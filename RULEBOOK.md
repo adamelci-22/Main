@@ -174,7 +174,7 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 ## 7. Profit-taking
 
 - Set a **realistic target at entry** — roughly **+8% to +12%** on a 2x sector ETF — separate from any far tail target.
-- **On reaching it: BANK IT**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
+- **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
 - **Never let the stop become the only exit** — that is drift.
 - Profit-taking is **manual** at checkpoints, because the stop occupies the one resting-order slot. That is the correct allocation: the downside must work unattended; the upside can wait for a 30-minute check.
 
@@ -185,12 +185,14 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 - **State the intended maximum hold at entry**, so it is a commitment rather than a running negotiation.
 - If the target is not reached and event risk approaches, **exit rather than drift** — the horizon is a ceiling, not a target to fill.
 
-### Scaling out — once more than one share is affordable
+### Target hit = FULL exit. No scaling out at target.
 
-- With a single share, the only choices are all-in or all-out. **Once the balance supports 2+ shares, take partial profits:** bank roughly half at target, let the remainder run with the stop ratcheted up behind it.
-- This is the one thing a single share structurally cannot do, and it serves "lock in profits" directly — a realised gain on half the position, with continued exposure on the rest.
-- The remainder is still governed by every other rule: same stop discipline, same exit criteria, same horizon ceiling.
-- **UNVERIFIED MECHANIC — test before relying on it.** §10's one-resting-order limit was proven with a single share, where a resting stop drove `sharesCanSell` to 0. Whether a stop on *part* of a multi-share position leaves the remainder sellable is **not yet known**. Before the first scale-out, confirm with `review_equity_order` that a partial sell is accepted while a stop rests on the rest. **If it is not**, scaling out means cancelling the stop, selling half, and immediately replacing the stop on the remainder — sequenced deliberately, since the position is unprotected in between. Do not discover this mid-trade.
+- **Hitting the target closes the WHOLE position**, at any share count. Do not bank half and let a remainder run. Do not keep a "runner." **Multiple shares change the dollar amount, never the decision.**
+- The only thing that keeps you in past target is the §7 override: **named new information** supporting more upside. Momentum is not new information. Reluctance to sell a winner is not new information. Neither is "there's still room."
+- **If the override does fire and you hold 2+ shares, bank half and hold the rest** rather than holding all of it. Staying in on new information is already permitted; taking half off while doing so is strictly more conservative than the override allows, and it serves "lock in profits." This is the *only* circumstance for a partial sell.
+- **Every other exit rule is unchanged and still fires first** — stalled momentum, reversal, flipped risk/reward, the 7:30pm deadline, an approaching event (§8), the ratcheting stop (§6), and the pre-commit rule (§8). Reaching target is not the only way out; it is the way out that requires no further judgment.
+- Rationale: a runner reintroduces exactly the drift these rules exist to prevent. It converts a decided exit into an open-ended hold, and on a decaying leveraged instrument the remainder is the part most likely to give the gain back.
+- **UNVERIFIED MECHANIC — only relevant in the override case.** §10's one-resting-order limit was proven with a single share, where a resting stop drove `sharesCanSell` to 0. Whether a stop on *part* of a multi-share position leaves the remainder sellable is **not yet known**. Before any partial sell, confirm with `review_equity_order` that it is accepted while a stop rests on the rest. **If it is not**, the sequence is cancel the stop, sell half, immediately replace the stop on the remainder — done deliberately, since the position is unprotected in between. Do not discover this mid-trade.
 
 ---
 
