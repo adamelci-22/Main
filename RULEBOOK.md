@@ -191,7 +191,7 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 ## 7. Profit-taking
 
 - Set a **realistic target at entry** — roughly **+8% to +12%** on a 2x sector ETF — separate from any far tail target.
-- **The target is a CEILING, not a destination.** Expect most trades to close *before* it, on a stall or a reversal (§8.1, §8.2), which fire at any profit level. Target is the exit that requires no judgment; it is not the most common exit and must never be used as a reason to keep holding a position the other criteria have already condemned.
+- **The target is a CEILING, not a guarantee.** Many trades will close before it — on a reversal, an event, the deadline, or a stall once past the §8.1 floor. Target is the exit that requires no judgment; it is **not** a reason to keep holding a position the other criteria have already condemned.
 - **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
 - **Never let the stop become the only exit** — that is drift.
 - Profit-taking is **manual** at checkpoints, because the stop occupies the one resting-order slot. That is the correct allocation: the downside must work unattended; the upside can wait for a 30-minute check.
@@ -232,7 +232,10 @@ Approving the override is not permission to stop deciding. It starts a clock tha
 
 ## 8. Exit criteria — any one fires
 
-1. **Momentum stalled** — no new high across 2+ checkpoints *and* volume drying up. **This fires at ANY profit level. There is no minimum gain required and no waiting for target.** A stall across multiple periods means sell, whether the position is up 3% or up 9%. **User decision, explicit:** *"as it did today, if it stalls for multiple periods it's time to sell."* Do not hold a stalling position hoping to reach target — that is the drift these rules exist to prevent.
+1. **Momentum stalled** — no new high across 2+ checkpoints *and* volume drying up. **A stall across multiple periods means sell** — do not hold a stalling position hoping it reaches target, that is drift.
+   - **FLOOR: the stall exit cannot fire below roughly half the target (~+5%)** on a position that is green and has not reversed. Below that, a stall alone is not enough — hold, or exit on a different criterion.
+   - **The floor does not apply**, and the stall exit fires immediately at any level, when **price is at or below entry**, or when a **§8.2 reversal is present**. Reversal always outranks the floor.
+   - **Why the floor exists:** the stall condition is only 60 minutes of sideways action, which ordinary consolidation inside a healthy uptrend produces constantly. Without a floor it systematically pre-empts the +8–12% target and the target becomes decorative. **The cost is real and accepted:** some positions that would have been banked at +3% will instead round-trip toward the stop. That is the price of letting winners reach a size worth having.
 2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. **Also an exit at any profit level**, and it takes precedence over everything except the stop.
 3. **Risk/reward flipped** — small remaining upside against a large distance to the stop.
 4. **Day trade nearing the 7:30pm deadline** with the move finished.
@@ -352,9 +355,9 @@ A week is ~3–4 trades and is noise. A month is ~12–15 and lets the win/loss 
 
 ### Statistics — each month-end
 
-- **Average winner vs average loser** — the ratio that actually predicts long-run results. **Failure threshold: below 1:1.** If the average winner is smaller than the average loser, the process is broken regardless of the account balance.
-  - **Honest note on why this is not 2:1.** An earlier draft demanded 2:1. That is arithmetically unreachable under the rules as they now stand: the stall and reversal exits (§8.1, §8.2) fire at *any* profit level, so winners get banked small — the Aug 10 trade closed at +3.25% against an 8–12% target — while the stop permits a loss of up to 5%. The two rules pull opposite ways, and **the exit discipline is the one worth keeping.** A metric the process cannot produce is worse than no metric, because it invites quietly holding winners longer to flatter the ratio, which is exactly the drift §8 forbids. Expect roughly **1:1 to 1.5:1**, carried by win rate rather than by winner size.
-- **Win rate** reported alongside it, and it matters *more* here than in a let-winners-run system — small winners require frequent ones. **70% at 0.8:1 is still a time bomb**; the ratio floor is what stops win rate from being gamed by cutting winners ever shorter.
+- **Average winner ≥ 2× average loser** — the metric that actually predicts long-run results. **Hard failure below 1:1**: an average winner smaller than the average loser means the process is broken regardless of the account balance.
+  - **This is reachable only because of the §8.1 stall floor.** The arithmetic is tight and worth stating: a 5% stop against winners banked at +3% is roughly 0.6:1 and loses money over time. The floor pushes stall exits to ≥5% while target exits land at 8–12%, and reversal exits on losers typically come in under the full 5% stop — which is what makes 2:1 attainable rather than aspirational. **If the floor is ever removed, this metric must be lowered in the same edit.** The two are load-bearing for each other.
+- **Win rate** reported alongside it — 40% at 3:1 is excellent; **70% at 0.8:1 is a time bomb.** The ratio requirement is what stops win rate from being gamed by cutting winners ever shorter.
 - **Trade count** reported, not targeted
 - **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. It is a **flag, not a brake**: report it loudly with a written review of what broke, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage only reflects instrument volatility.
 
