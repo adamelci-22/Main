@@ -87,6 +87,21 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 ## 4. Entry — what to look for
 
+### CIRCUIT BREAKER — check before every entry
+
+**After 3 consecutive losing closed trades, STOP ENTERING and wait for the user to clear it.**
+
+- A **losing trade** is any closed position with negative realised P&L, however small. Scratches and near-breakeven exits count as losses if the number is negative. Do not reclassify a loss as "flat" to keep a streak alive.
+- The count is **consecutive closed trades**, not days. A winner anywhere in the sequence resets it to zero.
+- **What "pause" means:** manage any open position normally to its exit, then take **no new entries**. Keep running every checkpoint, keep reporting, and **keep arming the next day** — pausing entries must never become pausing the system. **The 8:00pm arming checkpoint stays alive no matter what** (§3).
+- **Tell the user plainly at the third loss**: the three trades, what each thesis was, and your honest read on whether they were three bad reads or one bad read repeated. Three losses in a row is more diagnostic of a broken process than any single-day percentage, which is why this is the brake and drawdown is only a flag.
+- **Only the user restarts entries.** Do not resume on your own judgment, and do not resume because a setup looks good — that instinct is exactly what the brake exists to interrupt.
+- Track the streak in the month-to-date line so it is never reconstructed from memory.
+
+**A −25% drawdown from peak is a FLAG, not a brake** — report it loudly with a written review of what broke, and keep trading (§14). The hard floor remains **~$15** (§10), below which sizing stops working.
+
+### Signals
+
 - **Sector leadership, ranked.** Which sector is *actually* leading. Never default to one you have been watching.
 - **Breadth.** Is the whole group moving together, or is one name dragging the ETF? Broad beats narrow every time.
 - **A catalyst you can name.** Geopolitical event, earnings, macro data. "It's going up" is not a catalyst.
@@ -97,10 +112,17 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 ### Instrument selection, in priority order
 
-1. **Most leverage per dollar that fits as a WHOLE share** — whole shares preserve the after-hours and overnight exit.
+1. **Whole share is the DEFAULT** — the most leverage per dollar that fits as a whole share. Whole shares preserve the after-hours and 24-hour-market exit and allow limit orders.
 2. **Verify `all_day_tradability` before entering.**
 3. **Check the spread.** Do not assume it.
-4. Whole share **>** fractional (fractional forfeits extended-hours exit).
+4. **Check the actual price before shortlisting.** Much of the universe below is unaffordable as a whole share at a small balance. A candidate you cannot buy is not a candidate — do not build a thesis on one and discover the problem at the order stage.
+
+### Fractional — permitted only when the setup is clearly better
+
+- **Whole share is the default. Fractional is the exception**, allowed when the best available setup is materially stronger than anything affordable whole — not merely different, and not to avoid the work of finding an affordable equivalent.
+- **You must say at entry that you are going fractional, and what you are giving up.** State it as a cost being accepted, not a detail.
+- **What fractional costs, every time:** `type=market` only, `regular_hours` only. That means **no limit price** (no protection against the spread) and **no extended-hours or overnight exit at all** — a fractional position held overnight cannot be closed until the next regular session, whatever happens in between.
+- Because the exit window is narrower, a fractional position gets a **tighter leash**: prefer closing it the same session, and never invoke the 1-week horizon ceiling on one.
 
 ### Asset classes — equities and ETFs ONLY, indefinitely
 
@@ -145,6 +167,7 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 - **Stop orders are REGULAR-HOURS ONLY.** Extended hours and overnight **cannot** be automatically protected — a sell limit below market fills instantly at the bid, so it cannot fake a stop.
 - **A stop does NOT protect against a gap.** It bounds slippage in an orderly decline only.
 - **The only real defence for an overnight event is not holding into it.**
+- **The user has been told this and accepts it** — *"the overnight stuff I'm not too worried about."* A 1–2 day default horizon means routinely holding unprotected overnight, and that is a known, accepted cost, not an oversight. **Do not re-litigate it at checkpoints or re-warn about it as though it were news.** State it only when a specific, identifiable overnight event is approaching — that is a trade decision (§8.5), not a structural complaint.
 
 ---
 
@@ -167,6 +190,7 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 - With a single share, the only choices are all-in or all-out. **Once the balance supports 2+ shares, take partial profits:** bank roughly half at target, let the remainder run with the stop ratcheted up behind it.
 - This is the one thing a single share structurally cannot do, and it serves "lock in profits" directly — a realised gain on half the position, with continued exposure on the rest.
 - The remainder is still governed by every other rule: same stop discipline, same exit criteria, same horizon ceiling.
+- **UNVERIFIED MECHANIC — test before relying on it.** §10's one-resting-order limit was proven with a single share, where a resting stop drove `sharesCanSell` to 0. Whether a stop on *part* of a multi-share position leaves the remainder sellable is **not yet known**. Before the first scale-out, confirm with `review_equity_order` that a partial sell is accepted while a stop rests on the rest. **If it is not**, scaling out means cancelling the stop, selling half, and immediately replacing the stop on the remainder — sequenced deliberately, since the position is unprotected in between. Do not discover this mid-trade.
 
 ---
 
@@ -235,6 +259,8 @@ On a geopolitical trade the thesis dies by headline, not by chart. A ceasefire o
 
 ### Live context — DATED, refresh it, do not carry stale facts forward
 
+**Whose job that is:** the **9:00am research checkpoint** re-verifies this block against current headlines and **edits this file** if any of it has changed or gone stale — then commits and pushes. The **8:00pm checkpoint** is the backstop: if the date stamp below is more than a few days old, refresh it or delete it. **Stale context asserted confidently is worse than no context** — an exit trigger below that has already happened is a trigger that will never fire.
+
 *As of Aug 10 2026:* the **2026 Strait of Hormuz crisis** — an active closure amid a US-Israel-Iran war (Iran blocked the strait Feb 28 2026). Iran demands sanctions relief **and** war reparations, and has ruled out direct US talks. The Iran–**Oman** proposed-route deal (~Aug 5–7, joint statement "in final drafting") is with **Oman, not the US**; crossings **fell** afterward (15 Fri → 11 Sat → 6 Sun), so it produced no flow. WTI ~$80, Brent >$84. Reopening-optimism headlines exist ("deal as early as Wednesday") but are stale/undated — weigh price action.
 
 **Immediate exit triggers, regardless of price:** ceasefire · joint statement signed · reopening implemented · sanctions relief · direct US-Iran talks resuming · **crossing counts turning up**.
@@ -284,7 +310,7 @@ A week is ~3–4 trades and is noise. A month is ~12–15 and lets the win/loss 
 - **Average winner ≥ 2× average loser** (the metric that actually predicts long-run results)
 - **Win rate** reported alongside it — 40% at 3:1 is excellent; 70% at 0.8:1 is a time bomb
 - **Trade count** reported, not targeted
-- **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**
+- **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. It is a **flag, not a brake**: report it loudly with a written review of what broke, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage only reflects instrument volatility.
 
 ### P&L — lowest weight
 
@@ -302,6 +328,14 @@ Percentage growth net of costs, versus SPY over the same window.
 - **Never claim edge from a small sample.**
 - Correct your own errors promptly and plainly, including ones that make you look bad.
 - Most checkpoints are non-events: **stay silent unless something material happened** — an entry, exit, stop, notable skipped setup, or an error. No "checked, nothing to do" messages.
+
+### Cadence — events as they happen, plus a Friday recap
+
+- **Material events: report immediately**, at the checkpoint where they occur. Entry, exit, stop fired, circuit breaker tripped, error, a detected break in the checkpoint chain, a balance change indicating funding, or a setup notable enough to name even though it was declined.
+- **A no-trade day gets NO evening message.** Silence is the correct output.
+- **Friday's 8:00pm checkpoint always reports**, regardless of whether the week had trades. Balance, every trade, the win/loss and loss-streak count, process tests satisfied, what was declined and why, and any rulebook change made during the week. **This is the guaranteed heartbeat** — it is the user's only way to distinguish "correctly sat out" from "the system silently stopped running," so it goes out even on a week where nothing at all happened.
+- **Month-end still reports** the §14 statistics on top of the Friday recap.
+- Silence between these is intentional and means "nothing material," never "nothing checked."
 
 ### Known limitations — state honestly when relevant
 
@@ -321,4 +355,4 @@ Percentage growth net of costs, versus SPY over the same window.
 |---|---|---|---|---|---|---|
 | Aug 10 2026 | GUSH ×1 | $37.9299 (9:52am) | $39.1613 (3:02pm) | **+$1.2314** | **+3.25%** | Hormuz supply shock; exited on stalled momentum, not target. Zero fees. Account $40.84 → $42.07 |
 
-**Month to date (Aug 2026):** 1 trade · 1 win · 0 losses · **+3.01%** · max drawdown from peak −0.5%
+**Month to date (Aug 2026):** 1 trade · 1 win · 0 losses · **+3.01%** · max drawdown from peak −0.5% · **consecutive-loss streak: 0** (circuit breaker at 3, §4)
