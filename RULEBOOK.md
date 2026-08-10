@@ -179,6 +179,24 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 - **Why these numbers:** paired with the +8–12% target, a 5% stop is what produces a winner worth more than a loser. A 3–4% stop sits inside ordinary leveraged-ETF noise and stops out trades that were right; past 7% a single loss cancels a good win.
 - Sizing is all-in on one position, so **stop distance is the only risk lever there is.** Treat it accordingly.
 
+### The ratchet ladder — schedule is the floor, structure may be tighter
+
+| Gain reached | Stop moves to | Trail from price |
+|---|---|---|
+| Entry | **−5%** (ceiling −7%) | 5% |
+| **+2% and stalled 2 checks** | **breakeven** | ~2% |
+| +3% | **breakeven** | 3% |
+| +5% | +2% | ~3% |
+| +8% | +4% | ~4% |
+| +10% | +6% | ~4% |
+| +12% or more | half the gain | ~5% |
+
+- **Structural override, UPWARD ONLY.** If a 10-minute swing low that has held sits *above* the scheduled level, use that instead. Structure may tighten the stop; it may never loosen it.
+- **When to move it:** only when a schedule threshold is newly crossed, or a new higher swing low has formed and held across two checkpoints. **Not on every check** — each raise is cancel-then-replace and briefly leaves the position unprotected.
+- **Never on a flat print.** The stop migrates up as the position *gains*.
+- **Once past +3%, the stop never sits below breakeven again.** A trade that has been meaningfully green does not become a loss.
+- **Consequence worth stating:** a ~2–4% trail on a leveraged ETF is under an hour of typical range, so **expect noise stop-outs and expect scratches at breakeven.** That is the accepted cost of a bounded downside. The ladder is a starting hypothesis on one trade of data — month-end win rate and the winner/loser ratio are what will show whether the trail is too tight.
+
 ### Hard limits of a stop
 
 - **Stop orders are REGULAR-HOURS ONLY.** Extended hours and overnight **cannot** be automatically protected — a sell limit below market fills instantly at the bid, so it cannot fake a stop.
@@ -191,14 +209,14 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 ## 7. Profit-taking
 
 - Set a **realistic target at entry** — roughly **+8% to +12%** on a 2x sector ETF — separate from any far tail target.
-- **The target is a CEILING, not a guarantee.** Many trades will close before it — on a reversal, an event, the deadline, or a stall once past the §8.1 floor. Target is the exit that requires no judgment; it is **not** a reason to keep holding a position the other criteria have already condemned.
+- **The target is a CEILING, and most trades will not reach it.** The three-check stall exit (§8.1) will close the majority of positions first, at whatever gain stands. Target is the exit that requires no judgment; it is **not** a reason to keep holding a position the other criteria have already condemned.
 - **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
 - **Never let the stop become the only exit** — that is drift.
 - Profit-taking is **manual** at checkpoints, because the stop occupies the one resting-order slot. That is the correct allocation: the downside must work unattended; the upside can wait for a 30-minute check.
 
 ### Holding period
 
-- **Default: 1–2 days.** This is the working assumption for every trade.
+- **Default: 1–2 days**, but understand what the stall ladder does to this in practice. **A three-check stall sells the position**, so an overnight hold now happens only when the position is still making new highs into the close. **This is predominantly a day-trading system**, with swing holds as the exception rather than the plan — a deliberate consequence of the §8.1 ladder, accepted because a stalled leveraged position decays and because overnight gaps cannot be protected at all.
 - **Absolute ceiling: 1 trading week.** Only for an *exceptional* opportunity, and you must say at entry that you are invoking it and why. "It's still going up" is not exceptional.
 - **State the intended maximum hold at entry**, so it is a commitment rather than a running negotiation.
 - If the target is not reached and event risk approaches, **exit rather than drift** — the horizon is a ceiling, not a target to fill.
@@ -232,11 +250,23 @@ Approving the override is not permission to stop deciding. It starts a clock tha
 
 ## 8. Exit criteria — any one fires
 
-1. **Momentum stalled** — no new high across 2+ checkpoints *and* volume drying up. **A stall across multiple periods means sell** — do not hold a stalling position hoping it reaches target, that is drift.
-   - **FLOOR: the stall exit cannot fire below roughly half the target (~+5%)** on a position that is green and has not reversed. Below that, a stall alone is not enough — hold, or exit on a different criterion.
-   - **The floor does not apply**, and the stall exit fires immediately at any level, when **price is at or below entry**, or when a **§8.2 reversal is present**. Reversal always outranks the floor.
-   - **Why the floor exists:** the stall condition is only 60 minutes of sideways action, which ordinary consolidation inside a healthy uptrend produces constantly. Without a floor it systematically pre-empts the +8–12% target and the target becomes decorative. **The cost is real and accepted:** some positions that would have been banked at +3% will instead round-trip toward the stop. That is the price of letting winners reach a size worth having.
-2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. **Also an exit at any profit level**, and it takes precedence over everything except the stop.
+1. **Momentum stalled — a two-step escalation, NOT a single judgment call.**
+
+   **Definition of a stalled check:** no new high *and* volume drying up. **A "new high" must exceed the prior high by more than 0.3% to count as progress and reset the counter** — marginal ticks of +0.05% are not progress, they are a stall pretending otherwise.
+
+   | Stalled checks | Action |
+   |---|---|
+   | **2** | **Raise the stop to breakeven. Keep holding.** Downside eliminated; upside still open. |
+   | **3** | **SELL — whatever the gain.** No floor, no minimum, no exception. |
+
+   - **There is NO profit floor on the stall exit.** The earlier +5% floor is retired; this ladder replaces it. A three-check stall sells at +1% or +9% alike.
+   - **By the time the sell fires, the stop is already at breakeven**, so the rule can only ever cost upside — never a loss. That is what makes an unconditional sell safe.
+   - **A stall of 2 converts the signal from "sell" into "protect."** The information is not discarded; it is redirected.
+   - **MIDDAY EXCLUSION: checks between 12:00 and 1:30pm ET do not count toward the stall total.** Volume structurally dies over lunch every day, so counting that window would sell nearly every position held through it for reasons that carry no information. Positions may still be *protected* (stop raised) during it — they are not *sold* on it.
+   - **Why unconditional:** a stalled leveraged position is **negative expectancy, not neutral.** Daily rebalancing decay plus spread means time in a non-moving 2x/3x costs money. Waiting is not free.
+2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. An exit at any profit level, taking precedence over everything except the stop and a headline trigger.
+   - **The ratcheting stop now covers most of this automatically** during regular hours: a stop sitting under the structure removes the need to judge a reversal at all, and it fires *between* checkpoints where I am blind. Reversal as a manual criterion matters chiefly for **extended hours and overnight**, where no stop can rest, and for **headline reversals that gap through any stop.**
+   - **The level must have been NAMED AT ENTRY.** "It broke the level that justified entry" is unfalsifiable unless the level and its price were stated before the trade. No named level, no reversal claim.
 3. **Risk/reward flipped** — small remaining upside against a large distance to the stop.
 4. **Day trade nearing the 7:30pm deadline** with the move finished.
 5. **Unwanted event approaching** — earnings or macro data you did not intend to hold through.
@@ -355,9 +385,11 @@ A week is ~3–4 trades and is noise. A month is ~12–15 and lets the win/loss 
 
 ### Statistics — each month-end
 
-- **Average winner ≥ 2× average loser** — the metric that actually predicts long-run results. **Hard failure below 1:1**: an average winner smaller than the average loser means the process is broken regardless of the account balance.
-  - **This is reachable only because of the §8.1 stall floor.** The arithmetic is tight and worth stating: a 5% stop against winners banked at +3% is roughly 0.6:1 and loses money over time. The floor pushes stall exits to ≥5% while target exits land at 8–12%, and reversal exits on losers typically come in under the full 5% stop — which is what makes 2:1 attainable rather than aspirational. **If the floor is ever removed, this metric must be lowered in the same edit.** The two are load-bearing for each other.
-- **Win rate** reported alongside it — 40% at 3:1 is excellent; **70% at 0.8:1 is a time bomb.** The ratio requirement is what stops win rate from being gamed by cutting winners ever shorter.
+- **WIN RATE is the headline metric.** This is a high-frequency, small-win system by design, so consistency of wins carries it — not the size of any one.
+- **Average winner ÷ average loser ≥ 1.2:1**, with **anything below 1:1 a hard failure** regardless of the account balance.
+  - **Why 1.2 and not 2.** The three-check stall exit sells at whatever gain stands, so most winners land at +2–5% rather than at the +8–12% target. Against losses that are a mix of −5% stops and breakeven scratches, the honest expectation is roughly 1:1 to 1.3:1. **A metric the process cannot produce is worse than no metric** — it invites holding winners past their exit to flatter the ratio, which is precisely the drift §8 forbids. An earlier draft demanded 2:1; that depended on a +5% stall floor which has since been retired in favour of the escalation ladder.
+  - **What protects the ratio instead of a floor:** the breakeven ratchet at two stalled checks. It converts would-be small losses into scratches, which is what keeps the denominator from swallowing the numerator.
+- **A high win rate at a poor ratio is still a time bomb** — 70% at 0.8:1 fails. The 1:1 hard floor is what stops win rate from being gamed by cutting winners ever shorter.
 - **Trade count** reported, not targeted
 - **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. It is a **flag, not a brake**: report it loudly with a written review of what broke, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage only reflects instrument volatility.
 
