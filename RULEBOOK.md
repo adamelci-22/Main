@@ -22,7 +22,7 @@ Grow the account as fast as possible in a "nothing to lose" mindset, using **lev
 
 - **A +2% win is significant.** Do not dismiss small percentage gains as immaterial because the dollar figure is small today. At scale, a high win rate banking +2% with the downside capped at breakeven is an excellent system, and it is the thing being built.
 - **Never reason from the dollar balance to a change in strategy.** "This won't compound meaningfully at $42, so reach for the fat tail" is invalid — it optimises for an account size that is meant to be temporary and trains variance-seeking that would be actively harmful at scale.
-- **Every threshold is a PERCENTAGE, never a dollar amount.** Percentages transfer across account sizes; dollars do not. The only place dollar figures legitimately appear is where a mechanical constraint forces it — instrument affordability, and the hard floor in §10.
+- **Every threshold is a PERCENTAGE, never a dollar amount.** Percentages transfer across account sizes; dollars do not. The hard floor is a percentage of **deposited capital** (§10) for exactly this reason. The only place dollar figures legitimately appear is where a mechanical constraint forces it — instrument affordability, and the recorded deposit total itself.
 - **Rules currently dormant that activate with size**, and which must not be quietly dropped for being unused today: partial sells in the override case (§7, needs 2+ shares), and most of the leveraged universe (§4, unaffordable as whole shares at present).
 - Prefer the choice that would still be correct at 10x. Where the small-account answer and the at-scale answer differ, **say so explicitly** rather than silently optimising for today.
 
@@ -66,6 +66,7 @@ Purpose: form a thesis before the bell.
 - **(d)** Rank **sector leadership** as indicated pre-market.
 - **(e)** Confirm **settled buying power** (`get_accounts` for `unsettled_funds`, plus `get_portfolio`) so the 9:45 entry knows its size instead of discovering a shortfall mid-setup.
   - **A balance larger than yesterday's close, beyond what trading explains, means the user funded the account.** No announcement is coming and none is needed — the 9:00am check is where you find out. Size to the new balance and say what you observed in the report. Do not ask for or campaign for funds; the user adds them when the system has earned it.
+  - **On detecting funding, UPDATE the recorded deposited-capital figure in the trade log** — the hard floor is a percentage of it (§10), so a stale figure means a floor set against the wrong denominator.
 - **(f)** Write a **ranked shortlist** with the reason each candidate beats the others.
 
 ### 9:30am opening observation — no orders, read-only only
@@ -326,7 +327,11 @@ The legitimate version of this check is **aggregate**, and it is already capture
 - **Fractional orders place only in `regular_hours`**, and require `type=market`.
 - **24-hour tradability is OPTIONALITY, NOT OBLIGATION.** Never hold just because you can.
 - **The SWING label is a plan, not a promise.** Criteria override the label.
-- **Floor: stop trading and report below ~$15.**
+- **FLOOR: stop trading and report below 35% of deposited capital.** Expressed as a percentage so it transfers across account sizes (§0). At the deposited figure recorded in the trade log this is currently ~$14.29.
+  - **Deposited capital is not a field — it is DERIVED**, and the formula is confirmed correct: `deposited = total_value − all-time realized P&L − unrealized P&L`. There is no cumulative-deposits field; `pending_deposits` is in-flight money only.
+  - **Validated Aug 10 2026:** $42.07 total − $1.23 all-time realized, flat, = **$40.84**, which the user confirmed is exactly the amount deposited. The formula holds and needs no fudge factor.
+  - **It stays correct as funding is added**, because a new deposit raises `total_value` without touching realized P&L — the derived figure rises by the deposit, which is the desired behaviour.
+  - **Recompute it at the 9:00am check** rather than trusting the recorded number blindly, and update the trade-log figure whenever it moves (§2e). Report any disagreement between the two instead of silently adopting one.
 
 ### Settlement and round trips
 
@@ -451,3 +456,7 @@ Each row records the trade. **Stall-2 events are logged in the Note column** as 
 | Aug 10 2026 | GUSH ×1 | $37.9299 (9:52am) | $39.1613 (3:02pm) | **+$1.2314** | **+3.25%** | Hormuz supply shock; exited on stalled momentum, not target. Zero fees. Account $40.84 → $42.07 |
 
 **Month to date (Aug 2026):** 1 trade · 1 win · 0 losses · **+3.01%** · max drawdown from peak −0.5% · **consecutive-loss streak: 0** (circuit breaker at 3, §4)
+
+**Capital deposited: $40.84** *(confirmed Aug 10 2026)* — derived as total value $42.07 less all-time realized P&L $1.23 with no open positions, and confirmed by the user as the exact deposited amount. **Recompute at each 9:00am check; update here on any change (§2e).**
+
+**Hard floor: 35% of deposited capital = $14.29.** All-time return against deposits: **+3.01%**.
