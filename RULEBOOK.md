@@ -22,7 +22,7 @@ Grow the account as fast as possible in a "nothing to lose" mindset, using **lev
 
 Call `list_triggers`.
 
-1. **DELETE every trigger with `ended_reason='run_once_fired'`.** Spent triggers show a stale `next_run_at` pointing at tomorrow's same clock time. It is UNCONFIRMED whether they can re-fire — assume they might. Deleting is harmless if they are dead and prevents duplicate checkpoints if they are not. **Two checkpoints on one setup can place two orders — a real-money failure, not untidiness.**
+1. **DELETE every trigger with `ended_reason='run_once_fired'`.** Spent triggers show a stale `next_run_at` pointing at tomorrow's same clock time, which makes the list unreadable at a glance. **Observed Aug 10:** 14 spent triggers sat inert with `enabled: false` and did **not** re-fire — so the risk is lower than first assumed, but deletion stays mandatory, because a list you cannot read is a list where a real duplicate hides. **Two checkpoints on one setup can place two orders — a real-money failure, not untidiness.**
 2. **DELETE any trigger occupying a slot you are about to arm** — exactly one trigger per time slot.
 3. **NEVER delete the trigger you are currently running from** until the next day is successfully armed.
 4. After arming, `list_triggers` again, confirm one per slot with no extras, report the count.
@@ -110,11 +110,19 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 - **Did overnight strength hold into real volume?**
 - **No read = no trade.** A flat day is a valid and expected outcome.
 
+### Timing — prefer the morning, never force
+
+- **Preferred window: 9:45–11:00am.** Volume and directional conviction are highest, and it leaves the whole session to manage the position rather than defending it into the close.
+- **After 11:00am, a new entry must be clearly better than anything the morning offered** — not merely available because the morning was empty. Boredom is not a signal.
+- **NEVER force a trade because the window is closing.** User decision, explicit: *"prefer morning but if there's nothing don't force anything."* A day with no qualifying setup ends with no trade, and that is a correct outcome, not a missed one.
+- **Only one round trip per day exists** (T+1, §10). That single shot is something to **spend well, not to spend.** An entry taken at 9:45 on a mediocre read forfeits the day's only opportunity.
+- **Late-day entries carry an extra cost:** a position opened in the afternoon cannot reach target before the close, so it commits to an unprotected overnight hold on day one. Say so at entry if taking one.
+
 ### Instrument selection, in priority order
 
 1. **Whole share is the DEFAULT** — the most leverage per dollar that fits as a whole share. Whole shares preserve the after-hours and 24-hour-market exit and allow limit orders.
 2. **Verify `all_day_tradability` before entering.**
-3. **Check the spread.** Do not assume it.
+3. **Check the spread — no hard rejection gate; PRICE IT IN.** Read the actual bid/ask, double it for the round trip, subtract that from the expected move, and take the trade only if it **still clears the target with room to spare.** A spread does not disqualify an instrument by itself; a spread that eats the thesis does. Liquid leveraged ETFs typically run well under 0.15% and are a non-issue; thin sector and single-stock names are where this bites. **Log the actual spread cost on every fill** so the real drag accumulates in the record instead of being assumed.
 4. **Check the actual price before shortlisting.** Much of the universe below is unaffordable as a whole share at a small balance. A candidate you cannot buy is not a candidate — do not build a thesis on one and discover the problem at the order stage.
 
 ### Fractional — permitted only when the setup is clearly better
@@ -156,11 +164,20 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 ## 6. Stops — UP ONLY, NEVER DOWN
 
-- **Never widen for comfort or "room for variance."** If the tape needs more room than the stop allows, **the position is too big** — exit rather than move the goalposts.
+- **Never widen for comfort or "room for variance."** If the tape needs more room than the stop allows, **the trade is wrong for this account** — exit rather than move the goalposts. Sizing is fixed at all-in, so "reduce the position" is not an available answer; the answer is to be out.
 - The only permitted downward change is **correcting a factual placement error**, and you must say that is what it is.
 - Raise on **rules** or on **structure** (below a support that has held across several checks).
 - **Not every check.** Each raise is cancel-then-replace, which briefly leaves the position unprotected, and over-tightening invites noise stop-outs on a leveraged instrument. **Do not tighten on a flat print** — the stop migrates up as the position *gains*.
 - **Migrate from loss-avoidance to profit-locking as gains accrue.** A stop left far below price on a winner lets it round-trip through breakeven.
+
+### Initial placement — decided BEFORE the entry, not after
+
+- **Default: 5% below the fill.** This is the working number for every trade.
+- **Tighten to structure if a level is closer** — just below a support that has actually held. Structure beats the percentage when it is *nearer*, never when it is further.
+- **HARD CEILING: 7%. Never wider, for any reason, on any instrument.** If the setup appears to need more than 7% of room, **it is not a setup** — decline it. Do not enter and widen.
+- **State the stop price and the percentage at entry**, in the same breath as the entry itself. Placement is not a follow-up decision to be negotiated once the position is open. That was the Aug 10 failure: no number existed to check my judgment against, so it got argued out in chat across three messages while the position was live.
+- **Why these numbers:** paired with the +8–12% target, a 5% stop is what produces a winner worth more than a loser. A 3–4% stop sits inside ordinary leveraged-ETF noise and stops out trades that were right; past 7% a single loss cancels a good win.
+- Sizing is all-in on one position, so **stop distance is the only risk lever there is.** Treat it accordingly.
 
 ### Hard limits of a stop
 
@@ -174,6 +191,7 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 ## 7. Profit-taking
 
 - Set a **realistic target at entry** — roughly **+8% to +12%** on a 2x sector ETF — separate from any far tail target.
+- **The target is a CEILING, not a destination.** Expect most trades to close *before* it, on a stall or a reversal (§8.1, §8.2), which fire at any profit level. Target is the exit that requires no judgment; it is not the most common exit and must never be used as a reason to keep holding a position the other criteria have already condemned.
 - **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
 - **Never let the stop become the only exit** — that is drift.
 - Profit-taking is **manual** at checkpoints, because the stop occupies the one resting-order slot. That is the correct allocation: the downside must work unattended; the upside can wait for a 30-minute check.
@@ -214,8 +232,8 @@ Approving the override is not permission to stop deciding. It starts a clock tha
 
 ## 8. Exit criteria — any one fires
 
-1. **Momentum stalled** — no new high across 2+ checkpoints *and* volume drying up.
-2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over.
+1. **Momentum stalled** — no new high across 2+ checkpoints *and* volume drying up. **This fires at ANY profit level. There is no minimum gain required and no waiting for target.** A stall across multiple periods means sell, whether the position is up 3% or up 9%. **User decision, explicit:** *"as it did today, if it stalls for multiple periods it's time to sell."* Do not hold a stalling position hoping to reach target — that is the drift these rules exist to prevent.
+2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. **Also an exit at any profit level**, and it takes precedence over everything except the stop.
 3. **Risk/reward flipped** — small remaining upside against a large distance to the stop.
 4. **Day trade nearing the 7:30pm deadline** with the move finished.
 5. **Unwanted event approaching** — earnings or macro data you did not intend to hold through.
@@ -249,7 +267,7 @@ That is **outcome bias** — the quality of an exit is fixed by the information 
 - The distinction is **whether you made a choice against a price you had actually seen.** Considering an override and correctly rejecting it does not qualify — you took the target, so the tape afterward is none of your business.
 - When it does apply, report it honestly, including when the override lost money relative to obeying the target.
 
-The legitimate version of this check is **aggregate**, and it is already captured by the month-end metric *average winner ≥ 2× average loser*. If exits are systematically premature, that ratio degrades and it will show up there. Single-trade post-exit price action is noise pretending to be feedback.
+The legitimate version of this check is **aggregate**, and it is already captured by the month-end winner/loser ratio (§14). If exits are systematically premature, that ratio degrades and it will show up there. Single-trade post-exit price action is noise pretending to be feedback.
 
 ---
 
@@ -286,7 +304,9 @@ On a geopolitical trade the thesis dies by headline, not by chart. A ceasefire o
 
 **Whose job that is:** the **9:00am research checkpoint** re-verifies this block against current headlines and **edits this file** if any of it has changed or gone stale — then commits and pushes. The **8:00pm checkpoint** is the backstop: if the date stamp below is more than a few days old, refresh it or delete it. **Stale context asserted confidently is worse than no context** — an exit trigger below that has already happened is a trigger that will never fire.
 
-*As of Aug 10 2026:* the **2026 Strait of Hormuz crisis** — an active closure amid a US-Israel-Iran war (Iran blocked the strait Feb 28 2026). Iran demands sanctions relief **and** war reparations, and has ruled out direct US talks. The Iran–**Oman** proposed-route deal (~Aug 5–7, joint statement "in final drafting") is with **Oman, not the US**; crossings **fell** afterward (15 Fri → 11 Sat → 6 Sun), so it produced no flow. WTI ~$80, Brent >$84. Reopening-optimism headlines exist ("deal as early as Wednesday") but are stale/undated — weigh price action.
+This block holds **whatever the dominant macro driver currently is** — it is a slot, not a permanent fixture. When the driver below stops mattering, **replace it wholesale** rather than appending to it. Its exit triggers are specific to the driver named and must be rewritten with it.
+
+*As of Aug 10 2026 the driver is:* the **2026 Strait of Hormuz crisis** — an active closure amid a US-Israel-Iran war (Iran blocked the strait Feb 28 2026). Iran demands sanctions relief **and** war reparations, and has ruled out direct US talks. The Iran–**Oman** proposed-route deal (~Aug 5–7, joint statement "in final drafting") is with **Oman, not the US**; crossings **fell** afterward (15 Fri → 11 Sat → 6 Sun), so it produced no flow. WTI ~$80, Brent >$84. Reopening-optimism headlines exist ("deal as early as Wednesday") but are stale/undated — weigh price action.
 
 **Immediate exit triggers, regardless of price:** ceasefire · joint statement signed · reopening implemented · sanctions relief · direct US-Iran talks resuming · **crossing counts turning up**.
 
@@ -332,8 +352,9 @@ A week is ~3–4 trades and is noise. A month is ~12–15 and lets the win/loss 
 
 ### Statistics — each month-end
 
-- **Average winner ≥ 2× average loser** (the metric that actually predicts long-run results)
-- **Win rate** reported alongside it — 40% at 3:1 is excellent; 70% at 0.8:1 is a time bomb
+- **Average winner vs average loser** — the ratio that actually predicts long-run results. **Failure threshold: below 1:1.** If the average winner is smaller than the average loser, the process is broken regardless of the account balance.
+  - **Honest note on why this is not 2:1.** An earlier draft demanded 2:1. That is arithmetically unreachable under the rules as they now stand: the stall and reversal exits (§8.1, §8.2) fire at *any* profit level, so winners get banked small — the Aug 10 trade closed at +3.25% against an 8–12% target — while the stop permits a loss of up to 5%. The two rules pull opposite ways, and **the exit discipline is the one worth keeping.** A metric the process cannot produce is worse than no metric, because it invites quietly holding winners longer to flatter the ratio, which is exactly the drift §8 forbids. Expect roughly **1:1 to 1.5:1**, carried by win rate rather than by winner size.
+- **Win rate** reported alongside it, and it matters *more* here than in a let-winners-run system — small winners require frequent ones. **70% at 0.8:1 is still a time bomb**; the ratio floor is what stops win rate from being gamed by cutting winners ever shorter.
 - **Trade count** reported, not targeted
 - **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. It is a **flag, not a brake**: report it loudly with a written review of what broke, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage only reflects instrument volatility.
 
