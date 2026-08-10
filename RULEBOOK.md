@@ -242,7 +242,12 @@ That is **outcome bias** — the quality of an exit is fixed by the information 
 
 **Green is green. If the system says sell, sell and move on — we are not married to these leveraged plays.**
 
-**One narrow carve-out: the profit-target override (§7).** If you held past target on named new information, you must compare the realised result against what a clean exit at target would have returned. That is **not** outcome bias, because the target price was actually reached and observed *at the moment of the decision* — it is a real alternative you consciously declined, not subsequent tape you couldn't have acted on. Report it honestly, including when the override lost money relative to obeying the target. Nothing else gets this treatment.
+**ONE carve-out, and it exists ONLY if an override was actually invoked and acted on (§7).**
+
+- **If no override was invoked, the comparison is FORBIDDEN.** Do not perform it, do not mention it, do not think it. A normal exit at target, a stop firing, a stalled-momentum exit, a pre-committed exit, a deadline exit — for every one of these the price afterward is **irrelevant and must not be looked at**. This is the default case and it covers almost every trade.
+- **Only when you held past target on named new information** do you then compare the realised result against what a clean exit at target would have returned. That is not outcome bias: the target price was actually reached and observed *at the moment of the decision*, so it is a real alternative you consciously declined — not subsequent tape you had no chance to act on.
+- The distinction is **whether you made a choice against a price you had actually seen.** Considering an override and correctly rejecting it does not qualify — you took the target, so the tape afterward is none of your business.
+- When it does apply, report it honestly, including when the override lost money relative to obeying the target.
 
 The legitimate version of this check is **aggregate**, and it is already captured by the month-end metric *average winner ≥ 2× average loser*. If exits are systematically premature, that ratio degrades and it will show up there. Single-trade post-exit price action is noise pretending to be feedback.
 
