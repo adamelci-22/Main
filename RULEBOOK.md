@@ -16,6 +16,16 @@ Grow the account as fast as possible in a "nothing to lose" mindset, using **lev
 - **"Nothing to lose" NEVER licenses aggression in the exit.** Holding through a stop hoping for more is the single behaviour that destroys accounts.
 - **"Constant profit" is impossible.** Losing trades are structural, not failures. The goal is a consistent process with positive expectancy, which includes red days.
 
+### DESIGN FOR SCALE — the current balance is not the frame
+
+**This system is being trained to run at much larger sums. Judge every rule as though the account were 10x its current size or more.**
+
+- **A +2% win is significant.** Do not dismiss small percentage gains as immaterial because the dollar figure is small today. At scale, a high win rate banking +2% with the downside capped at breakeven is an excellent system, and it is the thing being built.
+- **Never reason from the dollar balance to a change in strategy.** "This won't compound meaningfully at $42, so reach for the fat tail" is invalid — it optimises for an account size that is meant to be temporary and trains variance-seeking that would be actively harmful at scale.
+- **Every threshold is a PERCENTAGE, never a dollar amount.** Percentages transfer across account sizes; dollars do not. The only place dollar figures legitimately appear is where a mechanical constraint forces it — instrument affordability, and the hard floor in §10.
+- **Rules currently dormant that activate with size**, and which must not be quietly dropped for being unused today: partial sells in the override case (§7, needs 2+ shares), and most of the leveraged universe (§4, unaffordable as whole shares at present).
+- Prefer the choice that would still be correct at 10x. Where the small-account answer and the at-scale answer differ, **say so explicitly** rather than silently optimising for today.
+
 ---
 
 ## 1. Step Zero — trigger hygiene (do this FIRST, every checkpoint)
@@ -264,6 +274,8 @@ Approving the override is not permission to stop deciding. It starts a clock tha
    - **A stall of 2 converts the signal from "sell" into "protect."** The information is not discarded; it is redirected.
    - **MIDDAY EXCLUSION: checks between 12:00 and 1:30pm ET do not count toward the stall total.** Volume structurally dies over lunch every day, so counting that window would sell nearly every position held through it for reasons that carry no information. Positions may still be *protected* (stop raised) during it — they are not *sold* on it.
    - **Why unconditional:** a stalled leveraged position is **negative expectancy, not neutral.** Daily rebalancing decay plus spread means time in a non-moving 2x/3x costs money. Waiting is not free.
+   - **LOG EVERY STALL-2 EVENT**, in the trade log: the gain at the time, and whether the position subsequently made a new high before the third stalled check. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 checks or 4 — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
+   - This log is **in-trade data**, recorded while the position is still open. It does **not** require tracking price after an exit and creates no exception to §9.
 2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. An exit at any profit level, taking precedence over everything except the stop and a headline trigger.
    - **The ratcheting stop now covers most of this automatically** during regular hours: a stop sitting under the structure removes the need to judge a reversal at all, and it fires *between* checkpoints where I am blind. Reversal as a manual criterion matters chiefly for **extended hours and overnight**, where no stop can rest, and for **headline reversals that gap through any stop.**
    - **The level must have been NAMED AT ENTRY.** "It broke the level that justified entry" is unfalsifiable unless the level and its price were stated before the trade. No named level, no reversal claim.
@@ -431,6 +443,8 @@ Percentage growth net of costs, versus SPY over the same window.
 ---
 
 ## Trade log
+
+Each row records the trade. **Stall-2 events are logged in the Note column** as `stall2 @ +X% → resumed / did not resume`, since the resumption rate is what decides whether the sell belongs at 3 checks or 4 (§8.1).
 
 | Date | Instrument | In | Out | P&L | % | Note |
 |---|---|---|---|---|---|---|
