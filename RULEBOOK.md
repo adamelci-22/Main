@@ -327,7 +327,10 @@ The legitimate version of this check is **aggregate**, and it is already capture
 - **Fractional orders place only in `regular_hours`**, and require `type=market`.
 - **24-hour tradability is OPTIONALITY, NOT OBLIGATION.** Never hold just because you can.
 - **The SWING label is a plan, not a promise.** Criteria override the label.
-- **FLOOR: stop trading and report below 35% of deposited capital.** Expressed as a percentage so it transfers across account sizes (§0). At the deposited figure recorded in the trade log this is currently ~$14.29.
+- **FLOOR: stop trading and report below 50% of DEPOSITED CASH.**
+  - **The denominator is the cash the user put in — NOT the current account value.** Currently $40.84 deposited, so the floor is a **fixed $20.42** until more is deposited. Account value is used only to *derive* the deposit figure; it is never the base of the floor.
+  - **The floor does NOT rise with gains.** If the account grows to $80, the floor stays $20.42 — it is a limit on how much of the user's own money may be lost, not a trailing stop on the account. A floor that ratcheted up with profits would liquidate the account on an ordinary drawdown from a high.
+  - Expressed as a percentage so it transfers across account sizes (§0). Losing half of contributed capital is where the process stops being given the benefit of the doubt, whatever any single trade looks like.
   - **Deposited capital is not a field — it is DERIVED**, and the formula is confirmed correct: `deposited = total_value − all-time realized P&L − unrealized P&L`. There is no cumulative-deposits field; `pending_deposits` is in-flight money only.
   - **Validated Aug 10 2026:** $42.07 total − $1.23 all-time realized, flat, = **$40.84**, which the user confirmed is exactly the amount deposited. The formula holds and needs no fudge factor.
   - **It stays correct as funding is added**, because a new deposit raises `total_value` without touching realized P&L — the derived figure rises by the deposit, which is the desired behaviour.
@@ -459,4 +462,4 @@ Each row records the trade. **Stall-2 events are logged in the Note column** as 
 
 **Capital deposited: $40.84** *(confirmed Aug 10 2026)* — derived as total value $42.07 less all-time realized P&L $1.23 with no open positions, and confirmed by the user as the exact deposited amount. **Recompute at each 9:00am check; update here on any change (§2e).**
 
-**Hard floor: 35% of deposited capital = $14.29.** All-time return against deposits: **+3.01%**.
+**Hard floor: 50% of deposited cash = $20.42** — fixed against deposits, not against account value, and it does not rise with gains. All-time return against deposits: **+3.01%**.
