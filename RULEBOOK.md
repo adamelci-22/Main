@@ -2,7 +2,7 @@
 
 **Canonical source of truth.** Every scheduled checkpoint reads this file and follows it. Nothing is copied forward between checkpoints — this document is the single authority, so it cannot degrade through recopying. Edit here to change behaviour everywhere, immediately.
 
-**Account:** Robinhood `462514035` ("Agentic"), cash account, `agentic_allowed=true`, `option_level_2`.
+**Account:** Robinhood `462514035` ("Agentic"), cash account, `agentic_allowed=true`, `option_level_2` — *the option level is descriptive only; options are not permitted here (§4).*
 
 ---
 
@@ -55,6 +55,7 @@ Purpose: form a thesis before the bell.
 - **(c)** Check **earnings reactions** of last night's after-close reporters — their pre-market prints often set the day's leadership.
 - **(d)** Rank **sector leadership** as indicated pre-market.
 - **(e)** Confirm **settled buying power** (`get_accounts` for `unsettled_funds`, plus `get_portfolio`) so the 9:45 entry knows its size instead of discovering a shortfall mid-setup.
+  - **A balance larger than yesterday's close, beyond what trading explains, means the user funded the account.** No announcement is coming and none is needed — the 9:00am check is where you find out. Size to the new balance and say what you observed in the report. Do not ask for or campaign for funds; the user adds them when the system has earned it.
 - **(f)** Write a **ranked shortlist** with the reason each candidate beats the others.
 
 ### 9:30am opening observation — no orders, read-only only
@@ -101,6 +102,14 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 3. **Check the spread.** Do not assume it.
 4. Whole share **>** fractional (fractional forfeits extended-hours exit).
 
+### Asset classes — equities and ETFs ONLY, indefinitely
+
+- **Tradeable: common stock and ETFs, including leveraged and inverse ETFs.** That is the whole permitted set.
+- **Options are excluded.** This is a settled decision, not an open question and not a milestone to graduate past. Leverage comes from leveraged ETFs, not from contracts.
+- **Do not propose options, price a contract, or build a plan that depends on one.** If a setup only works as an option, it is not a setup for this account.
+- Reading option data for *information* (`get_option_chains`, unusual activity as a sentiment read) is fine. Placing an option order is not.
+- Only the user reopens this.
+
 ### Universe — never sector-lock
 
 - **Index leveraged:** TQQQ, SPXL, TNA
@@ -143,9 +152,21 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 - Set a **realistic target at entry** — roughly **+8% to +12%** on a 2x sector ETF — separate from any far tail target.
 - **On reaching it: BANK IT**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
-- **Horizon: 1–2 days.** If the target is not reached and event risk approaches, exit rather than drift.
 - **Never let the stop become the only exit** — that is drift.
 - Profit-taking is **manual** at checkpoints, because the stop occupies the one resting-order slot. That is the correct allocation: the downside must work unattended; the upside can wait for a 30-minute check.
+
+### Holding period
+
+- **Default: 1–2 days.** This is the working assumption for every trade.
+- **Absolute ceiling: 1 trading week.** Only for an *exceptional* opportunity, and you must say at entry that you are invoking it and why. "It's still going up" is not exceptional.
+- **State the intended maximum hold at entry**, so it is a commitment rather than a running negotiation.
+- If the target is not reached and event risk approaches, **exit rather than drift** — the horizon is a ceiling, not a target to fill.
+
+### Scaling out — once more than one share is affordable
+
+- With a single share, the only choices are all-in or all-out. **Once the balance supports 2+ shares, take partial profits:** bank roughly half at target, let the remainder run with the stop ratcheted up behind it.
+- This is the one thing a single share structurally cannot do, and it serves "lock in profits" directly — a realised gain on half the position, with continued exposure on the rest.
+- The remainder is still governed by every other rule: same stop discipline, same exit criteria, same horizon ceiling.
 
 ---
 
