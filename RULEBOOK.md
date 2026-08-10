@@ -189,9 +189,25 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 - **Hitting the target closes the WHOLE position**, at any share count. Do not bank half and let a remainder run. Do not keep a "runner." **Multiple shares change the dollar amount, never the decision.**
 - The only thing that keeps you in past target is the §7 override: **named new information** supporting more upside. Momentum is not new information. Reluctance to sell a winner is not new information. Neither is "there's still room."
-- **If the override does fire and you hold 2+ shares, bank half and hold the rest** rather than holding all of it. Staying in on new information is already permitted; taking half off while doing so is strictly more conservative than the override allows, and it serves "lock in profits." This is the *only* circumstance for a partial sell.
+- **If the override does fire and you hold 2+ shares, bank half and hold the rest** rather than holding all of it. Staying in on new information is already permitted; taking half off while doing so is strictly more conservative than the override allows, and it serves "lock in profits." This is the *only* circumstance for a partial sell — see the lifecycle below.
 - **Every other exit rule is unchanged and still fires first** — stalled momentum, reversal, flipped risk/reward, the 7:30pm deadline, an approaching event (§8), the ratcheting stop (§6), and the pre-commit rule (§8). Reaching target is not the only way out; it is the way out that requires no further judgment.
 - Rationale: a runner reintroduces exactly the drift these rules exist to prevent. It converts a decided exit into an open-ended hold, and on a decaying leveraged instrument the remainder is the part most likely to give the gain back.
+### The override lifecycle — what happens after you bank half
+
+Approving the override is not permission to stop deciding. It starts a clock that you re-justify at every single checkpoint.
+
+1. **Sell half AT THE MOMENT the override is approved** — not at the next checkpoint, not once it runs further. The gain is locked when the decision to stay is made, or the whole point is lost.
+2. **RAISE THE STOP ON THE REMAINDER TO AT LEAST THE TARGET PRICE.** This is mandatory and immediate. You chose not to sell at target; the remainder must therefore not be allowed to come back *below* target. Anything less means the override can end up worse than simply having obeyed the target, which is unacceptable.
+3. **Re-justify the override at EVERY checkpoint, out loud.** Name the new information again and say whether it is still true, still unpriced, and still pointing up. **Silence is not continuation** — an override you did not restate is an override that has expired, and the remainder gets sold.
+4. **Sell the remainder the moment ANY of these is true:**
+   - the named new information is **exhausted, contradicted, or now priced in**;
+   - **any** §8 exit criterion fires — stalled momentum, reversal, flipped risk/reward, the 7:30pm deadline, an approaching event;
+   - the ratcheted stop is hit;
+   - a **pre-committed condition** fires (§8);
+   - the **horizon ceiling** (§7) is reached.
+5. **You may NOT override the override.** One extension per trade, full stop. When the remainder's exit condition fires, it is sold — you do not name a second piece of new information and extend again. Serial extension is an infinite hold with extra steps, and it is the single most likely way this rule gets abused.
+6. **Log both fills separately** in the trade log, with the override reason recorded. The trade's result is the blended P&L of both, reported honestly — if the override earned less than a clean exit at target would have, **say so plainly.** That is the only way to find out whether overrides are worth taking at all, and it is the one legitimate exception to §9's no-post-exit-tracking rule, because it measures a *decision you made*, not tape you didn't act on.
+
 - **UNVERIFIED MECHANIC — only relevant in the override case.** §10's one-resting-order limit was proven with a single share, where a resting stop drove `sharesCanSell` to 0. Whether a stop on *part* of a multi-share position leaves the remainder sellable is **not yet known**. Before any partial sell, confirm with `review_equity_order` that it is accepted while a stop rests on the rest. **If it is not**, the sequence is cancel the stop, sell half, immediately replace the stop on the remainder — done deliberately, since the position is unprotected in between. Do not discover this mid-trade.
 
 ---
@@ -225,6 +241,8 @@ Once a position is **closed**, do **not** report, track, or comment on what the 
 That is **outcome bias** — the quality of an exit is fixed by the information available *at* the decision, not by the next few minutes of tape. It is also actively harmful: logging "it went up after I sold" trains hesitation into future exits and destroys the discipline these rules exist to enforce.
 
 **Green is green. If the system says sell, sell and move on — we are not married to these leveraged plays.**
+
+**One narrow carve-out: the profit-target override (§7).** If you held past target on named new information, you must compare the realised result against what a clean exit at target would have returned. That is **not** outcome bias, because the target price was actually reached and observed *at the moment of the decision* — it is a real alternative you consciously declined, not subsequent tape you couldn't have acted on. Report it honestly, including when the override lost money relative to obeying the target. Nothing else gets this treatment.
 
 The legitimate version of this check is **aggregate**, and it is already captured by the month-end metric *average winner ≥ 2× average loser*. If exits are systematically premature, that ratio degrades and it will show up there. Single-trade post-exit price action is noise pretending to be feedback.
 
