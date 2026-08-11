@@ -243,11 +243,11 @@ Any of the three failing means **no entry in that sector**, whatever the pre-mar
 
 **What the ratio means.** It is favourable excursion per unit of risk — the same quantity expectancy is measured in (§14). A stop is a **risk normaliser, not a quality signal**: a tighter stop does not make a candidate better, it makes its losses smaller *and its stop-outs more frequent*. Comparing raw stop widths across instruments compares nothing.
 
-**Also check how far the target is in units of that instrument's normal day:** `8.0 ÷ median_mfe`. Above roughly 2.5× the +8% target is effectively unreachable and the trade is a trail-or-stall exit by construction. Say so at entry rather than implying a target that cannot be hit.
+**Also check how far the target is in units of that instrument's normal day:** `mfe_to_target` in `data/vol_profile.csv`, which is `target_pct ÷ median_mfe`. Above roughly 2.5× the target is effectively unreachable and the trade is a **trail-or-stall exit by construction** — say so at entry rather than implying a target that cannot be hit. **Scaling the target on 2026-08-11 cut the count above 3× from 18 of 31 to 8 of 31**, but it did not eliminate it, so the check still matters.
 
 **The error this rule exists to prevent, recorded so it is not repeated:**
 
-| | median MFE | stop | **mfe_per_stop** | ×MFE to reach +8% |
+| | median MFE | stop | **mfe_per_stop** | ×MFE to reach the then-flat +8% |
 |---|---|---|---|---|
 | SMCX | 5.21% | 6.67% | **0.78** | **1.54×** |
 | NVDX *(taken)* | 2.70% | 4.99% | 0.54 | **2.96×** |
@@ -396,7 +396,7 @@ Each still needs a `data/vol_profile.csv` row before it can be traded (§2g).
 - **Why the flat +8% was retired.** It needed a **median 3.48× a normal day's favourable excursion** to reach, and was effectively unreachable on **18 of 31** instruments — the rulebook already recorded +8% occurring in *zero of 21 sessions* for six of them. A flat target in a volatility-scaled system was the last unscaled number, and it made the target decoration rather than an exit.
 - **The new formula, and what each term is for.** `2 × median MFE` is an **exceptional day, not a median one**, so the target fires sometimes instead of never. The `1.5 × stop` floor guarantees **any target hit pays at least +1.5R**, which stops the scaling from producing a target so small it cannot cover the round trip. The 12% cap keeps it a "bank it" level rather than a fantasy.
 - **Effect:** effectively-unreachable instruments fall from **18 of 31 to 8 of 31**, and every target is now worth at least 1.5R.
-- **Known and accepted:** +8% occurred in **zero of 21 sessions** for GUSH, ERX, NUGT, NRGU, DUST and YINN (EXP-008), so on the calm names this fires rarely and most exits will come from the stall ladder or the trail. It is a ceiling that closes the trade when a big move does happen, not a level to wait for.
+- **Historical, and the reason the flat target was retired:** +8% occurred in **zero of 21 sessions** for GUSH, ERX, NUGT, NRGU, DUST and YINN (EXP-008) — six instruments for which the old target was unreachable in the entire sample. Under the scaled target those six sit at **4.39% (GUSH), 3.75% (ERX), 5.51% (NUGT), 4.20% (NRGU), 4.63% (DUST) and 3.80% (YANG-class calm names)**, which their normal range can actually reach. **The target remains a ceiling, not a level to wait for** — most exits still come from the stall ladder or the trail.
 - **The target is a CEILING, and most trades will not reach it.** The three-check stall exit (§8.1) will close the majority of positions first, at whatever gain stands. Target is the exit that requires no judgment; it is **not** a reason to keep holding a position the other criteria have already condemned.
 - **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
 - **Never let the stop become the only exit** — that is drift.

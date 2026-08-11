@@ -192,7 +192,9 @@ min stop mv = clamp(0.25 x median adverse excursion, 0.20%, 1.00%)
 
    **THE STALL IS MEASURED AT THE CHECKPOINT PRICE ONLY. What happens between checks is ignored.** Governor decision 2026-08-11, replacing intra-window highs from bars.
 
-   **A stalled check** = a 30-minute checkpoint whose **price at that moment** failed to exceed the running high by more than **0.3%**. Marginal ticks of +0.05% are not progress; they are a stall pretending otherwise.
+   **A stalled check** = a 30-minute checkpoint whose **price at that moment** failed to exceed the running high by more than **`stall_threshold_pct` from `data/vol_profile.csv`** — per-instrument, `clamp(0.15 × median favourable excursion, 0.10%, 1.00%)`. Marginal ticks are not progress; they are a stall pretending otherwise.
+
+   - **The flat 0.3% was retired 2026-08-11.** It was 33% of a calm instrument's whole daily range (YANG, median MFE 0.91%) and 5% of a volatile one's (SOXS, 6.29%), so the stall fired far more readily on calm names — the exact inverse of what volatility scaling exists to do. Current values run **0.14% (YANG) to 0.94% (SOXS)**.
 
    - **`run_high` is the highest CHECKPOINT price seen, not the highest price traded.** It starts at the fill price and advances only when a check prints above the threshold.
    - **A spike between checks is not progress.** If price ran +2% at 10:12 and was back to flat by the 10:30 check, that is a **stall**. The agent exists only at checkpoints — a high it never saw and could never have sold into is not a gain it could have captured. Counting it as progress credited the position with something unreachable.
