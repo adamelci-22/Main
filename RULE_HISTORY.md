@@ -5,7 +5,49 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 02:49 UTC · 13 changes to the rulebook.
+Generated 2026-08-11 02:55 UTC · 14 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `15fc044`
+
+**Separate history from policy: add the data layer**
+
+Acts on review feedback identifying the central architectural confusion in
+this design: it conflated "the LLM must have no memory" with "the system
+must have no memory." The first is a fact about the operator. The second
+was an accident, and it meant history lived inside the policy file mixed in
+with the rules.
+
+Five stores, separated by lifecycle and reader:
+
+- RULEBOOK.md now holds rules and verified mechanics only.
+- data/trades.csv, append-only, one row per closed trade with 26 fields --
+  MAE and MFE during the hold, time held, both slippage figures, catalyst
+  type and direction, exit reason, stall count at exit, and the rulebook
+  commit in force at the time. Seeded with the Aug 10 GUSH trade; its
+  MAE/MFE are recorded as unknown rather than backfilled, since they
+  predate the observation layer.
+- data/observations.jsonl, append-only, one record per checkpoint while
+  holding plus an entry snapshot. Explicitly features, not rules -- to be
+  collected now and reasoned about only once there is evidence.
+- EXPERIMENTS.md, with a state lifecycle where only the human governor can
+  move an entry to APPROVED, a requirement to state sample size and how
+  many hypotheses were tested against the same data, and an exemption so
+  safety defects are fixed immediately rather than queued as experiments.
+  Seeded with EXP-001, the open question of whether the stall exit belongs
+  at three checks or four.
+- RULE_HISTORY.md, GENERATED from git log by tools/gen-rule-history.sh and
+  never hand-edited. The review proposed maintaining it by hand; generating
+  it instead avoids a second source of truth that would eventually
+  contradict the commits it describes.
+
+Also removed all cached state from the rulebook. Loss streak and trade
+history are read from trades.csv, deposited capital is recomputed from the
+broker each morning. A cached copy is a copy that goes stale, and the
+derivation is a single file read.
+
+Four stale references to the old in-file trade log were repointed.
 
 ---
 

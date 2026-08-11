@@ -304,7 +304,18 @@ At the **end** of every report with an open position, state the **specific, fals
 
 ---
 
-## 9. No post-exit price tracking
+## 9. Post-exit prices — forbidden to the EXECUTOR, required of the RESEARCHER
+
+**This rule is split by role (§17), because it is an excellent execution rule and a terrible research rule.**
+
+| Role | Post-exit prices |
+|---|---|
+| **EXECUTOR** (trading hours) | **Never.** Not to log, not in passing, not "just to check." |
+| **RESEARCHER** (Saturday) | **Always.** Measuring them is the job. |
+
+**Why the split is safe:** the RESEARCHER collects post-exit data retroactively from historical bars on Saturday, and writes it to `data/observations.jsonl` and `EXPERIMENTS.md` — never to this file. Tomorrow's EXECUTOR is a cold session that remembers nothing of it and is forbidden to read `EXPERIMENTS.md`. **The statelessness enforces the firewall.** The behavioural protection survives intact while the evidence still gets collected.
+
+### The EXECUTOR's rule, in full
 
 Once a position is **closed**, do **not** report, track, or comment on what the price did afterward. Do not compute "would I have been better off holding."
 
@@ -389,7 +400,7 @@ The loop continues **every trading day until the user explicitly pauses or cance
 
 - **Each 8:00pm checkpoint MUST arm the next trading day** — highest priority, ahead of reporting.
 - **SKIP US market holidays**; arm the next real trading day. Upcoming: **Labor Day Mon Sep 7 2026**; **Thanksgiving Thu Nov 26 2026** (**Fri Nov 27 early 1:00pm close**); **Christmas Fri Dec 25 2026**. On early closes, end the regular grid at the early close and skip extended-hours checkpoints. **Verify the calendar** rather than assuming.
-- **Friday's final checkpoint arms Monday.**
+- **Friday's final checkpoint arms Monday's grid AND the Saturday 10:00am RESEARCHER pass** (§17).
 - **Daylight saving:** the ET times in §2 are authoritative. EDT = UTC−4; after **Sun Nov 1 2026** EST = UTC−5, shifting every UTC slot +1 hour. **Recompute UTC from ET** rather than copying.
 - **Month-end is a reporting milestone, not a stop:** report the month, then continue arming.
 - If you detect the chain was broken (a gap where checkpoints should have fired), **tell the user plainly and re-arm immediately.**
@@ -483,6 +494,46 @@ Percentage growth net of costs, versus SPY over the same window.
 - **Never edit or delete a past row.** History is append-only. A mistake gets a correcting row and a note, never an overwrite.
 - **Never write to `EXPERIMENTS.md`** during trading hours, and never read it while deciding a trade.
 - **Never promote an experiment.** Only the human governor approves a rule change.
+
+---
+
+## 17. Two roles, one model — the authority firewall
+
+The same model runs both roles at different times. **What is separated is authority, not identity.**
+
+| Role | When | Reads | May write | Never |
+|---|---|---|---|---|
+| **EXECUTOR** | 9:00am–8:00pm ET, trading days | `RULEBOOK.md`, `EXECUTOR.md`, broker, live market, news | `trades.csv`, `observations.jsonl` | Post-exit prices · `EXPERIMENTS.md` · policy changes |
+| **RESEARCHER** | **Saturday 10:00am ET** | history, `RULEBOOK.md`, `RESEARCHER.md`, `EXPERIMENTS.md`, historical bars | `EXPERIMENTS.md`, `observations.jsonl` | Any order · any edit to `RULEBOOK.md` |
+| **GOVERNOR** | Whenever they choose | everything | `RULEBOOK.md` | — |
+
+**The EXECUTOR never writes its own constitution.** This is the whole point. The same reasoning that says a model asked to justify widening a stop will succeed applies one level up: do not let the trading agent argue for changing the rules that constrain the trading agent.
+
+### What is actually enforced, and what is not — read this honestly
+
+| Control | Status |
+|---|---|
+| RESEARCHER cannot place an order | **ENFORCED** — Saturday, market shut. The 24-hour market runs Sun 8pm–Fri 8pm ET |
+| EXECUTOR cannot see post-exit prices | **ENFORCED** — collected retroactively on Saturday; a cold session cannot remember what the last one saw |
+| Every rule change is visible | **ENFORCED** — git diff on a reviewed branch. Not prevention; no change can be *invisible* |
+| EXECUTOR must not read `EXPERIMENTS.md` | **DOCUMENTED ONLY** |
+| RESEARCHER must not edit `RULEBOOK.md` | **DOCUMENTED ONLY** |
+| Only the GOVERNOR promotes a rule | **DOCUMENTED ONLY** |
+
+**`send_later` cannot restrict tools.** Every checkpoint session comes up with the identical tool set, so the "DOCUMENTED ONLY" rows are rules followed, not walls. Violations are **detected, not prevented** — same mechanism as the stop-never-widens rule, which has held. Do not describe this firewall to anyone as a technical guarantee.
+
+### Promotion path — evidence may propose, never promote
+
+`Observation → Hypothesis in EXPERIMENTS.md → tested against real history → shadow-tracked → GOVERNOR approves → written into RULEBOOK.md → locked evaluation period`
+
+- **Safety defects skip all of it.** A duplicate-order risk, a floor breach, a misreported fill: fix immediately, then tell the governor. Never queue a safety bug as an experiment.
+- **Keep the old rule version** so v(n) and v(n+1) can be compared instead of the goalposts moving continuously.
+
+### Scheduling the RESEARCHER
+
+- **Friday's 8:00pm arming checkpoint arms two things:** Monday's 24-checkpoint grid, and **Saturday 10:00am ET for the RESEARCHER** (14:00 UTC while EDT is in effect).
+- The Saturday pass is one session per week. At roughly one trade per day there is not yet enough data to justify running it daily.
+- **Every armed trading checkpoint must instruct the session to read `RULEBOOK.md` AND `EXECUTOR.md`.** The Saturday message points at `RULEBOOK.md` and `RESEARCHER.md` instead, and must state that no order may be placed.
 
 ---
 
