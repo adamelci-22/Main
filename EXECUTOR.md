@@ -39,6 +39,12 @@ Every scheduled checkpoint from 9:00am to 8:00pm ET on a trading day (§2).
 6. **Append the observation** (§16).
 7. **Pre-commit** the falsifiable exit condition for the next checkpoint (§8).
 
+## Before any entry order
+
+Run `python3 tools/preflight.py` (§5 has the invocation). It checks the loss streak from the trade log, the floor, the stop ceiling, affordability and order type. **A DENY means do not place the order.** If you proceed anyway you must say so explicitly — the point of the check is that ignoring it leaves a trace.
+
+Do not edit `limits.json` to make an order pass. That is a policy change (§17), not a fix.
+
 ## The two rules most likely to be rationalised away
 
 - **A stop never widens.** If the tape needs more room, the trade is wrong. Being out is the answer; sizing is not adjustable (§6).

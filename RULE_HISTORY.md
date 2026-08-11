@@ -5,7 +5,60 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 03:17 UTC · 18 changes to the rulebook.
+Generated 2026-08-11 03:24 UTC · 19 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `824270a`
+
+**Decouple data resolution from wake cadence; stall clock on market time**
+
+The review identified a circularity: checkpoints were 30 minutes apart, the
+stall was defined from 30-minute bars, and three stalls forced an exit -- so
+the exit rule's timescale was an artifact of the schedule rather than a claim
+about the market.
+
+The correctness fix has to come first, because decoupling the cadence breaks
+the stall rule otherwise. A stall is now measured in 30-minute windows of
+MARKET TIME, anchored to the clock at :00 and :30, built by aggregating
+5-minute bars. Waking more often no longer advances it. Without this,
+switching to a 15-minute cadence would have fired the exit after 45 minutes
+instead of 90 -- silently a different rule with no edit to the rule.
+
+Bars are now always collected at 5-minute resolution and aggregated up,
+deliberately so the window length stays a free parameter rather than a
+property of the data.
+
+Cadence becomes state-dependent:
+
+- Baseline armed each evening assumes flat: 13 checkpoints, dense through
+  the 9:45-11:00 preferred entry window, then hourly, since after 11:00 an
+  entry must clear a higher bar anyway and a flat checkpoint can only report
+  that nothing qualified.
+- On entry, the entering checkpoint arms 15-minute fill-ins for the rest of
+  regular hours. Stated reason: a ratchet threshold crossed at 10:07 sits
+  unacted-on for 23 minutes at 30-minute spacing.
+- Carrying overnight arms the holding schedule for the next day.
+
+This is cheaper, not more expensive. A flat day costs 13 checkpoints instead
+of 24; a day that enters at 9:45 and exits at 1:00 runs dense for three hours
+and then early shutdown deletes the rest. Only one round trip per day is
+possible, so the dense period is always short and bounded.
+
+The baseline is deliberately sufficient to manage a position on its own, so a
+failure to densify degrades coverage rather than removing it.
+
+cadence_min is recorded on every observation so the question can be settled
+later. Seeded EXP-005 (is 30 minutes the right window -- noting the value is
+inherited from the old checkpoint spacing and has no empirical basis) and
+EXP-006 (does cadence change outcomes, noting more frequent is not
+automatically better since each extra check is a chance to talk oneself out
+of a sound position). Both are answerable by replay because 5-minute bars are
+stored, and both carry a warning that testing several parameter values
+against a small history is several chances to find a winner by luck.
+
+Takes effect from the next arming checkpoint; days already armed on the fixed
+grid run as armed.
 
 ---
 

@@ -26,6 +26,31 @@ Grow the account as fast as possible in a "nothing to lose" mindset, using **lev
 - **Rules currently dormant that activate with size**, and which must not be quietly dropped for being unused today: partial sells in the override case (§7, needs 2+ shares), and most of the leveraged universe (§4, unaffordable as whole shares at present).
 - Prefer the choice that would still be correct at 10x. Where the small-account answer and the at-scale answer differ, **say so explicitly** rather than silently optimising for today.
 
+### ⚠ SANDBOX-ONLY RISK MODEL — NOT SCALABLE
+
+**The risk model is the one part of this system that must NOT be carried to a larger account.** Design-for-scale above applies to rules and metrics. It does **not** apply to sizing, and pretending otherwise would be the most expensive mistake in this document.
+
+**The arithmetic, stated plainly.** The whole balance sits in one leveraged instrument, so a 5% stop is roughly **5% of the account** and a 7% stop is roughly **7%**, before slippage or a gap:
+
+| Event | Account impact |
+|---|---|
+| Three consecutive −5% losses | **−14.3%** |
+| Three consecutive −7% losses | **−19.6%** |
+| −25% drawdown | a **flag**, not a halt (§14) |
+| Actual hard stop | **50% of deposited cash gone** (§10) |
+
+**At $40.84 this is acceptable because it is tuition.** The purpose is to test a process where being wrong is cheap. It is not a risk framework and must never be described as one.
+
+**What must change before this manages meaningful money:**
+
+- **Position size becomes an independent risk control.** Risk per trade drops to a small fraction of the account — conventionally well under 2% — and stop distance stops being the only lever.
+- **§6's line "stop distance is the only risk lever there is" becomes false and must be deleted**, not reinterpreted. It is a true statement about a $40 sandbox and a dangerous one about anything else.
+- **Concentration limits appear.** One instrument holding 100% is a sandbox artifact.
+- **The −25% drawdown flag becomes a brake**, not a diagnostic.
+- **The 50%-of-deposits floor becomes far tighter.** Losing half of real capital is not a backstop, it is a catastrophe.
+
+**Do not raise sizing incrementally as the balance grows.** The change from "all-in" to "sized" is a redesign that the governor decides deliberately, not a threshold to drift across.
+
 ---
 
 ## 1. Step Zero — trigger hygiene (do this FIRST, every checkpoint)
@@ -192,6 +217,23 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 ## 5. Order execution
 
+### RUN THE PREFLIGHT CHECK FIRST — before every entry
+
+```
+python3 tools/preflight.py --symbol X --qty N --limit P --stop S \
+    --balance B --deposits D --open-positions 0 --resting-orders 0
+```
+
+Checks, deterministically, against `limits.json`: the loss streak **computed from `data/trades.csv`** rather than remembered · the 50%-of-deposits floor · one position and one resting order · a stop present and inside the 7% ceiling · affordability · order type · universe membership. Exit 0 = ALLOW, 1 = DENY.
+
+- **Its most valuable job is the circuit breaker.** The streak is derived from the trade log, not recalled — a cold session cannot miscount it, and cannot talk itself into a different number.
+- **A DENY means do not place the order.** Overriding one is a policy violation; if you proceed regardless you must say so in as many words, so the transcript records it.
+- **Changing a value in `limits.json` is a POLICY CHANGE** and follows the §17 promotion path. Do not edit it to make an order pass.
+
+> **Honest limit: this is a TRIPWIRE, NOT A GATE.** Broker orders go through tools the script cannot intercept, so nothing forces it to run and nothing stops a refusal being ignored. What it buys is that the arithmetic becomes deterministic instead of a judgement, and that **skipping the check or overriding it is visible** rather than invisible. Real enforcement would need the order path to run through code that can refuse — which is not available here. Do not describe this as a hard gate.
+
+### Then
+
 - `review_equity_order` before placing.
 - **Marketable limit, never plain market** — price protection.
 - **Verify the fill from the order response.** Never report a fill you did not confirm.
@@ -215,7 +257,7 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 - **HARD CEILING: 7%. Never wider, for any reason, on any instrument.** If the setup appears to need more than 7% of room, **it is not a setup** — decline it. Do not enter and widen.
 - **State the stop price and the percentage at entry**, in the same breath as the entry itself. Placement is not a follow-up decision to be negotiated once the position is open. That was the Aug 10 failure: no number existed to check my judgment against, so it got argued out in chat across three messages while the position was live.
 - **Why these numbers:** paired with the +8–12% target, a 5% stop is what produces a winner worth more than a loser. A 3–4% stop sits inside ordinary leveraged-ETF noise and stops out trades that were right; past 7% a single loss cancels a good win.
-- Sizing is all-in on one position, so **stop distance is the only risk lever there is.** Treat it accordingly.
+- Sizing is all-in on one position, so **stop distance is the only risk lever there is.** Treat it accordingly. **This is true only of the sandbox** — see the sandbox-only risk block in §0, which requires this line to be deleted rather than reinterpreted once the account holds meaningful money.
 
 ### The ratchet ladder — schedule is the floor, structure may be tighter
 
@@ -254,7 +296,12 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 ### Holding period
 
-- **Default: 1–2 days**, but understand what the stall ladder does to this in practice. **A three-check stall sells the position**, so an overnight hold now happens only when the position is still making new highs into the close. **This is predominantly a day-trading system**, with swing holds as the exception rather than the plan — a deliberate consequence of the §8.1 ladder, accepted because a stalled leveraged position decays and because overnight gaps cannot be protected at all.
+- **DEFAULT FOR A LEVERAGED OR INVERSE INSTRUMENT: CLOSE THE SAME DAY.** Overnight is not the default and is not what happens when a day trade fails to exit.
+  - **Leveraged ETFs target a *daily* multiple and reset daily.** Held across multiple days, the return can diverge substantially from the simple multiple, and the divergence is worst precisely when volatility is high — which is when we are most likely to be holding one.
+  - **Overnight is also completely unprotected** — no stop can rest (§6).
+- **Carrying overnight is a SEPARATE DECISION requiring a named reason, stated at the 3:30pm checkpoint** while a stop still functions. Acceptable: the thesis is a multi-day catalyst that has not played out and the position is still making new highs into the close. **Not acceptable: "the exit criteria did not fire."** That is drift, and it is how an unintended overnight hold happens.
+- **The one-week ceiling does not apply to leveraged instruments** without evidence that a multi-day hold works here. Treat it as available for ordinary equities and ETFs only.
+- **Practical effect:** this is **predominantly a day-trading system**, with swing holds as a deliberate exception rather than the plan. The §8.1 stall ladder already produces that outcome; this states it as intent rather than leaving it as a side effect.
 - **Absolute ceiling: 1 trading week.** Only for an *exceptional* opportunity, and you must say at entry that you are invoking it and why. "It's still going up" is not exceptional.
 - **State the intended maximum hold at entry**, so it is a commitment rather than a running negotiation.
 - If the target is not reached and event risk approaches, **exit rather than drift** — the horizon is a ceiling, not a target to fill.
@@ -367,6 +414,23 @@ The legitimate version of this check is **aggregate**, and it is already capture
 
 ## 10. Account mechanics — verified facts
 
+### Rule layers — where a new rule belongs
+
+Rules live at four levels. **A rule stated at the wrong level is either too broad to be true or too narrow to be found.**
+
+| Layer | Scope | Examples |
+|---|---|---|
+| **Universal** | Everything, always | Capital protection · order verification · stops ratchet up only · one resting order · loss floor · logging obligations |
+| **Asset class** | Equity · ETF · **leveraged/inverse ETF** | Daily reset and decay · same-day close default (§7) · overnight unprotectable |
+| **Category** | Energy · semis · gold miners · crypto · index | Which catalysts matter · which proxy to compare against (§16) |
+| **Instrument** | A single ticker | Overnight tradability · spread behaviour · `position_closing_only` restrictions |
+
+- **Place a new rule at the narrowest level where it is actually true.** "Leveraged ETFs decay in chop" is asset-class. "JDST fractional is closing-only" is instrument. Stating the second as a universal rule would be false; stating the first as an instrument rule would mean rediscovering it for every ticker.
+- **The category layer is mostly empty and that is correct for now.** Energy responds to inventories, OPEC and geopolitics; gold miners to rates, the dollar and real yields; agriculture would respond to planting calendars, USDA reports and weather. **Those models are not built and must not be improvised at a checkpoint.** They arrive through `EXPERIMENTS.md` and governor approval, with evidence, one category at a time.
+- **Do not collapse domain knowledge into the generic gate.** "Leading sector + breadth + catalyst + trend" is what the system has today, and it deliberately throws away domain information. That is a known limitation, not a design goal.
+
+### Verified facts
+
 - **NO SHORT SELLING.** This cash account cannot short. Verified Aug 10: a sell with `sharesOwned=0` is rejected with `EQUITY_MAX_SELL_SHARES_EXCEEDED` (`sharesCanSell: 0`). `short_selling_tradability: tradable` describes the **instrument**, not account eligibility. Do not waste a setup attempting it. **Express bearish views via inverse ETFs bought long.**
 - **Inverse caution:** inverse leveraged ETFs decay in chop *and* carry a structural headwind since indices drift up. Day-trade or very short swing only — a faster exit than an equivalent long, never a multi-day hold.
 - **Only ONE resting order per position.** A pending sell locks the share (`sharesCanSell: 0`), so a stop and a take-profit cannot coexist.
@@ -390,7 +454,14 @@ Cash account, **T+1**.
 
 - Sale proceeds are **unsettled until the next business day**, so after an exit only previously-settled cash is spendable. **Rotation is not possible same-day** — an exit means going flat and staying flat for the session.
 - Buying with **settled** cash and selling the same day is fine and **not** a GFV. A **GFV** is selling something bought with **unsettled** proceeds. **3 GFVs = 90-day restriction.**
-- **Cash accounts are exempt from PDT** — no $25k minimum, so daily trading is permitted.
+- **Cash accounts are exempt from PDT** — no $25k minimum, so daily trading is permitted. **This is verified for THIS cash account and nothing else.**
+
+### ⚠ Do not carry these settlement facts into a margin account
+
+- Everything above is verified against a **cash** account. **Pattern-day-trader rules apply to margin accounts, not this one**, so none of the PDT reasoning here has been tested against margin mechanics.
+- **A reviewer has flagged that FINRA's margin day-trading rules changed in June 2026 with a firm transition period running into 2027.** *This claim is unverified* — it postdates what can be confirmed from here, and it has not been checked against a primary source.
+- **Therefore: if this account is ever converted to margin, or a margin account is added, re-verify the day-trading and settlement rules from primary sources BEFORE the first trade.** Do not port a single assumption from this section.
+- The general principle: **settlement and account-type rules are external facts with expiry dates.** They are not derivable and they change. Verify, cite, date.
 
 ---
 
@@ -704,7 +775,20 @@ The same model runs both roles at different times. **What is separated is author
 `Observation → Hypothesis in EXPERIMENTS.md → tested against real history → shadow-tracked → GOVERNOR approves → written into RULEBOOK.md → locked evaluation period`
 
 - **Safety defects skip all of it.** A duplicate-order risk, a floor breach, a misreported fill: fix immediately, then tell the governor. Never queue a safety bug as an experiment.
-- **Keep the old rule version** so v(n) and v(n+1) can be compared instead of the goalposts moving continuously.
+
+### POLICY VERSION: v1.0 — increment on every policy change
+
+**Bump the minor version on any change to a rule, threshold or limit.** Record it in the commit. `rulebook_commit` is already stamped on every trade row (§16), so any trade can be traced to the exact policy it ran under — the version number is the human-readable handle for the same thing.
+
+### The locked evaluation period — the anti-overfitting rule
+
+**After a rule changes, it may not change again until at least 20 closed trades have run under the new version** — or the governor explicitly overrides.
+
+- **Why:** without this, the loop becomes *trade → lose → adjust rule → trade → lose → adjust rule*, which is a sophisticated machine for fitting yesterday. Repeatedly selecting the variant that performed best on a small history produces a strategy that looks excellent in review and has no predictive content whatsoever. This is a well-documented failure in quantitative finance, not a hypothetical.
+- **A rule changed three times in a week has never been tested.** It has only been fitted. And there is no way afterwards to attribute any outcome to any version.
+- **Exempt:** safety defects, factual corrections, and anything the governor directs in conversation.
+- **Honest note on precedent.** The stall rule went through three versions in a single session on 2026-08-11, before any trade ran under any of them. That was acceptable *only* because it was pre-deployment design work on an untested rule, driven by reasoning about arithmetic rather than by results. **Once live trades exist, that pace becomes forbidden** — it would be indistinguishable from chasing noise.
+- **20 trades is roughly a month** at one round trip per day. That is deliberately slow. Slow is the point.
 
 ### Scheduling the RESEARCHER
 

@@ -1,0 +1,34 @@
+{
+  "_comment": "Machine-readable hard limits. Read by tools/preflight.py before any order. Changing a value here is a POLICY CHANGE and must follow the RULEBOOK.md section 17 promotion path.",
+  "policy_version": "1.0",
+  "stop": {
+    "default_pct": 5.0,
+    "max_pct": 7.0,
+    "min_pct": 1.5,
+    "required": true
+  },
+  "floor": {
+    "pct_of_deposits": 50.0
+  },
+  "circuit_breaker": {
+    "consecutive_losses": 3
+  },
+  "position": {
+    "max_open": 1,
+    "max_resting_orders": 1
+  },
+  "order": {
+    "allowed_types": ["limit"],
+    "market_allowed_only_for_fractional": true
+  },
+  "universe": [
+    "TQQQ", "SPXL", "TNA",
+    "SOXL", "GUSH", "ERX", "FNGU", "BULZ", "LABU", "NUGT", "GDXU", "NRGU", "YINN",
+    "NVDL", "TSLL", "CONL", "MSTX",
+    "SQQQ", "SOXS", "DUST", "SPXS", "SDOW", "TZA", "ERY",
+    "BITX", "ETHU", "RIOT", "MARA",
+    "UVIX", "VXX"
+  ],
+  "universe_note": "Any liquid high-beta single name with a catalyst is also permitted by RULEBOOK section 4. preflight.py warns rather than denies on an off-list symbol, since the list is not exhaustive.",
+  "forbidden_asset_classes": ["option", "future", "crypto_spot", "short_sale"]
+}
