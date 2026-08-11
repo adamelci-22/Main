@@ -101,7 +101,7 @@ Convert each ET time to UTC using the offset in effect.
 - **No densification on entry.** Entering a trade does not change the clock.
 - **Carrying overnight:** 8:00pm arms the standard schedule; extended slots get armed the following afternoon if still held.
 - **§12 volatility escalation** is the one authorised off-grid exception.
-- **Record the cadence in force** in every observation (§16).
+- **State the cadence in force** in the report (observation records are suspended, §16).
 
 > ### ⚠ THE CADENCE IS NOW LOAD-BEARING ON THE EXIT RULE. Do not change it casually.
 > The stall counts **checkpoints** (§8.1), so **the cadence IS the stall timescale.** At a 10-minute cadence three stalls would fire after 30 minutes instead of 90 — a different exit rule wearing the same words. **If the cadence is ever changed, re-derive `stall.checks_to_sell` in the same breath**, or the exit rule changes without anyone deciding to change it.
@@ -453,69 +453,20 @@ The loop continues **every trading day until the user explicitly pauses or cance
 
 ---
 
-## 14. How success is measured — monthly, rolling
+## 14. How success is measured
 
-A week is ~3–4 trades and is noise. A month is ~12–15 and lets the win/loss ratio mean something. **Even a month is not statistical proof** (that needs 30–100+ trades). **Never claim edge from it.**
+> **⏸ Measurement is DEFERRED while minimal logging is in force (§16).** The trade log still accumulates, so this becomes computable the moment the governor resumes analysis. Nothing here is abandoned; it is simply not run daily.
 
-### Process tests — highest weight, reported continuously as they occur
-
-1. A clean loss taken without excuse-making
-2. A stop executed
-3. A correct no-trade day, stated as such
-4. A profit-take executed while the trade is still running — **✅ done Aug 10**
-5. A whole choppy *stretch* sat out without forcing trades
-6. A pre-committed event exit honoured **when it cost potential upside**
-
-### Statistics — each month-end
-
-### The primary metric is EXPECTANCY, in R
-
-**R is the risk accepted at entry** — the initial stop distance in percent, fixed at the moment of entry and never recalculated afterwards. A trade's result in R is:
-
-```
-R multiple = (exit% − entry%) ÷ initial stop distance%
-```
-
-So a −5% initial stop and a +3.25% exit is **+0.65R**. Being stopped out at the initial stop is **−1.0R**. A scratch at breakeven is **0R**. Using *initial* risk as the denominator is deliberate: it measures return against the risk that was actually accepted, so ratcheting the stop to breakeven correctly shows up as a smaller loss rather than as smaller risk.
-
-```
-Expectancy per trade = (win rate × avg winner in R) − (loss rate × avg loser in R)
-```
-
-**Positive expectancy is the only thing that matters.** Report it every month. It is the primary figure, ahead of everything below.
-
-### Why neither win rate nor the win/loss ratio can be the headline
-
-An earlier version of this section made **win rate the headline metric** and required an average winner ≥ 1.2× the average loser. **That was wrong, and the arithmetic proves it:**
-
-| Win rate | Avg winner | Expectancy | Verdict |
-|---|---|---|---|
-| 60% | 0.9R | `0.60×0.9 − 0.40×1.0` = **+0.14R** | **Profitable** — yet fails the old 1.2:1 rule |
-| 40% | 1.2R | `0.40×1.2 − 0.60×1.0` = **−0.12R** | **Loses money** — yet passes the old 1.2:1 rule |
-
-The old metric could be **failed by a winning system and satisfied by a losing one.** Either number alone is meaningless; only their product against the loss side decides anything.
-
-**This also removes a bad incentive.** A headline win rate rewards *being right*. Trading does not pay for being right — it pays the distribution of money won against money lost. Optimising for win rate pushes toward cutting winners early to bank them, which is the exact drift §8 exists to prevent.
-
-**Expectancy is also the metric that credits this system's actual design.** The breakeven ratchet (§6) converts would-be losses into ~0R scratches. A win/loss ratio barely notices that. Expectancy captures it directly, because a scratch removes a full −1R from the loss side.
-
-### Reported every month, alongside expectancy
-
-- **Profit factor** — gross winnings ÷ gross losses. Above 1.0 is profitable.
-- **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. A **flag, not a brake**: report it loudly with a written review, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage mostly reflects instrument volatility.
-- **Rule adherence** — checkpoints where a rule was followed against where it was not. **A profitable month with poor adherence is worse news than a losing month with good adherence**, because the second is a process being tested and the first is luck being mistaken for one.
-- **Slippage**, entry and exit.
-- **Sample size**, stated next to every claim.
-- **Win rate** and **average winner ÷ average loser** — still reported, now **descriptive only.** Neither is a target and neither passes or fails anything.
-- **Trade count** reported, never targeted.
-
-**A negative expectancy over 30+ trades is a process failure.** Report it that way and hand the decision to the governor — it is not an automatic halt, because 30 trades is still a small sample and the existing loss-streak brake already catches fast deterioration.
-
-### P&L — lowest weight
-
-Percentage growth net of costs, versus SPY over the same window.
-
-**Do NOT let daily or weekly green-day targets drive behaviour.** They cause forced entries on no-setup days and premature exits on winners. Both are failures.
+- **EXPECTANCY PER TRADE, IN R, is the primary figure — ahead of everything else.**
+  - `R = (exit% − entry%) ÷ initial stop distance%`, using the stop set **at entry**.
+  - `Expectancy = (win rate × avg winner in R) − (loss rate × avg loser in R)`
+  - **Positive expectancy is the only thing that decides whether this works.** Negative expectancy over 30+ trades is a process failure — report it as one and hand the decision to the governor.
+- **R is why every risk number is volatility-scaled.** A fixed stop made R mean something different on every instrument, so expectancy could not be summed across them. Scaling is what makes this metric exist at all.
+- **Win rate and average winner ÷ average loser are DESCRIPTIVE ONLY.** Never a pass or a fail: 60% at 0.9R is profitable, 40% at 1.2R is not.
+- **Exclude rows marked `counts_toward_expectancy=no`, and report which were excluded and why.** Silently dropping trades flatters a record.
+- **State the EFFECTIVE sample size, not the row count.** As of 2026-08-11 it is **1 trade**, which supports no conclusion about anything.
+- Also track: profit factor · maximum drawdown from peak · slippage both sides · rule adherence.
+- **A −25% drawdown from peak is a FLAG, not a brake** (§4) — report it loudly with a written review, keep trading. The brake is 3 consecutive losses; the halt is the 50%-of-deposits floor (§10).
 
 ---
 
@@ -570,125 +521,90 @@ Percentage growth net of costs, versus SPY over the same window.
 
 ---
 
-## 16. The data layer — this file holds RULES, nothing else
+## 16. The data layer
 
-**The LLM has no memory. The SYSTEM must remember everything.** Different propositions; history is separated from policy by lifecycle and by reader.
+> ### ⚠ MINIMAL LOGGING MODE — IN FORCE 2026-08-11. Log trades. Nothing else.
+>
+> **Governor decision: "still store the trade data but don't do anything with it — we'll analyse later."** The operator operates from the rulebook; the observation and feature-collection layer is **SUSPENDED**, not deleted.
+>
+> | Write | Status |
+> |---|---|
+> | `data/trades.csv` — one row per closed trade | ✅ **REQUIRED** |
+> | `watchlist` record at 9:00 | ✅ **REQUIRED** — it is an operating aid read at 9:45, not analysis |
+> | `entry_snapshot` (33 fields) | ⏸ **SUSPENDED** |
+> | `checkpoint` record, every check while holding | ⏸ **SUSPENDED** |
+> | `catalyst` records | ⏸ **SUSPENDED** |
+> | `declined` records | ⏸ **SUSPENDED** |
+> | `kill_trigger_fired` records | ⏸ **SUSPENDED** |
+> | Saturday RESEARCHER pass | ⏸ **SUSPENDED** |
+>
+> **What suspension does NOT change.** The trade log is still the circuit breaker's only input, so a missing row breaks the brake. `r_multiple` is still computed at exit while the entry stop is known — it cannot be reconstructed later. And **the derived count still gets STATED in every report while holding** (§8.1); it is simply not written to a file.
+>
+> **The cost, stated so it is a decision and not a drift:** every suspended record was a defence against a specific bias. `declined` is the only guard against selection bias; `catalyst` is the only way to learn which news is worth trading; `entry_snapshot` is the only way to separate winners from losers by anything other than luck. **Suspending them means the eventual analysis starts from the resumption date, not from today.** That is the accepted trade for a cheaper, faster day.
+>
+> **Only the governor resumes it.** Do not restart logging because a pattern looks interesting — that instinct is why the layer exists.
 
 | File | Holds | Written by | Mutability |
 |---|---|---|---|
-| `RULEBOOK.md` · `OPERATIONS.md` | Policy only | Governor | Edited rarely, reviewed |
+| `RULEBOOK.md` · `OPERATIONS.md` | Policy only | Governor | Edited rarely |
 | `data/trades.csv` | One row per closed trade | Executor, at exit | **Append-only** |
-| `data/observations.jsonl` | Checkpoints, snapshots, catalysts, watchlists, declines | Executor | **Append-only** |
 | `data/vol_profile.csv` | Per-instrument risk numbers | 9:00 checkpoint | Regenerated daily |
-| `EXPERIMENTS.md` | Proposals and evidence | Researcher | Edited; states never skipped |
+| `data/observations.jsonl` | Watchlists now; the rest when resumed | Executor | **Append-only** |
+| `EXPERIMENTS.md` | Proposals and evidence | Researcher | Edited |
 | `RULE_HISTORY.md` | Every change with its reasoning | **Generated** from git | **Never hand-edited** |
 
-- **`RULE_HISTORY.md` is a rendering of the git log.** Regenerate it; never write to it. If it disagrees with the log, the log is right. **This is where the reasoning for every rule lives** — the policy files carry instruction only.
-- **No cached state.** Loss streak, deposited capital and month-to-date are **derived** — the streak from `trades.csv`, the deposit total from the broker (§10). A cached copy is a copy that goes stale.
+- **`RULE_HISTORY.md` is a rendering of the git log.** Regenerate it; never write to it. **This is where the reasoning for every rule lives** — the policy files carry instruction only.
+- **No cached state.** Loss streak, deposited capital and month-to-date are **derived** — the streak from `trades.csv`, the deposit total from the broker (§10). A cached copy goes stale.
 
-### What the EXECUTOR writes
+### `data/trades.csv` — the one required write
 
-| When | Record |
+**At exit, append one row. 30 columns.** The essentials, which must never be left blank:
+
+| Field | Note |
 |---|---|
-| 9:00 | one `watchlist` (≥5 names) · one `catalyst` per catalyst identified, traded or not |
-| At entry | one `entry_snapshot` |
-| Every checkpoint holding | one `checkpoint` (fields in `OPERATIONS.md`) |
-| Every stall-2 | flag it, and whether a qualifying new high followed |
-| Considered and passed | one `declined` — instrument, gate that failed, price |
-| Kill trigger fires | one `kill_trigger_fired` — trigger, price, action |
-| At exit | a row in `data/trades.csv` |
-
-**At exit, compute `r_multiple` while the entry stop is still known.** Also required: `initial_stop_pct`, MAE and MFE *during the hold*, time held, both slippage figures, exit reason, the rulebook commit, and `counts_toward_streak` / `counts_toward_expectancy`.
-
-**Set `counts_toward_*` to `no` only for** a mechanical abort (an order-plumbing failure, not a chosen exit) or a funded execution test. **Say why in `notes`.** A mechanical abort must not reset the circuit-breaker streak, and a test entry must not enter expectancy.
-
-### The entry snapshot — exact spec
-
-Written once, immediately after the fill is confirmed. **Compute each field the same way every time or they cannot be compared across trades.**
-
-| Field | How |
-|---|---|
-| `ts` | UTC. Every record type carries it |
-| `instrument`, `fill_price`, `fill_time_et` | From the order response. Confirmed, never assumed |
-| `trend_5m/15m/30m/60m` | `(last close − close N min ago) ÷ close N min ago × 100`, from 5-minute bars. **Snapshot features, not the stall input** (§8.1) |
-| `trend_since_open` | `(fill − session open) ÷ session open × 100` |
-| `gap_from_prev_close` | `(session open − prev close) ÷ prev close × 100` |
-| `trend_alignment` | How many of the four horizons share the trade's sign (0–4). An inverse ETF counts the *fund's* own move |
-| `position_in_range` | `(fill − session low) ÷ (session high − session low)`. 0 = at the low, 1 = at the high |
-| `session_high`, `session_low` | From the bars |
-| `volume_vs_session` | Latest 5-min volume ÷ median 5-min volume today. **Not time-of-day adjusted** — early values run high |
-| `sector_pct`, `underlying_pct` | Day change of the sector proxy, and of the underlying for a single-stock name. **Gate 2 (§4) compares them** |
-| `market_pct` | SPY day change |
-| `vix_level`, `vix_change` | `get_index_quotes` on VIX. **Blank if unavailable — never guess** |
-| `spread_pct_at_entry` | `(ask − bid) ÷ mid × 100` at entry |
-| `instrument_class` | `sector_leveraged` · `index_leveraged` · `single_stock_leveraged` · `commodity_leveraged` · `unleveraged` |
-| `sector_vehicles_ruled_out` | **Required for a single-stock name** (§4 Gate 3): which sector vehicles were rejected, by name and price |
-| `mfe_per_stop`, `mfe_to_target` | From the profile. State the top-two ranking at entry |
-| `stop_price`, `stop_pct`, `target_pct`, `breakeven_trigger_pct`, `trail_pct`, `stall_threshold_pct` | From the profile row, as stated at entry |
-| `catalyst_type` | One of: `earnings` · `guidance` · `macro` · `geopolitical` · `regulation` · `commodity_supply` · `weather` · `analyst` · `corporate_action` · `sector_sympathy` · `trend_structure` · `other` |
-| `catalyst_direction` | `bullish` · `bearish` · `ambiguous` |
-| `catalyst_scheduled` | `true` if calendared, `false` if a surprise |
-| `catalyst_source_time`, `catalyst_age_min` | Publication time and age at entry. **Blank if undateable — never estimate** |
-| `entry_thesis` | One sentence: what is expected and why |
-| `falsification_condition` | The §8 pre-commitment as a checkable condition |
-| `intended_max_hold` | §7 |
+| `date_closed`, `instrument`, `shares` | |
+| `entry_time_et`, `entry_price`, `exit_time_et`, `exit_price` | From the order responses. Confirmed, never assumed |
+| `pnl_usd`, `pnl_pct_position`, `pnl_pct_account` | |
+| `initial_stop_pct` | The stop distance set **at entry** |
+| **`r_multiple`** | `(exit% − entry%) ÷ initial_stop_pct`. **Compute at exit** — it cannot be reconstructed once the entry stop is forgotten |
+| `mae_pct`, `mfe_pct` | Maximum adverse and favourable excursion *during the hold* |
+| `hold_minutes`, `stop_initial`, `stop_final`, `target_pct` | |
+| `exit_reason`, `stall_count_at_exit` | |
+| `slippage_entry`, `slippage_exit` | Against the intended price |
 | `rulebook_commit` | `git rev-parse --short HEAD` |
-
-**One line, no line breaks.** `type` is the record kind; **never reuse `type` for a category** — that collision forced an ad-hoc workaround at the first real write, which is why the catalyst category is `catalyst_type`.
-
-### Sector proxy map — for `sector_pct` and Gate 2
-
-| Instrument | Proxy |
-|---|---|
-| SOXL · SOXS · USD | SMH |
-| NVDL · NVDX · NVDU | NVDA → SMH |
-| AMDL | AMD → SMH · **MUU** MU → SMH · **TSMX/TSMU** TSM → SMH · **SMCX** SMCI → SMH · **AVGX** AVGO → SMH |
-| TQQQ · SQQQ · FNGU · BULZ · TECL | QQQ |
-| SPXL · UPRO · SPXS · SDOW · UDOW | SPY |
-| TNA · TZA | IWM |
-| GUSH · ERX · ERY · NRGU · DRIP · OILU · OILD | XLE |
-| UCO · SCO | crude (USO) · **BOIL · KOLD** nat gas (UNG) |
-| NUGT · DUST · GDXU · JNUG · JDST | GDX · **AGQ · ZSL** SLV · **UGL · GLL** GLD · **SIL · SILJ** SLV |
-| LABU | XBI · **UYM · SMN** XLB · **COPX · CPER** copper · **URA · URNM** uranium |
-| YINN · YANG | FXI · **KORU** EWY |
-| TSLL | TSLA → QQQ |
-| CONL | COIN → IBIT · **MSTX** MSTR → IBIT |
-| RIOT · MARA · CLSK · BITX · BITU · ETHU · ETHT | IBIT, noted as crypto |
-| UVIX · VXX | VIX |
-
-`market_pct` is always SPY. **If an instrument is not on this map, name the closest unleveraged proxy in the snapshot and say it was chosen ad hoc.** For Gate 2, `limits.json → single_stock_leveraged.map` is authoritative.
-
-### FEATURES, NOT RULES — the discipline that makes this safe
-
-- **Nothing in the snapshot gates a trade.** Record it because we will want it later.
-- **It is a VIOLATION to decline or size a trade because a snapshot field "looks bad"**, unless that field is already a §4 gate. Letting a logged feature quietly influence judgment converts it into an unapproved rule while leaving no trace that a rule was added.
-- **The §4 gates are the complete entry criteria.**
-- A pattern becomes a rule only via `EXPERIMENTS.md` → evidence with a stated sample size → **governor approval** (§17). **Never by noticing it at a checkpoint.** Inventing the rule first and finding support afterwards is how a system fits yesterday.
-
-### Catalysts — structured, logged whether traded or not
-
-**Write one `catalyst` record for every catalyst identified, including ones not traded.** Logging only traded catalysts leaves the same selection bias as logging only taken trades — the sample would hold only news already believed in, so no category could ever be shown worthless.
-
-Fields: `id` (`CAT-YYYY-MM-DD-NN`) · `ts`, `discovery_time` · `source_time` + `source_time_confidence` (`exact`/`approximate`/`unknown` — **never present an estimate as known**) · `age_min` (blank if confidence is `unknown`) · `catalyst_type` · `direction` · `scheduled` · `affected_instrument` · `affected_underlying` · `relevance` (`direct`/`indirect`) · `expected_move_pct` (**a prediction — recorded to be scored**) · `expected_duration` · `confidence` 1–5 (**known uncalibrated**; logged to find out whether it predicts anything) · `headline`, `source` · `traded` + reason if false · `entry_snapshot_ts`.
-
-- **When two types apply, record the proximate cause.** OPEC moving oil is `commodity_supply`; the same move from a shooting war is `geopolitical`.
-- **`sector_sympathy` is only another company's news reaching this instrument.** Its own news is never sympathy.
-- **`other` requires a written reason.** Above ~15% of records the taxonomy is wrong — the Researcher proposes a fix.
-- **One catalyst per record.**
-- **Outcomes are a SEPARATE record**, written Saturday: `catalyst_outcome` referencing the `id`. **Never edit the original.**
+| **`counts_toward_streak`** | `no` **only** for a mechanical abort — an order-plumbing failure, not a chosen exit. A mechanical abort must not reset the circuit breaker |
+| **`counts_toward_expectancy`** | `no` for a mechanical abort **or** a funded execution test. A test entry must not enter expectancy |
+| `notes` | Say why, whenever either `counts_toward_*` is `no` |
 
 ### The watchlist — 9:00, at least 5 names
 
 One `watchlist` record: `ts`, `session_date`, `universe_ranked`, `affordable_count`, and a `names` array of ≥5, each with `symbol`, `rank_overall`, `mfe_per_stop`, `mfe_to_target`, `price`, `affordable_whole_share`, `instrument_class`, `sector_proxy`, `thesis_or_reason`.
 
-`universe_ranked` and `affordable_count` exist so **the capital constraint becomes measurable over time rather than asserted.** Read at 9:45.
+`universe_ranked` and `affordable_count` make **the capital constraint measurable rather than asserted.** Read at 9:45 so the entry consults a list built calmly.
 
-### What the EXECUTOR must NOT do
+### Sector proxy map — for Gate 2 and the sector read
+
+| Instrument | Proxy |
+|---|---|
+| SOXL · SOXS · USD | SMH |
+| NVDL · NVDX · NVDU | NVDA → SMH · **AMDL** AMD · **MUU** MU · **TSMX/TSMU** TSM · **SMCX** SMCI · **AVGX** AVGO — all → SMH |
+| TQQQ · SQQQ · FNGU · BULZ · TECL | QQQ |
+| SPXL · UPRO · SPXS · SDOW · UDOW | SPY · **TNA · TZA** IWM |
+| GUSH · ERX · ERY · NRGU · DRIP · OILU · OILD | XLE · **UCO · SCO** USO · **BOIL · KOLD** UNG |
+| NUGT · DUST · GDXU · JNUG · JDST | GDX · **AGQ · ZSL · SIL · SILJ** SLV · **UGL · GLL** GLD |
+| LABU | XBI · **UYM · SMN** XLB · **COPX · CPER** copper · **URA · URNM** uranium |
+| YINN · YANG | FXI · **KORU** EWY |
+| TSLL | TSLA → QQQ · **CONL** COIN → IBIT · **MSTX** MSTR → IBIT |
+| RIOT · MARA · CLSK · BITX · BITU · ETHU · ETHT | IBIT, noted as crypto |
+| UVIX · VXX | VIX |
+
+**Not on this map?** Name the closest unleveraged proxy and say it was chosen ad hoc. For Gate 2, `limits.json → single_stock_leveraged.map` is authoritative.
+
+### Append-only
 
 - **Never edit or delete a past row.** A mistake gets a correcting row and a note.
 - **Adding a column is a MIGRATION, not an edit, and is permitted** — backfilling revises no recorded outcome, which is what append-only protects. Say so in the commit; never change an existing value while doing it.
-- **Never evaluate how a DECLINED candidate performed since you declined it.** Same failure as post-exit tracking (§9) in different clothes — it trains chasing, and it is the likeliest route to a forced late entry. Saturday scores declines; you do not.
-- **Never write to or read `EXPERIMENTS.md`** while deciding a trade.
+- **Never evaluate how a DECLINED candidate performed since you declined it**, or a price after an exit (§9). It trains chasing.
 - **Never promote an experiment.** Only the governor approves a rule change.
 
 ---

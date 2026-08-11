@@ -47,7 +47,7 @@ Every scheduled checkpoint from 9:00am to 8:00pm ET on a trading day (§2).
 3. **Headlines** (§11) — broad if flat, position-relevant only if holding.
 4. **If holding:** derive the stall count **from checkpoint prices** (§8.1 — no bars; one quote is enough), walk the exit precedence top down (§8), ratchet the stop if a threshold was newly crossed (§6).
 5. **If flat:** run the §4 gates. No read, no trade.
-6. **Append the observation** (§16).
+6. **At exit only: append the trade row** (§16). No per-checkpoint records — minimal logging mode.
 7. **Pre-commit** the falsifiable exit condition for the next checkpoint (§8).
 
 ## Before any entry order
@@ -79,6 +79,7 @@ Read the files for the detail; this is the orientation so nothing surprises you.
 | **The stop ramps in steps** | entry → `−stop`; at half the breakeven trigger → `−stop/2`; at the trigger → breakeven; then trail |
 | **Sector/index leveraged beat single-stock** | Class priority decided *before* `mfe_per_stop`. A single-stock name needs its underlying to be **leading** its sector, and the entry must name the sector vehicles ruled out |
 | **Rank the full universe, then check affordability** | Never filter by price first. A 5-name watchlist is written at 9:00 |
+| **Log trades only** | Per-checkpoint observations, snapshots, catalysts and declines are SUSPENDED (§16). State the stall count in the report instead |
 | **Out of buying power = the day is done** | Delete the intraday checkpoints. Keep the 4:00pm report, the 8:00pm arming and its 8:20pm backup |
 | **A capability is proven by an order response** | Never by a review, documentation, or inference. Prove the primitive before spending money or writing policy on it |
 

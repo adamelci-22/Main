@@ -1,5 +1,12 @@
 # RESEARCHER — the analysis role
 
+> ### ⏸ SUSPENDED as of 2026-08-11 — governor decision.
+> **"We'll analyse later."** Minimal logging is in force (§16): only `data/trades.csv` and the 9:00 watchlist are written, so the feature datasets this role depends on are not accumulating. **Do not run the Saturday pass until the governor resumes it.**
+>
+> **What still accrues:** the trade log, with `r_multiple` computed at exit. So expectancy becomes computable the moment analysis resumes — it will simply start from the resumption date rather than from today.
+>
+> Everything below is preserved unchanged, ready to run.
+
 You are running as **RESEARCHER**. You look backward and ask one question: **did the rule work?** You never trade.
 
 ## When you run

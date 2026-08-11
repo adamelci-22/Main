@@ -266,5 +266,29 @@
     ],
     "note": "Governor decision 2026-08-11. The read is almost always sectoral, and a single-stock leveraged ETF multiplies leverage by idiosyncratic concentration \u2014 an earnings miss or a downgrade the sector shrugs off is not in the thesis. NVDX 2026-08-11: semis read correct all morning, SMH near its highs, position lost because NVDA gave back half its opening gain. ACCEPTED COST: sector leveraged ETFs cost more per share (SOXL 135, TECL 210, NUGT 161) than single-stock 2x names (4-20), so at current capital this produces MORE NO-TRADE DAYS. That is the correct outcome \u2014 it reports that the account cannot buy what the thesis calls for."
   },
-  "policy_version_note": "Bumped 1.2 -> 1.3 on 2026-08-11 after ~12 governor-directed changes in one session: fractional prohibited, commodity trend-structure gate, mfe_per_stop ranking, rank-then-afford, capability-verification rule, 9:30-9:45 sector hold, 5-name watchlist, class priority, stall measured at checkpoint price, asymmetric ladder, scaled target, scaled stall threshold and minimum stop move, stepped stop ramp. preflight prints this string, so leaving it at 1.2 would have printed a false version on every future order check."
+  "policy_version_note": "Bumped 1.2 -> 1.3 on 2026-08-11 after ~12 governor-directed changes in one session: fractional prohibited, commodity trend-structure gate, mfe_per_stop ranking, rank-then-afford, capability-verification rule, 9:30-9:45 sector hold, 5-name watchlist, class priority, stall measured at checkpoint price, asymmetric ladder, scaled target, scaled stall threshold and minimum stop move, stepped stop ramp. preflight prints this string, so leaving it at 1.2 would have printed a false version on every future order check.",
+  "logging": {
+    "mode": "minimal",
+    "in_force_since": "2026-08-11",
+    "required": [
+      "data/trades.csv row at exit",
+      "watchlist record at 09:00"
+    ],
+    "suspended": [
+      "entry_snapshot",
+      "checkpoint",
+      "catalyst",
+      "declined",
+      "kill_trigger_fired",
+      "saturday researcher pass"
+    ],
+    "governor_decision": "Still store the trade data but do nothing with it yet; the operator operates from the rulebook. We will analyse later.",
+    "cost_accepted": "Each suspended record defended against a specific bias \u2014 declined against selection bias, catalyst against unmeasurable news claims, entry_snapshot against attributing outcomes to luck. Analysis will therefore start from the resumption date, not from 2026-08-11.",
+    "unchanged_by_suspension": [
+      "trades.csv is the circuit breaker's only input \u2014 a missing row breaks the brake",
+      "r_multiple is computed at exit and cannot be reconstructed later",
+      "the derived stall count is STATED in every report while holding, just not written to a file"
+    ],
+    "resume": "governor only"
+  }
 }

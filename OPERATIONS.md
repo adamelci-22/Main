@@ -209,16 +209,19 @@ This is a **slot, not a fixture.** When the driver stops mattering, replace it w
 **Immediate exit triggers regardless of price:** ceasefire · joint statement signed · reopening implemented · sanctions relief · direct US-Iran talks · **crossing counts turning up.**
 
 ---
-## Logging — every checkpoint, before you finish
+## Logging — MINIMAL MODE. Trades only.
 
-Append to `data/observations.jsonl`. **Append-only: never edit or delete a past row.** A mistake gets a correcting row. *(Adding a column is a migration, not an edit — §16.)*
+> **Governor decision 2026-08-11: log the trades, do nothing else with the data yet.** Per-checkpoint observation records, entry snapshots, catalyst records and declined records are **SUSPENDED** (§16). Only the governor resumes them.
 
-**Holding — one `checkpoint` record:** `type` · `ts` (UTC) · `instrument` · `price` · `unrealised_pct` · `stall_count` · `stall_checks` (every checkpoint price since entry with threshold and verdict) · `stop_price` · `stop_moved` + `stop_move_reason` (`false` is normal) · `headlines_checked` · `precommit` · `cadence_min`.
+**Nothing to write at a management checkpoint.** State the derived stall count, the checkpoint prices behind it and the pre-commit **in the report** (§8.1) — that keeps the count auditable without a file write.
 
-**Flat — one `declined` record** per candidate considered and passed on: instrument, gate that failed, price. Nothing considered, nothing to log.
+**At exit — append one row to `data/trades.csv`.** 30 columns, schema in `RULEBOOK.md` §16.
 
-**At exit — a row in `data/trades.csv`.** 30 columns; schema and the R formula in `RULEBOOK.md` §16/§14. **Compute `r_multiple` now, while the entry stop is known.** Set `counts_toward_streak` and `counts_toward_expectancy` — `no` only for a mechanical abort or a funded execution test, and say why in `notes`.
+- **Compute `r_multiple` NOW**, while the entry stop is known. It cannot be reconstructed later.
+- **Set `counts_toward_streak` and `counts_toward_expectancy`.** `no` only for a mechanical abort or a funded execution test — and **say why in `notes`**.
+- **Append-only: never edit or delete a past row.** A mistake gets a correcting row.
+- **Commit and push.**
 
-**Commit and push anything written.**
+**At 9:00 — one `watchlist` record** (§16). That one stays: it is an operating aid read at 9:45, not analysis.
 
-> **Do NOT look at what a price did after an exit, or after a candidate you declined.** That is Saturday's job (§9).
+> **Do NOT look at what a price did after an exit, or after a candidate you declined.**
