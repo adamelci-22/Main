@@ -122,6 +122,7 @@ A management checkpoint reads `OPERATIONS.md` alone — **~16KB against ~90KB fo
   - **Include unaffordable names.** They are the record of what capital is costing.
   - **Write it as a `watchlist` record** (§16), so 9:45 reads a list built calmly rather than assembled under pressure, and Saturday can score what was watched and skipped.
   - **Fewer than five means the scan was too narrow**, not that the market was empty.
+  - **⚠ ONLY PROFILED INSTRUMENTS CAN BE RANKED, and the profile does not cover the whole universe.** As of 2026-08-11 it holds **31 of the 64 permitted names**, so "rank the full universe" means the full *profiled* universe. **If a candidate you want is unprofiled, profile it in step (g) before shortlisting it** — an unprofiled name cannot be traded (§6), so discovering the gap at the order stage forfeits the setup. Report the count profiled against the count permitted, so the coverage gap stays visible.
 - **(g) REFRESH `data/vol_profile.csv`.** Pull ~20 sessions of daily bars for the watchlist, recompute median adverse and favourable excursion, rewrite the file (`tools/vol_profile.py`). **Every risk number derives from it** (§6). Commit and push.
   - **Recompute, never freeze.** SOXL ranged $196 → $91 inside the window that produced the first profile.
   - **An instrument absent from the profile may not be traded.** No fallback default.

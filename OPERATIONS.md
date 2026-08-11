@@ -196,7 +196,7 @@ End every report with the **specific, falsifiable condition** that would make yo
 
 On a geopolitical trade the thesis dies by headline, not by chart — a ceasefire can move oil 5–10% in minutes, faster than any price criterion.
 
-**Every catalyst gets a structured `catalyst` record (§16), traded or not.** A fired kill trigger gets a `kill_trigger_fired` record.
+**Name the catalyst in the report.** Structured `catalyst` and `kill_trigger_fired` records are **SUSPENDED** under minimal logging (§16) — say it, do not write it.
 
 ### Live context — DATED. Refresh it; never carry it forward stale.
 
