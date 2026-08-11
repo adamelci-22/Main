@@ -140,5 +140,93 @@
     "all_legs_required": true,
     "named_catalyst_required": false,
     "note": "Governor decision 2026-08-11. A replacement, not a relaxation: the stop, target, stall ladder, circuit breaker, floor and whole-share rule all still bind."
+  },
+  "single_stock_leveraged": {
+    "gate": "DENY if underlying_pct < sector_pct on the day. Governor decision 2026-08-11.",
+    "reason": "A 2x single-stock ETF is a leveraged bet on one company. If the sector is rising and the company is not, you are buying the laggard with leverage and a correct sector call becomes a losing trade.",
+    "case": "NVDX 2026-08-11 entered with NVDA +0.84% vs SMH +1.26% (ratio 0.67). Sector thesis was right; instrument lost.",
+    "map": {
+      "NVDL": [
+        "NVDA",
+        "SMH"
+      ],
+      "NVDX": [
+        "NVDA",
+        "SMH"
+      ],
+      "NVDU": [
+        "NVDA",
+        "SMH"
+      ],
+      "AMDL": [
+        "AMD",
+        "SMH"
+      ],
+      "MUU": [
+        "MU",
+        "SMH"
+      ],
+      "TSMX": [
+        "TSM",
+        "SMH"
+      ],
+      "TSMU": [
+        "TSM",
+        "SMH"
+      ],
+      "SMCX": [
+        "SMCI",
+        "SMH"
+      ],
+      "AVGX": [
+        "AVGO",
+        "SMH"
+      ],
+      "TSLL": [
+        "TSLA",
+        "QQQ"
+      ],
+      "CONL": [
+        "COIN",
+        "IBIT"
+      ],
+      "MSTX": [
+        "MSTR",
+        "IBIT"
+      ]
+    },
+    "not_applicable_to": "sector and index leveraged ETFs (SOXL, TECL, GUSH, TQQQ) \u2014 those ARE the group"
+  },
+  "sector_trend_hold": {
+    "observations": [
+      "09:30",
+      "09:45"
+    ],
+    "requires": [
+      "positive at 09:30",
+      "positive at 09:45",
+      "09:45 reading not below the 09:30 reading"
+    ],
+    "on_failure": "no entry in that sector, whatever pre-market indicated",
+    "note": "Governor decision 2026-08-11. Two fixed observations only \u2014 do not add intermediate readings. Nothing at 5- or 13-minute resolution is a trend."
+  },
+  "watchlist": {
+    "min_names": 5,
+    "written_at": "09:00",
+    "record_type": "watchlist",
+    "order": "rank the FULL profiled universe by mfe_per_stop FIRST, then mark affordability",
+    "note": "Governor decision 2026-08-11: find the good then the affordable. Include unaffordable names \u2014 they measure what capital is costing."
+  },
+  "capability_verification": {
+    "accepted_evidence": [
+      "order response (fill or explicit rejection)",
+      "a successful tool call"
+    ],
+    "rejected_evidence": [
+      "review_equity_order passing",
+      "documentation",
+      "inference from a similar case"
+    ],
+    "note": "Governor decision 2026-08-11 after three instances in one session. Never commit capital or write policy on an unproven mechanism. Make the smallest call that proves the primitive first."
   }
 }

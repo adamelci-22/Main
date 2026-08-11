@@ -139,7 +139,11 @@ Purpose: form a thesis before the bell.
 - **(e)** Confirm **settled buying power** (`get_accounts` for `unsettled_funds`, plus `get_portfolio`) so the 9:45 entry knows its size instead of discovering a shortfall mid-setup.
   - **A balance larger than yesterday's close, beyond what trading explains, means the user funded the account.** No announcement is coming and none is needed — the 9:00am check is where you find out. Size to the new balance and say what you observed in the report. Do not ask for or campaign for funds; the user adds them when the system has earned it.
   - **On detecting funding, report the new deposited-capital figure** — the hard floor is a percentage of it (§10). The figure is **derived, never cached** (§16), so recomputing it each morning is what keeps the floor set against the right denominator.
-- **(f)** Write a **ranked shortlist** with the reason each candidate beats the others.
+- **(f) WRITE A WATCHLIST OF AT LEAST 5 NAMES.** Governor decision 2026-08-11 — a minimum, not a target.
+  - **Rank the full profiled universe first, then mark affordability** (§4). Five names minimum survive into the watchlist, each with: `mfe_per_stop`, price, whether it is affordable as a whole share, its sector proxy, and one line on the thesis or the reason it is being watched without one.
+  - **Include unaffordable names.** They are the record of what capital is costing, and an unaffordable leader today may be affordable after a deposit or a drawdown in its price.
+  - **Write it as a `watchlist` record in `data/observations.jsonl`** (§16) so the 9:45 entry reads a list it did not invent under time pressure, and Saturday can score names that were watched and skipped.
+  - **Fewer than five means the scan was too narrow, not that the market was empty.** Widen it — the profiled universe is 31 instruments and the permitted universe is larger.
 - **(g) REFRESH THE VOLATILITY PROFILE.** Pull ~20 sessions of daily bars for the shortlist candidates, recompute median adverse and favourable excursion, and rewrite `data/vol_profile.csv` (formulas in `tools/vol_profile.py`). The stop, target, breakeven trigger and trail all derive from it (§6).
   - **This must be recomputed, never frozen.** SOXL ranged from $196 to $91 inside the window that produced the first profile. A hardcoded table is a fixed guess wearing a formula.
   - **An instrument absent from the profile may not be traded.** Compute it or pick something else — there is no fallback default.
@@ -181,6 +185,34 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 - **Did overnight strength hold into real volume?**
 - **No read = no trade.** A flat day is a valid and expected outcome.
 
+### ⛔ HARD GATE — a single-stock leveraged ETF whose UNDERLYING is losing to its sector
+
+**Governor decision 2026-08-11. This is a DENY, not a consideration.**
+
+> **Never buy a single-stock leveraged ETF when its underlying is underperforming its sector proxy on the day.**
+
+- Compute both as day change: the underlying, and the sector proxy from the map in §16. If `underlying_pct < sector_pct`, the trade is **declined**. Log it as `declined` with gate `underlying_lags_sector`.
+- **Why it is absolute.** A 2x single-stock ETF is a leveraged bet on *one company*. If the sector is rising and that company is not, the sector read — which is what justified looking at the group at all — is not what you are buying. You are buying the laggard *with leverage*, which turns a correct sector call into a losing trade.
+- **The case that produced it.** NVDX, 2026-08-11: entered with **NVDA +0.84% against SMH +1.26%**, a ratio of 0.67. The semis thesis was right all day — SMH closed the morning near its highs — and the position still lost, because NVDA gave back more than half its opening gain while the sector held. The sector was working; the instrument was not.
+- **It does not apply to sector or index leveraged ETFs** (SOXL, TECL, GUSH, TQQQ…). Those *are* the group, so there is no underlying-versus-sector gap to open up.
+- **`preflight.py` enforces this** when `--underlying-pct` and `--sector-pct` are supplied, using the single-stock map in `limits.json`.
+
+### ⛔ HARD GATE — the sector must HOLD a positive trend from 9:30 to 9:45
+
+**Governor decision 2026-08-11.** The morning funnel exists to test whether a pre-market read survives real volume (§2). Make that test explicit and pass/fail rather than narrative.
+
+**Record the sector proxy's day change at the 9:30 observation and again at the 9:45 entry checkpoint. All three must hold:**
+
+1. **positive at 9:30**, and
+2. **positive at 9:45**, and
+3. **the 9:45 reading is not below the 9:30 reading** — it held or improved.
+
+Any of the three failing means **no entry in that sector**, whatever the pre-market indicated.
+
+- **This replaces narrating each swing as a regime change.** On 2026-08-11 the read was reported as four different regimes inside thirty minutes — "equipment fading, NVDA holding" at 9:30, "equipment accelerating" at 9:43, "everything fading" at 9:50, "bounced" at 10:00. Those were not four regimes; they were opening churn, and treating each as meaningful is how an entry gets taken with no stable thesis behind it.
+- **Nothing at 5- or 13-minute resolution is a trend.** Two fixed observations, 9:30 and 9:45, decide it. Do not add intermediate readings to the test.
+- **Honest note on what this gate does and does not catch:** SMH was +0.98% at 9:30 and about +1.2% at 9:45, so **this gate would have PASSED on 2026-08-11.** It is the underlying-lags-sector gate above that blocks NVDX. The two do different jobs — this one validates the sector, that one validates the instrument, and today the sector was genuinely fine.
+
 ### Timing — prefer the morning, never force
 
 - **Preferred window: 9:45–11:00am.** Volume and directional conviction are highest, and it leaves the whole session to manage the position rather than defending it into the close.
@@ -194,6 +226,18 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 **Governor decision, 2026-08-11, after a selection error.**
 
 > **When the affordable set is small, rank candidates by `median_mfe ÷ stop_pct` and by relative strength versus their sector — before deployment percentage or spread. Deployment is the last tiebreaker, never the first filter. State the ratio for the top two candidates at entry.**
+
+#### RANK FIRST, THEN INTERSECT WITH AFFORDABILITY. Never filter by price first.
+
+**Governor decision 2026-08-11: "find the good then the affordable."** The order is not cosmetic.
+
+1. **Rank the WHOLE profiled universe** by `mfe_per_stop`, ignoring price entirely.
+2. **Then** mark which of them buying power can actually reach as a whole share.
+3. **Then** apply the gates and pick from what survives.
+
+**Filtering by price first means the ranking never runs on the good names, so you never learn what you are giving up.** On 2026-08-11 the affordability filter ran first, and the result was NVDX — **22nd of 31 on structure, and 6th of the 7 viable affordable candidates.** MSTX ranked **3rd of the entire universe** at $8.78 and was never shortlisted, because the list it would have appeared on was never built.
+
+**Say out loud what affordability cost you.** If the top-ranked candidate is unaffordable, name it and name the gap. That is the number that tells the governor whether capital is the binding constraint — and on 2026-08-11 it was: **9 of 31 instruments were affordable, and of the top five by structure only two were reachable, both preflight-denied on the 7% stop cap.**
 
 `mfe_per_stop` is precomputed in `data/vol_profile.csv` at the 9:00 refresh, so this is a lookup, not a judgement.
 
@@ -551,6 +595,28 @@ Percentage growth net of costs, versus SPY over the same window.
 
 ## 15. Reporting standards
 
+### ⛔ A CAPABILITY IS VERIFIED BY AN ORDER RESPONSE OR A SUCCESSFUL CALL. NOTHING ELSE.
+
+**Governor decision 2026-08-11, after the same error three times in one session.**
+
+- **Never** record a capability as verified on the strength of a **review**, of **documentation**, or of **inference from a similar case**.
+- **Never** commit capital or write policy that depends on a mechanism you have not seen succeed.
+- **A refusal is evidence too** — an explicit broker rejection is a verified fact and should be recorded verbatim, with the exact error string.
+
+**The three instances, recorded so the shape is recognisable:**
+
+| | What was assumed | How it failed |
+|---|---|---|
+| 1 | A fractional position could carry a stop | Bought AGQ first, *then* found the stop is refused. Forced a 63-second round trip |
+| 2 | `review_equity_order` accepting a fractional stop proved it worked | It does not validate fractional constraints. **A false statement went into this rulebook**, where every cold session would have trusted it |
+| 3 | A 15-minute bar interval existed | It does not. Written into four files before the first call was made |
+
+**Instance 2 is the worst of the three and shows why this is a reporting rule rather than an execution one.** Bad execution costs one trade. A false capability claim in the rulebook is inherited by every future session, and the next one to read it would have taken an unprotected leveraged position believing it was protected.
+
+**In practice: make the smallest call that proves the primitive, before the one that depends on it.**
+
+### Reporting standards
+
 - Report **losses as plainly as gains.** No spin.
 - **Verified fills only** — never a fill you did not confirm from the order response.
 - P&L in **dollars and percent**. Slippage against intended price.
@@ -701,6 +767,12 @@ Percentage growth net of costs, versus SPY over the same window.
 **Outcomes are a SEPARATE record, written Saturday by the RESEARCHER.** Observations are append-only — never edit a catalyst record to add its result. Write `catalyst_outcome` referencing the `id`, with the affected instrument's move at **+15, +30, +60, +120 minutes and to the close**, whether the direction was right, actual against `expected_move_pct`, and the favourable and adverse extremes in the window.
 
 **When a §11 kill trigger fires, log a `kill_trigger_fired` record** — which trigger, the price at the time, and what was done. These are the highest-conviction exits in the system and there is currently no record of whether they have ever been right.
+
+### The watchlist — written at 9:00, at least 5 names
+
+One `watchlist` record per session (§2f). Fields: `ts`, `session_date`, and a `names` array of at least five entries, each with `symbol`, `rank_overall`, `mfe_per_stop`, `mfe_to_target`, `price`, `affordable_whole_share`, `sector_proxy`, `thesis_or_reason`. Also record `universe_ranked` (how many instruments the ranking covered) and `affordable_count`, so the capital constraint is measurable over time rather than asserted.
+
+**It is read at 9:45.** The point is that the entry decision consults a list built calmly at 9:00 rather than one assembled under time pressure from whatever is affordable and recent.
 
 ### Declined candidates — log the trades NOT taken
 

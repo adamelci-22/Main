@@ -89,6 +89,12 @@ def main():
     p.add_argument("--open-positions", type=int, default=0)
     p.add_argument("--resting-orders", type=int, default=0)
     p.add_argument("--order-type", default="limit")
+    p.add_argument("--underlying-pct", type=float, default=None,
+                   help="Day change of the UNDERLYING for a single-stock leveraged ETF "
+                        "(e.g. NVDA for NVDX). Required for those; ignored otherwise.")
+    p.add_argument("--sector-pct", type=float, default=None,
+                   help="Day change of the SECTOR PROXY (e.g. SMH for NVDX). Paired with "
+                        "--underlying-pct to enforce the single-stock gate.")
     a = p.parse_args()
 
     lim = load_limits()
@@ -181,6 +187,23 @@ def main():
         else:
             fails.append(f"ORDER TYPE: '{a.order_type}' not allowed "
                          f"(allowed: {lim['order']['allowed_types']}).")
+
+    # --- single-stock leveraged: the underlying must not lag its sector (RULEBOOK section 4)
+    ss = lim.get("single_stock_leveraged", {})
+    pair = ss.get("map", {}).get(a.symbol.upper())
+    if pair:
+        und, sec = pair
+        if a.underlying_pct is None or a.sector_pct is None:
+            fails.append(f"UNDERLYING GATE UNCHECKED: {a.symbol.upper()} is a single-stock "
+                         f"leveraged ETF, so --underlying-pct ({und}) and --sector-pct ({sec}) "
+                         "are required. The gate cannot be waived by omitting its inputs.")
+        elif a.underlying_pct < a.sector_pct:
+            fails.append(f"UNDERLYING LAGS SECTOR: {und} {a.underlying_pct:+.2f}% is behind "
+                         f"{sec} {a.sector_pct:+.2f}%. Buying the laggard with leverage turns a "
+                         "correct sector call into a losing trade (NVDX 2026-08-11).")
+        else:
+            warns.append(f"underlying gate OK: {und} {a.underlying_pct:+.2f}% "
+                         f"vs {sec} {a.sector_pct:+.2f}%")
 
     # --- universe
     if a.symbol.upper() not in lim["universe"]:
