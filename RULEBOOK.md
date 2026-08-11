@@ -6,8 +6,10 @@
 
 | File | Read by | Size |
 |---|---|---|
-| **`OPERATIONS.md`** | every management checkpoint — the hot path | ~16KB |
-| **`RULEBOOK.md`** (this file) | 9:00 research · 9:45 entry · 4:00 report · 8:00 arming · Saturday research | ~57KB |
+| **`OPERATIONS.md`** | every management checkpoint — the hot path | the smaller one, by design |
+| **`RULEBOOK.md`** (this file) | 9:00 research · 9:45 entry · 4:00 report · 8:00 arming · Saturday research | the larger one |
+
+*No byte counts here — they went stale four times in one day. `wc -c *.md` if you need them.*
 
 **Account:** Robinhood `462514035` ("Agentic"), cash account, `agentic_allowed=true`, `option_level_2` — *the option level is descriptive only; options are not permitted here (§4).*
 
@@ -57,7 +59,7 @@ Grow the account as fast as possible, "nothing to lose," using **leverage** plus
 > **§1** trigger hygiene · **§3** early shutdown · **§5** order execution · **§6** stops · **§8** exit criteria · **§11** headline check
 >
 > They were moved, not copied — each rule exists in exactly one file, so they cannot drift apart. Section numbers are unchanged, so every `(§n)` reference still resolves.
-> **A management checkpoint reads only `OPERATIONS.md` (~16KB) instead of this file (~57KB).** Entering, reporting, arming and research read both.
+> **A management checkpoint reads only `OPERATIONS.md`, not this file.** Entering, reporting, arming and research read both.
 >
 > **Both files are INSTRUCTION ONLY. The reasoning for every rule is in the commit that introduced it**, rendered in `RULE_HISTORY.md`. Do not re-add justification to either file — every KB in `OPERATIONS.md` is re-read up to 24 times a day, and bulk hides contradictions as reliably as it costs tokens.
 
@@ -106,7 +108,7 @@ Convert each ET time to UTC using the offset in effect.
 
 ### Keep the hot path small
 
-A management checkpoint reads `OPERATIONS.md` alone — **~16KB against ~90KB for both files.** That partition is what makes 17–24 checkpoints a day affordable. **Before adding to `OPERATIONS.md`, ask whether the rule is needed to *manage or exit an open position*. If it is only needed to *enter*, it belongs here.** The reasoning for any rule belongs in the commit message, not in either file.
+A management checkpoint reads `OPERATIONS.md` alone, which is roughly **a quarter of both files together.** That partition is what makes 17–24 checkpoints a day affordable. **Before adding to `OPERATIONS.md`, ask whether the rule is needed to *manage or exit an open position*. If it is only needed to *enter*, it belongs here.** The reasoning for any rule belongs in the commit message, not in either file.
 
 ### 9:00am pre-market research — read-only, no orders
 
