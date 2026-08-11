@@ -5,7 +5,57 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 04:52 UTC · 20 changes to the rulebook.
+Generated 2026-08-11 05:00 UTC · 21 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `6d0ef4b`
+
+**Partition the rulebook into a hot path and a policy file**
+
+The rulebook grew from 19KB to 75KB today acting on the review. Every
+checkpoint re-reads it from scratch, so per-checkpoint cost had roughly
+quadrupled -- and cadence is a linear multiplier on that cost. Fixing the
+per-session read buys more than tuning the multiplier.
+
+Sections 1, 3, 5, 6, 8 and 11 -- trigger hygiene, early shutdown, order
+execution, stops, exits, headlines -- MOVED to OPERATIONS.md. Moved, not
+copied: each rule now exists in exactly one file, so the two cannot drift
+apart. Section numbers are unchanged, so every existing (section n)
+cross-reference still resolves, and no renumbering churn touches the role
+files or the armed triggers.
+
+Done with a script rather than by hand, because transcribing 40KB of rules
+manually is how a rule silently changes.
+
+Measured effect on policy reading per day:
+  holding day, 15-min cadence:  608K -> 248K tokens  (60% less)
+  flat day:                     282K -> 134K tokens  (53% less)
+
+Two gaps the split exposed and closed:
+- A management checkpoint reading only OPERATIONS.md would not have known it
+  must log anything, since the logging obligation lived in section 16. The
+  checkpoint-record fields moved across; the full schemas stayed in the
+  rulebook, with section 16 pointing at OPERATIONS.md rather than repeating
+  the fields.
+- OPERATIONS.md now states in a banner that a new position may NOT be opened
+  from it alone -- entry needs the section 4 gates, instrument selection, the
+  33-field snapshot spec and the catalyst schema. The cheap path covers
+  managing and exiting; the expensive path covers committing capital.
+
+Also added CONDITIONAL 10-MINUTE DENSIFICATION, which the partition pays
+for: drop to 10 minutes only within 1% of a ratchet threshold, within 1.5%
+of the stop, in the final hour holding with an overnight decision pending, or
+under section 12 volatility. Recorded why uniform 10 minutes is refused --
+it changes the exit rule not at all now that the stall clock runs on market
+time, the average latency gain from 15 to 10 is 2.5 minutes for 50% more
+sessions, and every extra checkpoint is another cold session that can talk
+itself out of a sound position. More looking is not more discipline.
+
+Fixed stale text the split surfaced: the header claiming every checkpoint
+reads this file, the "24 checkpoints" section title, a "12 standard
+checkpoints, every 30 min" row, and duplicate section numbering in
+RESEARCHER.md.
 
 ---
 

@@ -95,6 +95,43 @@ Every entry moves through these states in order. It may be killed at any stage.
 - **Hypotheses examined against this data:** 1.
 - **Note:** more frequent is not automatically better. A shorter cadence gives more opportunities to react to meaningless noise, and every extra checkpoint is a chance to talk oneself out of a sound position.
 
+### EXP-007 · The 5% stop is wrong as a single global number
+
+- **State:** `TESTED` — real data, first evidence
+- **Opened:** 2026-08-11 · **Method:** `tools/calibrate_stops.py` on `data/calibration_daily.csv`
+- **Rule today:** −5% default stop, −7% ceiling, applied identically to every instrument (§6).
+- **Finding.** 21 sessions each, long entry at the open as a hindsight-free proxy. Share of sessions a 5% stop would have been **touched**:
+
+  | | SOXL | RIOT | GUSH | SQQQ | TZA |
+  |---|---|---|---|---|---|
+  | stop-out rate | **57%** | **38%** | 14% | 10% | 0% |
+  | median adverse excursion | 6.6% | 4.0% | 2.0% | 1.6% | 1.5% |
+  | median daily range | 11.9% | 8.4% | 4.6% | 4.6% | 3.5% |
+
+- **Interpretation.** A single global stop is **4× too tight for SOXL and arguably too loose for TZA.** SOXL's median adverse move *exceeds* the 5% stop, so on a typical day the stop is hit by noise rather than by being wrong. The instruments differ by a factor of four in volatility and the rule treats them identically.
+- **A corollary worth noting:** since §6 caps the stop at 7% and declines any setup needing more room, **SOXL is structurally untradeable under the current risk model** — its noise is wider than the widest permitted stop. That is independent of it also being unaffordable at $140.
+- **Proposed:** scale the stop to the instrument's recent volatility rather than fixing it — e.g. ~2× median adverse excursion, still hard-capped at 7%, with instruments whose scaled stop exceeds the cap excluded rather than entered on a too-tight stop.
+- **Sample:** 105 sessions, 5 instruments, one month. **Hypotheses examined against this data: 1.**
+- **Do not promote without governor approval.** But note this is arguably closer to a risk-model defect than an alpha hypothesis.
+
+### EXP-008 · The +8–12% target is close to unreachable on the affordable universe
+
+- **State:** `TESTED` — real data, first evidence
+- **Opened:** 2026-08-11 · **Same method and data as EXP-007**
+- **Rule today:** set a target of +8–12% at entry (§7).
+- **Finding.** Share of sessions reaching **+8%** from the open — and these are **upper bounds**, since a daily bar cannot say whether the high came before the low:
+
+  | | SOXL | RIOT | GUSH | SQQQ | TZA |
+  |---|---|---|---|---|---|
+  | reached +8% | 29% | 14% | **0%** | **0%** | **0%** |
+  | reached +3% | 71% | 48% | 33% | 43% | 24% |
+
+- **Interpretation.** On the three instruments actually affordable at this balance, **+8% did not occur once in 21 sessions.** The target is not merely rarely reached — intraday it is essentially unavailable. Meanwhile +3%, the breakeven-ratchet trigger, is reached 24–48% of the time, so **the ladder engages regularly while the target never fires.**
+- This corroborates the only real trade: GUSH exited at **+3.25%** on a stall, nowhere near target.
+- **Consequence for the metrics.** §14 already expects most trades to close before target. This says something stronger: for affordable instruments the target is **decorative**, and essentially all exits will come from the stall ladder or the stop. Expectancy will therefore be built from ~+2–4% winners, which makes the stop size (EXP-007) the dominant term in the whole system.
+- **Proposed:** either scale the target to instrument volatility alongside the stop, or state plainly that a multi-day hold is required to reach +8% and price that against the same-day-close default (§7).
+- **Sample:** 105 sessions, one month. **Hypotheses examined: 1.**
+
 ---
 
 ## Closed
