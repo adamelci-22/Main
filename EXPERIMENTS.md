@@ -28,6 +28,15 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 ## Open
 
+### EXP-012 · Should the trail be 0.4 x stop instead of 1.0 x median MAE?
+
+- **State:** 🟡 `PROPOSED` — awaiting governor decision. Raised 2026-08-11 and deliberately NOT applied.
+- **Origin:** the governor's stop ladder spec (`-5% → +1% gain → -3% → +2% gain → 0 → then gain - 2`) implies a trail of **2pp against a 5% stop = 0.4 x stop**. The live trail is **1.0 x median adverse excursion ≈ 0.67 x stop**.
+- **The trade-off, stated as a testable claim:** a trail at 0.4 x stop sits **inside one normal adverse excursion**, so it is hit by ordinary noise rather than by reversal. It should therefore raise the share of winners that end as small scratches, while raising the average locked-in gain on the winners that do run.
+- **Falsifiable test:** re-run `tools/replay.py` at both trail values over the available sessions and compare (a) expectancy in R, (b) share of trades exiting between 0 and +0.5R, (c) average R of trades exiting above +1R. If expectancy is materially higher at 0.4, adopt it; if the only effect is more scratches, reject it.
+- **Blocked on:** sample size. The effective expectancy sample is **1 trade**. This cannot be settled by evidence yet, so it stays a governor preference call rather than a measurement.
+- **Why it was not silently applied:** the governor gave explicit numbers, and departing from them without saying so would hide a real change in behaviour. The departure is recorded in `OPERATIONS.md`'s git history and here.
+
 ### EXP-001 · Stall exit at 3 checks or 4?
 
 - **State:** `PROPOSED`

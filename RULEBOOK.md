@@ -162,225 +162,150 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 
 ## 4. Entry — what to look for
 
+> **Instruction only. The reasoning for each rule is in the git commit that added it** (`RULE_HISTORY.md`). Do not re-add justification here — this section is read under time pressure at 9:45.
+
 ### CIRCUIT BREAKER — check before every entry
 
-**After 3 consecutive losing closed trades, STOP ENTERING and wait for the user to clear it.**
+**After 3 consecutive losing closed trades, STOP ENTERING until the governor clears it.**
 
-- A **losing trade** is any closed position with negative realised P&L, however small. Scratches and near-breakeven exits count as losses if the number is negative. Do not reclassify a loss as "flat" to keep a streak alive.
-- The count is **consecutive closed trades**, not days. A winner anywhere in the sequence resets it to zero.
-- **What "pause" means:** manage any open position normally to its exit, then take **no new entries**. Keep running every checkpoint, keep reporting, and **keep arming the next day** — pausing entries must never become pausing the system. **The 8:00pm arming checkpoint stays alive no matter what** (§3).
-- **Tell the user plainly at the third loss**: the three trades, what each thesis was, and your honest read on whether they were three bad reads or one bad read repeated. Three losses in a row is more diagnostic of a broken process than any single-day percentage, which is why this is the brake and drawdown is only a flag.
-- **Only the user restarts entries.** Do not resume on your own judgment, and do not resume because a setup looks good — that instinct is exactly what the brake exists to interrupt.
-- Track the streak in the month-to-date line so it is never reconstructed from memory.
+- A **loss** is any closed position with negative realised P&L, however small. Do not reclassify one as "flat" to keep a streak alive.
+- Consecutive **closed trades**, not days. A winner anywhere resets it to zero. Rows marked `counts_toward_streak=no` are excluded — a mechanical abort is not a trade.
+- **"Pause" means no new entries.** Manage any open position to its exit, keep running every checkpoint, keep reporting, and **keep arming.** Pausing entries must never become pausing the system.
+- **Tell the governor plainly at the third loss:** the three theses, and your honest read on whether they were three bad reads or one bad read repeated.
+- **Only the governor restarts entries.** Not on your own judgment, and not because a setup looks good — that instinct is what the brake exists to interrupt.
+- `preflight.py` computes the streak from `data/trades.csv`. Never from memory.
 
-**A −25% drawdown from peak is a FLAG, not a brake** — report it loudly with a written review of what broke, and keep trading (§14). The hard floor remains **~$15** (§10), below which sizing stops working.
+**A −25% drawdown from peak is a FLAG, not a brake** — report it loudly with a written review, keep trading (§14). The hard floor is **50% of deposited capital** (§10), recomputed daily.
 
 ### Signals
 
-- **Sector leadership, ranked.** Which sector is *actually* leading. Never default to one you have been watching.
-- **Breadth.** Is the whole group moving together, or is one name dragging the ETF? Broad beats narrow every time.
-- **A catalyst you can name.** Geopolitical event, earnings, macro data. "It's going up" is not a catalyst.
-- **Trend vs chop.** Leveraged ETFs decay in chop; multi-day holds need a real trend.
-- **Continuation, not prediction.** Go with an established move. Do not call tops or bottoms.
-- **Did overnight strength hold into real volume?**
-- **No read = no trade.** A flat day is a valid and expected outcome.
+- **Sector leadership, ranked from data.** Never default to one you have been watching.
+- **Breadth.** Is the group moving together, or is one name dragging the ETF? **Broad beats narrow every time.**
+- **A catalyst you can name.** "It's going up" is not a catalyst. *(Commodities and materials use the trend-structure gate instead — see below.)*
+- **Trend, not chop.** Leveraged ETFs decay in chop.
+- **Continuation, not prediction.** Go with an established move; do not call tops or bottoms.
+- **No read = no trade.** A flat day is a correct outcome.
 
-### ⛔ HARD GATE — a single-stock leveraged ETF whose UNDERLYING is losing to its sector
+### ⛔ GATE 1 — the sector must HOLD a positive trend from 9:30 to 9:45
 
-**Governor decision 2026-08-11. This is a DENY, not a consideration.**
+Record the sector proxy's day change at the **9:30** observation and again at **9:45**. All three must hold:
+
+1. positive at 9:30, **and**
+2. positive at 9:45, **and**
+3. the 9:45 reading **not below** the 9:30 reading.
+
+Any failure → **no entry in that sector**, whatever pre-market indicated.
+
+**Two fixed observations decide it. Do not add intermediate readings** — nothing at 5- or 13-minute resolution is a trend, and narrating each swing as a regime change is how an entry gets taken with no stable thesis.
+
+### ⛔ GATE 2 — a single-stock leveraged ETF whose UNDERLYING lags its sector
 
 > **Never buy a single-stock leveraged ETF when its underlying is underperforming its sector proxy on the day.**
 
-- Compute both as day change: the underlying, and the sector proxy from the map in §16. If `underlying_pct < sector_pct`, the trade is **declined**. Log it as `declined` with gate `underlying_lags_sector`.
-- **Why it is absolute.** A 2x single-stock ETF is a leveraged bet on *one company*. If the sector is rising and that company is not, the sector read — which is what justified looking at the group at all — is not what you are buying. You are buying the laggard *with leverage*, which turns a correct sector call into a losing trade.
-- **The case that produced it.** NVDX, 2026-08-11: entered with **NVDA +0.84% against SMH +1.26%**, a ratio of 0.67. The semis thesis was right all day — SMH closed the morning near its highs — and the position still lost, because NVDA gave back more than half its opening gain while the sector held. The sector was working; the instrument was not.
-- **It does not apply to sector or index leveraged ETFs** (SOXL, TECL, GUSH, TQQQ…). Those *are* the group, so there is no underlying-versus-sector gap to open up.
-- **`preflight.py` enforces this** when `--underlying-pct` and `--sector-pct` are supplied, using the single-stock map in `limits.json`.
+- Both as day change; sector proxy from the map in §16. If `underlying_pct < sector_pct` → **decline**, and log `declined` with gate `underlying_lags_sector`.
+- **You are otherwise buying the laggard with leverage**, which turns a correct sector call into a losing trade.
+- **Does not apply to sector or index leveraged ETFs** — those *are* the group.
+- **`preflight.py` enforces it.** `--underlying-pct` and `--sector-pct` are mandatory for these names; **omitting them DENYs.**
 
-### ⛔ HARD GATE — the sector must HOLD a positive trend from 9:30 to 9:45
+### ⛔ GATE 3 — CLASS PRIORITY. Sector and index beat single-stock.
 
-**Governor decision 2026-08-11.** The morning funnel exists to test whether a pre-market read survives real volume (§2). Make that test explicit and pass/fail rather than narrative.
+**Decided BEFORE `mfe_per_stop` ranking.** The ratio ranks *within* a class; it never promotes a single-stock name above a sector one.
 
-**Record the sector proxy's day change at the 9:30 observation and again at the 9:45 entry checkpoint. All three must hold:**
+| | Class | Examples |
+|---|---|---|
+| **1** | Sector / industry leveraged | SOXL · TECL · GUSH · ERX · NUGT · LABU · SOXS · DUST · AGQ |
+| **2** | Index leveraged (broad-market read) | TQQQ · UPRO · TNA · SQQQ · SPXS |
+| **3** | Single-stock leveraged | NVDX · NVDL · SMCX · MSTX · TSLL · CONL · MUU · AMDL |
 
-1. **positive at 9:30**, and
-2. **positive at 9:45**, and
-3. **the 9:45 reading is not below the 9:30 reading** — it held or improved.
+**The read is almost always sectoral, and a single-stock leveraged ETF multiplies twice** — leverage on idiosyncratic concentration. An earnings miss or downgrade the sector shrugs off is not in your thesis.
 
-Any of the three failing means **no entry in that sector**, whatever the pre-market indicated.
+**A single-stock name needs ALL FOUR:**
 
-- **This replaces narrating each swing as a regime change.** On 2026-08-11 the read was reported as four different regimes inside thirty minutes — "equipment fading, NVDA holding" at 9:30, "equipment accelerating" at 9:43, "everything fading" at 9:50, "bounced" at 10:00. Those were not four regimes; they were opening churn, and treating each as meaningful is how an entry gets taken with no stable thesis behind it.
-- **Nothing at 5- or 13-minute resolution is a trend.** Two fixed observations, 9:30 and 9:45, decide it. Do not add intermediate readings to the test.
-- **Honest note on what this gate does and does not catch:** SMH was +0.98% at 9:30 and about +1.2% at 9:45, so **this gate would have PASSED on 2026-08-11.** It is the underlying-lags-sector gate above that blocks NVDX. The two do different jobs — this one validates the sector, that one validates the instrument, and today the sector was genuinely fine.
+1. no sector or index vehicle for the same read is affordable as a whole share, **and**
+2. its underlying is **leading** its sector (Gate 2), **and**
+3. every other gate clears, **and**
+4. **you name at entry which sector vehicles were ruled out, by name and price.** "None affordable" is valid; not having looked is not.
 
-### Timing — prefer the morning, never force
+**Accepted cost:** sector leveraged ETFs cost more per share ($135–282) than single-stock 2x names ($4–20), so at current capital this produces **more no-trade days.** That is the correct outcome — it reports that the account cannot buy what the thesis calls for.
 
-- **Preferred window: 9:45–11:00am.** Volume and directional conviction are highest, and it leaves the whole session to manage the position rather than defending it into the close.
-- **After 11:00am, a new entry must be clearly better than anything the morning offered** — not merely available because the morning was empty. Boredom is not a signal.
-- **NEVER force a trade because the window is closing.** User decision, explicit: *"prefer morning but if there's nothing don't force anything."* A day with no qualifying setup ends with no trade, and that is a correct outcome, not a missed one.
-- **Only one round trip per day exists** (T+1, §10). That single shot is something to **spend well, not to spend.** An entry taken at 9:45 on a mediocre read forfeits the day's only opportunity.
-- **Late-day entries carry an extra cost:** a position opened in the afternoon cannot reach target before the close, so it commits to an unprotected overnight hold on day one. Say so at entry if taking one.
+### RANKING — rank the full universe FIRST, then intersect with affordability
 
-### ⚠ RANKING A SMALL AFFORDABLE SET — signal first, capital efficiency last
+**"Find the good then the affordable."** Never filter by price first.
 
-**Governor decision, 2026-08-11, after a selection error.**
-
-> **When the affordable set is small, rank candidates by `median_mfe ÷ stop_pct` and by relative strength versus their sector — before deployment percentage or spread. Deployment is the last tiebreaker, never the first filter. State the ratio for the top two candidates at entry.**
-
-#### RANK FIRST, THEN INTERSECT WITH AFFORDABILITY. Never filter by price first.
-
-**Governor decision 2026-08-11: "find the good then the affordable."** The order is not cosmetic.
-
-1. **Rank the WHOLE profiled universe** by `mfe_per_stop`, ignoring price entirely.
-2. **Then** mark which of them buying power can actually reach as a whole share.
+1. Rank the **whole profiled universe** by `mfe_per_stop`, ignoring price.
+2. **Then** mark what buying power reaches as a whole share.
 3. **Then** apply the gates and pick from what survives.
 
-**Filtering by price first means the ranking never runs on the good names, so you never learn what you are giving up.** On 2026-08-11 the affordability filter ran first, and the result was NVDX — **22nd of 31 on structure, and 6th of the 7 viable affordable candidates.** MSTX ranked **3rd of the entire universe** at $8.78 and was never shortlisted, because the list it would have appeared on was never built.
+- **`mfe_per_stop` and `mfe_to_target` are precomputed** in `data/vol_profile.csv` at the 9:00 refresh. This is a lookup, not a judgement.
+- **A stop is a risk normaliser, not a quality signal.** Comparing raw stop widths across instruments compares nothing.
+- **State the ratio for the top two candidates at entry**, and **name the top-ranked candidate if it was unaffordable, with the gap.** That number is what tells the governor whether capital is the binding constraint.
+- **Deployment percentage is the LAST tiebreaker, never a filter.**
+- **`mfe_to_target` above ~2.5× means the target is effectively unreachable** and the trade is a trail-or-stall exit by construction. Say so at entry rather than implying a target that cannot be hit.
+- **When the capital base or the thesis changes, the 9:00 shortlist is VOID.** Re-rank from the current tape. Asking "what fits?" instead of "what is best?" ratifies a decision already made.
 
-**Say out loud what affordability cost you.** If the top-ranked candidate is unaffordable, name it and name the gap. That is the number that tells the governor whether capital is the binding constraint — and on 2026-08-11 it was: **9 of 31 instruments were affordable, and of the top five by structure only two were reachable, both preflight-denied on the 7% stop cap.**
+### ⛔ FRACTIONAL IS PROHIBITED. Whole shares only.
 
-`mfe_per_stop` is precomputed in `data/vol_profile.csv` at the 9:00 refresh, so this is a lookup, not a judgement.
-
-**What the ratio means.** It is favourable excursion per unit of risk — the same quantity expectancy is measured in (§14). A stop is a **risk normaliser, not a quality signal**: a tighter stop does not make a candidate better, it makes its losses smaller *and its stop-outs more frequent*. Comparing raw stop widths across instruments compares nothing.
-
-**Also check how far the target is in units of that instrument's normal day:** `mfe_to_target` in `data/vol_profile.csv`, which is `target_pct ÷ median_mfe`. Above roughly 2.5× the target is effectively unreachable and the trade is a **trail-or-stall exit by construction** — say so at entry rather than implying a target that cannot be hit. **Scaling the target on 2026-08-11 cut the count above 3× from 18 of 31 to 8 of 31**, but it did not eliminate it, so the check still matters.
-
-**The error this rule exists to prevent, recorded so it is not repeated:**
-
-| | median MFE | stop | **mfe_per_stop** | ×MFE to reach the then-flat +8% |
-|---|---|---|---|---|
-| SMCX | 5.21% | 6.67% | **0.78** | **1.54×** |
-| NVDX *(taken)* | 2.70% | 4.99% | 0.54 | **2.96×** |
-
-At 09:51 on 2026-08-11, NVDX was chosen over SMCX on 98.4% vs 93% capital deployment — a five-point gap treated as decisive — while SMCX offered ~44% more favourable excursion per unit of risk and was the only one of the two showing relative strength as the sector faded. **Both profile numbers were already on disk and were never divided.** Spread was the one genuine point favouring NVDX (0.05% vs 0.43%; doubled for the round trip, 0.10% vs 0.86%) and under §4.3 both clear an 8% target comfortably, so it was not disqualifying for either.
-
-**Three failure modes named, because each will recur:**
-
-- **A tiebreaker promoted to a filter.** Deployment percentage was a sound argument earlier the same morning where the gap was 11 points. Reusing it at a 5-point gap let it decide a question it cannot answer.
-- **Anchoring on the pre-market shortlist.** When the capital base or the thesis changes, the 9:00 shortlist is void — re-rank from the current tape. Asking "what fits?" instead of "what is best?" confirms a decision already made.
-- **Sunk cost on analysis.** Having built a case for an instrument all morning, switching feels like waste. It is not; the analysis was the cost of finding out.
-
-### ⚠ SECTOR AND INDEX LEVERAGED ETFs TAKE PRIORITY OVER SINGLE-STOCK LEVERAGED ETFs
-
-**Governor decision 2026-08-11.** Class priority is decided **before** `mfe_per_stop` ranking. The ratio ranks candidates *within* a class; it does not promote a single-stock name above a sector one.
-
-| Priority | Class | Examples |
-|---|---|---|
-| **1** | **Sector / industry leveraged** | SOXL · TECL · GUSH · ERX · NUGT · LABU · SOXS · DUST · AGQ |
-| **2** | **Index leveraged** — when the read is broad-market rather than sectoral | TQQQ · UPRO · TNA · SQQQ · SPXS |
-| **3** | **Single-stock leveraged** — only when 1 and 2 are unavailable | NVDX · NVDL · SMCX · MSTX · TSLL · CONL · MUU · AMDL |
-
-**Why the sector vehicle wins even when it ranks lower on structure:**
-
-- **The read is almost always sectoral.** "Semis are leading, breadth is broad" justifies buying *semis*. Buying one semiconductor company with 2x leverage on top is a different bet that happens to share a rationale. §4 already says **broad beats narrow every time**; this makes the instrument choice obey it.
-- **A single-stock leveraged ETF multiplies twice** — leverage on top of idiosyncratic concentration. The company can be dragged by an earnings miss, a guidance cut, a downgrade or a CEO headline that the sector shrugs off entirely, and none of that is in the thesis you wrote.
-- **2026-08-11 is the case.** The semis read was correct all morning — SMH held near its highs. The sector vehicle would have captured it. NVDX lost, because NVDA gave back half its opening gain while its sector held. **Being right about the sector and wrong about the stock produced a loss on a correct call.**
-
-**When a single-stock name IS permitted (all four must hold):**
-
-1. No sector or index leveraged ETF expressing the same read is available and affordable as a whole share, **and**
-2. its underlying is **leading** its sector proxy, not lagging (the hard gate above), **and**
-3. it clears every other §4 gate, **and**
-4. **you state at entry which sector vehicles were ruled out and why** — by name and by price. "None were affordable" is a valid reason; not having looked is not.
-
-**The honest cost, and it is not small.** Sector leveraged ETFs are structurally more expensive per share — SOXL $135, TECL $210, NUGT $161, LABU $282 — while single-stock 2x ETFs run $4–20. **At current capital this rule will produce more no-trade days, because the preferred class is largely unaffordable.** That is the correct outcome, not a defect: it says the account cannot yet buy the instrument the thesis calls for, which is information the governor should have rather than a gap papered over with a cheaper substitute.
-
-**One thing the rule does not cost:** at the top of the distribution the classes are close. The best sector names by structure (SOXS 1.02, NUGT 0.98, KORU 0.86, GUSH 0.85) beat the best single-stock names (MSTX 0.94, MUU 0.89), so priority and structure mostly agree. The conflict appears in the middle of the list, which is exactly where discipline should decide rather than a ratio.
-
-### Instrument selection, in priority order
-
-1. **Whole share is the DEFAULT** — the most leverage per dollar that fits as a whole share. Whole shares preserve the after-hours and 24-hour-market exit and allow limit orders.
-2. **Verify `all_day_tradability` before entering.**
-3. **Check the spread — no hard rejection gate; PRICE IT IN.** Read the actual bid/ask, double it for the round trip, subtract that from the expected move, and take the trade only if it **still clears the target with room to spare.** A spread does not disqualify an instrument by itself; a spread that eats the thesis does. Liquid leveraged ETFs typically run well under 0.15% and are a non-issue; thin sector and single-stock names are where this bites. **Log the actual spread cost on every fill** so the real drag accumulates in the record instead of being assumed.
-4. **Check the actual price before shortlisting.** Much of the universe below is unaffordable as a whole share at a small balance. A candidate you cannot buy is not a candidate — do not build a thesis on one and discover the problem at the order stage.
-
-### ⛔ FRACTIONAL IS PROHIBITED — a fractional position cannot be protected
-
-**Verified by live order attempts, 2026-08-11. This overrides everything below it in this subsection.**
-
-**A fractional position CANNOT carry a resting stop.** The broker refuses the order outright:
+**A fractional position cannot carry a resting stop.** Verified by live orders 2026-08-11:
 
 | Attempt | Result |
 |---|---|
-| `limit` buy, qty 0.52 | ❌ `Limit order quantity cannot include fractional shares.` |
-| `stop_market` sell, qty 0.52, `gtc` | ❌ `Invalid time in force for fractional order.` |
-| `stop_market` sell, qty 0.52, `gfd` | ❌ `Invalid trigger for fractional order.` |
-| `market` buy/sell, qty 0.52 | ✅ filled |
+| `limit` buy, 0.52 | ❌ `Limit order quantity cannot include fractional shares.` |
+| `stop_market` sell, 0.52, `gtc` | ❌ `Invalid time in force for fractional order.` |
+| `stop_market` sell, 0.52, `gfd` | ❌ `Invalid trigger for fractional order.` |
+| `market` buy/sell, 0.52 | ✅ filled |
 
-**Fractional is market orders only, in both directions. No limit price, no stop, no trigger of any kind.**
+**Market orders only, both directions — no limit, no stop, no trigger.** The entire exit model assumes the stop rests continuously at the broker, so a fractional position is a **different risk model**, not a worse version of the same one.
 
-**Why this bans fractional rather than merely constraining it:** the entire exit model assumes the stop is a real resting order at the broker. `tools/replay.py` states it explicitly — the stop is the one thing evaluated continuously; target, stall ladder and ratchet are all checkpoint-evaluated. Remove the resting stop and a leveraged position is unprotected for 30 minutes at a stretch, and every calibrated number — the volatility-scaled stop, the R multiple, EXP-007 through EXP-010 — was derived against a model where that stop exists. **A fractional position is not a slightly worse version of a whole-share position. It is a different risk model, and not one this system has ever tested.**
+**If the best setup is unaffordable as a whole share, it is not available.** Take the next candidate or no trade.
 
-**Therefore: only whole shares.** If the best setup is unaffordable as a whole share, it is not available. Say so and take the next candidate or no trade — that is a correct outcome, not a missed one.
+> **`review_equity_order` accepted both refused orders.** Review does not validate fractional constraints. **A clean review proves nothing about placement** — only an order response is evidence (§15).
 
-> **⚠ CORRECTION — a false claim was written into this file earlier the same day and is retracted here.** At 09:20 ET, `review_equity_order` accepted both a fractional limit and a fractional `stop_market`, and that was recorded as "fractional can carry a resting stop." **`review_equity_order` does not validate fractional constraints.** It returned clean previews for two orders the broker then refused at placement. The note was flagged at the time as review evidence pending a confirmed fill; the fill came back negative and the claim is now known false.
->
-> **The general lesson, which matters more than the specific fact: a successful review proves nothing about placement.** Never record a capability as verified on the strength of a review. Only an order response — a fill or an explicit rejection — is evidence (§15).
+### Commodities and materials — TREND-STRUCTURE GATE replaces the catalyst gate
 
-### Fractional — RETIRED. Retained only to explain why.
-
-- **Whole share is the default. Fractional is the exception**, allowed when the best available setup is materially stronger than anything affordable whole — not merely different, and not to avoid the work of finding an affordable equivalent.
-- **You must say at entry that you are going fractional, and what you are giving up.** State it as a cost being accepted, not a detail.
-- **What fractional costs, every time:** `regular_hours` only — **no extended-hours or overnight exit at all.** A fractional position held overnight cannot be closed until the next regular session, whatever happens in between. That single fact is what drives the rule below.
-
-#### ⚠ A FRACTIONAL POSITION MUST BE CLOSED BEFORE THE 4:00pm BELL. No exceptions.
-
-**Governor decision, 2026-08-11.** This is a hard rule, not a preference. If you go fractional you are committing to a same-day round trip at entry, before the order is placed.
-
-- **It is never a swing.** The 1-week horizon ceiling does not apply to a fractional position, and neither does any override — a profit-target override (§7) cannot extend a fractional position past the bell.
-- **The 3:30pm checkpoint is the last one that can plan the close.** If a fractional position is still open at 3:30, close it there or at 4:00 regardless of gain, stall count or stop distance. Reaching 4:00pm still holding fractional is a rule violation, not a judgment call.
-- **Why it is absolute:** the exit tool is gone the moment the bell rings. A whole share carrying a bad overnight headline can be sold at 4:30pm, at 7:30pm, or in the overnight session. A fractional position holds whatever happens until 9:30 the next morning, with the stop unable to fill. The one protection that matters most is exactly the one fractional does not have.
-- **Never arm the extended-hours slots for a fractional position** — there is nothing they could do.
-
-**Verified 2026-08-11 — fractional is less restricted than previously documented, and this changes the risk picture but NOT the rule above.** A `stop_market` sell for 0.3 shares of SOXL and a `limit` buy for 0.3 shares both cleared `review_equity_order` with no order-type rejection; the only alert on the stop was `EQUITY_NOT_ENOUGH_BP_PERCENT_RESERVED` (a 10% buying-power reserve on stop orders). So a fractional position **can** carry a resting protective stop and **can** use a limit price, which is what makes fractional viable at all.
-  - **This is review evidence, not a confirmed fill.** Review is not placement. Confirm from the order response the first time each order type is actually used on a fractional quantity, and correct this note if the broker rejects at placement (§15).
-  - **It does not soften the close-before-the-bell rule**, because a resting stop is a `regular_hours` order — it stops protecting at 4:00pm exactly when the overnight risk starts.
-
-### Commodities and materials — the TREND-STRUCTURE GATE replaces the catalyst gate
-
-**Governor decision, 2026-08-11.** Commodity and materials leveraged trades are permanently open, on the governor's reasoning: *"they trend up and down sometimes for no reason."* That is true, and it collides with the §4 requirement of a catalyst you can name. For this asset class only, the catalyst gate is **replaced** — not waived — by a structural test that is still falsifiable and still refusable.
-
-**All three legs must hold. Any one failing is a decline.**
+Commodities trend without nameable news, so for **this asset class only** the catalyst requirement is *replaced* — not waived. **All three legs must hold:**
 
 1. **Established multi-session trend** — higher highs *and* higher lows across several sessions. One big day is not a trend.
-2. **Confirmation from the related complex** — the equity side must agree with the commodity side: metal versus miners, crude versus E&P, gas versus producers. Divergence *in the direction of the trade* is the strongest form of this (miners green while the metal is red = the dip is being bought).
-3. **Pullback, not breakdown** — today's price still inside the prior session's range and above its low. Below the prior low it is a breakdown and the trade is off.
+2. **Confirmation from the related complex** — metal vs miners, crude vs E&P, gas vs producers. Divergence *in the trade's direction* is the strongest form (miners green while the metal is red = the dip is being bought).
+3. **Pullback, not breakdown** — inside the prior session's range and **above its low.** Below the prior low it is a breakdown; the trade is off.
 
-- **No named catalyst is required.** Do not invent one to satisfy the old gate, and do not decline a qualifying setup for lacking one.
-- **This gate applies ONLY to commodities and materials.** Equities, index and single-stock leveraged ETFs keep the §4 catalyst requirement unchanged.
-- **It is a replacement, not a relaxation.** Everything else still binds: the volatility-scaled stop from the profile, the +8% target, the stall ladder, the circuit breaker, the floor, whole shares only.
-- **Why it is not simply "buy what is going up":** leg 2 requires an independent instrument to agree, and leg 3 can veto on price structure alone. Both are checkable before entry and neither depends on a narrative.
+- **No named catalyst required.** Do not invent one, and do not decline a qualifying setup for lacking one.
+- **Applies only to commodities and materials.** Everything else keeps the catalyst requirement.
+- **A replacement, not a relaxation** — the scaled stop, the scaled target, the stall ladder, the circuit breaker, the floor and whole-shares-only all still bind.
 
-**Worked example, 2026-08-11 (AGQ).** Leg 1: SLV +15.9% and AGQ +33.9% over six sessions to Aug 10, higher highs and higher lows throughout, SLV closing Aug 10 on its high. Leg 2: metal down 0.84% intraday while SIL +0.74% and SILJ +0.54% rose — miners refusing to follow. Leg 3: SLV at 58.91 against the prior session's low of 57.52, inside the range. **All three held; the gate passed and the trade was taken.** It was then exited for an unrelated reason (fractional could not be protected), which does not bear on the gate.
+### Timing — prefer the morning, never force
 
-### Universe additions — commodities and materials
+- **Preferred window 9:45–11:00am.** Highest volume and conviction, and it leaves the session to manage rather than defend.
+- **After 11:00am a new entry must be clearly BETTER than the morning offered**, not merely available because the morning was empty. Boredom is not a signal.
+- **NEVER force a trade because the window is closing.** No qualifying setup ends the day with no trade.
+- **One round trip per day exists** (T+1, §10). Spend it well, not merely spend it.
+- **Late entries commit to an unprotected overnight hold on day one.** Say so at entry.
 
-Each still needs a `data/vol_profile.csv` row before it can be traded (§2g).
+### Instrument selection
 
-- **Precious metals:** AGQ · ZSL · UGL · GLL · NUGT · DUST · GDXU · JNUG · JDST · SIL · SILJ
-- **Energy:** UCO · SCO · BOIL · KOLD · GUSH · DRIP · ERX · ERY · NRGU · OILU · OILD
-- **Base metals and materials:** UYM · SMN · COPX · CPER · URA · URNM · LIT · REMX · SLX
-- **Agriculture:** DBA · CORN · WEAT · SOYB — **unleveraged only**; no liquid leveraged ag vehicles exist, so these enter as trend reads or not at all
+1. **Whole share only** — the most leverage per dollar that fits. Preserves the extended-hours exit and limit orders.
+2. **Verify `all_day_tradability` before entering.**
+3. **Spread: no rejection gate — PRICE IT IN.** Read the actual bid/ask, **double it for the round trip**, subtract from the expected move, and take the trade only if it still clears the target with room. **Log the actual spread cost on every fill.**
+4. **Check the price before building a thesis.** A candidate you cannot buy is not a candidate.
+
+### Universe
+
+- **Index:** TQQQ · SPXL · UPRO · TNA · UDOW
+- **Sector:** SOXL · TECL · GUSH · ERX · FNGU · BULZ · LABU · NUGT · GDXU · NRGU · YINN · KORU · USD
+- **Single-stock:** NVDL · NVDX · TSLL · CONL · MSTX · SMCX · MUU · AMDL · TSMX
+- **Inverse:** SQQQ · SOXS · SPXS · SDOW · TZA · DUST · ERY · YANG · ZSL · JDST · SCO · DRIP · KOLD
+- **Commodities / materials:** AGQ · UGL · GLL · JNUG · SIL · SILJ · UCO · BOIL · OILU · OILD · UYM · SMN · COPX · CPER · URA · URNM · LIT · REMX · SLX
+- **Crypto proxies:** BITX · BITU · ETHU · ETHT · RIOT · MARA · CLSK
+- **Volatility:** UVIX · VXX — **event/intraday ONLY, never a hold.**
+- Any liquid high-beta single name with a catalyst.
+
+**An instrument absent from `data/vol_profile.csv` may not be traded** (§2g). Compute it or pick another.
 
 ### Asset classes — equities and ETFs ONLY, indefinitely
 
-- **Tradeable: common stock and ETFs, including leveraged and inverse ETFs.** That is the whole permitted set.
-- **Options are excluded.** This is a settled decision, not an open question and not a milestone to graduate past. Leverage comes from leveraged ETFs, not from contracts.
-- **Do not propose options, price a contract, or build a plan that depends on one.** If a setup only works as an option, it is not a setup for this account.
-- Reading option data for *information* (`get_option_chains`, unusual activity as a sentiment read) is fine. Placing an option order is not.
-- Only the user reopens this.
-
-### Universe — never sector-lock
-
-- **Index leveraged:** TQQQ, SPXL, TNA
-- **Sector leveraged:** SOXL (semis), GUSH (E&P), ERX (energy), FNGU / BULZ (mega tech), LABU (biotech), NUGT / GDXU (gold miners), NRGU (3x big oil), YINN (China)
-- **Single-stock leveraged:** NVDL, TSLL, CONL, MSTX
-- **Inverse (for bearish views):** SQQQ, SOXS, DUST, SPXS, SDOW, TZA, ERY
-- **Crypto proxies:** BITX, ETHU, RIOT, MARA
-- **Volatility:** UVIX, VXX — **event/intraday ONLY, never a hold** (severe structural decay)
-- Any liquid high-beta single name with a catalyst
-
----
+- **Tradeable: common stock and ETFs**, including leveraged and inverse. That is the whole permitted set.
+- **Options are excluded.** Settled, not an open question and not a milestone. Do not propose one, price one, or build a plan needing one. Reading option data as a sentiment signal is fine; placing an order is not.
+- **NO SHORT SELLING** — this cash account cannot (§10). Express bearish views via inverse ETFs bought long.
+- Only the governor reopens either.
 
 ## 5. Order execution
 
