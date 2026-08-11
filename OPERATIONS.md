@@ -23,6 +23,19 @@ Call `list_triggers`.
 3. **NEVER delete the trigger you are currently running from** until the next day is successfully armed.
 4. After arming, `list_triggers` again, confirm one per slot with no extras, report the count.
 
+### ⚠ A LONG TURN CAN SWALLOW A CHECKPOINT — verified 2026-08-11
+
+**A trigger cannot deliver into a session that is already generating a turn.** The 9:30am checkpoint on 2026-08-11 did not fire: at 13:30:00Z the session was mid-turn running a universe-wide instrument scan, and the trigger was still sitting `enabled=True` with `ended_reason=None` and `next_run_at` six minutes in the past. The user had to prompt it manually. The 9:00am trigger in the same chain shows `ended_reason='run_once_fired'`, so the chain itself was intact — the slot was simply occupied.
+
+**Why this is the most dangerous defect in the system:** the same mechanism applied to the 8:00pm arming checkpoint stops everything, silently and permanently. A long turn spanning that slot has the identical effect to deleting it, which §3 names as the single point of failure.
+
+**Mitigations, in force:**
+
+- **A BACKUP ARMING TRIGGER is armed 20 minutes after every 8:00pm slot.** It runs Step Zero, does nothing if the day is already armed, and runs the full arming pass if it is not. Each arming checkpoint re-arms the next evening's backup. **Never delete the backup without confirming the primary fired.**
+- **Do not start work that will outlast the current slot.** Near a checkpoint boundary, finish and reply — then continue at the next checkpoint. A scan that spans two slots costs a checkpoint, and the missed checkpoint is invisible unless someone notices.
+- **A past-due trigger still `enabled` with `ended_reason=None` means a MISSED checkpoint, not a pending one.** Check for this at every Step Zero. If found: do that checkpoint's work now, note in the report that it was missed and why, then delete the stale trigger so it cannot fire mid-turn later.
+- **Never silently absorb a missed checkpoint.** Say which one was missed and what the cause was. A checkpoint that vanishes without a trace is how a broken schedule looks exactly like a quiet day.
+
 ---
 
 ## 3. Early shutdown — saves usage
