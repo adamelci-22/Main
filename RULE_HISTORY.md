@@ -5,7 +5,46 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 02:59 UTC · 15 changes to the rulebook.
+Generated 2026-08-11 03:05 UTC · 16 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `6b1131e`
+
+**Make expectancy the primary metric; demote win rate to descriptive**
+
+The previous section made win rate the headline metric and required an
+average winner of at least 1.2x the average loser. That was wrong, and the
+arithmetic in the review demonstrates it:
+
+  60% win rate at 0.9R:  0.60*0.9 - 0.40*1.0 = +0.14R  profitable, but
+                                                        fails the old rule
+  40% win rate at 1.2R:  0.40*1.2 - 0.60*1.0 = -0.12R  loses money, but
+                                                        passes the old rule
+
+The old metric could be failed by a winning system and satisfied by a
+losing one. Neither number means anything alone.
+
+Expectancy per trade in R is now the primary figure, with R defined as the
+stop distance accepted at entry and never recalculated afterwards, so that
+ratcheting a stop to breakeven shows up as a smaller loss rather than as
+smaller risk. Reported alongside it: profit factor, max drawdown, rule
+adherence, slippage and sample size. Win rate and the win/loss ratio remain
+reported but are explicitly descriptive and target nothing.
+
+Two further reasons recorded in the file. A headline win rate rewards being
+right, and trading pays the distribution of money rather than correctness,
+so optimising win rate pushes toward cutting winners early -- the exact
+drift the exit rules exist to prevent. And expectancy is the metric that
+credits this system's own design, since the breakeven ratchet converts
+would-be losses into ~0R scratches, which a win/loss ratio barely registers.
+
+A negative expectancy over 30+ trades is defined as a process failure,
+reported to the governor rather than triggering an automatic halt.
+
+trades.csv gains initial_stop_pct and r_multiple, computed at exit while the
+entry stop is known. The Aug 10 trade backfills to +0.6918R (+3.2465%
+against a 4.6926% initial stop).
 
 ---
 

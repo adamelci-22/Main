@@ -519,10 +519,82 @@ Percentage growth net of costs, versus SPY over the same window.
 
 ### What the EXECUTOR writes
 
-- **At entry** — one `entry_snapshot` observation. These are **features, not rules.** Record them because we will want them later; do not invent a rule from them until there is evidence. Fields: instrument, timestamp, fill price, trend over 5/15/30/60 minutes and since the open, volume against normal, session high and low, sector performance, broad-market performance, volatility condition, catalyst type and age, the entry thesis, the falsification condition, stop, target.
+- **At entry** — one `entry_snapshot` observation. See the spec below; the fields must be computed the same way every time or they cannot be compared across trades.
 - **At every checkpoint while holding** — one `checkpoint` observation: price, unrealised percent, the derived stall count *and the bars it came from*, stop location, whether the stop moved and why, headlines checked, and the pre-committed exit condition for the next check.
 - **At every stall-2 event** — flag it in the observation, and record afterwards whether the position made a qualifying new high before the next check. This feeds EXP-001.
 - **At exit** — one row in `data/trades.csv`, including **`initial_stop_pct` and `r_multiple`** (§14), maximum adverse and maximum favourable excursion *during the hold*, time held, both slippage figures, exit reason, and the rulebook commit hash in force at the time. **Compute the R multiple at exit while the entry stop is known**, rather than leaving it to be reconstructed later.
+
+### The entry snapshot — exact spec
+
+**Written once per entry, immediately after the fill is confirmed.** Roughly three extra tool calls, once a day.
+
+| Field | How to compute it |
+|---|---|
+| `ts` | Record timestamp, **UTC**. Every record type carries it, so records can be ordered across files |
+| `instrument`, `fill_price`, `fill_time_et` | From the order response (§5). Confirmed, never assumed |
+| `trend_5m` `trend_15m` `trend_30m` `trend_60m` | Percent change over each lookback, from **5-minute bars** (`get_equity_historicals`). `(last close − close N min ago) ÷ close N min ago × 100` |
+| `trend_since_open` | `(fill − session open) ÷ session open × 100` |
+| `gap_from_prev_close` | `(session open − previous close) ÷ previous close × 100` |
+| `trend_alignment` | **How many of the four horizons share the sign of the trade** (0–4). Long counts positive; inverse ETF bought long counts the *fund's* own positive move |
+| `position_in_range` | `(fill − session low) ÷ (session high − session low)`. 0 = entering at the low, 1 = at the high |
+| `session_high`, `session_low` | From the bars |
+| `volume_vs_session` | Latest 5-min bar volume ÷ median 5-min bar volume so far today. **Known weakness:** not time-of-day adjusted, so early-session values run high. Record it anyway and correct later if it matters |
+| `sector_pct` | Day change of the **unleveraged** proxy from the map below |
+| `market_pct` | SPY day change |
+| `vix_level`, `vix_change` | `get_index_quotes` on VIX. Blank if unavailable — do not substitute a guess |
+| `spread_pct_at_entry` | `(ask − bid) ÷ mid × 100` at the moment of entry |
+| `catalyst_type` | One of: `earnings` · `guidance` · `macro` · `geopolitical` · `regulation` · `commodity_supply` · `weather` · `analyst` · `corporate_action` · `sector_sympathy` · `other` |
+| `catalyst_direction` | `bullish` · `bearish` · `ambiguous` |
+| `catalyst_scheduled` | `true` if a known calendar event, `false` if a surprise |
+| `catalyst_source_time`, `catalyst_age_min` | When the news was published, and its age at entry. Blank if undateable — **say blank, never estimate** |
+| `entry_thesis` | One sentence. What is expected to happen and why |
+| `falsification_condition` | The §8 pre-commitment, stated as a checkable condition |
+| `stop_price`, `stop_pct`, `target_pct`, `intended_max_hold` | As stated at entry (§6, §7) |
+| `rulebook_commit` | `git rev-parse --short HEAD` |
+
+### Unleveraged proxy map — for `sector_pct`
+
+| Instrument | Proxy | | Instrument | Proxy |
+|---|---|---|---|---|
+| SOXL · SOXS | SMH | | GUSH · ERX · ERY · NRGU | XLE |
+| TQQQ · SQQQ · FNGU · BULZ | QQQ | | LABU | XBI |
+| SPXL · SPXS · SDOW | SPY | | NUGT · DUST · GDXU | GDX |
+| TNA · TZA | IWM | | YINN | FXI |
+| NVDL | NVDA | | TSLL | TSLA |
+| CONL | COIN | | MSTX | MSTR |
+| RIOT · MARA · BITX | own sector, note as crypto | | UVIX · VXX | VIX |
+
+`market_pct` is always SPY. If an instrument is not on this map, name the closest unleveraged proxy in the snapshot and say it was chosen ad hoc.
+
+**Shape** — one line in `data/observations.jsonl`, no line breaks:
+
+```json
+{"type":"entry_snapshot","ts":"2026-08-11T13:52:55Z","fill_time_et":"09:52:55","instrument":"SOXL","fill_price":24.31,
+ "trend_5m":0.41,"trend_15m":0.88,"trend_30m":1.12,"trend_60m":1.60,"trend_alignment":4,
+ "trend_since_open":1.44,"gap_from_prev_close":0.62,"position_in_range":0.91,
+ "session_high":24.35,"session_low":23.88,"volume_vs_session":1.8,
+ "sector_pct":0.54,"market_pct":0.21,"vix_level":17.4,"vix_change":-0.6,
+ "spread_pct_at_entry":0.08,"catalyst_type":"earnings","catalyst_direction":"bullish",
+ "catalyst_scheduled":true,"catalyst_source_time":"2026-08-10T20:05:00Z","catalyst_age_min":1067,
+ "entry_thesis":"Memory guidance beat lifts the whole group; breadth confirms.",
+ "falsification_condition":"SMH loses its opening range low while SOXL fails to make a new high.",
+ "stop_price":23.09,"stop_pct":-5.0,"target_pct":10.0,"intended_max_hold":"1 day",
+ "rulebook_commit":"6b1131e"}
+```
+
+### FEATURES, NOT RULES — the discipline that makes this safe
+
+- **Record these because we will want them later. They are not criteria.** Nothing in the snapshot gates a trade.
+- **It is a VIOLATION to decline or size a trade because a snapshot field "looks bad"**, unless that field is already a §4 gate. Letting a logged feature quietly influence judgment converts it into an unapproved rule while leaving no trace that a rule was added.
+- **The §4 gates are the complete entry criteria.** The snapshot is observation running alongside them.
+- A pattern becomes a rule only via `EXPERIMENTS.md` → evidence with a stated sample size → **governor approval** (§17). Never by noticing it at a checkpoint.
+- **Why this order matters:** inventing the rule first and finding support for it afterwards is how a system fits yesterday. Collect first, decide later, and the evidence gets a chance to say no.
+
+### Declined candidates — log the trades NOT taken
+
+**One `declined` record per checkpoint that considered a candidate and passed**, naming the instrument, the gate that failed, and the price at the time.
+
+Without this the dataset contains only trades that were taken, which makes every conclusion drawn from it selection-biased — we could measure how our entries performed but never whether our filters were throwing away winners. This is the cheapest possible correction: one short record, no extra tool calls beyond what the gate check already required.
 
 ### What the EXECUTOR must NOT do
 

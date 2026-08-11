@@ -45,7 +45,16 @@ Write these to `data/observations.jsonl` as `post_exit` records. **The EXECUTOR 
 - **Rule adherence** — count of checkpoints where a rule was followed against where it was not. A profitable month with poor adherence is worse news than a losing month with good adherence.
 - Sample size, stated on every claim.
 
-### 3. Advance `EXPERIMENTS.md`
+### 3. Look at the features — and at what was declined
+
+The EXECUTOR logs an `entry_snapshot` at every entry and a `declined` record for every candidate it passed on (§16). **You are the only role permitted to look for patterns in them.**
+
+- Does anything separate winners from losers? Trend alignment across the four horizons, position in the session range, catalyst type, catalyst age, spread, sector or market backdrop.
+- **Study the declined records too.** They are the only defence against selection bias — trades taken are a filtered sample, and without the rejects you can measure how entries performed but never whether the filters were discarding winners.
+- **State the sample size beside every split.** Fifteen trades cut four ways is four groups of three or four. That is not evidence of anything.
+- A feature only becomes a gate through `EXPERIMENTS.md` and governor approval. **You may not add one, and the EXECUTOR may not act on one.**
+
+### 4. Advance `EXPERIMENTS.md`
 
 - Update open entries with new evidence and sample counts.
 - Propose new entries where the data suggests something.
