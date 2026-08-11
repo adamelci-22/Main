@@ -95,42 +95,55 @@ Every entry moves through these states in order. It may be killed at any stage.
 - **Hypotheses examined against this data:** 1.
 - **Note:** more frequent is not automatically better. A shorter cadence gives more opportunities to react to meaningless noise, and every extra checkpoint is a chance to talk oneself out of a sound position.
 
-### EXP-007 · The 5% stop is wrong as a single global number
+### EXP-007 · A single global stop cannot serve this universe
 
-- **State:** `TESTED` — real data, first evidence
-- **Opened:** 2026-08-11 · **Method:** `tools/calibrate_stops.py` on `data/calibration_daily.csv`
-- **Rule today:** −5% default stop, −7% ceiling, applied identically to every instrument (§6).
-- **Finding.** 21 sessions each, long entry at the open as a hindsight-free proxy. Share of sessions a 5% stop would have been **touched**:
+- **State:** `TESTED` — real data
+- **Opened:** 2026-08-11 · **Rerun on the correct universe** 2026-08-11
+- **Data:** `data/calibration_daily.csv` — **293 sessions, 14 instruments, leveraged sector ETFs and leveraged single-stock ETFs only.** An earlier run wrongly included index-leveraged (SQQQ, TZA) and an unleveraged single name (RIOT); those are not what this strategy trades and the run was discarded.
+- **Method:** `tools/calibrate_stops.py`. Long entry at the open — crude, but uses no hindsight about which entries were good.
+- **Rule today:** −5% default stop applied identically to every instrument (§6).
 
-  | | SOXL | RIOT | GUSH | SQQQ | TZA |
-  |---|---|---|---|---|---|
-  | stop-out rate | **57%** | **38%** | 14% | 10% | 0% |
-  | median adverse excursion | 6.6% | 4.0% | 2.0% | 1.6% | 1.5% |
-  | median daily range | 11.9% | 8.4% | 4.6% | 4.6% | 3.5% |
+**Share of sessions a 5% stop would have been touched:**
 
-- **Interpretation.** A single global stop is **4× too tight for SOXL and arguably too loose for TZA.** SOXL's median adverse move *exceeds* the 5% stop, so on a typical day the stop is hit by noise rather than by being wrong. The instruments differ by a factor of four in volatility and the rule treats them identically.
-- **A corollary worth noting:** since §6 caps the stop at 7% and declines any setup needing more room, **SOXL is structurally untradeable under the current risk model** — its noise is wider than the widest permitted stop. That is independent of it also being unaffordable at $140.
-- **Proposed:** scale the stop to the instrument's recent volatility rather than fixing it — e.g. ~2× median adverse excursion, still hard-capped at 7%, with instruments whose scaled stop exceeds the cap excluded rather than entered on a too-tight stop.
-- **Sample:** 105 sessions, 5 instruments, one month. **Hypotheses examined against this data: 1.**
-- **Do not promote without governor approval.** But note this is arguably closer to a risk-model defect than an alpha hypothesis.
+| Verdict | Instruments |
+|---|---|
+| **Unusable** ≥50% | SOXL 57% |
+| **Marginal** 30–49% | SOXS 45% · LABU 43% · CONL 38% · MSTX 38% |
+| Workable 15–29% | TSLL 29% · NRGU 24% · NVDL 24% · NUGT 19% · DUST 19% |
+| Comfortable <15% | GUSH 14% · FNGU 10% · ERX 5% · YINN 0% |
 
-### EXP-008 · The +8–12% target is close to unreachable on the affordable universe
+- **Median adverse excursion spans 0.9% (YINN) to 6.6% (SOXL) — a sevenfold range.** No single number serves that. **Five of fourteen instruments would be stopped on 38% or more of sessions** by noise rather than by being wrong.
+- **SOXL's median adverse move (6.6%) is wider than the 5% stop itself**, and 1.5× it exceeds the 7% ceiling — so under §6, which declines any setup needing more room, **SOXL is structurally untradeable by this system.** Independent of it also costing $140.
 
-- **State:** `TESTED` — real data, first evidence
-- **Opened:** 2026-08-11 · **Same method and data as EXP-007**
-- **Rule today:** set a target of +8–12% at entry (§7).
-- **Finding.** Share of sessions reaching **+8%** from the open — and these are **upper bounds**, since a daily bar cannot say whether the high came before the low:
+**Proposed rule:** `stop = 1.5 × median adverse excursion`, floored at **2.5%** and capped at **7%**; exclude any instrument whose scaled stop exceeds the cap.
 
-  | | SOXL | RIOT | GUSH | SQQQ | TZA |
-  |---|---|---|---|---|---|
-  | reached +8% | 29% | 14% | **0%** | **0%** | **0%** |
-  | reached +3% | 71% | 48% | 33% | 43% | 24% |
+| | YINN | ERX | NUGT | FNGU | GUSH | NRGU | DUST | LABU | NVDL | TSLL | MSTX | CONL | SOXS | SOXL |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| scaled stop | 2.5 | 2.5 | 2.6 | 3.0 | 3.0 | 4.1 | 4.3 | 4.8 | 5.0 | 5.1 | 5.2 | 6.4 | 6.5 | **excl** |
 
-- **Interpretation.** On the three instruments actually affordable at this balance, **+8% did not occur once in 21 sessions.** The target is not merely rarely reached — intraday it is essentially unavailable. Meanwhile +3%, the breakeven-ratchet trigger, is reached 24–48% of the time, so **the ladder engages regularly while the target never fires.**
-- This corroborates the only real trade: GUSH exited at **+3.25%** on a stall, nowhere near target.
-- **Consequence for the metrics.** §14 already expects most trades to close before target. This says something stronger: for affordable instruments the target is **decorative**, and essentially all exits will come from the stall ladder or the stop. Expectancy will therefore be built from ~+2–4% winners, which makes the stop size (EXP-007) the dominant term in the whole system.
-- **Proposed:** either scale the target to instrument volatility alongside the stop, or state plainly that a multi-day hold is required to reach +8% and price that against the same-day-close default (§7).
-- **Sample:** 105 sessions, one month. **Hypotheses examined: 1.**
+- Only SOXL is excluded. The floor exists because a stop inside the spread plus normal tick noise is a coin toss, not a stop.
+- **Sample:** 293 sessions, one month. **Hypotheses examined against this data: 1.**
+
+### EXP-008 · Stop quality and target reachability are INVERSE — the pair is mismatched everywhere
+
+- **State:** `TESTED` — real data · **the more important of the two findings**
+- **Same data and method as EXP-007.**
+- **Rule today:** −5% stop and a +8–12% target, both fixed, both applied to every instrument (§6, §7).
+
+**Sessions reaching +8% from the open, against the 5% stop-out rate. Both are upper bounds** — a daily bar cannot say whether the high came before the low.
+
+| | SOXL | SOXS | LABU | CONL | MSTX | TSLL | NVDL | NRGU | NUGT | DUST | GUSH | FNGU | ERX | YINN |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| stop-out at 5% | 57% | 45% | 43% | 38% | 38% | 29% | 24% | 24% | 19% | 19% | 14% | 10% | 5% | 0% |
+| reached +8% | 29% | 35% | 10% | 24% | 24% | 5% | 14% | **0%** | **0%** | **0%** | **0%** | 5% | **0%** | **0%** |
+
+- **The relationship is monotone and it is the finding.** Every instrument where +8% is achievable is an instrument where a 5% stop gets hit constantly. Every instrument where the stop is comfortable never reaches +8%. **The fixed stop/target pair is wrong on essentially all fourteen — one end or the other always is.**
+- Six of fourteen did not reach +8% once in 21 sessions: NRGU, NUGT, DUST, GUSH, ERX, YINN.
+- **Corroborates the only real trade.** GUSH exited at **+3.25%** on a stall. GUSH reached +8% on zero of 21 sessions, so that target was never available and the stall ladder was always going to be the exit.
+- **Consequence.** Scaling only the stop leaves the target unreachable on the calm names and scaling only the target leaves the stop broken on the volatile ones. **Both must scale together to the same volatility measure**, or the system keeps taking trades whose stated target is unreachable and whose stop is decorative.
+- **Sample:** 293 sessions, one month. **Hypotheses examined: 1.**
+
+> **Do not read the favourable/adverse ratios as instrument quality.** NUGT looks asymmetric because gold miners rallied from 115 to 160 during this window; that is a fact about July–August 2026, not about NUGT. Entry-at-open has no edge, so direction over the sample contaminates any up-versus-down comparison.
 
 ---
 
