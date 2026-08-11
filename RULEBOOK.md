@@ -233,7 +233,7 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 
 ## 7. Profit-taking
 
-- **Target is +8%, flat, on every instrument.** At any checkpoint showing a gain above +8%, **sell.**
+- **Target is +8%, flat, on every instrument.** At any checkpoint showing a gain **at or above +8%**, **sell.**
 - **Known and accepted:** +8% occurred in **zero of 21 sessions** for GUSH, ERX, NUGT, NRGU, DUST and YINN (EXP-008), so on the calm names this fires rarely and most exits will come from the stall ladder or the trail. It is a ceiling that closes the trade when a big move does happen, not a level to wait for.
 - **The target is a CEILING, and most trades will not reach it.** The three-check stall exit (§8.1) will close the majority of positions first, at whatever gain stands. Target is the exit that requires no judgment; it is **not** a reason to keep holding a position the other criteria have already condemned.
 - **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.

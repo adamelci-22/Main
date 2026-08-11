@@ -5,7 +5,58 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 06:07 UTC · 24 changes to the rulebook.
+Generated 2026-08-11 06:09 UTC · 25 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `5691e42`
+
+**Policy v1.2 — governor changes to exclusions, target, ratchet, stalls, headlines**
+
+Six changes, all directed.
+
+1. NO INSTRUMENT IS EXCLUDED ON VOLATILITY. Any leveraged instrument may be
+   traded if it meets the entry gates. Where 1.5 x median MAE exceeds the 7%
+   cap the stop is simply capped and flagged stop_at_cap -- SOXL is the current
+   case, its 6.6% median adverse being wider than its own 7% stop. Now a
+   warning to weigh at entry rather than a disqualification.
+
+2. TARGET IS FLAT +8% on every instrument, checked at checkpoints: any check
+   showing a gain above 8% sells. Replaces target = 2 x stop. Recorded that
+   +8% occurred in zero of 21 sessions for six of the fourteen instruments, so
+   on the calm names this is a ceiling that rarely fires rather than a level to
+   wait for.
+
+3. RATCHET LOCKS IN AT +1%. As soon as gain exceeds 1% the stop goes to
+   breakeven, so the trade can no longer become a loss. Replaces the
+   volatility-derived breakeven trigger. Above breakeven the trail continues at
+   1 x median adverse excursion below the running high.
+
+4. AT 2 STALLS the stop becomes max(current stop, breakeven) -- whichever is
+   HIGHER. If the trail has already carried it above breakeven it stays put.
+   Previously this could have been read as forcing it down to breakeven.
+
+5. MIDDAY EXCLUSION REMOVED ENTIRELY. Every 30-minute window counts normally
+   all session. Lunch windows increment the stall count, reset it on a
+   qualifying new high, and enter the volume chain like any other. Accepted
+   consequence recorded: a position held through midday is now more likely to
+   accumulate stalls and be sold there.
+
+6. HEADLINE SCOPE SPLIT BY STATE. Flat reads the PREVIOUS day's headlines --
+   the material a setup is built from. Holding reads the SAME day's -- only
+   live news can invalidate a live thesis. Looking for a setup and defending a
+   position are different jobs needing different information.
+
+limits.json, vol_profile.py, preflight.py and replay.py all updated to match;
+the profile regenerated. SOXL no longer denies -- it warns that its noise is
+wider than its capped stop.
+
+Worth flagging from the re-replay: GUSH 2026-08-05 under the tighter 3.0%
+profile stop is a full -1.00R stop-out at 14:40, where the old 5% stop let the
+stall ladder exit at -0.58R. The dollar loss is nearly identical (-3.00% vs
+-2.91%) -- the R multiple differs because R is the stop. Tighter stops mean
+smaller dollar losses but more full-R losses, and R multiples are not
+comparable across different stop sizes for the same dollar outcome.
 
 ---
 

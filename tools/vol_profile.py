@@ -14,9 +14,14 @@ FORMULAS
     median_mfe   median of (high - open) / open over the window
 
     stop      = clamp(1.5 x median_mae, 2.5%, 7.0%)
-    target    = 8.0%  flat                 (sell at any check above it)
-    breakeven = +1.0% flat                 (lock gains in immediately)
+    target    = 8.0%  flat                 (sell at any check AT OR ABOVE it)
+    breakeven = max(median_mfe, 0.5 x stop)  (where the stop first goes to breakeven)
     trail     = 1.0 x median_mae           (below the running high, once past breakeven)
+
+WHY the breakeven trigger floors at half the stop: moving the stop to breakeven
+when the gain is G leaves the stop G below price. If G is smaller than normal
+retracement the position just scratches on noise. Half the stop distance is the
+smallest gain at which a breakeven stop is not itself inside the noise.
 
     NOTHING IS EXCLUDED on volatility. Where 1.5 x median_mae exceeds the cap the
     stop is simply capped at 7% and stop_at_cap is flagged, so the tightness
@@ -43,7 +48,7 @@ STOP_MULT = 1.5
 STOP_FLOOR = 2.5
 STOP_CAP = 7.0
 TARGET_PCT = 8.0          # flat, governor decision 2026-08-11
-BREAKEVEN_TRIGGER_PCT = 1.0   # lock gains in immediately past +1%
+BREAKEVEN_FLOOR_FRAC = 0.5    # trigger floors at half the stop
 TRAIL_MULT = 1.0
 
 
@@ -60,7 +65,7 @@ def profile(bars):
         "median_mfe_pct": round(med_mfe, 3),
         "stop_pct": round(stop, 2),
         "target_pct": TARGET_PCT,
-        "breakeven_trigger_pct": BREAKEVEN_TRIGGER_PCT,
+        "breakeven_trigger_pct": round(max(med_mfe, BREAKEVEN_FLOOR_FRAC * stop), 2),
         "trail_pct": round(TRAIL_MULT * med_mae, 2),
         "stop_at_cap": "yes" if capped else "no",
     }

@@ -21,9 +21,9 @@ What is modelled, per RULEBOOK section 6 / section 8 and OPERATIONS.md:
                counts normally.
   LADDER       2 stalled windows -> stop to max(current, breakeven), never
                lowered. 3 -> sell at the next checkpoint, any gain.
-  RATCHET      gain > +1% -> breakeven immediately. Past breakeven -> trail
+  RATCHET      gain >= breakeven_trigger -> breakeven. Past that -> trail
                `--trail-pct` below the running high. Up only, min move 0.5%.
-  TARGET       any checkpoint showing gain > +8% -> sell.
+  TARGET       any checkpoint showing gain AT OR ABOVE +8% -> sell.
 
 Usage:
     python3 tools/replay.py data/bars_5min_GUSH_2026-08-05.csv \\
@@ -74,20 +74,20 @@ def stall_windows(bars, entry_m):
     return [dict(start=k, **v) for k, v in sorted(wins.items())]
 
 
-def ratchet(gain_pct, run_high_pct, trail_pct, stalls):
+def ratchet(gain_pct, run_high_pct, trail_pct, stalls, be_trigger):
     """Target stop as a percent offset from entry. None = leave as is.
 
-    +1% gain          -> breakeven, immediately
-    past breakeven    -> trail `trail_pct` below the running high
-    2 stalled windows -> max(current, breakeven); handled by the up-only rule
+    gain >= be_trigger -> breakeven
+    past breakeven     -> trail `trail_pct` below the running high
+    2 stalled windows  -> max(current, breakeven); the up-only rule does the rest
     """
     levels = []
-    if gain_pct > 1.0:
-        levels.append(0.0)                       # breakeven
-    if run_high_pct is not None and run_high_pct > 1.0:
-        levels.append(run_high_pct - trail_pct)  # trail below the high
+    if gain_pct >= be_trigger:
+        levels.append(0.0)
+    if run_high_pct is not None and run_high_pct >= be_trigger:
+        levels.append(run_high_pct - trail_pct)
     if stalls >= 2:
-        levels.append(0.0)                       # never lowered; up-only wins
+        levels.append(0.0)
     return max(levels) if levels else None
 
 
@@ -98,6 +98,8 @@ def main():
     p.add_argument("--cadence", type=int, default=15, help="checkpoint spacing, minutes")
     p.add_argument("--stop-pct", type=float, default=5.0)
     p.add_argument("--target-pct", type=float, default=8.0)
+    p.add_argument("--breakeven-pct", type=float, default=2.1,
+                   help="gain at which the stop first goes to breakeven")
     p.add_argument("--trail-pct", type=float, default=2.0,
                    help="trail distance below the running high, = 1 x median MAE")
     p.add_argument("--verbose", action="store_true")
@@ -149,7 +151,7 @@ def main():
 
         # ratchet, up only. min move 0.5% of entry to bound cancel/replace churn.
         run_high_pct = (run_high - entry) / entry * 100
-        sched = ratchet(gain, run_high_pct, a.trail_pct, stalls)
+        sched = ratchet(gain, run_high_pct, a.trail_pct, stalls, a.breakeven_pct)
         if sched is not None:
             new = entry * (1 + sched / 100)
             if new > stop and (new - stop) / entry * 100 >= 0.5:

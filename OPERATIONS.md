@@ -85,8 +85,8 @@ Checks, deterministically, against `limits.json`: the loss streak **computed fro
 
 ```
 stop      = clamp(1.5 x median adverse excursion, 2.5%, 7.0%)
-target    = +8.0%  flat  — sell at any check above it
-breakeven = +1.0%  flat  — lock gains in immediately
+target    = +8.0%  flat  — sell at any check AT OR ABOVE it
+breakeven = max(median favourable excursion, 0.5 x stop)
 trail     = 1.0 x median adverse excursion, below the running high
 ```
 
@@ -107,24 +107,25 @@ trail     = 1.0 x median adverse excursion, below the running high
 
 > **Honest note on what this buys.** Replaying it changed expectancy by about **+0.01R — noise** (EXP-009). This is a **risk-consistency fix, not a return fix.** Its value is that R finally means the same thing across instruments, which is what makes the expectancy metric in §14 meaningful at all. Do not expect it to make money.
 
-### The ratchet — lock in past +1%, then trail
+### The ratchet — one trigger, then a trail
 
 | Stage | Stop goes to |
 |---|---|
 | At entry | `−stop_pct` from the profile |
-| **Gain exceeds +1%** | **breakeven (the fill price) — immediately** |
-| Past breakeven | **trail at `trail_pct` below the running high** |
+| **Gain reaches `breakeven_trigger_pct`** | **breakeven** (the fill price) |
+| Past that | **trail at `trail_pct` below the running high** |
 | **2 stalled windows** | **`max(current stop, breakeven)`** — whichever is HIGHER. Never lowered |
 | **3 stalled windows** | **SELL** (§8.1) |
-| **Any check showing gain > +8%** | **SELL** — the target |
+| **Any check AT OR ABOVE +8%** | **SELL** — the target |
 
-- **+1% is the lock-in point.** As soon as the position clears 1%, the trade can no longer become a loss. This is deliberately early: gains get protected the moment they exist rather than waiting for a threshold the instrument may never reach.
-- **At 2 stalls the stop is raised to breakeven ONLY IF that is higher than where it already sits.** If the trail has carried it above breakeven, it stays where it is. The stop never moves down (§6).
+- **The trigger is per-instrument**, from `vol_profile.csv`: GUSH +2.1%, ERX +1.2%, NUGT +2.7%, MSTX +6.2%. It is `max(median favourable excursion, 0.5 × stop)`.
+- **Why the trigger is not a flat number.** It floors at half the stop because moving the stop to breakeven at a gain *smaller* than normal retracement just scratches the position on noise — the newly tightened stop would sit inside the instrument's own wiggle. Half the stop distance is the smallest gain at which a breakeven stop is not itself inside the noise.
+- **At 2 stalls the stop goes to breakeven ONLY IF that is higher than where it already sits.** If the trail has carried it above breakeven, it stays. The stop never moves down (§6).
 - **The trail replaces the old rung schedule.** Rungs at +5/+8/+10/+12 were dead code — +8% occurred in zero of 21 sessions for GUSH, ERX, NUGT, NRGU, DUST and YINN.
 - **Minimum move 0.5%.** Do not re-place the stop for less — every move is a cancel-then-replace that briefly leaves the position unprotected.
 - **Structural override, UPWARD ONLY.** A swing low that has held above the trailed level may be used instead.
 - **Never on a flat print.** The stop migrates up as the position *gains*.
-- **Expect scratches.** A +1% lock-in with a trail one median-adverse-excursion wide will be hit by ordinary noise. That is the accepted price of a downside that closes almost immediately — and the ladder also cuts losers near **−0.6R rather than −1.0R** (EXP-010).
+- **Expect scratches.** A trail one median-adverse-excursion wide is by construction hit by an ordinary adverse move. That is the accepted price of a bounded downside — and the ladder also cuts losers near **−0.6R rather than −1.0R** (EXP-010).
 
 ### Hard limits of a stop
 

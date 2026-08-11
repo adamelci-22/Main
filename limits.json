@@ -66,14 +66,15 @@
   ],
   "target": {
     "pct": 8.0,
-    "note": "Flat +8%, checked at checkpoints. Replaced target = 2 x stop on 2026-08-11."
+    "comparison": "at_or_above",
+    "note": "Sell at any checkpoint showing a gain AT OR ABOVE +8%. Replaced target = 2 x stop on 2026-08-11."
   },
   "breakeven": {
-    "trigger_pct": 1.0,
-    "note": "Stop moves to breakeven as soon as gain exceeds +1%. Gains are locked in immediately.",
+    "trigger": "max(median_mfe, 0.5 * stop)",
+    "note": "Where the stop first moves to breakeven. Volatility-scaled per instrument, from data/vol_profile.csv.",
     "trail_mult_of_median_mae": 1.0,
     "min_stop_move_pct": 0.5,
-    "at_2_stalls": "stop = max(current stop, breakeven) -- never lowered to breakeven if already higher"
+    "at_2_stalls": "stop = max(current stop, breakeven) -- never lowered if the trail already carried it higher"
   },
   "stall": {
     "windows_to_sell": 3,
