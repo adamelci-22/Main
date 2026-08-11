@@ -65,7 +65,7 @@ Grow the account as fast as possible in a "nothing to lose" mindset, using **lev
 > **§1** trigger hygiene · **§3** early shutdown · **§5** order execution · **§6** stops · **§8** exit criteria · **§11** headline check
 >
 > They were moved, not copied — each rule exists in exactly one file, so they cannot drift apart. Section numbers are unchanged, so every `(§n)` reference still resolves.
-> **A management checkpoint reads only `OPERATIONS.md` (~14KB) instead of this file (~50KB).** Entering, reporting, arming and research read both.
+> **A management checkpoint reads only `OPERATIONS.md` (~19KB) instead of this file (~61KB).** Entering, reporting, arming and research read both.
 
 ---
 
@@ -75,14 +75,14 @@ Grow the account as fast as possible in a "nothing to lose" mindset, using **lev
 
 ## 2. The daily grid (ET)
 
-A three-stage morning funnel, then management, then close. **The number of checkpoints is not fixed** — see the cadence rules below.
+A three-stage morning funnel, then management, then close. **17 checkpoints, plus 7 extended-hours slots only when a position is open.**
 
 | Time | Role | Orders | Reads |
 |---|---|---|---|
 | **9:00am** | **Pre-market research** | ❌ read-only | both files |
 | **9:30am** | Opening observation | ❌ read-only | `OPERATIONS.md` |
 | **9:45am** | **TRADING OPENS** — first entry | ✅ | **both files** |
-| 10:00 → 3:30 | Management, cadence per below | ✅ | `OPERATIONS.md` |
+| 10:00 → 3:30 | Management, **every 30 min** | ✅ | `OPERATIONS.md` |
 | 4:00pm | Close of regular hours, session report | ✅ until the bell | both files |
 | 4:30 → 7:00 | Extended hours — **only armed if holding** | ⚠️ limit only, **no new positions** | `OPERATIONS.md` |
 | **7:30pm** | **LAST ACTIONABLE CLOSE** — only armed if holding | ⚠️ day trades must close; swings may hold | `OPERATIONS.md` |
@@ -90,43 +90,39 @@ A three-stage morning funnel, then management, then close. **The number of check
 
 Convert each ET time to UTC using the offset in effect.
 
-### CADENCE IS STATE-DEPENDENT — arm sparse, densify on entry
+### Data resolution and decision cadence are separate things
 
 **Data resolution and decision cadence are separate things and must not be confused.** An earlier version coupled them: checkpoints were 30 minutes apart, the stall was defined from 30-minute bars, and three stalls triggered an exit — so the exit rule's timescale was an artifact of the schedule rather than a claim about the market. **Always collect 5-minute bars** (§8.1) regardless of how often the agent wakes.
 
-**Baseline armed each evening — assume FLAT. 13 checkpoints:**
+### THE CADENCE IS 30 MINUTES. Flat or holding, it does not change.
 
-`9:00 · 9:30 · 9:45 · 10:00 · 10:30 · 11:00 · 11:30 · 12:30 · 1:30 · 2:30 · 3:30 · 4:00 · 8:00`
+**Standard schedule, armed every evening — 17 checkpoints:**
 
-Dense through the preferred entry window (9:45–11:00), then hourly, because after 11:00 a new entry must clear a higher bar anyway (§4 Timing) and a flat checkpoint can only report that nothing qualified.
+`9:00 · 9:30 · 9:45 · 10:00 · 10:30 · 11:00 · 11:30 · 12:00 · 12:30 · 1:00 · 1:30 · 2:00 · 2:30 · 3:00 · 3:30 · 4:00 · 8:00`
 
-**ON ENTRY, the entering checkpoint immediately arms the fill-ins** — this is part of executing the trade, not an afterthought:
+**Plus, ONLY if a position is open at 4:00pm** — extended hours at 30 minutes: `4:30 · 5:00 · 5:30 · 6:00 · 6:30 · 7:00 · 7:30`. A flat book never arms these (§3).
 
-| State | Cadence | Reason |
-|---|---|---|
-| Holding, regular hours | **every 15 min** to 4:00 | Halves ratchet latency. A threshold crossed at 10:07 with a 30-minute cadence leaves the stop unmoved for 23 minutes while the position runs |
-| Holding, extended hours | 30 min, 4:30 → 7:00, plus **7:30** | No stop can rest; manual management only (§6) |
-| Carrying overnight | 8:00pm arms the **holding** schedule for the next day | The position exists before the day starts |
-| Exceptional volatility | §12 — off-grid minutes, 10–15 min | Already authorised |
-
-**CONDITIONAL 10-MINUTE DENSIFICATION — only where latency is actually expensive.** Drop to 10 minutes when *any* of these holds, and stand back down to 15 when none does:
-
-| Condition | Why latency costs money here |
+| State | Cadence |
 |---|---|
-| Within **1%** of the next ratchet threshold (§6) | The stop is about to move; every minute of delay is a minute the gain is unprotected |
-| Within **1.5%** of the stop | The position is about to resolve. Being present matters |
-| **3:00–4:00pm holding**, overnight decision pending | The last hour a stop functions at all (§6) |
-| Exceptional volatility | §12 |
+| Flat | **30 min** after 10:00 |
+| Holding, regular hours | **30 min** — the same |
+| Holding, extended hours | 30 min, 4:30 → 7:00, plus **7:30** |
+| Carrying overnight | 8:00pm arms the standard schedule; extended-hours slots get armed the following afternoon if still held |
+| Exceptional volatility | §12 — off-grid minutes, the one authorised exception |
 
-**Do NOT run 10 minutes uniformly.** Three reasons, and the first is the one that matters:
+**No densification on entry.** Earlier drafts tightened to 15 minutes while holding and to 10 minutes near a stop or ratchet threshold. **Both are removed.** Entering a trade does not change the clock.
 
-- **It changes the exit rule not at all.** The stall clock runs on market time (§8.1), so checking three times as often advances nothing.
-- **The latency gain collapses.** Average delay to act on a threshold crossing is roughly cadence ÷ 2. Going 30 → 15 saved 7.5 minutes; going **15 → 10 saves 2.5 more for 50% more sessions.** That is the worst available trade.
-- **Every checkpoint is a chance to make an unforced error.** Each one is a cold session that re-derives everything and re-decides. The pre-commit rule (§8) exists *because* any single decision point is unreliable. Tripling the decision points on an open position triples exposure to that. **More looking is not more discipline.**
+**Why 30 minutes is defensible, and it is not just a cost argument:**
 
-**Why this is not more expensive.** A flat day costs 13 checkpoints instead of 24. A day that enters at 9:45 and exits at 1:00 runs dense for three hours and then §3 early-shutdown deletes the rest — roughly 18. Since only one round trip per day is possible and an exit ends the session's trading, **the dense period is always short and bounded.**
+- **Measured, not assumed.** `tools/replay.py` on GUSH 2026-08-05 took the *same exit for the same reason* at 10, 15 and 30 minutes — results −0.60R, −0.58R, −0.61R. **A 3× range of cadence moved the outcome 0.03R** (EXP-006).
+- **The stall clock runs on market time** (§8.1), not on checkpoints. Waking more often does not advance it, so a faster cadence cannot change when the ladder fires.
+- **Every checkpoint is a chance to make an unforced error.** Each is a cold session that re-derives everything and re-decides. The pre-commit rule (§8) exists *because* any single decision point is unreliable — so more decision points means more exposure to that unreliability. **More looking is not more discipline.**
 
-**Densification is not optional, and a failure to densify must not leave a position under-covered.** The baseline above is deliberately sufficient to manage a position on its own — 30-minute gaps at worst until 11:30, then hourly — so if the fill-in arming fails, the position is still managed, just less tightly. Report the failure.
+**What 30 minutes costs, stated honestly:** average delay to act on a newly crossed ratchet threshold is about 15 minutes. A threshold crossed at 10:07 leaves the stop unmoved until 10:30. That is the accepted price, and the replay evidence says it is small.
+
+**§12 volatility escalation survives this** — it is a separate, previously authorised exception for exceptionally volatile positions, not a cadence default. If you want that removed too, say so.
+
+**Cost.** 17 checkpoints flat, 24 when holding into extended hours. That is the same count as the original fixed grid, but the rulebook partition (§16) cut the per-checkpoint read from ~78KB to ~23KB, so **24 checkpoints now cost roughly 57% less than 24 did before the split.** The partition is what pays for this.
 
 **Record the cadence actually in use** in every observation (§16), so it becomes possible to ask later whether it mattered.
 
@@ -386,7 +382,7 @@ This is the one permitted exception to "do not arm anything."
 
 The loop continues **every trading day until the user explicitly pauses or cancels it.** They set that date, not you. Never stop on your own initiative; no week-end or month-end is terminal.
 
-- **Each 8:00pm checkpoint MUST arm the next trading day** — highest priority, ahead of reporting. Arm the **13-slot flat baseline** (§2) unless a position is being carried overnight, in which case arm the holding schedule.
+- **Each 8:00pm checkpoint MUST arm the next trading day** — highest priority, ahead of reporting. Arm the **17-slot standard schedule** (§2). Extended-hours slots are armed only when a position is actually open at 4:00pm, so a normal evening arms 17 and nothing more.
 - **SKIP US market holidays**; arm the next real trading day. Upcoming: **Labor Day Mon Sep 7 2026**; **Thanksgiving Thu Nov 26 2026** (**Fri Nov 27 early 1:00pm close**); **Christmas Fri Dec 25 2026**. On early closes, end the regular grid at the early close and skip extended-hours checkpoints. **Verify the calendar** rather than assuming.
 - **Friday's final checkpoint arms Monday's grid AND the Saturday 10:00am RESEARCHER pass** (§17).
 - **Daylight saving:** the ET times in §2 are authoritative. EDT = UTC−4; after **Sun Nov 1 2026** EST = UTC−5, shifting every UTC slot +1 hour. **Recompute UTC from ET** rather than copying.

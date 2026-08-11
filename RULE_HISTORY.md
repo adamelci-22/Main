@@ -5,7 +5,18 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 05:23 UTC · 21 changes to the rulebook.
+Generated 2026-08-11 05:29 UTC · 22 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `0bc1cc8`
+
+**Fix the section 2 schedule table**
+
+Three rows were missing the Reads column added when the rulebook was
+partitioned, leaving the table malformed. The extended-hours row also still
+described a fixed six checkpoints, which the state-dependent cadence
+replaced -- those slots are now armed only when a position is held.
 
 ---
 
