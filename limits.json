@@ -1,13 +1,13 @@
 {
   "_comment": "Machine-readable hard limits. Read by tools/preflight.py before any order. Changing a value here is a POLICY CHANGE and must follow the RULEBOOK.md section 17 promotion path.",
-  "policy_version": "1.1",
+  "policy_version": "1.2",
   "stop": {
     "mult_of_median_mae": 1.5,
     "floor_pct": 2.5,
     "max_pct": 7.0,
     "required": true,
     "source": "data/vol_profile.csv, refreshed at the 9:00am checkpoint",
-    "note": "Flat 5% default retired 2026-08-11 (EXP-007/008). An instrument with no profile row may not be traded."
+    "note": "Flat 5% default retired 2026-08-11 (EXP-007/008); stop stays volatility-scaled. No instrument is excluded on volatility -- governor decision 2026-08-11: any leveraged instrument may be traded if it meets the entry gates. The 7% cap still binds."
   },
   "floor": {
     "pct_of_deposits": 50.0
@@ -65,14 +65,21 @@
     "short_sale"
   ],
   "target": {
-    "rr_multiple_of_stop": 2.0
+    "pct": 8.0,
+    "note": "Flat +8%, checked at checkpoints. Replaced target = 2 x stop on 2026-08-11."
   },
   "breakeven": {
-    "trigger": "max(median_mfe, 0.5 * stop)",
+    "trigger_pct": 1.0,
+    "note": "Stop moves to breakeven as soon as gain exceeds +1%. Gains are locked in immediately.",
     "trail_mult_of_median_mae": 1.0,
-    "min_stop_move_pct": 0.5
+    "min_stop_move_pct": 0.5,
+    "at_2_stalls": "stop = max(current stop, breakeven) -- never lowered to breakeven if already higher"
   },
-  "excluded_instruments": {
-    "SOXL": "median adverse excursion 6.6% exceeds the 7% stop cap; no permissible stop survives an ordinary session"
+  "stall": {
+    "windows_to_sell": 3,
+    "window_min": 30,
+    "new_high_pct": 0.3,
+    "midday_exclusion": false,
+    "note": "Midday exclusion removed 2026-08-11 -- every window counts normally."
   }
 }

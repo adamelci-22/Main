@@ -5,7 +5,7 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 05:47 UTC · 24 changes to the rulebook.
+Generated 2026-08-11 06:07 UTC · 24 changes to the rulebook.
 
 ---
 

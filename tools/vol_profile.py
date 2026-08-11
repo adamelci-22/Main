@@ -14,15 +14,13 @@ FORMULAS
     median_mfe   median of (high - open) / open over the window
 
     stop      = clamp(1.5 x median_mae, 2.5%, 7.0%)
-    EXCLUDED  if 1.5 x median_mae > 7.0%   (noise wider than the hard cap)
-    target    = 2.0 x stop                 (2:1 by construction)
-    breakeven = max(median_mfe, 0.5 x stop)
+    target    = 8.0%  flat                 (sell at any check above it)
+    breakeven = +1.0% flat                 (lock gains in immediately)
     trail     = 1.0 x median_mae           (below the running high, once past breakeven)
 
-WHY breakeven has a floor of half the stop: moving the stop to breakeven when
-the gain is G leaves the stop G below price. If G is smaller than normal
-retracement the position scratches on noise. Half the stop distance is the
-smallest gain for which a breakeven stop is not itself inside the noise.
+    NOTHING IS EXCLUDED on volatility. Where 1.5 x median_mae exceeds the cap the
+    stop is simply capped at 7% and stop_at_cap is flagged, so the tightness
+    relative to that instrument's noise is visible rather than disqualifying.
 
 THIS MUST BE RECOMPUTED, NOT FROZEN. Volatility moves -- SOXL ranged from $196
 to $91 inside the sample window that produced the first profile. The 9:00am
@@ -44,8 +42,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STOP_MULT = 1.5
 STOP_FLOOR = 2.5
 STOP_CAP = 7.0
-TARGET_RR = 2.0
-BREAKEVEN_FLOOR_FRAC = 0.5
+TARGET_PCT = 8.0          # flat, governor decision 2026-08-11
+BREAKEVEN_TRIGGER_PCT = 1.0   # lock gains in immediately past +1%
 TRAIL_MULT = 1.0
 
 
@@ -54,17 +52,17 @@ def profile(bars):
     mfe = [(b["high"] - b["open"]) / b["open"] * 100 for b in bars]
     med_mae, med_mfe = st.median(mae), st.median(mfe)
     raw = STOP_MULT * med_mae
-    excluded = raw > STOP_CAP
+    capped = raw > STOP_CAP          # informational only -- nothing is excluded
     stop = min(max(raw, STOP_FLOOR), STOP_CAP)
     return {
         "sessions": len(bars),
         "median_mae_pct": round(med_mae, 3),
         "median_mfe_pct": round(med_mfe, 3),
         "stop_pct": round(stop, 2),
-        "target_pct": round(stop * TARGET_RR, 2),
-        "breakeven_trigger_pct": round(max(med_mfe, BREAKEVEN_FLOOR_FRAC * stop), 2),
+        "target_pct": TARGET_PCT,
+        "breakeven_trigger_pct": BREAKEVEN_TRIGGER_PCT,
         "trail_pct": round(TRAIL_MULT * med_mae, 2),
-        "excluded": "yes" if excluded else "no",
+        "stop_at_cap": "yes" if capped else "no",
     }
 
 
@@ -88,13 +86,13 @@ def main():
         out.append(d)
 
     cols = ["symbol", "sessions", "median_mae_pct", "median_mfe_pct", "stop_pct",
-            "target_pct", "breakeven_trigger_pct", "trail_pct", "excluded", "computed"]
+            "target_pct", "breakeven_trigger_pct", "trail_pct", "stop_at_cap", "computed"]
 
     print(f"{'sym':6}{'n':>4}{'medMAE':>8}{'medMFE':>8}{'stop':>7}{'target':>8}"
           f"{'BE trig':>9}{'trail':>7}  status")
     print("-" * 68)
     for d in sorted(out, key=lambda x: x["stop_pct"]):
-        status = "EXCLUDED — noise > 7% cap" if d["excluded"] == "yes" else ""
+        status = "stop AT THE 7% CAP — noise is wider than the stop" if d["stop_at_cap"] == "yes" else ""
         print(f"{d['symbol']:6}{d['sessions']:>4}{d['median_mae_pct']:>7.1f}%"
               f"{d['median_mfe_pct']:>7.1f}%{d['stop_pct']:>6.1f}%{d['target_pct']:>7.1f}%"
               f"{d['breakeven_trigger_pct']:>8.1f}%{d['trail_pct']:>6.1f}%  {status}")

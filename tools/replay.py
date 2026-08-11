@@ -17,12 +17,13 @@ What is modelled, per RULEBOOK section 6 / section 8 and OPERATIONS.md:
   STALL CLOCK  30-minute windows of MARKET time, clock-anchored at :00/:30,
                independent of the checkpoint cadence. A window is stalled when
                its high fails to beat the running high by >0.3% AND its volume
-               is below the prior window's. Windows in the 12:00-13:30 ET
-               midday exclusion do not count.
-  LADDER       2 stalled windows -> stop to breakeven. 3 -> sell at the next
-               checkpoint, any gain.
-  RATCHET      +3% -> breakeven; +5% -> +2%; +8% -> +4%; +10% -> +6%;
-               +12%+ -> half the gain. Up only. Applied at checkpoints.
+               is below the prior window's. NO midday exclusion -- every window
+               counts normally.
+  LADDER       2 stalled windows -> stop to max(current, breakeven), never
+               lowered. 3 -> sell at the next checkpoint, any gain.
+  RATCHET      gain > +1% -> breakeven immediately. Past breakeven -> trail
+               `--trail-pct` below the running high. Up only, min move 0.5%.
+  TARGET       any checkpoint showing gain > +8% -> sell.
 
 Usage:
     python3 tools/replay.py data/bars_5min_GUSH_2026-08-05.csv \\
@@ -73,21 +74,21 @@ def stall_windows(bars, entry_m):
     return [dict(start=k, **v) for k, v in sorted(wins.items())]
 
 
-def ratchet(gain_pct, entry, stalls):
-    """Scheduled stop as a percent offset from entry. None = leave as is."""
-    if gain_pct >= 12:
-        return gain_pct / 2.0
-    if gain_pct >= 10:
-        return 6.0
-    if gain_pct >= 8:
-        return 4.0
-    if gain_pct >= 5:
-        return 2.0
-    if gain_pct >= 3:
-        return 0.0
-    if gain_pct >= 2 and stalls >= 2:
-        return 0.0
-    return None
+def ratchet(gain_pct, run_high_pct, trail_pct, stalls):
+    """Target stop as a percent offset from entry. None = leave as is.
+
+    +1% gain          -> breakeven, immediately
+    past breakeven    -> trail `trail_pct` below the running high
+    2 stalled windows -> max(current, breakeven); handled by the up-only rule
+    """
+    levels = []
+    if gain_pct > 1.0:
+        levels.append(0.0)                       # breakeven
+    if run_high_pct is not None and run_high_pct > 1.0:
+        levels.append(run_high_pct - trail_pct)  # trail below the high
+    if stalls >= 2:
+        levels.append(0.0)                       # never lowered; up-only wins
+    return max(levels) if levels else None
 
 
 def main():
@@ -97,6 +98,8 @@ def main():
     p.add_argument("--cadence", type=int, default=15, help="checkpoint spacing, minutes")
     p.add_argument("--stop-pct", type=float, default=5.0)
     p.add_argument("--target-pct", type=float, default=8.0)
+    p.add_argument("--trail-pct", type=float, default=2.0,
+                   help="trail distance below the running high, = 1 x median MAE")
     p.add_argument("--verbose", action="store_true")
     a = p.parse_args()
 
@@ -128,36 +131,31 @@ def main():
         px = b["close"]
         gain = (px - entry) / entry * 100
 
-        # Stall count over completed windows. Midday (12:00-13:30 ET) is
-        # ASYMMETRIC: a midday window may RESET the counter and may raise the
-        # running high, but may never ADD a stall, and its volume is kept out
-        # of the comparison chain entirely.
+        # Stall count over completed windows. NO midday exclusion -- every
+        # window counts normally (governor decision 2026-08-11).
         run_high, stalls, prev_vol = entry, 0, None
         for w in wins:
             if w["end"] > b["m"]:
                 break
-            w_et = w["start"] + ET_OFFSET * 60
-            midday = 12 * 60 <= w_et < 13 * 60 + 30
-
             progressed = w["high"] > run_high * 1.003
             if progressed:
                 stalls = 0
-                run_high = max(run_high, w["high"])   # tracks through midday
-            elif not midday:
+                run_high = max(run_high, w["high"])
+            else:
                 vol_dry = prev_vol is not None and w["vol"] < prev_vol
                 if vol_dry:
                     stalls += 1
+            prev_vol = w["vol"]
 
-            if not midday:            # lunch volume never becomes the baseline
-                prev_vol = w["vol"]
-
-        # ratchet, up only
-        sched = ratchet(gain, entry, stalls)
+        # ratchet, up only. min move 0.5% of entry to bound cancel/replace churn.
+        run_high_pct = (run_high - entry) / entry * 100
+        sched = ratchet(gain, run_high_pct, a.trail_pct, stalls)
         if sched is not None:
             new = entry * (1 + sched / 100)
-            if new > stop:
+            if new > stop and (new - stop) / entry * 100 >= 0.5:
                 stop, stop_label = new, f"{sched:+.2f}%"
-                log.append(f"  {b['ts']}  ratchet -> stop {stop:.4f} ({stop_label}) at {gain:+.2f}%")
+                log.append(f"  {b['ts']}  ratchet -> stop {stop:.4f} ({stop_label}) "
+                           f"at {gain:+.2f}%, high {run_high_pct:+.2f}%, stalls {stalls}")
 
         if a.verbose:
             log.append(f"  {b['ts']}  px {px:.4f} {gain:+6.2f}%  stalls {stalls}  stop {stop:.4f}")

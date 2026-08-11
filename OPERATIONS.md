@@ -85,23 +85,21 @@ Checks, deterministically, against `limits.json`: the loss streak **computed fro
 
 ```
 stop      = clamp(1.5 x median adverse excursion, 2.5%, 7.0%)
-target    = 2.0 x stop
-breakeven = max(median favourable excursion, 0.5 x stop)
-trail     = 1.0 x median adverse excursion
-EXCLUDE the instrument if 1.5 x median MAE > 7.0%
+target    = +8.0%  flat  — sell at any check above it
+breakeven = +1.0%  flat  — lock gains in immediately
+trail     = 1.0 x median adverse excursion, below the running high
 ```
 
 **Why this replaced a flat 5%.** Median adverse excursion across the leveraged universe spans **0.9% (YINN) to 6.6% (SOXL)** — sevenfold. A single number is four times too tight on one end and twice too loose on the other. Worse, stop quality and target reachability are **inverse**: every instrument where +8% was reachable is one where a 5% stop was hit constantly, and every instrument with a comfortable stop never reached +8%. The fixed pair was wrong on all fourteen (EXP-007, EXP-008).
 
-**Current profile** — *illustrative only, the file is authoritative and is recomputed daily:*
+**Current stops** — *illustrative only; `vol_profile.csv` is authoritative and is recomputed daily. Target is +8% on all of them.*
 
-| | ERX · YINN | GUSH · FNGU | NRGU · DUST | NVDL · TSLL · MSTX | CONL · SOXS | SOXL |
+| ERX · YINN | GUSH · FNGU | NRGU · DUST | LABU | NVDL · TSLL · MSTX | CONL · SOXS | SOXL |
 |---|---|---|---|---|---|---|
-| stop | 2.5% | 3.0% | 4.1–4.3% | 5.0–5.2% | 6.4–6.5% | **excluded** |
-| target | 5.0% | 5.9% | 8.2–8.7% | 10.0–10.4% | 12.7–13.0% | — |
+| 2.5% | 3.0% | 4.1–4.3% | 4.8% | 5.0–5.2% | 6.4–6.5% | 7.0% *(at cap)* |
 
-- **SOXL is EXCLUDED**, and this is a real conclusion rather than an omission: its noise (6.6% median adverse) is wider than the 7% hard cap, so no permissible stop survives an ordinary day. Independent of it also costing $140.
-- **If an instrument is not in `vol_profile.csv`, you may not trade it.** Compute its profile first or pick something else. No falling back to 5%.
+- **NOTHING IS EXCLUDED on volatility.** Any leveraged instrument may be traded if it meets the §4 entry gates. Where `1.5 × median MAE` exceeds the cap the stop is simply **capped at 7%** and flagged `stop_at_cap=yes` — SOXL is the current case, its 6.6% median adverse being wider than its own 7% stop. That is a **warning to weigh at entry, not a disqualification**: expect frequent noise stop-outs there.
+- **If an instrument is not in `vol_profile.csv`, you may not trade it.** Compute its profile first or pick something else. No falling back to a flat default.
 - **HARD CEILING 7%, unchanged.** A setup needing more room is not a setup — decline it.
 - **Tighten to structure if a level is nearer.** Structure beats the scaled number when it is *closer*, never when it is further.
 - **State the stop price, the percentage, and the target at entry**, in the same breath as the entry. That was the Aug 10 failure: no number existed to check judgment against, so it got argued out in chat while the position was live.
@@ -109,23 +107,24 @@ EXCLUDE the instrument if 1.5 x median MAE > 7.0%
 
 > **Honest note on what this buys.** Replaying it changed expectancy by about **+0.01R — noise** (EXP-009). This is a **risk-consistency fix, not a return fix.** Its value is that R finally means the same thing across instruments, which is what makes the expectancy metric in §14 meaningful at all. Do not expect it to make money.
 
-### The ratchet — one trigger, then a trail
-
-**The old schedule was mostly dead code.** Rungs at +5%, +8%, +10% and +12% only fire if the position reaches them, and +8% occurred in **zero of 21 sessions** for GUSH, ERX, NUGT, NRGU, DUST and YINN. In practice the ladder was a single rung. It is now written as one.
+### The ratchet — lock in past +1%, then trail
 
 | Stage | Stop goes to |
 |---|---|
 | At entry | `−stop_pct` from the profile |
-| **Gain ≥ `breakeven_trigger_pct`** | **breakeven** (the fill price) |
-| **2 stalled windows** and gain ≥ 1% | **breakeven** — whichever comes first |
+| **Gain exceeds +1%** | **breakeven (the fill price) — immediately** |
 | Past breakeven | **trail at `trail_pct` below the running high** |
+| **2 stalled windows** | **`max(current stop, breakeven)`** — whichever is HIGHER. Never lowered |
+| **3 stalled windows** | **SELL** (§8.1) |
+| **Any check showing gain > +8%** | **SELL** — the target |
 
-- **The trail replaces the old rungs.** It keeps pace continuously instead of jumping at thresholds that are never reached.
-- **Minimum move 0.5%.** Do not re-place the stop for less — every move is a cancel-then-replace that briefly leaves the position unprotected, and churn is a real cost.
-- **Structural override, UPWARD ONLY.** A swing low that has held above the trailed level may be used instead. Structure may tighten; never loosen.
+- **+1% is the lock-in point.** As soon as the position clears 1%, the trade can no longer become a loss. This is deliberately early: gains get protected the moment they exist rather than waiting for a threshold the instrument may never reach.
+- **At 2 stalls the stop is raised to breakeven ONLY IF that is higher than where it already sits.** If the trail has carried it above breakeven, it stays where it is. The stop never moves down (§6).
+- **The trail replaces the old rung schedule.** Rungs at +5/+8/+10/+12 were dead code — +8% occurred in zero of 21 sessions for GUSH, ERX, NUGT, NRGU, DUST and YINN.
+- **Minimum move 0.5%.** Do not re-place the stop for less — every move is a cancel-then-replace that briefly leaves the position unprotected.
+- **Structural override, UPWARD ONLY.** A swing low that has held above the trailed level may be used instead.
 - **Never on a flat print.** The stop migrates up as the position *gains*.
-- **Once at breakeven, the stop never goes below it again.** A trade that has been meaningfully green does not become a loss.
-- **Expect scratches.** A trail of one median adverse excursion is, by construction, hit by an ordinary adverse move. That is the accepted price of a bounded downside — and note the ladder also cuts losing positions near **−0.6R rather than −1.0R** (EXP-010), which is where the real benefit sits.
+- **Expect scratches.** A +1% lock-in with a trail one median-adverse-excursion wide will be hit by ordinary noise. That is the accepted price of a downside that closes almost immediately — and the ladder also cuts losers near **−0.6R rather than −1.0R** (EXP-010).
 
 ### Hard limits of a stop
 
@@ -156,13 +155,8 @@ EXCLUDE the instrument if 1.5 x median MAE > 7.0%
    - **The rule is still right, for a different reason.** In that same session the −5% stop would have been hit — GUSH closed −5.5% from the entry. The stall exit took **−0.58R instead of −1.0R.** So on a position that never goes green, the ladder is a **loss limiter**, cutting before the stop rather than protecting a gain.
    - **Two distinct jobs, then:** above +2–3% the ladder banks a gain the ratchet has already protected. Below entry it cuts a dead trade early. Do not justify it with the protected-gain argument when the position is red — that argument does not apply there.
    - **A stall of 2 converts the signal from "sell" into "protect."** The information is not discarded; it is redirected.
-   - **MIDDAY, 12:00–1:30pm ET — the window COUNTS, but it can never ADD a stall.** The exclusion is **asymmetric on purpose**:
-     - **A midday window CAN reset the counter to zero** and CAN raise the running high. A qualifying new high is real — the price went there — and thin volume does not make it fake.
-     - **A midday window can NEVER increment the stall count.** Volume structurally dies over lunch, so a *lack* of progress there carries no information about weakness.
-     - **The running high tracks through midday.** A 12:15 high of $38.00 raises the bar that a 2:00pm window must beat.
-     - **Midday volume is excluded from the volume comparison.** The first post-lunch window is compared against the **last pre-lunch window**, not against lunch. Comparing 2:00pm volume to 1:00pm volume is meaningless — the afternoon is always busier, so every post-lunch window would falsely read as "volume rising."
-     - Positions may still be **protected** during midday (stop raised) — they are never **sold** on a midday stall reading.
-     > **This corrects an earlier version** that skipped midday windows entirely. Skipping meant a genuine new high at 12:15 was *ignored*: the stall count carried across lunch as if nothing had happened, and the running high did not update — which made post-lunch progress too easy to claim against a stale high. Counting progress while refusing to count stalls is the behaviour that was actually intended.
+   - **NO MIDDAY EXCLUSION. Every window counts normally, all session.** Governor decision 2026-08-11 — earlier versions skipped or half-counted 12:00–1:30pm ET and that is removed. Lunch windows increment the stall count, reset it on a qualifying new high, and enter the volume comparison chain exactly like any other window.
+     - **Consequence, accepted:** volume genuinely does die over lunch, so a position held through midday is now more likely to accumulate stalls and be sold there. That is the intended behaviour — a position going nowhere on low volume is still a position going nowhere.
    - **Why unconditional:** a stalled leveraged position is **negative expectancy, not neutral.** Daily rebalancing decay plus spread means time in a non-moving 2x/3x costs money. Waiting is not free.
    - **HOW A COLD CHECKPOINT COUNTS STALLS.** The count is per-position state and **nothing remembers it** — each checkpoint is a fresh session with no recollection of the last one. It must therefore be **DERIVED, every time, from price history**, not recalled:
      - Pull **5-minute bars** from entry to now (`get_equity_historicals`) and aggregate them into clock-anchored 30-minute windows. Collect at the finer resolution and aggregate up; do not request 30-minute bars directly, so the window length stays a free parameter rather than a property of the data (§2).
@@ -195,8 +189,9 @@ At the **end** of every report with an open position, state the **specific, fals
 
 ## 11. Headline check — every checkpoint
 
-- **Flat:** scan major market headlines broadly.
-- **Holding:** scan **only** position-relevant headlines.
+- **FLAT — read the PREVIOUS DAY's headlines.** What happened yesterday and overnight is what forms today's setups. That is the material a shortlist is built from.
+- **HOLDING — read the SAME DAY's headlines.** Once capital is committed, only live news matters: what could invalidate the thesis right now. Yesterday's news is already in the price.
+- The split is deliberate. Looking for a setup and defending a position are different jobs needing different information.
 
 On a geopolitical trade the thesis dies by headline, not by chart. A ceasefire or reopening can move oil 5–10% in minutes, faster than any price-based criterion will show it.
 

@@ -107,11 +107,6 @@ def main():
         fails.append(f"RESTING ORDERS: {a.resting_orders} already resting "
                      f"(max {lim['position']['max_resting_orders']}). A pending sell locks the shares.")
 
-    # --- excluded instruments
-    excl = lim.get("excluded_instruments", {})
-    if a.symbol.upper() in excl:
-        fails.append(f"EXCLUDED INSTRUMENT: {a.symbol.upper()} — {excl[a.symbol.upper()]}")
-
     # --- stop present and sized against THIS instrument's profile
     s = lim["stop"]
     prof = vol_profile(a.symbol)
@@ -120,10 +115,10 @@ def main():
                      "breakeven trigger all derive from data/vol_profile.csv. Compute it "
                      "(tools/vol_profile.py) or pick another instrument — there is no "
                      "fallback default.")
-    elif prof["excluded"] == "yes":
-        fails.append(f"EXCLUDED: {a.symbol.upper()} median adverse excursion "
-                     f"{float(prof['median_mae_pct']):.1f}% needs a stop wider than the "
-                     f"{s['max_pct']:.1f}% cap.")
+    elif prof.get("stop_at_cap") == "yes":
+        warns.append(f"{a.symbol.upper()} median adverse excursion "
+                     f"{float(prof['median_mae_pct']):.1f}% is WIDER than its capped "
+                     f"{float(prof['stop_pct']):.1f}% stop — expect frequent noise stop-outs.")
 
     if s["required"] and a.stop <= 0:
         fails.append("STOP: none supplied. A stop is placed immediately after the entry fills.")
