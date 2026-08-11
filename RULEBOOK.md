@@ -92,7 +92,7 @@ Convert each ET time to UTC using the offset in effect.
 
 ### Data resolution and decision cadence are separate things
 
-**Data resolution and decision cadence are separate things and must not be confused.** An earlier version coupled them: checkpoints were 30 minutes apart, the stall was defined from 30-minute bars, and three stalls triggered an exit — so the exit rule's timescale was an artifact of the schedule rather than a claim about the market. **Always collect 5-minute bars** (§8.1) regardless of how often the agent wakes.
+**Data resolution and decision cadence are separate things and must not be confused.** An earlier version coupled them: checkpoints were 30 minutes apart, the stall was defined from 30-minute bars, and three stalls triggered an exit — so the exit rule's timescale was an artifact of the schedule rather than a claim about the market. **Always collect 15-minute bars** (§8.1) regardless of how often the agent wakes (governor decision 2026-08-11, replacing 5-minute). The principle is unchanged — collect finer than the window and aggregate up — but the floor is now 15 minutes, so window length is re-testable only at multiples of 15.
 
 ### THE CADENCE IS 30 MINUTES. Flat or holding, it does not change.
 

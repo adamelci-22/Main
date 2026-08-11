@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Replay the ACTUAL exit rules on 5-minute bars, honouring the checkpoint structure.
+Replay the ACTUAL exit rules on 15-minute bars, honouring the checkpoint structure.
 
 Why this exists: the earlier daily-bar study implicitly assumed the profit
 target was hit continuously. It is not. Only the STOP rests at the broker. The
@@ -14,7 +14,8 @@ What is modelled, per RULEBOOK section 6 / section 8 and OPERATIONS.md:
                low pierces it fills. Checked on every 5-minute bar.
   CHECKPOINTS  everything else. Target, stall count, ratchet, exit decisions
                happen only at cadence boundaries, at the price then showing.
-  STALL CLOCK  30-minute windows of MARKET time, clock-anchored at :00/:30,
+  STALL CLOCK  30-minute windows of MARKET time from 15-MINUTE bars (two per window),
+               clock-anchored at :00/:30,
                independent of the checkpoint cadence. A window is stalled when
                its high fails to beat the running high by >0.3% AND its volume
                is below the prior window's. NO midday exclusion -- every window

@@ -121,7 +121,9 @@
     "window_min": 30,
     "new_high_pct": 0.3,
     "midday_exclusion": false,
-    "note": "Midday exclusion removed 2026-08-11 -- every window counts normally."
+    "note": "Midday exclusion removed 2026-08-11 -- every window counts normally. Bar resolution changed to 15 minutes 2026-08-11 (governor decision), two bars per 30-minute window; window length is now re-testable only at multiples of 15 minutes.",
+    "bar_interval_min": 15,
+    "bars_per_window": 2
   },
   "commodity_trend_structure_gate": {
     "replaces": "the section 4 named-catalyst requirement, for commodities and materials ONLY",
