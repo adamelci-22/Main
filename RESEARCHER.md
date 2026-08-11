@@ -35,8 +35,12 @@ Write these to `data/observations.jsonl` as `post_exit` records. **The EXECUTOR 
 
 ### 2. Compute the numbers
 
-- **Expectancy per trade, in R** — the primary figure.
-- Profit factor, win rate, average winner ÷ average loser, maximum drawdown.
+- **Expectancy per trade, in R** — the primary figure, ahead of everything else.
+  - `R multiple = (exit% − entry%) ÷ initial stop distance%`, using the stop distance set **at entry** (§14).
+  - `Expectancy = (win rate × avg winner in R) − (loss rate × avg loser in R)`
+  - Positive expectancy is the only thing that decides whether this works. **A negative expectancy over 30+ trades is a process failure** — report it as one and hand the decision to the governor.
+- Profit factor (gross wins ÷ gross losses), maximum drawdown from peak.
+- **Win rate and average winner ÷ average loser are DESCRIPTIVE ONLY.** Neither is a target. Never present either as a pass or a fail — a 60% win rate at 0.9R is profitable and a 40% rate at 1.2R is not.
 - Slippage, entry and exit.
 - **Rule adherence** — count of checkpoints where a rule was followed against where it was not. A profitable month with poor adherence is worse news than a losing month with good adherence.
 - Sample size, stated on every claim.

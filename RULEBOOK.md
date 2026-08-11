@@ -422,13 +422,48 @@ A week is ~3–4 trades and is noise. A month is ~12–15 and lets the win/loss 
 
 ### Statistics — each month-end
 
-- **WIN RATE is the headline metric.** This is a high-frequency, small-win system by design, so consistency of wins carries it — not the size of any one.
-- **Average winner ÷ average loser ≥ 1.2:1**, with **anything below 1:1 a hard failure** regardless of the account balance.
-  - **Why 1.2 and not 2.** The three-check stall exit sells at whatever gain stands, so most winners land at +2–5% rather than at the +8–12% target. Against losses that are a mix of −5% stops and breakeven scratches, the honest expectation is roughly 1:1 to 1.3:1. **A metric the process cannot produce is worse than no metric** — it invites holding winners past their exit to flatter the ratio, which is precisely the drift §8 forbids. An earlier draft demanded 2:1; that depended on a +5% stall floor which has since been retired in favour of the escalation ladder.
-  - **What protects the ratio instead of a floor:** the breakeven ratchet at two stalled checks. It converts would-be small losses into scratches, which is what keeps the denominator from swallowing the numerator.
-- **A high win rate at a poor ratio is still a time bomb** — 70% at 0.8:1 fails. The 1:1 hard floor is what stops win rate from being gamed by cutting winners ever shorter.
-- **Trade count** reported, not targeted
-- **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. It is a **flag, not a brake**: report it loudly with a written review of what broke, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage only reflects instrument volatility.
+### The primary metric is EXPECTANCY, in R
+
+**R is the risk accepted at entry** — the initial stop distance in percent, fixed at the moment of entry and never recalculated afterwards. A trade's result in R is:
+
+```
+R multiple = (exit% − entry%) ÷ initial stop distance%
+```
+
+So a −5% initial stop and a +3.25% exit is **+0.65R**. Being stopped out at the initial stop is **−1.0R**. A scratch at breakeven is **0R**. Using *initial* risk as the denominator is deliberate: it measures return against the risk that was actually accepted, so ratcheting the stop to breakeven correctly shows up as a smaller loss rather than as smaller risk.
+
+```
+Expectancy per trade = (win rate × avg winner in R) − (loss rate × avg loser in R)
+```
+
+**Positive expectancy is the only thing that matters.** Report it every month. It is the primary figure, ahead of everything below.
+
+### Why neither win rate nor the win/loss ratio can be the headline
+
+An earlier version of this section made **win rate the headline metric** and required an average winner ≥ 1.2× the average loser. **That was wrong, and the arithmetic proves it:**
+
+| Win rate | Avg winner | Expectancy | Verdict |
+|---|---|---|---|
+| 60% | 0.9R | `0.60×0.9 − 0.40×1.0` = **+0.14R** | **Profitable** — yet fails the old 1.2:1 rule |
+| 40% | 1.2R | `0.40×1.2 − 0.60×1.0` = **−0.12R** | **Loses money** — yet passes the old 1.2:1 rule |
+
+The old metric could be **failed by a winning system and satisfied by a losing one.** Either number alone is meaningless; only their product against the loss side decides anything.
+
+**This also removes a bad incentive.** A headline win rate rewards *being right*. Trading does not pay for being right — it pays the distribution of money won against money lost. Optimising for win rate pushes toward cutting winners early to bank them, which is the exact drift §8 exists to prevent.
+
+**Expectancy is also the metric that credits this system's actual design.** The breakeven ratchet (§6) converts would-be losses into ~0R scratches. A win/loss ratio barely notices that. Expectancy captures it directly, because a scratch removes a full −1R from the loss side.
+
+### Reported every month, alongside expectancy
+
+- **Profit factor** — gross winnings ÷ gross losses. Above 1.0 is profitable.
+- **Max drawdown from peak** — worse than **−25%** is a **process failure regardless of P&L**. A **flag, not a brake**: report it loudly with a written review, then keep trading. The brake is the 3-consecutive-loss circuit breaker (§4), because a loss streak diagnoses a broken process where a percentage mostly reflects instrument volatility.
+- **Rule adherence** — checkpoints where a rule was followed against where it was not. **A profitable month with poor adherence is worse news than a losing month with good adherence**, because the second is a process being tested and the first is luck being mistaken for one.
+- **Slippage**, entry and exit.
+- **Sample size**, stated next to every claim.
+- **Win rate** and **average winner ÷ average loser** — still reported, now **descriptive only.** Neither is a target and neither passes or fails anything.
+- **Trade count** reported, never targeted.
+
+**A negative expectancy over 30+ trades is a process failure.** Report it that way and hand the decision to the governor — it is not an automatic halt, because 30 trades is still a small sample and the existing loss-streak brake already catches fast deterioration.
 
 ### P&L — lowest weight
 
@@ -487,7 +522,7 @@ Percentage growth net of costs, versus SPY over the same window.
 - **At entry** — one `entry_snapshot` observation. These are **features, not rules.** Record them because we will want them later; do not invent a rule from them until there is evidence. Fields: instrument, timestamp, fill price, trend over 5/15/30/60 minutes and since the open, volume against normal, session high and low, sector performance, broad-market performance, volatility condition, catalyst type and age, the entry thesis, the falsification condition, stop, target.
 - **At every checkpoint while holding** — one `checkpoint` observation: price, unrealised percent, the derived stall count *and the bars it came from*, stop location, whether the stop moved and why, headlines checked, and the pre-committed exit condition for the next check.
 - **At every stall-2 event** — flag it in the observation, and record afterwards whether the position made a qualifying new high before the next check. This feeds EXP-001.
-- **At exit** — one row in `data/trades.csv`, including maximum adverse and maximum favourable excursion *during the hold*, time held, both slippage figures, exit reason, and the rulebook commit hash in force at the time.
+- **At exit** — one row in `data/trades.csv`, including **`initial_stop_pct` and `r_multiple`** (§14), maximum adverse and maximum favourable excursion *during the hold*, time held, both slippage figures, exit reason, and the rulebook commit hash in force at the time. **Compute the R multiple at exit while the entry stop is known**, rather than leaving it to be reconstructed later.
 
 ### What the EXECUTOR must NOT do
 

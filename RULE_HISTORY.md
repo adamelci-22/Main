@@ -5,7 +5,48 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 02:55 UTC · 14 changes to the rulebook.
+Generated 2026-08-11 02:59 UTC · 15 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `c96cfb9`
+
+**Split Executor and Researcher roles; scope the post-exit ban by role**
+
+Adds the authority firewall from the review: one model, two roles at
+different times, with the human as the only party that can promote a rule.
+
+- EXECUTOR.md: the trading role. May trade and log; may not look at
+  post-exit prices, read EXPERIMENTS.md, optimise, or change policy.
+- RESEARCHER.md: the analysis role, Saturday only. May measure anything
+  including post-exit prices; may not place an order or edit RULEBOOK.md.
+- RULEBOOK section 17: the firewall, the promotion path, and a table
+  separating what is actually enforced from what is only documented.
+
+Section 9 previously banned post-exit price tracking outright. That is a
+good execution rule and a bad research rule, so it is now scoped by role:
+forbidden to the Executor, required of the Researcher.
+
+Three deliberate departures from the proposal as written:
+
+- The research pass runs Saturday rather than weekday evenings. Extended
+  hours orders are still live on a weekday evening; on Saturday the market
+  is shut, so "the Researcher cannot trade" becomes a fact about the
+  calendar instead of a promise.
+- Post-exit prices are collected retroactively from historical bars, not
+  captured live. Capturing them live would require the Executor to see the
+  very numbers it is forbidden to consider. Statelessness then does the
+  rest: tomorrow's Executor cannot remember what Saturday's Researcher saw.
+- Both role files and section 17 state plainly that most of the separation
+  is documented rather than enforced, because send_later cannot restrict
+  tools and every session comes up with the identical tool set. Violations
+  would be detected, not prevented. The firewall is not described as a
+  technical guarantee anywhere.
+
+Friday's arming checkpoint now arms Monday's grid plus the Saturday pass,
+and armed trading messages must point at EXECUTOR.md alongside the
+rulebook. The first research pass is armed directly for Sat 15 Aug so it
+does not depend on the new rule propagating through the chain.
 
 ---
 
