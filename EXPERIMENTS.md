@@ -104,7 +104,7 @@ Every entry moves through these states in order. It may be killed at any stage.
 - **Hypotheses examined against this data:** 1.
 - **Note:** more frequent is not automatically better. A shorter cadence gives more opportunities to react to meaningless noise, and every extra checkpoint is a chance to talk oneself out of a sound position.
 
-### EXP-007 · A single global stop cannot serve this universe
+### EXP-007 · A single global stop cannot serve this universe — **IMPLEMENTED, closed**
 
 - **State:** ✅ `LIVE` — approved by the governor 2026-08-11, policy **v1.1**. Implemented in `OPERATIONS.md` §6, `tools/vol_profile.py`, `data/vol_profile.csv`, `limits.json`, `tools/preflight.py`.
 - **Locked evaluation period:** may not change again for **20 closed trades** (§17).
@@ -135,7 +135,9 @@ Every entry moves through these states in order. It may be killed at any stage.
 - Only SOXL is excluded. The floor exists because a stop inside the spread plus normal tick noise is a coin toss, not a stop.
 - **Sample:** 293 sessions, one month. **Hypotheses examined against this data: 1.**
 
-### EXP-008 · Stop quality and target reachability are INVERSE — the pair is mismatched everywhere
+### EXP-008 · Stop quality and target reachability are INVERSE — the pair is mismatched everywhere — **IMPLEMENTED, closed**
+
+> **Closed 2026-08-11.** The second half of this finding — that the flat +8% target was unreachable wherever the stop was comfortable — is now fixed too: the target is `clamp(2.0 x median MFE, 1.5 x stop, 12.0%)` per instrument, which cut effectively-unreachable instruments from **18 of 31 to 8 of 31**. Do not re-argue this experiment; measure the replacement.
 
 - **State:** ✅ `LIVE` — approved 2026-08-11, policy **v1.1**. Target now `2.0 x stop` per instrument; the flat +8–12% is retired (`RULEBOOK.md` §7).
 - **Locked evaluation period:** 20 closed trades.

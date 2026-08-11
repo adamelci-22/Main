@@ -24,11 +24,14 @@ What is modelled, per RULEBOOK section 6 / section 8 and OPERATIONS.md:
                strictly more often. NO midday exclusion.
                WARNING: this couples the rule to the cadence. At 10 minutes,
                three stalls would fire after 30 min instead of 90.
-  LADDER       2 stalled windows -> stop to max(current, breakeven), never
-               lowered. 3 -> sell at the next checkpoint, any gain.
-  RATCHET      gain >= breakeven_trigger -> breakeven. Past that -> trail
-               `--trail-pct` below the running high. Up only, min move 0.5%.
-  TARGET       any checkpoint showing gain AT OR ABOVE +8% -> sell.
+  LADDER       2 stalled CHECKS in profit -> stop to max(current, breakeven), never
+               lowered. 2 stalled checks BELOW THE FILL -> SELL NOW (asymmetric,
+               governor 2026-08-11). 3 -> sell, any gain.
+  RATCHET      STEPPED RAMP: gain >= trigger/2 -> -stop/2 (halve the risk);
+               gain >= trigger -> breakeven; past that -> trail `--trail-pct`
+               below the running high. Up only; min move is per-instrument.
+  TARGET       any checkpoint showing gain AT OR ABOVE `--target-pct` -> sell.
+               Per-instrument now: clamp(2 x median MFE, 1.5 x stop, 12%).
 
 Usage:
     python3 tools/replay.py data/bars_5min_GUSH_2026-08-05.csv \\

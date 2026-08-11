@@ -2,6 +2,21 @@
 """
 Stop and target calibration from real daily bars.
 
+    ############################################################################
+    # HISTORICAL STUDY — 2026-08-11. Its conclusion is ALREADY IMPLEMENTED.
+    #
+    # This script produced EXP-007 and EXP-008: that a flat -5% stop and a flat
+    # +8% target are mismatched on essentially every instrument, and that stop
+    # quality and target reachability are INVERSE. Both findings are now live
+    # policy — the stop is clamp(1.5 x median MAE, 2.5%, 7.0%) and the target is
+    # clamp(2.0 x median MFE, 1.5 x stop, 12.0%), both per-instrument.
+    #
+    # The hardcoded 5% and 8% below are THE THING BEING TESTED, not current
+    # policy. Do not "update" them — that would erase the record of what was
+    # measured. For live numbers use tools/vol_profile.py, which is the
+    # production path and is re-run every morning.
+    ############################################################################
+
 Answers one question the rulebook currently guesses at: is a -5% stop inside
 or outside normal daily noise for the instruments we actually trade?
 

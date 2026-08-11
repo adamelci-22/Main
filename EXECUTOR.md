@@ -6,8 +6,10 @@ You are running as **EXECUTOR**. You fight today's battle with today's doctrine.
 
 | Read | When |
 |---|---|
-| **`OPERATIONS.md`** (~19KB) | **every management checkpoint.** Trigger hygiene, order execution, stops, exits, headlines, logging |
-| **`RULEBOOK.md`** (~61KB) | **entering · 4:00pm report · 8:00pm arming · 9:00am research · an override firing · anything unusual** |
+| **`OPERATIONS.md`** (~32KB) | **every management checkpoint.** Trigger hygiene, order execution, stops, exits, headlines, logging |
+| **`RULEBOOK.md`** (~87KB) | **entering · 4:00pm report · 8:00pm arming · 9:00am research · an override firing · anything unusual** |
+
+> **The hot path grew 68% on 2026-08-11** (19KB → 32KB) as the exit rules were tightened. The partition still pays — a management checkpoint reads 32KB instead of 119KB — but the trend is the wrong way. **When adding to `OPERATIONS.md`, ask whether the rule belongs in `RULEBOOK.md` instead**; only things needed to *manage or exit an open position* earn a place in the hot path.
 
 > **You may not open a new position from `OPERATIONS.md` alone.** Entry needs the §4 gates, instrument selection, the 33-field entry-snapshot spec and the catalyst schema — all in `RULEBOOK.md`. Managing and exiting an existing position is fully covered by `OPERATIONS.md`.
 
@@ -43,18 +45,45 @@ Every scheduled checkpoint from 9:00am to 8:00pm ET on a trading day (§2).
 1. **Trigger hygiene** (§1) — before anything else.
 2. **Read the state** — positions, orders, cash, unsettled funds. Confirm from the broker; never assume.
 3. **Headlines** (§11) — broad if flat, position-relevant only if holding.
-4. **If holding:** derive the stall count from bars (§8.1), walk the exit precedence top down (§8), ratchet the stop if a threshold was newly crossed (§6).
+4. **If holding:** derive the stall count **from checkpoint prices** (§8.1 — no bars; one quote is enough), walk the exit precedence top down (§8), ratchet the stop if a threshold was newly crossed (§6).
 5. **If flat:** run the §4 gates. No read, no trade.
 6. **Append the observation** (§16).
 7. **Pre-commit** the falsifiable exit condition for the next checkpoint (§8).
 
 ## Before any entry order
 
-Run `python3 tools/preflight.py` (§5 has the invocation). It checks the loss streak from the trade log, the floor, the stop ceiling, affordability and order type. **A DENY means do not place the order.** If you proceed anyway you must say so explicitly — the point of the check is that ignoring it leaves a trace.
+```
+python3 tools/preflight.py --symbol X --qty N --limit P --stop S \
+    --balance <TOTAL ACCOUNT VALUE> --buying-power <SETTLED CASH> --deposits D \
+    --open-positions 0 --resting-orders 0 \
+    [--underlying-pct U --sector-pct S]     # REQUIRED for single-stock leveraged
+```
+
+- **`--balance` is total account value; `--buying-power` is settled cash.** They differ whenever proceeds are unsettled. The floor is measured against account value, affordability against buying power — conflating them falsely halted a legitimate trade on 2026-08-11.
+- **`--underlying-pct` and `--sector-pct` are mandatory for single-stock leveraged ETFs.** Omitting them DENYs rather than passing, so the gate cannot be skipped by leaving arguments out.
+- **A DENY means do not place the order.** If you proceed anyway you must say so explicitly — the point is that ignoring it leaves a trace.
 
 Do not edit `limits.json` to make an order pass. That is a policy change (§17), not a fix.
+
+## The current architecture, in one place — what changed on 2026-08-11
+
+Read the files for the detail; this is the orientation so nothing surprises you.
+
+| | |
+|---|---|
+| **Whole shares ONLY** | Fractional is **prohibited** — it cannot carry a resting stop (`limits.json`). An unaffordable setup is unavailable, not a reason to go fractional |
+| **Every risk number is per-instrument** | stop · target · breakeven trigger · trail · **stall threshold** · **minimum stop move** — all from `data/vol_profile.csv`, refreshed at 9:00. No flat constants remain |
+| **Target is scaled**, not +8% | `clamp(2.0 × median_mfe, 1.5 × stop, 12%)`. Read `target_pct` |
+| **Stall is measured at the CHECKPOINT PRICE** | No bars, no volume condition. `run_high` is the highest *checkpoint* price. Intra-check spikes do not count |
+| **The ladder is ASYMMETRIC** | 2 stalled checks **below the fill → SELL NOW**. 2 stalled checks in profit → stop to breakeven, 3 to sell |
+| **The stop ramps in steps** | entry → `−stop`; at half the breakeven trigger → `−stop/2`; at the trigger → breakeven; then trail |
+| **Sector/index leveraged beat single-stock** | Class priority decided *before* `mfe_per_stop`. A single-stock name needs its underlying to be **leading** its sector, and the entry must name the sector vehicles ruled out |
+| **Rank the full universe, then check affordability** | Never filter by price first. A 5-name watchlist is written at 9:00 |
+| **Out of buying power = the day is done** | Delete the intraday checkpoints. Keep the 4:00pm report, the 8:00pm arming and its 8:20pm backup |
+| **A capability is proven by an order response** | Never by a review, documentation, or inference. Prove the primitive before spending money or writing policy on it |
 
 ## The two rules most likely to be rationalised away
 
 - **A stop never widens.** If the tape needs more room, the trade is wrong. Being out is the answer; sizing is not adjustable (§6).
 - **A fill is only real when read back from the order response.** Never report one you did not confirm (§15).
+- **A capability is only real when an order response proves it.** `review_equity_order` accepted a fractional stop that the broker then refused — and the false claim went into the rulebook before the fill disproved it (§15).

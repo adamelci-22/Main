@@ -72,10 +72,19 @@ Those checkpoints can only report "flat, nothing to do." They cannot trade and n
 
 ```
 python3 tools/preflight.py --symbol X --qty N --limit P --stop S \
-    --balance B --deposits D --open-positions 0 --resting-orders 0
+    --balance <TOTAL ACCOUNT VALUE> --buying-power <SETTLED CASH> --deposits D \
+    --open-positions 0 --resting-orders 0 \
+    [--underlying-pct U --sector-pct S]     # MANDATORY for single-stock leveraged
 ```
 
-Checks, deterministically, against `limits.json`: the loss streak **computed from `data/trades.csv`** rather than remembered · the 50%-of-deposits floor · one position and one resting order · a stop present and inside the 7% ceiling · affordability · order type · universe membership. Exit 0 = ALLOW, 1 = DENY.
+Checks, deterministically, against `limits.json`: the loss streak **computed from `data/trades.csv`** rather than remembered, **excluding rows marked `counts_toward_streak=no`** · the 50%-of-deposits floor · one position and one resting order · a stop present, inside the 7% ceiling, and **matching the instrument's profile** · **whole shares only** · affordability against settled cash · **the single-stock underlying-versus-sector gate** · order type · universe membership. Exit 0 = ALLOW, 1 = DENY.
+
+**Two argument traps, both of which have already bitten:**
+
+- **`--balance` is TOTAL ACCOUNT VALUE; `--buying-power` is SETTLED CASH.** They diverge the moment a sale is unsettled. The floor is an account-value test, affordability a buying-power test. Passing buying power as `--balance` on 2026-08-11 produced a **false floor DENY** with the account at double its floor — and the same conflation the other way would let an unaffordable order through.
+- **`--underlying-pct` and `--sector-pct` are REQUIRED for single-stock leveraged ETFs**, and **omitting them DENYs** rather than skipping the check. The gate cannot be waived by leaving arguments out.
+
+**It also WARNS, and the warnings matter:** a single-stock symbol is flagged as the lowest-priority class with a demand that the ruled-out sector vehicles be named with prices (§4), and an instrument whose `stop_at_cap=yes` is flagged as having noise wider than its own stop.
 
 - **Its most valuable job is the circuit breaker.** The streak is derived from the trade log, not recalled — a cold session cannot miscount it, and cannot talk itself into a different number.
 - **A DENY means do not place the order.** Overriding one is a policy violation; if you proceed regardless you must say so in as many words, so the transcript records it.
@@ -239,7 +248,7 @@ min stop mv = clamp(0.25 x median adverse excursion, 0.20%, 1.00%)
    - **HOW A COLD CHECKPOINT COUNTS STALLS.** The count is per-position state and **nothing remembers it** — each checkpoint is a fresh session with no recollection of the last one. It must therefore be **DERIVED, every time, from price history**, not recalled:
      - Read **one quote** — the price at this checkpoint. No bars. The stall is a comparison between checkpoint prices, so intra-checkpoint data cannot enter it (governor decision 2026-08-11).
      - Compare that price against `run_high`, the highest **checkpoint** price so far, seeded at the fill. If `price > run_high x 1.003`, the check **progressed**: reset the stall count to zero and advance `run_high` to this price. Otherwise it is a **stalled check** and the count increments.
-     - The stall total is the number of **consecutive** stalled windows ending at the last *completed* one. Any window making a qualifying new high resets it to zero.
+     - The stall total is the number of **consecutive stalled CHECKS** ending at the most recent one. Any check making a qualifying new high resets it to zero and advances `run_high`. There are no longer 'windows' — the check IS the unit.
      - **State the derived count, the windows it came from, and their highs, in every report while holding.** Deriving it silently makes the most consequential number in the system unauditable, and a wrong count either sells a good position or holds a dead one.
    - **LOG EVERY STALL-2 EVENT**, in `data/observations.jsonl` (§16): the gain at the time, and whether the position subsequently made a qualifying new high before the third stalled **window** closed. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 windows or 4 (EXP-001) — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
    - This log is **in-trade data**, recorded while the position is still open. It does **not** require tracking price after an exit and creates no exception to §9.

@@ -122,7 +122,7 @@ Convert each ET time to UTC using the offset in effect.
 
 **§12 volatility escalation survives this** — it is a separate, previously authorised exception for exceptionally volatile positions, not a cadence default. If you want that removed too, say so.
 
-**Cost.** 17 checkpoints flat, 24 when holding into extended hours. That is the same count as the original fixed grid, but the rulebook partition (§16) cut the per-checkpoint read from ~78KB to ~23KB, so **24 checkpoints now cost roughly 57% less than 24 did before the split.** The partition is what pays for this.
+**Cost.** 17 checkpoints flat, 24 when holding into extended hours. The partition (§16) means a management checkpoint reads `OPERATIONS.md` alone — **~32KB against ~119KB for both files**, so it still pays for the checkpoint count. **But the hot path grew 68% on 2026-08-11**, from ~19KB to ~32KB, as the exit rules were tightened. That trend is the wrong way: before adding to `OPERATIONS.md`, ask whether the rule is needed to *manage or exit an open position*. If it is only needed to *enter*, it belongs in `RULEBOOK.md`.
 
 **Record the cadence actually in use** in every observation (§16), so it becomes possible to ask later whether it mattered.
 
@@ -704,7 +704,7 @@ Percentage growth net of costs, versus SPY over the same window.
 |---|---|
 | `ts` | Record timestamp, **UTC**. Every record type carries it, so records can be ordered across files |
 | `instrument`, `fill_price`, `fill_time_et` | From the order response (§5). Confirmed, never assumed |
-| `trend_5m` `trend_15m` `trend_30m` `trend_60m` | Percent change over each lookback, from **5-minute bars** (`get_equity_historicals`). `(last close − close N min ago) ÷ close N min ago × 100` |
+| `trend_5m` `trend_15m` `trend_30m` `trend_60m` | Percent change over each lookback, from **5-minute bars** (`get_equity_historicals`). `(last close − close N min ago) ÷ close N min ago × 100`. **These are SNAPSHOT FEATURES, not the stall input** — the stall reads checkpoint prices only (§8.1). Bars are still pulled here because a feature wants fine resolution; nothing in the exit path depends on them |
 | `trend_since_open` | `(fill − session open) ÷ session open × 100` |
 | `gap_from_prev_close` | `(session open − previous close) ÷ previous close × 100` |
 | `trend_alignment` | **How many of the four horizons share the sign of the trade** (0–4). Long counts positive; inverse ETF bought long counts the *fund's* own positive move |
@@ -750,7 +750,10 @@ Percentage growth net of costs, versus SPY over the same window.
  "catalyst_scheduled":true,"catalyst_source_time":"2026-08-10T20:05:00Z","catalyst_age_min":1067,
  "entry_thesis":"Memory guidance beat lifts the whole group; breadth confirms.",
  "falsification_condition":"SMH loses its opening range low while SOXL fails to make a new high.",
- "stop_price":23.09,"stop_pct":-5.0,"target_pct":10.0,"intended_max_hold":"1 day",
+ "stop_price":23.10,"stop_pct":-4.99,"target_pct":7.49,"breakeven_trigger_pct":2.70,
+ "trail_pct":3.33,"stall_threshold_pct":0.40,"mfe_per_stop":0.541,"mfe_to_target":2.77,
+ "instrument_class":"single_stock_leveraged","sector_vehicles_ruled_out":"SOXL $135.50 unaffordable; USD $91.60 unaffordable",
+ "underlying_pct":1.50,"sector_pct":1.26,"intended_max_hold":"1 day",
  "rulebook_commit":"6b1131e"}
 ```
 
