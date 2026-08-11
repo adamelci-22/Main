@@ -5,7 +5,49 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 03:09 UTC · 17 changes to the rulebook.
+Generated 2026-08-11 03:17 UTC · 18 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `a73050d`
+
+**Structure catalysts as data, and log them whether traded or not**
+
+"A nameable catalyst" is a sound guardrail and an unmeasurable one -- almost
+anything can be narrated as a catalyst after the fact. This converts it into
+structured records that can be scored by category.
+
+- A `catalyst` record for every catalyst identified, INCLUDING ones not
+  traded. Logging only traded catalysts would leave the same selection bias
+  as logging only taken trades: the sample would contain only news already
+  believed in, so no category could ever be shown worthless.
+- 18 fields: type, direction, scheduled-or-surprise, source and discovery
+  times with an explicit confidence flag on the source time, age, affected
+  instrument and underlying, direct-versus-indirect relevance, an
+  expected_move_pct prediction, expected duration, and a 1-5 confidence
+  recorded on the stated assumption that it is probably uncalibrated.
+- Classification rules so categories stay consistent: record the proximate
+  cause rather than the mechanism, sector_sympathy only for another
+  company's news, and `other` above roughly 15% of records is treated as
+  evidence the taxonomy itself is wrong.
+- Outcomes are SEPARATE append-only records referencing the catalyst id,
+  never edits to the original, measured Saturday by the Researcher at
+  +15/+30/+60/+120 minutes and to the close.
+- A fired section 11 kill trigger now logs a `kill_trigger_fired` record.
+  These are the system's highest-conviction exits and nothing so far records
+  whether any of them has ever been right.
+
+One new prohibition, found while writing this: the Executor may not evaluate
+how a declined candidate has performed since declining it. That is post-exit
+tracking wearing different clothes -- it trains chasing rather than
+hesitation, and it is the likeliest route to a forced late entry. The
+Researcher scores declined candidates on Saturday instead.
+
+Seeded EXP-002 (do catalyst categories differ in hit rate), EXP-003 (does
+catalyst age predict anything), EXP-004 (is stated confidence calibrated at
+all -- where a negative result is the more valuable one). Each carries a
+sample count of zero and an explicit trap to avoid, since eleven categories
+against a few dozen observations guarantees one looks terrible by chance.
 
 ---
 

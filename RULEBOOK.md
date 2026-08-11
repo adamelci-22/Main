@@ -56,6 +56,33 @@ A three-stage morning funnel, then management, then close.
 
 Convert each ET time to UTC using the offset in effect.
 
+### CADENCE IS STATE-DEPENDENT — arm sparse, densify on entry
+
+**Data resolution and decision cadence are separate things and must not be confused.** An earlier version coupled them: checkpoints were 30 minutes apart, the stall was defined from 30-minute bars, and three stalls triggered an exit — so the exit rule's timescale was an artifact of the schedule rather than a claim about the market. **Always collect 5-minute bars** (§8.1) regardless of how often the agent wakes.
+
+**Baseline armed each evening — assume FLAT. 13 checkpoints:**
+
+`9:00 · 9:30 · 9:45 · 10:00 · 10:30 · 11:00 · 11:30 · 12:30 · 1:30 · 2:30 · 3:30 · 4:00 · 8:00`
+
+Dense through the preferred entry window (9:45–11:00), then hourly, because after 11:00 a new entry must clear a higher bar anyway (§4 Timing) and a flat checkpoint can only report that nothing qualified.
+
+**ON ENTRY, the entering checkpoint immediately arms the fill-ins** — this is part of executing the trade, not an afterthought:
+
+| State | Cadence | Reason |
+|---|---|---|
+| Holding, regular hours | **every 15 min** to 4:00 | Halves ratchet latency. A threshold crossed at 10:07 with a 30-minute cadence leaves the stop unmoved for 23 minutes while the position runs |
+| Holding, extended hours | 30 min, 4:30 → 7:00, plus **7:30** | No stop can rest; manual management only (§6) |
+| Carrying overnight | 8:00pm arms the **holding** schedule for the next day | The position exists before the day starts |
+| Exceptional volatility | §12 — off-grid minutes, 10–15 min | Already authorised |
+
+**Why this is not more expensive.** A flat day costs 13 checkpoints instead of 24. A day that enters at 9:45 and exits at 1:00 runs dense for three hours and then §3 early-shutdown deletes the rest — roughly 18. Since only one round trip per day is possible and an exit ends the session's trading, **the dense period is always short and bounded.**
+
+**Densification is not optional, and a failure to densify must not leave a position under-covered.** The baseline above is deliberately sufficient to manage a position on its own — 30-minute gaps at worst until 11:30, then hourly — so if the fill-in arming fails, the position is still managed, just less tightly. Report the failure.
+
+**Record the cadence actually in use** in every observation (§16), so it becomes possible to ask later whether it mattered.
+
+**This takes effect from the next arming checkpoint.** Any day already armed on the old fixed 24-slot grid runs as armed; the extra checkpoints are harmless.
+
 ### 9:00am pre-market research — no orders, read-only tools only
 
 Purpose: form a thesis before the bell.
@@ -263,12 +290,16 @@ Approving the override is not permission to stop deciding. It starts a clock tha
 
 1. **Momentum stalled — a two-step escalation, NOT a single judgment call.**
 
-   **Definition of a stalled check:** no new high *and* volume drying up. **A "new high" must exceed the prior high by more than 0.3% to count as progress and reset the counter** — marginal ticks of +0.05% are not progress, they are a stall pretending otherwise.
+   **THE STALL CLOCK RUNS ON MARKET TIME, NOT ON CHECKPOINTS.** A stall is measured in **30-minute windows of market time**, built from 5-minute bars. Waking more often does not advance it; waking less often does not slow it. This matters because the wake cadence is variable (§2) — if a stall counted *checks*, then checking every 10 minutes would fire the exit after 30 minutes instead of 90, silently turning it into a different rule.
 
-   | Stalled checks | Action |
-   |---|---|
-   | **2** | **Raise the stop to breakeven. Keep holding.** Downside eliminated; upside still open. |
-   | **3** | **SELL — whatever the gain.** No floor, no minimum, no exception. |
+   **A stalled window** = a 30-minute window of market time in which the high failed to exceed the running high by more than **0.3%**, *and* volume was below the prior window's. Marginal ticks of +0.05% are not progress; they are a stall pretending otherwise.
+
+   | Stalled windows | Elapsed | Action |
+   |---|---|---|
+   | **2** | 60 min | **Raise the stop to breakeven. Keep holding.** Downside eliminated; upside still open. |
+   | **3** | 90 min | **SELL — whatever the gain.** No floor, no minimum, no exception. |
+
+   **Windows are anchored to the clock** (`:00` and `:30`), not to the entry time, so two sessions looking at the same position count identically. A partial window in progress does not count until it completes.
 
    - **There is NO profit floor on the stall exit.** The earlier +5% floor is retired; this ladder replaces it. A three-check stall sells at +1% or +9% alike.
    - **By the time the sell fires, the stop is already at breakeven**, so the rule can only ever cost upside — never a loss. That is what makes an unconditional sell safe.
@@ -276,12 +307,12 @@ Approving the override is not permission to stop deciding. It starts a clock tha
    - **MIDDAY EXCLUSION: checks between 12:00 and 1:30pm ET do not count toward the stall total.** Volume structurally dies over lunch every day, so counting that window would sell nearly every position held through it for reasons that carry no information. Positions may still be *protected* (stop raised) during it — they are not *sold* on it.
    - **Why unconditional:** a stalled leveraged position is **negative expectancy, not neutral.** Daily rebalancing decay plus spread means time in a non-moving 2x/3x costs money. Waiting is not free.
    - **HOW A COLD CHECKPOINT COUNTS STALLS.** The count is per-position state and **nothing remembers it** — each checkpoint is a fresh session with no recollection of the last one. It must therefore be **DERIVED, every time, from price history**, not recalled:
-     - Pull 30-minute bars from entry to now (`get_equity_historicals`).
-     - Walk them forward tracking the running high. A bar is a **stalled check** if its high failed to exceed the running high by more than 0.3% **and** its volume was below the prior bar's.
-     - **Skip bars in the 12:00–1:30pm exclusion window** — they are not counted either way.
-     - The stall total is the number of **consecutive** stalled bars ending at the present. Any bar that made a qualifying new high resets it to zero.
-     - **State the derived count and the bars it came from in every report while holding.** Deriving it silently makes the most consequential number in the system unauditable, and a wrong count either sells a good position or holds a dead one.
-   - **LOG EVERY STALL-2 EVENT**, in `data/observations.jsonl` (§16): the gain at the time, and whether the position subsequently made a new high before the third stalled check. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 checks or 4 — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
+     - Pull **5-minute bars** from entry to now (`get_equity_historicals`) and aggregate them into clock-anchored 30-minute windows. Collect at the finer resolution and aggregate up; do not request 30-minute bars directly, so the window length stays a free parameter rather than a property of the data (§2).
+     - Walk the windows forward tracking the running high. A window is **stalled** if its high failed to exceed the running high by more than 0.3% **and** its volume was below the prior window's.
+     - **Skip windows in the 12:00–1:30pm exclusion window** — not counted either way.
+     - The stall total is the number of **consecutive** stalled windows ending at the last *completed* one. Any window making a qualifying new high resets it to zero.
+     - **State the derived count, the windows it came from, and their highs, in every report while holding.** Deriving it silently makes the most consequential number in the system unauditable, and a wrong count either sells a good position or holds a dead one.
+   - **LOG EVERY STALL-2 EVENT**, in `data/observations.jsonl` (§16): the gain at the time, and whether the position subsequently made a qualifying new high before the third stalled **window** closed. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 windows or 4 (EXP-001) — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
    - This log is **in-trade data**, recorded while the position is still open. It does **not** require tracking price after an exit and creates no exception to §9.
 2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. An exit at any profit level, taking precedence over everything except the stop and a headline trigger.
    - **The ratcheting stop now covers most of this automatically** during regular hours: a stop sitting under the structure removes the need to judge a reversal at all, and it fires *between* checkpoints where I am blind. Reversal as a manual criterion matters chiefly for **extended hours and overnight**, where no stop can rest, and for **headline reversals that gap through any stop.**
@@ -400,7 +431,7 @@ This is the one permitted exception to "do not arm anything."
 
 The loop continues **every trading day until the user explicitly pauses or cancels it.** They set that date, not you. Never stop on your own initiative; no week-end or month-end is terminal.
 
-- **Each 8:00pm checkpoint MUST arm the next trading day** — highest priority, ahead of reporting.
+- **Each 8:00pm checkpoint MUST arm the next trading day** — highest priority, ahead of reporting. Arm the **13-slot flat baseline** (§2) unless a position is being carried overnight, in which case arm the holding schedule.
 - **SKIP US market holidays**; arm the next real trading day. Upcoming: **Labor Day Mon Sep 7 2026**; **Thanksgiving Thu Nov 26 2026** (**Fri Nov 27 early 1:00pm close**); **Christmas Fri Dec 25 2026**. On early closes, end the regular grid at the early close and skip extended-hours checkpoints. **Verify the calendar** rather than assuming.
 - **Friday's final checkpoint arms Monday's grid AND the Saturday 10:00am RESEARCHER pass** (§17).
 - **Daylight saving:** the ET times in §2 are authoritative. EDT = UTC−4; after **Sun Nov 1 2026** EST = UTC−5, shifting every UTC slot +1 hour. **Recompute UTC from ET** rather than copying.
@@ -522,7 +553,7 @@ Percentage growth net of costs, versus SPY over the same window.
 ### What the EXECUTOR writes
 
 - **At entry** — one `entry_snapshot` observation. See the spec below; the fields must be computed the same way every time or they cannot be compared across trades.
-- **At every checkpoint while holding** — one `checkpoint` observation: price, unrealised percent, the derived stall count *and the bars it came from*, stop location, whether the stop moved and why, headlines checked, and the pre-committed exit condition for the next check.
+- **At every checkpoint while holding** — one `checkpoint` observation: price, unrealised percent, the derived stall count *and the windows it came from*, stop location, whether the stop moved and why, headlines checked, the pre-committed exit condition for the next check, and **`cadence_min`** — the interval in force (§2), so it becomes possible to ask later whether cadence changed outcomes.
 - **At every stall-2 event** — flag it in the observation, and record afterwards whether the position made a qualifying new high before the next check. This feeds EXP-001.
 - **At exit** — one row in `data/trades.csv`, including **`initial_stop_pct` and `r_multiple`** (§14), maximum adverse and maximum favourable excursion *during the hold*, time held, both slippage figures, exit reason, and the rulebook commit hash in force at the time. **Compute the R multiple at exit while the entry stop is known**, rather than leaving it to be reconstructed later.
 
