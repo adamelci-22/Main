@@ -5,7 +5,49 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 03:05 UTC · 16 changes to the rulebook.
+Generated 2026-08-11 03:09 UTC · 17 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `588ddb8`
+
+**Specify the entry snapshot, and log declined candidates too**
+
+The data layer previously named the entry-snapshot fields but not how to
+compute any of them, which left a cold session to invent a method and would
+have produced fields that were not comparable across trades.
+
+Now a full spec: 33 fields with the exact derivation for each, a worked JSON
+example verified to match the spec field-for-field, and an unleveraged proxy
+map so sector context is measured against SMH, XLE, QQQ, GDX and so on
+rather than against whichever index the session happened to pick.
+
+Notable fields: trend over 5/15/30/60 minutes plus a trend_alignment count
+of how many horizons share the trade's direction, which is the specific
+hypothesis the review suggested; position_in_range, so entering at the high
+of the session is distinguishable from entering at the low; spread at entry;
+and catalyst type, direction, scheduled-or-surprise, source time and age.
+
+Two disciplines recorded alongside:
+
+- FEATURES, NOT RULES. Nothing in the snapshot gates a trade. It is an
+  explicit violation to decline or size a trade because a snapshot field
+  looks bad unless that field is already a section 4 gate -- letting a
+  logged feature influence judgment converts it into an unapproved rule
+  while leaving no trace that a rule was added. Patterns become rules only
+  through EXPERIMENTS.md and governor approval.
+- DECLINED CANDIDATES are now logged: one record per checkpoint that
+  considered a candidate and passed, with the failing gate. Without them the
+  dataset contains only trades that were taken, so every conclusion drawn
+  from it is selection-biased -- we could measure how entries performed but
+  never whether the filters were discarding winners. Costs one short record
+  and no extra tool calls.
+
+Also recorded a known weakness rather than hiding it: volume_vs_session is
+not time-of-day adjusted, so early-session values run high.
+
+RESEARCHER.md gains the task of analysing features and declined records, and
+is named as the only role permitted to look for patterns in them.
 
 ---
 

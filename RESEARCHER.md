@@ -50,6 +50,13 @@ Write these to `data/observations.jsonl` as `post_exit` records. **The EXECUTOR 
 The EXECUTOR logs an `entry_snapshot` at every entry and a `declined` record for every candidate it passed on (§16). **You are the only role permitted to look for patterns in them.**
 
 - Does anything separate winners from losers? Trend alignment across the four horizons, position in the session range, catalyst type, catalyst age, spread, sector or market backdrop.
+- **Score the catalysts.** For every `catalyst` record since the last pass — traded or not — write a `catalyst_outcome` record with the affected instrument's move at +15/+30/+60/+120 minutes and to the close, whether the direction was right, and actual against `expected_move_pct`. **Never edit the original record; outcomes are new rows** (§16).
+  - Hit rate by `type`. Does `geopolitical` behave differently from `analyst`?
+  - Does `age_min` predict anything? A finding like "news older than X adds nothing" would be worth a rule.
+  - `direct` versus `indirect` relevance.
+  - **Is `confidence` calibrated at all?** It is logged on the assumption that it probably is not. Check whether 4s and 5s actually outperform 2s. If they do not, say so — that is a real and useful result.
+  - Is `other` over ~15% of records? Then the taxonomy is wrong; propose a fix.
+- **Score the kill triggers.** `kill_trigger_fired` records are the system's highest-conviction exits and nothing yet shows whether they have ever been right.
 - **Study the declined records too.** They are the only defence against selection bias — trades taken are a filtered sample, and without the rejects you can measure how entries performed but never whether the filters were discarding winners.
 - **State the sample size beside every split.** Fifteen trades cut four ways is four groups of three or four. That is not evidence of anything.
 - A feature only becomes a gate through `EXPERIMENTS.md` and governor approval. **You may not add one, and the EXECUTOR may not act on one.**

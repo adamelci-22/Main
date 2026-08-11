@@ -370,6 +370,8 @@ Cash account, **T+1**.
 
 On a geopolitical trade the thesis dies by headline, not by chart. A ceasefire or reopening can move oil 5–10% in minutes, faster than any price-based criterion will show it.
 
+**Every catalyst identified gets a structured `catalyst` record (§16), traded or not.** "Nameable catalyst" is the guardrail; the record is what eventually makes it measurable. A fired kill trigger gets a `kill_trigger_fired` record.
+
 ### Live context — DATED, refresh it, do not carry stale facts forward
 
 **Whose job that is:** the **9:00am research checkpoint** re-verifies this block against current headlines and **edits this file** if any of it has changed or gone stale — then commits and pushes. The **8:00pm checkpoint** is the backstop: if the date stamp below is more than a few days old, refresh it or delete it. **Stale context asserted confidently is worse than no context** — an exit trigger below that has already happened is a trigger that will never fire.
@@ -590,6 +592,42 @@ Percentage growth net of costs, versus SPY over the same window.
 - A pattern becomes a rule only via `EXPERIMENTS.md` → evidence with a stated sample size → **governor approval** (§17). Never by noticing it at a checkpoint.
 - **Why this order matters:** inventing the rule first and finding support for it afterwards is how a system fits yesterday. Collect first, decide later, and the evidence gets a chance to say no.
 
+### Catalysts — structured, and logged whether traded or not
+
+**"A nameable catalyst" is a good guardrail and a bad measurement.** As prose it is unfalsifiable — almost anything can be narrated as a catalyst. Structuring it makes categories scoreable, and makes it possible to discover that some kinds of news are worth trading and others are not.
+
+**Write one `catalyst` record for every catalyst identified at the 9:00am research pass or noticed at any checkpoint — including ones not traded.** Logging only traded catalysts would leave the same selection bias as logging only taken trades: the sample would contain only news already believed in, so no category could ever be shown worthless.
+
+| Field | Notes |
+|---|---|
+| `id` | `CAT-YYYY-MM-DD-NN` |
+| `ts`, `discovery_time` | When logged / when first seen |
+| `source_time`, `source_time_confidence` | Publication time, and `exact` · `approximate` · `unknown`. **Never estimate a time and present it as known** |
+| `age_min` | Age at discovery. Blank if `source_time_confidence` is `unknown` |
+| `type` | The 11 categories above |
+| `direction` | `bullish` · `bearish` · `ambiguous` |
+| `scheduled` | Calendar event, or surprise |
+| `affected_instrument` | The tradeable name |
+| `affected_underlying` | Sector or underlying, from the proxy map |
+| `relevance` | `direct` — the instrument's own news · `indirect` — someone else's news reaching it |
+| `expected_move_pct` | **A prediction.** Record it so it can be scored |
+| `expected_duration` | `minutes` · `hours` · `days` |
+| `confidence` | 1–5. **Known to be uncalibrated** — logged precisely so the RESEARCHER can find out whether it predicts anything at all. Do not treat it as meaningful yet |
+| `headline`, `source` | Short |
+| `traded` | `true` / `false`, plus a one-line reason when false |
+| `entry_snapshot_ts` | Links to the entry, if traded |
+
+**Classification rules — so the categories mean the same thing each time:**
+
+- **When two types apply, record the proximate cause**, not the mechanism. An OPEC production decision moving oil is `commodity_supply`; the same move caused by a shooting war is `geopolitical`.
+- **`sector_sympathy` is only for another company's news reaching this instrument.** If it is the instrument's own news it is never sympathy.
+- **`other` requires a written reason.** If `other` exceeds roughly 15% of records, the taxonomy is wrong and the RESEARCHER should propose fixing it. That threshold is the taxonomy checking itself.
+- One catalyst per record. Two pieces of news are two records, even if they point the same way.
+
+**Outcomes are a SEPARATE record, written Saturday by the RESEARCHER.** Observations are append-only — never edit a catalyst record to add its result. Write `catalyst_outcome` referencing the `id`, with the affected instrument's move at **+15, +30, +60, +120 minutes and to the close**, whether the direction was right, actual against `expected_move_pct`, and the favourable and adverse extremes in the window.
+
+**When a §11 kill trigger fires, log a `kill_trigger_fired` record** — which trigger, the price at the time, and what was done. These are the highest-conviction exits in the system and there is currently no record of whether they have ever been right.
+
 ### Declined candidates — log the trades NOT taken
 
 **One `declined` record per checkpoint that considered a candidate and passed**, naming the instrument, the gate that failed, and the price at the time.
@@ -599,6 +637,7 @@ Without this the dataset contains only trades that were taken, which makes every
 ### What the EXECUTOR must NOT do
 
 - **Never edit or delete a past row.** History is append-only. A mistake gets a correcting row and a note, never an overwrite.
+- **Never evaluate how a DECLINED candidate has performed since you declined it.** Log the rejection and move on. Checking whether the one you passed on has run is the same failure as post-exit tracking (§9) wearing different clothes — it trains chasing instead of hesitation, and it is the likeliest route to a forced late entry. The RESEARCHER scores declined candidates on Saturday; you do not.
 - **Never write to `EXPERIMENTS.md`** during trading hours, and never read it while deciding a trade.
 - **Never promote an experiment.** Only the human governor approves a rule change.
 

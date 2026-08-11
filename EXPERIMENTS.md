@@ -40,6 +40,39 @@ Every entry moves through these states in order. It may be killed at any stage.
 - **Hypotheses examined against this data:** 1.
 - **Do not promote on fewer than ~20 stall-2 events.**
 
+### EXP-002 · Do catalyst categories differ in hit rate?
+
+- **State:** `PROPOSED`
+- **Opened:** 2026-08-11
+- **Rule today:** §4 requires "a catalyst you can name." All eleven categories are treated as equally valid.
+- **Question:** are they? A plausible outcome is that `geopolitical` and `earnings` carry real edge while `analyst` and `sector_sympathy` carry none — in which case the entry gate should exclude the weak ones.
+- **Evidence needed:** `catalyst` records paired with `catalyst_outcome` records, grouped by `type`. Both traded and untraded catalysts count, which is why untraded ones are logged.
+- **Sample so far:** 0.
+- **Hypotheses examined against this data:** 1.
+- **Trap to avoid:** eleven categories against a few dozen catalysts is a few observations per bucket. **Do not propose dropping a category on fewer than ~15 observations of that category.** With eleven buckets, one will look terrible by chance.
+
+### EXP-003 · Does catalyst age predict anything?
+
+- **State:** `PROPOSED`
+- **Opened:** 2026-08-11
+- **Rule today:** none. Age is recorded but never used.
+- **Question:** does a catalyst stop being tradeable after some interval — is stale news already priced?
+- **Evidence needed:** `age_min` against outcome, across catalyst records. Only records with `source_time_confidence` of `exact` or `approximate` may be used; `unknown` must be excluded rather than guessed at.
+- **Sample so far:** 0.
+- **Hypotheses examined against this data:** 1.
+- **Note:** if this produces a threshold it becomes an entry gate, which makes it a higher-consequence change than most. Require a larger sample than usual.
+
+### EXP-004 · Is stated confidence calibrated?
+
+- **State:** `PROPOSED`
+- **Opened:** 2026-08-11
+- **Rule today:** none. `confidence` 1–5 is recorded on every catalyst and used for nothing.
+- **Question:** do high-confidence catalysts outperform low-confidence ones?
+- **Why it matters either way:** if yes, confidence becomes a usable input. **If no, that is the more valuable result** — it would be direct evidence that this agent's self-reported certainty is noise, which is worth knowing well beyond this one field.
+- **Evidence needed:** outcome grouped by `confidence`, checking for monotonicity rather than just a difference between the extremes.
+- **Sample so far:** 0.
+- **Hypotheses examined against this data:** 1.
+
 ---
 
 ## Closed
