@@ -228,5 +228,20 @@
       "inference from a similar case"
     ],
     "note": "Governor decision 2026-08-11 after three instances in one session. Never commit capital or write policy on an unproven mechanism. Make the smallest call that proves the primitive first."
+  },
+  "instrument_class_priority": {
+    "order": [
+      "sector_or_industry_leveraged",
+      "index_leveraged",
+      "single_stock_leveraged"
+    ],
+    "decided_before": "mfe_per_stop ranking \u2014 the ratio ranks WITHIN a class, it does not promote a single-stock name above a sector one",
+    "single_stock_permitted_only_if": [
+      "no sector or index leveraged ETF expressing the same read is available and affordable as a whole share",
+      "the underlying is LEADING its sector proxy (see single_stock_leveraged gate)",
+      "every other section 4 gate clears",
+      "the entry states which sector vehicles were ruled out, by name and by price"
+    ],
+    "note": "Governor decision 2026-08-11. The read is almost always sectoral, and a single-stock leveraged ETF multiplies leverage by idiosyncratic concentration \u2014 an earnings miss or a downgrade the sector shrugs off is not in the thesis. NVDX 2026-08-11: semis read correct all morning, SMH near its highs, position lost because NVDA gave back half its opening gain. ACCEPTED COST: sector leveraged ETFs cost more per share (SOXL 135, TECL 210, NUGT 161) than single-stock 2x names (4-20), so at current capital this produces MORE NO-TRADE DAYS. That is the correct outcome \u2014 it reports that the account cannot buy what the thesis calls for."
   }
 }

@@ -204,6 +204,12 @@ def main():
         else:
             warns.append(f"underlying gate OK: {und} {a.underlying_pct:+.2f}% "
                          f"vs {sec} {a.sector_pct:+.2f}%")
+        # Class priority (RULEBOOK section 4): sector and index leveraged ETFs come first.
+        # A tripwire, not a block — preflight cannot see what alternatives existed.
+        warns.append(f"CLASS PRIORITY: {a.symbol.upper()} is SINGLE-STOCK leveraged, the LOWEST "
+                     "priority class. Sector and index leveraged ETFs come first (section 4). "
+                     "State at entry which sector vehicles were ruled out, BY NAME AND PRICE. "
+                     "Not having looked is not a reason.")
 
     # --- universe
     if a.symbol.upper() not in lim["universe"]:

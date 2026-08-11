@@ -260,6 +260,33 @@ At 09:51 on 2026-08-11, NVDX was chosen over SMCX on 98.4% vs 93% capital deploy
 - **Anchoring on the pre-market shortlist.** When the capital base or the thesis changes, the 9:00 shortlist is void — re-rank from the current tape. Asking "what fits?" instead of "what is best?" confirms a decision already made.
 - **Sunk cost on analysis.** Having built a case for an instrument all morning, switching feels like waste. It is not; the analysis was the cost of finding out.
 
+### ⚠ SECTOR AND INDEX LEVERAGED ETFs TAKE PRIORITY OVER SINGLE-STOCK LEVERAGED ETFs
+
+**Governor decision 2026-08-11.** Class priority is decided **before** `mfe_per_stop` ranking. The ratio ranks candidates *within* a class; it does not promote a single-stock name above a sector one.
+
+| Priority | Class | Examples |
+|---|---|---|
+| **1** | **Sector / industry leveraged** | SOXL · TECL · GUSH · ERX · NUGT · LABU · SOXS · DUST · AGQ |
+| **2** | **Index leveraged** — when the read is broad-market rather than sectoral | TQQQ · UPRO · TNA · SQQQ · SPXS |
+| **3** | **Single-stock leveraged** — only when 1 and 2 are unavailable | NVDX · NVDL · SMCX · MSTX · TSLL · CONL · MUU · AMDL |
+
+**Why the sector vehicle wins even when it ranks lower on structure:**
+
+- **The read is almost always sectoral.** "Semis are leading, breadth is broad" justifies buying *semis*. Buying one semiconductor company with 2x leverage on top is a different bet that happens to share a rationale. §4 already says **broad beats narrow every time**; this makes the instrument choice obey it.
+- **A single-stock leveraged ETF multiplies twice** — leverage on top of idiosyncratic concentration. The company can be dragged by an earnings miss, a guidance cut, a downgrade or a CEO headline that the sector shrugs off entirely, and none of that is in the thesis you wrote.
+- **2026-08-11 is the case.** The semis read was correct all morning — SMH held near its highs. The sector vehicle would have captured it. NVDX lost, because NVDA gave back half its opening gain while its sector held. **Being right about the sector and wrong about the stock produced a loss on a correct call.**
+
+**When a single-stock name IS permitted (all four must hold):**
+
+1. No sector or index leveraged ETF expressing the same read is available and affordable as a whole share, **and**
+2. its underlying is **leading** its sector proxy, not lagging (the hard gate above), **and**
+3. it clears every other §4 gate, **and**
+4. **you state at entry which sector vehicles were ruled out and why** — by name and by price. "None were affordable" is a valid reason; not having looked is not.
+
+**The honest cost, and it is not small.** Sector leveraged ETFs are structurally more expensive per share — SOXL $135, TECL $210, NUGT $161, LABU $282 — while single-stock 2x ETFs run $4–20. **At current capital this rule will produce more no-trade days, because the preferred class is largely unaffordable.** That is the correct outcome, not a defect: it says the account cannot yet buy the instrument the thesis calls for, which is information the governor should have rather than a gap papered over with a cheaper substitute.
+
+**One thing the rule does not cost:** at the top of the distribution the classes are close. The best sector names by structure (SOXS 1.02, NUGT 0.98, KORU 0.86, GUSH 0.85) beat the best single-stock names (MSTX 0.94, MUU 0.89), so priority and structure mostly agree. The conflict appears in the middle of the list, which is exactly where discipline should decide rather than a ratio.
+
 ### Instrument selection, in priority order
 
 1. **Whole share is the DEFAULT** — the most leverage per dollar that fits as a whole share. Whole shares preserve the after-hours and 24-hour-market exit and allow limit orders.
