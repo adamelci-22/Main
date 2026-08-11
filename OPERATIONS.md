@@ -40,6 +40,15 @@ Call `list_triggers`.
 
 ## 3. Early shutdown — saves usage
 
+> ### ⚠ OUT OF PURCHASING POWER = THE DAY IS DONE. Shut it down.
+> **Governor decision 2026-08-11.** When settled buying power can no longer fund an entry, there is no decision left to make. Every remaining checkpoint can only report "flat, nothing to do" — it cannot trade, and **no headline, no setup and no amount of watching can change that**, because T+1 means today's proceeds are not spendable until tomorrow.
+>
+> **This is a stop-work rule, not a suggestion.** Delete the remaining intraday checkpoints the moment it is true. Continuing to wake and look is pure cost with a guaranteed null result, and it invites the worst failure available — talking yourself into an entry you cannot fund, or one funded by unsettled proceeds, which is how a good-faith violation happens (§10).
+>
+> **Keep exactly three things:** the **4:00pm session report**, the **8:00pm arming checkpoint**, and its **8:20pm backup**. Never the intraday slots.
+>
+> **Applied 2026-08-11:** flat after the NVDX exit with ~$0.24 settled against $61.60 unsettled. Seventeen checkpoints deleted, 11:00am–3:30pm and 4:30–7:30pm.
+
 **DELETE the remaining checkpoints for today when ALL of these hold:**
 
 - position is **FLAT**, and
