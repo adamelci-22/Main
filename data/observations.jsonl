@@ -1,0 +1,1 @@
+{"schema_version":1,"type":"schema_note","note":"One JSON object per line, append-only, never edited. Written by the EXECUTOR at every checkpoint while holding, and at entry. Read by the RESEARCHER. Field definitions are in RULEBOOK.md section 16. This first line is a marker, not an observation - skip records where type=schema_note when analysing."}

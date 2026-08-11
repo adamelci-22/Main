@@ -66,7 +66,7 @@ Purpose: form a thesis before the bell.
 - **(d)** Rank **sector leadership** as indicated pre-market.
 - **(e)** Confirm **settled buying power** (`get_accounts` for `unsettled_funds`, plus `get_portfolio`) so the 9:45 entry knows its size instead of discovering a shortfall mid-setup.
   - **A balance larger than yesterday's close, beyond what trading explains, means the user funded the account.** No announcement is coming and none is needed — the 9:00am check is where you find out. Size to the new balance and say what you observed in the report. Do not ask for or campaign for funds; the user adds them when the system has earned it.
-  - **On detecting funding, UPDATE the recorded deposited-capital figure in the trade log** — the hard floor is a percentage of it (§10), so a stale figure means a floor set against the wrong denominator.
+  - **On detecting funding, report the new deposited-capital figure** — the hard floor is a percentage of it (§10). The figure is **derived, never cached** (§16), so recomputing it each morning is what keeps the floor set against the right denominator.
 - **(f)** Write a **ranked shortlist** with the reason each candidate beats the others.
 
 ### 9:30am opening observation — no orders, read-only only
@@ -253,7 +253,7 @@ Approving the override is not permission to stop deciding. It starts a clock tha
    - a **pre-committed condition** fires (§8);
    - the **horizon ceiling** (§7) is reached.
 5. **You may NOT override the override.** One extension per trade, full stop. When the remainder's exit condition fires, it is sold — you do not name a second piece of new information and extend again. Serial extension is an infinite hold with extra steps, and it is the single most likely way this rule gets abused.
-6. **Log both fills separately** in the trade log, with the override reason recorded. The trade's result is the blended P&L of both, reported honestly — if the override earned less than a clean exit at target would have, **say so plainly.** That is the only way to find out whether overrides are worth taking at all, and it is the one legitimate exception to §9's no-post-exit-tracking rule, because it measures a *decision you made*, not tape you didn't act on.
+6. **Log both fills as separate rows** in `data/trades.csv` (§16), with the override reason recorded. The trade's result is the blended P&L of both, reported honestly — if the override earned less than a clean exit at target would have, **say so plainly.** That is the only way to find out whether overrides are worth taking at all, and it is the one legitimate exception to §9's no-post-exit-tracking rule, because it measures a *decision you made*, not tape you didn't act on.
 
 - **UNVERIFIED MECHANIC — only relevant in the override case.** §10's one-resting-order limit was proven with a single share, where a resting stop drove `sharesCanSell` to 0. Whether a stop on *part* of a multi-share position leaves the remainder sellable is **not yet known**. Before any partial sell, confirm with `review_equity_order` that it is accepted while a stop rests on the rest. **If it is not**, the sequence is cancel the stop, sell half, immediately replace the stop on the remainder — done deliberately, since the position is unprotected in between. Do not discover this mid-trade.
 
@@ -281,7 +281,7 @@ Approving the override is not permission to stop deciding. It starts a clock tha
      - **Skip bars in the 12:00–1:30pm exclusion window** — they are not counted either way.
      - The stall total is the number of **consecutive** stalled bars ending at the present. Any bar that made a qualifying new high resets it to zero.
      - **State the derived count and the bars it came from in every report while holding.** Deriving it silently makes the most consequential number in the system unauditable, and a wrong count either sells a good position or holds a dead one.
-   - **LOG EVERY STALL-2 EVENT**, in the trade log: the gain at the time, and whether the position subsequently made a new high before the third stalled check. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 checks or 4 — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
+   - **LOG EVERY STALL-2 EVENT**, in `data/observations.jsonl` (§16): the gain at the time, and whether the position subsequently made a new high before the third stalled check. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 checks or 4 — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
    - This log is **in-trade data**, recorded while the position is still open. It does **not** require tracking price after an exit and creates no exception to §9.
 2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. An exit at any profit level, taking precedence over everything except the stop and a headline trigger.
    - **The ratcheting stop now covers most of this automatically** during regular hours: a stop sitting under the structure removes the need to judge a reversal at all, and it fires *between* checkpoints where I am blind. Reversal as a manual criterion matters chiefly for **extended hours and overnight**, where no stop can rest, and for **headline reversals that gap through any stop.**
@@ -340,7 +340,7 @@ The legitimate version of this check is **aggregate**, and it is already capture
   - **Deposited capital is not a field — it is DERIVED**, and the formula is confirmed correct: `deposited = total_value − all-time realized P&L − unrealized P&L`. There is no cumulative-deposits field; `pending_deposits` is in-flight money only.
   - **Validated Aug 10 2026:** $42.07 total − $1.23 all-time realized, flat, = **$40.84**, which the user confirmed is exactly the amount deposited. The formula holds and needs no fudge factor.
   - **It stays correct as funding is added**, because a new deposit raises `total_value` without touching realized P&L — the derived figure rises by the deposit, which is the desired behaviour.
-  - **Recompute it at the 9:00am check** rather than trusting the recorded number blindly, and update the trade-log figure whenever it moves (§2e). Report any disagreement between the two instead of silently adopting one.
+  - **Recompute it at the 9:00am check.** It is derived, not cached (§16) — there is no stored figure to trust or to go stale. Report it whenever it changes (§2e).
 
 ### Settlement and round trips
 
@@ -456,16 +456,38 @@ Percentage growth net of costs, versus SPY over the same window.
 
 ---
 
-## Trade log
+## 16. The data layer — this file holds RULES, nothing else
 
-Each row records the trade. **Stall-2 events are logged in the Note column** as `stall2 @ +X% → resumed / did not resume`, since the resumption rate is what decides whether the sell belongs at 3 checks or 4 (§8.1).
+**The LLM has no memory. The SYSTEM must remember everything.** Those are different propositions, and an earlier version of this design confused them — history was kept inside this file, mixed in with policy. It is now separated by lifecycle and by reader.
 
-| Date | Instrument | In | Out | P&L | % | Note |
-|---|---|---|---|---|---|---|
-| Aug 10 2026 | GUSH ×1 | $37.9299 (9:52am) | $39.1613 (3:02pm) | **+$1.2314** | **+3.25%** | Hormuz supply shock; exited on stalled momentum, not target. Zero fees. Account $40.84 → $42.07 |
+| File | Holds | Written by | Read by | Mutability |
+|---|---|---|---|---|
+| `RULEBOOK.md` | Rules and verified mechanics. **Policy only.** | Human governor | Every checkpoint | Edited rarely, reviewed |
+| `data/trades.csv` | One row per closed trade | Executor, at exit | Researcher | **Append-only. Never edited.** |
+| `data/observations.jsonl` | One record per checkpoint while holding, plus entry snapshots | Executor, at every check | Researcher | **Append-only. Never edited.** |
+| `EXPERIMENTS.md` | Proposed rule changes and their evidence | Researcher | Human governor | Edited; states never skipped |
+| `RULE_HISTORY.md` | Every rulebook change with its reasoning | **Generated** by `tools/gen-rule-history.sh` | Human governor | **Never hand-edited** |
 
-**Month to date (Aug 2026):** 1 trade · 1 win · 0 losses · **+3.01%** · max drawdown from peak −0.5% · **consecutive-loss streak: 0** (circuit breaker at 3, §4)
+- **`RULE_HISTORY.md` is a rendering of the git log, not a second source of truth.** Regenerate it; never write to it. If it disagrees with `git log`, the log is right and the file is stale. This is deliberate — a hand-maintained history would eventually contradict the commits it claims to describe.
+- **No cached state in this file.** Loss streak, deposited capital and month-to-date figures are all **derived** — the streak and trade history from `data/trades.csv`, the deposit total from the broker (§10). A cached copy is a copy that goes stale, and there is no reason to keep one when the derivation is a single file read.
 
-**Capital deposited: $40.84** *(confirmed Aug 10 2026)* — derived as total value $42.07 less all-time realized P&L $1.23 with no open positions, and confirmed by the user as the exact deposited amount. **Recompute at each 9:00am check; update here on any change (§2e).**
+### What the EXECUTOR writes
 
-**Hard floor: 50% of deposited cash = $20.42** — fixed against deposits, not against account value, and it does not rise with gains. All-time return against deposits: **+3.01%**.
+- **At entry** — one `entry_snapshot` observation. These are **features, not rules.** Record them because we will want them later; do not invent a rule from them until there is evidence. Fields: instrument, timestamp, fill price, trend over 5/15/30/60 minutes and since the open, volume against normal, session high and low, sector performance, broad-market performance, volatility condition, catalyst type and age, the entry thesis, the falsification condition, stop, target.
+- **At every checkpoint while holding** — one `checkpoint` observation: price, unrealised percent, the derived stall count *and the bars it came from*, stop location, whether the stop moved and why, headlines checked, and the pre-committed exit condition for the next check.
+- **At every stall-2 event** — flag it in the observation, and record afterwards whether the position made a qualifying new high before the next check. This feeds EXP-001.
+- **At exit** — one row in `data/trades.csv`, including maximum adverse and maximum favourable excursion *during the hold*, time held, both slippage figures, exit reason, and the rulebook commit hash in force at the time.
+
+### What the EXECUTOR must NOT do
+
+- **Never edit or delete a past row.** History is append-only. A mistake gets a correcting row and a note, never an overwrite.
+- **Never write to `EXPERIMENTS.md`** during trading hours, and never read it while deciding a trade.
+- **Never promote an experiment.** Only the human governor approves a rule change.
+
+---
+
+## Current position
+
+Flat. See `data/trades.csv` for all closed trades and `EXPERIMENTS.md` for open questions.
+
+**Hard floor: 50% of deposited cash** (§10) — deposits recomputed at each 9:00am check.
