@@ -169,13 +169,22 @@ trail     = 1.0 x median adverse excursion, below the running high
    |---|---|---|
    | **2** | 60 min | **Raise the stop to breakeven. Keep holding.** Downside eliminated; upside still open. |
 
-   > **⚠ AT STALL 2 WHILE UNDERWATER, THE BREAKEVEN STEP IS UNEXECUTABLE — and that is not a bug to improvise around.** "Raise the stop to breakeven" silently assumes the position has a gain. If price is BELOW the fill, breakeven sits above the market, and **a sell stop above the market is rejected by the broker** — it is not a stop, it is a market order wearing a stop's name.
+   > ### ⚠ AT 2 STALLS, IF PRICE IS BELOW BREAKEVEN — **SELL.** Do not wait for the third.
    >
-   > **Handling: leave the stop where it is and let stall 3 sell.** This follows from §6 — the ratchet is a stop-*raising* mechanism and it cannot raise a stop through the current price. There is also no downside left to eliminate: the position is already losing, which is the thing breakeven exists to prevent.
+   > **Governor decision 2026-08-11. The ladder is deliberately ASYMMETRIC: two stalled checks for a loser, three for a winner.**
    >
-   > **Never place, or attempt to place, a stop above the market price.** If the broker accepts something that looks like one, it will fill immediately at whatever the bid is.
+   > | At stall 2 | Price vs the fill | Action |
+   > |---|---|---|
+   > | | **at or above** breakeven | raise the stop to `max(current stop, breakeven)` and keep holding — three checks still apply |
+   > | | **below** breakeven | **SELL immediately, at the market, at whatever the loss is** |
    >
-   > **The alternative reading is the governor's to make, not the executor's:** that stalling twice while *underwater* is worse than stalling twice in profit and should sell at stall 2 rather than 3. That would make the ladder asymmetric — 2 checks for losers, 3 for winners. It has not been approved and is not in force.
+   > **Why the asymmetry is right and not just harsher.** The stall-2 breakeven step was written to protect a gain. A position that is *underwater* and has failed to make a new high twice running has no gain to protect — the rule had nothing to act on, so the position was drifting on the initial stop alone with no thesis left supporting it. Giving a losing, stalling position a third check spends 30 more minutes of exposure to buy information the first two checks already delivered.
+   >
+   > **It also resolves an unexecutable instruction.** Breakeven sits *above* the market when the position is losing, and **a sell stop above the market is rejected by the broker** — it is not a stop, it is a market order wearing a stop's name. Selling removes the need to place an order that cannot exist. **Never place, or attempt to place, a stop above the market price.**
+   >
+   > **Sell means sell now**, not at the next checkpoint. The condition is met the moment the second stalled check is counted. Cancel the resting stop first — a pending sell locks the share (§10) — then exit with a marketable limit.
+   >
+   > **First application:** NVDX, 2026-08-11. Stalled at the 10:00 and 10:30 checks against a 19.8677 threshold, price 19.76 against a 19.8083 fill. Sold at 19.6901 for −0.60%, −0.12R. Under the previous rule it would have held to the 11:00 check.
    | **3** | 90 min | **SELL — whatever the gain.** No floor, no minimum, no exception. |
 
    **Windows are anchored to the clock** (`:00` and `:30`), not to the entry time, so two sessions looking at the same position count identically. A partial window in progress does not count until it completes.

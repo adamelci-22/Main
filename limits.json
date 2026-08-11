@@ -126,7 +126,9 @@
     "midday_exclusion": false,
     "run_high": "highest CHECKPOINT price since the fill, seeded at the fill price",
     "note": "Governor decision 2026-08-11: the stall is measured at the checkpoint price only; what happens between checks is ignored. Intra-window highs from bars are no longer used, and the volume condition is REMOVED because volume has no instantaneous value. Stalls therefore fire strictly more often than before. WARNING: this couples the exit rule to the 30-minute cadence -- at a 10-minute cadence three stalls would fire after 30 minutes instead of 90. If the cadence changes, re-derive checks_to_sell in the same breath.",
-    "at_2_stalls_underwater": "Leave the stop unchanged. Breakeven is above the market when the position is losing, and a sell stop above the market is rejected by the broker. Stall 3 sells. Selling at stall 2 when underwater would make the ladder asymmetric and is NOT approved."
+    "at_2_stalls_underwater": "SELL IMMEDIATELY at the market. Governor decision 2026-08-11. The ladder is asymmetric: 2 stalled checks sell a position below its fill, 3 are required for one at or above it. Cancel the resting stop first, then exit with a marketable limit. Do not wait for the next checkpoint.",
+    "at_2_stalls_in_profit": "Raise the stop to max(current stop, breakeven) and keep holding; the 3-check rule still applies.",
+    "asymmetric": true
   },
   "commodity_trend_structure_gate": {
     "replaces": "the section 4 named-catalyst requirement, for commodities and materials ONLY",
