@@ -88,7 +88,7 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 - **State:** `PROPOSED`
 - **Opened:** 2026-08-11
-- **Rule today:** 15 minutes while holding, sparse while flat (§2).
+- **Rule today:** **30 minutes, flat or holding** (§2), set by governor decision 2026-08-11 and supported by the replay evidence below.
 - **Question:** does checking more often actually improve results, or just cost more? The stated reason for 15 minutes is reduced ratchet latency — a threshold crossed at 10:07 sits unacted-on for 23 minutes at 30-minute spacing. That is a plausible mechanism, **not a measured one.**
 - **Evidence needed:** `cadence_min` is recorded on every observation. Compare stop-move latency and outcomes across cadences. Because 5-minute bars are stored, the counterfactual — where the stop *would* have moved at a different cadence — can be reconstructed exactly.
 - **Sample so far:** 0.

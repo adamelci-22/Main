@@ -5,7 +5,57 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 05:47 UTC · 23 changes to the rulebook.
+Generated 2026-08-11 05:47 UTC · 24 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `fd7b05c`
+
+**Implement volatility-scaled stops and targets — policy v1.1**
+
+Approved by the governor. EXP-007 and EXP-008 promoted from TESTED to LIVE,
+with a 20-closed-trade locked evaluation period per section 17.
+
+The flat 5% stop and +8-12% target are retired. Both now scale to the same
+per-instrument volatility measure, because the pair was mismatched on all
+fourteen instruments -- every one where +8% was reachable was one where a 5%
+stop got shredded, and vice versa.
+
+  stop      = clamp(1.5 x median adverse excursion, 2.5%, 7.0%)
+  target    = 2.0 x stop
+  breakeven = max(median favourable excursion, 0.5 x stop)
+  trail     = 1.0 x median adverse excursion
+  EXCLUDE   if 1.5 x median MAE > 7.0%
+
+The breakeven floor of half the stop exists because moving the stop to
+breakeven at a gain smaller than normal retracement just scratches the
+position on noise.
+
+The old ratchet is replaced by one trigger and a trail. Rungs at +5%, +8%,
++10% and +12% were dead code -- +8% occurred in zero of 21 sessions for GUSH,
+ERX, NUGT, NRGU, DUST and YINN -- so the ladder was already a single rung in
+practice and is now written as one. Minimum stop move of 0.5% bounds
+cancel-and-replace churn.
+
+SOXL is excluded outright: its median adverse excursion of 6.6% is wider than
+the 7% hard cap, so no permissible stop survives an ordinary session. That is
+a conclusion, not an omission.
+
+RECOMPUTED, NOT FROZEN -- the point the governor insisted on. tools/vol_profile.py
+derives the numbers, data/vol_profile.csv holds them, and a new 9:00am subtask
+(g) refreshes it from ~20 sessions of daily bars each morning. SOXL ranged from
+$196 to $91 inside the window that produced the first profile; a hardcoded
+table would be a fixed guess wearing a formula. An instrument with no profile
+row may not be traded, and there is no fallback default.
+
+preflight.py now checks the instrument's own profile rather than a flat
+ceiling. Verified: GUSH at the scaled 3.0% stop ALLOWs; GUSH at the old flat
+5% now DENYs on stop mismatch; SOXL DENYs on exclusion.
+
+Honest scope, restated in the rules: replay showed this moves expectancy by
+about +0.01R, which is noise. It is a risk-consistency fix, not a return fix.
+Its value is that R finally means the same thing across instruments, which is
+what makes the expectancy metric meaningful at all.
 
 ---
 
