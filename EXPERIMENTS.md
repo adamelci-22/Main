@@ -97,7 +97,9 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 ### EXP-007 · A single global stop cannot serve this universe
 
-- **State:** `TESTED` — real data
+- **State:** ✅ `LIVE` — approved by the governor 2026-08-11, policy **v1.1**. Implemented in `OPERATIONS.md` §6, `tools/vol_profile.py`, `data/vol_profile.csv`, `limits.json`, `tools/preflight.py`.
+- **Locked evaluation period:** may not change again for **20 closed trades** (§17).
+- **Previously:** `TESTED` — real data
 - **Opened:** 2026-08-11 · **Rerun on the correct universe** 2026-08-11
 - **Data:** `data/calibration_daily.csv` — **293 sessions, 14 instruments, leveraged sector ETFs and leveraged single-stock ETFs only.** An earlier run wrongly included index-leveraged (SQQQ, TZA) and an unleveraged single name (RIOT); those are not what this strategy trades and the run was discarded.
 - **Method:** `tools/calibrate_stops.py`. Long entry at the open — crude, but uses no hindsight about which entries were good.
@@ -126,7 +128,9 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 ### EXP-008 · Stop quality and target reachability are INVERSE — the pair is mismatched everywhere
 
-- **State:** `TESTED` — real data · **the more important of the two findings**
+- **State:** ✅ `LIVE` — approved 2026-08-11, policy **v1.1**. Target now `2.0 x stop` per instrument; the flat +8–12% is retired (`RULEBOOK.md` §7).
+- **Locked evaluation period:** 20 closed trades.
+- **Previously:** `TESTED` — real data · **the more important of the two findings**
 - **Same data and method as EXP-007.**
 - **Rule today:** −5% stop and a +8–12% target, both fixed, both applied to every instrument (§6, §7).
 

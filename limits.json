@@ -1,11 +1,13 @@
 {
   "_comment": "Machine-readable hard limits. Read by tools/preflight.py before any order. Changing a value here is a POLICY CHANGE and must follow the RULEBOOK.md section 17 promotion path.",
-  "policy_version": "1.0",
+  "policy_version": "1.1",
   "stop": {
-    "default_pct": 5.0,
+    "mult_of_median_mae": 1.5,
+    "floor_pct": 2.5,
     "max_pct": 7.0,
-    "min_pct": 1.5,
-    "required": true
+    "required": true,
+    "source": "data/vol_profile.csv, refreshed at the 9:00am checkpoint",
+    "note": "Flat 5% default retired 2026-08-11 (EXP-007/008). An instrument with no profile row may not be traded."
   },
   "floor": {
     "pct_of_deposits": 50.0
@@ -18,17 +20,59 @@
     "max_resting_orders": 1
   },
   "order": {
-    "allowed_types": ["limit"],
+    "allowed_types": [
+      "limit"
+    ],
     "market_allowed_only_for_fractional": true
   },
   "universe": [
-    "TQQQ", "SPXL", "TNA",
-    "SOXL", "GUSH", "ERX", "FNGU", "BULZ", "LABU", "NUGT", "GDXU", "NRGU", "YINN",
-    "NVDL", "TSLL", "CONL", "MSTX",
-    "SQQQ", "SOXS", "DUST", "SPXS", "SDOW", "TZA", "ERY",
-    "BITX", "ETHU", "RIOT", "MARA",
-    "UVIX", "VXX"
+    "TQQQ",
+    "SPXL",
+    "TNA",
+    "SOXL",
+    "GUSH",
+    "ERX",
+    "FNGU",
+    "BULZ",
+    "LABU",
+    "NUGT",
+    "GDXU",
+    "NRGU",
+    "YINN",
+    "NVDL",
+    "TSLL",
+    "CONL",
+    "MSTX",
+    "SQQQ",
+    "SOXS",
+    "DUST",
+    "SPXS",
+    "SDOW",
+    "TZA",
+    "ERY",
+    "BITX",
+    "ETHU",
+    "RIOT",
+    "MARA",
+    "UVIX",
+    "VXX"
   ],
   "universe_note": "Any liquid high-beta single name with a catalyst is also permitted by RULEBOOK section 4. preflight.py warns rather than denies on an off-list symbol, since the list is not exhaustive.",
-  "forbidden_asset_classes": ["option", "future", "crypto_spot", "short_sale"]
+  "forbidden_asset_classes": [
+    "option",
+    "future",
+    "crypto_spot",
+    "short_sale"
+  ],
+  "target": {
+    "rr_multiple_of_stop": 2.0
+  },
+  "breakeven": {
+    "trigger": "max(median_mfe, 0.5 * stop)",
+    "trail_mult_of_median_mae": 1.0,
+    "min_stop_move_pct": 0.5
+  },
+  "excluded_instruments": {
+    "SOXL": "median adverse excursion 6.6% exceeds the 7% stop cap; no permissible stop survives an ordinary session"
+  }
 }

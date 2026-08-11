@@ -79,32 +79,53 @@ Checks, deterministically, against `limits.json`: the loss streak **computed fro
 - **Not every check.** Each raise is cancel-then-replace, which briefly leaves the position unprotected, and over-tightening invites noise stop-outs on a leveraged instrument. **Do not tighten on a flat print** — the stop migrates up as the position *gains*.
 - **Migrate from loss-avoidance to profit-locking as gains accrue.** A stop left far below price on a winner lets it round-trip through breakeven.
 
-### Initial placement — decided BEFORE the entry, not after
+### Initial placement — VOLATILITY-SCALED, decided BEFORE the entry
 
-- **Default: 5% below the fill.** This is the working number for every trade.
-- **Tighten to structure if a level is closer** — just below a support that has actually held. Structure beats the percentage when it is *nearer*, never when it is further.
-- **HARD CEILING: 7%. Never wider, for any reason, on any instrument.** If the setup appears to need more than 7% of room, **it is not a setup** — decline it. Do not enter and widen.
-- **State the stop price and the percentage at entry**, in the same breath as the entry itself. Placement is not a follow-up decision to be negotiated once the position is open. That was the Aug 10 failure: no number existed to check my judgment against, so it got argued out in chat across three messages while the position was live.
-- **Why these numbers:** paired with the +8–12% target, a 5% stop is what produces a winner worth more than a loser. A 3–4% stop sits inside ordinary leveraged-ETF noise and stops out trades that were right; past 7% a single loss cancels a good win.
-- Sizing is all-in on one position, so **stop distance is the only risk lever there is.** Treat it accordingly. **This is true only of the sandbox** — see the sandbox-only risk block in §0, which requires this line to be deleted rather than reinterpreted once the account holds meaningful money.
+**The stop is scaled to the instrument, not fixed.** Read `data/vol_profile.csv`, refreshed at the 9:00am checkpoint (§2e).
 
-### The ratchet ladder — schedule is the floor, structure may be tighter
+```
+stop      = clamp(1.5 x median adverse excursion, 2.5%, 7.0%)
+target    = 2.0 x stop
+breakeven = max(median favourable excursion, 0.5 x stop)
+trail     = 1.0 x median adverse excursion
+EXCLUDE the instrument if 1.5 x median MAE > 7.0%
+```
 
-| Gain reached | Stop moves to | Trail from price |
-|---|---|---|
-| Entry | **−5%** (ceiling −7%) | 5% |
-| **+2% and stalled 2 checks** | **breakeven** | ~2% |
-| +3% | **breakeven** | 3% |
-| +5% | +2% | ~3% |
-| +8% | +4% | ~4% |
-| +10% | +6% | ~4% |
-| +12% or more | half the gain | ~5% |
+**Why this replaced a flat 5%.** Median adverse excursion across the leveraged universe spans **0.9% (YINN) to 6.6% (SOXL)** — sevenfold. A single number is four times too tight on one end and twice too loose on the other. Worse, stop quality and target reachability are **inverse**: every instrument where +8% was reachable is one where a 5% stop was hit constantly, and every instrument with a comfortable stop never reached +8%. The fixed pair was wrong on all fourteen (EXP-007, EXP-008).
 
-- **Structural override, UPWARD ONLY.** If a 10-minute swing low that has held sits *above* the scheduled level, use that instead. Structure may tighten the stop; it may never loosen it.
-- **When to move it:** only when a schedule threshold is newly crossed, or a new higher swing low has formed and held across two checkpoints. **Not on every check** — each raise is cancel-then-replace and briefly leaves the position unprotected.
+**Current profile** — *illustrative only, the file is authoritative and is recomputed daily:*
+
+| | ERX · YINN | GUSH · FNGU | NRGU · DUST | NVDL · TSLL · MSTX | CONL · SOXS | SOXL |
+|---|---|---|---|---|---|---|
+| stop | 2.5% | 3.0% | 4.1–4.3% | 5.0–5.2% | 6.4–6.5% | **excluded** |
+| target | 5.0% | 5.9% | 8.2–8.7% | 10.0–10.4% | 12.7–13.0% | — |
+
+- **SOXL is EXCLUDED**, and this is a real conclusion rather than an omission: its noise (6.6% median adverse) is wider than the 7% hard cap, so no permissible stop survives an ordinary day. Independent of it also costing $140.
+- **If an instrument is not in `vol_profile.csv`, you may not trade it.** Compute its profile first or pick something else. No falling back to 5%.
+- **HARD CEILING 7%, unchanged.** A setup needing more room is not a setup — decline it.
+- **Tighten to structure if a level is nearer.** Structure beats the scaled number when it is *closer*, never when it is further.
+- **State the stop price, the percentage, and the target at entry**, in the same breath as the entry. That was the Aug 10 failure: no number existed to check judgment against, so it got argued out in chat while the position was live.
+- Sizing is all-in, so **stop distance is the only risk lever there is** — **true only of the sandbox** (§0, which requires this line deleted rather than reinterpreted once the account holds real money).
+
+> **Honest note on what this buys.** Replaying it changed expectancy by about **+0.01R — noise** (EXP-009). This is a **risk-consistency fix, not a return fix.** Its value is that R finally means the same thing across instruments, which is what makes the expectancy metric in §14 meaningful at all. Do not expect it to make money.
+
+### The ratchet — one trigger, then a trail
+
+**The old schedule was mostly dead code.** Rungs at +5%, +8%, +10% and +12% only fire if the position reaches them, and +8% occurred in **zero of 21 sessions** for GUSH, ERX, NUGT, NRGU, DUST and YINN. In practice the ladder was a single rung. It is now written as one.
+
+| Stage | Stop goes to |
+|---|---|
+| At entry | `−stop_pct` from the profile |
+| **Gain ≥ `breakeven_trigger_pct`** | **breakeven** (the fill price) |
+| **2 stalled windows** and gain ≥ 1% | **breakeven** — whichever comes first |
+| Past breakeven | **trail at `trail_pct` below the running high** |
+
+- **The trail replaces the old rungs.** It keeps pace continuously instead of jumping at thresholds that are never reached.
+- **Minimum move 0.5%.** Do not re-place the stop for less — every move is a cancel-then-replace that briefly leaves the position unprotected, and churn is a real cost.
+- **Structural override, UPWARD ONLY.** A swing low that has held above the trailed level may be used instead. Structure may tighten; never loosen.
 - **Never on a flat print.** The stop migrates up as the position *gains*.
-- **Once past +3%, the stop never sits below breakeven again.** A trade that has been meaningfully green does not become a loss.
-- **Consequence worth stating:** a ~2–4% trail on a leveraged ETF is under an hour of typical range, so **expect noise stop-outs and expect scratches at breakeven.** That is the accepted cost of a bounded downside. The ladder is a starting hypothesis on one trade of data — month-end win rate and the winner/loser ratio are what will show whether the trail is too tight.
+- **Once at breakeven, the stop never goes below it again.** A trade that has been meaningfully green does not become a loss.
+- **Expect scratches.** A trail of one median adverse excursion is, by construction, hit by an ordinary adverse move. That is the accepted price of a bounded downside — and note the ladder also cuts losing positions near **−0.6R rather than −1.0R** (EXP-010), which is where the real benefit sits.
 
 ### Hard limits of a stop
 

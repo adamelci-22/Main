@@ -140,6 +140,9 @@ Purpose: form a thesis before the bell.
   - **A balance larger than yesterday's close, beyond what trading explains, means the user funded the account.** No announcement is coming and none is needed — the 9:00am check is where you find out. Size to the new balance and say what you observed in the report. Do not ask for or campaign for funds; the user adds them when the system has earned it.
   - **On detecting funding, report the new deposited-capital figure** — the hard floor is a percentage of it (§10). The figure is **derived, never cached** (§16), so recomputing it each morning is what keeps the floor set against the right denominator.
 - **(f)** Write a **ranked shortlist** with the reason each candidate beats the others.
+- **(g) REFRESH THE VOLATILITY PROFILE.** Pull ~20 sessions of daily bars for the shortlist candidates, recompute median adverse and favourable excursion, and rewrite `data/vol_profile.csv` (formulas in `tools/vol_profile.py`). The stop, target, breakeven trigger and trail all derive from it (§6).
+  - **This must be recomputed, never frozen.** SOXL ranged from $196 to $91 inside the window that produced the first profile. A hardcoded table is a fixed guess wearing a formula.
+  - **An instrument absent from the profile may not be traded.** Compute it or pick something else — there is no fallback default.
 
 ### 9:30am opening observation — no orders, read-only only
 
@@ -230,7 +233,8 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 
 ## 7. Profit-taking
 
-- Set a **realistic target at entry** — roughly **+8% to +12%** on a 2x sector ETF — separate from any far tail target.
+- **Set the target from `data/vol_profile.csv`: `target = 2.0 x stop_pct`** for that instrument (§6). Currently 5.0% on ERX and YINN, 5.9% on GUSH, 10.0% on NVDL, 13.0% on SOXS — a 2:1 reward-to-risk by construction.
+- **The old flat +8–12% is retired.** It was unreachable on the calm names — +8% occurred in **zero of 21 sessions** for GUSH, ERX, NUGT, NRGU, DUST and YINN — and simultaneously too easy on the volatile ones, where a 5% stop was being shredded. Stating a target that cannot be reached makes it decorative and hands every exit to the stall ladder by default (EXP-008).
 - **The target is a CEILING, and most trades will not reach it.** The three-check stall exit (§8.1) will close the majority of positions first, at whatever gain stands. Target is the exit that requires no judgment; it is **not** a reason to keep holding a position the other criteria have already condemned.
 - **On reaching it: BANK IT — close the ENTIRE position**, unless there is **new information** supporting more upside, named explicitly. Momentum alone does not qualify. Neither does reluctance to sell a winner.
 - **Never let the stop become the only exit** — that is drift.
@@ -656,7 +660,7 @@ The same model runs both roles at different times. **What is separated is author
 
 - **Safety defects skip all of it.** A duplicate-order risk, a floor breach, a misreported fill: fix immediately, then tell the governor. Never queue a safety bug as an experiment.
 
-### POLICY VERSION: v1.0 — increment on every policy change
+### POLICY VERSION: v1.1 — increment on every policy change
 
 **Bump the minor version on any change to a rule, threshold or limit.** Record it in the commit. `rulebook_commit` is already stamped on every trade row (§16), so any trade can be traced to the exact policy it ran under — the version number is the human-readable handle for the same thing.
 

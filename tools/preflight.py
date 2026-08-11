@@ -36,6 +36,17 @@ def load_limits():
         return json.load(fh)
 
 
+def vol_profile(symbol):
+    """Per-instrument stop/target/breakeven from data/vol_profile.csv, or None."""
+    path = os.path.join(ROOT, "data", "vol_profile.csv")
+    if not os.path.exists(path):
+        return None
+    for r in csv.DictReader(open(path)):
+        if r["symbol"].upper() == symbol.upper():
+            return r
+    return None
+
+
 def loss_streak():
     """Consecutive losing closed trades ending at the most recent one.
 
@@ -96,8 +107,24 @@ def main():
         fails.append(f"RESTING ORDERS: {a.resting_orders} already resting "
                      f"(max {lim['position']['max_resting_orders']}). A pending sell locks the shares.")
 
-    # --- stop present and sized
+    # --- excluded instruments
+    excl = lim.get("excluded_instruments", {})
+    if a.symbol.upper() in excl:
+        fails.append(f"EXCLUDED INSTRUMENT: {a.symbol.upper()} — {excl[a.symbol.upper()]}")
+
+    # --- stop present and sized against THIS instrument's profile
     s = lim["stop"]
+    prof = vol_profile(a.symbol)
+    if prof is None:
+        fails.append(f"NO VOLATILITY PROFILE for {a.symbol.upper()}. The stop, target and "
+                     "breakeven trigger all derive from data/vol_profile.csv. Compute it "
+                     "(tools/vol_profile.py) or pick another instrument — there is no "
+                     "fallback default.")
+    elif prof["excluded"] == "yes":
+        fails.append(f"EXCLUDED: {a.symbol.upper()} median adverse excursion "
+                     f"{float(prof['median_mae_pct']):.1f}% needs a stop wider than the "
+                     f"{s['max_pct']:.1f}% cap.")
+
     if s["required"] and a.stop <= 0:
         fails.append("STOP: none supplied. A stop is placed immediately after the entry fills.")
     else:
@@ -105,13 +132,23 @@ def main():
         if dist <= 0:
             fails.append(f"STOP: {a.stop:.4f} is not below the entry {a.limit:.4f}.")
         elif dist > s["max_pct"]:
-            fails.append(f"STOP TOO WIDE: {dist:.2f}% exceeds the {s['max_pct']:.1f}% ceiling. "
+            fails.append(f"STOP TOO WIDE: {dist:.2f}% exceeds the {s['max_pct']:.1f}% hard cap. "
                          "A setup needing more room is declined, not entered wider.")
-        elif dist < s["min_pct"]:
-            warns.append(f"stop {dist:.2f}% is tighter than {s['min_pct']:.1f}% — "
-                         "inside normal leveraged noise; expect a noise stop-out.")
-        else:
-            warns.append(f"stop distance {dist:.2f}% (default {s['default_pct']:.1f}%).")
+        elif dist < s["floor_pct"]:
+            fails.append(f"STOP TOO TIGHT: {dist:.2f}% is inside the {s['floor_pct']:.1f}% floor. "
+                         "A stop inside the spread plus tick noise is a coin toss.")
+        elif prof is not None:
+            want = float(prof["stop_pct"])
+            if abs(dist - want) > 0.75:
+                fails.append(f"STOP MISMATCH: {dist:.2f}% but the profile for "
+                             f"{a.symbol.upper()} says {want:.2f}% "
+                             f"(1.5 x median adverse {float(prof['median_mae_pct']):.2f}%). "
+                             "Use the scaled stop or state explicitly why not.")
+            else:
+                warns.append(f"stop {dist:.2f}% matches profile {want:.2f}% · "
+                             f"target {float(prof['target_pct']):.2f}% · "
+                             f"breakeven trigger +{float(prof['breakeven_trigger_pct']):.2f}% · "
+                             f"trail {float(prof['trail_pct']):.2f}%")
 
     # --- affordability
     notional = a.qty * a.limit
@@ -136,6 +173,8 @@ def main():
     risk_pct = (a.limit - a.stop) * a.qty / a.balance * 100.0 if a.stop > 0 else float("nan")
 
     print(f"preflight · policy v{lim['policy_version']}")
+    if prof is not None:
+        print(f"  profile: {prof['sessions']} sessions, computed {prof['computed']}")
     print(f"  {a.symbol.upper()} qty {a.qty:g} @ {a.limit:.4f} = {notional:.2f} "
           f"of {a.balance:.2f} ({notional / a.balance * 100:.1f}% of account)")
     print(f"  stop {a.stop:.4f} · risk {risk_pct:.2f}% of account "
