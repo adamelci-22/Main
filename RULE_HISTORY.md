@@ -5,7 +5,43 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 05:29 UTC · 22 changes to the rulebook.
+Generated 2026-08-11 05:41 UTC · 23 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `611cdeb`
+
+**Fix cadence at 30 minutes, flat or holding**
+
+Governor decision: the cadence is 30 minutes after 10:00 and does not change
+when a trade is entered. Removes both the 15-minute densification while
+holding and the conditional 10-minute densification near a stop or ratchet
+threshold.
+
+Standard schedule is now 17 checkpoints armed every evening, plus 7
+extended-hours slots armed only when a position is actually open at 4:00pm.
+
+The replay evidence supports this rather than merely permitting it: GUSH
+2026-08-05 took the same exit for the same reason at 10, 15 and 30 minutes,
+for -0.60R, -0.58R and -0.61R. A threefold range of cadence moved the outcome
+0.03R. Because the stall clock runs on market time, waking more often cannot
+change when the ladder fires -- it only changes when the same decision gets
+executed.
+
+Cost stated honestly: average delay to act on a newly crossed ratchet
+threshold is about 15 minutes, so a threshold crossed at 10:07 leaves the stop
+unmoved until 10:30. Accepted, and the replay says the price is small.
+
+24 checkpoints on a holding day is the same count as the original fixed grid,
+but the rulebook partition cut the per-checkpoint read from ~78KB to ~23KB, so
+it costs roughly 57% less than the same count did before the split.
+
+Section 12 volatility escalation is untouched -- it is a separate prior
+authorisation for exceptional cases, not a cadence default.
+
+Also fixed stale text the change exposed: a section heading that still said
+"arm sparse, densify on entry", the arming instruction still specifying a
+13-slot baseline, and partition sizes quoted from before the file grew.
 
 ---
 

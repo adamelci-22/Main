@@ -128,23 +128,28 @@ def main():
         px = b["close"]
         gain = (px - entry) / entry * 100
 
-        # stall count: completed windows strictly before now, excluding midday
+        # Stall count over completed windows. Midday (12:00-13:30 ET) is
+        # ASYMMETRIC: a midday window may RESET the counter and may raise the
+        # running high, but may never ADD a stall, and its volume is kept out
+        # of the comparison chain entirely.
         run_high, stalls, prev_vol = entry, 0, None
         for w in wins:
             if w["end"] > b["m"]:
                 break
             w_et = w["start"] + ET_OFFSET * 60
-            if 12 * 60 <= w_et < 13 * 60 + 30:      # midday exclusion
-                prev_vol = w["vol"]
-                continue
+            midday = 12 * 60 <= w_et < 13 * 60 + 30
+
             progressed = w["high"] > run_high * 1.003
-            vol_dry = prev_vol is not None and w["vol"] < prev_vol
             if progressed:
                 stalls = 0
-                run_high = max(run_high, w["high"])
-            elif vol_dry:
-                stalls += 1
-            prev_vol = w["vol"]
+                run_high = max(run_high, w["high"])   # tracks through midday
+            elif not midday:
+                vol_dry = prev_vol is not None and w["vol"] < prev_vol
+                if vol_dry:
+                    stalls += 1
+
+            if not midday:            # lunch volume never becomes the baseline
+                prev_vol = w["vol"]
 
         # ratchet, up only
         sched = ratchet(gain, entry, stalls)
