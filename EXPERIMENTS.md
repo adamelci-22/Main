@@ -145,6 +145,26 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 > **Do not read the favourable/adverse ratios as instrument quality.** NUGT looks asymmetric because gold miners rallied from 115 to 160 during this window; that is a fact about July–August 2026, not about NUGT. Entry-at-open has no edge, so direction over the sample contaminates any up-versus-down comparison.
 
+### EXP-009 · The exit rules are approximately VALUE-NEUTRAL on random entries
+
+- **State:** `TESTED` — real data · **the most consequential result so far**
+- **Opened:** 2026-08-11 · **Method:** `tools/calibrate_stops.py`, 293 sessions, 14 leveraged instruments.
+- **Question:** applied to entries with no selection edge, do the exit rules make money?
+
+| Scenario | n | % profitable | Expectancy | Profit factor |
+|---|---|---|---|---|
+| Current rules — 5% stop, 8% target | 293 | 48.5–48.8% | +0.01 to +0.02R | 1.04–1.07 |
+| Proposed — scaled stop, target 2× stop | 272 | 48.5–48.9% | +0.02 to +0.03R | 1.06–1.09 |
+
+Bounds are pessimistic (assume the stop was touched first whenever both were) and optimistic (target first). The truth is between and **cannot be narrowed with daily bars.**
+
+- **At n=293 the standard error on a 48.5% rate is ±2.9%. This is indistinguishable from a coin flip, and expectancy is indistinguishable from zero.**
+- **This is the correct and expected result, not a failure.** Entry at the open has no edge by construction. A value-neutral outcome means **the exit machinery neither creates nor destroys value** — it bounds losses without generating profit.
+- **The conclusion that matters:** every bit of hypothesised edge in this system rests on the **entry gates** — sector leadership, breadth, a nameable catalyst, trend over chop. Those are the components that **cannot be backtested** (§ no structured historical news, and the gates need judgment), and they have a sample size of **one closed trade.**
+- **Do not read this as "the strategy is break-even."** It says nothing about the strategy. It says the exits are sound plumbing and the entries are entirely unvalidated.
+
+**Second-order finding, and it corrects how EXP-007 should be sold.** The proposed scaled stop improves expectancy by roughly **+0.01R** — noise. So volatility-scaling the stop is a **risk-consistency fix, not a return fix**: it makes R mean the same thing across instruments and stops SOXL-class names being stopped by noise. It should be argued on those grounds and not as a profit improvement, which the data does not support.
+
 ---
 
 ## Closed

@@ -126,5 +126,83 @@ def main():
     print("    not evidence of edge, and it covers one particular market month.")
 
 
+def outcomes():
+    """Bounded profitability estimate. See the caveat printed below."""
+    import csv as _csv
+    rows = list(_csv.DictReader(open(os.path.join(ROOT, "data", "calibration_daily.csv"))))
+    by = {}
+    for r in rows:
+        by.setdefault(r["symbol"], []).append({k: float(r[k]) for k in ("open", "high", "low", "close")})
+
+    def run(stop_pct, target_pct, order):
+        """order='stop_first' = pessimistic, 'target_first' = optimistic."""
+        res = []
+        for bars in by.values():
+            for b in bars:
+                mae = (b["open"] - b["low"]) / b["open"] * 100
+                mfe = (b["high"] - b["open"]) / b["open"] * 100
+                ret = (b["close"] - b["open"]) / b["open"] * 100
+                hit_s, hit_t = mae >= stop_pct, mfe >= target_pct
+                if order == "stop_first":
+                    r = -stop_pct if hit_s else (target_pct if hit_t else ret)
+                else:
+                    r = target_pct if hit_t else (-stop_pct if hit_s else ret)
+                res.append(r / stop_pct)  # in R
+        return res
+
+    def scaled_run(order, mult=1.5, rr=2.0):
+        res = []
+        for bars in by.values():
+            maes = sorted((b["open"] - b["low"]) / b["open"] * 100 for b in bars)
+            med = maes[len(maes) // 2]
+            stop = min(max(mult * med, 2.5), 7.0)
+            if mult * med > 7.0:
+                continue  # excluded instrument
+            tgt = stop * rr
+            for b in bars:
+                mae = (b["open"] - b["low"]) / b["open"] * 100
+                mfe = (b["high"] - b["open"]) / b["open"] * 100
+                ret = (b["close"] - b["open"]) / b["open"] * 100
+                hit_s, hit_t = mae >= stop, mfe >= tgt
+                if order == "stop_first":
+                    r = -stop if hit_s else (tgt if hit_t else ret)
+                else:
+                    r = tgt if hit_t else (-stop if hit_s else ret)
+                res.append(r / stop)
+        return res
+
+    def rep(name, rs):
+        n = len(rs)
+        win = sum(1 for r in rs if r > 0) / n * 100
+        exp = sum(rs) / n
+        gw = sum(r for r in rs if r > 0)
+        gl = -sum(r for r in rs if r < 0)
+        pf = gw / gl if gl else float("inf")
+        print(f"  {name:34}{n:>5}{win:>9.1f}%{exp:>+10.2f}R{pf:>9.2f}")
+
+    print("\n" + "=" * 78)
+    print("BOUNDED PROFITABILITY — entry at the open, exit on stop / target / close")
+    print("=" * 78)
+    print(f"  {'scenario':34}{'n':>5}{'% profit':>10}{'expectancy':>10}{'  PF':>8}")
+    print("  " + "-" * 74)
+    print("  CURRENT RULES  stop 5%, target 8%")
+    rep("    pessimistic (stop first)", run(5.0, 8.0, "stop_first"))
+    rep("    optimistic (target first)", run(5.0, 8.0, "target_first"))
+    print("  PROPOSED  stop = 1.5x med MAE, target = 2x stop")
+    rep("    pessimistic (stop first)", scaled_run("stop_first"))
+    rep("    optimistic (target first)", scaled_run("target_first"))
+    print()
+    print("  READ THIS BEFORE QUOTING ANY NUMBER ABOVE:")
+    print("  * Entry at the open is NOT the strategy's entry rule. There is no")
+    print("    sector-leadership test, no catalyst, no breadth check, no trend filter.")
+    print("    This measures the EXIT RULES ON RANDOM ENTRIES, nothing more.")
+    print("  * The true figure sits between the two bounds and cannot be narrowed")
+    print("    with daily bars, because they do not order the high and the low.")
+    print("  * A real entry edge would move these numbers. So would a real entry")
+    print("    disadvantage. This says nothing either way about the entry gates.")
+    print("  * One month, one market regime, 293 sessions.")
+
+
 if __name__ == "__main__":
     main()
+    outcomes()
