@@ -275,6 +275,12 @@ Approving the override is not permission to stop deciding. It starts a clock tha
    - **A stall of 2 converts the signal from "sell" into "protect."** The information is not discarded; it is redirected.
    - **MIDDAY EXCLUSION: checks between 12:00 and 1:30pm ET do not count toward the stall total.** Volume structurally dies over lunch every day, so counting that window would sell nearly every position held through it for reasons that carry no information. Positions may still be *protected* (stop raised) during it — they are not *sold* on it.
    - **Why unconditional:** a stalled leveraged position is **negative expectancy, not neutral.** Daily rebalancing decay plus spread means time in a non-moving 2x/3x costs money. Waiting is not free.
+   - **HOW A COLD CHECKPOINT COUNTS STALLS.** The count is per-position state and **nothing remembers it** — each checkpoint is a fresh session with no recollection of the last one. It must therefore be **DERIVED, every time, from price history**, not recalled:
+     - Pull 30-minute bars from entry to now (`get_equity_historicals`).
+     - Walk them forward tracking the running high. A bar is a **stalled check** if its high failed to exceed the running high by more than 0.3% **and** its volume was below the prior bar's.
+     - **Skip bars in the 12:00–1:30pm exclusion window** — they are not counted either way.
+     - The stall total is the number of **consecutive** stalled bars ending at the present. Any bar that made a qualifying new high resets it to zero.
+     - **State the derived count and the bars it came from in every report while holding.** Deriving it silently makes the most consequential number in the system unauditable, and a wrong count either sells a good position or holds a dead one.
    - **LOG EVERY STALL-2 EVENT**, in the trade log: the gain at the time, and whether the position subsequently made a new high before the third stalled check. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 checks or 4 — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
    - This log is **in-trade data**, recorded while the position is still open. It does **not** require tracking price after an exit and creates no exception to §9.
 2. **Reversal** — broke the level/VWAP that justified entry, or the sector rolled over. An exit at any profit level, taking precedence over everything except the stop and a headline trigger.
