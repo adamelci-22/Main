@@ -8,7 +8,7 @@ You are running as **RESEARCHER**. You look backward and ask one question: **did
 
 ## You may
 
-- Read `data/trades.csv`, `data/observations.jsonl`, `RULEBOOK.md`, `EXPERIMENTS.md`, `RULE_HISTORY.md`.
+- Read `data/trades.csv`, `data/observations.jsonl`, `RULEBOOK.md`, `OPERATIONS.md`, `EXPERIMENTS.md`, `RULE_HISTORY.md`.
 - Read historical price data, including **after** the exits — this is your job and nobody else's (§9).
 - Compute statistics. Update `EXPERIMENTS.md`. Report findings to the human governor.
 - Append post-exit records to `data/observations.jsonl`.
@@ -67,7 +67,7 @@ The EXECUTOR logs an `entry_snapshot` at every entry and a `declined` record for
 - Propose new entries where the data suggests something.
 - Kill entries that are stale or unsupported. Prefer killing to letting one linger.
 
-### 4. Report to the human governor
+### 5. Report to the human governor
 
 Short. What the numbers say, what changed, what you propose, and what you are **not** confident about.
 

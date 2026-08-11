@@ -5,7 +5,70 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 03:24 UTC · 19 changes to the rulebook.
+Generated 2026-08-11 04:52 UTC · 20 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `700d2fa`
+
+**Complete the review: sandbox risk label, day-trade default, rule layers, version locking, and a preflight checker**
+
+Items 8 through 13 of the review feedback.
+
+SANDBOX-ONLY RISK MODEL (section 0). Resolves a contradiction introduced
+earlier: "judge every rule as if the account were 10x" and "all-in, so stop
+distance is the only risk lever" cannot both be right. Design-for-scale now
+explicitly applies to rules and metrics but NOT to sizing. Records the
+arithmetic -- three consecutive 5% losses is -14.3%, three 7% losses is
+-19.6% -- and lists what must change before real money: position size as an
+independent lever, concentration limits, the -25% flag becoming a brake, a
+far tighter floor, and deletion rather than reinterpretation of the
+"stop distance is the only lever" line. Sizing is not to be raised
+incrementally as the balance grows; it is a deliberate redesign.
+
+LEVERAGED POSITIONS CLOSE SAME DAY BY DEFAULT (section 7). Leveraged funds
+target a daily multiple and reset daily, so multi-day returns diverge from
+the simple multiple, worst when volatility is high -- which is when we are
+most likely to be holding. Overnight is now a separate decision requiring a
+named reason stated at 3:30pm while a stop still functions. "The exit
+criteria did not fire" is explicitly not a reason. The one-week ceiling no
+longer applies to leveraged instruments without evidence.
+
+Note for the governor: this narrows the swing-trading half of the original
+mandate. Implemented in the softer form -- overnight permitted with stated
+justification rather than banned -- since the stall ladder already produced
+this outcome in practice and this states it as intent.
+
+RULE LAYERS (section 10): universal, asset class, category, instrument, with
+guidance to place a rule at the narrowest level where it is true. The
+category layer is deliberately near-empty; per-sector models arrive through
+EXPERIMENTS.md with evidence, not improvised at a checkpoint.
+
+MARGIN WARNING (section 10): all settlement facts are verified for this cash
+account only. A reviewer's claim that FINRA margin day-trading rules changed
+in June 2026 is recorded as UNVERIFIED, since it cannot be confirmed from
+here. Any move to margin requires re-verifying from primary sources first.
+
+POLICY VERSIONING AND A LOCKED EVALUATION PERIOD (section 17). Policy is now
+v1.0. After a rule changes it may not change again for 20 closed trades
+unless the governor overrides. Without this the loop becomes trade, lose,
+adjust, repeat -- a machine for fitting yesterday. Records honestly that the
+stall rule changed three times in one session, that this was acceptable only
+as pre-deployment design on an untested rule, and that the same pace becomes
+forbidden once live trades exist.
+
+PREFLIGHT CHECKER (limits.json, tools/preflight.py, section 5). Deterministic
+pre-order checks: loss streak COMPUTED from trades.csv rather than
+remembered, the floor, one position and one resting order, stop present and
+inside the 7% ceiling, affordability, order type, universe membership.
+Tested against a valid entry, an over-wide stop, and an unaffordable
+off-universe market order with no stop.
+
+Documented plainly as a TRIPWIRE, NOT A GATE: broker orders go through tools
+the script cannot intercept, so nothing forces it to run and nothing stops a
+DENY being ignored. What it buys is deterministic arithmetic and a visible
+trace when it is skipped or overridden. Real enforcement would require the
+order path to run through code that can refuse, which is not available here.
 
 ---
 
