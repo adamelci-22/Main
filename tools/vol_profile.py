@@ -67,6 +67,13 @@ def profile(bars):
         "target_pct": TARGET_PCT,
         "breakeven_trigger_pct": round(max(med_mfe, BREAKEVEN_FLOOR_FRAC * stop), 2),
         "trail_pct": round(TRAIL_MULT * med_mae, 2),
+        # Favourable excursion per unit of risk — the RANKING metric for a small
+        # affordable set (RULEBOOK section 4). Comparing raw stop widths across
+        # instruments compares nothing; a stop is a risk normaliser, not a signal.
+        "mfe_per_stop": round(med_mfe / stop, 3),
+        # How far +8% is in units of this instrument's normal day. Above ~2.5 the
+        # target is effectively unreachable and the trade is a trail-or-stall exit.
+        "mfe_to_target": round(TARGET_PCT / med_mfe, 2) if med_mfe > 0 else None,
         "stop_at_cap": "yes" if capped else "no",
     }
 
@@ -91,7 +98,8 @@ def main():
         out.append(d)
 
     cols = ["symbol", "sessions", "median_mae_pct", "median_mfe_pct", "stop_pct",
-            "target_pct", "breakeven_trigger_pct", "trail_pct", "stop_at_cap", "computed"]
+            "target_pct", "breakeven_trigger_pct", "trail_pct", "mfe_per_stop",
+            "mfe_to_target", "stop_at_cap", "computed"]
 
     print(f"{'sym':6}{'n':>4}{'medMAE':>8}{'medMFE':>8}{'stop':>7}{'target':>8}"
           f"{'BE trig':>9}{'trail':>7}  status")

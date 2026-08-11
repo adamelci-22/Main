@@ -189,6 +189,33 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 - **Only one round trip per day exists** (T+1, §10). That single shot is something to **spend well, not to spend.** An entry taken at 9:45 on a mediocre read forfeits the day's only opportunity.
 - **Late-day entries carry an extra cost:** a position opened in the afternoon cannot reach target before the close, so it commits to an unprotected overnight hold on day one. Say so at entry if taking one.
 
+### ⚠ RANKING A SMALL AFFORDABLE SET — signal first, capital efficiency last
+
+**Governor decision, 2026-08-11, after a selection error.**
+
+> **When the affordable set is small, rank candidates by `median_mfe ÷ stop_pct` and by relative strength versus their sector — before deployment percentage or spread. Deployment is the last tiebreaker, never the first filter. State the ratio for the top two candidates at entry.**
+
+`mfe_per_stop` is precomputed in `data/vol_profile.csv` at the 9:00 refresh, so this is a lookup, not a judgement.
+
+**What the ratio means.** It is favourable excursion per unit of risk — the same quantity expectancy is measured in (§14). A stop is a **risk normaliser, not a quality signal**: a tighter stop does not make a candidate better, it makes its losses smaller *and its stop-outs more frequent*. Comparing raw stop widths across instruments compares nothing.
+
+**Also check how far the target is in units of that instrument's normal day:** `8.0 ÷ median_mfe`. Above roughly 2.5× the +8% target is effectively unreachable and the trade is a trail-or-stall exit by construction. Say so at entry rather than implying a target that cannot be hit.
+
+**The error this rule exists to prevent, recorded so it is not repeated:**
+
+| | median MFE | stop | **mfe_per_stop** | ×MFE to reach +8% |
+|---|---|---|---|---|
+| SMCX | 5.21% | 6.67% | **0.78** | **1.54×** |
+| NVDX *(taken)* | 2.70% | 4.99% | 0.54 | **2.96×** |
+
+At 09:51 on 2026-08-11, NVDX was chosen over SMCX on 98.4% vs 93% capital deployment — a five-point gap treated as decisive — while SMCX offered ~44% more favourable excursion per unit of risk and was the only one of the two showing relative strength as the sector faded. **Both profile numbers were already on disk and were never divided.** Spread was the one genuine point favouring NVDX (0.05% vs 0.43%; doubled for the round trip, 0.10% vs 0.86%) and under §4.3 both clear an 8% target comfortably, so it was not disqualifying for either.
+
+**Three failure modes named, because each will recur:**
+
+- **A tiebreaker promoted to a filter.** Deployment percentage was a sound argument earlier the same morning where the gap was 11 points. Reusing it at a 5-point gap let it decide a question it cannot answer.
+- **Anchoring on the pre-market shortlist.** When the capital base or the thesis changes, the 9:00 shortlist is void — re-rank from the current tape. Asking "what fits?" instead of "what is best?" confirms a decision already made.
+- **Sunk cost on analysis.** Having built a case for an instrument all morning, switching feels like waste. It is not; the analysis was the cost of finding out.
+
 ### Instrument selection, in priority order
 
 1. **Whole share is the DEFAULT** — the most leverage per dollar that fits as a whole share. Whole shares preserve the after-hours and 24-hour-market exit and allow limit orders.
