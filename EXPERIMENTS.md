@@ -165,6 +165,29 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
 
 **Second-order finding, and it corrects how EXP-007 should be sold.** The proposed scaled stop improves expectancy by roughly **+0.01R** — noise. So volatility-scaling the stop is a **risk-consistency fix, not a return fix**: it makes R mean the same thing across instruments and stops SOXL-class names being stopped by noise. It should be argued on those grounds and not as a profit improvement, which the data does not support.
 
+### EXP-006 · Cadence — FIRST REAL EVIDENCE, and it is nearly irrelevant
+
+- **State:** `TESTED` — first replay evidence · **n = 1 session, so directional only**
+- **Method:** `tools/replay.py` on `data/bars_5min_GUSH_2026-08-05.csv`. Models the real structure: the resting stop is checked **continuously** because it is an actual broker order; target, stall count and ratchet only at **checkpoint boundaries**; stall windows are 30-minute market-time windows independent of the cadence.
+
+| Cadence | Exit | Result |
+|---|---|---|
+| 10 min | 18:35, stall ×3 | −3.02% / −0.60R |
+| **15 min (current)** | 18:30, stall ×3 | **−2.91% / −0.58R** |
+| 30 min (old) | 18:45, stall ×3 | −3.07% / −0.61R |
+
+- **Total spread across a 3× range of cadence: 0.16 percentage points, or 0.03R.** All three took the same exit for the same reason, minutes apart.
+- **This is what the decoupling was for.** Because the stall clock runs on market time, tripling the wake rate does not change the exit — it only shifts *when* the same decision gets executed. Direct support for refusing uniform 10-minute cadence (§2).
+- **Sample: one session.** Not evidence of a general result. But the *mechanism* is now demonstrated rather than argued.
+
+### EXP-010 · The stall ladder is a LOSS LIMITER below entry, not only a gain-banker
+
+- **State:** `TESTED` · **arose from a rulebook error this replay exposed**
+- The rules claimed the three-window sell "can only ever cost upside — never a loss," because the stop would already be at breakeven. **False.** The ratchet only engages at +2–3%; a position that goes down from entry and stalls has no breakeven stop, and the sell closes it at a loss. **Corrected in `OPERATIONS.md` §8.1** as a factual fix, not a policy change.
+- **The rule survives on better grounds.** In the same session the −5% stop *would* have been hit — GUSH closed −5.5% below entry. The stall exit took **−0.58R instead of −1.0R.**
+- **So the ladder does two different jobs**, and conflating them hid the error: above +2–3% it banks a gain the ratchet already protected; below entry it cuts a dead trade before the stop does. The second job is arguably the more valuable and was undocumented.
+- **Open question this raises:** if the ladder reliably exits red positions near −0.6R rather than −1.0R, then the *effective* average loss is smaller than the stop implies, which changes the expectancy arithmetic in §14 in our favour. **Needs many more sessions before believing it** — one trade proves nothing, and the ladder could equally fire at −4.5% on a different tape.
+
 ---
 
 ## Closed
