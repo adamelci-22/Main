@@ -77,7 +77,14 @@ def main():
     p.add_argument("--qty", type=float, required=True)
     p.add_argument("--limit", type=float, required=True, help="entry limit price")
     p.add_argument("--stop", type=float, required=True, help="protective stop price; 0 = none")
-    p.add_argument("--balance", type=float, required=True, help="account value")
+    p.add_argument("--balance", type=float, required=True,
+                   help="TOTAL ACCOUNT VALUE (get_portfolio total_value). The floor is measured "
+                        "against this, never against buying power — unsettled proceeds are still "
+                        "the account's money.")
+    p.add_argument("--buying-power", type=float, default=None,
+                   help="SETTLED, SPENDABLE cash (get_portfolio buying_power.buying_power). "
+                        "Affordability is measured against this. Defaults to --balance, which is "
+                        "correct only when nothing is unsettled.")
     p.add_argument("--deposits", type=float, required=True, help="deposited capital")
     p.add_argument("--open-positions", type=int, default=0)
     p.add_argument("--resting-orders", type=int, default=0)
@@ -93,6 +100,11 @@ def main():
     if streak >= cap:
         fails.append(f"CIRCUIT BREAKER: {streak} consecutive losses (limit {cap}). "
                      "Only the governor clears it.")
+
+    # Buying power defaults to the account value; they differ whenever proceeds are
+    # unsettled. The floor is an ACCOUNT VALUE test (section 10) — measuring it against
+    # buying power would falsely halt trading every time a sale had not yet settled.
+    bp = a.buying_power if a.buying_power is not None else a.balance
 
     # --- floor
     floor = lim["floor"]["pct_of_deposits"] / 100.0 * a.deposits
@@ -147,8 +159,10 @@ def main():
 
     # --- affordability
     notional = a.qty * a.limit
-    if notional > a.balance:
-        fails.append(f"NOTIONAL: {notional:.2f} exceeds balance {a.balance:.2f}.")
+    if notional > bp:
+        fails.append(f"NOTIONAL: {notional:.2f} exceeds settled buying power {bp:.2f}"
+                     + (f" (account value is {a.balance:.2f}, but {a.balance - bp:.2f} is "
+                        "unsettled and cannot be spent)." if bp < a.balance else "."))
 
     # --- fractional: PROHIBITED 2026-08-11
     # The broker refuses a resting stop on a fractional quantity ("Invalid trigger
@@ -180,10 +194,12 @@ def main():
     if prof is not None:
         print(f"  profile: {prof['sessions']} sessions, computed {prof['computed']}")
     print(f"  {a.symbol.upper()} qty {a.qty:g} @ {a.limit:.4f} = {notional:.2f} "
-          f"of {a.balance:.2f} ({notional / a.balance * 100:.1f}% of account)")
+          f"of {bp:.2f} ({notional / bp * 100:.1f}% of buying power)")
     print(f"  stop {a.stop:.4f} · risk {risk_pct:.2f}% of account "
           f"(SANDBOX sizing — see RULEBOOK section 0)")
-    print(f"  loss streak {streak}/{cap} over {n} closed trade(s) · floor {floor:.2f}")
+    print(f"  loss streak {streak}/{cap} over {n} closed trade(s) · floor {floor:.2f}"
+          f" vs account value {a.balance:.2f}"
+          + (f" · {a.balance - bp:.2f} unsettled" if bp < a.balance else ""))
     for w in warns:
         print(f"  note: {w}")
 
