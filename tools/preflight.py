@@ -57,7 +57,10 @@ def loss_streak():
     if not os.path.exists(path):
         return 0, 0
     with open(path) as fh:
-        rows = [r for r in csv.DictReader(fh) if r.get("pnl_usd", "").strip()]
+        rows = [r for r in csv.DictReader(fh) if r.get("pnl_usd", "").strip()
+                # A mechanical abort is not a trade the strategy chose to close, so it
+                # must not reset the breaker. Absent column defaults to counting.
+                and r.get("counts_toward_streak", "yes").strip().lower() != "no"]
     streak = 0
     for row in reversed(rows):
         try:

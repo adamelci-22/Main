@@ -87,7 +87,10 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("bars")
     p.add_argument("--entry", default="13:45", help="UTC HH:MM of the entry checkpoint")
-    p.add_argument("--cadence", type=int, default=15, help="checkpoint spacing, minutes")
+    p.add_argument("--cadence", type=int, default=30,
+                   help="checkpoint spacing, minutes. WARNING: since the stall is measured at "
+                        "checkpoint prices, cadence IS the stall timescale — changing it changes "
+                        "the exit rule. Live policy is 30 (limits.json stall.cadence_min).")
     p.add_argument("--stop-pct", type=float, default=5.0)
     p.add_argument("--target-pct", type=float, default=8.0)
     p.add_argument("--breakeven-pct", type=float, default=2.1,
@@ -96,6 +99,13 @@ def main():
                    help="trail distance below the running high, = 1 x median MAE")
     p.add_argument("--verbose", action="store_true")
     a = p.parse_args()
+
+    live_cadence = 30
+    if a.cadence != live_cadence:
+        print(f"  !! WARNING: --cadence {a.cadence} differs from live policy {live_cadence}min.\n"
+              f"     The stall is measured at checkpoint prices, so this is NOT a resolution knob —\n"
+              f"     three stalls now fire after {3 * a.cadence}min instead of {3 * live_cadence}min.\n"
+              f"     Results are not comparable to live behaviour.")
 
     bars = load(a.bars)
     entry_m = to_min(a.entry)

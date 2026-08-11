@@ -771,7 +771,7 @@ Percentage growth net of costs, versus SPY over the same window.
 | `ts`, `discovery_time` | When logged / when first seen |
 | `source_time`, `source_time_confidence` | Publication time, and `exact` · `approximate` · `unknown`. **Never estimate a time and present it as known** |
 | `age_min` | Age at discovery. Blank if `source_time_confidence` is `unknown` |
-| `type` | The 11 categories above |
+| `catalyst_type` | The 11 categories above. **Named `catalyst_type`, NOT `type`** — the record envelope already uses `type` to name the record kind, and an earlier version specified both, which forced an ad-hoc `type_cat` workaround at the first real write. Matches the field name already used in the entry snapshot. |
 | `direction` | `bullish` · `bearish` · `ambiguous` |
 | `scheduled` | Calendar event, or surprise |
 | `affected_instrument` | The tradeable name |
@@ -810,6 +810,7 @@ Without this the dataset contains only trades that were taken, which makes every
 ### What the EXECUTOR must NOT do
 
 - **Never edit or delete a past row.** History is append-only. A mistake gets a correcting row and a note, never an overwrite.
+- **ADDING A COLUMN is a schema migration, not an edit, and it is permitted.** Backfilling a new column on existing rows does not revise any recorded outcome — which is the thing append-only exists to protect. Say in the commit that a migration touched historical rows, and never change an existing value while doing it. `counts_toward_streak` and `counts_toward_expectancy` were added this way on 2026-08-11.
 - **Never evaluate how a DECLINED candidate has performed since you declined it.** Log the rejection and move on. Checking whether the one you passed on has run is the same failure as post-exit tracking (§9) wearing different clothes — it trains chasing instead of hesitation, and it is the likeliest route to a forced late entry. The RESEARCHER scores declined candidates on Saturday; you do not.
 - **Never write to `EXPERIMENTS.md`** during trading hours, and never read it while deciding a trade.
 - **Never promote an experiment.** Only the human governor approves a rule change.

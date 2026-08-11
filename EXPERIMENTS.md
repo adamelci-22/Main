@@ -73,7 +73,9 @@ Every entry moves through these states in order. It may be killed at any stage.
 - **Sample so far:** 0.
 - **Hypotheses examined against this data:** 1.
 
-### EXP-005 · Is 30 minutes the right stall window?
+### EXP-005 · Is 30 minutes the right stall window? — **RETIRED 2026-08-11, question dissolved**
+
+> **This experiment no longer has a variable to test.** The stall is now measured at the checkpoint price (§8.1), so there is no window separate from the cadence — the window IS the wake schedule. 'Window length' and 'cadence' collapsed into one parameter, which is EXP-011's subject. Retired rather than deleted, so the reasoning survives.
 
 - **State:** `PROPOSED`
 - **Opened:** 2026-08-11
@@ -169,7 +171,9 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
 
 **Second-order finding, and it corrects how EXP-007 should be sold.** The proposed scaled stop improves expectancy by roughly **+0.01R** — noise. So volatility-scaling the stop is a **risk-consistency fix, not a return fix**: it makes R mean the same thing across instruments and stops SOXL-class names being stopped by noise. It should be argued on those grounds and not as a profit improvement, which the data does not support.
 
-### EXP-006 · Cadence — FIRST REAL EVIDENCE, and it is nearly irrelevant
+### EXP-011 · Cadence — FIRST REAL EVIDENCE, and it is nearly irrelevant
+
+> **Renumbered 2026-08-11.** This was filed as a second EXP-006, colliding with the open experiment above. Two entries sharing an ID makes both unciteable.
 
 - **State:** `TESTED` — first replay evidence · **n = 1 session, so directional only**
 - **Method:** `tools/replay.py` on `data/bars_5min_GUSH_2026-08-05.csv`. Models the real structure: the resting stop is checked **continuously** because it is an actual broker order; target, stall count and ratchet only at **checkpoint boundaries**; stall windows are 30-minute market-time windows independent of the cadence.
