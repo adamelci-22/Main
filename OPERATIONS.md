@@ -153,13 +153,29 @@ trail     = 1.0 x median adverse excursion, below the running high
 
 1. **Momentum stalled — a two-step escalation, NOT a single judgment call.**
 
-   **THE STALL CLOCK RUNS ON MARKET TIME, NOT ON CHECKPOINTS.** A stall is measured in **30-minute windows of market time**, built from 10-minute bars (governor decision 2026-08-11). Waking more often does not advance it; waking less often does not slow it. This matters because the wake cadence is variable (§2) — if a stall counted *checks*, then checking every 10 minutes would fire the exit after 30 minutes instead of 90, silently turning it into a different rule.
+   **THE STALL IS MEASURED AT THE CHECKPOINT PRICE ONLY. What happens between checks is ignored.** Governor decision 2026-08-11, replacing intra-window highs from bars.
 
-   **A stalled window** = a 30-minute window of market time in which the high failed to exceed the running high by more than **0.3%**, *and* volume was below the prior window's. Marginal ticks of +0.05% are not progress; they are a stall pretending otherwise.
+   **A stalled check** = a 30-minute checkpoint whose **price at that moment** failed to exceed the running high by more than **0.3%**. Marginal ticks of +0.05% are not progress; they are a stall pretending otherwise.
+
+   - **`run_high` is the highest CHECKPOINT price seen, not the highest price traded.** It starts at the fill price and advances only when a check prints above the threshold.
+   - **A spike between checks is not progress.** If price ran +2% at 10:12 and was back to flat by the 10:30 check, that is a **stall**. The agent exists only at checkpoints — a high it never saw and could never have sold into is not a gain it could have captured. Counting it as progress credited the position with something unreachable.
+   - **This makes the stall consistent with the rest of the exit model.** `tools/replay.py` already treats the target, the ratchet and the ladder as checkpoint-evaluated, and only the resting stop as continuous. Using intra-window highs for the stall was the one place that assumed the agent could see between its own checks.
+   - **THE VOLUME CONDITION IS REMOVED.** A stall used to require *both* no new high *and* declining volume. Volume has no instantaneous value — it only exists over an interval — so "checkpoint price only" cannot accommodate it. **Effect: stalls now fire strictly more often**, because a non-progressing check with rising volume used to be exempt and no longer is. Three flat-or-down checks in a row now sell, full stop.
+   - **No bars are needed for the stall.** One quote per checkpoint is sufficient, which is why this also removes the bar pull from the hot path.
+
+   > **⚠ THIS RULE IS NOW COUPLED TO THE 30-MINUTE CADENCE.** The previous market-time definition was deliberately cadence-independent, precisely so that changing the wake schedule could not silently change the exit rule. Counting *checks* re-introduces that coupling: **at a 10-minute cadence, three stalls would fire after 30 minutes instead of 90 — a completely different rule wearing the same words.** This is safe only because §2 pins the cadence at 30 minutes flat or holding. **If the cadence is ever changed, the stall threshold must be re-derived in the same breath, or the exit rule changes without anyone deciding to change it.**
 
    | Stalled windows | Elapsed | Action |
    |---|---|---|
    | **2** | 60 min | **Raise the stop to breakeven. Keep holding.** Downside eliminated; upside still open. |
+
+   > **⚠ AT STALL 2 WHILE UNDERWATER, THE BREAKEVEN STEP IS UNEXECUTABLE — and that is not a bug to improvise around.** "Raise the stop to breakeven" silently assumes the position has a gain. If price is BELOW the fill, breakeven sits above the market, and **a sell stop above the market is rejected by the broker** — it is not a stop, it is a market order wearing a stop's name.
+   >
+   > **Handling: leave the stop where it is and let stall 3 sell.** This follows from §6 — the ratchet is a stop-*raising* mechanism and it cannot raise a stop through the current price. There is also no downside left to eliminate: the position is already losing, which is the thing breakeven exists to prevent.
+   >
+   > **Never place, or attempt to place, a stop above the market price.** If the broker accepts something that looks like one, it will fill immediately at whatever the bid is.
+   >
+   > **The alternative reading is the governor's to make, not the executor's:** that stalling twice while *underwater* is worse than stalling twice in profit and should sell at stall 2 rather than 3. That would make the ladder asymmetric — 2 checks for losers, 3 for winners. It has not been approved and is not in force.
    | **3** | 90 min | **SELL — whatever the gain.** No floor, no minimum, no exception. |
 
    **Windows are anchored to the clock** (`:00` and `:30`), not to the entry time, so two sessions looking at the same position count identically. A partial window in progress does not count until it completes.
@@ -173,9 +189,8 @@ trail     = 1.0 x median adverse excursion, below the running high
      - **Consequence, accepted:** volume genuinely does die over lunch, so a position held through midday is now more likely to accumulate stalls and be sold there. That is the intended behaviour — a position going nowhere on low volume is still a position going nowhere.
    - **Why unconditional:** a stalled leveraged position is **negative expectancy, not neutral.** Daily rebalancing decay plus spread means time in a non-moving 2x/3x costs money. Waiting is not free.
    - **HOW A COLD CHECKPOINT COUNTS STALLS.** The count is per-position state and **nothing remembers it** — each checkpoint is a fresh session with no recollection of the last one. It must therefore be **DERIVED, every time, from price history**, not recalled:
-     - Pull **10-minute bars** from entry to now (`get_equity_historicals`) and aggregate them into clock-anchored 30-minute windows — three bars per window. Governor decision 2026-08-11 was 15-minute; the broker offers no 15-minute interval (valid: 15s, 30s, 1, 5, 10, 30 min), so 10-minute is the nearest available that is still finer than the window. Still do not request 30-minute bars directly: aggregating up keeps the window length a parameter rather than a property of the data (§2).
-       - **What this costs, stated plainly:** window length can now only be re-tested at multiples of 10 minutes — 10, 20, 30, 60. A 5- or 15-minute window can no longer be reconstructed retroactively (EXP-005 narrows accordingly). That is the accepted price of a smaller pull per checkpoint.
-     - Walk the windows forward tracking the running high. A window is **stalled** if its high failed to exceed the running high by more than 0.3% **and** its volume was below the prior window's.
+     - Read **one quote** — the price at this checkpoint. No bars. The stall is a comparison between checkpoint prices, so intra-checkpoint data cannot enter it (governor decision 2026-08-11).
+     - Compare that price against `run_high`, the highest **checkpoint** price so far, seeded at the fill. If `price > run_high x 1.003`, the check **progressed**: reset the stall count to zero and advance `run_high` to this price. Otherwise it is a **stalled check** and the count increments.
      - The stall total is the number of **consecutive** stalled windows ending at the last *completed* one. Any window making a qualifying new high resets it to zero.
      - **State the derived count, the windows it came from, and their highs, in every report while holding.** Deriving it silently makes the most consequential number in the system unauditable, and a wrong count either sells a good position or holds a dead one.
    - **LOG EVERY STALL-2 EVENT**, in `data/observations.jsonl` (§16): the gain at the time, and whether the position subsequently made a qualifying new high before the third stalled **window** closed. Over enough trades this yields the **resumption rate**, which is the only thing that can settle whether the sell belongs at 3 windows or 4 (EXP-001) — break-even is roughly a 33% resumption rate, and the answer is currently a prior, not a measurement.
@@ -237,7 +252,7 @@ Append to `data/observations.jsonl`. **Append-only: never edit or delete a past 
 | `ts` | UTC |
 | `instrument`, `price`, `unrealised_pct` | |
 | `stall_count` | the derived count (§8.1) |
-| `stall_windows` | the windows it came from, **with their highs** — so the count is auditable, not asserted |
+| `stall_checks` | every checkpoint price since entry with its threshold and verdict — so the count is auditable, not asserted |
 | `stop_price` | current |
 | `stop_moved`, `stop_move_reason` | `false` is a normal and common answer |
 | `headlines_checked` | position-relevant only while holding (§11) |

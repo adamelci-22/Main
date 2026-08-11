@@ -14,12 +14,16 @@ What is modelled, per RULEBOOK section 6 / section 8 and OPERATIONS.md:
                low pierces it fills. Checked on every 5-minute bar.
   CHECKPOINTS  everything else. Target, stall count, ratchet, exit decisions
                happen only at cadence boundaries, at the price then showing.
-  STALL CLOCK  30-minute windows of MARKET time from 10-MINUTE bars (three per window),
-               clock-anchored at :00/:30,
-               independent of the checkpoint cadence. A window is stalled when
-               its high fails to beat the running high by >0.3% AND its volume
-               is below the prior window's. NO midday exclusion -- every window
-               counts normally.
+  STALL CLOCK  MEASURED AT THE CHECKPOINT PRICE ONLY (governor decision
+               2026-08-11). A check is stalled when the price AT THAT MOMENT
+               fails to beat the running high by >0.3%. run_high is the highest
+               CHECKPOINT price, seeded at the fill -- not the highest price
+               traded. Intra-check spikes are ignored: a high the agent never
+               saw is not a gain it could have taken. The volume condition is
+               REMOVED (volume has no instantaneous value), so stalls fire
+               strictly more often. NO midday exclusion.
+               WARNING: this couples the rule to the cadence. At 10 minutes,
+               three stalls would fire after 30 min instead of 90.
   LADDER       2 stalled windows -> stop to max(current, breakeven), never
                lowered. 3 -> sell at the next checkpoint, any gain.
   RATCHET      gain >= breakeven_trigger -> breakeven. Past that -> trail
@@ -62,19 +66,6 @@ def load(path):
     return out
 
 
-def stall_windows(bars, entry_m):
-    """Aggregate post-entry bars into clock-anchored 30-minute windows."""
-    wins = {}
-    for b in bars:
-        if b["m"] < entry_m or b["interp"]:
-            continue
-        key = (b["m"] // 30) * 30
-        w = wins.setdefault(key, {"high": -1e9, "vol": 0.0, "end": key + 30})
-        w["high"] = max(w["high"], b["high"])
-        w["vol"] += b["vol"]
-    return [dict(start=k, **v) for k, v in sorted(wins.items())]
-
-
 def ratchet(gain_pct, run_high_pct, trail_pct, stalls, be_trigger):
     """Target stop as a percent offset from entry. None = leave as is.
 
@@ -115,7 +106,9 @@ def main():
     entry = ebars[0]["open"]
     stop = entry * (1 - a.stop_pct / 100)
     stop_label = f"-{a.stop_pct:.2f}%"
-    wins = stall_windows(bars, entry_m)
+    # Stall state, tracked incrementally across checkpoints. run_high is the
+    # highest CHECKPOINT price, seeded at the fill.
+    run_high, stalls = entry, 0
 
     exit_price = exit_ts = reason = None
     log = []
@@ -134,21 +127,12 @@ def main():
         px = b["close"]
         gain = (px - entry) / entry * 100
 
-        # Stall count over completed windows. NO midday exclusion -- every
-        # window counts normally (governor decision 2026-08-11).
-        run_high, stalls, prev_vol = entry, 0, None
-        for w in wins:
-            if w["end"] > b["m"]:
-                break
-            progressed = w["high"] > run_high * 1.003
-            if progressed:
-                stalls = 0
-                run_high = max(run_high, w["high"])
-            else:
-                vol_dry = prev_vol is not None and w["vol"] < prev_vol
-                if vol_dry:
-                    stalls += 1
-            prev_vol = w["vol"]
+        # Stall test at the CHECKPOINT PRICE ONLY (governor decision 2026-08-11).
+        # No bars, no volume condition, no intra-check highs.
+        if px > run_high * 1.003:
+            stalls, run_high = 0, px
+        else:
+            stalls += 1
 
         # ratchet, up only. min move 0.5% of entry to bound cancel/replace churn.
         run_high_pct = (run_high - entry) / entry * 100
