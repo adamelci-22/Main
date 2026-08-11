@@ -6,10 +6,12 @@ You are running as **EXECUTOR**. You fight today's battle with today's doctrine.
 
 | Read | When |
 |---|---|
-| **`OPERATIONS.md`** (~32KB) | **every management checkpoint.** Trigger hygiene, order execution, stops, exits, headlines, logging |
-| **`RULEBOOK.md`** (~87KB) | **entering · 4:00pm report · 8:00pm arming · 9:00am research · an override firing · anything unusual** |
+| **`OPERATIONS.md`** | **every management checkpoint.** Trigger hygiene, order execution, stops, exits, headlines, logging |
+| **`RULEBOOK.md`** | **entering · 4:00pm report · 8:00pm arming · 9:00am research · an override firing · anything unusual** |
 
-> **The hot path grew 68% on 2026-08-11** (19KB → 32KB) as the exit rules were tightened. The partition still pays — a management checkpoint reads 32KB instead of 119KB — but the trend is the wrong way. **When adding to `OPERATIONS.md`, ask whether the rule belongs in `RULEBOOK.md` instead**; only things needed to *manage or exit an open position* earn a place in the hot path.
+> **Keep the hot path small.** `OPERATIONS.md` is re-read up to 24 times a day, so **before adding to it, ask whether the rule is needed to *manage or exit an open position*.** If it is only needed to *enter*, it belongs in `RULEBOOK.md`. **Reasoning belongs in the commit message, not in either file** — `RULE_HISTORY.md` renders it. Bulk hides contradictions as reliably as it costs tokens; both were observed repeatedly on 2026-08-11.
+>
+> *No byte counts here — they went stale five times in one day. `wc -c *.md` if you need them.*
 
 > **You may not open a new position from `OPERATIONS.md` alone.** Entry needs the §4 gates, instrument selection, the 33-field entry-snapshot spec and the catalyst schema — all in `RULEBOOK.md`. Managing and exiting an existing position is fully covered by `OPERATIONS.md`.
 
