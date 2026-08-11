@@ -196,7 +196,30 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 3. **Check the spread — no hard rejection gate; PRICE IT IN.** Read the actual bid/ask, double it for the round trip, subtract that from the expected move, and take the trade only if it **still clears the target with room to spare.** A spread does not disqualify an instrument by itself; a spread that eats the thesis does. Liquid leveraged ETFs typically run well under 0.15% and are a non-issue; thin sector and single-stock names are where this bites. **Log the actual spread cost on every fill** so the real drag accumulates in the record instead of being assumed.
 4. **Check the actual price before shortlisting.** Much of the universe below is unaffordable as a whole share at a small balance. A candidate you cannot buy is not a candidate — do not build a thesis on one and discover the problem at the order stage.
 
-### Fractional — permitted only when the setup is clearly better
+### ⛔ FRACTIONAL IS PROHIBITED — a fractional position cannot be protected
+
+**Verified by live order attempts, 2026-08-11. This overrides everything below it in this subsection.**
+
+**A fractional position CANNOT carry a resting stop.** The broker refuses the order outright:
+
+| Attempt | Result |
+|---|---|
+| `limit` buy, qty 0.52 | ❌ `Limit order quantity cannot include fractional shares.` |
+| `stop_market` sell, qty 0.52, `gtc` | ❌ `Invalid time in force for fractional order.` |
+| `stop_market` sell, qty 0.52, `gfd` | ❌ `Invalid trigger for fractional order.` |
+| `market` buy/sell, qty 0.52 | ✅ filled |
+
+**Fractional is market orders only, in both directions. No limit price, no stop, no trigger of any kind.**
+
+**Why this bans fractional rather than merely constraining it:** the entire exit model assumes the stop is a real resting order at the broker. `tools/replay.py` states it explicitly — the stop is the one thing evaluated continuously; target, stall ladder and ratchet are all checkpoint-evaluated. Remove the resting stop and a leveraged position is unprotected for 30 minutes at a stretch, and every calibrated number — the volatility-scaled stop, the R multiple, EXP-007 through EXP-010 — was derived against a model where that stop exists. **A fractional position is not a slightly worse version of a whole-share position. It is a different risk model, and not one this system has ever tested.**
+
+**Therefore: only whole shares.** If the best setup is unaffordable as a whole share, it is not available. Say so and take the next candidate or no trade — that is a correct outcome, not a missed one.
+
+> **⚠ CORRECTION — a false claim was written into this file earlier the same day and is retracted here.** At 09:20 ET, `review_equity_order` accepted both a fractional limit and a fractional `stop_market`, and that was recorded as "fractional can carry a resting stop." **`review_equity_order` does not validate fractional constraints.** It returned clean previews for two orders the broker then refused at placement. The note was flagged at the time as review evidence pending a confirmed fill; the fill came back negative and the claim is now known false.
+>
+> **The general lesson, which matters more than the specific fact: a successful review proves nothing about placement.** Never record a capability as verified on the strength of a review. Only an order response — a fill or an explicit rejection — is evidence (§15).
+
+### Fractional — RETIRED. Retained only to explain why.
 
 - **Whole share is the default. Fractional is the exception**, allowed when the best available setup is materially stronger than anything affordable whole — not merely different, and not to avoid the work of finding an affordable equivalent.
 - **You must say at entry that you are going fractional, and what you are giving up.** State it as a cost being accepted, not a detail.
@@ -214,6 +237,32 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 **Verified 2026-08-11 — fractional is less restricted than previously documented, and this changes the risk picture but NOT the rule above.** A `stop_market` sell for 0.3 shares of SOXL and a `limit` buy for 0.3 shares both cleared `review_equity_order` with no order-type rejection; the only alert on the stop was `EQUITY_NOT_ENOUGH_BP_PERCENT_RESERVED` (a 10% buying-power reserve on stop orders). So a fractional position **can** carry a resting protective stop and **can** use a limit price, which is what makes fractional viable at all.
   - **This is review evidence, not a confirmed fill.** Review is not placement. Confirm from the order response the first time each order type is actually used on a fractional quantity, and correct this note if the broker rejects at placement (§15).
   - **It does not soften the close-before-the-bell rule**, because a resting stop is a `regular_hours` order — it stops protecting at 4:00pm exactly when the overnight risk starts.
+
+### Commodities and materials — the TREND-STRUCTURE GATE replaces the catalyst gate
+
+**Governor decision, 2026-08-11.** Commodity and materials leveraged trades are permanently open, on the governor's reasoning: *"they trend up and down sometimes for no reason."* That is true, and it collides with the §4 requirement of a catalyst you can name. For this asset class only, the catalyst gate is **replaced** — not waived — by a structural test that is still falsifiable and still refusable.
+
+**All three legs must hold. Any one failing is a decline.**
+
+1. **Established multi-session trend** — higher highs *and* higher lows across several sessions. One big day is not a trend.
+2. **Confirmation from the related complex** — the equity side must agree with the commodity side: metal versus miners, crude versus E&P, gas versus producers. Divergence *in the direction of the trade* is the strongest form of this (miners green while the metal is red = the dip is being bought).
+3. **Pullback, not breakdown** — today's price still inside the prior session's range and above its low. Below the prior low it is a breakdown and the trade is off.
+
+- **No named catalyst is required.** Do not invent one to satisfy the old gate, and do not decline a qualifying setup for lacking one.
+- **This gate applies ONLY to commodities and materials.** Equities, index and single-stock leveraged ETFs keep the §4 catalyst requirement unchanged.
+- **It is a replacement, not a relaxation.** Everything else still binds: the volatility-scaled stop from the profile, the +8% target, the stall ladder, the circuit breaker, the floor, whole shares only.
+- **Why it is not simply "buy what is going up":** leg 2 requires an independent instrument to agree, and leg 3 can veto on price structure alone. Both are checkable before entry and neither depends on a narrative.
+
+**Worked example, 2026-08-11 (AGQ).** Leg 1: SLV +15.9% and AGQ +33.9% over six sessions to Aug 10, higher highs and higher lows throughout, SLV closing Aug 10 on its high. Leg 2: metal down 0.84% intraday while SIL +0.74% and SILJ +0.54% rose — miners refusing to follow. Leg 3: SLV at 58.91 against the prior session's low of 57.52, inside the range. **All three held; the gate passed and the trade was taken.** It was then exited for an unrelated reason (fractional could not be protected), which does not bear on the gate.
+
+### Universe additions — commodities and materials
+
+Each still needs a `data/vol_profile.csv` row before it can be traded (§2g).
+
+- **Precious metals:** AGQ · ZSL · UGL · GLL · NUGT · DUST · GDXU · JNUG · JDST · SIL · SILJ
+- **Energy:** UCO · SCO · BOIL · KOLD · GUSH · DRIP · ERX · ERY · NRGU · OILU · OILD
+- **Base metals and materials:** UYM · SMN · COPX · CPER · URA · URNM · LIT · REMX · SLX
+- **Agriculture:** DBA · CORN · WEAT · SOYB — **unleveraged only**; no liquid leveraged ag vehicles exist, so these enter as trend reads or not at all
 
 ### Asset classes — equities and ETFs ONLY, indefinitely
 

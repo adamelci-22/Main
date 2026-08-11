@@ -150,10 +150,19 @@ def main():
     if notional > a.balance:
         fails.append(f"NOTIONAL: {notional:.2f} exceeds balance {a.balance:.2f}.")
 
+    # --- fractional: PROHIBITED 2026-08-11
+    # The broker refuses a resting stop on a fractional quantity ("Invalid trigger
+    # for fractional order"), and every exit rule is calibrated against a stop that
+    # rests continuously at the broker. Whole shares only.
+    if a.qty != int(a.qty) and not lim.get("fractional", {}).get("permitted", False):
+        fails.append(f"FRACTIONAL: qty {a.qty:g} is not a whole share. A fractional position "
+                     "cannot carry a resting stop, so it cannot be protected between "
+                     "checkpoints. If the setup is unaffordable whole, it is unavailable.")
+
     # --- order type
     if a.order_type not in lim["order"]["allowed_types"]:
         if a.order_type == "market" and a.qty != int(a.qty) and \
-                lim["order"]["market_allowed_only_for_fractional"]:
+                lim["order"].get("market_allowed_only_for_fractional", False):
             warns.append("market order permitted only because the quantity is fractional.")
         else:
             fails.append(f"ORDER TYPE: '{a.order_type}' not allowed "
