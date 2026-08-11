@@ -200,8 +200,20 @@ Test whether the 9:00 thesis survived the open. Did pre-market strength hold int
 
 - **Whole share is the default. Fractional is the exception**, allowed when the best available setup is materially stronger than anything affordable whole — not merely different, and not to avoid the work of finding an affordable equivalent.
 - **You must say at entry that you are going fractional, and what you are giving up.** State it as a cost being accepted, not a detail.
-- **What fractional costs, every time:** `type=market` only, `regular_hours` only. That means **no limit price** (no protection against the spread) and **no extended-hours or overnight exit at all** — a fractional position held overnight cannot be closed until the next regular session, whatever happens in between.
-- Because the exit window is narrower, a fractional position gets a **tighter leash**: prefer closing it the same session, and never invoke the 1-week horizon ceiling on one.
+- **What fractional costs, every time:** `regular_hours` only — **no extended-hours or overnight exit at all.** A fractional position held overnight cannot be closed until the next regular session, whatever happens in between. That single fact is what drives the rule below.
+
+#### ⚠ A FRACTIONAL POSITION MUST BE CLOSED BEFORE THE 4:00pm BELL. No exceptions.
+
+**Governor decision, 2026-08-11.** This is a hard rule, not a preference. If you go fractional you are committing to a same-day round trip at entry, before the order is placed.
+
+- **It is never a swing.** The 1-week horizon ceiling does not apply to a fractional position, and neither does any override — a profit-target override (§7) cannot extend a fractional position past the bell.
+- **The 3:30pm checkpoint is the last one that can plan the close.** If a fractional position is still open at 3:30, close it there or at 4:00 regardless of gain, stall count or stop distance. Reaching 4:00pm still holding fractional is a rule violation, not a judgment call.
+- **Why it is absolute:** the exit tool is gone the moment the bell rings. A whole share carrying a bad overnight headline can be sold at 4:30pm, at 7:30pm, or in the overnight session. A fractional position holds whatever happens until 9:30 the next morning, with the stop unable to fill. The one protection that matters most is exactly the one fractional does not have.
+- **Never arm the extended-hours slots for a fractional position** — there is nothing they could do.
+
+**Verified 2026-08-11 — fractional is less restricted than previously documented, and this changes the risk picture but NOT the rule above.** A `stop_market` sell for 0.3 shares of SOXL and a `limit` buy for 0.3 shares both cleared `review_equity_order` with no order-type rejection; the only alert on the stop was `EQUITY_NOT_ENOUGH_BP_PERCENT_RESERVED` (a 10% buying-power reserve on stop orders). So a fractional position **can** carry a resting protective stop and **can** use a limit price, which is what makes fractional viable at all.
+  - **This is review evidence, not a confirmed fill.** Review is not placement. Confirm from the order response the first time each order type is actually used on a fractional quantity, and correct this note if the broker rejects at placement (§15).
+  - **It does not soften the close-before-the-bell rule**, because a resting stop is a `regular_hours` order — it stops protecting at 4:00pm exactly when the overnight risk starts.
 
 ### Asset classes — equities and ETFs ONLY, indefinitely
 

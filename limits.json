@@ -25,6 +25,14 @@
     ],
     "market_allowed_only_for_fractional": true
   },
+  "fractional": {
+    "must_close_before_bell": true,
+    "last_planning_checkpoint_et": "15:30",
+    "hard_close_et": "16:00",
+    "overrides_allowed": false,
+    "arm_extended_hours": false,
+    "note": "Governor decision 2026-08-11: a fractional position is a same-day round trip, committed at entry. It cannot be held overnight because it cannot be exited outside regular hours. Verified 2026-08-11 that fractional CAN carry a resting stop and CAN use a limit price (both cleared review_equity_order); that does not relax this rule, since a regular-hours stop stops protecting at the bell."
+  },
   "universe": [
     "TQQQ",
     "SPXL",
