@@ -14,7 +14,7 @@ FORMULAS
     median_mfe   median of (high - open) / open over the window
 
     stop      = clamp(1.5 x median_mae, 2.5%, 7.0%)
-    target    = 8.0%  flat                 (sell at any check AT OR ABOVE it)
+    target    = clamp(2.0 x median_mfe, 1.5 x stop, 12.0%)   governor 2026-08-11
     breakeven = max(median_mfe, 0.5 x stop)  (where the stop first goes to breakeven)
     trail     = 1.0 x median_mae           (below the running high, once past breakeven)
 
@@ -47,7 +47,13 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STOP_MULT = 1.5
 STOP_FLOOR = 2.5
 STOP_CAP = 7.0
-TARGET_PCT = 8.0          # flat, governor decision 2026-08-11
+TARGET_MULT_MFE = 2.0     # an exceptional day, not a median one
+TARGET_FLOOR_R = 1.5      # a target hit must pay at least this many R
+TARGET_CAP = 12.0         # above this it stops being a "bank it" level
+STALL_THR_FRAC = 0.15     # stall new-high threshold, as a fraction of median_mfe
+STALL_THR_MIN, STALL_THR_MAX = 0.10, 1.00
+MIN_MOVE_FRAC = 0.25      # minimum stop move, as a fraction of median_mae
+MIN_MOVE_MIN, MIN_MOVE_MAX = 0.20, 1.00
 BREAKEVEN_FLOOR_FRAC = 0.5    # trigger floors at half the stop
 TRAIL_MULT = 1.0
 
@@ -59,12 +65,13 @@ def profile(bars):
     raw = STOP_MULT * med_mae
     capped = raw > STOP_CAP          # informational only -- nothing is excluded
     stop = min(max(raw, STOP_FLOOR), STOP_CAP)
+    target = min(max(TARGET_MULT_MFE * med_mfe, TARGET_FLOOR_R * stop), TARGET_CAP)
     return {
         "sessions": len(bars),
         "median_mae_pct": round(med_mae, 3),
         "median_mfe_pct": round(med_mfe, 3),
         "stop_pct": round(stop, 2),
-        "target_pct": TARGET_PCT,
+        "target_pct": round(target, 2),
         "breakeven_trigger_pct": round(max(med_mfe, BREAKEVEN_FLOOR_FRAC * stop), 2),
         "trail_pct": round(TRAIL_MULT * med_mae, 2),
         # Favourable excursion per unit of risk — the RANKING metric for a small
@@ -73,7 +80,11 @@ def profile(bars):
         "mfe_per_stop": round(med_mfe / stop, 3),
         # How far +8% is in units of this instrument's normal day. Above ~2.5 the
         # target is effectively unreachable and the trade is a trail-or-stall exit.
-        "mfe_to_target": round(TARGET_PCT / med_mfe, 2) if med_mfe > 0 else None,
+        "mfe_to_target": round(target / med_mfe, 2) if med_mfe > 0 else None,
+        # Scaled 2026-08-11: a flat 0.3% threshold was 33% of a calm instrument's daily
+        # range and 5% of a volatile one's — the one parameter that was never scaled.
+        "stall_threshold_pct": round(min(max(STALL_THR_FRAC * med_mfe, STALL_THR_MIN), STALL_THR_MAX), 2),
+        "min_stop_move_pct": round(min(max(MIN_MOVE_FRAC * med_mae, MIN_MOVE_MIN), MIN_MOVE_MAX), 2),
         "stop_at_cap": "yes" if capped else "no",
     }
 
@@ -99,7 +110,7 @@ def main():
 
     cols = ["symbol", "sessions", "median_mae_pct", "median_mfe_pct", "stop_pct",
             "target_pct", "breakeven_trigger_pct", "trail_pct", "mfe_per_stop",
-            "mfe_to_target", "stop_at_cap", "computed"]
+            "mfe_to_target", "stall_threshold_pct", "min_stop_move_pct", "stop_at_cap", "computed"]
 
     print(f"{'sym':6}{'n':>4}{'medMAE':>8}{'medMFE':>8}{'stop':>7}{'target':>8}"
           f"{'BE trig':>9}{'trail':>7}  status")

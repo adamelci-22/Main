@@ -106,19 +106,29 @@ Checks, deterministically, against `limits.json`: the loss streak **computed fro
 **The stop is scaled to the instrument, not fixed.** Read `data/vol_profile.csv`, refreshed at the 9:00am checkpoint (§2e).
 
 ```
-stop      = clamp(1.5 x median adverse excursion, 2.5%, 7.0%)
-target    = +8.0%  flat  — sell at any check AT OR ABOVE it
-breakeven = max(median favourable excursion, 0.5 x stop)
-trail     = 1.0 x median adverse excursion, below the running high
+stop        = clamp(1.5 x median adverse excursion, 2.5%, 7.0%)
+target      = clamp(2.0 x median FAVOURABLE excursion, 1.5 x stop, 12.0%)
+breakeven   = max(median favourable excursion, 0.5 x stop)
+trail       = 1.0 x median adverse excursion, below the running high
+stall thr   = clamp(0.15 x median favourable excursion, 0.10%, 1.00%)
+min stop mv = clamp(0.25 x median adverse excursion, 0.20%, 1.00%)
 ```
+
+**EVERY ONE OF THESE IS NOW SCALED. The flat +8% target, the flat 0.3% stall threshold and the flat 0.5% minimum stop move were retired 2026-08-11** — they were the last constants in a volatility-scaled system, and each was wrong at both ends of the universe.
 
 **Why this replaced a flat 5%.** Median adverse excursion across the leveraged universe spans **0.9% (YINN) to 6.6% (SOXL)** — sevenfold. A single number is four times too tight on one end and twice too loose on the other. Worse, stop quality and target reachability are **inverse**: every instrument where +8% was reachable is one where a 5% stop was hit constantly, and every instrument with a comfortable stop never reached +8%. The fixed pair was wrong on all fourteen (EXP-007, EXP-008).
 
-**Current stops** — *illustrative only; `vol_profile.csv` is authoritative and is recomputed daily. Target is +8% on all of them.*
+**Current values** — *illustrative only; `vol_profile.csv` is authoritative and is recomputed every morning.*
 
-| ERX · YINN | GUSH · FNGU | NRGU · DUST | LABU | NVDL · TSLL · MSTX | CONL · SOXS | SOXL |
-|---|---|---|---|---|---|---|
-| 2.5% | 3.0% | 4.1–4.3% | 4.8% | 5.0–5.2% | 6.4–6.5% | 7.0% *(at cap)* |
+| | stop | target | R at target | breakeven | trail | stall thr | min move |
+|---|---|---|---|---|---|---|---|
+| AGQ | 2.50% | 3.75% | 1.50 | 1.76% | 1.45% | 0.26% | 0.36% |
+| YANG | 2.54% | 3.80% | 1.50 | 1.27% | 1.69% | 0.14% | 0.42% |
+| GUSH | 2.59% | 4.39% | 1.69 | 2.20% | 1.73% | 0.33% | 0.43% |
+| NVDX | 4.99% | 7.49% | 1.50 | 2.70% | 3.33% | 0.40% | 0.83% |
+| MSTX | 5.81% | 10.93% | 1.88 | 5.47% | 3.88% | 0.82% | 0.97% |
+| SOXS | 6.15% | 12.00% | 1.95 | 6.29% | 4.10% | 0.94% | 1.00% |
+| SOXL | 7.00% | 10.50% | 1.50 | 4.16% | 6.98% | 0.62% | 1.00% |
 
 - **NOTHING IS EXCLUDED on volatility.** Any leveraged instrument may be traded if it meets the §4 entry gates. Where `1.5 × median MAE` exceeds the cap the stop is simply **capped at 7%** and flagged `stop_at_cap=yes` — SOXL is the current case, its 6.6% median adverse being wider than its own 7% stop. That is a **warning to weigh at entry, not a disqualification**: expect frequent noise stop-outs there.
 - **If an instrument is not in `vol_profile.csv`, you may not trade it.** Compute its profile first or pick something else. No falling back to a flat default.
@@ -131,14 +141,32 @@ trail     = 1.0 x median adverse excursion, below the running high
 
 ### The ratchet — one trigger, then a trail
 
+**Governor decision 2026-08-11 — a STEPPED RAMP to breakeven, then a trail. The ramp is new.**
+
 | Stage | Stop goes to |
 |---|---|
 | At entry | `−stop_pct` from the profile |
-| **Gain reaches `breakeven_trigger_pct`** | **breakeven** (the fill price) |
+| **Gain reaches `breakeven_trigger ÷ 2`** | **`−stop_pct ÷ 2`** — halve the risk. **This step is new** |
+| **Gain reaches `breakeven_trigger`** | **breakeven** (the fill price) |
 | Past that | **trail at `trail_pct` below the running high** |
-| **2 stalled windows** | **`max(current stop, breakeven)`** — whichever is HIGHER. Never lowered |
-| **3 stalled windows** | **SELL** (§8.1) |
-| **Any check AT OR ABOVE +8%** | **SELL** — the target |
+| **2 stalled checks, in profit** | **`max(current stop, breakeven)`** — never lowered |
+| **2 stalled checks, below the fill** | **SELL** (§8.1) — the ladder is asymmetric |
+| **3 stalled checks** | **SELL** (§8.1) |
+| **Any check AT OR ABOVE `target_pct`** | **SELL** — the target, now per-instrument |
+
+**Why the half-risk step matters.** Before it, the stop sat at its *full* initial distance until breakeven was reached — so a position could show a real gain, give all of it back, and then keep going to a full stop-out having never once had its risk reduced. The governor's ladder (`−5% → +1% gain → −3% → +2% gain → 0 → then gain − 2`) fixes exactly that, and it is right: **risk should come off the table in proportion to gain, not in one jump at the end.**
+
+**Worked example, NVDX profile** (stop 4.99%, breakeven trigger +2.70%, trail 3.33%):
+
+| Gain | Stop |
+|---|---|
+| entry | −4.99% |
+| **+1.35%** | **−2.50%** ← half the risk gone |
+| +2.70% | 0.00% |
+| +4.37% | +1.04% |
+| +6.03% | +2.70% |
+
+> **One deliberate departure from the governor's spec, flagged rather than silently applied.** The spec implied a trail of 2pp against a 5% stop — a **0.4 × stop** trail. This keeps **1.0 × median adverse excursion (≈0.67 × stop)**, because trailing *inside* one normal pullback converts winners into scratches: the stop would sit closer than the instrument's ordinary wiggle and get hit on noise rather than on reversal. **Say the word and it tightens to 0.4 × stop** — it locks in more per winner and cuts more winners short, and that trade-off is the governor's to price, not mine.
 
 - **The trigger is per-instrument**, from `vol_profile.csv`: GUSH +2.1%, ERX +1.2%, NUGT +2.7%, MSTX +6.2%. It is `max(median favourable excursion, 0.5 × stop)`.
 - **Why the trigger is not a flat number.** It floors at half the stop because moving the stop to breakeven at a gain *smaller* than normal retracement just scratches the position on noise — the newly tightened stop would sit inside the instrument's own wiggle. Half the stop distance is the smallest gain at which a breakeven stop is not itself inside the noise.

@@ -66,14 +66,24 @@ def load(path):
     return out
 
 
-def ratchet(gain_pct, run_high_pct, trail_pct, stalls, be_trigger):
+def ratchet(gain_pct, run_high_pct, trail_pct, stalls, be_trigger, stop_pct):
     """Target stop as a percent offset from entry. None = leave as is.
 
-    gain >= be_trigger -> breakeven
-    past breakeven     -> trail `trail_pct` below the running high
-    2 stalled windows  -> max(current, breakeven); the up-only rule does the rest
+    THE LADDER (governor decision 2026-08-11) — a stepped ramp to breakeven, then a trail:
+
+        entry                      -stop_pct
+        gain >= be_trigger / 2     -stop_pct / 2      halve the risk before breakeven
+        gain >= be_trigger          0.0               breakeven
+        past that                   run_high - trail  trail below the running high
+        2 stalls, in profit         0.0               (underwater at 2 stalls SELLS, section 8.1)
+
+    The half-risk step is the new part: previously the stop sat at its full initial
+    distance until breakeven was reached, so a position could give back its entire
+    allowance having already shown a real gain.
     """
     levels = []
+    if gain_pct >= be_trigger / 2.0:
+        levels.append(-stop_pct / 2.0)
     if gain_pct >= be_trigger:
         levels.append(0.0)
     if run_high_pct is not None and run_high_pct >= be_trigger:
@@ -146,7 +156,7 @@ def main():
 
         # ratchet, up only. min move 0.5% of entry to bound cancel/replace churn.
         run_high_pct = (run_high - entry) / entry * 100
-        sched = ratchet(gain, run_high_pct, a.trail_pct, stalls, a.breakeven_pct)
+        sched = ratchet(gain, run_high_pct, a.trail_pct, stalls, a.breakeven_pct, a.stop_pct)
         if sched is not None:
             new = entry * (1 + sched / 100)
             if new > stop and (new - stop) / entry * 100 >= 0.5:

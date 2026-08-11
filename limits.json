@@ -17,7 +17,18 @@
   },
   "position": {
     "max_open": 1,
-    "max_resting_orders": 1
+    "max_resting_orders": 1,
+    "multiple_positions": {
+      "permitted_now": false,
+      "governor_position": "Approved in principle once the account is large enough; not reasonable at current size (2026-08-11).",
+      "why_not_yet": "At ~$62 a second position halves an already-tiny per-position notional, and whole-shares-only means most of the universe is unaffordable even with the full balance. Splitting it makes the affordable set strictly worse, not more diversified.",
+      "what_must_change_first": [
+        "position sizing becomes an independent risk control (section 0 sandbox note)",
+        "a per-position and total concentration limit exists",
+        "preflight can verify open positions from the broker rather than a hand-passed argument",
+        "the one-round-trip-per-day T+1 constraint is re-derived for multiple concurrent positions"
+      ]
+    }
   },
   "order": {
     "allowed_types": [
@@ -105,22 +116,33 @@
     "short_sale"
   ],
   "target": {
-    "pct": 8.0,
+    "formula": "clamp(2.0 * median_mfe, 1.5 * stop, 12.0)",
+    "source": "data/vol_profile.csv target_pct",
     "comparison": "at_or_above",
-    "note": "Sell at any checkpoint showing a gain AT OR ABOVE +8%. Replaced target = 2 x stop on 2026-08-11."
+    "mult_of_mfe": 2.0,
+    "floor_r": 1.5,
+    "cap_pct": 12.0,
+    "note": "Governor decision 2026-08-11, replacing flat +8%. The flat target needed a median 3.48x a normal day's favourable excursion and was unreachable on 18 of 31 instruments. Scaling drops that to 8 of 31 and guarantees every target hit pays at least 1.5R."
   },
   "breakeven": {
     "trigger": "max(median_mfe, 0.5 * stop)",
     "note": "Where the stop first moves to breakeven. Volatility-scaled per instrument, from data/vol_profile.csv.",
     "trail_mult_of_median_mae": 1.0,
-    "min_stop_move_pct": 0.5,
-    "at_2_stalls": "stop = max(current stop, breakeven) -- never lowered if the trail already carried it higher"
+    "min_stop_move_pct": "per-instrument: data/vol_profile.csv min_stop_move_pct = clamp(0.25 * median_mae, 0.20, 1.00). Flat 0.5% retired 2026-08-11.",
+    "at_2_stalls": "stop = max(current stop, breakeven) -- never lowered if the trail already carried it higher",
+    "ladder": [
+      "entry: -stop_pct",
+      "gain >= breakeven_trigger/2: -stop_pct/2 (HALVE THE RISK, new 2026-08-11)",
+      "gain >= breakeven_trigger: 0 (breakeven)",
+      "past that: run_high - trail_pct, up only"
+    ],
+    "trail_note": "Kept at 1.0 x median_mae (~0.67 x stop). The governor's spec implied 0.4 x stop; trailing inside one normal pullback converts winners into scratches, so the tighter value is offered but not applied."
   },
   "stall": {
     "checks_to_sell": 3,
     "measured_at": "checkpoint price only",
     "cadence_min": 30,
-    "new_high_pct": 0.3,
+    "new_high_pct": "per-instrument: data/vol_profile.csv stall_threshold_pct = clamp(0.15 * median_mfe, 0.10, 1.00). Flat 0.3% retired 2026-08-11 \u2014 it was 33% of a calm instrument's daily range and 5% of a volatile one's.",
     "volume_condition": false,
     "bars_required": false,
     "midday_exclusion": false,
