@@ -84,9 +84,9 @@ A three-stage morning funnel, then management, then close. **The number of check
 | **9:45am** | **TRADING OPENS** — first entry | ✅ | **both files** |
 | 10:00 → 3:30 | Management, cadence per below | ✅ | `OPERATIONS.md` |
 | 4:00pm | Close of regular hours, session report | ✅ until the bell | both files |
-| 4:30 → 7:00 | 6 extended-hours checkpoints | ⚠️ limit only, **no new positions** |
-| **7:30pm** | **LAST ACTIONABLE CLOSE** | ⚠️ day trades must close; swings may hold |
-| **8:00pm** | Report + arm the next trading day | ❌ admin only |
+| 4:30 → 7:00 | Extended hours — **only armed if holding** | ⚠️ limit only, **no new positions** | `OPERATIONS.md` |
+| **7:30pm** | **LAST ACTIONABLE CLOSE** — only armed if holding | ⚠️ day trades must close; swings may hold | `OPERATIONS.md` |
+| **8:00pm** | Report + arm the next trading day | ❌ admin only | both files |
 
 Convert each ET time to UTC using the offset in effect.
 
