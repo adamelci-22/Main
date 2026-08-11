@@ -871,6 +871,21 @@ The same model runs both roles at different times. **What is separated is author
 - The Saturday pass is one session per week. At roughly one trade per day there is not yet enough data to justify running it daily.
 - **Every armed trading checkpoint must instruct the session to read `RULEBOOK.md` AND `EXECUTOR.md`.** The Saturday message points at `RULEBOOK.md` and `RESEARCHER.md` instead, and must state that no order may be placed.
 
+### ⚠ REGENERATE EVERY CHECKPOINT PROMPT FROM THE CURRENT FILES. Never copy forward last night's text.
+
+**Governor-relevant defect, observed 2026-08-11.** Checkpoint prompts are written at arming time and **cannot update themselves**. Policy changed twelve times during that session, and by mid-morning the armed prompts were issuing retired instructions:
+
+| Trigger | Stale instruction it carried |
+|---|---|
+| 9:45 entry | *"fractional only if the setup is clearly better"* — **fractional had been prohibited at 9:46** |
+| 10:00 management | *"walk the §5 exit precedence"* — exit precedence is **§8**; §5 is order execution |
+
+**Neither caused a wrong action, only because the session reads the rulebook fresh at every checkpoint and the files outrank the prompt.** A session that trusted the prompt over the file would have opened an unprotected fractional position.
+
+- **At the 8:00pm arming, rebuild each prompt's rule content by reading `RULEBOOK.md` and `OPERATIONS.md` as they stand that evening.** Do not paste yesterday's message with the date changed.
+- **Prompts are advisory. The files are authoritative.** If a prompt and a file disagree, the file wins, and **say so in the report** rather than resolving it silently — a prompt that contradicts policy is a defect worth surfacing.
+- **Keep prompts short and point at the files.** The longer a prompt restates policy, the more of it goes stale. A prompt should say *which* sections to read and *what decision* is due, not re-explain the rules.
+
 ---
 
 ## Current position

@@ -5,7 +5,413 @@
 Every change to `RULEBOOK.md`, newest first, with the reasoning recorded at the time.
 The git log is authoritative; this is a rendering of it.
 
-Generated 2026-08-11 06:09 UTC · 25 changes to the rulebook.
+Generated 2026-08-11 17:37 UTC · 37 changes to the rulebook.
+
+---
+
+## 2026-08-11 · `2eca78a`
+
+**Fix three stale references the scaling sweep exposed**
+
+One was a live contradiction in the hot path: OPERATIONS 8.1 still defined a
+stalled check against a flat 0.3% while limits.json and vol_profile.csv had
+moved to a per-instrument threshold. A cold session reading only the
+operations file would have used the retired constant. Now points at
+stall_threshold_pct with the range stated (0.14% YANG to 0.94% SOXS).
+
+The section 4 ranking rule still computed target reachability as 8.0 /
+median_mfe; it now reads mfe_to_target from the profile, and records that
+scaling cut the above-3x count from 18 of 31 to 8 of 31 without eliminating
+it, so the check still earns its place.
+
+Section 7's 'zero of 21 sessions' note is reframed as the historical evidence
+that retired the flat target, with the scaled targets for those same six
+instruments listed so the fix is visible against the failure that motivated
+it.
+
+---
+
+## 2026-08-11 · `9297dcc`
+
+**Scale the last four flat constants: target, stall threshold, min stop move; add the half-risk step**
+
+A. TARGET is now per-instrument: clamp(2.0 x median_mfe, 1.5 x stop, 12.0%),
+   replacing flat +8%. The flat target needed a median 3.48x a normal day's
+   favourable excursion and was effectively unreachable on 18 of 31
+   instruments — decoration, not an exit. 2x median MFE is an exceptional day
+   rather than a median one so it fires sometimes; the 1.5 x stop floor
+   guarantees any target hit pays at least 1.5R so scaling cannot produce a
+   target too small to cover the round trip; the 12% cap keeps it a bank-it
+   level. Effectively unreachable falls from 18 of 31 to 8 of 31.
+
+B. THE RATCHET IS NOW A STEPPED RAMP, per the governor's ladder. New middle
+   step: at half the gain to breakeven, the stop halves. Previously the stop
+   sat at its FULL initial distance until breakeven, so a position could show
+   a real gain, give it all back and still run to a full stop-out having
+   never once had its risk reduced. Risk now comes off in proportion to gain.
+   NVDX profile: entry -4.99%, +1.35% -> -2.50%, +2.70% -> 0, then trail.
+
+   One departure flagged rather than silently applied: the spec implied a
+   0.4 x stop trail; this keeps 1.0 x median_mae (~0.67 x stop), because
+   trailing inside one normal pullback converts winners into scratches. The
+   tighter value is offered, not applied — that trade-off is the governor's.
+
+C. STALL THRESHOLD and MINIMUM STOP MOVE are now scaled per instrument:
+   clamp(0.15 x median_mfe, 0.10, 1.00) and clamp(0.25 x median_mae, 0.20,
+   1.00). A flat 0.3% was 33% of a calm instrument's daily range and 5% of a
+   volatile one's — the stall fired far more readily on calm names, the exact
+   inverse of what volatility scaling is for.
+
+D. MULTIPLE POSITIONS approved in principle for later, not now. max_open
+   stays 1. Recorded why: at ~$62 a second position halves an already-tiny
+   notional and whole-shares-only makes the affordable set strictly worse,
+   not more diversified. Four preconditions recorded, including that
+   preflight must verify open positions from the broker rather than trust a
+   hand-passed argument — today's weakest check.
+
+vol_profile.csv now carries target_pct, stall_threshold_pct and
+min_stop_move_pct per instrument; replay.py's ratchet implements the ramp.
+
+---
+
+## 2026-08-11 · `9c6513e`
+
+**Audit fixes: six defects today's session exposed**
+
+1. CIRCUIT BREAKER WAS DEFEATABLE BY A NON-TRADE. The AGQ round trip was a
+   mechanical abort — the broker refused the stop after the buy filled — and
+   it closed +$0.08, which counted as a WIN and reset the loss streak. Added
+   counts_toward_streak; preflight now excludes rows marked no. It did NOT
+   bite today (GUSH before it was also a win, so the streak is 1 either way),
+   but a losing streak could have been reset by an order-plumbing accident.
+
+2. 'EXCLUDE FROM EXPECTANCY' WAS UNENFORCEABLE PROSE. Both of today's trades
+   were labelled system tests in a free-text notes field no tool reads, so
+   both would have polluted the primary metric. Added
+   counts_toward_expectancy. NVDX counts toward the streak (a real
+   rule-driven loss) but not toward expectancy (a funded execution test with
+   a knowingly poor entry); AGQ counts toward neither.
+
+3. replay.py --cadence became a footgun the moment the stall started reading
+   checkpoint prices — cadence IS the stall timescale now, so varying it
+   silently changes the exit rule rather than the resolution. Default moved
+   to 30 to match live policy, and it now prints a warning when they differ.
+
+4. EXP-006 was filed twice under one ID; two entries sharing an ID makes both
+   uncitable. Second one renumbered EXP-011.
+
+5. EXP-005 ('is 30 minutes the right stall window?') retired — the question
+   dissolved. With the stall measured at checkpoint prices there is no window
+   separate from the cadence, so window length and cadence collapsed into one
+   parameter, which is EXP-011's subject. Retired, not deleted.
+
+6. Section 16 specified the catalyst record's category field as 'type', which
+   collides with the envelope's own 'type'. That forced an ad-hoc 'type_cat'
+   at the first real write. Renamed catalyst_type, matching the entry
+   snapshot.
+
+Also records that ADDING A COLUMN is a schema migration rather than an edit,
+and is permitted: backfilling a new column revises no recorded outcome, which
+is what append-only protects. This migration touched historical rows and
+changed no existing value.
+
+---
+
+## 2026-08-11 · `be40612`
+
+**Sector and index leveraged ETFs take priority over single-stock leveraged**
+
+Governor decision. Class priority is decided BEFORE mfe_per_stop ranking —
+the ratio ranks candidates within a class, it does not promote a single-stock
+name above a sector one. Order: sector/industry leveraged, then index
+leveraged, then single-stock.
+
+The reasoning is that the read is almost always sectoral. 'Semis are leading,
+breadth is broad' justifies buying semis; buying one semiconductor company at
+2x is a different bet sharing a rationale. Section 4 already says broad beats
+narrow, and this makes the instrument choice obey it. A single-stock
+leveraged ETF also multiplies twice — leverage on idiosyncratic
+concentration — so an earnings miss, downgrade or CEO headline the sector
+shrugs off is not in the written thesis.
+
+NVDX 2026-08-11 is the case: the semis read was right all morning and SMH
+held near its highs, but the position lost because NVDA gave back half its
+opening gain. Right about the sector, wrong about the stock, loss on a
+correct call.
+
+Single-stock is permitted only when no sector or index vehicle for the same
+read is available and affordable, the underlying is leading its sector, every
+other gate clears, and the entry names which sector vehicles were ruled out
+and at what price.
+
+ACCEPTED COST, recorded rather than hidden: sector leveraged ETFs are
+structurally more expensive per share (SOXL 135, TECL 210, NUGT 161, LABU
+282) than single-stock 2x names (4-20), so at current capital this rule
+produces more no-trade days. That is the correct outcome — it reports that
+the account cannot buy the instrument the thesis calls for instead of
+papering over the gap with a cheaper substitute.
+
+preflight now warns on every single-stock symbol that it is the lowest
+priority class and that the ruled-out sector vehicles must be named with
+prices. A tripwire, not a block — the script cannot see what alternatives
+existed.
+
+---
+
+## 2026-08-11 · `4fb47d2`
+
+**Five approved gates: underlying-vs-sector, rank-then-afford, capability proof, 9:30-9:45 hold, 5-name watchlist**
+
+1. HARD GATE, enforced in preflight: never buy a single-stock leveraged ETF
+   whose underlying is underperforming its sector proxy on the day. NVDX
+   2026-08-11 entered with NVDA +0.84% against SMH +1.26% — the sector thesis
+   was right all morning and the position still lost, because the instrument
+   was the laggard with leverage on it. Twelve single-stock mappings in
+   limits.json. Omitting the gate's inputs DENIES rather than silently
+   passing, so the check cannot be waived by leaving arguments out.
+
+2. Rank the FULL profiled universe by mfe_per_stop FIRST, then intersect with
+   affordability — 'find the good then the affordable'. Filtering by price
+   first means the ranking never runs on the good names. On 2026-08-11 that
+   ordering produced NVDX, 22nd of 31 on structure and 6th of 7 viable
+   affordable candidates, while MSTX ranked 3rd overall at $8.78 and was
+   never shortlisted. The cost of affordability must now be stated out loud.
+
+3. A capability is verified by an order response or a successful call, and by
+   nothing else — not a review, not documentation, not inference. Three
+   instances in one session, the worst being a false capability claim written
+   into the rulebook itself, which every future cold session would inherit.
+
+4. The sector must HOLD a positive trend across two fixed observations, 9:30
+   and 9:45: positive at both, and the 9:45 reading not below the 9:30 one.
+   No intermediate readings enter the test. Recorded honestly that this gate
+   would have PASSED on 2026-08-11 — it validates the sector, gate 1
+   validates the instrument, and today the sector was genuinely fine.
+
+5. A watchlist of AT LEAST FIVE names, written at 9:00 as a watchlist record,
+   including unaffordable ones so the capital constraint becomes measurable
+   rather than asserted. Read at 9:45 so the entry consults a list built
+   calmly rather than assembled under time pressure.
+
+Also collapses an accidental section 15/15a split introduced while adding the
+capability rule; global section numbers are intact.
+
+---
+
+## 2026-08-11 · `1a0c897`
+
+**Stall measured at the checkpoint price only; volume condition removed**
+
+Governor decision. A stalled check is now a 30-minute checkpoint whose price
+AT THAT MOMENT failed to beat the running high by more than 0.3%. run_high is
+the highest CHECKPOINT price, seeded at the fill — not the highest price
+traded. What happens between checks is ignored.
+
+The reasoning holds: a spike the agent never saw and could never have sold
+into is not a gain it could have captured. Crediting it as progress let the
+position claim something unreachable. This also makes the stall consistent
+with the rest of the exit model, where replay.py already treats target,
+ratchet and ladder as checkpoint-evaluated and only the resting stop as
+continuous — intra-window highs were the one place assuming the agent could
+see between its own checks.
+
+Two consequences recorded rather than buried:
+
+1. THE VOLUME CONDITION IS REMOVED. Volume has no instantaneous value, so
+   'checkpoint price only' cannot carry it. A non-progressing check with
+   rising volume used to be exempt; it no longer is. Stalls fire strictly
+   more often — three flat-or-down checks now sell, full stop.
+
+2. THE RULE IS NOW COUPLED TO THE 30-MINUTE CADENCE. The old market-time
+   definition was deliberately cadence-independent so that changing the wake
+   schedule could not silently change the exit rule. Counting checks
+   reintroduces that coupling: at a 10-minute cadence three stalls would fire
+   after 30 minutes instead of 90. Safe only because section 2 pins the
+   cadence. If the cadence changes, checks_to_sell must be re-derived in the
+   same breath.
+
+Bars are no longer needed in the live path — one quote per checkpoint.
+
+Also adds a guard for a case the ladder never specified: at stall 2 while
+UNDERWATER, 'raise the stop to breakeven' is unexecutable, because breakeven
+sits above the market and a sell stop above the market is rejected. Handling
+is to leave the stop and let stall 3 sell, which follows from section 6 — the
+ratchet cannot raise a stop through the current price. The asymmetric
+alternative (sell at stall 2 when losing) is flagged as the governor's call
+and is not in force.
+
+replay.py rewritten to match: stall_windows() removed, stalls tracked
+incrementally from checkpoint prices.
+
+---
+
+## 2026-08-11 · `7fcf2b9`
+
+**Correct the stall bar interval to 10 minutes — 15 does not exist**
+
+The governor's decision said 15-minute bars and I wrote that into four files
+without checking the broker exposes such an interval. It does not: valid
+intraday intervals are 15second, 30second, minute, 5minute, 10minute,
+30minute, hour, 4hour. The 10:30 checkpoint failed with 'invalid interval'.
+
+10-minute is the nearest available that is still finer than the 30-minute
+window, so the collect-finer-and-aggregate-up principle holds. Three bars per
+window. Window length re-testable at multiples of 10 (10/20/30/60), which is
+in fact broader than 15 would have allowed.
+
+Corrected in OPERATIONS.md 8.1, RULEBOOK.md section 2, limits.json and
+replay.py, each recording why the stated decision could not be implemented
+literally.
+
+10:30 checkpoint: window 14:00-14:30Z completed with high 19.920 against a
+19.868 threshold — a qualifying new high, so the ladder reset and run_high
+advanced. Stall count 0. No ratchet: run_high +0.56% is far below the +2.70%
+breakeven trigger. Stop unchanged at 18.82.
+
+The 13:30-14:00Z window drops out entirely under 10-minute bars, since all
+three of its bars begin before the 13:51:46 entry. That removes the
+partial-window volume-baseline artifact flagged at 10:00 for this position.
+
+---
+
+## 2026-08-11 · `4419feb`
+
+**Stall ladder now computed from 15-minute bars**
+
+Governor decision: pull 15-minute bars instead of 5-minute for the stall
+computation. Two bars per 30-minute window. The principle is unchanged —
+collect finer than the window and aggregate up, never request 30-minute bars
+directly — but the resolution floor rises to 15 minutes.
+
+Cost recorded in the file: window length is now re-testable only at multiples
+of 15 (15/30/45/60). A 10- or 20-minute window can no longer be reconstructed
+retroactively, so EXP-005 narrows.
+
+Propagated to OPERATIONS.md 8.1, RULEBOOK.md section 2, limits.json
+(bar_interval_min 15, bars_per_window 2) and replay.py.
+
+Also removes a live contradiction found while editing: 8.1 still carried
+'Skip windows in the 12:00-1:30pm exclusion window - not counted either way'
+eight lines below the governor decision that removed the midday exclusion
+entirely. Two rules in the same section said opposite things; the stale one
+is deleted.
+
+---
+
+## 2026-08-11 · `bf48a1e`
+
+**Rank a small affordable set by mfe_per_stop, not by capital deployment**
+
+Governor decision after a selection error. When the affordable set is small,
+rank by median_mfe / stop_pct and by relative strength versus the sector,
+before deployment percentage or spread. Deployment is the last tiebreaker,
+never the first filter, and the ratio for the top two candidates is stated
+at entry.
+
+vol_profile.py now computes mfe_per_stop and mfe_to_target into
+vol_profile.csv, so ranking is a lookup rather than a judgement. A stop is a
+risk normaliser, not a quality signal — comparing raw stop widths across
+instruments compares nothing.
+
+The error on record: NVDX was taken over SMCX on 98.4% vs 93% deployment, a
+five-point gap treated as decisive, while SMCX offered 0.78 mfe_per_stop
+against NVDX's 0.54 and was the only one showing relative strength as the
+sector faded. Both numbers were already on disk and were never divided.
+Three named failure modes: a tiebreaker promoted to a filter, anchoring on
+a void pre-market shortlist, and sunk cost on the morning's analysis.
+
+Ranking also exposes that NVDX needs 2.96x its median favourable excursion
+to reach +8%, so the target was never realistically in play — mfe_to_target
+now surfaces that before entry instead of after.
+
+10:00 checkpoint: holding, stall count 0, no ratchet due, stop unchanged.
+The 09:55 pre-commit (thesis failed if SMH below +0.30%) resolved in favour
+of holding at +0.98%.
+
+Logs a defect for approval: the partial first post-entry window poisons the
+volume baseline, so window 2 cannot stall regardless of price, delaying the
+earliest stall-3 exit from 11:30 to 12:00. Same class as the midday-exclusion
+bug. Fix proposed (volume per minute, not raw window volume), deliberately
+not implemented while a position is open.
+
+---
+
+## 2026-08-11 · `da618e2`
+
+**PROHIBIT fractional — a fractional position cannot carry a stop**
+
+Verified by live orders, not by review. After a fractional AGQ buy filled,
+every attempt to place its protective stop was refused:
+
+  limit buy 0.52          Limit order quantity cannot include fractional shares
+  stop_market 0.52 gtc    Invalid time in force for fractional order
+  stop_market 0.52 gfd    Invalid trigger for fractional order
+  market buy/sell 0.52    filled
+
+Fractional is market-only in both directions — no limit, no stop, no
+trigger. That is not a worse version of a whole-share position, it is a
+different risk model: replay.py makes the resting stop the one continuously
+evaluated rule, and every calibrated number assumes it exists. Whole shares
+only; an unaffordable setup is unavailable.
+
+Retracts a false claim written into RULEBOOK.md earlier the same day.
+review_equity_order accepted both orders the broker then refused, so it does
+not validate fractional constraints. The note was flagged at the time as
+review evidence pending a fill; the fill came back negative. General lesson
+recorded: a clean review proves nothing about placement.
+
+preflight.py now DENYs any non-whole quantity.
+
+Also implements the governor's commodity trend-structure gate, which
+replaces the named-catalyst requirement for commodities and materials only:
+multi-session higher highs and higher lows, confirmation from the related
+complex, and pullback-not-breakdown. All three required. Adds 34 commodity,
+materials and leveraged names to the universe.
+
+Trade logged: AGQ 0.52 @ 80.4442 -> 80.6001, +$0.08, +0.08R, held 63
+seconds, exited on the stop failure rather than on thesis. The sequencing
+error is recorded in the notes — capability should have been proven before
+the entry, not after.
+
+---
+
+## 2026-08-11 · `f5a5e63`
+
+**Fractional positions must close before the bell; extend the volatility profile**
+
+Governor decision: a fractional position is a same-day round trip committed
+at entry. It cannot be exited outside regular hours, so holding one overnight
+means holding whatever happens with no way to sell. The 3:30pm checkpoint is
+the last that can plan the close; overrides cannot extend a fractional
+position past 4:00pm and its extended-hours slots are never armed.
+
+Also records a verified correction: fractional is less restricted than the
+rulebook stated. A 0.3-share stop_market and a 0.3-share limit both cleared
+review_equity_order, so fractional can carry a resting stop and a limit
+price. Flagged as review evidence pending a confirmed fill. It does not
+relax the close-before-the-bell rule, because a regular-hours stop stops
+protecting exactly when the overnight risk begins.
+
+Profile now covers 28 instruments — adds KORU, YANG, NVDX, USD, MUU, SMCX,
+TECL, AMDL, TSMX and SCO so the full leveraged scan is tradeable.
+
+---
+
+## 2026-08-11 · `4b4d4bd`
+
+**Revert the flat +1% breakeven trigger; fix target to at-or-above 8%**
+
+The +1% lock-in was a misreading. The governor was asking how the ratcheting
+stop works, not proposing a change to it. The breakeven trigger returns to the
+volatility-scaled max(median favourable excursion, 0.5 x stop) -- GUSH +2.1%,
+ERX +1.2%, NUGT +2.7%, MSTX +6.2%.
+
+Target comparison corrected to AT OR ABOVE +8%. The replay code was already
+using >=; only the prose and limits.json said "above".
+
+The directed changes from the same message all stand: no volatility exclusions,
+flat +8% target, stop at 2 stalls = max(current, breakeven), sell at 3 stalls,
+midday exclusion removed, headline scope split by state.
 
 ---
 

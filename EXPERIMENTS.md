@@ -88,6 +88,13 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 ### EXP-006 · Does wake cadence change outcomes?
 
+> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
+> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
+> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
+> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
+> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+
+
 - **State:** `PROPOSED`
 - **Opened:** 2026-08-11
 - **Rule today:** **30 minutes, flat or holding** (§2), set by governor decision 2026-08-11 and supported by the replay evidence below.
@@ -153,6 +160,13 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 ### EXP-009 · The exit rules are approximately VALUE-NEUTRAL on random entries
 
+> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
+> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
+> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
+> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
+> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+
+
 - **State:** `TESTED` — real data · **the most consequential result so far**
 - **Opened:** 2026-08-11 · **Method:** `tools/calibrate_stops.py`, 293 sessions, 14 leveraged instruments.
 - **Question:** applied to entries with no selection edge, do the exit rules make money?
@@ -173,6 +187,13 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
 
 ### EXP-011 · Cadence — FIRST REAL EVIDENCE, and it is nearly irrelevant
 
+> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
+> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
+> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
+> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
+> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+
+
 > **Renumbered 2026-08-11.** This was filed as a second EXP-006, colliding with the open experiment above. Two entries sharing an ID makes both unciteable.
 
 - **State:** `TESTED` — first replay evidence · **n = 1 session, so directional only**
@@ -189,6 +210,13 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
 - **Sample: one session.** Not evidence of a general result. But the *mechanism* is now demonstrated rather than argued.
 
 ### EXP-010 · The stall ladder is a LOSS LIMITER below entry, not only a gain-banker
+
+> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
+> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
+> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
+> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
+> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+
 
 - **State:** `TESTED` · **arose from a rulebook error this replay exposed**
 - The rules claimed the three-window sell "can only ever cost upside — never a loss," because the stop would already be at breakeven. **False.** The ratchet only engages at +2–3%; a position that goes down from entry and stalls has no breakeven stop, and the sell closes it at a loss. **Corrected in `OPERATIONS.md` §8.1** as a factual fix, not a policy change.
