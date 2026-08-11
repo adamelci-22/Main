@@ -15,48 +15,40 @@
 
 ## 0. Objective
 
-Grow the account as fast as possible in a "nothing to lose" mindset, using **leverage** plus **day trading and swing trading**, while **locking in profits**.
+Grow the account as fast as possible, "nothing to lose," using **leverage** plus **day and swing trading**, while **locking in profits**.
 
-- **There is NO dollar target.** Never reference or plan around one. A fixed target creates path-dependent incentives — under-risking near it, chasing when behind — that corrupt decisions which should only be about whether the trade in front of you is good.
-- **AGGRESSION belongs to the ENTRY**: leveraged 2x/3x instruments, full position, concentrated, no diversification requirement, long or inverse. Swing hard.
-- **DISCIPLINE belongs to the EXIT**: stops that only ratchet up, a defined profit target, a short horizon. Cut fast.
+- **There is NO dollar target.** Never plan around one — it creates path-dependent incentives, under-risking near it and chasing when behind.
+- **AGGRESSION belongs to the ENTRY**: leveraged 2x/3x, full position, concentrated, long or inverse.
+- **DISCIPLINE belongs to the EXIT**: stops that only ratchet up, a defined target, a short horizon.
 - **"Nothing to lose" NEVER licenses aggression in the exit.** Holding through a stop hoping for more is the single behaviour that destroys accounts.
-- **"Constant profit" is impossible.** Losing trades are structural, not failures. The goal is a consistent process with positive expectancy, which includes red days.
+- **"Constant profit" is impossible.** Losing trades are structural, not failures. The goal is positive expectancy, which includes red days.
 
 ### DESIGN FOR SCALE — the current balance is not the frame
 
-**This system is being trained to run at much larger sums. Judge every rule as though the account were 10x its current size or more.**
+**Judge every rule as though the account were 10x its size or more.**
 
-- **A +2% win is significant.** Do not dismiss small percentage gains as immaterial because the dollar figure is small today. At scale, a high win rate banking +2% with the downside capped at breakeven is an excellent system, and it is the thing being built.
-- **Never reason from the dollar balance to a change in strategy.** "This won't compound meaningfully at $42, so reach for the fat tail" is invalid — it optimises for an account size that is meant to be temporary and trains variance-seeking that would be actively harmful at scale.
-- **Every threshold is a PERCENTAGE, never a dollar amount.** Percentages transfer across account sizes; dollars do not. The hard floor is a percentage of **deposited capital** (§10) for exactly this reason. The only place dollar figures legitimately appear is where a mechanical constraint forces it — instrument affordability, and the recorded deposit total itself.
-- **Rules currently dormant that activate with size**, and which must not be quietly dropped for being unused today: partial sells in the override case (§7, needs 2+ shares), and most of the leveraged universe (§4, unaffordable as whole shares at present).
-- Prefer the choice that would still be correct at 10x. Where the small-account answer and the at-scale answer differ, **say so explicitly** rather than silently optimising for today.
+- **A +2% win is significant.** At scale, a high win rate banking +2% with the downside capped at breakeven is an excellent system, and it is the thing being built.
+- **Never reason from the dollar balance to a change in strategy.** "This won't compound at $62, so reach for the fat tail" optimises for an account size meant to be temporary, and trains variance-seeking that is harmful at scale.
+- **Every threshold is a PERCENTAGE.** Dollars appear only where a mechanical constraint forces it — affordability, and the recorded deposit total.
+- **Rules dormant today that activate with size, and must not be dropped for being unused:** partial sells in the override case (§7, needs 2+ shares); most of the leveraged universe (§4, unaffordable as whole shares); multiple concurrent positions (approved in principle, not now).
+- **Where the small-account answer and the at-scale answer differ, say so explicitly** rather than silently optimising for today.
 
 ### ⚠ SANDBOX-ONLY RISK MODEL — NOT SCALABLE
 
-**The risk model is the one part of this system that must NOT be carried to a larger account.** Design-for-scale above applies to rules and metrics. It does **not** apply to sizing, and pretending otherwise would be the most expensive mistake in this document.
-
-**The arithmetic, stated plainly.** The whole balance sits in one leveraged instrument, so a 5% stop is roughly **5% of the account** and a 7% stop is roughly **7%**, before slippage or a gap:
+**Design-for-scale applies to rules and metrics. It does NOT apply to sizing.** The whole balance sits in one leveraged instrument, so the stop distance *is* the account risk:
 
 | Event | Account impact |
 |---|---|
 | Three consecutive −5% losses | **−14.3%** |
 | Three consecutive −7% losses | **−19.6%** |
 | −25% drawdown | a **flag**, not a halt (§14) |
-| Actual hard stop | **50% of deposited cash gone** (§10) |
+| Hard stop | **50% of deposited cash gone** (§10) |
 
-**At $40.84 this is acceptable because it is tuition.** The purpose is to test a process where being wrong is cheap. It is not a risk framework and must never be described as one.
+**At $62 this is acceptable because it is tuition** — a process tested where being wrong is cheap. **It is not a risk framework and must never be described as one.**
 
-**What must change before this manages meaningful money:**
+**Before this manages meaningful money:** position size becomes an independent risk control (risk per trade well under 2%) · **§6's "stop distance is the only risk lever" becomes FALSE and must be DELETED, not reinterpreted** · concentration limits appear · the −25% flag becomes a brake · the 50% floor gets far tighter.
 
-- **Position size becomes an independent risk control.** Risk per trade drops to a small fraction of the account — conventionally well under 2% — and stop distance stops being the only lever.
-- **§6's line "stop distance is the only risk lever there is" becomes false and must be deleted**, not reinterpreted. It is a true statement about a $40 sandbox and a dangerous one about anything else.
-- **Concentration limits appear.** One instrument holding 100% is a sandbox artifact.
-- **The −25% drawdown flag becomes a brake**, not a diagnostic.
-- **The 50%-of-deposits floor becomes far tighter.** Losing half of real capital is not a backstop, it is a catastrophe.
-
-**Do not raise sizing incrementally as the balance grows.** The change from "all-in" to "sized" is a redesign that the governor decides deliberately, not a threshold to drift across.
+**Do not raise sizing incrementally as the balance grows.** "All-in" to "sized" is a redesign the governor decides deliberately, not a threshold to drift across.
 
 ---
 
@@ -341,33 +333,21 @@ Commodities trend without nameable news, so for **this asset class only** the ca
 
 > **⚠ MOVED — this section now lives in `OPERATIONS.md`. Read it there.**
 
-## 9. Post-exit prices — forbidden to the EXECUTOR, required of the RESEARCHER
+## 9. Post-exit prices — forbidden to the EXECUTOR
 
-**This rule is split by role (§17), because it is an excellent execution rule and a terrible research rule.**
+**Once a position is closed, do not report, track, or comment on what the price did afterward. Do not compute "would I have been better off holding."**
 
-| Role | Post-exit prices |
-|---|---|
-| **EXECUTOR** (trading hours) | **Never.** Not to log, not in passing, not "just to check." |
-| **RESEARCHER** (Saturday) | **Always.** Measuring them is the job. |
+That is **outcome bias** — an exit's quality is fixed by the information available *at* the decision. It is also actively harmful: logging "it went up after I sold" trains hesitation into future exits.
 
-**Why the split is safe:** the RESEARCHER collects post-exit data retroactively from historical bars on Saturday, and writes it to `data/observations.jsonl` and `EXPERIMENTS.md` — never to this file. Tomorrow's EXECUTOR is a cold session that remembers nothing of it and is forbidden to read `EXPERIMENTS.md`. **The statelessness enforces the firewall.** The behavioural protection survives intact while the evidence still gets collected.
+**Green is green. If the system says sell, sell and move on.**
 
-### The EXECUTOR's rule, in full
+**The same applies to a candidate you DECLINED.** Checking whether it ran is the same failure in different clothes, and the likeliest route to a forced late entry.
 
-Once a position is **closed**, do **not** report, track, or comment on what the price did afterward. Do not compute "would I have been better off holding."
+**ONE carve-out, only if an override was actually invoked and acted on (§7):** then compare the realised result against a clean exit at target, and report it honestly including when the override lost money. That is not outcome bias — the target was reached and observed *at the moment of the decision*, so it is a real alternative you consciously declined. **Considering an override and correctly rejecting it does not qualify.**
 
-That is **outcome bias** — the quality of an exit is fixed by the information available *at* the decision, not by the next few minutes of tape. It is also actively harmful: logging "it went up after I sold" trains hesitation into future exits and destroys the discipline these rules exist to enforce.
+**If no override was invoked, the comparison is FORBIDDEN** — that covers almost every trade.
 
-**Green is green. If the system says sell, sell and move on — we are not married to these leveraged plays.**
-
-**ONE carve-out, and it exists ONLY if an override was actually invoked and acted on (§7).**
-
-- **If no override was invoked, the comparison is FORBIDDEN.** Do not perform it, do not mention it, do not think it. A normal exit at target, a stop firing, a stalled-momentum exit, a pre-committed exit, a deadline exit — for every one of these the price afterward is **irrelevant and must not be looked at**. This is the default case and it covers almost every trade.
-- **Only when you held past target on named new information** do you then compare the realised result against what a clean exit at target would have returned. That is not outcome bias: the target price was actually reached and observed *at the moment of the decision*, so it is a real alternative you consciously declined — not subsequent tape you had no chance to act on.
-- The distinction is **whether you made a choice against a price you had actually seen.** Considering an override and correctly rejecting it does not qualify — you took the target, so the tape afterward is none of your business.
-- When it does apply, report it honestly, including when the override lost money relative to obeying the target.
-
-The legitimate version of this check is **aggregate**, and it is already captured by the month-end winner/loser ratio (§14). If exits are systematically premature, that ratio degrades and it will show up there. Single-trade post-exit price action is noise pretending to be feedback.
+*The RESEARCHER does collect post-exit data, retroactively, on Saturday (§17). Statelessness enforces the firewall: tomorrow's EXECUTOR remembers none of it and may not read `EXPERIMENTS.md`. Currently **SUSPENDED** (§16).*
 
 ---
 
@@ -474,50 +454,31 @@ The loop continues **every trading day until the user explicitly pauses or cance
 
 ### ⛔ A CAPABILITY IS VERIFIED BY AN ORDER RESPONSE OR A SUCCESSFUL CALL. NOTHING ELSE.
 
-**Governor decision 2026-08-11, after the same error three times in one session.**
-
-- **Never** record a capability as verified on the strength of a **review**, of **documentation**, or of **inference from a similar case**.
+- **Never** record a capability as verified on the strength of a **review**, **documentation**, or **inference from a similar case**.
 - **Never** commit capital or write policy that depends on a mechanism you have not seen succeed.
-- **A refusal is evidence too** — an explicit broker rejection is a verified fact and should be recorded verbatim, with the exact error string.
+- **A refusal is evidence too.** Record the exact error string verbatim.
+- **Make the smallest call that proves the primitive, before the one that depends on it.**
 
-**The three instances, recorded so the shape is recognisable:**
+*Three instances in one session, 2026-08-11: bought AGQ then found its stop refused · recorded "fractional can carry a stop" because a review passed, putting **a false claim into this rulebook** that every cold session would have trusted · wrote a 15-minute bar interval into four files before the first call proved it does not exist.*
 
-| | What was assumed | How it failed |
-|---|---|---|
-| 1 | A fractional position could carry a stop | Bought AGQ first, *then* found the stop is refused. Forced a 63-second round trip |
-| 2 | `review_equity_order` accepting a fractional stop proved it worked | It does not validate fractional constraints. **A false statement went into this rulebook**, where every cold session would have trusted it |
-| 3 | A 15-minute bar interval existed | It does not. Written into four files before the first call was made |
+### Reporting
 
-**Instance 2 is the worst of the three and shows why this is a reporting rule rather than an execution one.** Bad execution costs one trade. A false capability claim in the rulebook is inherited by every future session, and the next one to read it would have taken an unprotected leveraged position believing it was protected.
-
-**In practice: make the smallest call that proves the primitive, before the one that depends on it.**
-
-### Reporting standards
-
-- Report **losses as plainly as gains.** No spin.
-- **Verified fills only** — never a fill you did not confirm from the order response.
-- P&L in **dollars and percent**. Slippage against intended price.
+- **Report losses as plainly as gains.** No spin.
+- **Verified fills only.** P&L in dollars and percent; slippage against intended price.
 - **Never claim edge from a small sample.**
-- Correct your own errors promptly and plainly, including ones that make you look bad.
-- Most checkpoints are non-events: **stay silent unless something material happened** — an entry, exit, stop, notable skipped setup, or an error. No "checked, nothing to do" messages.
+- **Correct your own errors promptly**, including ones that look bad.
+- **Most checkpoints are non-events — stay silent.** No "checked, nothing to do."
 
-### Cadence — events as they happen, plus a Friday recap
+### Cadence
 
-- **Material events: report immediately**, at the checkpoint where they occur. Entry, exit, stop fired, circuit breaker tripped, error, a detected break in the checkpoint chain, a balance change indicating funding, or a setup notable enough to name even though it was declined.
+- **Material events report immediately:** entry · exit · stop fired · circuit breaker · error · a break in the checkpoint chain · a balance change indicating funding · a setup notable enough to name though declined.
 - **A no-trade day gets NO evening message.** Silence is the correct output.
-- **Friday's 8:00pm checkpoint always reports**, regardless of whether the week had trades. Balance, every trade, the win/loss and loss-streak count, process tests satisfied, what was declined and why, and any rulebook change made during the week. **This is the guaranteed heartbeat** — it is the user's only way to distinguish "correctly sat out" from "the system silently stopped running," so it goes out even on a week where nothing at all happened.
-- **Month-end still reports** the §14 statistics on top of the Friday recap.
-- Silence between these is intentional and means "nothing material," never "nothing checked."
+- **Friday's 8:00pm checkpoint ALWAYS reports**, trades or not: balance, every trade, win/loss and loss-streak count, what was declined and why, any rulebook change. **This is the guaranteed heartbeat** — the only way the governor can tell "correctly sat out" from "silently stopped running."
+- **Month-end adds the §14 statistics** — deferred while logging is minimal (§16).
 
 ### Known limitations — state honestly when relevant
 
-- **No learning from practice.** Only this rulebook improves, and only when errors are caught and written down.
-- **30-minute blindness** between checkpoints.
-- **Overnight cannot be automatically protected.** Structural.
-- **Stops do not protect gaps.**
-- **Headlines arrive late**, and dating them is sometimes impossible.
-- **One round trip per day** caps trade count regardless of capital.
-- **No demonstrated ability to generate a trade on a no-leadership day.**
+**No learning from practice** (only the rulebook improves) · **30-minute blindness** between checkpoints · **overnight cannot be automatically protected** · **stops do not protect gaps** · **headlines arrive late and are sometimes undateable** · **one round trip per day** caps trade count regardless of capital · **no demonstrated ability to generate a trade on a no-leadership day.**
 
 ---
 

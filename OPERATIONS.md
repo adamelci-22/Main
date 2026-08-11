@@ -6,7 +6,7 @@
 |---|---|
 | §1 triggers · §3 shutdown · §5 execution · §6 stops · §8 exits · §11 headlines | §0 objective · §2 schedule · §4 entry · §7 targets · §9 post-exit · §10 mechanics · §12–17 |
 
-> **YOU MAY NOT OPEN A POSITION FROM THIS FILE ALONE.** Entry needs the §4 gates, class priority, instrument selection, the entry-snapshot spec and the catalyst schema — all in `RULEBOOK.md`. Managing and exiting is fully covered here.
+> **YOU MAY NOT OPEN A POSITION FROM THIS FILE ALONE.** Entry needs the §4 gates, class priority and instrument selection — all in `RULEBOOK.md`. Managing and exiting is fully covered here.
 
 **Also read `RULEBOOK.md` when:** entering · 4:00pm report · 8:00pm arming · an override fires · anything ambiguous.
 
