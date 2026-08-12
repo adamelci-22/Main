@@ -235,6 +235,23 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
 - **So the ladder does two different jobs**, and conflating them hid the error: above +2–3% it banks a gain the ratchet already protected; below entry it cuts a dead trade before the stop does. The second job is arguably the more valuable and was undocumented.
 - **Open question this raises:** if the ladder reliably exits red positions near −0.6R rather than −1.0R, then the *effective* average loss is smaller than the stop implies, which changes the expectancy arithmetic in §14 in our favour. **Needs many more sessions before believing it** — one trade proves nothing, and the ladder could equally fire at −4.5% on a different tape.
 
+### EXP-013 · preflight's class-priority tripwire is blind to 1x single-stock names
+
+- **State:** `PROPOSED` · found at the 2026-08-12 09:00 checkpoint while ranking the profiled universe.
+- `preflight.py` fires the single-stock underlying gate AND the class-priority warning off one lookup:
+  `limits.json -> single_stock_leveraged.map`. That map only lists **leveraged** single-stock ETFs.
+- **RIOT, MARA, CLSK** are plain 1x equities. They are still class-priority 3 (single-stock), and they
+  are on the watchlist and affordable — but preflight prints **no** class-priority warning for them,
+  so an entry could take the lowest-priority class with the tripwire silent. The underlying gate
+  correctly does not apply (the underlying *is* the instrument), but the priority warning should.
+- **Fix:** derive the priority class from `data/vol_profile.csv`'s instrument class (`single_1x`,
+  `single_2x`) rather than from map membership, and keep the map for the underlying-vs-sector gate only.
+- **Deliberately NOT changed at the 09:00 checkpoint.** Editing the tripwire 45 minutes before an
+  entry decision is the same mistake as the fractional-stop episode: verify capability on a calm slot,
+  not against a clock. Scheduled for the 20:00 rule-change slot.
+- **Bounded risk today:** the three affected names rank 27, 29 and 30 of 31 on `mfe_per_stop`, so the
+  ranking rule already puts them last. The tripwire gap is real but is not load-bearing this session.
+
 ---
 
 ## Closed

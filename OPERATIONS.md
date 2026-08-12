@@ -204,9 +204,9 @@ On a geopolitical trade the thesis dies by headline, not by chart — a ceasefir
 
 This is a **slot, not a fixture.** When the driver stops mattering, replace it wholesale; its triggers are specific to it.
 
-*As of Aug 10 2026:* the **Strait of Hormuz closure** — US-Israel-Iran war, Iran blocked the strait Feb 28 2026, demands sanctions relief and reparations, has ruled out direct US talks. The Iran–**Oman** route deal (~Aug 5–7, "final drafting") is with Oman, not the US, and crossings **fell** after it (15 → 11 → 6). WTI ~$80, Brent >$84. Reopening-optimism headlines are stale and undated — weigh price action.
+*As of Aug 12 2026:* **AI-capex re-acceleration on a cooling-inflation tape.** July CPI came in line and softening — +0.1% MoM, 3.4% YoY (from 3.5%), core +0.2% — and the bid went straight into semiconductors rather than into the broad index. Pre-market: SMH +2.7%, SOXL +9.7%, QQQ +1.0%, SPY +0.5%. Overnight confirmation from Korea, same theme: KOSPI +3.7% (intraday ~+5%) on Samsung Electronics and SK Hynix. Earnings fuel: **CRWV +19%**, **SMCI +9.8%**. Precious metals are a separate, also-rising complex (GDX +3.0%, SLV +2.1%). **Energy is the only sector down** (XLE −0.5%) — the Hormuz trade that drove Aug 10 is no longer the driver. **China is not in this** (YINN −2.0%): Korea is a semis proxy here, not an Asia proxy.
 
-**Immediate exit triggers regardless of price:** ceasefire · joint statement signed · reopening implemented · sanctions relief · direct US-Iran talks · **crossing counts turning up.**
+**Immediate exit triggers regardless of price:** a hot inflation print or hawkish Fed repricing · an AI-capex guidance cut or hyperscaler spending walk-back from any large customer · SMH turning negative on the day while the position is a semis vehicle · a Samsung/SK Hynix reversal that drags the Korea complex (only while holding KORU).
 
 ---
 ## Logging — MINIMAL MODE. Trades only.
