@@ -17,7 +17,7 @@
 
 Call `list_triggers`.
 
-1. **DELETE every trigger with `ended_reason='run_once_fired'`.** An unreadable list is where a real duplicate hides, and two checkpoints on one setup can place two orders.
+1. **DELETE every trigger with `ended_reason='run_once_fired'`.** Not housekeeping — **a fired run-once trigger is NOT inert.** Observed three times (Aug 12–13): each one carries a live `next_run_at` roughly 24 hours later and *will* fire again, delivering its **original, now wrongly-dated prompt** — a Wednesday 10:30am checkpoint arriving Thursday 10:31am, a Wednesday arming colliding with Thursday's. Leaving one is arming a stale checkpoint. An unreadable list is also where a real duplicate hides, and two checkpoints on one setup can place two orders.
 2. **DELETE any trigger occupying a slot you are about to arm.** Exactly one per slot.
 3. **NEVER delete the trigger you are running from** until the next day is armed.
 4. After arming, list again, confirm one per slot, report the count.
