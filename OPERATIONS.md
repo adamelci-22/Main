@@ -204,9 +204,13 @@ On a geopolitical trade the thesis dies by headline, not by chart — a ceasefir
 
 This is a **slot, not a fixture.** When the driver stops mattering, replace it wholesale; its triggers are specific to it.
 
-*As of Aug 12 2026:* **AI-capex re-acceleration on a cooling-inflation tape.** July CPI came in line and softening — +0.1% MoM, 3.4% YoY (from 3.5%), core +0.2% — and the bid went straight into semiconductors rather than into the broad index. Pre-market: SMH +2.7%, SOXL +9.7%, QQQ +1.0%, SPY +0.5%. Overnight confirmation from Korea, same theme: KOSPI +3.7% (intraday ~+5%) on Samsung Electronics and SK Hynix. Earnings fuel: **CRWV +19%**, **SMCI +9.8%**. Precious metals are a separate, also-rising complex (GDX +3.0%, SLV +2.1%). **Energy is the only sector down** (XLE −0.5%) — the Hormuz trade that drove Aug 10 is no longer the driver. **China is not in this** (YINN −2.0%): Korea is a semis proxy here, not an Asia proxy.
+*As of Aug 13 2026:* **THE SLOT IS EMPTY. There is no driver this morning, and that is the finding — not a gap to fill.** Pre-market at 9:03 has every proxy inside ±0.5%: IWM +0.26, SPY +0.25, QQQ +0.16, XLK 0.00, SMH −0.12, EWY −0.16, SLV −0.24, FXI −0.37, XLE −0.46. Only GDX is decisively anywhere, at −1.08%, and it is going the wrong way for the metals complex. Semis constituents are pinned flat — NVDA +0.08, AVGO +0.02, TSM −0.03, MU −0.06, AMD −0.25 — so **yesterday's semis leadership has fully dissipated**; SMH gained 2.08% on Wednesday and has given the momentum back overnight. SMCI +1.36% is the only constituent moving, which is a single name, not a sector.
 
-**Immediate exit triggers regardless of price:** a hot inflation print or hawkish Fed repricing · an AI-capex guidance cut or hyperscaler spending walk-back from any large customer · SMH turning negative on the day while the position is a semis vehicle · a Samsung/SK Hynix reversal that drags the Korea complex (only while holding KORU).
+**Do not manufacture a driver from this.** §4 requires ranked sector leadership and a nameable catalyst; a tape where the widest read is half a percent supplies neither. The 9:30 observation decides whether anything develops, and no-read-no-trade is the standing default until it does.
+
+**Provisional exit triggers, should a position be opened later today:** whatever thesis 9:45 names, its own falsification — plus, because the tape is directionless, treat the FIRST stalled checkpoint as more informative than usual: a position entered without sector wind behind it has nothing to resume on.
+
+*Superseded — Aug 12 2026:* AI-capex re-acceleration on a cooling CPI, semis leading. Retained one line for continuity only. Its exit triggers are DEAD — they belonged to that driver and must not be read as live.
 
 ---
 ## Logging — MINIMAL MODE. Trades only.
