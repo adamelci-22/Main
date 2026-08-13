@@ -306,6 +306,41 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
   decision; editing an entry gate on that clock is the fractional-stop mistake and the EXP-013
   mistake. It is recorded here so the finding survives a context compaction.
 
+### EXP-016 · The already-extended check — a pre-entry test for an unreachable target
+
+- **State:** `PROPOSED` · from the FNGU trade, 2026-08-13. **Sample of one. Do not implement on this.**
+- **The observation.** FNGU opened at $32.750 and topped at $34.000. Gate 1's mandatory 15-minute
+  wait meant the earliest legal fill was 09:45; I filled 09:48:39 at **$33.5999**, having watched
+  **+2.60% of a +3.82% move** go past. At entry the instrument was already **+4.38% on the day**
+  against a median daily MFE of **2.405%** — it had delivered **1.82x its typical whole-day
+  excursion before I was permitted to buy**. The profile's target (+4.81%, i.e. $35.216) was not
+  unlikely from that fill; it was arithmetically out of reach.
+- **What the trade actually produced:** true intraday MFE **+1.19%** ($34.000 at 10:35), true MAE
+  −0.44%, exit −0.059%. Breakeven trigger (+2.30%) never reached, so the ratchet never engaged and
+  there was never a protected gain. **No rule in the system banks a sub-1% move** — correctly — which
+  means a late entry into a spent move has no profitable exit available to it at all.
+- **Proposed test, applied BEFORE entry so it cannot be fitted to an outcome:**
+  `day_change_at_entry / median_mfe_pct >= ~1.5` -> the scaled target is unreachable from here.
+  Either decline, or state at entry that this is a trail-or-stall exit with no reachable target and
+  size the expectation accordingly. Both inputs already exist; nothing new needs collecting.
+- **Relationship to `mfe_to_target`.** That ratio asks whether the target is reachable *for the
+  instrument in general*. This asks whether it is reachable *from today's entry price* — the same
+  question shifted from the instrument to the fill. FNGU passed the first (2.10, comfortably under
+  the 2.5 line) and would have failed the second.
+- **The uncomfortable implication, which the governor should weigh, not me.** This is really a
+  measurement of what **Gate 1 costs**. The gate exists to avoid buying a gap that fades, and on
+  Aug 12 it correctly kept us out. But it structurally enters after the first fifteen minutes, and
+  on a gap-and-go day that is most of the move. The honest framing is not "Gate 1 is wrong" but
+  "Gate 1's premium is now measurable, and on some tapes it exceeds the whole remaining move."
+  **Deciding that trade-off is a governor call.**
+- **Secondary finding, logged not proposed.** The half-risk ratchet trigger ($33.986) was touched
+  intraday at $34.000 but missed at the 10:42 checkpoint reading of $33.890. The ratchet carries the
+  same checkpoint-only discretisation deliberately chosen for the stall rule. **It changed nothing
+  today** — a $33.06 stop was never threatened — and it is recorded only so the property is known.
+- **NOT IMPLEMENTED, deliberately.** One losing trade, and §17's locked evaluation period binds:
+  the sample is 2 closed trades against ~14 rule changes on Aug 11. Changing an entry rule on the
+  day a trade lost is curve-fitting even when the arithmetic looks clean.
+
 ---
 
 ## Closed
