@@ -252,6 +252,34 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
 - **Bounded risk today:** the three affected names rank 27, 29 and 30 of 31 on `mfe_per_stop`, so the
   ranking rule already puts them last. The tripwire gap is real but is not load-bearing this session.
 
+### EXP-014 · Gate 1 passes on a dead-flat reading, and a foreign-market gap is not a trend
+
+- **State:** `PROPOSED` · from the Wed 2026-08-12 session, which ended FLAT. **No outcome data — nothing was traded.**
+- **Two observations, one underlying issue.**
+- **(1) Gate 1 has no minimum margin.** It requires the 9:45 sector reading to be "not below" the 9:30
+  one. On Aug 12 both surviving proxies passed on noise: EWY +4.54% -> +4.57% (**+2.4bp**) and
+  SMH +2.66% -> +2.66% (**+0.6bp**). A tape that gapped and then went completely flat for fifteen
+  minutes satisfied a gate whose stated purpose is to establish that a trend is *holding*. The gate
+  did its literal job and told us nothing.
+- **(2) A foreign-market ETF's gap can be a fully spent move.** KORU was the only affordable
+  class-priority-2 vehicle expressing the day's leading theme, and its entire +13.5% was an opening
+  reprice of a KOSPI session that had closed roughly seven hours before our open. There was no
+  further Korean price discovery available during our session. §4 demands "continuation, not
+  prediction"; buying 3x into a gap whose catalyst has already finished is closer to the latter.
+- **What I am NOT proposing.** Not a ban on foreign-market leveraged ETFs — Asian markets are always
+  shut during US hours, so that would delete KORU, YINN and YANG from the universe on a technicality,
+  and those ETFs do have genuine US-session price discovery. The narrow version is what matters:
+  *a gap that reprices a closed session is not by itself evidence of a live trend.*
+- **DELIBERATELY NOT CHANGING ANY RULE.** Adding a minimum margin to Gate 1 would be tuning a
+  threshold against a **single session in which no trade was taken** — there is no P&L, not even a
+  bad one, to fit to. That is curve-fitting in its purest form, and §17's locked evaluation period
+  binds: the effective sample is 1 trade against ~14 rule changes on Aug 11. Filing the observation
+  is the correct output; supplying the parameter is not.
+- **What would make this decidable:** count sessions where Gate 1 passes with a margin inside
+  roughly +/-5bp, and record what the sector did over the following hour. If a near-zero-margin pass
+  is no better than a coin flip while a clearly positive one is not, the gate needs a margin. That
+  needs many sessions, and the RESEARCHER is currently SUSPENDED, so it is not collectable today.
+
 ---
 
 ## Closed
