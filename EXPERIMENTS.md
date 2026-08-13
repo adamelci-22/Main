@@ -280,6 +280,32 @@ Bounds are pessimistic (assume the stop was touched first whenever both were) an
   is no better than a coin flip while a clearly positive one is not, the gate needs a margin. That
   needs many sessions, and the RESEARCHER is currently SUSPENDED, so it is not collectable today.
 
+### EXP-015 · Gate 1 is INVERTED for inverse vehicles, making five universe names unbuyable
+
+- **State:** `PROPOSED` · found at the 2026-08-13 09:30 observation. **A logic hole, not a threshold.**
+- Gate 1 (§4) requires the sector proxy to be **positive at 9:30, positive at 9:45**, and not lower at
+  9:45. An inverse ETF's entire thesis is that its proxy **falls**. So the gate demands the exact
+  condition under which the instrument loses money.
+- **Read literally, an inverse vehicle can never pass Gate 1.** That silently removes five names from
+  the permitted universe: **SOXS · DUST · YANG · ZSL · SCO**.
+- **This is not academic.** On Aug 13 the single most decisive move on the board was GDX **−2.47%** at
+  9:31, holding **−2.50%** at 9:46 — a clean, sustained, high-conviction directional move, and the
+  only proxy going anywhere at 9:31. Its vehicle, DUST, is **class priority 1** and affordable at ~$42.
+  SOXS ranked **2nd of 31** on `mfe_per_stop` that morning. Both were unreachable on a technicality
+  rather than on a market judgement.
+- **Likely fix (NOT yet applied):** evaluate Gate 1 against the proxy's move *in the direction the
+  instrument profits from* — for a long vehicle the proxy must hold positive; for an inverse vehicle
+  the proxy must hold **negative**, and the 9:45 reading must not be **above** the 9:30 one. Same
+  three-part structure, sign flipped by instrument polarity. `instrument_class` already carries the
+  polarity (`*_inverse`), so it is derivable rather than a new field.
+- **Open question the fix must answer**, and the reason it is not a one-line change: an inverse ETF
+  bought into a falling sector is by construction **not** "continuation of an established move" in the
+  sector — it is continuation of a *decline*. §4's continuation-not-prediction rule needs to be read
+  against the instrument, not the proxy, or the polarity fix will pass trades the spirit of §4 refuses.
+- **Deliberately deferred to the 20:00 rule slot.** Flagged at 09:30, fifteen minutes before an entry
+  decision; editing an entry gate on that clock is the fractional-stop mistake and the EXP-013
+  mistake. It is recorded here so the finding survives a context compaction.
+
 ---
 
 ## Closed
