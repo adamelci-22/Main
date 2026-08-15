@@ -406,6 +406,6 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## Current state
 
-**Flat.** Loss streak **2 of 3**. Floor: 50% of deposited cash, recomputed each 9:00.
+**Flat.** Loss streak **0 of 3** (cleared 2026-08-15, per A1). Floor: 50% of deposited cash, recomputed each 9:00.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
