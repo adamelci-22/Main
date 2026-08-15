@@ -4,21 +4,15 @@
 
 **Account:** Robinhood `462514035` ("Agentic"), cash account, `agentic_allowed=true`.
 
-**Policy version: 1.4.** Bump on every rule/threshold/limit change; record it in the commit.
+**Policy version: 1.5.** Bump on every rule/threshold/limit change; record it in the commit.
 
 ---
 
 ## 1. Objective
 
-Grow the account as fast as possible using leverage plus day and swing trading, while locking in profits.
-
-- No dollar target. Never plan around one.
-- Aggression belongs to the entry: leveraged 2x/3x, full position, concentrated, long or inverse.
-- Discipline belongs to the exit: stops that only ratchet up, a defined target, a short horizon.
 - Losing trades are structural. The goal is positive expectancy, which includes red days.
 - Every threshold is a percentage. Dollars appear only where a mechanical constraint forces it (affordability, deposit total).
-- Sizing is currently all-in on one instrument, so stop distance is the only risk lever. This is a sandbox condition, not a scalable risk model — before this manages meaningful money: independent position sizing, concentration limits, a tighter floor, and a brake on drawdown all need to exist, and "stop distance is the only risk lever" must be deleted outright.
-- Equities and ETFs only — including leveraged and inverse. No options. No short selling (cash account cannot; express bearish views via inverse ETFs bought long). Only the governor reopens either.
+- Equities and ETFs only — including leveraged and inverse. No options. No short selling (cash account cannot; express bearish views via inverse ETFs bought long).
 
 ---
 
@@ -26,17 +20,17 @@ Grow the account as fast as possible using leverage plus day and swing trading, 
 
 17 checkpoints, plus 7 extended-hours slots only when holding at 4:00pm.
 
-`9:00 · 9:30 · 9:45 · 10:00 · 10:30 · 11:00 · 11:30 · 12:00 · 12:30 · 1:00 · 1:30 · 2:00 · 2:30 · 3:00 · 3:30 · 4:00 · 8:00`
+`9:00 · 9:30 · 9:40 · 10:00 · 10:30 · 11:00 · 11:30 · 12:00 · 12:30 · 1:00 · 1:30 · 2:00 · 2:30 · 3:00 · 3:30 · 4:00 · 8:00`
 
 Only if holding at 4:00pm, add: `4:30 · 5:00 · 5:30 · 6:00 · 6:30 · 7:00 · 7:30`.
 
-Cadence is fixed at 30 minutes, flat or holding. The stall count (§9.1) is measured in checkpoints, so the cadence IS the stall timescale — if the cadence ever changes, re-derive the stall thresholds in the same breath.
+Cadence is fixed at 30 minutes from 10:00am on, flat or holding. The stall count (§9.1) is measured in checkpoints, so the cadence IS the stall timescale — if the cadence ever changes, re-derive the stall thresholds in the same breath.
 
 | Time | Role | Orders |
 |---|---|---|
 | 9:00am | Pre-market research | read-only |
 | 9:30am | Opening observation | read-only |
-| 9:45am | Trading opens — first entry permitted | ✅ |
+| 9:40am | Trading opens — first entry permitted | ✅ |
 | 10:00–3:30 | Management, every 30 min | ✅ |
 | 4:00pm | Close, session report | ✅ until the bell |
 | 4:30–7:00 | Extended hours, only if holding | limit only, no new positions |
@@ -59,12 +53,12 @@ Runs indefinitely until the user explicitly pauses or cancels it. Never stop on 
 4. Rank sector leadership as indicated pre-market.
 5. Confirm settled buying power and unsettled funds. Recompute deposited capital and the floor (§10) — report if either changed.
 6. Write a watchlist of at least 5 names: rank the full profiled universe by `mfe_per_stop` first, then mark affordability. Include unaffordable names. Only profiled instruments may be ranked or traded — profile a candidate before shortlisting it if it isn't yet covered.
-7. Refresh `data/vol_profile.csv`: pull recent daily bars for the watchlist, recompute median adverse/favourable excursion, rewrite the file. Every risk number derives from it (§9). Commit and push.
+7. Refresh `data/vol_profile.csv`: pull recent daily bars for the watchlist, recompute median adverse/favourable excursion, rewrite the file. Every risk number derives from it (§6). Commit and push.
 8. Refresh the live-context block (§11) against today's tape.
 
 ### 9:30am — opening observation, read-only
 
-Test whether the 9:00 thesis survived the open: did pre-market strength hold into real volume, or fade? Check breadth within the leader — one name dragging an ETF is not a sector move. Record the sector proxy's day change; Gate 1 (§4) compares it against the 9:45 reading. Two fixed observations decide Gate 1 — do not add intermediate readings.
+Test whether the 9:00 thesis survived the open: did pre-market strength hold into real volume, or fade? Check breadth within the leader — one name dragging an ETF is not a sector move. Record the sector proxy's day change; Gate 1 (§4) compares it against the 9:40 reading. Two fixed observations decide Gate 1 — do not add intermediate readings.
 
 ---
 
@@ -120,9 +114,9 @@ A −25% drawdown from peak is a flag, not a brake — report it, keep trading. 
 - Continuation, not prediction.
 - No read = no trade.
 
-### Gate 1 — sector must hold a positive trend, 9:30 to 9:45
+### Gate 1 — sector must hold a positive trend, 9:30 to 9:40
 
-Record the sector proxy's day change at 9:30 and again at 9:45. All three must hold: positive at 9:30, positive at 9:45, and the 9:45 reading not below the 9:30 reading. Any failure → no entry in that sector.
+Record the sector proxy's day change at 9:30 and again at 9:40. All three must hold: positive at 9:30, positive at 9:40, and the 9:40 reading not below the 9:30 reading. Any failure → no entry in that sector.
 
 Two fixed observations decide it — no intermediate readings.
 
@@ -130,17 +124,14 @@ Two fixed observations decide it — no intermediate readings.
 
 Never buy a single-stock leveraged ETF when its underlying is underperforming its sector proxy on the day (both as day change; proxy map in §12). If `underlying_pct < sector_pct` → decline. Does not apply to sector or index leveraged ETFs — those are the group.
 
-### Gate 3 — class priority: sector and index beat single-stock
+### Instrument priority — applies everywhere
 
-Decided before `mfe_per_stop` ranking — the ratio ranks within a class, never promotes single-stock above sector.
+Priority order for what to trade:
 
-| Class | Examples |
-|---|---|
-| 1 — Sector/industry leveraged | SOXL · TECL · GUSH · ERX · NUGT · LABU · SOXS · DUST · AGQ |
-| 2 — Index leveraged | TQQQ · UPRO · TNA · SQQQ · SPXS |
-| 3 — Single-stock leveraged | NVDX · NVDL · SMCX · MSTX · TSLL · CONL · MUU · AMDL |
-
-A single-stock name needs all four: no sector or index vehicle for the same read is affordable as a whole share; its underlying is leading its sector (Gate 2); every other gate clears; the entry names which sector vehicles were ruled out, by name and price.
+1. Find the stock or instrument that is moving the most, with real breadth behind it.
+2. Identify its sector.
+3. If a leveraged vehicle exists for that stock or sector and is affordable as a whole share, prefer it — it clears Gate 2 first if it's a single-stock leveraged name.
+4. If no leveraged vehicle exists, or none is affordable, do not skip the trade. Take the underlying stock directly if it is moving majorly — missing a real move for lack of a leverage wrapper is the wrong trade-off.
 
 ### Ranking
 
@@ -166,11 +157,11 @@ No named catalyst required or invented. Applies only to commodities and material
 
 ### Timing
 
-- Preferred window 9:45–11:00am.
+- Preferred window 9:40–11:00am.
 - After 11:00am, a new entry must be clearly better than the morning offered, not merely available.
 - Never force a trade because the window is closing. No qualifying setup ends the day with no trade.
 - One round trip per day exists (T+1, §10).
-- Late entries commit to an unprotected overnight hold on day one — say so at entry.
+- Late entries have less time to develop before the mandatory same-day close (§7).
 
 ### Instrument selection
 
@@ -188,7 +179,7 @@ No named catalyst required or invented. Applies only to commodities and material
 - Commodities/materials: AGQ · UGL · GLL · JNUG · SIL · SILJ · UCO · BOIL · OILU · OILD · UYM · SMN · COPX · CPER · URA · URNM · LIT · REMX · SLX
 - Crypto proxies: BITX · BITU · ETHU · ETHT · RIOT · MARA · CLSK
 - Volatility: UVIX · VXX — event/intraday only, never a hold.
-- Any liquid high-beta single name with a catalyst.
+- Any liquid high-beta single name with a catalyst, leveraged or not (see Instrument priority, above).
 
 An instrument absent from `data/vol_profile.csv` may not be traded. Compute it or pick another.
 
@@ -238,14 +229,14 @@ No flat constants. An instrument absent from `vol_profile.csv` may not be traded
 | Gain reaches `breakeven_trigger ÷ 2` | `−stop_pct ÷ 2` |
 | Gain reaches `breakeven_trigger` | breakeven (the fill) |
 | Past that | trail `trail_pct` below the running high |
-| 2 stalled checks, in profit | `max(current stop, breakeven)`, keep holding |
-| 2 stalled checks, below the fill | SELL (§9.1) |
-| 3 stalled checks | SELL (§9.1) |
+| 1 stalled check, price ≥ breakeven | stop → `max(current stop, breakeven)` |
+| 1 stalled check, price < breakeven | no stop change (§9.1) |
+| 2 stalled checks, either | SELL ALL (§9.1) |
 | Any check at or above `target_pct` | SELL |
 
 Up only. Minimum re-placement move: `min_stop_move_pct` from the profile. A structural override (a swing low holding above the trailed level) may be used instead, upward only.
 
-Stop orders are regular-hours only. A stop does not protect against a gap — the only defence for an overnight event is not holding into it.
+Stop orders are regular-hours only. A stop does not protect against a gap — the only defence for an overnight event is not holding into it, and positions do not carry overnight (§7).
 
 ---
 
@@ -260,25 +251,25 @@ On reaching target: close the entire position, unless there is named new informa
 1. Sell half the moment the override is approved, not at the next checkpoint.
 2. Raise the stop on the remainder to at least the target price, immediately.
 3. Re-justify at every checkpoint, out loud, naming the information again. Silence is expiry — an unrestated override has ended and the remainder gets sold.
-4. Sell the remainder the moment any of: the information is exhausted/contradicted/priced in · any §9 exit criterion fires · the ratcheted stop is hit · a pre-commitment fires · the horizon ceiling is reached.
+4. Sell the remainder the moment any of: the information is exhausted/contradicted/priced in · any §9 exit criterion fires · the ratcheted stop is hit · a pre-commitment fires · the same-day close deadline is reached (§7).
 5. One extension per trade — no overriding the override.
 6. Log both fills as separate rows in `data/trades.csv`, with the override reason. Report the blended P&L honestly, including if the override earned less than a clean exit at target would have.
 
 Before any partial sell, confirm with `review_equity_order` that a stop on part of a multi-share position leaves the remainder sellable — and remember a clean review is not proof of placement (§13). If refused: cancel the stop, sell half, immediately replace the stop on the remainder, accepting it is briefly unprotected.
 
-### Holding period
+### Holding period — every position closes same-day
 
-Default for a leveraged or inverse instrument: close the same day. Overnight is a separate decision needing a named reason, stated at the 3:30pm checkpoint while a stop still functions — a multi-day catalyst that has not played out, position still making new highs into the close. "The exit criteria did not fire" is not a reason.
-
-Absolute ceiling: 1 trading week, for an exceptional opportunity only, declared at entry. State the intended maximum hold at entry.
+Every position closes the same trading day it was opened. No overnight or multi-day hold, under any circumstance — this is a cash, day-trading system, full stop. State the intended exit point at entry.
 
 ---
 
-## 8. Post-exit restriction
+## 8. Post-exit review
 
-Once a position is closed, do not report, track, or comment on what the price did afterward — not to log it, not in passing. Green is green. The same applies to a candidate that was declined.
+30 minutes after every exit, check the instrument's price and note the move since the exit. Compare it against the exit price and say plainly whether the exit looks well-timed or early.
 
-The one carve-out: if an override was actually invoked and acted on (§7), compare the realised result against a clean exit at target, and report it honestly including when the override lost money. Considering and correctly rejecting an override does not qualify.
+If the move suggests a rule is causing early exits or missed continuation, note the observation and the specific rule involved in the report, and suggest a change. This is meant to surface missed opportunities, not to second-guess a single trade in isolation — look for a repeated pattern before proposing a rule change.
+
+The same check applies to a candidate that was declined: 30 minutes after declining, check what it did and note whether the decline was justified.
 
 ---
 
@@ -288,17 +279,17 @@ The one carve-out: if an override was actually invoked and acted on (§7), compa
 
 Measured at the checkpoint price only — what happens between checks is ignored.
 
-A stalled check = a 30-minute checkpoint whose price at that moment failed to exceed `run_high` by more than `stall_threshold_pct`. `run_high` is the highest **checkpoint** price, seeded at the fill, not the highest price traded — it advances only when a check clears the threshold. No volume condition, no bars; one quote per checkpoint is sufficient.
+A stalled check = a checkpoint whose price at that moment failed to exceed `run_high` by more than `stall_threshold_pct`. `run_high` is the highest **checkpoint** price, seeded at the fill, not the highest price traded — it advances only when a check clears the threshold. No volume condition, no bars; one quote per checkpoint is sufficient.
 
-| Stalled checks | Price vs fill | Action |
+| Stalled checks | Condition | Action |
 |---|---|---|
-| 2 | at or above | stop → `max(current, breakeven)`, keep holding |
-| 2 | below | SELL NOW — the market, at whatever the loss is |
-| 3 | either | SELL — whatever the gain, no exception |
+| 1 | price ≥ breakeven (the fill) | stop → `max(current stop, breakeven)` |
+| 1 | price < breakeven | no stop change — moving the stop to breakeven here would sit it above the market and force an immediate loss |
+| 2 | either | SELL ALL — the market, whatever the result |
 
-The ladder is asymmetric: two checks for a loser, three for a winner. SELL means now, not next checkpoint — cancel the resting stop first (a pending sell locks the share), then exit with a marketable limit.
+SELL means now, not next checkpoint — cancel the resting stop first (a pending sell locks the share), then exit with a marketable limit.
 
-Coupled to the 30-minute cadence: counting checkpoints means the cadence is the stall timescale. If the cadence changes, re-derive the stall thresholds in the same breath.
+Coupled to the checkpoint cadence: counting checkpoints means the cadence is the stall timescale. If the cadence changes, re-derive the stall thresholds in the same breath.
 
 How a cold checkpoint counts stalls — derive it every time, nothing is remembered:
 
@@ -334,8 +325,7 @@ End every report with the specific, falsifiable condition that would cause an ex
 - No short selling — this cash account cannot. Express bearish views via inverse ETFs bought long.
 - Inverse leveraged ETFs: day-trade or very short swing only, never a multi-day hold.
 - Only one resting order per position — a pending sell locks the share.
-- Fractional orders place only in `regular_hours`, `type=market` only.
-- 24-hour tradability is optionality, not obligation. Never hold just because you can.
+- 24-hour tradability is optionality, not obligation. Never hold just because you can — and positions do not carry overnight regardless (§7).
 
 ### Floor
 
@@ -353,10 +343,11 @@ These settlement facts are verified for a **cash** account only. If ever convert
 
 ---
 
-## 11. Headline check — every checkpoint
+## 11. Headline check
 
-- Flat → the previous day's headlines set today's setups.
-- Holding → same-day headlines only; yesterday's is in the price.
+- 9:00, 9:30 and 10:00am: check headlines broadly — macro, sector, overnight moves. While flat, the previous day's and overnight headlines are what set up today's trades.
+- While holding a position, check headlines every hour after that. Only headlines relevant to the position or its thesis — same-day news only, since yesterday's is already in the price.
+- If flat past 10:00am, no further scheduled headline check is required.
 
 Name the catalyst in the report.
 
@@ -432,57 +423,18 @@ Expectancy per trade, in R, is the primary figure: `R = (exit% − entry%) ÷ in
 
 ---
 
-## 15. Data layer
+## 15. Rule layers — where a new rule belongs
 
-| File | Holds | Written by | Mutability |
-|---|---|---|---|
-| `RULEBOOK.md` | Policy | Governor | Edited rarely |
-| `data/trades.csv` | One row per closed trade | At exit | Append-only |
-| `data/vol_profile.csv` | Per-instrument risk numbers | 9:00 checkpoint | Regenerated daily |
-| `data/observations.jsonl` | Watchlist records | 9:00 checkpoint | Append-only |
-| `archive/` | Prior trade history and rule-change reasoning | — | Historical, not read operationally |
-
-No cached state. Loss streak, deposited capital and any derived figure are computed fresh from source each time, never trusted from a prior session.
-
-### `data/trades.csv` — one row per closed trade, appended at exit
-
-Required fields: `date_closed, instrument, shares, entry_time_et, entry_price, exit_time_et, exit_price` (from order responses, confirmed not assumed) · `pnl_usd, pnl_pct_position, pnl_pct_account` · `initial_stop_pct` (the stop distance set at entry) · `r_multiple` (`(exit% − entry%) ÷ initial_stop_pct`, computed at exit — cannot be reconstructed later) · `mae_pct, mfe_pct` (during the hold) · `hold_minutes, stop_initial, stop_final, target_pct` · `exit_reason, stall_count_at_exit` · `slippage_entry, slippage_exit` · `rulebook_commit` (`git rev-parse --short HEAD`) · `counts_toward_streak` (`no` only for a mechanical abort, never a chosen exit) · `counts_toward_expectancy` (`no` for a mechanical abort or a funded execution test) · `notes` (required whenever either `counts_toward_*` is `no`).
-
-Never edit or delete a past row — a mistake gets a correcting row and a note. Adding a column is a migration, permitted; changing an existing value is not.
-
-### Watchlist record — 9:00am, at least 5 names
-
-One record: `ts, session_date, universe_ranked, affordable_count`, and a `names` array of ≥5, each with `symbol, rank_overall, mfe_per_stop, mfe_to_target, price, affordable_whole_share, instrument_class, sector_proxy, thesis_or_reason`.
-
----
-
-## 16. Rule layers — where a new rule belongs
+> **Pending update — content unchanged from the last revision. Flagged for a rewrite; see note to governor.**
 
 | Layer | Scope | Examples |
 |---|---|---|
 | Universal | Everything, always | Capital protection · order verification · stops ratchet up only · one resting order · loss floor |
-| Asset class | Equity · ETF · leveraged/inverse ETF | Daily reset and decay · same-day close default · overnight unprotectable |
+| Asset class | Equity · ETF · leveraged/inverse ETF | Daily reset and decay · same-day close · overnight unprotectable |
 | Category | Energy · semis · gold miners · crypto · index | Which catalysts matter · which proxy to compare against |
 | Instrument | A single ticker | Overnight tradability · spread behaviour · closing-only restrictions |
 
 Place a new rule at the narrowest level where it is actually true.
-
----
-
-## 17. Roles and authority
-
-| Role | When | May do | Never |
-|---|---|---|---|
-| Executor | Every scheduled checkpoint, trading days | Evaluate and enter setups against §4 · manage/exit positions (§6–9) · append to `data/trades.csv` and the watchlist · fix a safety defect immediately | Look at post-exit prices · change a threshold or limit on its own reasoning · promote anything |
-| Governor | Whenever they choose | Edit this file · approve rule changes · clear the circuit breaker · fund the account | — |
-
-None of this is technically enforced — every session holds the same tools. Violations are detected via the transcript, not prevented.
-
-A safety defect (duplicate-order risk, a floor breach, a misreported fill) is fixed immediately, then reported — never queued as a proposal.
-
-Any other rule change: edit this file directly, bump the policy version, commit with the reasoning in the commit message.
-
-**Locked evaluation period:** after a rule changes, it should not change again until at least 20 closed trades have run under the new version, except for safety defects, factual corrections, or an explicit governor override. Changing a rule shortly after a loss under it is curve-fitting on a sample size that cannot support the conclusion — say so rather than supplying the change.
 
 ---
 
