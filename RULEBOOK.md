@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.2.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.3.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -22,7 +22,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | Checkpoint | Read | Why |
 |---|---|---|
 | **9:00** research | A · C · D | Builds the day's candidates |
-| **9:30** observation | A · C1 | Records the Gate-1 baseline only |
+| **9:30** observation | A · C1 | Watchlist only — no new scan; records the Gate-1 baseline |
 | **9:40** entry | A · C | The only slot that may open a position |
 | **10:00–3:30** management ×13 | A · B | Holding or flat-with-nothing-to-do |
 | **4:00** close | A · B4 · D3 | Exit and report |
@@ -105,18 +105,28 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 - Minimum re-placement move: `min_stop_move_pct`. A structural level (swing low) may substitute **only if nearer**.
 - Stops are **regular-hours only** and do not protect a gap.
 
-### The ratchet
+### The ratchet — precise, so a cold checkpoint can't misread "gain"
 
-| Stage | Stop goes to |
-|---|---|
-| At entry | `−stop_pct` |
-| Gain ≥ `breakeven_trigger ÷ 2` | `−stop_pct ÷ 2` |
-| Gain ≥ `breakeven_trigger` | breakeven (the fill) |
-| Past that | trail `trail_pct` below the running high |
-| 1 stall, price ≥ breakeven | `max(current, breakeven)` |
-| 1 stall, price < breakeven | **no change** — a stop above market is rejected |
-| 2 stalls | **SELL ALL** |
-| Any check ≥ `target_pct` | **SELL ALL** |
+**One `run_high`, shared with B3 — not a second high-water mark.** Same value, same derivation: checkpoint-price only, advances only when a check clears it by more than `stall_threshold_pct` (B3 steps 1–2). A stalled check does not advance it.
+
+**The three stepped stages below are measured against `run_high`, never the live price.** `run_high` only moves up, so once a stage is reached it cannot un-reach itself on a pullback — that is what "up only" requires. Each is a one-time jump, evaluated fresh every checkpoint, applied only if it raises the stop:
+
+| Stage | Trigger (on `run_high`) | Stop goes to |
+|---|---|---|
+| 1 — entry | — | `−stop_pct` |
+| 2 — half-risk | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger ÷ 2` | `−stop_pct ÷ 2` |
+| 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger` | breakeven (the fill price) |
+| 4 — trail | past stage 3 | `run_high × (1 − trail_pct)` — **the only continuous stage**, recomputed every checkpoint as `run_high` climbs |
+
+**The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp:
+
+| Stall count | Live price vs. fill | Action |
+|---|---|---|
+| 1 | at or above fill | force stop to `max(current stop, breakeven)`, even if stage 3 hasn't triggered yet |
+| 1 | below fill | **no change** — a stop above the live price is rejected |
+| 2 | either | **SELL ALL** — overrides every stage above |
+
+**Any checkpoint where the live price ≥ `target_pct` → SELL ALL**, overriding everything above (B4).
 
 ## B3. Exits — any one fires
 
@@ -155,7 +165,9 @@ Name the **specific, falsifiable** condition that would exit at the next checkpo
 
 ## B4. Profit-taking
 
-At any checkpoint showing a gain ≥ `target_pct` → **sell the entire position.** No scaling out, no runner, at any share count. Target is a ceiling; most trades exit on the stall ladder first.
+At any checkpoint showing a live-price gain ≥ `target_pct` → **sell the entire position.** No scaling out, no runner, at any share count. Target is a ceiling; most trades exit on the stall ladder first.
+
+**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1: `clamp(2.0 × median favourable, 1.5 × stop, 12.0%)`), and it does not change for the life of that trade.** A different candidate gets a different target; a fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number too, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** State the intended exit at entry.
 
@@ -174,6 +186,8 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 > **No position may be opened outside 9:40–4:00, and only one round trip per day exists.** Spend it well, not merely spend it.
 
 ## C1. Gate 1 — the sector must hold, 9:30 → 9:40
+
+**9:30 is scoped to the 20-name watchlist only — no new market scan.** Record the day change of the **5 sector proxies** (feeds the Gate 1 test below) and note whether each of the **15 individual candidates** is still holding its move. That's an observational check, not a formal re-run of C3 — the formal re-confirmation of C3's legs happens live at 9:40.
 
 Applies to a **sector- or index-leveraged trade** only. Record the sector proxy's day change at **9:30** and again at **9:40**. All three must hold:
 
@@ -302,7 +316,7 @@ Flat at 4:00 → delete 4:30–7:30 regardless.
 3. **Earnings reactions** from last night's after-close reporters.
 4. **Scan for individual movers clearing C3 first.** Rank sector leadership second, only where nothing cleared C3 but a group is moving.
 5. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
-6. **Write the watchlist — ≥5 names.** Profile each candidate just-in-time (B1) and rank by `mfe_per_stop`; mark affordability second, never first. Include unaffordable names — they measure what capital is costing.
+6. **Write the watchlist — 20 names: 5 sector/index vehicles + 15 individual stocks.** Profile each just-in-time (B1) and rank by `mfe_per_stop`; mark affordability second, never first. Include unaffordable names — they measure what capital is costing. The 5 sectors feed C1 (Gate 1); the 15 individuals feed C3 (major-move gate) and C4's rank-1/rank-2 tracks.
 7. **Refresh the live-context block (E5).** Commit and push.
 
 ## D3. Reporting
