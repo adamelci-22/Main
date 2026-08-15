@@ -1,9 +1,9 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.0.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.1.** Bump on every rule/threshold change; record it in the commit.
 
-Nothing carries between checkpoints. State lives in this file and in `data/`, never in memory.
+Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
 ---
 
@@ -32,13 +32,13 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 | Blocked when | Verify by |
 |---|---|
-| Loss streak ≥ 3 | Count closed trades in `data/trades.csv` **and** `archive/trades.csv` (E1) |
+| Loss streak ≥ 3 | Count closed trades in `archive/trades.csv` (E1) |
 | Account below 50% of deposited cash | Recompute; never cache (E2) |
-| `data/vol_profile.csv` missing the candidate | No profile → no stop → no trade (B1) |
+| Candidate's risk numbers not computed | No profile → no stop → no trade (B1) |
 | An exit already happened today | Cash settlement: flat and **stays flat** all session (E2) |
 | Position already open | One position, one resting order (E2) |
 
-**⚠ CURRENT STATE — loss streak is 2 of 3.** One more losing closed trade halts entries until the governor clears it. `data/trades.csv` does not currently exist; the live streak lives in `archive/trades.csv`. **A missing file must never be read as a streak of zero** — that silently disables the breaker.
+**⚠ CURRENT STATE — loss streak is 2 of 3.** One more losing closed trade halts entries until the governor clears it. The streak is computed from `archive/trades.csv`, which is the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
 
 ## A2. Trigger hygiene
 
@@ -59,18 +59,35 @@ Read from the broker, never assume: position · resting orders · settled cash �
 
 # PART B — HOLDING (management checkpoints)
 
-## B1. Risk numbers — all per-instrument, from `data/vol_profile.csv`
+## B1. Risk numbers — computed just-in-time, per candidate
+
+**Profiled at the moment a candidate clears its gate, never in advance.** Pull ~20–30 daily bars for that one symbol and run:
 
 ```
-stop        = clamp(1.5 × median adverse excursion, 2.5%, 7.0%)
-target      = clamp(2.0 × median favourable excursion, 1.5 × stop, 12.0%)
-breakeven   = max(median favourable excursion, 0.5 × stop)
-trail       = 1.0 × median adverse excursion, below the running high
-stall thr   = clamp(0.15 × median favourable excursion, 0.10%, 1.00%)
-min stop mv = clamp(0.25 × median adverse excursion, 0.20%, 1.00%)
+printf '<open>,<high>,<low>\n...' | python3 tools/profile.py SYMBOL
 ```
 
-No flat constants. Read the row; never compute from memory. **Hard ceiling 7%** — a setup needing more room is not a setup. Where 1.5 × median adverse exceeds the cap it is capped and flagged `stop_at_cap=yes`: a warning, not a disqualification.
+It returns every number below. **Never compute these by hand** — a transposed digit becomes a mispriced stop.
+
+```
+median adverse    = median of (open − low)  / open      across the window
+median favourable = median of (high − open) / open
+
+stop        = clamp(1.5 × median adverse,    2.5%, 7.0%)
+target      = clamp(2.0 × median favourable, 1.5 × stop, 12.0%)
+breakeven   = max(median favourable, 0.5 × stop)
+trail       = 1.0 × median adverse, below the running high
+stall thr   = clamp(0.15 × median favourable, 0.10%, 1.00%)
+min stop mv = clamp(0.25 × median adverse,    0.20%, 1.00%)
+mfe_per_stop  = median favourable ÷ stop     (the ranking metric, C7)
+mfe_to_target = target ÷ median favourable   (>2.5 → target unreachable)
+```
+
+No flat constants, and **nothing is pre-computed or cached** — volatility moves, and a profile written last night is a different instrument by this morning. Recompute per candidate, per session.
+
+**Hard ceiling 7%.** A setup needing more room is not a setup. Where 1.5 × median adverse exceeds the cap, the stop is capped and flagged — a warning that noise is wider than the stop, not a disqualification.
+
+Fewer than ~15 sessions available → the sample is thin; treat the numbers as provisional and say so at entry.
 
 ## B2. Stops — UP ONLY, NEVER DOWN
 
@@ -213,7 +230,7 @@ A replacement, not a relaxation — every other rule still binds.
 
 ## C7. Ranking
 
-1. Rank the whole **profiled** universe by `mfe_per_stop`, ignoring price.
+1. Rank candidates by `mfe_per_stop` (B1, computed per candidate), ignoring price.
 2. **Then** mark what settled cash reaches as a whole share.
 3. **Then** apply the gates and pick from survivors.
 
@@ -277,9 +294,8 @@ Flat at 4:00 → delete 4:30–7:30 regardless.
 3. **Earnings reactions** from last night's after-close reporters.
 4. **Scan for individual movers clearing C3 first.** Rank sector leadership second, only where nothing cleared C3 but a group is moving.
 5. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
-6. **Write the watchlist — ≥5 names**, ranked by `mfe_per_stop` first and affordability marked second. Include unaffordable names; they measure what capital is costing. An unprofiled name cannot be traded — profile it here or drop it.
-7. **Refresh `data/vol_profile.csv`** — recent daily bars, recompute median adverse/favourable excursion. Every risk number in B1 derives from it. Commit and push.
-8. **Refresh the live-context block (E5).**
+6. **Write the watchlist — ≥5 names.** Profile each candidate just-in-time (B1) and rank by `mfe_per_stop`; mark affordability second, never first. Include unaffordable names — they measure what capital is costing.
+7. **Refresh the live-context block (E5).** Commit and push.
 
 ## D3. Reporting
 
@@ -291,7 +307,7 @@ Flat at 4:00 → delete 4:30–7:30 regardless.
 - **A no-trade day gets no evening message.**
 - **Friday 8:00pm always reports**, trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat.
 
-**At exit, append one row to `data/trades.csv`.** Compute `r_multiple = (exit% − entry%) ÷ initial_stop_pct` **now**, while the entry stop is known — it cannot be reconstructed later. Set `counts_toward_streak` and `counts_toward_expectancy` (`no` only for a mechanical abort or a funded execution test) and say why in `notes`. **Append-only — never edit a past row**; a mistake gets a correcting row.
+**At exit, append one row to `archive/trades.csv`** — the live append-only log. Compute `r_multiple = (exit% − entry%) ÷ initial_stop_pct` **now**, while the entry stop is known — it cannot be reconstructed later. Set `counts_toward_streak` and `counts_toward_expectancy` (`no` only for a mechanical abort or a funded execution test) and say why in `notes`. **Append-only — never edit a past row**; a mistake gets a correcting row.
 
 **Measurement:** expectancy per trade in R is primary. `Expectancy = (win rate × avg winner R) − (loss rate × avg loser R)`. Win rate and avg winner/loser are descriptive only, never pass/fail. Exclude `counts_toward_expectancy=no` rows and name them. **State the effective sample size, not the row count.**
 
@@ -382,6 +398,4 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Flat.** Loss streak **2 of 3**. Floor: 50% of deposited cash, recomputed each 9:00.
 
-**Open defects — the system cannot place a trade until these clear:**
-- `data/` does not exist. `vol_profile.csv` (every risk number in B1) and `trades.csv` (the circuit-breaker input) have no producer — the tooling that generated them was deleted.
-- Live trade history is in `archive/trades.csv`. Read the streak from there until a live log exists.
+**Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
