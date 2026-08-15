@@ -38,7 +38,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | An exit already happened today | Cash settlement: flat and **stays flat** all session (E2) |
 | Position already open | One position, one resting order (E2) |
 
-**⚠ CURRENT STATE — loss streak is 2 of 3.** One more losing closed trade halts entries until the governor clears it. The streak is computed from `archive/trades.csv`, which is the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
+**⚠ CURRENT STATE — streak 0 of 3.** Governor cleared the breaker **2026-08-15**; count only trades closed after that date. The streak is computed from `archive/trades.csv`, the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
 
 ## A2. Trigger hygiene
 
@@ -326,6 +326,8 @@ If a pattern suggests a rule is causing early exits or missed continuation, name
 **3 consecutive losing closed trades → stop entering until the governor clears it.**
 
 A loss is any negative realised P&L, however small. Consecutive **closed trades**, not days — a winner anywhere resets to zero. Rows marked `counts_toward_streak=no` are excluded (a mechanical abort is not a trade). **Compute from the trade log, never from memory.**
+
+**Counting starts after the most recent governor clearance** (dated in A1). Trades closed before it are history, not streak. The log stays append-only — a clearance is recorded as a date in A1, never by editing or deleting a past row.
 
 Pausing entries never means pausing the system — keep managing any open position, keep every checkpoint, keep reporting, **keep arming.**
 
