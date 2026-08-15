@@ -4,7 +4,7 @@
 
 **Account:** Robinhood `462514035` ("Agentic"), cash account, `agentic_allowed=true`.
 
-**Policy version: 1.5.** Bump on every rule/threshold/limit change; record it in the commit.
+**Policy version: 2.1.** Bump on every rule/threshold/limit change; record it in the commit.
 
 ---
 
@@ -50,7 +50,7 @@ Runs indefinitely until the user explicitly pauses or cancels it. Never stop on 
 1. Headlines, broad — macro, geopolitical, anything that moved overnight.
 2. Pre-market prices across the universe plus yesterday's watchlist.
 3. Earnings reactions of last night's after-close reporters.
-4. Rank sector leadership as indicated pre-market.
+4. Scan for individual stocks clearing the major-move gate (§4) first. Rank sector leadership from pre-market data second, for names where nothing clears that gate but a group is moving together.
 5. Confirm settled buying power and unsettled funds. Recompute deposited capital and the floor (§10) — report if either changed.
 6. Write a watchlist of at least 5 names: rank the full profiled universe by `mfe_per_stop` first, then mark affordability. Include unaffordable names. Only profiled instruments may be ranked or traded — profile a candidate before shortlisting it if it isn't yet covered.
 7. Refresh `data/vol_profile.csv`: pull recent daily bars for the watchlist, recompute median adverse/favourable excursion, rewrite the file. Every risk number derives from it (§6). Commit and push.
@@ -108,15 +108,17 @@ A −25% drawdown from peak is a flag, not a brake — report it, keep trading. 
 ### Signals
 
 - Sector leadership, ranked from data. Never default to one you have been watching.
-- Breadth: is the group moving together, or is one name dragging the ETF? Broad beats narrow.
-- A catalyst you can name. "It's going up" is not a catalyst (commodities/materials use the trend-structure gate instead, below).
+- Breadth matters for a sector- or index-leveraged trade — the vehicle should reflect a real group move, not one name dragging it. It does not disqualify a single-stock trade: a stock moving alone on its own catalyst is a valid trade in its own right, leveraged or not (see Instrument priority, below). If a single name is doing the moving, trade the name — directly, or through its leveraged wrapper if one exists.
+- A catalyst you can name. "It's going up" is not a catalyst — look for one first. Commodities/materials use the trend-structure gate instead (below). Technology and semiconductor names are volatile enough that a clean catalyst often doesn't exist for a real move — look for one, but its absence does not exclude a tech name. If it is the strongest, most stable mover available and nothing more clearly catalyst-backed exists, take it and say plainly that no catalyst was found.
 - Trend, not chop. Leveraged ETFs decay in chop.
 - Continuation, not prediction.
 - No read = no trade.
 
 ### Gate 1 — sector must hold a positive trend, 9:30 to 9:40
 
-Record the sector proxy's day change at 9:30 and again at 9:40. All three must hold: positive at 9:30, positive at 9:40, and the 9:40 reading not below the 9:30 reading. Any failure → no entry in that sector.
+Applies to a **sector- or index-leveraged trade**, where the thesis is that the sector itself is moving. Record the sector proxy's day change at 9:30 and again at 9:40. All three must hold: positive at 9:30, positive at 9:40, and the 9:40 reading not below the 9:30 reading. Any failure → no entry in that sector's leveraged vehicle.
+
+**Does not gate a single-stock trade.** A stock moving decisively on its own — SMCI ripping while SMH is flat, for example — does not need its sector proxy to pass this. It is evaluated on its own move, and if traded through a leveraged wrapper (SMCX in that example), on Gate 2 instead, which a genuine standalone mover clears easily.
 
 Two fixed observations decide it — no intermediate readings.
 
@@ -126,12 +128,40 @@ Never buy a single-stock leveraged ETF when its underlying is underperforming it
 
 ### Instrument priority — applies everywhere
 
-Priority order for what to trade:
+Four ranked slots — two of them share a rank, because which one is live depends on what's actually moving:
 
-1. Find the stock or instrument that is moving the most, with real breadth behind it.
-2. Identify its sector.
-3. If a leveraged vehicle exists for that stock or sector and is affordable as a whole share, prefer it — it clears Gate 2 first if it's a single-stock leveraged name.
-4. If no leveraged vehicle exists, or none is affordable, do not skip the trade. Take the underlying stock directly if it is moving majorly — missing a real move for lack of a leverage wrapper is the wrong trade-off.
+| Rank | Vehicle | Applies when |
+|---|---|---|
+| **1** | Individual leveraged stock | A single stock is the mover (major-move gate, below) and a leveraged wrapper for it is affordable |
+| **2** | Plain stock, unleveraged | A single stock is the mover, but no leveraged wrapper is available or affordable |
+| **2** | Leveraged sector/index ETF | No single name cleared the major-move gate, but a sector or group is genuinely moving together (Gate 1 applies), and the leveraged ETF is affordable |
+| **3** | Plain sector/index ETF, unleveraged | A sector is the mover, but the leveraged ETF is not available or affordable |
+
+The two rank-2 rows are parallel, never competing — they are not weighed against each other in the same decision. Which one is live depends entirely on whether the mover turns out to be one stock or a whole sector.
+
+1. **Identify the mover first: individual stock, or sector.** Look for an individual stock making a major, decisive move on its own (major-move gate, below) — that's the first pass, not a fallback for when a sector move can't be found. Only if none clears that gate but a sector or group is genuinely moving together, treat it as a sector move instead.
+2. **Within whichever track applies, prefer the leveraged vehicle** if one exists and is affordable as a whole share — it clears Gate 2 first if it's a single-stock leveraged name.
+3. **If no leveraged vehicle exists, or none is affordable, do not skip the trade.** Take it unleveraged instead — missing a real move for lack of a leverage wrapper is the wrong trade-off.
+
+### Major-move gate — what qualifies an individual stock as "moving majorly"
+
+Applies to an individual-stock candidate. **Long-only, end to end.** There is no single-stock inverse ETF anywhere in the Universe (§4) — every single-stock name listed is a leveraged-*long* wrapper — so this gate has no mechanism to produce a short or inverse trade, and does not attempt to. An inverse view is expressed through the sector-wide path (Instrument priority step 2, Gate 1, and an inverse sector ETF), never through an individual name.
+
+1. **Magnitude.** Day change ≥ +0.75% from the prior close (up only), measured pre-market at the 9:00 check and re-confirmed live at 9:40. Measure the underlying stock itself, never a leveraged wrapper's move — the wrapper is just the multiple.
+2. **Volume confirmation.** Relative volume ≥ 1.75× the recent baseline (10- to 30-session average). A move on light volume is not confirmed.
+
+**Legs 1 and 2 together are sufficient to qualify a candidate on their own.**
+
+3. **Moving-average check — optional, adds weight only, never a trigger by itself.** Once a candidate clears legs 1–2, pull the 50-day and 200-day SMA and check each one's slope over the last 5–10 sessions, only when price is actually testing one of them:
+   - MA rising, price bouncing up off it → extra confirmation for the long. Note it as added weight, not a separate entry trigger.
+   - MA falling, price rejected downward at it → **not counted at all.** It is not a reason to decline the long, and never a trigger for an inverse or short trade — the check can only ever add confirmation or do nothing, never subtract.
+   - Skip if price isn't near either average.
+
+Screen legs 1–2 at 9:00am using the scanner (`% Change` and `Relative volume` filters, or the gainers/losers presets ranked by relative volume). **Re-confirm both fresh at 9:40 before entering** — a 9:00 read goes stale by the open. Check leg 3 against whatever cleared legs 1–2, for extra conviction only.
+
+Fails legs 1–2 → not a major-move candidate. Fall back to a sector-wide read (step 2, above) if one exists, or no trade.
+
+**0.75% and 1.75× are starting defaults, not fixed constants** — not backtested against this account or universe, adjust once there's evidence either way. This bar is intentionally low: it is built to catch momentum early, not to wait until a move is already obvious. It will surface far more candidates than a stricter bar would — the catalyst check, Gate 2 where applicable, and the ranking step downstream carry more of the filtering load as a result.
 
 ### Ranking
 
