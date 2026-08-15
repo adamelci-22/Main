@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.3.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.4.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -81,14 +81,14 @@ It returns every number below. **Never compute these by hand** — a transposed 
 median adverse    = median of (open − low)  / open      across the window
 median favourable = median of (high − open) / open
 
-stop        = clamp(1.5 × median adverse,    2.5%, 7.0%)
-target      = clamp(2.0 × median favourable, 1.5 × stop, 12.0%)
-breakeven   = max(median favourable, 0.5 × stop)
-trail       = 1.0 × median adverse, below the running high
-stall thr   = clamp(0.15 × median favourable, 0.10%, 1.00%)
-min stop mv = clamp(0.25 × median adverse,    0.20%, 1.00%)
-mfe_per_stop  = median favourable ÷ stop     (the ranking metric, C7)
-mfe_to_target = target ÷ median favourable   (>2.5 → target unreachable)
+stop_pct           = clamp(1.5 × median adverse,    2.5%, 7.0%)
+target_pct         = clamp(2.0 × median favourable, 1.5 × stop_pct, 12.0%)
+breakeven_trigger  = max(median favourable, 0.5 × stop_pct)
+trail_pct          = 1.0 × median adverse, below the running high
+stall_threshold_pct = clamp(0.15 × median favourable, 0.10%, 1.00%)
+min_stop_move_pct   = clamp(0.25 × median adverse,    0.20%, 1.00%)
+mfe_per_stop  = median favourable ÷ stop_pct     (the ranking metric, C7)
+mfe_to_target = target_pct ÷ median favourable   (>2.5 → target unreachable)
 ```
 
 No flat constants, and **nothing is pre-computed or cached** — volatility moves, and a profile written last night is a different instrument by this morning. Recompute per candidate, per session.
@@ -113,18 +113,37 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 
 | Stage | Trigger (on `run_high`) | Stop goes to |
 |---|---|---|
-| 1 — entry | — | `−stop_pct` |
-| 2 — half-risk | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger ÷ 2` | `−stop_pct ÷ 2` |
-| 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger` | breakeven (the fill price) |
+| 1 — entry | — | `fill × (1 − stop_pct)` |
+| 2 — half-risk | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger ÷ 2` | `fill × (1 − stop_pct ÷ 2)` |
+| 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger` | `fill` (breakeven) |
 | 4 — trail | past stage 3 | `run_high × (1 − trail_pct)` — **the only continuous stage**, recomputed every checkpoint as `run_high` climbs |
+
+**Worked example — AGQ's actual profiled numbers, fill at $100.00:**
+
+```
+median adverse = 1.45%   median favourable = 1.65%
+
+stop_pct          = clamp(1.5 × 1.45, 2.5, 7.0)        = 2.50%
+target_pct        = clamp(2.0 × 1.65, 1.5 × 2.50, 12.0) = 3.75%
+breakeven_trigger = max(1.65, 0.5 × 2.50)               = 1.65%
+trail_pct         = 1.0 × 1.45                          = 1.45%
+```
+
+| Stage | `run_high` reaches | Stop becomes |
+|---|---|---|
+| 1 — entry | $100.00 (fill) | $100.00 × (1 − 0.0250) = **$97.50** |
+| 2 — half-risk | $100.00 × (1 + 0.0165÷2) = **$100.83** | $100.00 × (1 − 0.0125) = **$98.75** |
+| 3 — breakeven | $100.00 × (1 + 0.0165) = **$101.65** | **$100.00** (fill) |
+| 4 — trail, e.g. `run_high` runs to $103.00 | — | $103.00 × (1 − 0.0145) = **$101.51** |
+| target | live price reaches $100.00 × (1 + 0.0375) = **$103.75** | **SELL ALL** — B4, overrides every stage |
 
 **The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp:
 
 | Stall count | Live price vs. fill | Action |
 |---|---|---|
-| 1 | at or above fill | force stop to `max(current stop, breakeven)`, even if stage 3 hasn't triggered yet |
-| 1 | below fill | **no change** — a stop above the live price is rejected |
-| 2 | either | **SELL ALL** — overrides every stage above |
+| 1 | at or above fill | Stop moves to `max(current stop, breakeven)` — safe, the live price is still above it. |
+| 1 | below fill | **No move.** Moving the stop to breakeven would place it above the live price, forcing an immediate sell — that is rejected, not executed early. Re-check next checkpoint. |
+| 2 | either | **SELL ALL — complete.** Overrides every stage above, no exceptions. |
 
 **Any checkpoint where the live price ≥ `target_pct` → SELL ALL**, overriding everything above (B4).
 
@@ -167,7 +186,7 @@ Name the **specific, falsifiable** condition that would exit at the next checkpo
 
 At any checkpoint showing a live-price gain ≥ `target_pct` → **sell the entire position.** No scaling out, no runner, at any share count. Target is a ceiling; most trades exit on the stall ladder first.
 
-**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1: `clamp(2.0 × median favourable, 1.5 × stop, 12.0%)`), and it does not change for the life of that trade.** A different candidate gets a different target; a fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number too, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
+**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1: `clamp(2.0 × median favourable, 1.5 × stop_pct, 12.0%)`), and it does not change for the life of that trade.** A different candidate gets a different target; a fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number too, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** State the intended exit at entry.
 
