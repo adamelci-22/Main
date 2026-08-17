@@ -46,7 +46,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | An exit already happened today | Cash settlement: flat and **stays flat** all session (E2) |
 | Position already open | One position, one resting order (E2) |
 
-**⚠ CURRENT STATE — streak 0 of 3.** Governor cleared the breaker **2026-08-15**; count only trades closed after that date. The streak is computed from `archive/trades.csv`, the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
+**⚠ CURRENT STATE — streak 1 of 3.** Governor cleared the breaker **2026-08-15**; count only trades closed after that date. One loss since: GUSH, closed 2026-08-17 (-$0.0199). The streak is computed from `archive/trades.csv`, the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
 
 ## A2. Trigger hygiene
 
@@ -493,19 +493,12 @@ TSMX (the pricier TSM wrapper, $82.07) excluded in favor of TSMU — both unaffo
 
 ## Current state
 
-**Holding 1 share GUSH.** Entered 2026-08-17T13:47:08Z (~9:47am ET) at **$41.7699** (marketable limit $41.85, filled inside the ask — favorable slippage, $0.0301 better than the $41.80 ask at review). Rank-2 sector-leveraged: no individual stock cleared C3 (MU's leg 1 held but leg 2 relative volume estimated ~1.4× at read time, short of the 1.75× bar), so this is XLE/energy via C1 (positive at 9:30 +0.38% and 9:40 +0.40%, held) plus C6 in place of a named catalyst (higher highs clean across 5 sessions, one shallow higher-low dip 8/13 that fully resolved by 8/14; USO +0.58% confirms the crude complex same-direction; today's low $41.055 stayed inside 8/14's $40.70–$42.155 range and above its low). Ranked #1 of 21 profiled names by `mfe_per_stop` and the only C1-and-catalyst-gate-complete candidate that was also affordable — SOXL (semis, same MU-driven move, C1+C5 both clear) ranked behind it on `mfe_per_stop` and was the next real survivor, but unaffordable at $152.34 (**$90.33 short** of $62.01 settled).
+**Flat. Round trip spent for today (E2) — no further entries until tomorrow's 9:00.** Bought 1 GUSH at $41.7699 (09:47:08 ET); the breakeven stop set at the 10:00 checkpoint ($41.77) triggered on its own at **10:08:10 ET**, before the 10:30 slot ran — filled $41.7500, a $0.02 stop-market slip below the trigger. Net: **-$0.0199 (-0.048% position, -0.032% account, r = -0.019)**. Full detail, gate reasoning, and the appended trade row are in `archive/trades.csv` (2026-08-17 GUSH) — this footer no longer carries the open-position tracking fields since there is nothing open.
 
-**Risk numbers (B1, profiled pre-entry on 32 daily sessions):**
-`stop_pct` 2.50% (entry stop, superseded — see below) · `target_pct` 4.89% → sell-all at live price ≥ **$43.81** · `breakeven_trigger` 2.45%: half-risk stage fires at `run_high` ≥ **$42.28**, full breakeven stage fires at `run_high` ≥ **$42.79** · `trail_pct` 1.44%, applies past breakeven as `run_high` × (1 − 0.0144) · `stall_threshold_pct` 0.37% (progress needs `run_high` > $41.9244) · `min_stop_move_pct` 0.36% · `mfe_per_stop` 0.979 · `mfe_to_target` 2.00 (reachable).
+**D4 post-exit review (10:30, ~22 min post-exit):** GUSH ran to $42.01 (MFE +0.57%, never reaching the $42.28 half-risk trigger) before reversing hard over 3 minutes and tagging the stop. Exit reads as early in hindsight — the move had more room — but the breakeven-lock is designed to trade some upside for guaranteed protection on a single check; that's what it did. One trade is not a pattern; no rule change proposed.
 
-**`run_high` = $41.7699** (seeded at fill — unchanged, no check has progressed it yet). **Stall count = 1** (as of 10:00 check).
+**D1 early shutdown executed:** exit already happened today, so no further entry is possible regardless of what the tape does (E2 cash-settlement, stays flat all session). Deleted the 10 remaining half-hour intraday triggers (11:00 through 3:30). **Kept exactly three: 4:00 report, 8:00 arming, 8:20 backup**, per D1.
 
-**10:00 checkpoint log:** one check since entry. Price read $41.85 (14:01:53Z) — did not exceed `run_high` × 1.0037 = $41.9244 → **stalled**, count 1. Live price ($41.85) was at/above fill ($41.7699) → B2 stall row 1 applies: stop forced to `max(current stop, breakeven)` = **breakeven, $41.77**. Cancel-then-replace: cancelled the $40.73 stop (confirmed), first replacement attempt at $41.77 was **rejected** — the live price had ticked down to/through $41.77 in the ~30 seconds between quote and placement, an invalid trigger. Re-quoted (bid back to $41.84), retried, **confirmed resting at $41.77**. Position was unprotected for under a minute during the retry — logged per B2's "briefly unprotected," not treated as an error.
-
-**Headlines (B5):** real catalyst behind the energy move, not just C6's technical read — Strait of Hormuz tanker traffic slowing further, a new blockade threat on Saudi exports through Bab el-Mandeb; Brent ~$88.62. Oil & Gas E&P +1.07%, Integrated +1.60% sector-wide. XLE holding +0.55% at this checkpoint.
-
-**Pre-commit for 10:30:** progress requires the 10:30 checkpoint price to exceed $41.9244 (`run_high` unchanged) — if so, `run_high` advances, stall count resets to 0, ratchet re-evaluated fresh. **At or below $41.9244 → stall 2 → SELL ALL**, overriding everything else, whatever the P&L. Reversal override still stands: XLE negative on the day at 10:30 exits regardless of stall count.
-
-Loss streak **0 of 3** (cleared 2026-08-15, per A1). Floor: **$30.42** (50% of $60.84 deposited, computed 9:00 8/17 — deposited = $62.01 total value − $1.17 all-time realized P&L).
+**Loss streak 1 of 3** (governor cleared the breaker 2026-08-15; this GUSH trade is the first loss counted since — 2 more consecutive losses would trip the breaker). Floor: **$30.42** (50% of $60.84 deposited, computed 9:00 8/17 — deposited = $62.01 total value − $1.17 all-time realized P&L, pre-dates today's trade).
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
