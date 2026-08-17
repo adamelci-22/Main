@@ -493,6 +493,15 @@ TSMX (the pricier TSM wrapper, $82.07) excluded in favor of TSMU — both unaffo
 
 ## Current state
 
-**Flat.** Loss streak **0 of 3** (cleared 2026-08-15, per A1). Floor: 50% of deposited cash, recomputed each 9:00.
+**Holding 1 share GUSH.** Entered 2026-08-17T13:47:08Z (~9:47am ET) at **$41.7699** (marketable limit $41.85, filled inside the ask — favorable slippage, $0.0301 better than the $41.80 ask at review). Rank-2 sector-leveraged: no individual stock cleared C3 (MU's leg 1 held but leg 2 relative volume estimated ~1.4× at read time, short of the 1.75× bar), so this is XLE/energy via C1 (positive at 9:30 +0.38% and 9:40 +0.40%, held) plus C6 in place of a named catalyst (higher highs clean across 5 sessions, one shallow higher-low dip 8/13 that fully resolved by 8/14; USO +0.58% confirms the crude complex same-direction; today's low $41.055 stayed inside 8/14's $40.70–$42.155 range and above its low). Ranked #1 of 21 profiled names by `mfe_per_stop` and the only C1-and-catalyst-gate-complete candidate that was also affordable — SOXL (semis, same MU-driven move, C1+C5 both clear) ranked behind it on `mfe_per_stop` and was the next real survivor, but unaffordable at $152.34 (**$90.33 short** of $62.01 settled).
 
-**Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
+**Risk numbers (B1, profiled pre-entry on 32 daily sessions):**
+`stop_pct` 2.50% → stop **$40.73** (resting stop_market, confirmed) · `target_pct` 4.89% → sell-all at live price ≥ **$43.81** · `breakeven_trigger` 2.45%: half-risk stage fires at `run_high` ≥ **$42.28** (stop → $41.25), full breakeven stage fires at `run_high` ≥ **$42.79** (stop → $41.77, the fill) · `trail_pct` 1.44%, applies past breakeven as `run_high` × (1 − 0.0144) · `stall_threshold_pct` 0.37% (progress needs `run_high` > $41.9244) · `min_stop_move_pct` 0.36% · `mfe_per_stop` 0.979 · `mfe_to_target` 2.00 (reachable).
+
+**`run_high` = $41.7699** (seeded at fill, per B2/B3). **Stall count = 0.**
+
+**Pre-commit for 10:00:** progressed if the 10:00 checkpoint price on GUSH exceeds $41.9243 (`run_high` × 1.0037); anything at or below that is stall 1 → ratchet per B2 (stop unchanged, still below fill, so no forced move). Reversal override: if XLE turns negative on the day by 10:00, the C1 thesis broke — exit regardless of stall count.
+
+Loss streak **0 of 3** (cleared 2026-08-15, per A1). Floor: **$30.42** (50% of $60.84 deposited, computed 9:00 8/17 — deposited = $62.01 total value − $1.17 all-time realized P&L).
+
+**Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
