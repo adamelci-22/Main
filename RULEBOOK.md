@@ -435,7 +435,23 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 *As of Aug 17 2026, ~9:31am ET:* **Semis leading a broadly green morning.** MU +4.29% on named catalyst (AI-infrastructure memory demand, institutional buying — Reuters/Bloomberg premarket coverage), dragging the complex: AVGO +1.00%, TSM +1.03%, NVDA +0.79% all clearing C3 leg 1 (≥0.75%). Asian semis (CSI Semiconductor Index +4%, CXMT +9%) confirm sympathy overseas. **C3 leg 2 (relative volume ≥1.75×) not yet assessable** — only ~2 minutes of regular-hours volume exists at read time; re-confirm live at 9:40 per C3, do not carry this morning's extrapolation into a gate decision.
 
-**Gate 1 baseline (9:30 observation), all 5 sector proxies positive:** SMH +1.29% · GDX +0.82% · XLE +0.52% · QQQ +0.39% · SPY +0.04%.
+**Opening snapshot (~9:31am ET, informational only — not the C1 baseline):** SMH +1.29% · GDX +0.82% · XLE +0.52% · QQQ +0.39% · SPY +0.04%.
+
+### C1 Gate-1 baseline — formal 9:30 reading
+
+**Recorded 9:30 checkpoint, actual read time 2026-08-17T13:41:00Z (~9:41am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
+
+| Proxy | 9:30 day change |
+|---|---|
+| SMH | +0.99% |
+| GDX | +0.93% |
+| XLE | +0.38% |
+| QQQ | +0.16% |
+| SPY | −0.10% |
+
+**Verdict at this reading: not yet a pass for any sector.** All 5 were positive at the open; SPY has now flipped negative and QQQ/XLE are fading toward flat. C1 requires positive at 9:30 **and** positive at 9:40 **and** the 9:40 reading not below this one — SPY already fails leg 1 outright (negative now), QQQ/XLE/SMH/GDX remain alive but need to hold or improve by 9:40, not just stay positive.
+
+**Breadth check — not real, one name carrying:** of the four individual movers that cleared C3 leg 1 at the open, only **MU still clears it** (+4.33%, strengthening). TSM has faded to +0.54% (below the +0.75% bar), AVGO to +0.20% (below the bar), NVDA to +0.20% (round-tripped nearly to flat). Premarket strength did **not** hold into real volume for three of the four names — this was never a semis-complex move, it is a single-name MU move that briefly dragged sympathy with it at the open. Re-run C3 legs 1–2 live at 9:40 rather than assuming yesterday's — this morning's — complex-wide read still holds.
 
 **20-name watchlist**, profiled just-in-time (B1), ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $62.01 settled:
 
