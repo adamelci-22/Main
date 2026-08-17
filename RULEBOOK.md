@@ -433,7 +433,45 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*As of Aug 13 2026:* No driver — every proxy inside ±0.5%, prior-session semis leadership fully dissipated overnight. **Stale for any later session; refresh before trusting.**
+*As of Aug 17 2026, ~9:31am ET:* **Semis leading a broadly green morning.** MU +4.29% on named catalyst (AI-infrastructure memory demand, institutional buying — Reuters/Bloomberg premarket coverage), dragging the complex: AVGO +1.00%, TSM +1.03%, NVDA +0.79% all clearing C3 leg 1 (≥0.75%). Asian semis (CSI Semiconductor Index +4%, CXMT +9%) confirm sympathy overseas. **C3 leg 2 (relative volume ≥1.75×) not yet assessable** — only ~2 minutes of regular-hours volume exists at read time; re-confirm live at 9:40 per C3, do not carry this morning's extrapolation into a gate decision.
+
+**Gate 1 baseline (9:30 observation), all 5 sector proxies positive:** SMH +1.29% · GDX +0.82% · XLE +0.52% · QQQ +0.39% · SPY +0.04%.
+
+**20-name watchlist**, profiled just-in-time (B1), ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $62.01 settled:
+
+*15 individuals:*
+| Rank | Symbol | Underlying | mfe_per_stop | Price | Afford |
+|---|---|---|---|---|---|
+| 1 | MSTX | MSTR | 0.961 | $8.14 | ✓ |
+| 2 | PLTR | — | 0.824 | $175.44 | ✗ |
+| 3 | SMCX | SMCI | 0.750 | $13.63 | ✓ |
+| 4 | CONL | COIN | 0.730 | $4.10 | ✓ |
+| 5 | MUU | MU | 0.649 | $34.90 | ✓ |
+| 6 | NVDL | NVDA | 0.626 | $37.20 | ✓ |
+| 7 | MSFT | — | 0.585 | $491.63 | ✗ |
+| 8 | META | — | 0.579 | $584.54 | ✗ |
+| 9 | AMDL | AMD | 0.546 | $58.04 | ✓ |
+| 10 | TSMU | TSM | 0.528 | $71.58 | ✗ ($9.57 short) |
+| 11 | TSLL | TSLA | 0.496 | $8.56 | ✓ |
+| 12 | AMZN | — | 0.431 | $265.46 | ✗ |
+| 13 | GOOGL | — | 0.420 | $346.78 | ✗ |
+| 14 | AVGX | AVGO | 0.417 | $49.71 | ✓ |
+| 15 | AAPL | — | 0.350 | $306.76 | ✗ |
+
+TSMX (the pricier TSM wrapper, $82.07) excluded in favor of TSMU — both unaffordable regardless.
+
+*5 sector/index vehicles* (feed C1; leveraged form noted for C4 rank-2/3):
+| Symbol | Proxy | Day chg | Leveraged form | mfe_per_stop | Price | Afford |
+|---|---|---|---|---|---|---|
+| SMH | Semis | +1.29% | SOXL | 0.521 | — | — |
+| GDX | Gold miners | +0.82% | NUGT | 0.832 | — | — |
+| XLE | Energy | +0.52% | GUSH | 0.979 | — | — |
+| QQQ | Tech/index | +0.39% | TQQQ | 0.451 | — | — |
+| SPY | Broad market | +0.04% | SPXL | 0.469 | — | — |
+
+**Top-ranked affordable individual: MSTX (0.961)** — also the #1 candidate overall; no unaffordable name is ranked ahead of it. Second: SMCX (0.750), since #2 PLTR is unaffordable. **Re-rank live at 9:40 per C7** — this is the 9:00 shortlist, void if capital or thesis moves.
+
+**Stale for any later session; refresh before trusting.**
 
 ---
 
