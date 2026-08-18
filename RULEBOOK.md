@@ -449,7 +449,23 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Premarket individual moves** (vs. adjusted previous close): MU -4.65%, AMD -3.36%, SMCI -3.34%, TSM -2.55%, NVDA -2.05%, AVGO -1.96%, MSTR -1.66%, COIN -1.56%, TSLA -1.51%, META -1.22%, GOOGL -0.51%, PLTR -0.16% — **all red, none clear C3's up-only magnitude leg.** MSFT +0.63% and AAPL +0.56% show relative strength inside the selloff but neither clears +0.75%. **HD +2.39%** on Q2 earnings (reported 6am ET) is the one real individual mover with a named catalyst — unaffordable regardless (**$345.95**, no leveraged wrapper exists for it, plain-stock price alone is 5.6x the account).
 
-**Sector proxies:** SMH -3.21% · QQQ -1.22% · SPY -0.40% · XLE **+1.09%** · GDX -1.03%. Energy is the only sector green; GUSH itself **+1.93%** premarket, continuing to extend yesterday's move.
+**Sector proxies (premarket, informational only — not the C1 baseline):** SMH -3.21% · QQQ -1.22% · SPY -0.40% · XLE **+1.09%** · GDX -1.03%. Energy is the only sector green; GUSH itself **+1.93%** premarket, continuing to extend yesterday's move.
+
+### C1 Gate-1 baseline — formal 9:30 reading
+
+**Recorded 9:30 checkpoint, read time 2026-08-18T13:31:04Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
+
+| Proxy | 9:30 day change | vs. premarket |
+|---|---|---|
+| XLE | **+1.49%** | strengthened (+1.09%→+1.49%) |
+| SPY | −0.50% | weakened slightly |
+| QQQ | −1.24% | ~flat |
+| GDX | −1.54% | weakened |
+| SMH | −2.99% | modest recovery, still deeply red |
+
+**Verdict at this reading: only XLE is alive for C1.** SPY, QQQ, GDX, SMH are all negative at 9:30 — leg 1 ("positive at 9:30") already fails for all four; nothing left to track there. XLE is positive and has strengthened since the open — needs to hold positive and not fade below +1.49% at 9:40 to complete the pass.
+
+**Breadth and premarket-to-real-volume check: this is genuine, broad risk-off, not one name.** Every individual mover checked (NVDA, AMD, MU, TSM, SMCI, AVGO, TSLA, COIN, MSTR) is still solidly red at the open — MU worst at -4.37%, AMD -2.97%, TSM -2.96%. Premarket weakness **held into real volume**, it did not fade — the opposite pattern from yesterday's single-name MU dislocation. No individual stock is a candidate today; this is entirely a sector-level (energy) story if it's tradeable at all.
 
 **⚠ Rule gap surfaced today, not resolved — flagging rather than guessing:** C1's literal text ("positive at 9:30 and positive at 9:40") is written for a bullish sector-leveraged trade only. It never defines the entry gate for an inverse sector ETF (e.g. SOXS, SQQQ), which today's broad semis/tech weakness could otherwise make relevant. **Declining any inverse-sector trade today on this gap rather than inventing an interpretation for real money** — C3 already declines to touch inverses for individual stocks and points to "C1 + an inverse sector ETF" as the outlet, but C1 itself was never actually written to cover that case. Worth a rule clarification when there's time to discuss it, not something to resolve unilaterally mid-session.
 
