@@ -489,6 +489,16 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **No trade at 10:00.** Pre-commit for 10:30: enter GUSH (rank-2, C4) only if XLE's next reading clears **+1.486%** (back above the 9:30 baseline, satisfying leg 3) while still positive — no other condition substitutes. No individual stock is watched further; the gap to +0.75% is now 1.2–4.6pp across all nine, not closing on a single intraday check.
 
+### 10:30 management checkpoint — pre-commit checked, condition not met
+
+**A1 confirmed fresh: no positions, no resting orders.**
+
+**Pre-commit test: XLE at $63.425, +1.350%.** Required **+1.486%** to clear leg 3 — still short by 0.14pp, though it's the closest read yet (up from +1.206% at 9:40, +1.214% at 10:00). Condition not met; honoring the pre-commit means declining, not re-deciding on a softer read. GUSH itself +1.126% ($43.09), still gated.
+
+**Individual stocks, all still red:** NVDA -2.062%, AMD -4.647%, MU -5.391%, TSM -3.578%, SMCI -2.927%, AVGO -3.326%, TSLA -0.401%, COIN -0.326%, MSTR -0.891%. TSLA/COIN/MSTR narrowed their losses but none is within reach of +0.75%; no candidate.
+
+**No trade at 10:30.** This is the second-to-last slot of the preferred window — D1's early-shutdown clause doesn't apply (buying power is intact and the day's round trip is unspent; entry is still structurally possible, the gate just hasn't cleared), so the day continues on schedule rather than shutting down early. Pre-commit for 11:00, the window's last slot: same XLE trigger, **+1.486% while positive**. If still short at 11:00, drop to hourly per D1's cadence-reduction rule and stop watching the half-hour slots — the bar for a late entry rises from there.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
