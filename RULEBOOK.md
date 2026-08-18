@@ -445,59 +445,47 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*As of Aug 17 2026, ~9:31am ET:* **Semis leading a broadly green morning.** MU +4.29% on named catalyst (AI-infrastructure memory demand, institutional buying — Reuters/Bloomberg premarket coverage), dragging the complex: AVGO +1.00%, TSM +1.03%, NVDA +0.79% all clearing C3 leg 1 (≥0.75%). Asian semis (CSI Semiconductor Index +4%, CXMT +9%) confirm sympathy overseas. **C3 leg 2 (relative volume ≥1.75×) not yet assessable** — only ~2 minutes of regular-hours volume exists at read time; re-confirm live at 9:40 per C3, do not carry this morning's extrapolation into a gate decision.
+*As of Aug 18 2026, ~9:03am ET (premarket):* **Broad risk-off — semis/tech hit hard, energy the lone bright spot, continuing yesterday's driver.** Overnight escalation: Trump threatened further economic pressure on Iran and to "bomb" Oman if it interferes with Strait of Hormuz plans. Nasdaq-100 futures -1.1%, S&P futures -0.4%. Oil at a 2+ week high; gold +0.36%. This is the same geopolitical driver as yesterday's GUSH trade, now amplified.
 
-**Opening snapshot (~9:31am ET, informational only — not the C1 baseline):** SMH +1.29% · GDX +0.82% · XLE +0.52% · QQQ +0.39% · SPY +0.04%.
+**Premarket individual moves** (vs. adjusted previous close): MU -4.65%, AMD -3.36%, SMCI -3.34%, TSM -2.55%, NVDA -2.05%, AVGO -1.96%, MSTR -1.66%, COIN -1.56%, TSLA -1.51%, META -1.22%, GOOGL -0.51%, PLTR -0.16% — **all red, none clear C3's up-only magnitude leg.** MSFT +0.63% and AAPL +0.56% show relative strength inside the selloff but neither clears +0.75%. **HD +2.39%** on Q2 earnings (reported 6am ET) is the one real individual mover with a named catalyst — unaffordable regardless (**$345.95**, no leveraged wrapper exists for it, plain-stock price alone is 5.6x the account).
 
-### C1 Gate-1 baseline — formal 9:30 reading
+**Sector proxies:** SMH -3.21% · QQQ -1.22% · SPY -0.40% · XLE **+1.09%** · GDX -1.03%. Energy is the only sector green; GUSH itself **+1.93%** premarket, continuing to extend yesterday's move.
 
-**Recorded 9:30 checkpoint, actual read time 2026-08-17T13:41:00Z (~9:41am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
+**⚠ Rule gap surfaced today, not resolved — flagging rather than guessing:** C1's literal text ("positive at 9:30 and positive at 9:40") is written for a bullish sector-leveraged trade only. It never defines the entry gate for an inverse sector ETF (e.g. SOXS, SQQQ), which today's broad semis/tech weakness could otherwise make relevant. **Declining any inverse-sector trade today on this gap rather than inventing an interpretation for real money** — C3 already declines to touch inverses for individual stocks and points to "C1 + an inverse sector ETF" as the outlet, but C1 itself was never actually written to cover that case. Worth a rule clarification when there's time to discuss it, not something to resolve unilaterally mid-session.
 
-| Proxy | 9:30 day change |
-|---|---|
-| SMH | +0.99% |
-| GDX | +0.93% |
-| XLE | +0.38% |
-| QQQ | +0.16% |
-| SPY | −0.10% |
-
-**Verdict at this reading: not yet a pass for any sector.** All 5 were positive at the open; SPY has now flipped negative and QQQ/XLE are fading toward flat. C1 requires positive at 9:30 **and** positive at 9:40 **and** the 9:40 reading not below this one — SPY already fails leg 1 outright (negative now), QQQ/XLE/SMH/GDX remain alive but need to hold or improve by 9:40, not just stay positive.
-
-**Breadth check — not real, one name carrying:** of the four individual movers that cleared C3 leg 1 at the open, only **MU still clears it** (+4.33%, strengthening). TSM has faded to +0.54% (below the +0.75% bar), AVGO to +0.20% (below the bar), NVDA to +0.20% (round-tripped nearly to flat). Premarket strength did **not** hold into real volume for three of the four names — this was never a semis-complex move, it is a single-name MU move that briefly dragged sympathy with it at the open. Re-run C3 legs 1–2 live at 9:40 rather than assuming yesterday's — this morning's — complex-wide read still holds.
-
-**20-name watchlist**, profiled just-in-time (B1), ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $62.01 settled:
+**20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
-| Rank | Symbol | Underlying | mfe_per_stop | Price | Afford |
-|---|---|---|---|---|---|
-| 1 | MSTX | MSTR | 0.961 | $8.14 | ✓ |
-| 2 | PLTR | — | 0.824 | $175.44 | ✗ |
-| 3 | SMCX | SMCI | 0.750 | $13.63 | ✓ |
-| 4 | CONL | COIN | 0.730 | $4.10 | ✓ |
-| 5 | MUU | MU | 0.649 | $34.90 | ✓ |
-| 6 | NVDL | NVDA | 0.626 | $37.20 | ✓ |
-| 7 | MSFT | — | 0.585 | $491.63 | ✗ |
-| 8 | META | — | 0.579 | $584.54 | ✗ |
-| 9 | AMDL | AMD | 0.546 | $58.04 | ✓ |
-| 10 | TSMU | TSM | 0.528 | $71.58 | ✗ ($9.57 short) |
-| 11 | TSLL | TSLA | 0.496 | $8.56 | ✓ |
-| 12 | AMZN | — | 0.431 | $265.46 | ✗ |
-| 13 | GOOGL | — | 0.420 | $346.78 | ✗ |
-| 14 | AVGX | AVGO | 0.417 | $49.71 | ✓ |
-| 15 | AAPL | — | 0.350 | $306.76 | ✗ |
+| Rank | Symbol | Underlying | Day chg | mfe_per_stop | Price | Afford |
+|---|---|---|---|---|---|---|
+| 1 | MSTX | MSTR | -1.66% | 0.903 | $8.32 | ✓ |
+| 2 | SMCX | SMCI | -3.34% | 0.770 | $12.01 | ✓ |
+| 3 | PLTR | — | -0.16% | 0.739 | $172.28 | ✗ |
+| 4 | MUU | MU | -4.65% | 0.688 | $31.54 | ✓ |
+| 5 | CONL | COIN | -1.56% | 0.685 | $4.03 | ✓ |
+| 6 | AMDL | AMD | -3.36% | 0.669 | $52.73 | ✓ |
+| 7 | TSMU | TSM | -2.55% | 0.580 | $68.24 | ✗ ($6.25 short) |
+| 8 | META | — | -1.22% | 0.570 | $562.05 | ✗ |
+| 9 | TSLL | TSLA | -1.51% | 0.503 | $8.33 | ✓ |
+| 10 | NVDL | NVDA | -2.05% | 0.493 | $35.06 | ✓ |
+| 11 | MSFT | — | +0.63% | 0.478 | $483.37 | ✗ |
+| 12 | AVGX | AVGO | -1.96% | 0.420 | $46.37 | ✓ |
+| 13 | GOOGL | — | -0.51% | 0.372 | $342.26 | ✗ |
+| 14 | HD | — | +2.39% | 0.352 | $345.95 | ✗ |
+| 15 | AAPL | — | +0.56% | 0.310 | $307.30 | ✗ |
 
-TSMX (the pricier TSM wrapper, $82.07) excluded in favor of TSMU — both unaffordable regardless.
+TSMX (pricier TSM wrapper, $77.79) excluded in favor of TSMU — both unaffordable regardless.
 
 *5 sector/index vehicles* (feed C1; leveraged form noted for C4 rank-2/3):
 | Symbol | Proxy | Day chg | Leveraged form | mfe_per_stop | Price | Afford |
 |---|---|---|---|---|---|---|
-| SMH | Semis | +1.29% | SOXL | 0.521 | — | — |
-| GDX | Gold miners | +0.82% | NUGT | 0.832 | — | — |
-| XLE | Energy | +0.52% | GUSH | 0.979 | — | — |
-| QQQ | Tech/index | +0.39% | TQQQ | 0.451 | — | — |
-| SPY | Broad market | +0.04% | SPXL | 0.469 | — | — |
+| XLE | Energy | +1.09% | GUSH | 1.025 | $43.43 | ✓ |
+| SPY | Broad market | -0.40% | SPXL | 0.449 | $291.13 | ✗ |
+| QQQ | Tech/index | -1.22% | TQQQ | 0.454 | $73.45 | ✗ |
+| GDX | Gold miners | -1.03% | NUGT | 0.875 | $164.11 | ✗ |
+| SMH | Semis | -3.21% | SOXL | 0.574 | $134.22 | ✗ |
 
-**Top-ranked affordable individual: MSTX (0.961)** — also the #1 candidate overall; no unaffordable name is ranked ahead of it. Second: SMCX (0.750), since #2 PLTR is unaffordable. **Re-rank live at 9:40 per C7** — this is the 9:00 shortlist, void if capital or thesis moves.
+**GUSH ranks #1 of all 21 profiled instruments (1.025) and is the only sector-leveraged vehicle both affordable and (if C1 holds) gate-eligible today** — same instrument as yesterday, same driver, still moving in the same direction. Top-ranked affordable individual: MSTX (0.903, also #1 among individuals) — but MSTR is red premarket, no thesis. Second-ranked affordable individual: SMCX (0.770) — also red, no thesis. **Nothing on the individual side has both a bullish move and clears the bar; re-confirm everything live at 9:40 per C7** — this is the 9:00 shortlist, void if capital or thesis moves.
 
 **Stale for any later session; refresh before trusting.**
 
