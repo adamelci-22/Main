@@ -509,6 +509,16 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Preferred window closed with no entry.** Per D1's cadence-reduction rule, dropped to hourly and deleted the half-hour slots: 11:30, 12:30, 2:30 and 3:30 removed. **The 1:30pm slot's deletion was denied** (a tool-call permission decline, not a rulebook exception) — it stays armed and will need handling at the 1:00pm checkpoint rather than firing as a stray half-hour slot. Any entry from here forward must be **clearly better** than what the morning offered, not merely available — the bar is deliberately higher past this point, per E4/D1.
 
+### 12:00 management checkpoint — flat, declining a nominal pre-commit hit on a rule-design ground
+
+**A1 confirmed fresh: no positions, no resting orders.**
+
+**XLE at $63.525, +1.510% — the pre-commit's literal +1.486% trigger is technically cleared, still positive.** GUSH itself is at its best reading of the day, +1.807% ($43.38). On the number alone, the 10:00 pre-commit says enter.
+
+**Declining anyway, and flagging why rather than trading on it.** C1 is written as a **one-shot gate anchored to two fixed timestamps** — "positive at 9:30, positive at 9:40, 9:40 not below 9:30" — not a continuously-re-tested condition. That test already ran and **failed at 9:40** (9:40's +1.206% came in below 9:30's +1.486%); nothing in C1 provides for re-running it later in the session when price happens to revisit the same level. The XLE-clears-+1.486% tripwire in the 10:00/10:30/11:00 pre-commits was **my own shorthand for "the sector recovers," not an actual rule in the book** — treating it as a live entry trigger now would mean inventing a late-session re-entry gate for real money that C1's text does not contain. Per standing policy, a genuine rule gap gets flagged and the trade declined, not resolved by guessing. **Individual stocks are moot regardless:** NVDA -2.140%, AMD -5.099%, MU -6.525%, TSM -3.722%, SMCI -3.762%, AVGO -2.752%, TSLA +0.165% (barely positive, still far under +0.75%), COIN -1.119%, MSTR -2.032% — no candidate there either.
+
+**No trade at noon.** Worth a rule discussion later: should a sector-leveraged path get a defined late-session re-entry test distinct from C1's 9:30/9:40 anchor, or should recovered sector strength after the preferred window simply never be tradeable under the current gate design? Not resolved unilaterally today. Noon boundary also now in effect for the stall ladder (moot while flat).
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
