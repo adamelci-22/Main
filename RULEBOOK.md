@@ -249,7 +249,7 @@ Screen legs 1–2 at **9:00** with the scanner (`% Change` + `Relative volume`, 
 
 Fails legs 1–2 → not a major-move candidate; fall back to a sector read or no trade.
 
-> 0.75% / 1.25× are **starting defaults, not backtested constants.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream. *(Volume threshold lowered from 1.75× on 2026-08-18 — the 1.75× bar declined a real, catalyst-backed move (MU, Aug 17 morning) on thin early-session volume; 1.25× still requires confirmation, just not an implausibly high one 10–15 minutes into a session.)*
+> 0.75% / 1.25× are **starting defaults, not backtested constants.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
 
 ## C4. Instrument priority
 
@@ -505,14 +505,8 @@ TSMX (the pricier TSM wrapper, $82.07) excluded in favor of TSMU — both unaffo
 
 ## Current state
 
-**Flat at the close, 2026-08-17.** No position, no resting orders (verified from the broker at 4:00pm, not assumed). One trade today: bought 1 GUSH at $41.7699 (09:47:08 ET); the breakeven stop set at the 10:00 checkpoint ($41.77) triggered on its own at **10:08:10 ET**, filled $41.7500. Net: **-$0.0199 (-0.048% position, -0.032% account, r = -0.019)**. Verified fill and slippage came from the order responses (not a review) both legs: entry $0.0301 favorable vs. the $41.80 ask, exit $0.0200 unfavorable vs. the $41.77 stop trigger (ordinary stop-market behavior). Full gate reasoning and the trade row are in `archive/trades.csv` (2026-08-17 GUSH).
+**Flat.** Last close 2026-08-17: one trade (GUSH, -$0.02, r=-0.02) — full detail lives in `archive/trades.csv` and the commit history, not repeated here.
 
-**Account at close:** total value **$61.99** (-$0.02 on the day, matching the trade's P&L exactly). Cash $61.99, of which **$41.75 is unsettled** (today's sale proceeds, T+1) — spendable buying power right now is **$20.24**. Full settlement, and full buying power, returns tomorrow morning.
-
-**D4 post-exit review** (done at 10:30, ~22 min post-exit): GUSH ran to $42.01 (MFE +0.57%, never reaching the $42.28 half-risk trigger) before reversing hard over 3 minutes and tagging the stop — checked again at 1:06pm ET per the user's own question and GUSH had recovered to $41.85, above the exit price. Exit reads as early in hindsight; the breakeven-lock traded some upside for guaranteed protection on a single check, which is what it's for. One trade is not a pattern — no rule change proposed.
-
-**Trigger board at close:** exactly 2 remain — 8:00pm arming, 8:20pm backup. The 10 half-hour intraday slots (11:00–3:30) were deleted at 10:30 under D1's early-shutdown rule once the day's one round trip was spent; extended-hours slots (4:30–7:30) were never armed since the book was flat well before 4:00. Nothing left to delete at this checkpoint.
-
-**Loss streak 1 of 3** (governor cleared the breaker 2026-08-15; today's GUSH trade is the first loss counted since — 2 more consecutive losses would trip the breaker). Floor: **$30.42** (50% of $60.84 deposited, computed 9:00 8/17).
+**Loss streak 1 of 3** (cleared 2026-08-15). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
