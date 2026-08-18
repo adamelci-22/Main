@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.4.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.5.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -137,13 +137,25 @@ trail_pct         = 1.0 × 1.45                          = 1.45%
 | 4 — trail, e.g. `run_high` runs to $103.00 | — | $103.00 × (1 − 0.0145) = **$101.51** |
 | target | live price reaches $100.00 × (1 + 0.0375) = **$103.75** | **SELL ALL** — B4, overrides every stage |
 
-**The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp:
+**The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp. **Time-gated at 12:00pm ET**, evaluated by the checkpoint's own clock time, not entry time:
 
-| Stall count | Live price vs. fill | Action |
+**Before 12:00pm ET — more room to develop.** SELL ALL needs **3** stalls, not 2, and stalls 1–2 force **no stop move at all**; the stop can only rise via the percentage-based ratchet stages above. A pause in the first couple hours doesn't trigger an early breakeven lock — it only has to not go on for three checks straight. Trade-off, stated plainly: this accepts more downside room in exchange for not shaking a real move out on its first pause.
+
+| Stall count, before noon | Action |
+|---|---|
+| 1 | No stop move. Only the ratchet stages above can raise the stop. |
+| 2 | No stop move. Same. |
+| 3 | **SELL ALL — complete.** Overrides every stage above, no exceptions. |
+
+**At or after 12:00pm ET — the tighter rule.** SELL ALL needs **2** stalls, and the first one locks in profit immediately:
+
+| Stall count, noon or later | Live price vs. fill | Action |
 |---|---|---|
-| 1 | at or above fill | Stop moves to `max(current stop, breakeven)` — safe, the live price is still above it. |
+| 1 | at or above fill | Stop moves to `max(current stop, breakeven)` — breakeven, or wherever the ratchet stages already have it, whichever is higher. Safe, the live price is still above it. |
 | 1 | below fill | **No move.** Moving the stop to breakeven would place it above the live price, forcing an immediate sell — that is rejected, not executed early. Re-check next checkpoint. |
 | 2 | either | **SELL ALL — complete.** Overrides every stage above, no exceptions. |
+
+**Crossing noon mid-hold:** apply whichever table matches the *current* checkpoint's clock time to the stall count as derived cold at that same checkpoint (B3) — don't backdate which regime a past stall happened under. A count that's already at 2 when a 12:00 checkpoint runs means SELL ALL immediately under the now-current rule; a count of 1 or 2 left over from the morning is simply read against the afternoon table from that point on.
 
 **Any checkpoint where the live price ≥ `target_pct` → SELL ALL**, overriding everything above (B4).
 
@@ -159,7 +171,7 @@ A **stalled check** = a checkpoint whose price failed to exceed `run_high` by mo
 3. Otherwise → **stalled**: count increments.
 4. Total = consecutive stalled checks ending at the most recent.
 
-**1 stall** → ratchet per B2. **2 stalls** → SELL ALL, whatever the result.
+**Before 12:00pm ET:** stalls 1–2 do nothing to the stop; **3 stalls → SELL ALL.** **At or after 12:00pm ET:** 1 stall ratchets the stop to breakeven-or-higher; **2 stalls → SELL ALL.** Full detail and the noon-crossing rule in B2 — whatever the result.
 
 **SELL means now, not next checkpoint.** Cancel the resting stop first — a pending sell locks the share — then exit on a marketable limit.
 
@@ -227,7 +239,7 @@ Both as day change; proxy map in **E3**. If `underlying_pct < sector_pct` → **
 **Long-only, end to end.** Every single-stock name in the universe is a leveraged-*long* wrapper, so this gate cannot produce a short or inverse trade and does not try. Inverse views go through the sector path (C1 + an inverse sector ETF).
 
 1. **Magnitude** — day change **≥ +0.75%** from prior close, up only. Measure the *underlying stock*, never the leveraged wrapper; the wrapper is just the multiple.
-2. **Volume** — relative volume **≥ 1.75×** the 10–30 session baseline. A move on light volume is not confirmed.
+2. **Volume** — relative volume **≥ 1.25×** the 10–30 session baseline. A move on light volume is not confirmed.
 
 **Legs 1–2 together are sufficient to qualify a candidate.**
 
@@ -237,7 +249,7 @@ Screen legs 1–2 at **9:00** with the scanner (`% Change` + `Relative volume`, 
 
 Fails legs 1–2 → not a major-move candidate; fall back to a sector read or no trade.
 
-> 0.75% / 1.75× are **starting defaults, not backtested constants.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
+> 0.75% / 1.25× are **starting defaults, not backtested constants.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream. *(Volume threshold lowered from 1.75× on 2026-08-18 — the 1.75× bar declined a real, catalyst-backed move (MU, Aug 17 morning) on thin early-session volume; 1.25× still requires confirmation, just not an implausibly high one 10–15 minutes into a session.)*
 
 ## C4. Instrument priority
 
