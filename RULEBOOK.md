@@ -541,6 +541,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **A1 confirmed fresh: no positions, no resting orders.** Nothing to plan an exit for under B4 — still flat all day. Individual stocks: NVDA -2.333%, AMD -5.194%, MU -7.699%, TSM -4.349%, SMCI -2.260%, AVGO -3.512%, TSLA -0.958%, COIN -2.511%, MSTR -4.554% — no candidate, essentially unchanged from 2:00. XLE +1.550%, GUSH +1.467% — not a live signal, same basis as prior checkpoints. No trade at 3:00pm. B5 not required past 10:00 while flat — skipped.
 
+### 4:00pm close — flat all day, D3 report
+
+**Confirmed fresh from the broker: no positions, no resting orders, no fills today.** `get_equity_orders` shows nothing created 2026-08-18 — every order on the account is from prior sessions (the Aug 17 GUSH round trip and earlier). Cash **$61.99**, buying power **$61.99**, no unsettled funds, no pending deposits — unchanged from this morning since no trade ever executed. **No row appended to `archive/trades.csv`** — nothing closed, nothing to log. D4 post-exit review doesn't apply — no exit today.
+
+**Why a clean flat day:** every individual leveraged-wrapper stock stayed red the entire session (worst: MU, -7.7% to -7.8% through the afternoon); the one live sector candidate, XLE/GUSH, cleared its 9:30 baseline again around midday but C1 is a one-shot 9:30-vs-9:40 test that had already failed and doesn't get a second look on a later price revisit — trading that recovery would have meant inventing a rule that doesn't exist, so it was declined and flagged instead (see the noon entry above). One round trip was available all day and correctly went unspent.
+
+**D1 early shutdown checked:** flat at 4:00 with no resting orders → delete 4:30–7:30. Verified via `list_triggers`: those slots were never armed in the first place (a flat book never arms them, per D1's grid note), so there is nothing to delete. Only the 8:00pm arming and its 8:20pm backup remain scheduled, both untouched.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
@@ -581,8 +589,8 @@ TSMX (pricier TSM wrapper, $77.79) excluded in favor of TSMU — both unaffordab
 
 ## Current state
 
-**Flat.** Last close 2026-08-17: one trade (GUSH, -$0.02, r=-0.02) — full detail lives in `archive/trades.csv` and the commit history, not repeated here.
+**Flat.** Last close 2026-08-18: no trade — a genuine no-candidate day, both entry paths declined on their own terms (individual stocks never cleared C3's magnitude leg; the sector path's C1 gate failed at 9:40 and doesn't retest intraday). Prior close 2026-08-17: one trade (GUSH, -$0.02, r=-0.02) — full detail lives in `archive/trades.csv` and the commit history, not repeated here.
 
-**Loss streak 1 of 3** (cleared 2026-08-15). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
+**Loss streak 1 of 3** (cleared 2026-08-15, unchanged today — a flat day neither adds to nor clears a streak). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
