@@ -499,6 +499,16 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **No trade at 10:30.** This is the second-to-last slot of the preferred window — D1's early-shutdown clause doesn't apply (buying power is intact and the day's round trip is unspent; entry is still structurally possible, the gate just hasn't cleared), so the day continues on schedule rather than shutting down early. Pre-commit for 11:00, the window's last slot: same XLE trigger, **+1.486% while positive**. If still short at 11:00, drop to hourly per D1's cadence-reduction rule and stop watching the half-hour slots — the bar for a late entry rises from there.
 
+### 11:00 management checkpoint — preferred window closes, no trade, cadence dropped to hourly
+
+**A1 confirmed fresh: no positions, no resting orders.**
+
+**Pre-commit test: XLE at $63.21, +1.006%.** Required +1.486% — the gap widened again versus 10:30's +1.350%, moving away from the trigger, not toward it. Condition not met. GUSH itself is now barely positive (+0.692%, $42.90), its smallest reading yet.
+
+**Individual stocks, all still red and several re-widening:** NVDA -2.747%, AMD -5.883%, MU -7.524% (worst of the day), TSM -4.348%, SMCI -5.068%, AVGO -3.576%, TSLA -1.224%, COIN -1.960%, MSTR -2.298%. TSLA/COIN/MSTR's brief 10:30 narrowing reversed. No candidate — the morning offered nothing across either path, all four checks (9:40, 10:00, 10:30, 11:00) agree.
+
+**Preferred window closed with no entry.** Per D1's cadence-reduction rule, dropped to hourly and deleted the half-hour slots: 11:30, 12:30, 2:30 and 3:30 removed. **The 1:30pm slot's deletion was denied** (a tool-call permission decline, not a rulebook exception) — it stays armed and will need handling at the 1:00pm checkpoint rather than firing as a stray half-hour slot. Any entry from here forward must be **clearly better** than what the morning offered, not merely available — the bar is deliberately higher past this point, per E4/D1.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
