@@ -533,6 +533,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **This is the slot whose deletion was declined at 11:00.** It's a one-shot (`run_once_at`) trigger, so firing here consumes it — no further cleanup call needed; it won't recur. **A1 confirmed fresh anyway: no positions, no resting orders.** Individual stocks unchanged in kind: NVDA -2.058%, AMD -5.183%, MU -7.062%, TSM -4.199%, SMCI -1.508%, AVGO -2.812%, TSLA -0.654%, COIN -1.250%, MSTR -2.501% — no candidate. XLE +1.454%, GUSH +1.361% — not a live signal per the noon/1:00 finding (C1 already resolved, not re-testable). No trade; nothing to pre-commit differently than 1:00's entry.
 
+### 2:00pm management checkpoint — flat, no change
+
+**A1 confirmed fresh: no positions, no resting orders.** Individual stocks: NVDA -2.333%, AMD -5.212%, MU -7.717% (new worst reading of the day), TSM -4.363%, SMCI -2.338%, AVGO -3.512%, TSLA -0.917%, COIN -2.557%, MSTR -4.536% — no candidate, several widening again. XLE +1.558%, GUSH +1.432% — still not a live signal, same basis as noon/1:00/1:30. No trade at 2:00pm.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
