@@ -151,7 +151,7 @@ trail_pct         = 1.0 × 1.45                          = 1.45%
 
 | Stall count, noon or later | Live price vs. fill | Action |
 |---|---|---|
-| 1 | at or above fill | Stop moves to `max(current stop, breakeven)` — breakeven, or wherever the ratchet stages already have it, whichever is higher. Safe, the live price is still above it. |
+| 1 | at or above fill | Stop moves to **whichever is higher: breakeven, or the ratcheting stop's current level** (`max(breakeven, ratchet stop as of this checkpoint)`). Never a third value — just those two, compared, higher one wins. Safe, the live price is still above it. |
 | 1 | below fill | **No move.** Moving the stop to breakeven would place it above the live price, forcing an immediate sell — that is rejected, not executed early. Re-check next checkpoint. |
 | 2 | either | **SELL ALL — complete.** Overrides every stage above, no exceptions. |
 
@@ -171,7 +171,7 @@ A **stalled check** = a checkpoint whose price failed to exceed `run_high` by mo
 3. Otherwise → **stalled**: count increments.
 4. Total = consecutive stalled checks ending at the most recent.
 
-**Before 12:00pm ET:** stalls 1–2 do nothing to the stop; **3 stalls → SELL ALL.** **At or after 12:00pm ET:** 1 stall ratchets the stop to breakeven-or-higher; **2 stalls → SELL ALL.** Full detail and the noon-crossing rule in B2 — whatever the result.
+**Before 12:00pm ET:** stalls 1–2 do nothing to the stop; **3 stalls → SELL ALL.** **At or after 12:00pm ET:** 1 stall moves the stop to whichever is higher — breakeven, or the ratcheting stop's current level; **2 stalls → SELL ALL.** Full detail and the noon-crossing rule in B2 — whatever the result.
 
 **SELL means now, not next checkpoint.** Cancel the resting stop first — a pending sell locks the share — then exit on a marketable limit.
 
