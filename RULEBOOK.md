@@ -537,6 +537,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **A1 confirmed fresh: no positions, no resting orders.** Individual stocks: NVDA -2.333%, AMD -5.212%, MU -7.717% (new worst reading of the day), TSM -4.363%, SMCI -2.338%, AVGO -3.512%, TSLA -0.917%, COIN -2.557%, MSTR -4.536% — no candidate, several widening again. XLE +1.558%, GUSH +1.432% — still not a live signal, same basis as noon/1:00/1:30. No trade at 2:00pm.
 
+### 3:00pm management checkpoint — flat, no change; B4 moot
+
+**A1 confirmed fresh: no positions, no resting orders.** Nothing to plan an exit for under B4 — still flat all day. Individual stocks: NVDA -2.333%, AMD -5.194%, MU -7.699%, TSM -4.349%, SMCI -2.260%, AVGO -3.512%, TSLA -0.958%, COIN -2.511%, MSTR -4.554% — no candidate, essentially unchanged from 2:00. XLE +1.550%, GUSH +1.467% — not a live signal, same basis as prior checkpoints. No trade at 3:00pm. B5 not required past 10:00 while flat — skipped.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
