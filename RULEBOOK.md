@@ -469,6 +469,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **⚠ Rule gap surfaced today, not resolved — flagging rather than guessing:** C1's literal text ("positive at 9:30 and positive at 9:40") is written for a bullish sector-leveraged trade only. It never defines the entry gate for an inverse sector ETF (e.g. SOXS, SQQQ), which today's broad semis/tech weakness could otherwise make relevant. **Declining any inverse-sector trade today on this gap rather than inventing an interpretation for real money** — C3 already declines to touch inverses for individual stocks and points to "C1 + an inverse sector ETF" as the outlet, but C1 itself was never actually written to cover that case. Worth a rule clarification when there's time to discuss it, not something to resolve unilaterally mid-session.
 
+### 9:40 entry window — no trade, both gates failed cleanly
+
+**Live re-check, read time ~2026-08-18T13:41:25Z (~9:41am ET).** C3 magnitude leg re-confirmed for all 9 individual leveraged-wrapper-mapped stocks: NVDA -1.671%, AMD -3.109%, MU -3.630%, TSM -2.954%, SMCI -0.849%, AVGO -2.175%, TSLA +0.153%, COIN -1.143%, MSTR -1.305%. **All fail** — none clears +0.75%; TSLA flipped positive but is nowhere close to the bar. No individual candidate exists.
+
+**C1 leg 3 re-checked for XLE, the only sector still alive at 9:30:** 9:30 reading was +1.486% ($63.51); 9:40 reading is **+1.206%** ($63.335). Still positive, but the 9:40 reading is **below** the 9:30 reading — leg 3 ("the 9:40 reading not below the 9:30 reading") fails. GUSH itself was still up on the day at 9:40 ($42.85, +0.563%), but that's irrelevant: GUSH only qualifies today through C4's rank-2 track gated by XLE passing C1, and XLE just failed.
+
+**Conclusion: no trade today.** Both the individual-stock path and the sector-leveraged path close out at 9:40 for the same underlying reason — this morning's move weakened into the open instead of confirming, the mirror image of yesterday's MU/GUSH pattern where the sector strengthened. One round trip per day was available and unspent; that's correct, not a miss. E2's single-entry window is now closed for the rest of the day regardless.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
