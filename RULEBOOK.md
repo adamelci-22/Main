@@ -519,6 +519,16 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **No trade at noon.** Worth a rule discussion later: should a sector-leveraged path get a defined late-session re-entry test distinct from C1's 9:30/9:40 anchor, or should recovered sector strength after the preferred window simply never be tradeable under the current gate design? Not resolved unilaterally today. Noon boundary also now in effect for the stall ladder (moot while flat).
 
+### 1:00pm management checkpoint — flat, no candidate, XLE tripwire retired
+
+**A1 confirmed fresh: no positions, no resting orders.**
+
+**Individual stocks, all still failing C3, best barely positive:** NVDA -2.222%, AMD -5.251%, MU -7.153%, TSM -4.125%, SMCI -2.417%, AVGO -2.959%, TSLA +0.050%, COIN -1.306%, MSTR -2.386%. No candidate.
+
+**XLE $63.465 (+1.414%), GUSH $43.33 (+1.690%)** — not tracked against the old +1.486% number anymore. That tripwire was retired at noon: C1 already resolved (fail) at 9:40 and isn't re-testable intraday, so continuing to watch for XLE to cross a specific level would just be re-litigating the same invented gate. Nothing left to watch on the sector side today absent an actual rule change.
+
+**No trade at 1:00pm.** Nothing new to pre-commit to — both paths are closed for the rest of the session on their own terms (individual stocks on distance from +0.75%, sector on C1 already having run its one shot), not on a moving price target. B5 is not required past 10:00 while flat per its own note — skipped, not missed.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
