@@ -529,6 +529,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **No trade at 1:00pm.** Nothing new to pre-commit to — both paths are closed for the rest of the session on their own terms (individual stocks on distance from +0.75%, sector on C1 already having run its one shot), not on a moving price target. B5 is not required past 10:00 while flat per its own note — skipped, not missed.
 
+### 1:30pm — stray half-hour slot, fired despite the 11:00 cadence drop, no action needed
+
+**This is the slot whose deletion was declined at 11:00.** It's a one-shot (`run_once_at`) trigger, so firing here consumes it — no further cleanup call needed; it won't recur. **A1 confirmed fresh anyway: no positions, no resting orders.** Individual stocks unchanged in kind: NVDA -2.058%, AMD -5.183%, MU -7.062%, TSM -4.199%, SMCI -1.508%, AVGO -2.812%, TSLA -0.654%, COIN -1.250%, MSTR -2.501% — no candidate. XLE +1.454%, GUSH +1.361% — not a live signal per the noon/1:00 finding (C1 already resolved, not re-testable). No trade; nothing to pre-commit differently than 1:00's entry.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
