@@ -477,6 +477,18 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Conclusion: no trade at 9:40.** Both the individual-stock path and the sector-leveraged path close out at this checkpoint for the same underlying reason — this morning's move weakened into the open instead of confirming, the mirror image of yesterday's MU/GUSH pattern where the sector strengthened. Still flat, still inside the preferred 9:40–11:00 window per the schedule — 9:40 failing does not close the day; a fresh candidate at 10:00 or 10:30 is still eligible for the day's one round trip if either gate flips clean. Nothing carries forward as a bias either way — re-derive cold at the next checkpoint.
 
+### 10:00 management checkpoint — flat, still no candidate
+
+**A1 confirmed fresh from the broker: no positions, no resting orders.** Blocking conditions clear, not that it matters while flat.
+
+**Live re-check at ~10:01am ET.** Individual stocks all still deeply red: NVDA -2.211%, AMD -5.121%, MU -5.377%, TSM -3.766%, SMCI -2.481%, AVGO -3.302%, TSLA -0.492%, COIN -2.418%, MSTR -2.114% — every one further from C3's +0.75% bar than at 9:40, not closer. No individual candidate.
+
+**XLE:** $63.34, +1.214% — a slight recovery off the 9:40 low (+1.206%) but still **below the 9:30 baseline of +1.486%**. C1 leg 3 still fails; the sector hasn't reclaimed the level it needs to hold. GUSH itself is +0.915% ($43.00) but remains gated by XLE's failure.
+
+**B5 headlines (last flat-check per the schedule — none required after 10:00 while flat):** Same driver, escalating — a vessel was reportedly struck by an "unknown projectile" in the Strait of Hormuz overnight, Trump posted an image labeling the waterway "New US Territory," and Iran's Parliament Speaker reiterated the strait stays closed until sanctions lift and assets are unfrozen. Brent just under $91, WTI toward $85 — both at their highest since July. This is real, intensifying, and consistent with XLE/GUSH's relative strength — the reason energy hasn't cracked like the rest of the tape, just not enough yet to clear C1's specific bar.
+
+**No trade at 10:00.** Pre-commit for 10:30: enter GUSH (rank-2, C4) only if XLE's next reading clears **+1.486%** (back above the 9:30 baseline, satisfying leg 3) while still positive — no other condition substitutes. No individual stock is watched further; the gap to +0.75% is now 1.2–4.6pp across all nine, not closing on a single intraday check.
+
 **20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
 
 *15 individuals:*
