@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.5.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.6.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -226,7 +226,11 @@ Applies to a **sector- or index-leveraged trade** only. Record the sector proxy'
 2. positive at 9:40, **and**
 3. the 9:40 reading **not below** the 9:30 reading.
 
-Any failure → no entry in that sector's leveraged vehicle. **Two fixed observations decide it — never add intermediate readings.**
+Any failure at 9:40 → no entry **at 9:40** in that sector's leveraged vehicle.
+
+**Late entry, any checkpoint after 9:40:** the door isn't permanently closed by a 9:40 failure. At any later checkpoint, entry is still allowed if the sector proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:40's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). This is the resolution to the gap flagged 2026-08-18: recovered sector strength after 9:40 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
+
+**Two fixed observations (9:30, 9:40) decide the 9:40 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
 
 **Does not gate a single-stock trade.** A stock moving decisively on its own does not need its sector to confirm; it is judged on its own move, and on Gate 2 if traded leveraged.
 
@@ -308,7 +312,7 @@ Then:
 ## C9. Timing and selection
 
 - **Preferred window 9:40–11:00.**
-- After 11:00 a new entry must be **clearly better** than the morning offered, not merely available. Boredom is not a signal.
+- After 11:00 a new entry must be **clearly better** than the morning offered, not merely available. Boredom is not a signal. For a sector-leveraged trade this is concrete, not a feeling: C1's late-entry clause requires the proxy strictly above its 9:30 baseline.
 - Never force a trade because the window is closing.
 - Verify `all_day_tradability` before entering.
 - **Price the spread:** read the actual bid/ask, **double it** for the round trip, subtract from the expected move — take it only if it still clears the target with room.
