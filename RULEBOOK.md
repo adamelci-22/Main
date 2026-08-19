@@ -514,6 +514,34 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Several individual candidates (MSTX, CONL, MUU, TSMU, NVDL, TSLL) are already well past C3's +0.75% magnitude bar at 9:30** — informational only, C3's formal re-confirmation is the 9:40 live check, not this reading. AMDL and META flipping negative removes them from contention unless they recover. This is a markedly more bullish, broader-based morning than yesterday across both the sector and individual sides — the opposite problem from Tuesday (too little qualified) may be too many qualifying, which makes C4/C7's ranking discipline the real work at 9:40.
 
+### 9:40 entry — GUSH, sector-leveraged (C4 rank 2), individual path shut out entirely on volume
+
+**A1 confirmed fresh: no positions, no resting orders, streak 1/3, floor unaffected.**
+
+**C3 re-confirmed live via the updated scanner (0.75%/1.25× filters, verified in `filters_applied`): 0 of 15 watchlist candidates qualify.** The scan returned only 4 matches market-wide (RDAC, YJ, TNON, MRNA — none on this list). Every one of yesterday's promising 9:30 movers (MSTX, CONL, MUU, TSMU, NVDL, TSLL) had real price legs but **none cleared the relative-volume leg** this early in the session — price without confirming volume, exactly what leg 2 exists to filter out. **No individual candidate today, full stop.**
+
+**C1 re-checked at 9:40 (read time ~2026-08-19T13:42:00Z):** XLE +0.683% (up from +0.267% at 9:30 — strengthens, passes all three legs). GDX +7.160% (up from +6.487% — also passes, but stays untradeable, no affordable vehicle at any C4 rank: NUGT $171+, GDX itself $95.32, both over the $61.99 buying power). SPY +0.248% (below 9:30's +0.374% — fails leg 3). QQQ −0.017% (flipped negative — fails). SMH −0.582% (flipped negative — fails). **XLE is the only proxy that both passes C1 and gates an affordable vehicle.**
+
+**C6 checked in place of a named catalyst** (energy/materials replacement gate): (1) multi-session higher highs/higher lows — GUSH closes $41.27→$42.61→$43.50 over the last three sessions, lows $40.70→$41.055→$42.17, highs $42.155→$42.665→$43.75, clean uptrend. (2) Related-complex confirmation — USO (crude) +0.485% today, same direction. (3) Not a breakdown — today's price ($44.20+) is trading **above** the entire prior session's range (high $43.75), a continuation, not a pullback threatening the low. All three legs hold.
+
+**C4/C7:** rank 2 (leveraged sector ETF, no individual cleared C3) is the only populated rank. Single surviving candidate, so no ranking dispute — `mfe_per_stop` 0.974 stated for the record, `mfe_to_target` 2.00 (comfortably under the 2.5 unreachable-target flag).
+
+**Entry executed:** BUY 1 GUSH, marketable limit $44.25 (ask was $44.22 at review), **filled $44.25** (order `6a85b2f9`, verified via order response, 09:43:21 ET). Slippage: $0.03 above the review-time ask, ordinary marketable-limit cost. Spread priced before entry: bid/ask $44.16/$44.22 (4¢ wide), round-trip ~8¢ against a $2.16 expected move to target — trivial. `all_day_tradability` confirmed tradable beforehand.
+
+**Protective stop placed immediately, confirmed resting** (order `6a85b312`, state `confirmed`): stop_market, $43.14 (stage 1 = fill × (1 − 2.50%)).
+
+**Full ratchet schedule for this fill ($44.25), from this morning's fresh profile (stop_pct 2.50%, target_pct 4.87%, breakeven_trigger 2.43%, trail_pct 1.38%, stall_threshold 0.37%, min_stop_move 0.34%):**
+
+| Stage | `run_high` reaches | Stop becomes |
+|---|---|---|
+| 1 — entry | $44.25 (fill) | **$43.14** ← resting now |
+| 2 — half-risk | $44.79 | $43.70 |
+| 3 — breakeven | $45.33 | $44.25 (fill) |
+| 4 — trail | past stage 3 | `run_high × (1 − 1.38%)`, recomputed every checkpoint |
+| target | $46.41 | **SELL ALL** |
+
+**Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop (only the ratchet stages above can). No individual-stock re-entry considered today — C3 is shut out market-wide, not just for this list, so nothing to re-check there barring a fresh scan.
+
 ---
 
 ## Current state
