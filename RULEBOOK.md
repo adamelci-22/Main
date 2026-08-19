@@ -578,6 +578,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **E2's one round trip is now spent for today — no further entries possible regardless of what develops.** D1 early shutdown executed: 9 remaining intraday slots deleted (11:30 through 3:30), verified via `list_triggers` — exactly 3 left: 4:00 close, 8:00 arming, 8:20 backup. D4 post-exit review scheduled as a one-off reminder for 11:53 ET (30 minutes post-exit, actual fire time), since the grid itself is now shut down.
 
+**D4 post-exit review, checked 11:53 ET:** GUSH now $44.185 (bid $44.10/ask $44.13) — **below** the $44.4656 exit fill by $0.28, −0.63%. **The exit reads as well-timed, not early:** price rolled over after the stall-3 sell rather than continuing to run, so the exit banked the gain right before it started giving back. One data point on the new v3.6 before-noon ladder — genuinely positive, but one read is not a pattern; keep watching future stall-3 exits before drawing a conclusion about whether the rule change is systematically well-timed or just got lucky here.
+
 ---
 
 ## Current state
