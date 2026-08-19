@@ -488,6 +488,28 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Stale for any later session; refresh before trusting.**
 
+### C1 Gate-1 baseline — formal 9:30 reading
+
+**Recorded 9:30 checkpoint, read time 2026-08-19T13:31:02Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
+
+| Proxy | 9:30 day change | vs. premarket |
+|---|---|---|
+| GDX | **+6.487%** | strengthened sharply (+4.55%→+6.49%) — the standout, but NUGT is unaffordable regardless |
+| SMH | +0.709% | weakened somewhat (+1.14%→+0.71%) |
+| QQQ | +0.343% | ~flat |
+| SPY | +0.374% | ~flat |
+| XLE | +0.267% | weakened (+0.39%→+0.27%) |
+
+**Unlike yesterday, all five sector proxies are positive at 9:30** — a genuinely different tape (broad, mild strength vs. yesterday's broad risk-off). Leg 1 ("positive at 9:30") passes for every proxy; all five stay alive into 9:40, though only XLE (via GUSH) is actually affordable and tradeable if C1 completes — GDX/SMH/QQQ/SPY all gate to unaffordable leveraged forms (NUGT/SOXL/TQQQ/SPXL).
+
+**Individual candidates — wrapper prices at 9:30, holding vs. premarket:**
+
+*Strengthened or flipped positive:* MSTX +4.10% (MSTR premarket +1.95%, extended), CONL +4.07% (COIN +1.10%→+4.07%), MUU +3.02% (MU +2.14%→+3.02%, still clear of C3's bar), TSMU +2.65% (TSM +1.10%→+2.65%), NVDL +2.09% (NVDA +0.62%→+2.09%), TSLL +1.89% (TSLA +0.17%→+1.89%), PLTR +1.10% (**flipped from −0.42% premarket**), AMZN +0.87%, AAPL +0.17%.
+
+*Weakened or flipped negative:* AVGX −4.48% (AVGO −3.09%→−4.48%, still the weakest by far), META −0.60% (**flipped from +0.30% premarket**), AMDL −1.61% (**flipped from +0.61% premarket**), SMCX −1.95% (SMCI −1.28%→−1.95%), GOOGL −0.31%, MSFT −0.15% (both still negative, marginal change).
+
+**Several individual candidates (MSTX, CONL, MUU, TSMU, NVDL, TSLL) are already well past C3's +0.75% magnitude bar at 9:30** — informational only, C3's formal re-confirmation is the 9:40 live check, not this reading. AMDL and META flipping negative removes them from contention unless they recover. This is a markedly more bullish, broader-based morning than yesterday across both the sector and individual sides — the opposite problem from Tuesday (too little qualified) may be too many qualifying, which makes C4/C7's ranking discipline the real work at 9:40.
+
 ---
 
 ## Current state
