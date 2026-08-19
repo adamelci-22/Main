@@ -542,6 +542,16 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop (only the ratchet stages above can). No individual-stock re-entry considered today — C3 is shut out market-wide, not just for this list, so nothing to re-check there barring a fresh scan.
 
+### 10:00 management checkpoint — 1 stall, no stop move, position and stop confirmed
+
+**A1 confirmed fresh: position 1 GUSH @ $44.25 avg cost, stop resting confirmed** (`6a85b312`, state `confirmed`, $43.14).
+
+**Stall derivation, cold, per B3:** `run_high` seeded at fill $44.25. Checkpoint price at 10:00 (read ~2026-08-19T14:01:06Z): **$44.00**. Progression threshold: $44.25 × 1.0037 = $44.41. $44.00 is below both `run_high` and the threshold → **stalled**. **Count: 1.** Before noon, 1–2 stalls do nothing to the stop — only the percentage ratchet stages can move it, and `run_high` hasn't advanced past $44.25, so no stage has triggered. **Stop stays at $43.14, unchanged.**
+
+**B5 headlines:** same driver, still escalating — Brent $91.52 (+0.55% today, +4.5% over three sessions), a fourth straight up day. A vessel was reportedly attacked leaving the Strait of Hormuz with a reported crew casualty; Trump confirmed no talks planned and the naval blockade stays in place. The fundamental thesis behind this trade is intact and, if anything, strengthening — today's small pullback in GUSH itself ($44.25→$44.00) reads as normal noise against that backdrop, not a reversal.
+
+**Pre-commit for 10:30:** re-derive the stall count cold against `run_high` $44.25 and the same $44.41 progression threshold. 2 consecutive stalls still does nothing before noon (3 needed to sell). No stop move expected unless price clears $44.79 (stage 2, half-risk) or a fresh high resets `run_high`.
+
 ---
 
 ## Current state
