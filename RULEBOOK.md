@@ -552,6 +552,18 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 10:30:** re-derive the stall count cold against `run_high` $44.25 and the same $44.41 progression threshold. 2 consecutive stalls still does nothing before noon (3 needed to sell). No stop move expected unless price clears $44.79 (stage 2, half-risk) or a fresh high resets `run_high`.
 
+### 10:30 management checkpoint — 2 stalls, close to progressing but not there, stop unchanged
+
+**A1 confirmed fresh: position 1 GUSH @ $44.25 avg cost, stop resting confirmed** (`6a85b312`, `confirmed`, $43.14).
+
+**Stall derivation, cold, per B3:** `run_high` still $44.25 (10:00's $44.00 didn't advance it). Checkpoint price at 10:30 (read ~2026-08-19T14:31:15Z): **$44.405**. Progression threshold: $44.25 × 1.0037 = **$44.4137**. $44.405 is below the threshold by less than a cent — genuinely close, but per B3's rule (must *exceed* `run_high` by more than the threshold, a nominal gain above fill isn't enough) this is still **stalled. Count: 2** (checkpoint prices since entry: $44.25 fill → $44.00 stall 1 → $44.405 stall 2).
+
+**Before noon, 2 stalls still does nothing to the stop — 3 needed to sell, and only the percentage ratchet stages move it early.** `run_high` unchanged at $44.25, so no stage has triggered. **Stop stays at $43.14.**
+
+**This is the second-to-last slot of the preferred window; D1 early shutdown does not apply** — holding a position with a functioning stop is not "no entry possible," that clause is about flat-and-stuck, not held-and-fine. Nothing to shut down.
+
+**Pre-commit for 11:00, the window's last slot (also the noon-adjacent one — still before noon):** re-derive the stall count cold. A third consecutive stall (price ≤ ~$44.41) → **SELL ALL** per B3's before-noon rule, regardless of anything else. A price clearing $44.4137 resets the count to 0 and advances `run_high` to that price. A price clearing $44.79 additionally triggers stage 2 (half-risk), moving the stop to $43.70.
+
 ---
 
 ## Current state
