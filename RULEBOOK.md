@@ -576,7 +576,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Result: +$0.2156, +0.49% on the position, r = +0.194.** A genuine small win, not a stop-out — the new before-noon 3-stall ladder (policy v3.6, first real test) let this develop through two stalls that the old 2-stall/breakeven-lock rule would have exited at stall 1, and it happened to still be net positive when stall 3 forced the exit. Hold time 80 minutes (09:43:21 → 11:03:39 ET). Full detail, MAE/MFE, and slippage in `archive/trades.csv`, not repeated here.
 
-**E2's one round trip is now spent for today — no further entries possible regardless of what develops.** D1 early shutdown applies: deleting all remaining intraday slots (11:30 through 3:30), keeping only 4:00 close, 8:00 arming, 8:20 backup. D4 post-exit review scheduled for ~11:33 ET (30 minutes post-exit) via a one-off reminder, since the grid itself is being shut down.
+**E2's one round trip is now spent for today — no further entries possible regardless of what develops.** D1 early shutdown executed: 9 remaining intraday slots deleted (11:30 through 3:30), verified via `list_triggers` — exactly 3 left: 4:00 close, 8:00 arming, 8:20 backup. D4 post-exit review scheduled as a one-off reminder for 11:53 ET (30 minutes post-exit, actual fire time), since the grid itself is now shut down.
 
 ---
 
