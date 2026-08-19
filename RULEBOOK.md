@@ -546,7 +546,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## Current state
 
-**Flat.** Last close 2026-08-18: no trade — a genuine no-candidate day, both entry paths declined on their own terms (individual stocks never cleared C3's magnitude leg; the sector path's C1 gate failed at 9:40 and doesn't retest intraday). Prior close 2026-08-17: one trade (GUSH, -$0.02, r=-0.02) — full detail lives in `archive/trades.csv` and the commit history, not repeated here.
+**Holding GUSH.** 1 share, filled $44.25 at 09:43:21 ET 2026-08-19, stop resting $43.14 — full detail and the ratchet schedule in E5's 9:40 entry note, not repeated here. Last close 2026-08-18: no trade. Prior close 2026-08-17: one trade (GUSH, -$0.02, r=-0.02) — full detail lives in `archive/trades.csv` and the commit history.
 
 **Loss streak 1 of 3** (cleared 2026-08-15, unchanged today — a flat day neither adds to nor clears a streak). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
 
