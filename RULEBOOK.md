@@ -581,12 +581,22 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **D4 post-exit review, checked 11:53 ET:** GUSH now $44.185 (bid $44.10/ask $44.13) — **below** the $44.4656 exit fill by $0.28, −0.63%. **The exit reads as well-timed, not early:** price rolled over after the stall-3 sell rather than continuing to run, so the exit banked the gain right before it started giving back. One data point on the new v3.6 before-noon ladder — genuinely positive, but one read is not a pattern; keep watching future stall-3 exits before drawing a conclusion about whether the rule change is systematically well-timed or just got lucky here.
 
+### 4:00pm close — flat since 11:00, D3 report, funding update
+
+**Confirmed fresh from the broker: no positions, no resting orders.** No new trade between the 11:00 exit and now — per E2, flat stays flat for the rest of the session, so nothing to report beyond what's already logged above and in `archive/trades.csv`. D4 was already completed at 11:53 ET.
+
+**Funding update, mid-session:** a deposit landed today. `get_portfolio`: total value **$202.21**, cash $202.21, buying power **$157.74**. `get_accounts`: unsettled funds $44.47 (today's GUSH sale proceeds, T+1) and $140 still shown as `pending_deposits` — the new deposit itself hasn't fully settled either. This account is limited-margin-eligible (checked via `get_limited_margin_upgrade_info`); not acted on, just noted for the record — upgrading is the governor's call, not something to self-serve.
+
+**This materially changes tomorrow's setup, not just the number:** the new C8 sizing rule (v3.8, full deployment in whole shares rather than a flat 1) now has real room to matter — at ~$157 buying power, several previously 1-share-only watchlist names could size to 2-4+ shares depending on price at entry. The floor (50% of deposited cash) and every affordability check in C7/E5 need a fresh computation at 9:00 tomorrow; today's $61.99-based numbers throughout this log are now historical, not current.
+
+**D1 early shutdown remains in effect** — verified via `list_triggers`: exactly 2 remain, 8:00pm arming and its 8:20pm backup. No 4:30–7:30 slots existed to delete (flat book never arms them).
+
 ---
 
 ## Current state
 
 **Flat.** Round trip spent for 2026-08-19: GUSH, +$0.22, r=+0.194, 3-stall before-noon exit — full detail in `archive/trades.csv` and the commit history, not repeated here. Prior close 2026-08-18: no trade. 2026-08-17: one trade (GUSH, -$0.02, r=-0.02).
 
-**Loss streak 0 of 3** — today's GUSH win reset it per E1 ("a winner anywhere resets to zero"). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
+**Loss streak 0 of 3** — today's GUSH win reset it per E1 ("a winner anywhere resets to zero"). **A deposit landed 2026-08-19: total value $202.21, buying power $157.74** (up from $61.99) — floor and every affordability number need a fresh 9:00 computation, don't trust anything cached from before today's deposit.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
