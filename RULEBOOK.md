@@ -202,7 +202,7 @@ At any checkpoint showing a live-price gain ≥ `target_pct` → **sell the enti
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** State the intended exit at entry.
 
-> **Override (dormant — needs 2+ shares, currently unreachable at one share/position).** Staying past target requires *named new information*; momentum does not qualify. If invoked: sell half immediately, raise the remainder's stop to ≥ target, re-justify aloud every checkpoint (silence = expiry), sell the remainder when the information dies or any exit fires. One extension per trade. Log both fills; report blended P&L honestly including when the override lost money.
+> **Override (dormant while a position is sized at 1 share — needs 2+ to have a "half" to sell).** Staying past target requires *named new information*; momentum does not qualify. If invoked: sell half immediately, raise the remainder's stop to ≥ target, re-justify aloud every checkpoint (silence = expiry), sell the remainder when the information dies or any exit fires. One extension per trade. Log both fills; report blended P&L honestly including when the override lost money.
 
 ## B5. Headlines while holding
 
@@ -228,7 +228,7 @@ Applies to a **sector- or index-leveraged trade** only. Record the sector proxy'
 
 Any failure at 9:40 → no entry **at 9:40** in that sector's leveraged vehicle.
 
-**Late entry, any checkpoint after 9:40:** the door isn't permanently closed by a 9:40 failure. At any later checkpoint, entry is still allowed if the sector proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:40's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). This is the resolution to the gap flagged 2026-08-18: recovered sector strength after 9:40 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
+**Late entry, any checkpoint after 9:40:** the door isn't permanently closed by a 9:40 failure. At any later checkpoint, entry is still allowed if the sector proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:40's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). Recovered sector strength after 9:40 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
 
 **Two fixed observations (9:30, 9:40) decide the 9:40 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
 
@@ -252,7 +252,7 @@ Screen leg 1 at **9:00** with the scanner (`% Change`, or the gainers preset). *
 
 Fails leg 1 → not a major-move candidate; fall back to a sector read or no trade.
 
-> **Volume removed entirely as a gating leg, 2026-08-19** — see the commit history for why. +0.75% is a **starting default, not a backtested constant.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
+> +0.75% is a **starting default, not a backtested constant.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
 
 ## C4. Instrument priority
 
