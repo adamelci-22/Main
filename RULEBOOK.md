@@ -445,143 +445,46 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*As of Aug 18 2026, ~9:03am ET (premarket):* **Broad risk-off — semis/tech hit hard, energy the lone bright spot, continuing yesterday's driver.** Overnight escalation: Trump threatened further economic pressure on Iran and to "bomb" Oman if it interferes with Strait of Hormuz plans. Nasdaq-100 futures -1.1%, S&P futures -0.4%. Oil at a 2+ week high; gold +0.36%. This is the same geopolitical driver as yesterday's GUSH trade, now amplified.
+*As of Aug 19 2026, ~9:08am ET (premarket):* **Mixed, no dominant driver — semis/tech still soft after yesterday's rout, but gold miners are the real story.** Bond yields and oil remain elevated, pressuring valuations broadly (30-year Treasury yield near a two-decade high per overnight coverage). FOMC minutes and earnings from ADI, TJX, LOW, TGT and EL land today — none of that maps to anything in this watchlist. **Gold is the genuine catalyst:** bullion is at/near $4,400/oz, GDX has surged ~21% over five sessions on heavy retail inflows ($419M into GDX in August alone) hitting decade-highs — a real, sourced, multi-day story, not a single headline. Broadcom (AVGO) is down hard on valuation reassessment ahead of its Sept 2 earnings, unrelated to the gold move. **Caution on secondary web sources today:** one search result claimed MU traded at $921.63 overnight (down ~2%), which directly contradicts the broker's own premarket quote (+2.1%, $960.86) — treating that as noise and trusting the broker feed, not the web article, for anything price-specific.
 
-**Premarket individual moves** (vs. adjusted previous close): MU -4.65%, AMD -3.36%, SMCI -3.34%, TSM -2.55%, NVDA -2.05%, AVGO -1.96%, MSTR -1.66%, COIN -1.56%, TSLA -1.51%, META -1.22%, GOOGL -0.51%, PLTR -0.16% — **all red, none clear C3's up-only magnitude leg.** MSFT +0.63% and AAPL +0.56% show relative strength inside the selloff but neither clears +0.75%. **HD +2.39%** on Q2 earnings (reported 6am ET) is the one real individual mover with a named catalyst — unaffordable regardless (**$345.95**, no leveraged wrapper exists for it, plain-stock price alone is 5.6x the account).
+**Premarket individual moves** (vs. adjusted previous close, broker quotes): MU **+2.14%**, MSTR +1.95%, TSM +1.10%, COIN +1.10%, NVDA +0.62%, AMD +0.61%, AMZN +0.64%, META +0.30%, TSLA +0.17%, AAPL +0.05%, GOOGL −0.41%, PLTR −0.42%, MSFT −0.55%, SMCI −1.28%, **AVGO −3.09%** (worst, valuation-driven per above). MU is the standout — real memory-sector tailwind (SK Hynix +3.9% premarket on a buyback) plus a sharp reversal off yesterday's -7% session.
 
-**Sector proxies (premarket, informational only — not the C1 baseline):** SMH -3.21% · QQQ -1.22% · SPY -0.40% · XLE **+1.09%** · GDX -1.03%. Energy is the only sector green; GUSH itself **+1.93%** premarket, continuing to extend yesterday's move.
+**Sector proxies (premarket, informational only — not the C1 baseline):** SPY +0.36% · QQQ +0.38% · SMH +1.14% · XLE +0.39% · **GDX +4.55%** — gold miners far and away the leader, consistent with the sourced rally above.
 
-### C1 Gate-1 baseline — formal 9:30 reading
-
-**Recorded 9:30 checkpoint, read time 2026-08-18T13:31:04Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
-
-| Proxy | 9:30 day change | vs. premarket |
-|---|---|---|
-| XLE | **+1.49%** | strengthened (+1.09%→+1.49%) |
-| SPY | −0.50% | weakened slightly |
-| QQQ | −1.24% | ~flat |
-| GDX | −1.54% | weakened |
-| SMH | −2.99% | modest recovery, still deeply red |
-
-**Verdict at this reading: only XLE is alive for C1.** SPY, QQQ, GDX, SMH are all negative at 9:30 — leg 1 ("positive at 9:30") already fails for all four; nothing left to track there. XLE is positive and has strengthened since the open — needs to hold positive and not fade below +1.49% at 9:40 to complete the pass.
-
-**Breadth and premarket-to-real-volume check: this is genuine, broad risk-off, not one name.** Every individual mover checked (NVDA, AMD, MU, TSM, SMCI, AVGO, TSLA, COIN, MSTR) is still solidly red at the open — MU worst at -4.37%, AMD -2.97%, TSM -2.96%. Premarket weakness **held into real volume**, it did not fade — the opposite pattern from yesterday's single-name MU dislocation. No individual stock is a candidate today; this is entirely a sector-level (energy) story if it's tradeable at all.
-
-**⚠ Rule gap surfaced today, not resolved — flagging rather than guessing:** C1's literal text ("positive at 9:30 and positive at 9:40") is written for a bullish sector-leveraged trade only. It never defines the entry gate for an inverse sector ETF (e.g. SOXS, SQQQ), which today's broad semis/tech weakness could otherwise make relevant. **Declining any inverse-sector trade today on this gap rather than inventing an interpretation for real money** — C3 already declines to touch inverses for individual stocks and points to "C1 + an inverse sector ETF" as the outlet, but C1 itself was never actually written to cover that case. Worth a rule clarification when there's time to discuss it, not something to resolve unilaterally mid-session.
-
-### 9:40 entry window — no trade, both gates failed cleanly
-
-**Live re-check, read time ~2026-08-18T13:41:25Z (~9:41am ET).** C3 magnitude leg re-confirmed for all 9 individual leveraged-wrapper-mapped stocks: NVDA -1.671%, AMD -3.109%, MU -3.630%, TSM -2.954%, SMCI -0.849%, AVGO -2.175%, TSLA +0.153%, COIN -1.143%, MSTR -1.305%. **All fail** — none clears +0.75%; TSLA flipped positive but is nowhere close to the bar. No individual candidate exists.
-
-**C1 leg 3 re-checked for XLE, the only sector still alive at 9:30:** 9:30 reading was +1.486% ($63.51); 9:40 reading is **+1.206%** ($63.335). Still positive, but the 9:40 reading is **below** the 9:30 reading — leg 3 ("the 9:40 reading not below the 9:30 reading") fails. GUSH itself was still up on the day at 9:40 ($42.85, +0.563%), but that's irrelevant: GUSH only qualifies today through C4's rank-2 track gated by XLE passing C1, and XLE just failed.
-
-**Conclusion: no trade at 9:40.** Both the individual-stock path and the sector-leveraged path close out at this checkpoint for the same underlying reason — this morning's move weakened into the open instead of confirming, the mirror image of yesterday's MU/GUSH pattern where the sector strengthened. Still flat, still inside the preferred 9:40–11:00 window per the schedule — 9:40 failing does not close the day; a fresh candidate at 10:00 or 10:30 is still eligible for the day's one round trip if either gate flips clean. Nothing carries forward as a bias either way — re-derive cold at the next checkpoint.
-
-### 10:00 management checkpoint — flat, still no candidate
-
-**A1 confirmed fresh from the broker: no positions, no resting orders.** Blocking conditions clear, not that it matters while flat.
-
-**Live re-check at ~10:01am ET.** Individual stocks all still deeply red: NVDA -2.211%, AMD -5.121%, MU -5.377%, TSM -3.766%, SMCI -2.481%, AVGO -3.302%, TSLA -0.492%, COIN -2.418%, MSTR -2.114% — every one further from C3's +0.75% bar than at 9:40, not closer. No individual candidate.
-
-**XLE:** $63.34, +1.214% — a slight recovery off the 9:40 low (+1.206%) but still **below the 9:30 baseline of +1.486%**. C1 leg 3 still fails; the sector hasn't reclaimed the level it needs to hold. GUSH itself is +0.915% ($43.00) but remains gated by XLE's failure.
-
-**B5 headlines (last flat-check per the schedule — none required after 10:00 while flat):** Same driver, escalating — a vessel was reportedly struck by an "unknown projectile" in the Strait of Hormuz overnight, Trump posted an image labeling the waterway "New US Territory," and Iran's Parliament Speaker reiterated the strait stays closed until sanctions lift and assets are unfrozen. Brent just under $91, WTI toward $85 — both at their highest since July. This is real, intensifying, and consistent with XLE/GUSH's relative strength — the reason energy hasn't cracked like the rest of the tape, just not enough yet to clear C1's specific bar.
-
-**No trade at 10:00.** Pre-commit for 10:30: enter GUSH (rank-2, C4) only if XLE's next reading clears **+1.486%** (back above the 9:30 baseline, satisfying leg 3) while still positive — no other condition substitutes. No individual stock is watched further; the gap to +0.75% is now 1.2–4.6pp across all nine, not closing on a single intraday check.
-
-### 10:30 management checkpoint — pre-commit checked, condition not met
-
-**A1 confirmed fresh: no positions, no resting orders.**
-
-**Pre-commit test: XLE at $63.425, +1.350%.** Required **+1.486%** to clear leg 3 — still short by 0.14pp, though it's the closest read yet (up from +1.206% at 9:40, +1.214% at 10:00). Condition not met; honoring the pre-commit means declining, not re-deciding on a softer read. GUSH itself +1.126% ($43.09), still gated.
-
-**Individual stocks, all still red:** NVDA -2.062%, AMD -4.647%, MU -5.391%, TSM -3.578%, SMCI -2.927%, AVGO -3.326%, TSLA -0.401%, COIN -0.326%, MSTR -0.891%. TSLA/COIN/MSTR narrowed their losses but none is within reach of +0.75%; no candidate.
-
-**No trade at 10:30.** This is the second-to-last slot of the preferred window — D1's early-shutdown clause doesn't apply (buying power is intact and the day's round trip is unspent; entry is still structurally possible, the gate just hasn't cleared), so the day continues on schedule rather than shutting down early. Pre-commit for 11:00, the window's last slot: same XLE trigger, **+1.486% while positive**. If still short at 11:00, drop to hourly per D1's cadence-reduction rule and stop watching the half-hour slots — the bar for a late entry rises from there.
-
-### 11:00 management checkpoint — preferred window closes, no trade, cadence dropped to hourly
-
-**A1 confirmed fresh: no positions, no resting orders.**
-
-**Pre-commit test: XLE at $63.21, +1.006%.** Required +1.486% — the gap widened again versus 10:30's +1.350%, moving away from the trigger, not toward it. Condition not met. GUSH itself is now barely positive (+0.692%, $42.90), its smallest reading yet.
-
-**Individual stocks, all still red and several re-widening:** NVDA -2.747%, AMD -5.883%, MU -7.524% (worst of the day), TSM -4.348%, SMCI -5.068%, AVGO -3.576%, TSLA -1.224%, COIN -1.960%, MSTR -2.298%. TSLA/COIN/MSTR's brief 10:30 narrowing reversed. No candidate — the morning offered nothing across either path, all four checks (9:40, 10:00, 10:30, 11:00) agree.
-
-**Preferred window closed with no entry.** Per D1's cadence-reduction rule, dropped to hourly and deleted the half-hour slots: 11:30, 12:30, 2:30 and 3:30 removed. **The 1:30pm slot's deletion was denied** (a tool-call permission decline, not a rulebook exception) — it stays armed and will need handling at the 1:00pm checkpoint rather than firing as a stray half-hour slot. Any entry from here forward must be **clearly better** than what the morning offered, not merely available — the bar is deliberately higher past this point, per E4/D1.
-
-### 12:00 management checkpoint — flat, declining a nominal pre-commit hit on a rule-design ground
-
-**A1 confirmed fresh: no positions, no resting orders.**
-
-**XLE at $63.525, +1.510% — the pre-commit's literal +1.486% trigger is technically cleared, still positive.** GUSH itself is at its best reading of the day, +1.807% ($43.38). On the number alone, the 10:00 pre-commit says enter.
-
-**Declining anyway, and flagging why rather than trading on it.** C1 is written as a **one-shot gate anchored to two fixed timestamps** — "positive at 9:30, positive at 9:40, 9:40 not below 9:30" — not a continuously-re-tested condition. That test already ran and **failed at 9:40** (9:40's +1.206% came in below 9:30's +1.486%); nothing in C1 provides for re-running it later in the session when price happens to revisit the same level. The XLE-clears-+1.486% tripwire in the 10:00/10:30/11:00 pre-commits was **my own shorthand for "the sector recovers," not an actual rule in the book** — treating it as a live entry trigger now would mean inventing a late-session re-entry gate for real money that C1's text does not contain. Per standing policy, a genuine rule gap gets flagged and the trade declined, not resolved by guessing. **Individual stocks are moot regardless:** NVDA -2.140%, AMD -5.099%, MU -6.525%, TSM -3.722%, SMCI -3.762%, AVGO -2.752%, TSLA +0.165% (barely positive, still far under +0.75%), COIN -1.119%, MSTR -2.032% — no candidate there either.
-
-**No trade at noon.** Worth a rule discussion later: should a sector-leveraged path get a defined late-session re-entry test distinct from C1's 9:30/9:40 anchor, or should recovered sector strength after the preferred window simply never be tradeable under the current gate design? Not resolved unilaterally today. Noon boundary also now in effect for the stall ladder (moot while flat).
-
-### 1:00pm management checkpoint — flat, no candidate, XLE tripwire retired
-
-**A1 confirmed fresh: no positions, no resting orders.**
-
-**Individual stocks, all still failing C3, best barely positive:** NVDA -2.222%, AMD -5.251%, MU -7.153%, TSM -4.125%, SMCI -2.417%, AVGO -2.959%, TSLA +0.050%, COIN -1.306%, MSTR -2.386%. No candidate.
-
-**XLE $63.465 (+1.414%), GUSH $43.33 (+1.690%)** — not tracked against the old +1.486% number anymore. That tripwire was retired at noon: C1 already resolved (fail) at 9:40 and isn't re-testable intraday, so continuing to watch for XLE to cross a specific level would just be re-litigating the same invented gate. Nothing left to watch on the sector side today absent an actual rule change.
-
-**No trade at 1:00pm.** Nothing new to pre-commit to — both paths are closed for the rest of the session on their own terms (individual stocks on distance from +0.75%, sector on C1 already having run its one shot), not on a moving price target. B5 is not required past 10:00 while flat per its own note — skipped, not missed.
-
-### 1:30pm — stray half-hour slot, fired despite the 11:00 cadence drop, no action needed
-
-**This is the slot whose deletion was declined at 11:00.** It's a one-shot (`run_once_at`) trigger, so firing here consumes it — no further cleanup call needed; it won't recur. **A1 confirmed fresh anyway: no positions, no resting orders.** Individual stocks unchanged in kind: NVDA -2.058%, AMD -5.183%, MU -7.062%, TSM -4.199%, SMCI -1.508%, AVGO -2.812%, TSLA -0.654%, COIN -1.250%, MSTR -2.501% — no candidate. XLE +1.454%, GUSH +1.361% — not a live signal per the noon/1:00 finding (C1 already resolved, not re-testable). No trade; nothing to pre-commit differently than 1:00's entry.
-
-### 2:00pm management checkpoint — flat, no change
-
-**A1 confirmed fresh: no positions, no resting orders.** Individual stocks: NVDA -2.333%, AMD -5.212%, MU -7.717% (new worst reading of the day), TSM -4.363%, SMCI -2.338%, AVGO -3.512%, TSLA -0.917%, COIN -2.557%, MSTR -4.536% — no candidate, several widening again. XLE +1.558%, GUSH +1.432% — still not a live signal, same basis as noon/1:00/1:30. No trade at 2:00pm.
-
-### 3:00pm management checkpoint — flat, no change; B4 moot
-
-**A1 confirmed fresh: no positions, no resting orders.** Nothing to plan an exit for under B4 — still flat all day. Individual stocks: NVDA -2.333%, AMD -5.194%, MU -7.699%, TSM -4.349%, SMCI -2.260%, AVGO -3.512%, TSLA -0.958%, COIN -2.511%, MSTR -4.554% — no candidate, essentially unchanged from 2:00. XLE +1.550%, GUSH +1.467% — not a live signal, same basis as prior checkpoints. No trade at 3:00pm. B5 not required past 10:00 while flat — skipped.
-
-### 4:00pm close — flat all day, D3 report
-
-**Confirmed fresh from the broker: no positions, no resting orders, no fills today.** `get_equity_orders` shows nothing created 2026-08-18 — every order on the account is from prior sessions (the Aug 17 GUSH round trip and earlier). Cash **$61.99**, buying power **$61.99**, no unsettled funds, no pending deposits — unchanged from this morning since no trade ever executed. **No row appended to `archive/trades.csv`** — nothing closed, nothing to log. D4 post-exit review doesn't apply — no exit today.
-
-**Why a clean flat day:** every individual leveraged-wrapper stock stayed red the entire session (worst: MU, -7.7% to -7.8% through the afternoon); the one live sector candidate, XLE/GUSH, cleared its 9:30 baseline again around midday but C1 is a one-shot 9:30-vs-9:40 test that had already failed and doesn't get a second look on a later price revisit — trading that recovery would have meant inventing a rule that doesn't exist, so it was declined and flagged instead (see the noon entry above). One round trip was available all day and correctly went unspent.
-
-**D1 early shutdown checked:** flat at 4:00 with no resting orders → delete 4:30–7:30. Verified via `list_triggers`: those slots were never armed in the first place (a flat book never arms them, per D1's grid note), so there is nothing to delete. Only the 8:00pm arming and its 8:20pm backup remain scheduled, both untouched.
-
-**20-name watchlist**, profiled just-in-time (B1) on 31 sessions through Aug 17, ranked by `mfe_per_stop` — ✓ = affordable as 1 whole share against $61.99 settled. Individual list swapped AMZN (yesterday's flattest name) for HD (today's real mover):
+**20-name watchlist**, re-profiled just-in-time (B1) fresh this morning on 38 sessions through Aug 18 close (`tools/profile.py`, never reused from yesterday) — ✓ = affordable as 1 whole share against **$61.99** buying power (unchanged, still flat, verified via `get_portfolio`):
 
 *15 individuals:*
-| Rank | Symbol | Underlying | Day chg | mfe_per_stop | Price | Afford |
+| Rank | Symbol | Underlying | Premarket chg | mfe_per_stop | Price | Afford |
 |---|---|---|---|---|---|---|
-| 1 | MSTX | MSTR | -1.66% | 0.903 | $8.32 | ✓ |
-| 2 | SMCX | SMCI | -3.34% | 0.770 | $12.01 | ✓ |
-| 3 | PLTR | — | -0.16% | 0.739 | $172.28 | ✗ |
-| 4 | MUU | MU | -4.65% | 0.688 | $31.54 | ✓ |
-| 5 | CONL | COIN | -1.56% | 0.685 | $4.03 | ✓ |
-| 6 | AMDL | AMD | -3.36% | 0.669 | $52.73 | ✓ |
-| 7 | TSMU | TSM | -2.55% | 0.580 | $68.24 | ✗ ($6.25 short) |
-| 8 | META | — | -1.22% | 0.570 | $562.05 | ✗ |
-| 9 | TSLL | TSLA | -1.51% | 0.503 | $8.33 | ✓ |
-| 10 | NVDL | NVDA | -2.05% | 0.493 | $35.06 | ✓ |
-| 11 | MSFT | — | +0.63% | 0.478 | $483.37 | ✗ |
-| 12 | AVGX | AVGO | -1.96% | 0.420 | $46.37 | ✓ |
-| 13 | GOOGL | — | -0.51% | 0.372 | $342.26 | ✗ |
-| 14 | HD | — | +2.39% | 0.352 | $345.95 | ✗ |
-| 15 | AAPL | — | +0.56% | 0.310 | $307.30 | ✗ |
+| 1 | MSTX | MSTR | +1.95%* | 0.918 | $7.98 | ✓ |
+| 2 | PLTR | — | −0.42% | 0.901 | $171.60 | ✗ |
+| 3 | TSLL | TSLA | +0.17%* | 0.879 | $8.51 | ✓ |
+| 4 | SMCX | SMCI | −1.28%* | 0.744 | $12.10 | ✓ |
+| 5 | CONL | COIN | +1.10%* | 0.714 | $4.01 | ✓ |
+| 6 | MUU | MU | **+4.42%** | 0.663 | $31.50 | ✓ |
+| 7 | NVDL | NVDA | +0.62%* | 0.614 | $35.46 | ✓ |
+| 8 | TSMU | TSM | +1.93%* | 0.539 | $67.19 | ✗ ($5.20 short) |
+| 9 | AMDL | AMD | +0.61%* | 0.511 | $52.78 | ✓ |
+| 10 | META | — | +0.30% | 0.511 | $545.70 | ✗ |
+| 11 | MSFT | — | −0.55% | 0.451 | $479.07 | ✗ |
+| 12 | GOOGL | — | −0.41% | 0.432 | $342.83 | ✗ |
+| 13 | AMZN | — | +0.64% | 0.431 | $261.22 | ✗ |
+| 14 | AVGX | AVGO | **−5.65%** | 0.391 | $42.79 | ✓ |
+| 15 | HD | — | n/a (no live quote pulled) | 0.353 | ~$337+ | ✗ |
+| — | AAPL | — | +0.05% | 0.350 | $310.17 | ✗ |
 
-TSMX (pricier TSM wrapper, $77.79) excluded in favor of TSMU — both unaffordable regardless.
+*Wrapper premarket % shown as the underlying's own move (proxy — the ETN itself gapped further, e.g. MUU +4.42% vs MU's +2.14%, leverage as expected). AVGX moved further than AVGO (−5.65% vs −3.09%) for the same reason.
 
 *5 sector/index vehicles* (feed C1; leveraged form noted for C4 rank-2/3):
-| Symbol | Proxy | Day chg | Leveraged form | mfe_per_stop | Price | Afford |
+| Symbol | Proxy | Premarket chg | Leveraged form | mfe_per_stop | Price | Afford |
 |---|---|---|---|---|---|---|
-| XLE | Energy | +1.09% | GUSH | 1.025 | $43.43 | ✓ |
-| SPY | Broad market | -0.40% | SPXL | 0.449 | $291.13 | ✗ |
-| QQQ | Tech/index | -1.22% | TQQQ | 0.454 | $73.45 | ✗ |
-| GDX | Gold miners | -1.03% | NUGT | 0.875 | $164.11 | ✗ |
-| SMH | Semis | -3.21% | SOXL | 0.574 | $134.22 | ✗ |
+| GDX | Gold miners | **+4.55%** | NUGT | 0.673 | $171.37 | ✗ ($109 short) |
+| SMH | Semis | +1.14% | SOXL | 0.521 | $134.18 | ✗ |
+| XLE | Energy | +0.39% | GUSH | 0.974 | $43.90 | ✓ |
+| QQQ | Tech/index | +0.38% | TQQQ | 0.487 | $73.47 | ✗ |
+| SPY | Broad market | +0.36% | SPXL | 0.469 | $292.47 | ✗ |
 
-**GUSH ranks #1 of all 21 profiled instruments (1.025) and is the only sector-leveraged vehicle both affordable and (if C1 holds) gate-eligible today** — same instrument as yesterday, same driver, still moving in the same direction. Top-ranked affordable individual: MSTX (0.903, also #1 among individuals) — but MSTR is red premarket, no thesis. Second-ranked affordable individual: SMCX (0.770) — also red, no thesis. **Nothing on the individual side has both a bullish move and clears the bar; re-confirm everything live at 9:40 per C7** — this is the 9:00 shortlist, void if capital or thesis moves.
+**GUSH ranks #1 of all 21 profiled instruments (0.974) and is the only sector-leveraged vehicle affordable today** — same instrument as both prior sessions, though today's driver (modest energy strength) is far weaker than yesterday's Hormuz escalation; no fresh energy catalyst overnight. **The real story — gold/GDX — has no affordable vehicle:** NUGT at $171.37 is more than 2.7x the account's buying power, so the week's biggest, most sourced move is untradeable here regardless of how C1 reads at 9:30/9:40. Top-ranked affordable individual: **MSTX (0.918)**, MSTR premarket-strong (+1.95%) — plausible thesis, unconfirmed until 9:40. Also notable: **MUU (0.663, rank 6)** is up a real +4.42% premarket on the memory/SK Hynix tailwind, well clear of C3's +0.75% bar if it holds into the open. **Nothing decided yet — re-confirm everything live at 9:30/9:40 per C1/C3/C7; this is the 9:00 shortlist, void if capital or thesis moves.**
 
 **Stale for any later session; refresh before trusting.**
 
