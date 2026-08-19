@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.6.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.7.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -243,17 +243,16 @@ Both as day change; proxy map in **E3**. If `underlying_pct < sector_pct` → **
 **Long-only, end to end.** Every single-stock name in the universe is a leveraged-*long* wrapper, so this gate cannot produce a short or inverse trade and does not try. Inverse views go through the sector path (C1 + an inverse sector ETF).
 
 1. **Magnitude** — day change **≥ +0.75%** from prior close, up only. Measure the *underlying stock*, never the leveraged wrapper; the wrapper is just the multiple.
-2. **Volume** — relative volume **≥ 1.25×** the 10–30 session baseline. A move on light volume is not confirmed.
 
-**Legs 1–2 together are sufficient to qualify a candidate.**
+**Leg 1 alone is sufficient to qualify a candidate.**
 
-3. **Moving average — optional, adds weight only, never a trigger and never a veto.** When price is actually testing the 50- or 200-day SMA, check its slope over 5–10 sessions. Rising MA + bounce up → extra confirmation for the long. Falling MA + rejection → **not counted at all**, neither as a reason to decline nor as an inverse trigger. Skip if price is not near either average.
+2. **Moving average — optional, adds weight only, never a trigger and never a veto.** When price is actually testing the 50- or 200-day SMA, check its slope over 5–10 sessions. Rising MA + bounce up → extra confirmation for the long. Falling MA + rejection → **not counted at all**, neither as a reason to decline nor as an inverse trigger. Skip if price is not near either average.
 
-Screen legs 1–2 at **9:00** with the scanner (`% Change` + `Relative volume`, or the gainers preset ranked by relative volume). **Re-confirm both live at 9:40** — a 9:00 read is stale by the open.
+Screen leg 1 at **9:00** with the scanner (`% Change`, or the gainers preset). **Re-confirm live at 9:40** — a 9:00 read is stale by the open.
 
-Fails legs 1–2 → not a major-move candidate; fall back to a sector read or no trade.
+Fails leg 1 → not a major-move candidate; fall back to a sector read or no trade.
 
-> 0.75% / 1.25× are **starting defaults, not backtested constants.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
+> **Volume removed entirely as a gating leg, 2026-08-19** — see the commit history for why. +0.75% is a **starting default, not a backtested constant.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
 
 ## C4. Instrument priority
 
