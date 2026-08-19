@@ -564,12 +564,26 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 11:00, the window's last slot (also the noon-adjacent one — still before noon):** re-derive the stall count cold. A third consecutive stall (price ≤ ~$44.41) → **SELL ALL** per B3's before-noon rule, regardless of anything else. A price clearing $44.4137 resets the count to 0 and advances `run_high` to that price. A price clearing $44.79 additionally triggers stage 2 (half-risk), moving the stop to $43.70.
 
+### 11:00 management checkpoint — 3rd stall, SELL ALL executed, small real win
+
+**A1 confirmed fresh: position 1 GUSH @ $44.25, stop still confirmed resting at $43.14.**
+
+**Stall derivation, cold:** checkpoint price at 11:00 (read ~2026-08-19T15:00:51Z): **$44.38** — still below the $44.4137 progression threshold. **Count: 3, before-noon rule fires: SELL ALL, no exceptions.**
+
+**Executed per B3's sequence — cancel the resting stop first, then exit on a marketable limit:**
+1. Cancelled stop `6a85b312` — confirmed `cancelled` via order response before proceeding, no race.
+2. Sold 1 GUSH, marketable limit $44.45 (bid $44.47 at review) — **filled $44.4656** (order `6a85c5cb`), 1.6¢ of price improvement above the limit floor.
+
+**Result: +$0.2156, +0.49% on the position, r = +0.194.** A genuine small win, not a stop-out — the new before-noon 3-stall ladder (policy v3.6, first real test) let this develop through two stalls that the old 2-stall/breakeven-lock rule would have exited at stall 1, and it happened to still be net positive when stall 3 forced the exit. Hold time 80 minutes (09:43:21 → 11:03:39 ET). Full detail, MAE/MFE, and slippage in `archive/trades.csv`, not repeated here.
+
+**E2's one round trip is now spent for today — no further entries possible regardless of what develops.** D1 early shutdown applies: deleting all remaining intraday slots (11:30 through 3:30), keeping only 4:00 close, 8:00 arming, 8:20 backup. D4 post-exit review scheduled for ~11:33 ET (30 minutes post-exit) via a one-off reminder, since the grid itself is being shut down.
+
 ---
 
 ## Current state
 
-**Holding GUSH.** 1 share, filled $44.25 at 09:43:21 ET 2026-08-19, stop resting $43.14 — full detail and the ratchet schedule in E5's 9:40 entry note, not repeated here. Last close 2026-08-18: no trade. Prior close 2026-08-17: one trade (GUSH, -$0.02, r=-0.02) — full detail lives in `archive/trades.csv` and the commit history.
+**Flat.** Round trip spent for 2026-08-19: GUSH, +$0.22, r=+0.194, 3-stall before-noon exit — full detail in `archive/trades.csv` and the commit history, not repeated here. Prior close 2026-08-18: no trade. 2026-08-17: one trade (GUSH, -$0.02, r=-0.02).
 
-**Loss streak 1 of 3** (cleared 2026-08-15, unchanged today — a flat day neither adds to nor clears a streak). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
+**Loss streak 0 of 3** — today's GUSH win reset it per E1 ("a winner anywhere resets to zero"). Floor: **$30.42** (50% of deposited cash, recomputed each 9:00 — reconfirm live, don't trust this number past the next research checkpoint).
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
