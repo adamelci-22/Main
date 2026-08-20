@@ -520,12 +520,48 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Five real candidates already clearing C3's magnitude bar at 9:30 (informational, formal check is 9:40 live):** MSTX, CONL, SMCX, MUU, AAPL. MSTX and CONL remain the clearest story — same named catalyst (crypto bill), still moving together, still enormous. SMCX's sudden strength is unexplained so far and needs a headline check before trusting it. **Re-confirm everything live at 9:40 — this reading is 9-10 minutes old already and today's tape is moving fast.**
 
+### 9:40 entry — MSTX, individual leveraged stock (C4 rank 1)
+
+**A1 re-confirmed fresh: no positions, no resting orders, streak 0/3, floor clear.** **Real correction to this morning's capital note:** `get_portfolio` shows buying power **$46.21**, not the ~$157-202 speculated at 9:00 — `get_accounts` shows $156.65 of today's $202.86 cash is `unsettled_funds` (the BSX sale proceeds, T+1, same rule that constrained yesterday's own GUSH sale). **Settled, spendable cash today is $46.21, materially smaller than assumed this morning.**
+
+**C1 re-checked at 9:40 (read ~2026-08-20T13:40:52Z):** XLE +1.681% (up from 9:30's +1.274% — passes all three legs). SMH +0.428% (up from +0.255% — also passes all three legs). Both sector-leveraged paths (GUSH, SOXL) are technically alive, but moot — no individual-stock candidate is needed today, see below.
+
+**C3 magnitude re-confirmed live for all 15 individuals — 8 clear the +0.75% bar:** MSTX +11.735%, CONL +10.215%, SMCX +7.980%, AMDL +2.249%, MUU +1.778%, AVGX +1.676%, NVDL +1.344%, TSMU +1.070%. **AAPL fell back below the bar** (+0.29%, was +0.81% at 9:30) — dropped from contention. Everything else stayed negative (TSLL, PLTR, GOOGL, AMZN, META, MSFT).
+
+**C7 ranking (mfe_per_stop, ignoring price):** MSTX 1.001 > CONL 0.779 > SMCX 0.744 > MUU 0.663 > NVDL 0.614 > TSMU 0.539 > AMDL 0.511 > AVGX 0.391. **Affordability against the real $46.21:** MSTX ✓ ($10.92 ask) · CONL ✓ ($5.13) · SMCX ✓ ($12.74) · MUU ✓ ($30.34) · NVDL ✓ ($34.69) · AVGX ✓ ($41.80) · **TSMU ✗** ($66.13, $19.92 short) · **AMDL ✗** ($49.25, $3.04 short). Top two for the record: MSTX 1.001, CONL 0.779.
+
+**C4:** all eight are rank 1 (individual leveraged stock, C3 cleared, wrapper affordable) — no rank-2/3 fallback needed.
+
+**C2 checked for the top pick, MSTX:** underlying MSTR +6.791% vs. its sector proxy IBIT (crypto, per E3) +4.358% — **underlying leads**, passes. (MSTR itself, not the 2x wrapper, is the correct comparison per C2's text.)
+
+**C5 catalyst:** Trump pressing Congress on crypto legislation, Bitcoin rallying on the news, MSTR and COIN moving together — real, named, sourced this morning, two-sided confirmation. Not "it's going up."
+
+**C9 checked:** within the preferred window (9:40, right at open of it). Spread priced: bid $10.86/ask $10.88 at review (1-2¢ wide), round-trip ~4¢ against a target move of roughly $1.30/share (12% of ~$10.85) — trivial. `all_day_tradability` confirmed tradable beforehand.
+
+**Sizing per C8 (v3.8):** floor($46.21 ÷ $10.92 ask) = **4 shares**, not a flat 1 — the first real test of the new full-deployment rule.
+
+**Entry executed:** BUY 4 MSTX, marketable limit $10.98, **filled avg $10.8399** (order `6a87043d`, verified via order response, 09:42:21 ET), total cost **$43.36**. Filled *below* the limit and the review-time ask — favorable. `shares_available_for_sells` etc. not yet checked, position confirmed via the fill itself.
+
+**Protective stop placed immediately, confirmed resting** (order `6a870454`, state `confirmed`): stop_market, **$10.17** (stage 1 = fill × (1 − 6.19%)), quantity 4.
+
+**Full ratchet schedule for this fill ($10.8399), from this morning's fresh profile (stop_pct 6.19%, target_pct 12.00%, breakeven_trigger 6.20%, trail_pct 4.13%, stall_threshold 0.93%, min_stop_move 1.00%):**
+
+| Stage | `run_high` reaches | Stop becomes |
+|---|---|---|
+| 1 — entry | $10.84 (fill) | **$10.17** ← resting now |
+| 2 — half-risk | $11.18 | $10.50 |
+| 3 — breakeven | $11.51 | $10.84 (fill) |
+| 4 — trail | past stage 3 | `run_high × (1 − 4.13%)`, recomputed every checkpoint |
+| target | $12.14 | **SELL ALL** |
+
+**Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop (only the ratchet stages above can). This is a wide-stop, wide-target instrument (6.19%/12.00%) — a normal-looking dollar move will be a small percentage of it; don't mistake a few-cent wiggle for a real signal.
+
 ---
 
 ## Current state
 
-**Not flat as of the 2026-08-20 9:00 checkpoint** — the system's own book is flat (last close: GUSH, +$0.22, r=+0.194, 3-stall before-noon exit, 2026-08-19), but the broker shows 3 shares of BSX held from the governor's own overnight manual trade, with a queued sell expected to clear at the 9:30 open. **Re-verify before any entry** — A1's "position already open" blocks new positions until this actually clears. Prior trades: 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
+**Holding MSTX.** 4 shares, filled avg $10.8399 at 09:42:21 ET 2026-08-20, total cost $43.36, stop resting $10.17 — full detail and the ratchet schedule in E5's 9:40 entry note, not repeated here. The overnight BSX position (governor's own manual trade, not this system's) cleared at the 9:30 open as expected. Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
 
-**Loss streak 0 of 3** (reset 2026-08-19 by the GUSH win, per E1 "a winner anywhere resets to zero"). **A deposit landed 2026-08-19: total value ~$202, buying power ~$157-202 depending on BSX** — floor and every affordability number were recomputed fresh this morning (E5); don't trust anything cached from before.
+**Loss streak 0 of 3** (reset 2026-08-19 by the GUSH win, per E1 "a winner anywhere resets to zero"). **Settled buying power is $46.21, not the ~$202 total** — $156.65 of today's cash is unsettled (T+1 on the BSX sale proceeds). Don't assume the larger number is spendable; check `get_accounts` unsettled_funds before any capital assumption.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
