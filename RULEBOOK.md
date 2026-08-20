@@ -494,6 +494,32 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Stale for any later session; refresh before trusting.**
 
+### A1 re-verified, BSX cleared
+
+**Position check fresh from the broker at 9:31 ET: no positions, no resting orders.** The overnight BSX shares are gone — the queued market sell cleared at the open as expected. A1's blocking condition is clear; nothing prevents an entry today on that front.
+
+### C1 Gate-1 baseline — formal 9:30 reading
+
+**Recorded 9:30 checkpoint, read time 2026-08-20T13:31:15Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
+
+| Proxy | 9:30 day change | vs. premarket |
+|---|---|---|
+| XLE | **+1.274%** | strengthened (+1.15%→+1.27%) — energy's third-session grind continues |
+| SMH | +0.255% | flipped positive (was −0.50% premarket) |
+| GDX | −0.380% | recovered most of its premarket loss but still negative — fails leg 1 |
+| SPY | −0.365% | ~flat, still negative — fails leg 1 |
+| QQQ | −0.434% | still negative — fails leg 1 |
+
+**Only XLE and SMH are alive for C1 at 9:30** — SPY, QQQ, GDX all fail leg 1. XLE remains the strongest and most consistent; SMH just barely flipped positive and needs to hold, not just print green once.
+
+**Individual candidates — wrapper prices at 9:30, holding vs. premarket:**
+
+*Still strong or newly clearing C3's bar:* MSTX +11.27% (down from the premarket spike but still enormous — MSTR/crypto-bill thesis intact), CONL +12.15% (held essentially flat vs. premarket, still enormous), **SMCX +6.70%** (flipped hugely positive from ~flat premarket — SMCI rallying, unclear catalyst yet, worth checking at 9:40), AVGX +1.26% (positive), **MUU +0.77%** (flipped positive, clears C3's +0.75% bar), **AAPL +0.81%** (flipped positive, clears the bar), NVDL +0.60% (positive but short of the bar).
+
+*Still negative, not candidates:* TSLL −2.29% (TSLA still weak), AMZN −1.41% (worsened), PLTR −0.86%, GOOGL −0.75%, META ~flat, MSFT ~flat, TSMU/AMDL both showing 0.00% (stale prints, no fresh trade yet at read time).
+
+**Five real candidates already clearing C3's magnitude bar at 9:30 (informational, formal check is 9:40 live):** MSTX, CONL, SMCX, MUU, AAPL. MSTX and CONL remain the clearest story — same named catalyst (crypto bill), still moving together, still enormous. SMCX's sudden strength is unexplained so far and needs a headline check before trusting it. **Re-confirm everything live at 9:40 — this reading is 9-10 minutes old already and today's tape is moving fast.**
+
 ---
 
 ## Current state
