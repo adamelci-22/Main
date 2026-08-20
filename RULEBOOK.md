@@ -576,6 +576,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **E2's one round trip is now spent for today — no further entries possible.** D1 early shutdown executed: 11 remaining intraday slots deleted (10:30 through 3:30), verified via `list_triggers` — exactly 3 left: 4:00 close, 8:00 arming, 8:20 backup.
 
+**10:30 — stray, fired anyway.** This slot had already been queued before its deletion landed (same race as prior sessions' stray half-hour slots). Re-verified fresh: no positions, no new orders since the 10:26 exit. Nothing to do — already covered above.
+
 ---
 
 ## Current state
