@@ -450,153 +450,56 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*As of Aug 19 2026, ~9:08am ET (premarket):* **Mixed, no dominant driver — semis/tech still soft after yesterday's rout, but gold miners are the real story.** Bond yields and oil remain elevated, pressuring valuations broadly (30-year Treasury yield near a two-decade high per overnight coverage). FOMC minutes and earnings from ADI, TJX, LOW, TGT and EL land today — none of that maps to anything in this watchlist. **Gold is the genuine catalyst:** bullion is at/near $4,400/oz, GDX has surged ~21% over five sessions on heavy retail inflows ($419M into GDX in August alone) hitting decade-highs — a real, sourced, multi-day story, not a single headline. Broadcom (AVGO) is down hard on valuation reassessment ahead of its Sept 2 earnings, unrelated to the gold move. **Caution on secondary web sources today:** one search result claimed MU traded at $921.63 overnight (down ~2%), which directly contradicts the broker's own premarket quote (+2.1%, $960.86) — treating that as noise and trusting the broker feed, not the web article, for anything price-specific.
+*As of Aug 20 2026, ~9:05am ET (premarket):* **Crypto is the real story — a named, sourced catalyst, not a mood.** Trump is pressing Congress to pass a key crypto bill; Bitcoin jumped on the news and MSTR/COIN are moving hard alongside it. Broader tape is soft: Nasdaq-100 futures -0.5%, S&P/Dow flat, tech mostly lower (Oracle, AMD, Micron, Marvell all down) on renewed yield pressure — the Treasury announced it will more than double its debt-repurchase program after yields hit levels last seen ~20 years ago, though the S&P actually rose Wednesday once yields eased on that same announcement. Oil holds its four-day run near $85.
 
-**Premarket individual moves** (vs. adjusted previous close, broker quotes): MU **+2.14%**, MSTR +1.95%, TSM +1.10%, COIN +1.10%, NVDA +0.62%, AMD +0.61%, AMZN +0.64%, META +0.30%, TSLA +0.17%, AAPL +0.05%, GOOGL −0.41%, PLTR −0.42%, MSFT −0.55%, SMCI −1.28%, **AVGO −3.09%** (worst, valuation-driven per above). MU is the standout — real memory-sector tailwind (SK Hynix +3.9% premarket on a buyback) plus a sharp reversal off yesterday's -7% session.
+**⚠ Unexpected account state, resolved before this checkpoint's work began:** found 3 shares of BSX (Boston Scientific, not a tracked instrument) held at $52.00 avg cost — `placed_agent: "user"` on both the buy and a queued sell confirmed via `get_equity_orders`, so this is the governor's own manual trade, not a system error or a rogue fill. The sell is a market order placed overnight (queued, since market orders don't execute outside regular hours) — expected to clear at the 9:30 open. **A1's "position already open" blocks new entries until it does; re-verify at 9:30/9:40, don't assume it's cleared.** Buying power currently shows $46.21, artificially low while those shares are held — not this morning's real number.
 
-**Sector proxies (premarket, informational only — not the C1 baseline):** SPY +0.36% · QQQ +0.38% · SMH +1.14% · XLE +0.39% · **GDX +4.55%** — gold miners far and away the leader, consistent with the sourced rally above.
+**Premarket individual moves** (vs. adjusted previous close, broker quotes): **MSTR +9.39%**, **COIN +5.96%** (both crypto-bill driven, real catalyst), NVDA +0.19%, AVGO +0.43%, META +0.36%, MSFT ~flat, AAPL ~flat, GOOGL −0.44%, PLTR −0.25%, AMD −0.63%, MU −0.77%, TSM −0.43%, SMCI −0.14%, AMZN −0.88%, **TSLA −1.71%** (worst). MSTR/COIN are the clear standout — everything else is noise-range on a soft, yield-pressured tape.
 
-**20-name watchlist**, re-profiled just-in-time (B1) fresh this morning on 38 sessions through Aug 18 close (`tools/profile.py`, never reused from yesterday) — ✓ = affordable as 1 whole share against **$61.99** buying power (unchanged, still flat, verified via `get_portfolio`):
+**Sector proxies (premarket, informational only — not the C1 baseline):** XLE +1.15% (oil's 4-day run continuing) · SPY −0.39% · QQQ −0.57% · SMH −0.50% · GDX −1.21% (gold miners actually red today, opposite of yesterday).
+
+**20-name watchlist**, re-profiled just-in-time (B1) fresh this morning on 38 sessions through Aug 19 close (`tools/profile.py`, never reused from yesterday) — ✓ = affordable against **expected ~$202 buying power once BSX clears** (not the current $46.21, which is temporary):
 
 *15 individuals:*
-| Rank | Symbol | Underlying | Premarket chg | mfe_per_stop | Price | Afford |
+| Rank | Symbol | Underlying | Premarket chg | mfe_per_stop | Price | Afford (~$202) |
 |---|---|---|---|---|---|---|
-| 1 | MSTX | MSTR | +1.95%* | 0.918 | $7.98 | ✓ |
-| 2 | PLTR | — | −0.42% | 0.901 | $171.60 | ✗ |
-| 3 | TSLL | TSLA | +0.17%* | 0.879 | $8.51 | ✓ |
-| 4 | SMCX | SMCI | −1.28%* | 0.744 | $12.10 | ✓ |
-| 5 | CONL | COIN | +1.10%* | 0.714 | $4.01 | ✓ |
-| 6 | MUU | MU | **+4.42%** | 0.663 | $31.50 | ✓ |
-| 7 | NVDL | NVDA | +0.62%* | 0.614 | $35.46 | ✓ |
-| 8 | TSMU | TSM | +1.93%* | 0.539 | $67.19 | ✗ ($5.20 short) |
-| 9 | AMDL | AMD | +0.61%* | 0.511 | $52.78 | ✓ |
-| 10 | META | — | +0.30% | 0.511 | $545.70 | ✗ |
-| 11 | MSFT | — | −0.55% | 0.451 | $479.07 | ✗ |
-| 12 | GOOGL | — | −0.41% | 0.432 | $342.83 | ✗ |
-| 13 | AMZN | — | +0.64% | 0.431 | $261.22 | ✗ |
-| 14 | AVGX | AVGO | **−5.65%** | 0.391 | $42.79 | ✓ |
-| 15 | HD | — | n/a (no live quote pulled) | 0.353 | ~$337+ | ✗ |
-| — | AAPL | — | +0.05% | 0.350 | $310.17 | ✗ |
+| 1 | TSLL | TSLA | −3.16%* | 1.010 | $8.90 | ✓ (but TSLA red — not a candidate) |
+| 2 | MSTX | MSTR | **+18.59%*** | 1.001 | $11.44 | ✓ |
+| 3 | PLTR | — | −0.25% | 0.923 | $175.00 | ✓ (barely) |
+| 4 | CONL | COIN | **+12.69%*** | 0.779 | $5.24 | ✓ |
+| 5 | SMCX | SMCI | ~flat* | 0.744 | $11.74 | ✓ |
+| 6 | MUU | MU | −0.77%* | 0.663 | $29.43 | ✓ (but MU red — not a candidate) |
+| 7 | NVDL | NVDA | +0.19%* | 0.614 | $34.40 | ✓ |
+| 8 | META | — | +0.36% | 0.579 | $548.30 | ✗ |
+| 9 | TSMU | TSM | −0.43%* | 0.539 | $64.85 | ✓ (but TSM red — not a candidate) |
+| 10 | MSFT | — | ~flat | 0.520 | $483.50 | ✗ |
+| 11 | AMDL | AMD | −0.63%* | 0.511 | $47.64 | ✓ (but AMD red — not a candidate) |
+| 12 | AMZN | — | −0.88% | 0.477 | $263.49 | ✗ |
+| 13 | GOOGL | — | −0.44% | 0.432 | $343.33 | ✗ |
+| 14 | AVGX | AVGO | +0.43%* | 0.391 | $41.66 | ✓ |
+| 15 | AAPL | — | ~flat | 0.368 | $316.85 | ✗ |
 
-*Wrapper premarket % shown as the underlying's own move (proxy — the ETN itself gapped further, e.g. MUU +4.42% vs MU's +2.14%, leverage as expected). AVGX moved further than AVGO (−5.65% vs −3.09%) for the same reason.
+*Wrapper premarket % is the wrapper's own move where it differs materially from the underlying (leverage effect, e.g. MSTX +18.6% vs MSTR's own +9.4%); shown as the underlying's move where the two track closely.
 
 *5 sector/index vehicles* (feed C1; leveraged form noted for C4 rank-2/3):
-| Symbol | Proxy | Premarket chg | Leveraged form | mfe_per_stop | Price | Afford |
+| Symbol | Proxy | Premarket chg | Leveraged form | mfe_per_stop | Price | Afford (~$202) |
 |---|---|---|---|---|---|---|
-| GDX | Gold miners | **+4.55%** | NUGT | 0.673 | $171.37 | ✗ ($109 short) |
-| SMH | Semis | +1.14% | SOXL | 0.521 | $134.18 | ✗ |
-| XLE | Energy | +0.39% | GUSH | 0.974 | $43.90 | ✓ |
-| QQQ | Tech/index | +0.38% | TQQQ | 0.487 | $73.47 | ✗ |
-| SPY | Broad market | +0.36% | SPXL | 0.469 | $292.47 | ✗ |
+| GUSH | Energy | **+1.15%*** (XLE) | — | 0.928 | $45.47 | ✓ |
+| NUGT | Gold miners | −1.21%* (GDX) | — | 0.832 | $182.45 | ✓ (but GDX red — not a candidate) |
+| SOXL | Semis | −0.50%* (SMH) | — | 0.521 | $119.34 | ✓ (but SMH red — not a candidate) |
+| TQQQ | Tech/index | −0.57%* (QQQ) | — | 0.487 | $70.92 | ✓ (but QQQ red — not a candidate) |
+| SPXL | Broad market | −0.39%* (SPY) | — | 0.469 | $287.48 | ✗ |
 
-**GUSH ranks #1 of all 21 profiled instruments (0.974) and is the only sector-leveraged vehicle affordable today** — same instrument as both prior sessions, though today's driver (modest energy strength) is far weaker than yesterday's Hormuz escalation; no fresh energy catalyst overnight. **The real story — gold/GDX — has no affordable vehicle:** NUGT at $171.37 is more than 2.7x the account's buying power, so the week's biggest, most sourced move is untradeable here regardless of how C1 reads at 9:30/9:40. Top-ranked affordable individual: **MSTX (0.918)**, MSTR premarket-strong (+1.95%) — plausible thesis, unconfirmed until 9:40. Also notable: **MUU (0.663, rank 6)** is up a real +4.42% premarket on the memory/SK Hynix tailwind, well clear of C3's +0.75% bar if it holds into the open. **Nothing decided yet — re-confirm everything live at 9:30/9:40 per C1/C3/C7; this is the 9:00 shortlist, void if capital or thesis moves.**
+**The real story: MSTX (#2, 1.001) and CONL (#6 overall, 0.779) are both up huge on the same named catalyst** (Trump's crypto bill push, Bitcoin rallying) — a genuine, sourced, two-sided confirmation (both crypto-adjacent names moving together), not a single-headline fluke. **Both are now easily affordable, including multiple shares, once the expanded capital is actually usable** — contingent on the BSX sell clearing before 9:40. GUSH (#3 overall among sector-leveraged, 0.928) continues its energy grind for a third session, also affordable, also still directionally alive. Every other rank-1 candidate (TSLL, MUU, TSMU, AMDL) is red today despite decent `mfe_per_stop` scores — direction matters more than the ranking number, and none of those clear C3 as written. **Nothing decided yet — re-confirm everything live at 9:30/9:40 per C1/C3/C7, and re-confirm A1 is actually clear before touching any of this.**
 
 **Stale for any later session; refresh before trusting.**
-
-### C1 Gate-1 baseline — formal 9:30 reading
-
-**Recorded 9:30 checkpoint, read time 2026-08-19T13:31:02Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
-
-| Proxy | 9:30 day change | vs. premarket |
-|---|---|---|
-| GDX | **+6.487%** | strengthened sharply (+4.55%→+6.49%) — the standout, but NUGT is unaffordable regardless |
-| SMH | +0.709% | weakened somewhat (+1.14%→+0.71%) |
-| QQQ | +0.343% | ~flat |
-| SPY | +0.374% | ~flat |
-| XLE | +0.267% | weakened (+0.39%→+0.27%) |
-
-**Unlike yesterday, all five sector proxies are positive at 9:30** — a genuinely different tape (broad, mild strength vs. yesterday's broad risk-off). Leg 1 ("positive at 9:30") passes for every proxy; all five stay alive into 9:40, though only XLE (via GUSH) is actually affordable and tradeable if C1 completes — GDX/SMH/QQQ/SPY all gate to unaffordable leveraged forms (NUGT/SOXL/TQQQ/SPXL).
-
-**Individual candidates — wrapper prices at 9:30, holding vs. premarket:**
-
-*Strengthened or flipped positive:* MSTX +4.10% (MSTR premarket +1.95%, extended), CONL +4.07% (COIN +1.10%→+4.07%), MUU +3.02% (MU +2.14%→+3.02%, still clear of C3's bar), TSMU +2.65% (TSM +1.10%→+2.65%), NVDL +2.09% (NVDA +0.62%→+2.09%), TSLL +1.89% (TSLA +0.17%→+1.89%), PLTR +1.10% (**flipped from −0.42% premarket**), AMZN +0.87%, AAPL +0.17%.
-
-*Weakened or flipped negative:* AVGX −4.48% (AVGO −3.09%→−4.48%, still the weakest by far), META −0.60% (**flipped from +0.30% premarket**), AMDL −1.61% (**flipped from +0.61% premarket**), SMCX −1.95% (SMCI −1.28%→−1.95%), GOOGL −0.31%, MSFT −0.15% (both still negative, marginal change).
-
-**Several individual candidates (MSTX, CONL, MUU, TSMU, NVDL, TSLL) are already well past C3's +0.75% magnitude bar at 9:30** — informational only, C3's formal re-confirmation is the 9:40 live check, not this reading. AMDL and META flipping negative removes them from contention unless they recover. This is a markedly more bullish, broader-based morning than yesterday across both the sector and individual sides — the opposite problem from Tuesday (too little qualified) may be too many qualifying, which makes C4/C7's ranking discipline the real work at 9:40.
-
-### 9:40 entry — GUSH, sector-leveraged (C4 rank 2), individual path shut out entirely on volume
-
-**A1 confirmed fresh: no positions, no resting orders, streak 1/3, floor unaffected.**
-
-**C3 re-confirmed live via the updated scanner (0.75%/1.25× filters, verified in `filters_applied`): 0 of 15 watchlist candidates qualify.** The scan returned only 4 matches market-wide (RDAC, YJ, TNON, MRNA — none on this list). Every one of yesterday's promising 9:30 movers (MSTX, CONL, MUU, TSMU, NVDL, TSLL) had real price legs but **none cleared the relative-volume leg** this early in the session — price without confirming volume, exactly what leg 2 exists to filter out. **No individual candidate today, full stop.**
-
-**C1 re-checked at 9:40 (read time ~2026-08-19T13:42:00Z):** XLE +0.683% (up from +0.267% at 9:30 — strengthens, passes all three legs). GDX +7.160% (up from +6.487% — also passes, but stays untradeable, no affordable vehicle at any C4 rank: NUGT $171+, GDX itself $95.32, both over the $61.99 buying power). SPY +0.248% (below 9:30's +0.374% — fails leg 3). QQQ −0.017% (flipped negative — fails). SMH −0.582% (flipped negative — fails). **XLE is the only proxy that both passes C1 and gates an affordable vehicle.**
-
-**C6 checked in place of a named catalyst** (energy/materials replacement gate): (1) multi-session higher highs/higher lows — GUSH closes $41.27→$42.61→$43.50 over the last three sessions, lows $40.70→$41.055→$42.17, highs $42.155→$42.665→$43.75, clean uptrend. (2) Related-complex confirmation — USO (crude) +0.485% today, same direction. (3) Not a breakdown — today's price ($44.20+) is trading **above** the entire prior session's range (high $43.75), a continuation, not a pullback threatening the low. All three legs hold.
-
-**C4/C7:** rank 2 (leveraged sector ETF, no individual cleared C3) is the only populated rank. Single surviving candidate, so no ranking dispute — `mfe_per_stop` 0.974 stated for the record, `mfe_to_target` 2.00 (comfortably under the 2.5 unreachable-target flag).
-
-**Entry executed:** BUY 1 GUSH, marketable limit $44.25 (ask was $44.22 at review), **filled $44.25** (order `6a85b2f9`, verified via order response, 09:43:21 ET). Slippage: $0.03 above the review-time ask, ordinary marketable-limit cost. Spread priced before entry: bid/ask $44.16/$44.22 (4¢ wide), round-trip ~8¢ against a $2.16 expected move to target — trivial. `all_day_tradability` confirmed tradable beforehand.
-
-**Protective stop placed immediately, confirmed resting** (order `6a85b312`, state `confirmed`): stop_market, $43.14 (stage 1 = fill × (1 − 2.50%)).
-
-**Full ratchet schedule for this fill ($44.25), from this morning's fresh profile (stop_pct 2.50%, target_pct 4.87%, breakeven_trigger 2.43%, trail_pct 1.38%, stall_threshold 0.37%, min_stop_move 0.34%):**
-
-| Stage | `run_high` reaches | Stop becomes |
-|---|---|---|
-| 1 — entry | $44.25 (fill) | **$43.14** ← resting now |
-| 2 — half-risk | $44.79 | $43.70 |
-| 3 — breakeven | $45.33 | $44.25 (fill) |
-| 4 — trail | past stage 3 | `run_high × (1 − 1.38%)`, recomputed every checkpoint |
-| target | $46.41 | **SELL ALL** |
-
-**Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop (only the ratchet stages above can). No individual-stock re-entry considered today — C3 is shut out market-wide, not just for this list, so nothing to re-check there barring a fresh scan.
-
-### 10:00 management checkpoint — 1 stall, no stop move, position and stop confirmed
-
-**A1 confirmed fresh: position 1 GUSH @ $44.25 avg cost, stop resting confirmed** (`6a85b312`, state `confirmed`, $43.14).
-
-**Stall derivation, cold, per B3:** `run_high` seeded at fill $44.25. Checkpoint price at 10:00 (read ~2026-08-19T14:01:06Z): **$44.00**. Progression threshold: $44.25 × 1.0037 = $44.41. $44.00 is below both `run_high` and the threshold → **stalled**. **Count: 1.** Before noon, 1–2 stalls do nothing to the stop — only the percentage ratchet stages can move it, and `run_high` hasn't advanced past $44.25, so no stage has triggered. **Stop stays at $43.14, unchanged.**
-
-**B5 headlines:** same driver, still escalating — Brent $91.52 (+0.55% today, +4.5% over three sessions), a fourth straight up day. A vessel was reportedly attacked leaving the Strait of Hormuz with a reported crew casualty; Trump confirmed no talks planned and the naval blockade stays in place. The fundamental thesis behind this trade is intact and, if anything, strengthening — today's small pullback in GUSH itself ($44.25→$44.00) reads as normal noise against that backdrop, not a reversal.
-
-**Pre-commit for 10:30:** re-derive the stall count cold against `run_high` $44.25 and the same $44.41 progression threshold. 2 consecutive stalls still does nothing before noon (3 needed to sell). No stop move expected unless price clears $44.79 (stage 2, half-risk) or a fresh high resets `run_high`.
-
-### 10:30 management checkpoint — 2 stalls, close to progressing but not there, stop unchanged
-
-**A1 confirmed fresh: position 1 GUSH @ $44.25 avg cost, stop resting confirmed** (`6a85b312`, `confirmed`, $43.14).
-
-**Stall derivation, cold, per B3:** `run_high` still $44.25 (10:00's $44.00 didn't advance it). Checkpoint price at 10:30 (read ~2026-08-19T14:31:15Z): **$44.405**. Progression threshold: $44.25 × 1.0037 = **$44.4137**. $44.405 is below the threshold by less than a cent — genuinely close, but per B3's rule (must *exceed* `run_high` by more than the threshold, a nominal gain above fill isn't enough) this is still **stalled. Count: 2** (checkpoint prices since entry: $44.25 fill → $44.00 stall 1 → $44.405 stall 2).
-
-**Before noon, 2 stalls still does nothing to the stop — 3 needed to sell, and only the percentage ratchet stages move it early.** `run_high` unchanged at $44.25, so no stage has triggered. **Stop stays at $43.14.**
-
-**This is the second-to-last slot of the preferred window; D1 early shutdown does not apply** — holding a position with a functioning stop is not "no entry possible," that clause is about flat-and-stuck, not held-and-fine. Nothing to shut down.
-
-**Pre-commit for 11:00, the window's last slot (also the noon-adjacent one — still before noon):** re-derive the stall count cold. A third consecutive stall (price ≤ ~$44.41) → **SELL ALL** per B3's before-noon rule, regardless of anything else. A price clearing $44.4137 resets the count to 0 and advances `run_high` to that price. A price clearing $44.79 additionally triggers stage 2 (half-risk), moving the stop to $43.70.
-
-### 11:00 management checkpoint — 3rd stall, SELL ALL executed, small real win
-
-**A1 confirmed fresh: position 1 GUSH @ $44.25, stop still confirmed resting at $43.14.**
-
-**Stall derivation, cold:** checkpoint price at 11:00 (read ~2026-08-19T15:00:51Z): **$44.38** — still below the $44.4137 progression threshold. **Count: 3, before-noon rule fires: SELL ALL, no exceptions.**
-
-**Executed per B3's sequence — cancel the resting stop first, then exit on a marketable limit:**
-1. Cancelled stop `6a85b312` — confirmed `cancelled` via order response before proceeding, no race.
-2. Sold 1 GUSH, marketable limit $44.45 (bid $44.47 at review) — **filled $44.4656** (order `6a85c5cb`), 1.6¢ of price improvement above the limit floor.
-
-**Result: +$0.2156, +0.49% on the position, r = +0.194.** A genuine small win, not a stop-out — the new before-noon 3-stall ladder (policy v3.6, first real test) let this develop through two stalls that the old 2-stall/breakeven-lock rule would have exited at stall 1, and it happened to still be net positive when stall 3 forced the exit. Hold time 80 minutes (09:43:21 → 11:03:39 ET). Full detail, MAE/MFE, and slippage in `archive/trades.csv`, not repeated here.
-
-**E2's one round trip is now spent for today — no further entries possible regardless of what develops.** D1 early shutdown executed: 9 remaining intraday slots deleted (11:30 through 3:30), verified via `list_triggers` — exactly 3 left: 4:00 close, 8:00 arming, 8:20 backup. D4 post-exit review scheduled as a one-off reminder for 11:53 ET (30 minutes post-exit, actual fire time), since the grid itself is now shut down.
-
-**D4 post-exit review, checked 11:53 ET:** GUSH now $44.185 (bid $44.10/ask $44.13) — **below** the $44.4656 exit fill by $0.28, −0.63%. **The exit reads as well-timed, not early:** price rolled over after the stall-3 sell rather than continuing to run, so the exit banked the gain right before it started giving back. One data point on the new v3.6 before-noon ladder — genuinely positive, but one read is not a pattern; keep watching future stall-3 exits before drawing a conclusion about whether the rule change is systematically well-timed or just got lucky here.
-
-### 4:00pm close — flat since 11:00, D3 report, funding update
-
-**Confirmed fresh from the broker: no positions, no resting orders.** No new trade between the 11:00 exit and now — per E2, flat stays flat for the rest of the session, so nothing to report beyond what's already logged above and in `archive/trades.csv`. D4 was already completed at 11:53 ET.
-
-**Funding update, mid-session:** a deposit landed today. `get_portfolio`: total value **$202.21**, cash $202.21, buying power **$157.74**. `get_accounts`: unsettled funds $44.47 (today's GUSH sale proceeds, T+1) and $140 still shown as `pending_deposits` — the new deposit itself hasn't fully settled either. This account is limited-margin-eligible (checked via `get_limited_margin_upgrade_info`); not acted on, just noted for the record — upgrading is the governor's call, not something to self-serve.
-
-**This materially changes tomorrow's setup, not just the number:** the new C8 sizing rule (v3.8, full deployment in whole shares rather than a flat 1) now has real room to matter — at ~$157 buying power, several previously 1-share-only watchlist names could size to 2-4+ shares depending on price at entry. The floor (50% of deposited cash) and every affordability check in C7/E5 need a fresh computation at 9:00 tomorrow; today's $61.99-based numbers throughout this log are now historical, not current.
-
-**D1 early shutdown remains in effect** — verified via `list_triggers`: exactly 2 remain, 8:00pm arming and its 8:20pm backup. No 4:30–7:30 slots existed to delete (flat book never arms them).
 
 ---
 
 ## Current state
 
-**Flat.** Round trip spent for 2026-08-19: GUSH, +$0.22, r=+0.194, 3-stall before-noon exit — full detail in `archive/trades.csv` and the commit history, not repeated here. Prior close 2026-08-18: no trade. 2026-08-17: one trade (GUSH, -$0.02, r=-0.02).
+**Not flat as of the 2026-08-20 9:00 checkpoint** — the system's own book is flat (last close: GUSH, +$0.22, r=+0.194, 3-stall before-noon exit, 2026-08-19), but the broker shows 3 shares of BSX held from the governor's own overnight manual trade, with a queued sell expected to clear at the 9:30 open. **Re-verify before any entry** — A1's "position already open" blocks new positions until this actually clears. Prior trades: 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
 
-**Loss streak 0 of 3** — today's GUSH win reset it per E1 ("a winner anywhere resets to zero"). **A deposit landed 2026-08-19: total value $202.21, buying power $157.74** (up from $61.99) — floor and every affordability number need a fresh 9:00 computation, don't trust anything cached from before today's deposit.
+**Loss streak 0 of 3** (reset 2026-08-19 by the GUSH win, per E1 "a winner anywhere resets to zero"). **A deposit landed 2026-08-19: total value ~$202, buying power ~$157-202 depending on BSX** — floor and every affordability number were recomputed fresh this morning (E5); don't trust anything cached from before.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
