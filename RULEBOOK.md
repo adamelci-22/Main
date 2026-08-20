@@ -574,7 +574,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **This exit is not B2/B3's output — it's a discretionary override, logged honestly as such.** The entry-side gates (C1-C9) still ran correctly and are valid data; the exit timing simply isn't evidence for or against the stall ladder. Per governor instruction, the next entry uses **full settled capital** — expected to be close to the full ~$202 once both today's BSX and MSTX sale proceeds settle T+1 (by tomorrow's session; re-verify fresh at 9:00, don't assume).
 
-**E2's one round trip is now spent for today — no further entries possible.** D1 early shutdown applies: round trip spent = no entry possible.
+**E2's one round trip is now spent for today — no further entries possible.** D1 early shutdown executed: 11 remaining intraday slots deleted (10:30 through 3:30), verified via `list_triggers` — exactly 3 left: 4:00 close, 8:00 arming, 8:20 backup.
 
 ---
 
