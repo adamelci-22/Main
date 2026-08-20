@@ -556,6 +556,16 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop (only the ratchet stages above can). This is a wide-stop, wide-target instrument (6.19%/12.00%) — a normal-looking dollar move will be a small percentage of it; don't mistake a few-cent wiggle for a real signal.
 
+### 10:00 management checkpoint — progressed (barely), run_high advances, stop unchanged
+
+**A1 confirmed fresh: position 4 MSTX @ $10.8399 avg cost, stop resting confirmed** (`6a870454`, state `confirmed`, $10.17).
+
+**Stall derivation, cold, per B3:** `run_high` seeded at fill $10.8399. Progression threshold: $10.8399 × 1.0093 = $10.9407. Checkpoint price at 10:00 (read ~2026-08-20T14:01:31Z): **$10.9415** — clears the threshold by less than a tenth of a cent, but clears it. **Progressed, not stalled. Count: 0.** `run_high` advances to $10.9415. No ratchet stage triggered yet (half-risk needs $11.18). **Stop stays at $10.17, unchanged.**
+
+**B5 headlines:** the catalyst is real and specific — Trump hosted crypto executives (Coinbase's Armstrong, the Winklevoss twins, Kraken's co-CEO, and Robinhood's own Vlad Tenev) at the White House Aug 19 pushing the "Clarity Act," a bill defining securities-vs-commodities status for crypto. Bitcoin rose to $71,834 (+11.5%), Ether +18.3%. This is the actual driver behind MSTX/CONL's move, confirmed by name — not a vague "crypto is up" guess.
+
+**Pre-commit for 10:30:** re-derive the stall count cold against the new `run_high` $10.9415 and a new progression threshold of $10.9415 × 1.0093 = **$11.0433**. No stop move expected unless price clears $11.18 (stage 2, half-risk) or a fresh high resets `run_high` again.
+
 ---
 
 ## Current state
