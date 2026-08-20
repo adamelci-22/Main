@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
-**Account:** Robinhood `462514035` ("Agentic"), cash, `agentic_allowed=true`.
-**Policy version: 3.8.** Bump on every rule/threshold change; record it in the commit.
+**Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
+**Policy version: 3.9.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -43,10 +43,12 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | Loss streak ≥ 3 | Count closed trades in `archive/trades.csv` (E1) |
 | Account below 50% of deposited cash | Recompute; never cache (E2) |
 | Candidate's risk numbers not computed | No profile → no stop → no trade (B1) |
-| An exit already happened today | Cash settlement: flat and **stays flat** all session (E2) |
+| Day-trade budget exhausted | ≥3 day trades already in the trailing 5 business days (E2) — one below the actual 4-trade PDT trigger |
 | Position already open | One position, one resting order (E2) |
 
 **⚠ CURRENT STATE — streak 1 of 3.** Governor cleared the breaker **2026-08-15**; count only trades closed after that date. One loss since: GUSH, closed 2026-08-17 (-$0.0199). The streak is computed from `archive/trades.csv`, the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
+
+**⚠ CURRENT STATE — day-trade budget exhausted as of 2026-08-20.** 4 day trades already sit in the trailing 5-business-day window (detail and dates in the Current State footer at the bottom of this file). **No new position until this is re-verified fresh and clears E2's cap** — do not assume it has cleared just because a new day has started.
 
 ## A2. Trigger hygiene
 
@@ -214,7 +216,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 # PART C — ENTRY (9:00 · 9:30 · 9:40 only)
 
-> **No position may be opened outside 9:40–4:00, and only one round trip per day exists.** Spend it well, not merely spend it.
+> **No position may be opened outside 9:40–4:00.** Multiple round trips per day are now possible (limited margin, since 2026-08-20) but each one spends part of the day-trade budget (E2) — check it fresh before every entry, not just the first.
 
 ## C1. Gate 1 — the sector must hold, 9:30 → 9:40
 
@@ -394,11 +396,11 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 ## E2. Account mechanics
 
 - **Floor: stop trading below 50% of *deposited* cash** — not account value. `deposited = total_value − all-time realized P&L − unrealized P&L`. Derived, never cached. **The floor does not rise with gains.**
-- **T+1 settlement.** Sale proceeds are unsettled until the next business day. After an exit the account is flat and **stays flat for the session** — no same-day rotation. Buying with *settled* cash and selling the same day is fine; selling something bought with *unsettled* proceeds is a GFV, and 3 GFVs = 90-day restriction. This cash account is **PDT-exempt**.
-- **No short selling** — a cash account cannot. Bearish views go through inverse ETFs bought long.
-- **One resting order per position** — a pending sell locks the share, so a stop and a take-profit cannot coexist.
+- **Limited margin, since 2026-08-20** (verified via `get_accounts`: `type: "limited_margin"`; verified via `get_portfolio`: `buying_power` now equals `total_value`, unsettled proceeds usable immediately). This removes the old T+1 settlement gate — same-day rotation across sequential positions is now mechanically possible. It does **not** grant borrowing/leverage beyond the account's own cash, and does **not** by itself confirm anything about GFV exposure beyond what's stated below. If the account type changes again, re-verify from primary sources before the first trade — port nothing forward blind.
+- **Pattern Day Trader (PDT) budget — the live constraint now, replacing T+1 as the binding limit.** A "day trade" is a buy+sell (or sell+buy) of the same security on the same calendar day. Margin accounts are restricted once they execute **4 or more day trades within a rolling 5-business-day window**; a PDT-restricted account must maintain **$25,000 minimum equity**, which this account cannot — triggering it would be effectively catastrophic (forced to close-only until cured). **Genuine unresolved uncertainty, not glossed over:** whether Robinhood's `limited_margin` is counted for PDT the same way full margin is has not been confirmed from a primary source — treat it as if it **does** count, the conservative assumption, until verified otherwise. **Count every day trade, don't estimate it:** every row in `archive/trades.csv` is inherently a day trade (B4/Part C force same-day entry and same-day close on every system-managed position), so each closed trade row = 1. **Also check `get_equity_orders` fresh** for any governor-placed manual round trip (buy and sell of the same symbol on the same calendar day) that wouldn't appear in the trade log — count those too; don't assume the log is complete. Sum both sources over the trailing 5 business days, today inclusive. **Block new entries once that count reaches 3** — one full trade below the actual 4-trade trigger, a deliberate buffer against the `limited_margin` uncertainty above and against any miscount. Recompute fresh at every entry-eligible checkpoint; never cache or carry a prior count forward.
+- **No short selling is authorized** — not part of this system's mandate regardless of account type. Bearish views go through inverse ETFs bought long.
+- **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
 - 24-hour tradability is optionality, never obligation.
-- **Settlement facts are verified for a *cash* account only.** If ever converted to margin, re-verify from primary sources before the first trade — port nothing.
 
 ## E3. Sector proxy map
 
@@ -582,8 +584,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## Current state
 
-**Flat.** Round trip spent for 2026-08-20: MSTX, -$0.54, r=-0.201, closed early by the governor's own off-cycle decision (not a rule-triggered exit) — full detail in `archive/trades.csv` and the commit history, not repeated here. Next entry uses full settled capital per governor instruction, expected ~$202 once today's sale proceeds settle T+1. Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
+**Flat.** **Account converted to limited margin today (2026-08-20, governor instruction)** — verified via `get_accounts`/`get_portfolio`, buying power now equals full account value ($202.32), no T+1 gate.
 
-**Loss streak 1 of 3** (the 2026-08-19 GUSH win reset it to zero; today's MSTX loss is the first since). Floor and buying power: reconfirm live at the next 9:00 checkpoint — today's numbers were complicated by two rounds of T+1 unsettled funds (BSX, then MSTX), don't carry either forward.
+**⚠ DAY-TRADE BUDGET IS EXHAUSTED — NO NEW ENTRIES until this is resolved.** Computed cold from `archive/trades.csv` + `get_equity_orders` (trailing 5 business days = Aug 14/17/18/19/20): **MSTX (Aug 20, buy 09:42 ET/sell 10:26 ET) = 1 day trade; BSX (Aug 20, buy filled 05:35 ET/sell filled 09:04 ET, both governor-placed manual orders, not logged to trades.csv since BSX isn't a watchlist name) = 1 day trade; GUSH Aug 19 = 1; GUSH Aug 17 = 1; Aug 18 and Aug 14 = none.** That's **4 day trades already inside the trailing window — the actual PDT trigger count**, reached via two trades placed today alone (BSX + MSTX). E2's cap (block at ≥3) is exceeded before this instruction could even change how the system trades.
+
+**Genuinely unresolved, not glossed over:** the Aug 17/19 GUSH trades and the Aug 20 BSX trade were executed while the account was still `cash`-type (or, for BSX, at least before the margin-conversion message arrived); whether Robinhood counts day trades made under cash status toward a `limited_margin` account's PDT tally is not confirmed from any tool available here, and no tool surfaced an explicit PDT-flag field to check whether the account has already been restricted. Treating the conservative case (they count) as binding until the governor says otherwise or it's verified from a primary source. Under that assumption the count does not fall back under the cap until roughly **2026-08-26** (Wed), when Aug 19's GUSH ages out of the trailing window — recompute fresh, don't trust this date blindly.
+
+Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit).
+
+**Loss streak 1 of 3** (the 2026-08-19 GUSH win reset it to zero; today's MSTX loss is the first since). Buying power: reconfirm live at the next checkpoint, don't assume today's figures carry forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
