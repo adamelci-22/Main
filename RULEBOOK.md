@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.10.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.11.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -234,7 +234,7 @@ Any failure at 9:40 → no entry **at 9:40** in that sector's leveraged vehicle.
 
 **Two fixed observations (9:30, 9:40) decide the 9:40 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
 
-**Does not gate a single-stock trade.** A stock moving decisively on its own does not need its sector to confirm; it is judged on its own move, and on Gate 2 if traded leveraged.
+**Does not gate a single-stock trade.** A stock moving decisively on its own does not need its sector to confirm; it is judged on its own move, and on Gate 2 if traded leveraged. **Every candidate, including single stocks, is still subject to C10's direction/reversal test** — this gate's leg 3 is the sector-proxy-only version of that same idea.
 
 ## C2. Gate 2 — a leveraged single-stock ETF's underlying must lead its sector
 
@@ -320,6 +320,25 @@ Then:
 - Verify `all_day_tradability` before entering.
 - **Price the spread:** read the actual bid/ask, **double it** for the round trip, subtract from the expected move — take it only if it still clears the target with room.
 - Check the price before building a thesis. A candidate you cannot buy is not a candidate.
+
+## C10. Momentum direction — decline a fading price, allow a confirmed reversal
+
+**Applies to every candidate, every entry-eligible checkpoint** — sector proxies, individual stocks, plain or leveraged, in addition to (never instead of) C1–C9. Built to catch a candidate that's fading right now without permanently locking out a genuine second-wave rally later in the same session.
+
+**Track, per candidate, from the day's own checkpoint reads already logged in E5** (9:30 is the first formal read; the 9:00 scan is informal/stale per C3 and does not count here):
+
+- `session_high` — the best checkpoint reading so far today. Advances any time a fresh high prints.
+- `session_low` — the lowest checkpoint reading recorded *since* `session_high` was last set. Only exists while price is currently below `session_high`; clears the instant a new `session_high` prints — a fresh high ends the pullback episode outright.
+
+**All three must hold, checked fresh at every entry-eligible checkpoint (never cached):**
+
+1. **Not currently falling.** This checkpoint's reading ≥ the immediately prior formal checkpoint's reading, for this candidate specifically. (The per-candidate, universal version of C1 leg 3 — C1 itself stays scoped to sector proxies only.)
+2. **If below `session_high`, the bounce off `session_low` must be real, not noise.** Price must clear `session_low × (1 + stall_threshold_pct)`, using *this candidate's own* `stall_threshold_pct` from today's fresh JIT profile (B1) — a choppier name needs a bigger bounce to count, a calmer one needs less. Automatically satisfied when price is at or above `session_high` (no pullback active, nothing to confirm).
+3. **Giveback ceiling.** Decline regardless of a qualifying bounce if `(session_high − price) / (session_high − prior_close) > 65%` — more than roughly two-thirds of the day's move already erased reads as a broken trend, not a dip. (`prior_close` = the official prior-session close, same reference C3 uses.) In practice this rarely binds on its own — a candidate that's given back that much has usually also failed C3's magnitude gate outright — but it exists as a backstop against buying a confirmed-but-small bounce inside an otherwise-collapsed move.
+
+Fails leg 1 → blocked outright, full stop, regardless of how the candidate otherwise ranks. Fails leg 2 or 3 while leg 1 passes → the "bounce" isn't real yet or the move is too far gone; wait for the next checkpoint rather than forcing it (C9's "never force a trade because the window is closing" applies here too).
+
+Reset `session_high`/`session_low` at 9:00 daily — nothing carries between sessions (per this file's own opening line).
 
 ---
 
@@ -597,6 +616,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 **PDT is confirmed eliminated — now independently verified twice.** First from Robinhood's own support page (earlier checkpoint pass), then re-confirmed this session from primary sources (FINRA.org Regulatory Notice 26-10, an SEC.gov filing, the Federal Register): FINRA's new intraday margin standard replaced PDT on **June 4, 2026** — already ~2.5 months in the past. No more 4-trades-in-5-days restriction, no more $25,000 minimum, any prior PDT flag auto-removed. Full detail and the residual smaller uncertainty (whether this explicitly covers `limited_margin` vs. only full margin, and whether the separate $2,000 margin-minimum applies here) is in E2 — not blocking, just flagged to watch for.
 
 **Weekly day-trade count as of 2026-08-20: 4** (MSTX + BSX today, GUSH 8/19, GUSH 8/17), well under the new self-imposed cap of 10 in a trailing 7 calendar days (E2) — **not blocking further entries today.** Multiple different candidates per day are now explicitly authorized per governor instruction, not just repeats of one symbol.
+
+**New this update — C10, the momentum-direction gate (v3.11).** Built directly from today's MSTX trade: governor correctly read a gap-and-fade (MSTX opened at its day high and sold off from there) that C1–C9 couldn't see, since none of them check a candidate's own reading against its immediately-prior checkpoint or against its own recent swing low. C10 now declines entry into any candidate that's currently falling checkpoint-to-checkpoint, but reopens once a *confirmed* bounce (sized to that candidate's own `stall_threshold_pct`, not a flat number) clears off the local low — so a real second-wave rally later in the day is still tradeable even if the candidate never reclaims its original high. A 65% giveback ceiling backstops it against buying a small bounce inside an otherwise-collapsed move. Not yet live-tested — first real read happens at the next entry.
 
 Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit).
 
