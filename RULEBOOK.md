@@ -566,12 +566,22 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 10:30:** re-derive the stall count cold against the new `run_high` $10.9415 and a new progression threshold of $10.9415 × 1.0093 = **$11.0433**. No stop move expected unless price clears $11.18 (stage 2, half-risk) or a fresh high resets `run_high` again.
 
+### 10:26 ET — off-cycle manual exit by the governor, before the 10:30 pre-commit ran
+
+**Not a checkpoint-driven decision.** The governor sold all 4 MSTX shares directly ("I sold I didn't like the trend"), ahead of the scheduled 10:30 check. Verified via `get_equity_orders`: sell order `6a870e85`, `placed_agent: "user"`, filled 4 @ **$10.705** avg, 10:26:13 ET. The resting protective stop (`6a870454`) was auto-cancelled by the broker at the same moment, not left orphaned.
+
+**A1 re-confirmed: no positions, no resting orders.** Result: **-$0.5396, -1.24% on the position, r = -0.201** — a small loss. Pulled real minute-bar historicals for the full hold rather than estimating from checkpoint samples: true high **$11.15** (13:45 UTC, MFE +2.87%), true low **$10.63** (14:20 UTC, MAE +1.94%) — the position was actually still up (+0.94%) as of the 10:00 checkpoint and touched +2.87% intraday before the reversal that prompted the exit. Full detail in `archive/trades.csv`.
+
+**This exit is not B2/B3's output — it's a discretionary override, logged honestly as such.** The entry-side gates (C1-C9) still ran correctly and are valid data; the exit timing simply isn't evidence for or against the stall ladder. Per governor instruction, the next entry uses **full settled capital** — expected to be close to the full ~$202 once both today's BSX and MSTX sale proceeds settle T+1 (by tomorrow's session; re-verify fresh at 9:00, don't assume).
+
+**E2's one round trip is now spent for today — no further entries possible.** D1 early shutdown applies: round trip spent = no entry possible.
+
 ---
 
 ## Current state
 
-**Holding MSTX.** 4 shares, filled avg $10.8399 at 09:42:21 ET 2026-08-20, total cost $43.36, stop resting $10.17 — full detail and the ratchet schedule in E5's 9:40 entry note, not repeated here. The overnight BSX position (governor's own manual trade, not this system's) cleared at the 9:30 open as expected. Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
+**Flat.** Round trip spent for 2026-08-20: MSTX, -$0.54, r=-0.201, closed early by the governor's own off-cycle decision (not a rule-triggered exit) — full detail in `archive/trades.csv` and the commit history, not repeated here. Next entry uses full settled capital per governor instruction, expected ~$202 once today's sale proceeds settle T+1. Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
 
-**Loss streak 0 of 3** (reset 2026-08-19 by the GUSH win, per E1 "a winner anywhere resets to zero"). **Settled buying power is $46.21, not the ~$202 total** — $156.65 of today's cash is unsettled (T+1 on the BSX sale proceeds). Don't assume the larger number is spendable; check `get_accounts` unsettled_funds before any capital assumption.
+**Loss streak 1 of 3** (the 2026-08-19 GUSH win reset it to zero; today's MSTX loss is the first since). Floor and buying power: reconfirm live at the next 9:00 checkpoint — today's numbers were complicated by two rounds of T+1 unsettled funds (BSX, then MSTX), don't carry either forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
