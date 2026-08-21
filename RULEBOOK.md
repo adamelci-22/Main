@@ -591,6 +591,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop. Also worth checking cold at 10:00: whether MSTX (declined here on C2 alone, not on quality) has continued outrunning CONL — if the gap between MSTR and IBIT closes or reverses, that's informational for tomorrow's read on C2's bite, not a reason to revisit today's already-placed trade.
 
+### 10:00 management checkpoint — progressed, run_high advances, stop unchanged
+
+**A1 confirmed fresh: position 31 CONL @ $6.3299 avg cost, stop resting confirmed** (`6a885613`, state `confirmed`, $5.98).
+
+**Stall derivation, cold, per B3:** `run_high` seeded at fill $6.3299. Progression threshold: $6.3299 × 1.0065 = $6.3711. Checkpoint price at 10:00 (read ~2026-08-21T14:01:35Z): **$6.435** — clears the threshold with room. **Progressed, not stalled. Count: 0.** `run_high` advances to $6.435. Stage 2 half-risk needs $6.47 — not reached yet. **Stop stays at $5.98, unchanged.**
+
+**Pre-commit for 10:30:** re-derive the stall count cold against the new `run_high` $6.435 and a new progression threshold of $6.435 × 1.0065 = **$6.4768**. If price clears $6.47 first (stage 2, half-risk), the stop moves to $6.15 regardless of the stall count.
+
 ---
 
 ## Current state
