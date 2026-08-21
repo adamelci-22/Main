@@ -643,18 +643,46 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **A1 re-confirmed: no positions, no resting orders. Weekly day-trade count: 6/10** (today's CONL round trip is now closed) — still well under the cap, no blocking effect. D1: no early shutdown — flat with the weekly cap still open means a fresh entry is still possible at any checkpoint through 3:30 per v3.10, not just today's first one.
 
+### 12:30pm — D4 post-exit review, then a second entry: MSTX
+
+**D4, ~30 minutes after the 12:02:54 exit:** CONL trades at $6.34 as of 12:31 ET, **below** the $6.4110 exit. The noon-crossing rule's exit reads as well-timed, not early — price kept declining after the sell rather than continuing to run. One data point; not evidence the rule is generally well-tuned, just that it wasn't premature here.
+
+**A1 confirmed fresh: flat, no orders.** With the weekly cap still open (6/10) and the market still live, checked whether a genuinely better opportunity exists rather than sitting idle by default.
+
+**MSTX has re-qualified since the 9:40 decline.** Fresh quotes: MSTX +13.58% on the day (was +11.51% at 9:40, a new high versus its last formal checkpoint read). **C2 has flipped decisively:** MSTR +6.92% now leads IBIT +6.24% by 0.68pp — a real, comfortable margin, not the 0.14pp deficit that declined it this morning. Still ranks #1 by `mfe_per_stop` (0.844, unchanged — this morning's JIT profile is still valid intraday). C3 clears easily. **C10:** treating 9:40 as the last formal checkpoint for this candidate (it wasn't re-scanned at every 30-minute mark while CONL was being managed instead — flagged honestly rather than assumed clean), the current reading is a new high above it, so leg 1 passes.
+
+**C9 checked:** spread priced from the book: bid $12.65/ask $12.66, 1¢ wide — trivial against an 11.43% target move. Genuinely re-qualified, not chased out of boredom — the specific gate that declined it this morning (C2) is the one that reversed.
+
+**Sizing per C8:** floor($202.32 ÷ $12.75 review ask) = 15 shares, reviewed clean.
+
+**Entry executed:** BUY 15 MSTX, marketable limit $12.75, **filled avg $12.6591** (order `6a887d9f`, verified via order response, 12:32:31 ET), total cost **$189.89**. Filled below the limit — favorable.
+
+**Stop error, caught and corrected before it mattered:** first placed the protective stop at $11.86 — a miscalculation; the correct stage-1 stop for stop_pct 6.77% is fill × (1 − 0.0677) = **$11.80**, not $11.86. Caught immediately via a direct recomputation, cancelled the wrong stop (verified `cancelled` with zero fill), and placed the correct one. **Protective stop now resting at $11.80** (order `6a887dd0`, state `confirmed`), quantity 15. Logged plainly per D3 ("correct your own errors promptly, including ones that look bad") rather than only noting the corrected end state.
+
+**Full ratchet schedule for this fill ($12.6591), from this morning's fresh profile (stop_pct 6.77%, target_pct 11.43%, breakeven_trigger 5.71%, trail_pct 4.51%, stall_threshold 0.86%, min_stop_move 1.00%):**
+
+| Stage | `run_high` reaches | Stop becomes |
+|---|---|---|
+| 1 — entry | $12.66 (fill) | **$11.80** ← resting now |
+| 2 — half-risk | $13.02 | $12.23 |
+| 3 — breakeven | $13.39 | $12.66 (fill) |
+| 4 — trail | past stage 3 | `run_high × (1 − 4.51%)`, recomputed every checkpoint |
+| target | $14.11 | **SELL ALL** |
+
+**Pre-commit for 1:00:** derive the stall count cold from checkpoint prices per B3. **This checkpoint runs at 12:30, already past noon — the tighter at-or-after-noon table applies from the very first check: 1 stall moves the stop to whichever is higher (breakeven or the current ratchet level), 2 stalls forces SELL ALL.** No 3-stall grace period today, unlike CONL's morning entry.
+
 ---
 
 ## Current state
 
-**Flat.** Round trip closed for 2026-08-21: CONL, +$2.51, r=+0.230, a genuine rule-driven win (afternoon noon-crossing stall rule, not discretionary). Weekly day-trade count now **6/10** — still well under the cap, not blocking; a fresh entry remains possible at any checkpoint through 3:30 per v3.10.
+**Holding 15 MSTX @ $12.6591 avg (entered 12:32:31 ET), stop resting at $11.80.** This is the day's **second** round trip — CONL closed +$2.51 at noon, MSTX opened 30 minutes later once C2 (the gate that had declined it that morning) reversed decisively in its favor. Weekly day-trade count now **7/10** (will be 8/10 once this one closes) — still under the cap, watch it more closely if a third trade is considered today.
 
-**C10 lived up to its design on its first real use, and the noon-crossing stall rule did too, in the same trade.** TSLL and AMDL both still cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined separately on **C2** (its underlying MSTR no longer led sector proxy IBIT, by a thin 0.14pp) — C10 and C2 catch genuinely different failure modes. CONL, ranked #2, passed both, ran to a stage-2 ratchet advance, then correctly got sold under B2's tighter at-or-after-noon table the moment the clock crossed 12:00 with a stall count already at 2.
+**C10 and the noon-crossing stall rule both did exactly what they were built for on CONL, the day's first trade.** TSLL and AMDL cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined on **C2** (MSTR no longer led IBIT, by a thin 0.14pp). CONL, ranked #2, passed both, ratcheted once, then correctly got sold under B2's tighter at-or-after-noon table the moment the clock crossed 12:00 with a stall count already at 2.
 
-**Order execution note:** the first entry attempt (32 shares, limit $6.29) went unfilled on a fast-moving tape and was cancelled cleanly (verified zero fill before re-pricing) — re-priced to a $6.38 limit and filled 31 shares at $6.3299. Worth watching whether this kind of slippage-from-speed recurs on crypto-catalyst mornings specifically.
+**A real execution error, caught and corrected:** MSTX's protective stop was first placed at $11.86 — a miscalculation (correct value: fill × (1 − 6.77%) = $11.80). Caught immediately on recomputation, wrong stop cancelled with zero fill verified, correct $11.80 stop placed. Worth naming plainly rather than glossing past it.
 
 Prior trades: 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
 
-**Loss streak 0 of 3** — today's CONL win resets it to zero per E1 ("a winner anywhere resets to zero"), clearing the 2026-08-20 MSTX loss. Buying power: reconfirm live at each checkpoint, don't assume a stale figure carries forward.
+**Loss streak 0 of 3** — the 2026-08-21 CONL win reset it to zero, clearing the 2026-08-20 MSTX loss. Buying power: reconfirm live at each checkpoint, don't assume a stale figure carries forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
