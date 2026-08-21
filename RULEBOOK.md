@@ -599,6 +599,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 10:30:** re-derive the stall count cold against the new `run_high` $6.435 and a new progression threshold of $6.435 × 1.0065 = **$6.4768**. If price clears $6.47 first (stage 2, half-risk), the stop moves to $6.15 regardless of the stall count.
 
+### 10:30 management checkpoint — first stall, stop unchanged
+
+**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a885613`, state `confirmed`, $5.98).
+
+**Stall derivation, cold, per B3:** `run_high` still $6.435 (10:00's high). Progression threshold $6.4768. Checkpoint price at 10:30 (read ~2026-08-21T14:31:05Z): **$6.27** — below both `run_high` and the threshold. **Stalled. Count: 1.** Before-noon ladder: stalls 1–2 don't move the stop, only the ratchet stages can. Stage 2 half-risk ($6.47) was never reached. **Stop stays at $5.98, unchanged. `run_high` unchanged at $6.435** (the high-water mark never decreases).
+
+**Pre-commit for 11:00:** re-check against the same `run_high` $6.435 and threshold $6.4768. A 2nd stall still doesn't move the stop; a 3rd stall before noon forces SELL ALL regardless of price.
+
 ---
 
 ## Current state
