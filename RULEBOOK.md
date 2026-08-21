@@ -619,6 +619,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 11:30:** re-derive stall count against `run_high` $6.5213 and a fresh progression threshold of $6.5213 × 1.0065 = **$6.5637**. Watch for stage 3 (breakeven, $6.60) if the run continues.
 
+### 11:30 management checkpoint — stall 1 (fresh count since the 11:00 reset), stop unchanged
+
+**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a8868c1`, state `confirmed`, $6.15).
+
+**Checkpoint price at 11:30 (read ~2026-08-21T15:31:04Z): $6.355** — below `run_high` $6.5213 and the $6.5637 threshold. **Stalled. Count: 1** (fresh count since 11:00's progression reset it). Stage 3 breakeven ($6.60) not reached. **Stop stays at $6.15, unchanged. `run_high` unchanged at $6.5213.**
+
+**Pre-commit for 12:00:** re-check against the same `run_high`/threshold. A 2nd stall still doesn't move the stop; a 3rd stall before noon forces SELL ALL — noon is close, watch the clock as well as the price.
+
 ---
 
 ## Current state
