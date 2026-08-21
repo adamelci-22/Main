@@ -46,9 +46,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | Weekly day-trade cap reached | ≥10 day trades already in the trailing 7 calendar days (E2) — self-imposed pacing limit |
 | Position already open | One position, one resting order (E2) |
 
-**⚠ CURRENT STATE — streak 1 of 3.** Governor cleared the breaker **2026-08-15**; count only trades closed after that date. One loss since: GUSH, closed 2026-08-17 (-$0.0199). The streak is computed from `archive/trades.csv`, the **live append-only log** — new rows go there. **A missing or unreadable file must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
-
-**⚠ CURRENT STATE — weekly day-trade count as of 2026-08-20: 4** (MSTX + BSX today, GUSH 8/19, GUSH 8/17 — all within the trailing 7 calendar days). Well under the 10-cap; not blocking. Recompute fresh each checkpoint per E2, don't reuse this number cold.
+**Most recent governor clearance of the breaker: 2026-08-15** — count only trades closed after that date (E1). Both the streak and the weekly day-trade count are computed fresh from `archive/trades.csv` (plus `get_equity_orders` for manual round trips) at every check — never from a number written here, which goes stale the day after it's written. **A missing or unreadable trade log must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
 
 ## A2. Trigger hygiene
 
@@ -101,15 +99,13 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 
 ## B1b. Range-based checkpoint reads — every mechanism below uses this, not a single point quote
 
-**As of v3.14, "checkpoint price" no longer means one live quote taken at the checkpoint's exact moment.** At every checkpoint from entry onward, pull minute-bar historicals covering the gap since the *previous* checkpoint (or since entry, for the first check) — the same call already used to compute honest MAE/MFE after a trade closes, now run *during* the hold instead of only at the end. From that window, derive three numbers:
+**"Checkpoint price" never means one live quote taken at the checkpoint's exact moment.** At every checkpoint from entry onward, pull minute-bar historicals covering the gap since the *previous* checkpoint (or since entry, for the first check) — the same call used to compute honest MAE/MFE after a trade closes, run *during* the hold as well. From that window, derive three numbers:
 
 - `bar_high` — the highest high reached anywhere in the gap.
 - `bar_low` — the lowest low reached anywhere in the gap.
 - `bar_close` — the window's final close, used wherever a mechanism needs the actual live tradable price (order placement, comparing a proposed stop against where price sits right now) — ranges inform the analysis, but a real order still needs a real current quote.
 
-**This closes the checkpoint-granularity blind spot without changing decision frequency.** Checkpoints still run every 30 minutes — that cadence is a hard cost constraint, not something this changes. But each checkpoint now knows the true high and low reached since the last one, not just wherever price happened to sit at one exact second. A move that spikes and reverses entirely inside one interval is now visible to every rule that keys off it, even though the system still can't act until the next scheduled checkpoint.
-
-**Every place below that said "checkpoint price," `run_high`, `session_high`/`session_low`, or "checkpoint-to-checkpoint move" now reads from this range, not a point** — see the specific updates in B2, B3, C10, and C11.
+**Ranges close the observation gap without changing decision frequency.** Checkpoints run every 30 minutes — a hard cost constraint. Each one knows the true high and low reached since the last, so a spike-and-reverse inside one interval is visible to every rule, even though action still waits for a scheduled checkpoint. Everywhere below, `run_high`, `session_high`/`session_low`, and checkpoint-to-checkpoint comparisons read from this range, never a point.
 
 ## B2. Stops — UP ONLY, NEVER DOWN
 
@@ -159,9 +155,7 @@ trail_pct         = 1.0 × 1.45                          = 1.45%
 
 **If `checkpoint_gain ≥ 3 × stall_threshold_pct`, a fast move has occurred and this position is flagged for the rest of the hold** — the flag never clears once set. **From the triggering checkpoint onward, at every checkpoint (fast or not), the stop becomes `max(staged-ratchet stop, run_high × (1 − stall_threshold_pct))`** — a continuous tight trail using the candidate's own noise-calibrated cushion, layered on top of the staged ratchet, never replacing it, always taking whichever is higher. Still subject to B2's own rules: up only, never down, minimum re-placement move applies.
 
-**Why this exists as its own check, not folded into the staged stages:** the ratchet moves in fixed jumps tied to the fill price and only unlocks continuous trailing once stage 3 (breakeven) is fully reached. A position that runs hard but stalls just short of stage 3 gets *zero* additional protection the whole time it gives that gain back — CONL on 2026-08-21 peaked at $6.56 against a stage-3 bar of $6.60, four cents short, and the stop sat flat at stage 2's $6.15 for the entire decline that followed. This check reacts to *how fast the position got there*, not just *how far*: a checkpoint that jumps well past the instrument's own normal noise is treated as proof enough to start locking in gains immediately, ahead of the staged schedule. This account trades on margin with real money and no room for a large loss — once a position has shown it can move fast, prioritize keeping what's been won over giving it room to keep running.
-
-**Verified against real trade history before building, not designed and assumed:** CONL's 10:30→11:00 checkpoint move was +4.01%, against a required bar of `3 × 0.65% = 1.95%` — a genuine fast move. Snapping to `$6.5213 × (1 − 0.65%) = $6.4789` at 11:00 would have exited the position around 11:25–11:30am (real intraday lows crossed that level then, confirmed from minute bars) for roughly **$4.62 realized instead of the actual $2.51** — nearly double. Checked against both MSTX trades too: neither had a checkpoint-visible fast move (both true peaks happened *between* checkpoints), so this trigger would not have fired on either — same checkpoint-granularity limit as every other mechanism in this file. Not yet live-tested against a real trade.
+**Why this is its own check, not a fifth stage:** the staged ratchet only unlocks continuous trailing once stage 3 (breakeven) is fully reached — a position that runs hard but stalls just short of that bar gets zero additional protection while it gives the gain back. This check reacts to *how fast* the position moved, not just how far: a jump well past the instrument's own normal noise is proof enough to start locking in gains ahead of the staged schedule. Once a position has shown it can move fast, keeping what's been won outranks giving it room to keep running.
 
 **The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp. **Time-gated at 12:00pm ET**, evaluated by the checkpoint's own clock time, not entry time:
 
@@ -240,7 +234,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 **At every management checkpoint (10:00–3:30), log `bar_high`/`bar_low`/`bar_close` (B1b) for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 20-name watchlist) — not a single point price, the same range-pull technique used for the held position, applied to the rest of the shortlist too, even while holding something else. One extra minute-bar call per name; the same call already run for the held position, not a new kind of lookup.
 
-**Why this exists as its own duty, not left implicit:** C10's `session_high`/`session_low` need continuous, real range history *per candidate* to work as designed — a genuine day-long high-water mark, not a window that resets every time the candidate is re-considered. Without this habit, a candidate re-considered later in the day after not being the held position — like MSTX on 2026-08-21, re-entered at 12:30 with no formal reads since 9:40 — has no real history for C10 to check, and it default-passes for lack of data rather than genuinely clearing anything. That default-pass is safe (never block on a gap) but silently defeats the point of the gate if the gap becomes routine instead of the exception. (C11 no longer depends on B6 — see C11's own note, v3.14.)
+**Why this is its own duty:** C10's `session_high`/`session_low` need continuous range history *per candidate* — a genuine day-long high-water mark. A candidate re-considered later in the day with no reads since 9:40 has no history for C10 to check, so it default-passes for lack of data rather than genuinely clearing anything. That default-pass is safe (never block on a gap) but silently defeats the gate if the gap becomes routine. When a default-pass does happen, flag it explicitly at entry — never let it look like a deliberate clearance.
 
 ---
 
@@ -372,9 +366,9 @@ Reset `session_high`/`session_low` at 9:00 daily — nothing carries between ses
 
 ## C11. Chop filter — Efficiency Ratio, time-scaled
 
-**Applies to every candidate at every entry-eligible checkpoint, in addition to C1–C10.** Built to catch a candidate that's technically up on the day and technically not falling (passes C10) but is genuinely just chopping sideways rather than trending — the shape that produced a near-flat, whipsawed hold on 2026-08-21's afternoon MSTX re-entry.
+**Applies to every candidate at every entry-eligible checkpoint, in addition to C1–C10.** Catches a candidate that's technically up on the day and technically not falling (passes C10) but is genuinely just chopping sideways rather than trending — leveraged ETFs decay in exactly that shape (C5).
 
-**Efficiency Ratio (ER), computed from a direct minute-bar pull (B1b's technique), not sparse checkpoint points:** pull the trailing 60 minutes of minute bars for the candidate (or back to 9:30, whichever is shorter, early in the session). `ER = |last close − first close| ÷ Σ|close(n) − close(n−1)|` across every minute in the window — net progress over total path length. Near 1 = clean directional move; near 0 = pure back-and-forth with little net progress. **This is a single fresh fetch at the moment of the check, so it no longer depends on B6 having logged this exact candidate at prior checkpoints** — a real improvement over the original design, which needed 3 prior formal reads and often wouldn't have had them. Fewer than ~20 minutes since the open or since entry-eligibility began → too little window to be meaningful, gate passes by default, same not-enough-data handling as C10's TSMU case.
+**Efficiency Ratio (ER), computed from a direct minute-bar pull (B1b's technique), not sparse checkpoint points:** pull the trailing 60 minutes of minute bars for the candidate (or back to 9:30, whichever is shorter, early in the session). `ER = |last close − first close| ÷ Σ|close(n) − close(n−1)|` across every minute in the window — net progress over total path length. Near 1 = clean directional move; near 0 = pure back-and-forth with little net progress. Fewer than ~20 minutes of window available → too little to be meaningful, gate passes by default — never block on a gap, never pretend the check ran.
 
 **Minimum ER required to enter, scaled to how forgiving the hour should be** (early moves are naturally noisier as they establish; afternoon entries into an already-mature move should be held to a materially higher bar):
 
@@ -387,7 +381,7 @@ Reset `session_high`/`session_low` at 9:00 daily — nothing carries between ses
 
 Below the window's minimum → declined as too choppy, regardless of C1–C10 all passing. This is a real, separate failure mode from C10: C10 asks "is it currently falling," C11 asks "is the recent path actually going anywhere, net."
 
-**Data dependency, updated by B1b/v3.14:** C11's original design needed three prior formal checkpoint reads for the specific candidate, which today's actual system often didn't have (MSTX's 12:30 re-entry had none since 9:40). Now that ER is computed from a direct minute-bar pull at the moment of the check, that dependency is gone for C11 itself — it self-supplies its own window regardless of what B6 has or hasn't logged for this candidate. **B6's shortlist tracking still matters for C10**, whose `session_high`/`session_low` genuinely need continuity across the whole day, not just a trailing-60-minute window — B6 stays for that reason, just now carrying `bar_high`/`bar_low`/`bar_close` per name instead of a single point.
+C11 self-supplies its window with a fresh pull at the moment of the check — it does not depend on B6 having tracked the candidate at prior checkpoints. (B6 exists for C10, whose `session_high`/`session_low` need day-long continuity a trailing window can't provide.)
 
 ---
 
@@ -465,7 +459,7 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 
 - **Floor: stop trading below 50% of *deposited* cash** — not account value. `deposited = total_value − all-time realized P&L − unrealized P&L`. Derived, never cached. **The floor does not rise with gains.**
 - **Limited margin, since 2026-08-20** (verified via `get_accounts`: `type: "limited_margin"`; verified via `get_portfolio`: `buying_power` now equals `total_value`, unsettled proceeds usable immediately). This removes the old T+1 settlement gate — same-day rotation across sequential positions is now mechanically possible. It does **not** grant borrowing/leverage beyond the account's own cash, and does **not** by itself confirm anything about GFV exposure beyond what's stated below. If the account type changes again, re-verify from primary sources before the first trade — port nothing forward blind.
-- **PDT (Pattern Day Trader) restriction is gone.** Verified directly from Robinhood's own support page (fetched 2026-08-20, re-read with today's real date in view so "will" vs "already has" isn't misread): *"On June 4, 2026, FINRA's new intraday margin standards will replace Pattern Day Trading (PDT)... No more day trade restrictions or day trade calls with your Robinhood margin account... If you had a pattern day trading (PDT) flag or restrictions on your account, they'll be removed... You will no longer need to maintain a $25,000 minimum portfolio value to day trade."* June 4, 2026 is in the past relative to today (2026-08-20) — the change is live, not pending. The old 4-day-trades-in-5-business-days trigger and the $25,000 minimum no longer apply. **Residual, smaller uncertainty, not fully closed out:** the page discusses "margin account" generally without singling out `limited_margin` by name; inferred it's covered because the *old* PDT rule explicitly applied to "both full and limited margin accounts" per the same research pass, and the new rule replaces that identical framework wholesale. Also unconfirmed: whether Robinhood's separate **$2,000 margin minimum equity** requirement (still standing per the same page) applies to `limited_margin` itself or only to actual margin investing/borrowing — `get_limited_margin_upgrade_info`'s own description states limited margin adds "no borrowing or leverage," which argues against it applying here, but that's inference, not a citation naming the two together. Watch for any broker-side restriction message as a signal this inference was wrong; nothing in current account state suggests it was.
+- **PDT (Pattern Day Trader) restriction is gone** — FINRA eliminated the framework effective 2026-06-04 (verified from Robinhood's support page, FINRA.org Regulatory Notice 26-10, SEC.gov, and the Federal Register; full sourcing in commits `ebac8c7`/`10d9379`). No 4-in-5-days trigger, no $25,000 minimum. **Residual uncertainty, not fully closed:** whether the replacement intraday-margin standard names `limited_margin` explicitly (inferred covered), and whether the separate $2,000 margin-minimum applies to `limited_margin`'s cash-only operation (inferred not). Both are inference, not citation — treat any broker-side restriction message as the signal that inference was wrong.
 - **Weekly day-trade cap — self-imposed pacing, not a compliance requirement.** With PDT gone, this exists purely to bound churn/slippage on a small account, per governor instruction to set an explicit weekly limit. Cap: **no more than 10 day trades in the trailing 7 calendar days** (today inclusive). Count the same way as before: every `archive/trades.csv` row is a day trade (B4/Part C force same-day entry and same-day close), plus any governor-placed manual round trip visible in `get_equity_orders` that wouldn't appear in the trade log. Recompute fresh at every entry-eligible checkpoint, never cached. Revisit the number if it turns out to bind often (too tight) or never binds at all (too loose, in which case it's just there for the record).
 - **Multiple different candidates per day are explicitly authorized.** Not limited to repeating the same symbol — if a real, gate-clearing opportunity in a *different* instrument appears after an earlier position closed, take it, subject to A1's "position already open" gate (still only one position at a time) and the weekly cap above. Governor instruction, 2026-08-20: *"you now have instant cash with margins and are allowed to trade multiple different things within one day if presented with an opportunity."*
 - **No short selling is authorized** — not part of this system's mandate regardless of account type. Bearish views go through inverse ETFs bought long.
@@ -522,258 +516,18 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*As of Aug 21 2026, ~9:03am ET (premarket):* **Crypto is still the story, third session running.** MSTR and COIN are both up hard again premarket, and their leveraged wrappers are up harder still — same shape as Wed/Thu (Trump's crypto-legislation push, Bitcoin rallying). No new headline confirmed yet this morning specifically; treat this as continuation of the existing catalyst until B5's hourly check finds something fresher, not as a new, independently-sourced story. Gold/miners are also strong (GDX +2.74% premarket) — second axis worth watching alongside crypto.
-
-**A1 verified fresh:** `get_equity_positions` empty, `get_equity_orders` since 2026-08-21T00:00:00Z empty — flat, no resting orders, nothing pending. **Account fully settled:** `get_accounts` shows `unsettled_funds: $0.00`; `get_portfolio` confirms **buying power $202.32 = full account value** — this is the real, uncomplicated full-deployment number the governor described, no T+1 asterisk this time. Streak unchanged at 1 of 3 (last loss: MSTX, 2026-08-20). **Weekly day-trade count (E2, trailing 7 calendar days, Aug 15–21): 4** (MSTX + BSX 8/20, GUSH 8/19, GUSH 8/17) — well under the cap of 10, not blocking.
-
-**Premarket individual moves** (underlying vs. adjusted previous close, broker quotes): **MSTR +7.39%**, **COIN +4.60%** (crypto, third day running), TSM +1.80%, AVGO +1.53%, SMCI +1.59%, AMD +1.35%, MU +1.40%, TSLA +1.30%, NVDA +0.42% (weakest of the semis complex). Plain stocks all essentially flat: GOOGL +0.74%, AMZN +0.72% (both just under the +0.75% bar), AAPL +0.29%, MSFT +0.28%, META +0.32%, PLTR +0.17%.
-
-**Wrapper premarket moves** (leverage effect confirmed again — wrapper move is larger than the underlying's): **MSTX +14.48%**, **CONL +9.14%**, TSMU +3.34%, SMCX +3.30%, AVGX +2.82%, AMDL +2.71%, MUU +2.71%, TSLL +2.36%, NVDL +0.57%.
-
-**Sector proxies (premarket, informational only — not the C1 baseline):** GDX +2.74% (gold miners strong, opposite of Wednesday) · SMH +1.31% · QQQ +0.75% · SPY +0.52% · XLE −0.05% (energy essentially flat, GUSH's 3-session grind may be pausing).
-
-**20-name watchlist, re-profiled just-in-time (B1) fresh this morning on 43 sessions through Aug 20 close** (`tools/profile.py`, never reused from yesterday) — ✓ = affordable against the real, uncomplicated **$202.32**:
-
-*15 individuals:*
-| Rank | Symbol | Underlying | Premarket chg | mfe_per_stop | Ask | Afford |
-|---|---|---|---|---|---|---|
-| 1 | PLTR | — | +0.17% | 0.906 | $174.56 | ✓ (barely, but not a candidate — underlying flat) |
-| 2 | MSTX | MSTR | **+14.48%*** | 0.844 | $12.73 | ✓ |
-| 3 | CONL | COIN | **+9.14%*** | 0.773 | $5.88 | ✓ |
-| 4 | TSLL | TSLA | +2.36%* | 0.765 | $9.09 | ✓ |
-| 5 | SMCX | SMCI | +3.30%* | 0.749 | $12.12 | ✓ |
-| 6 | MUU | MU | +2.71%* | 0.644 | $32.98 | ✓ |
-| 7 | TSMU | TSM | +3.34%* | 0.595 | $68.81 | ✓ |
-| 8 | MSFT | — | +0.28% | 0.520 | $482.90 | ✗ |
-| 9 | META | — | +0.32% | 0.508 | $548.29 | ✗ |
-| 10 | AMDL | AMD | +2.71%* | 0.506 | $50.01 | ✓ |
-| 11 | AMZN | — | +0.72% | 0.464 | $261.97 | ✗ |
-| 12 | NVDL | NVDA | +0.57%* | 0.450 | $34.26 | ✓ (but NVDA underlying weak — not a candidate) |
-| 13 | GOOGL | — | +0.74% | 0.443 | $343.20 | ✗ |
-| 14 | AVGX | AVGO | +2.82%* | 0.377 | $42.72 | ✓ |
-| 15 | AAPL | — | +0.29% | 0.373 | $312.25 | ✗ |
-
-*Wrapper premarket % shown where it differs materially from the underlying (leverage effect); underlying's own move used for the plain names.
-
-*5 sector/index vehicles* (feed C1; leveraged form noted for C4 rank-2/3):
-| Symbol | Proxy | Premarket chg | mfe_per_stop | Ask | Afford |
-|---|---|---|---|---|---|
-| GUSH | Energy (XLE) | −0.05% | 0.933 | $44.80 | ✓ (but proxy flat/negative — not a candidate) |
-| NUGT | Gold miners (GDX) | **+2.74%** | 0.907 | $207.30 | ✗ (unaffordable, $5 short) |
-| SOXL | Semis (SMH) | +1.31% | 0.520 | $127.62 | ✓ |
-| TQQQ | Tech/index (QQQ) | +0.75% | 0.454 | $71.95 | ✓ |
-| SPXL | Broad market (SPY) | +0.52% | 0.450 | $287.50 | ✗ |
-
-**The real story, third session running: MSTX (#2, 0.844) and CONL (#3, 0.779) are both up huge premarket on the same crypto catalyst as Wed/Thu** — both easily affordable, both with real intraday history now (MSTX traded yesterday; today would be the first live test of the new C10 momentum-direction gate on this exact name, which is worth watching given yesterday's gap-and-fade). TSLL, SMCX, MUU, TSMU, AMDL, AVGX are all real, all clear C3's premarket bar, all affordable — genuine depth in the shortlist today, not a one-name morning. NUGT is the highest-ranked sector vehicle after GUSH but **unaffordable by about $5** — worth noting as a real cost of the current capital base. **Nothing decided yet — re-confirm everything live at 9:30/9:40 per C1/C2/C3/C7/C10, and re-verify A1 fresh before touching any of this.**
-
-**Stale for any later session; refresh before trusting.**
-
-### C1 Gate-1 baseline — formal 9:30 reading
-
-**A1 re-verified fresh at 9:31 ET: flat, no orders, no positions.** Nothing has changed since 9:00.
-
-**Recorded 9:30 checkpoint, read ~2026-08-21T13:31:26Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
-
-| Proxy | 9:30 day change | vs. premarket |
-|---|---|---|
-| GDX | **+3.095%** | strengthened sharply (premarket +2.74% → +3.10%) |
-| SMH | +1.018% | strengthened (premarket +1.31%, but base shifted — still clearly positive) |
-| QQQ | +0.414% | roughly steady |
-| SPY | +0.355% | roughly steady |
-| XLE | +0.329% | flipped positive (premarket was −0.05%) |
-
-**All five proxies are alive for C1 at 9:30** — a stronger, broader tape than either of the last two mornings, where 2-3 proxies failed leg 1 outright. GDX is the clear standout.
-
-**Individual candidates — wrapper day-change at 9:30:**
-
-*Clearing C3's +0.75% bar:* **CONL +11.15%**, **MSTX +9.80%** (both still enormous, crypto catalyst intact), AVGX +3.36%, AMDL +3.15%, SMCX +3.84%, MUU +3.02%, TSLL +2.44%.
-
-*Not candidates:* NVDL +0.56% (short of the bar), GOOGL +0.12%, PLTR 0.00%, AMZN −0.56%, AAPL −0.25%, META −0.21%, MSFT −0.34%. **TSMU shows a stale 0.00% print** (last trade timestamped to yesterday's close, no fresh trade yet at read time) — same pattern as prior mornings, re-check at 9:40 before trusting either way.
-
-**Seven real candidates clearing C3's magnitude bar at 9:30 (informational; formal check is 9:40 live):** MSTX, CONL, SMCX, MUU, AMDL, AVGX, TSLL. Same lineup as the 9:00 premarket read, now confirmed live and, in most cases, stronger. **C10 note: this is the first formal checkpoint of the day for every candidate — `session_high` is seeded at today's 9:30 reading for each one; nothing to compare it against yet, so C10's leg 1 is trivially open at this checkpoint.** Re-confirm everything live at 9:40.
-
-### 9:40 entry — CONL, individual leveraged stock (first live use of C10, and its first block)
-
-**A1 re-confirmed fresh: no positions, no orders, buying power $202.32, fully settled.** Weekly day-trade count 4/10, not blocking.
-
-**C1 re-checked at 9:40:** all 5 proxies **declined from their 9:30 readings** — XLE +0.28% (was +0.33%), GDX +2.86% (was +3.10%), SMH +0.29% (was +1.02%), QQQ +0.19% (was +0.41%), SPY +0.33% (was +0.36%). All still positive (legs 1–2 hold) but **every proxy fails leg 3** — a genuinely broader pullback than either individual candidate saw. Sector-leveraged path not needed regardless; noted for the record since it's the first time all five have failed leg 3 together this week.
-
-**C3 magnitude re-confirmed live for all 15 individuals:** MSTX +11.51%, CONL +15.15%, AVGX +4.50%, SMCX +3.84%, TSMU +2.56% (real print now, 9:30's 0.00% was confirmed stale), TSLL +2.23%, AMDL +1.30%, **META +0.86%** (newly clearing, wasn't a candidate at 9:00/9:30). **MUU dropped out** — +0.39% at 9:40, down hard from +3.02% at 9:30, now below the bar.
-
-**C10 — first live application, and its first real block.** Comparing each candidate's 9:40 reading against its own 9:30 baseline (`session_high`):
-- MSTX +11.51% (up from +9.80%) — new high, **passes**.
-- CONL +15.15% (up from +11.15%) — new high, **passes**.
-- SMCX +3.84% (flat vs. +3.84%) — not below, **passes**.
-- TSMU: 9:30 reading was a confirmed stale print, not a real observation — treated as this candidate's first real formal read; **passes** by default.
-- AVGX +4.50% (up from +3.36%) — new high, **passes**.
-- META +0.86% (up from −0.21% at 9:30, when it wasn't yet a candidate) — **passes**.
-- **TSLL +2.23% (down from +2.44% at 9:30) — FAILS leg 1, blocked.** Still clears C3's magnitude bar on its own, but is currently falling — exactly the shape C10 exists to catch.
-- **AMDL +1.30% (down hard from +3.15% at 9:30) — FAILS leg 1, blocked.** Same story, larger decline.
-
-**C7 ranking (mfe_per_stop) among C10 survivors:** MSTX 0.844 > CONL 0.773 > SMCX 0.749 > TSMU 0.595 > META 0.508 > AVGX 0.377. **Affordability against $202.32:** MSTX ✓ ($12.41) · CONL ✓ ($6.28 at review) · SMCX ✓ ($12.18) · TSMU ✓ ($67.98) · **META ✗** ($550.69) · AVGX ✓ ($43.43).
-
-**C4:** MSTX ranks rank-1 (individual leveraged stock, C3 cleared, affordable) — checked first.
-
-**C2 on the top pick, MSTX: FAILS.** Underlying MSTR +5.80% vs. its sector proxy IBIT (crypto, per E3) +5.95% — **IBIT is leading, not MSTR** (by 0.14pp; verified with a direct calculation, not eyeballed). Buying the laggard with leverage turns a correct call into a losing trade — declined per C2's own text, despite ranking #1 by `mfe_per_stop` and passing C10 cleanly. **This is the actual reason CONL was bought instead of MSTX today**, not a ranking artifact.
-
-**C2 on the next pick, CONL: passes decisively.** Underlying COIN +7.67% vs. IBIT +5.95% — COIN leads by 1.72pp, real separation. CONL becomes the pick.
-
-**C5 catalyst:** same crypto/Bitcoin-legislation story running its third session — continuation, not a fresh independent source today (flagged as such this morning). Real and named, not "it's going up."
-
-**C9 checked:** within the preferred window. Spread priced at review: bid $6.27/ask $6.28 (1¢ wide) — trivial against a target move of roughly $0.53/share (8.61% of ~$6.30). `all_day_tradability`: untradable (regular hours only, not a concern for a 9:40 entry). Tape moving fast — confirmed by what happened next.
-
-**Sizing per C8:** floor($202.32 ÷ $6.29 review ask) = 32 shares, reviewed clean (no `order_checks` alerts). **First attempt (32 shares, marketable limit $6.29) went unfilled and was cancelled after ~30 seconds — CONL's ask had already run to $6.33, past the limit, on a genuinely fast tape.** Verified `cancelled` with zero `cumulative_quantity` before re-pricing, no partial fill to reconcile. **Re-sized fresh against the live ask:** floor($202.32 ÷ $6.38 new limit) = 31 shares.
-
-**Entry executed:** BUY 31 CONL, marketable limit $6.38, **filled avg $6.3299** (order `6a8855f6`, verified via order response, 09:43:19 ET), total cost **$196.23**. Filled **below** the limit — favorable, despite the fast tape.
-
-**Protective stop placed immediately, confirmed resting** (order `6a885613`, state `confirmed`): stop_market, **$5.98** (stage 1 = fill × (1 − 5.57%)), quantity 31.
-
-**Full ratchet schedule for this fill ($6.3299), from this morning's fresh profile (stop_pct 5.57%, target_pct 8.61%, breakeven_trigger 4.31%, trail_pct 3.71%, stall_threshold 0.65%, min_stop_move 0.93%):**
-
-| Stage | `run_high` reaches | Stop becomes |
-|---|---|---|
-| 1 — entry | $6.33 (fill) | **$5.98** ← resting now |
-| 2 — half-risk | $6.47 | $6.15 |
-| 3 — breakeven | $6.60 | $6.33 (fill) |
-| 4 — trail | past stage 3 | `run_high × (1 − 3.71%)`, recomputed every checkpoint |
-| target | $6.87 | **SELL ALL** |
-
-**Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop. Also worth checking cold at 10:00: whether MSTX (declined here on C2 alone, not on quality) has continued outrunning CONL — if the gap between MSTR and IBIT closes or reverses, that's informational for tomorrow's read on C2's bite, not a reason to revisit today's already-placed trade.
-
-### 10:00 management checkpoint — progressed, run_high advances, stop unchanged
-
-**A1 confirmed fresh: position 31 CONL @ $6.3299 avg cost, stop resting confirmed** (`6a885613`, state `confirmed`, $5.98).
-
-**Stall derivation, cold, per B3:** `run_high` seeded at fill $6.3299. Progression threshold: $6.3299 × 1.0065 = $6.3711. Checkpoint price at 10:00 (read ~2026-08-21T14:01:35Z): **$6.435** — clears the threshold with room. **Progressed, not stalled. Count: 0.** `run_high` advances to $6.435. Stage 2 half-risk needs $6.47 — not reached yet. **Stop stays at $5.98, unchanged.**
-
-**Pre-commit for 10:30:** re-derive the stall count cold against the new `run_high` $6.435 and a new progression threshold of $6.435 × 1.0065 = **$6.4768**. If price clears $6.47 first (stage 2, half-risk), the stop moves to $6.15 regardless of the stall count.
-
-### 10:30 management checkpoint — first stall, stop unchanged
-
-**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a885613`, state `confirmed`, $5.98).
-
-**Stall derivation, cold, per B3:** `run_high` still $6.435 (10:00's high). Progression threshold $6.4768. Checkpoint price at 10:30 (read ~2026-08-21T14:31:05Z): **$6.27** — below both `run_high` and the threshold. **Stalled. Count: 1.** Before-noon ladder: stalls 1–2 don't move the stop, only the ratchet stages can. Stage 2 half-risk ($6.47) was never reached. **Stop stays at $5.98, unchanged. `run_high` unchanged at $6.435** (the high-water mark never decreases).
-
-**Pre-commit for 11:00:** re-check against the same `run_high` $6.435 and threshold $6.4768. A 2nd stall still doesn't move the stop; a 3rd stall before noon forces SELL ALL regardless of price.
-
-### 11:00 management checkpoint — new high, stage 2 half-risk triggers, stop moves to $6.15
-
-**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a885613`, state `confirmed`, $5.98 — about to be replaced below).
-
-**Checkpoint price at 11:00 (read ~2026-08-21T15:02:44Z): $6.5213** — a fresh high, well clear of $6.435. **Progressed. Stall count resets to 0.** `run_high` advances to $6.5213.
-
-**Ratchet stage check: clears stage 2's half-risk threshold ($6.47), does not yet reach stage 3's breakeven threshold ($6.60).** Per the ratchet schedule set at entry, stage 2 triggers: **stop moves from $5.98 to $6.15.**
-
-**Executed:** cancelled the $5.98 stop (`6a885613`, verified `cancelled` with zero fill before replacing), placed a fresh stop_market at **$6.15** (`6a8868c1`, state `confirmed`), quantity 31. Locked-in protection improved from -5.57% to -2.79% on the position, real progress on this trade regardless of what happens next.
-
-**Pre-commit for 11:30:** re-derive stall count against `run_high` $6.5213 and a fresh progression threshold of $6.5213 × 1.0065 = **$6.5637**. Watch for stage 3 (breakeven, $6.60) if the run continues.
-
-### 11:30 management checkpoint — stall 1 (fresh count since the 11:00 reset), stop unchanged
-
-**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a8868c1`, state `confirmed`, $6.15).
-
-**Checkpoint price at 11:30 (read ~2026-08-21T15:31:04Z): $6.355** — below `run_high` $6.5213 and the $6.5637 threshold. **Stalled. Count: 1** (fresh count since 11:00's progression reset it). Stage 3 breakeven ($6.60) not reached. **Stop stays at $6.15, unchanged. `run_high` unchanged at $6.5213.**
-
-**Pre-commit for 12:00:** re-check against the same `run_high`/threshold. A 2nd stall still doesn't move the stop; a 3rd stall before noon forces SELL ALL — noon is close, watch the clock as well as the price.
-
-### 12:00pm management checkpoint — noon-crossing rule fires, SELL ALL, real rule-driven exit
-
-**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a8868c1`, state `confirmed`, $6.15).
-
-**Checkpoint price at 12:00 (read ~2026-08-21T16:01:51Z): $6.425** — below `run_high` $6.5213 and the $6.5637 threshold. **Stalled.** This is the **2nd consecutive stall since the 11:00 reset** (stall 1 at 11:30, stall 2 now) — the count is derived cold and carries continuously across the noon boundary per B2's explicit rule, it does not reset just because the clock crossed 12:00.
-
-**Regime check: this checkpoint runs at 12:00pm ET — the at-or-after-noon table applies, not the before-noon table.** Per B2: *"A count that's already at 2 when a 12:00 checkpoint runs means SELL ALL immediately under the now-current rule."* Stall count is 2. **SELL ALL fires, unconditionally, overriding the resting $6.15 stop.**
-
-**Executed per B3's exit protocol ("cancel the resting stop first, then exit on a marketable limit"):** cancelled the $6.15 stop (`6a8868c1`, verified `cancelled` with zero fill before selling), sold 31 CONL on a marketable limit $6.35, **filled avg $6.4110** (order `6a8876ae`, verified via order response, 12:02:54 ET) — filled **above** the limit, favorable.
-
-**Result: +$2.51, +1.28% on the position, r = +0.230 — a genuine, rule-driven win.** Pulled real minute-bar historicals for the full hold: true high **$6.56** (14:57 UTC, MFE +3.64%), true low **$6.16** (14:42 UTC, MAE +2.68%) — both occurred mid-hold, well inside the eventual exit. Full detail in `archive/trades.csv`.
-
-**This is the first live test of two new v3.11 mechanisms landing in the same trade: C10's entry gate (blocked TSLL and AMDL, let MSTX/CONL/others through) and the noon-crossing stall rule (correctly tightened from "3 stalls, no stop move" to "2 stalls, unconditional SELL ALL" the moment the clock crossed 12:00, exactly as designed).** One trade is not a pattern — no rule changes proposed off this alone — but both mechanisms did exactly what they were built to do, which is worth recording plainly rather than only noting failures.
-
-**A1 re-confirmed: no positions, no resting orders. Weekly day-trade count: 6/10** (today's CONL round trip is now closed) — still well under the cap, no blocking effect. D1: no early shutdown — flat with the weekly cap still open means a fresh entry is still possible at any checkpoint through 3:30 per v3.10, not just today's first one.
-
-### 12:30pm — D4 post-exit review, then a second entry: MSTX
-
-**D4, ~30 minutes after the 12:02:54 exit:** CONL trades at $6.34 as of 12:31 ET, **below** the $6.4110 exit. The noon-crossing rule's exit reads as well-timed, not early — price kept declining after the sell rather than continuing to run. One data point; not evidence the rule is generally well-tuned, just that it wasn't premature here.
-
-**A1 confirmed fresh: flat, no orders.** With the weekly cap still open (6/10) and the market still live, checked whether a genuinely better opportunity exists rather than sitting idle by default.
-
-**MSTX has re-qualified since the 9:40 decline.** Fresh quotes: MSTX +13.58% on the day (was +11.51% at 9:40, a new high versus its last formal checkpoint read). **C2 has flipped decisively:** MSTR +6.92% now leads IBIT +6.24% by 0.68pp — a real, comfortable margin, not the 0.14pp deficit that declined it this morning. Still ranks #1 by `mfe_per_stop` (0.844, unchanged — this morning's JIT profile is still valid intraday). C3 clears easily. **C10:** treating 9:40 as the last formal checkpoint for this candidate (it wasn't re-scanned at every 30-minute mark while CONL was being managed instead — flagged honestly rather than assumed clean), the current reading is a new high above it, so leg 1 passes.
-
-**C9 checked:** spread priced from the book: bid $12.65/ask $12.66, 1¢ wide — trivial against an 11.43% target move. Genuinely re-qualified, not chased out of boredom — the specific gate that declined it this morning (C2) is the one that reversed.
-
-**Sizing per C8:** floor($202.32 ÷ $12.75 review ask) = 15 shares, reviewed clean.
-
-**Entry executed:** BUY 15 MSTX, marketable limit $12.75, **filled avg $12.6591** (order `6a887d9f`, verified via order response, 12:32:31 ET), total cost **$189.89**. Filled below the limit — favorable.
-
-**Stop error, caught and corrected before it mattered:** first placed the protective stop at $11.86 — a miscalculation; the correct stage-1 stop for stop_pct 6.77% is fill × (1 − 0.0677) = **$11.80**, not $11.86. Caught immediately via a direct recomputation, cancelled the wrong stop (verified `cancelled` with zero fill), and placed the correct one. **Protective stop now resting at $11.80** (order `6a887dd0`, state `confirmed`), quantity 15. Logged plainly per D3 ("correct your own errors promptly, including ones that look bad") rather than only noting the corrected end state.
-
-**Full ratchet schedule for this fill ($12.6591), from this morning's fresh profile (stop_pct 6.77%, target_pct 11.43%, breakeven_trigger 5.71%, trail_pct 4.51%, stall_threshold 0.86%, min_stop_move 1.00%):**
-
-| Stage | `run_high` reaches | Stop becomes |
-|---|---|---|
-| 1 — entry | $12.66 (fill) | **$11.80** ← resting now |
-| 2 — half-risk | $13.02 | $12.23 |
-| 3 — breakeven | $13.39 | $12.66 (fill) |
-| 4 — trail | past stage 3 | `run_high × (1 − 4.51%)`, recomputed every checkpoint |
-| target | $14.11 | **SELL ALL** |
-
-**Pre-commit for 1:00:** derive the stall count cold from checkpoint prices per B3. **This checkpoint runs at 12:30, already past noon — the tighter at-or-after-noon table applies from the very first check: 1 stall moves the stop to whichever is higher (breakeven or the current ratchet level), 2 stalls forces SELL ALL.** No 3-stall grace period today, unlike CONL's morning entry.
-
-### 1:00pm management checkpoint — stall 1, below fill, no stop move (rejected per B2's own text)
-
-**A1 confirmed fresh: position 15 MSTX @ $12.6591 avg cost, stop resting confirmed** (`6a887dd0`, state `confirmed`, $11.80).
-
-**Checkpoint price at 1:00 (read ~2026-08-21T17:01:40Z): $12.6333** — below `run_high` $12.6591 and the $12.7680 progression threshold. **Stalled. Count: 1** (first check since entry, already under the at-or-after-noon table). Price is **below fill** ($12.6333 < $12.6591). Per B2's afternoon table: *"below fill → No move. Moving the stop to breakeven would place it above the live price, forcing an immediate sell — that is rejected, not executed early."* **Stop stays at $11.80, unchanged.**
-
-**Pre-commit for 1:30:** re-check against `run_high` $12.6591 and threshold $12.7680. If a 2nd stall occurs regardless of price vs. fill, B2's table is unconditional at that count: SELL ALL.
-
-### 1:30pm management checkpoint — stall 2, unconditional SELL ALL, second rule-driven exit of the day
-
-**A1 confirmed fresh: position 15 MSTX @ $12.6591 avg cost, stop resting confirmed** (`6a887dd0`, state `confirmed`, $11.80).
-
-**Checkpoint price at 1:30 (read ~2026-08-21T17:30:45Z): $12.6663.** This is marginally *above* the seed run_high ($12.6591) but does **not** clear the progression threshold ($12.7680, 0.86% above run_high). **Per B3's literal two-branch logic — step 2 requires price to exceed `run_high` by *more than* `stall_threshold_pct` to count as progressed and update `run_high`; anything else, including a small uptick that doesn't clear that bar, is step 3: stalled, count increments.** Verified this carefully before acting, since it's a genuinely easy point to misapply (a higher print looking like "progress" at a glance) — `run_high` stays at $12.6591, unchanged. **Stalled. Count: 2** (stall 1 at 1:00, stall 2 now).
-
-**Regime: at-or-after-noon table, count 2 → unconditional SELL ALL**, per B2's own text (*"2 | either | SELL ALL — complete."*) — the price-vs-fill branch only matters at count 1; count 2 fires regardless.
-
-**Executed per B3's exit protocol:** cancelled the $11.80 stop (`6a887dd0`, verified `cancelled` with zero fill before selling), sold 15 MSTX on a marketable limit $12.55, **filled avg $12.6501** (order `6a888b80`, verified via order response, 13:31:44 ET) — filled well above the limit.
-
-**Result: -$0.135, -0.07% on the position, r = -0.011 — essentially flat, a rounding-error-sized loss.** Pulled real minute-bar historicals for the full 59-minute hold: true high **$12.7655** (17:11 UTC, MFE +0.84%), true low **$12.44** (17:23 UTC, MAE +1.73%). Full detail in `archive/trades.csv`.
-
-**Correction, caught during a later review the same afternoon:** the original write-up here and in the trades.csv notes claimed the true low happened *after* the exit. That was wrong — 17:23 UTC is roughly 8.5 minutes **before** the 17:31:44 UTC exit, not after. The accurate sequence: price dipped to $12.44 (the real MAE) around 1:23pm ET, then recovered most of the way back, and the stall rule sold near that recovery (avg $12.6501) rather than at the bottom. Still a fine outcome — it didn't sell at the low — but the reasoning given at the time (that the rule "got the position out before" the drawdown) had the timing backwards. Corrected here rather than silently; the trades.csv row's numeric fields (mae_pct, mfe_pct, pnl, r_multiple) were computed correctly from the right bars and are unaffected — only the narrative sequencing claim in the notes text was wrong.
-
-**A1 re-confirmed: no positions, no resting orders. Weekly day-trade count: 8/10** — getting close to the self-imposed cap; a third entry today would need to clear it fresh and would leave only 1 remaining trade of room this week. Loss streak: this is a loss by the letter (E1: any negative realized P&L, however small), so **streak moves to 1 of 3** — the CONL win reset it to zero at noon, this now starts a fresh count.
-
-**2:00pm, 2:30pm, 3:00pm, 3:30pm management checkpoints:** flat throughout, both MSTX and CONL faded steadily all afternoon (MSTX $12.57→$12.40, CONL $6.25→$6.14 across the four checks) — never close to "clearly better than the morning offered" per C9, and by 3:30 there wasn't real time left for a fresh thesis before the close anyway. No entries, no rule changes triggered — non-events, per D3's "most checkpoints are non-events" logged briefly here rather than each getting their own subsection.
-
-### 4:00pm close
-
-**Confirmed flat** (`get_equity_positions`: empty) and no orders since the 1:31:44 MSTX exit. **Account value $204.69**, up from this morning's $202.32 — net **+$2.37** on the day across two rule-driven round trips (CONL +$2.51, MSTX -$0.14), consistent with the individually logged trades. `unsettled_funds` shows $388.49 in `get_accounts`, an artifact of `limited_margin` tracking today's sale proceeds internally — doesn't constrain buying power (already confirmed $204.69 = full account value).
-
-**D3 report:** both trades already logged in full at their own checkpoints (12:00 CONL exit, 1:31 MSTX exit), including verified fills, P&L in $/%/R, slippage both sides, and D4 reviews. No new trade closed at this checkpoint — nothing further to append to `archive/trades.csv`.
-
-**D1 early shutdown:** flat at 4:00 → delete 4:30–7:30 regardless, per D1's own unconditional rule for this slot. 8:00pm arming and 8:20pm backup stay untouched.
-
-**Open thread from the governor, not yet resolved:** mid-afternoon discussion proposed two concrete rule additions — a giveback-ceiling tightening on the ratchet (to capture more of a peak like CONL's $6.56 high, only 1.28% of which was realized at exit) and an Efficiency-Ratio-based chop filter for entries (to avoid afternoon re-entries like MSTX's, which scored ER≈0.12 against CONL's morning ER≈0.37). Neither has been built yet — awaiting the governor's choice of which to build first, or both.
+*Friday 2026-08-21 closed: two rule-driven round trips (CONL +$2.51, MSTX -$0.14), account $204.69, flat into the weekend. Full day narrative in git history and `archive/trades.csv`. Next 9:00 research (Monday 2026-08-24) replaces this block wholesale per this section's own rule.*
 
 ---
 
 ## Current state
 
-**Flat, market closed for the day.** Account value **$204.69**, up from $202.32 this morning — net **+$2.37** across two rule-driven round trips: CONL (+$2.51, r=+0.230) at noon, MSTX (-$0.135, r=-0.011, essentially flat) at 1:31pm. Both exits fired via the same noon-crossing/afternoon-stall mechanism, no discretionary calls either time. **Weekly day-trade count: 8/10.**
+**Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8/10** as of Friday close — recompute fresh Monday, two of the eight (GUSH 8/17 then 8/19) age out over the weekend.
 
-**Both new v3.11 mechanisms (C10, the noon-crossing stall table) got real, correct live tests today, including a subtle edge case** — MSTX's 1:30pm stall count derived from a marginal new high that still didn't clear the required threshold, correctly read as a stall rather than progress per B3's literal logic, not by eyeballing price direction.
+**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, and B1b's range-based reads all shipped Friday after the close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.14), not repeated here.
 
-**Two real things caught and corrected today, logged plainly rather than glossed over:** MSTX's protective stop was first placed at $11.86 instead of the correct $11.80 — caught in ~30 seconds, fixed before any adverse move. Separately, the MSTX exit write-up initially had the MAE timing backwards (claimed the true low came after the exit; it was ~8.5 minutes before) — caught during a later review and corrected in place, numeric fields unaffected.
+Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
-**v3.12 — C11 (time-scaled Efficiency Ratio chop filter) plus B6 (shortlist price tracking to feed it).** C11 needs 3 real formal checkpoint reads per candidate to compute — today's actual data collection didn't provide that for MSTX's 12:30 re-entry, so B6 now requires every management checkpoint to log a one-line price for the full shortlist, not just the held position. Expect C11 to default-pass on re-entries until that habit accumulates real history — flagged explicitly each time, never silently treated as a clean pass.
-
-**v3.13 — the velocity trigger (B2), a genuinely different fix for Problem 1 than the three originally proposed.** Backtesting the original three options (continuous trailing, giveback ceiling, mid-ladder stage) against CONL's real data showed **none of them would have changed the outcome** — CONL's exit was decided by the stall-count rule (B3), not the stop (B2), so tightening the stop alone did nothing; a fast-acting giveback trigger would have sold into an 11:30 dip and done *worse* than the actual trade (giveback was 86.9% at 11:30, only 57.6% at the eventual exit). The velocity trigger instead watches checkpoint-to-checkpoint speed: a single-interval move ≥3× the candidate's own `stall_threshold_pct` flags the position for a permanent tight trail (`run_high × (1 − stall_threshold_pct)`) from then on, layered on the existing ratchet, whichever stop is higher. Verified against CONL before building: would have exited around $6.48 instead of the actual $6.41 — nearly double the realized gain ($4.62 vs $2.51).
-
-**v3.14 — B1b, range-based checkpoint reads: every mechanism now sources from `bar_high`/`bar_low`/`bar_close` (a minute-bar pull covering the gap since the last checkpoint), not a single point quote.** Directly closes the checkpoint-granularity blind spot v3.13's own writeup flagged — both MSTX trades' real peaks happened *between* checkpoints and were invisible to a point-sampling system; range-based reads catch those without adding any decision frequency (checkpoints still run every 30 minutes, a hard cost constraint the governor set explicitly). `run_high` (shared B2/B3), the velocity trigger, and C10's `session_high`/`session_low` all now derive from real interval highs/lows instead of point samples. C11 was restructured further, not just patched: it now pulls its own trailing-60-minute minute-bar window directly and computes a true Efficiency Ratio from it, which also removes its original dependency on B6 having tracked the specific candidate at prior checkpoints. B6 remains, but now logs a range per shortlist name each checkpoint rather than a point — still needed for C10's day-long continuity, which a trailing window alone can't provide. Not yet live-tested against a real trade.
-
-Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
-
-**Loss streak 1 of 3** — the CONL win reset it to zero at noon; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Buying power: reconfirm live at the next 9:00 checkpoint, don't assume today's figure carries forward.
+**Loss streak 1 of 3** — the CONL win reset it to zero; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Buying power: reconfirm live at the next 9:00 checkpoint, don't assume Friday's figure carries forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
