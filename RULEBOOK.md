@@ -543,13 +543,63 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Seven real candidates clearing C3's magnitude bar at 9:30 (informational; formal check is 9:40 live):** MSTX, CONL, SMCX, MUU, AMDL, AVGX, TSLL. Same lineup as the 9:00 premarket read, now confirmed live and, in most cases, stronger. **C10 note: this is the first formal checkpoint of the day for every candidate — `session_high` is seeded at today's 9:30 reading for each one; nothing to compare it against yet, so C10's leg 1 is trivially open at this checkpoint.** Re-confirm everything live at 9:40.
 
+### 9:40 entry — CONL, individual leveraged stock (first live use of C10, and its first block)
+
+**A1 re-confirmed fresh: no positions, no orders, buying power $202.32, fully settled.** Weekly day-trade count 4/10, not blocking.
+
+**C1 re-checked at 9:40:** all 5 proxies **declined from their 9:30 readings** — XLE +0.28% (was +0.33%), GDX +2.86% (was +3.10%), SMH +0.29% (was +1.02%), QQQ +0.19% (was +0.41%), SPY +0.33% (was +0.36%). All still positive (legs 1–2 hold) but **every proxy fails leg 3** — a genuinely broader pullback than either individual candidate saw. Sector-leveraged path not needed regardless; noted for the record since it's the first time all five have failed leg 3 together this week.
+
+**C3 magnitude re-confirmed live for all 15 individuals:** MSTX +11.51%, CONL +15.15%, AVGX +4.50%, SMCX +3.84%, TSMU +2.56% (real print now, 9:30's 0.00% was confirmed stale), TSLL +2.23%, AMDL +1.30%, **META +0.86%** (newly clearing, wasn't a candidate at 9:00/9:30). **MUU dropped out** — +0.39% at 9:40, down hard from +3.02% at 9:30, now below the bar.
+
+**C10 — first live application, and its first real block.** Comparing each candidate's 9:40 reading against its own 9:30 baseline (`session_high`):
+- MSTX +11.51% (up from +9.80%) — new high, **passes**.
+- CONL +15.15% (up from +11.15%) — new high, **passes**.
+- SMCX +3.84% (flat vs. +3.84%) — not below, **passes**.
+- TSMU: 9:30 reading was a confirmed stale print, not a real observation — treated as this candidate's first real formal read; **passes** by default.
+- AVGX +4.50% (up from +3.36%) — new high, **passes**.
+- META +0.86% (up from −0.21% at 9:30, when it wasn't yet a candidate) — **passes**.
+- **TSLL +2.23% (down from +2.44% at 9:30) — FAILS leg 1, blocked.** Still clears C3's magnitude bar on its own, but is currently falling — exactly the shape C10 exists to catch.
+- **AMDL +1.30% (down hard from +3.15% at 9:30) — FAILS leg 1, blocked.** Same story, larger decline.
+
+**C7 ranking (mfe_per_stop) among C10 survivors:** MSTX 0.844 > CONL 0.773 > SMCX 0.749 > TSMU 0.595 > META 0.508 > AVGX 0.377. **Affordability against $202.32:** MSTX ✓ ($12.41) · CONL ✓ ($6.28 at review) · SMCX ✓ ($12.18) · TSMU ✓ ($67.98) · **META ✗** ($550.69) · AVGX ✓ ($43.43).
+
+**C4:** MSTX ranks rank-1 (individual leveraged stock, C3 cleared, affordable) — checked first.
+
+**C2 on the top pick, MSTX: FAILS.** Underlying MSTR +5.80% vs. its sector proxy IBIT (crypto, per E3) +5.95% — **IBIT is leading, not MSTR** (by 0.14pp; verified with a direct calculation, not eyeballed). Buying the laggard with leverage turns a correct call into a losing trade — declined per C2's own text, despite ranking #1 by `mfe_per_stop` and passing C10 cleanly. **This is the actual reason CONL was bought instead of MSTX today**, not a ranking artifact.
+
+**C2 on the next pick, CONL: passes decisively.** Underlying COIN +7.67% vs. IBIT +5.95% — COIN leads by 1.72pp, real separation. CONL becomes the pick.
+
+**C5 catalyst:** same crypto/Bitcoin-legislation story running its third session — continuation, not a fresh independent source today (flagged as such this morning). Real and named, not "it's going up."
+
+**C9 checked:** within the preferred window. Spread priced at review: bid $6.27/ask $6.28 (1¢ wide) — trivial against a target move of roughly $0.53/share (8.61% of ~$6.30). `all_day_tradability`: untradable (regular hours only, not a concern for a 9:40 entry). Tape moving fast — confirmed by what happened next.
+
+**Sizing per C8:** floor($202.32 ÷ $6.29 review ask) = 32 shares, reviewed clean (no `order_checks` alerts). **First attempt (32 shares, marketable limit $6.29) went unfilled and was cancelled after ~30 seconds — CONL's ask had already run to $6.33, past the limit, on a genuinely fast tape.** Verified `cancelled` with zero `cumulative_quantity` before re-pricing, no partial fill to reconcile. **Re-sized fresh against the live ask:** floor($202.32 ÷ $6.38 new limit) = 31 shares.
+
+**Entry executed:** BUY 31 CONL, marketable limit $6.38, **filled avg $6.3299** (order `6a8855f6`, verified via order response, 09:43:19 ET), total cost **$196.23**. Filled **below** the limit — favorable, despite the fast tape.
+
+**Protective stop placed immediately, confirmed resting** (order `6a885613`, state `confirmed`): stop_market, **$5.98** (stage 1 = fill × (1 − 5.57%)), quantity 31.
+
+**Full ratchet schedule for this fill ($6.3299), from this morning's fresh profile (stop_pct 5.57%, target_pct 8.61%, breakeven_trigger 4.31%, trail_pct 3.71%, stall_threshold 0.65%, min_stop_move 0.93%):**
+
+| Stage | `run_high` reaches | Stop becomes |
+|---|---|---|
+| 1 — entry | $6.33 (fill) | **$5.98** ← resting now |
+| 2 — half-risk | $6.47 | $6.15 |
+| 3 — breakeven | $6.60 | $6.33 (fill) |
+| 4 — trail | past stage 3 | `run_high × (1 − 3.71%)`, recomputed every checkpoint |
+| target | $6.87 | **SELL ALL** |
+
+**Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop. Also worth checking cold at 10:00: whether MSTX (declined here on C2 alone, not on quality) has continued outrunning CONL — if the gap between MSTR and IBIT closes or reverses, that's informational for tomorrow's read on C2's bite, not a reason to revisit today's already-placed trade.
+
 ---
 
 ## Current state
 
-**Flat, pre-market Fri Aug 21.** Fully settled: `unsettled_funds: $0.00`, buying power **$202.32 = full account value**, no asterisks this morning. Weekly day-trade count (trailing 7 calendar days, Aug 15–21): **4** (MSTX + BSX 8/20, GUSH 8/19, GUSH 8/17) — well under the cap of 10, not blocking.
+**Holding 31 CONL @ $6.3299 avg (entered 09:43:19 ET), stop resting at $5.98.** Weekly day-trade count now 5/10 (today's CONL round trip will make it 6 once closed) — still well under the cap of 10, not blocking.
 
-**C10 (v3.11, the momentum-direction gate) has not yet been live-tested against a real trade.** Today is the first session it's active for. MSTX and CONL are both showing large premarket moves again (third session running on the same crypto catalyst) — if MSTX specifically repeats Thursday's gap-and-fade shape, that's the first real read on whether C10 actually catches it.
+**C10 lived up to its design on its first real use.** TSLL and AMDL both still cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint (down from their own 9:30 readings) — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined separately on **C2** (its underlying MSTR no longer led sector proxy IBIT, by a thin 0.14pp) — a reminder that C10 and C2 catch genuinely different failure modes, and a candidate can clear one while failing the other. CONL, ranked #2, passed both and became the actual entry.
+
+**Order execution note:** the first attempt (32 shares, limit $6.29) went unfilled on a fast-moving tape and was cancelled cleanly (verified zero fill before re-pricing) — re-priced to a $6.38 limit and filled 31 shares at $6.3299, still favorable. Worth watching whether this kind of slippage-from-speed recurs on crypto-catalyst mornings specifically.
 
 Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit).
 
