@@ -671,6 +671,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 1:00:** derive the stall count cold from checkpoint prices per B3. **This checkpoint runs at 12:30, already past noon — the tighter at-or-after-noon table applies from the very first check: 1 stall moves the stop to whichever is higher (breakeven or the current ratchet level), 2 stalls forces SELL ALL.** No 3-stall grace period today, unlike CONL's morning entry.
 
+### 1:00pm management checkpoint — stall 1, below fill, no stop move (rejected per B2's own text)
+
+**A1 confirmed fresh: position 15 MSTX @ $12.6591 avg cost, stop resting confirmed** (`6a887dd0`, state `confirmed`, $11.80).
+
+**Checkpoint price at 1:00 (read ~2026-08-21T17:01:40Z): $12.6333** — below `run_high` $12.6591 and the $12.7680 progression threshold. **Stalled. Count: 1** (first check since entry, already under the at-or-after-noon table). Price is **below fill** ($12.6333 < $12.6591). Per B2's afternoon table: *"below fill → No move. Moving the stop to breakeven would place it above the live price, forcing an immediate sell — that is rejected, not executed early."* **Stop stays at $11.80, unchanged.**
+
+**Pre-commit for 1:30:** re-check against `run_high` $12.6591 and threshold $12.7680. If a 2nd stall occurs regardless of price vs. fill, B2's table is unconditional at that count: SELL ALL.
+
 ---
 
 ## Current state
