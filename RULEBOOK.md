@@ -695,18 +695,32 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **A1 re-confirmed: no positions, no resting orders. Weekly day-trade count: 8/10** — getting close to the self-imposed cap; a third entry today would need to clear it fresh and would leave only 1 remaining trade of room this week. Loss streak: this is a loss by the letter (E1: any negative realized P&L, however small), so **streak moves to 1 of 3** — the CONL win reset it to zero at noon, this now starts a fresh count.
 
+**2:00pm, 2:30pm, 3:00pm, 3:30pm management checkpoints:** flat throughout, both MSTX and CONL faded steadily all afternoon (MSTX $12.57→$12.40, CONL $6.25→$6.14 across the four checks) — never close to "clearly better than the morning offered" per C9, and by 3:30 there wasn't real time left for a fresh thesis before the close anyway. No entries, no rule changes triggered — non-events, per D3's "most checkpoints are non-events" logged briefly here rather than each getting their own subsection.
+
+### 4:00pm close
+
+**Confirmed flat** (`get_equity_positions`: empty) and no orders since the 1:31:44 MSTX exit. **Account value $204.69**, up from this morning's $202.32 — net **+$2.37** on the day across two rule-driven round trips (CONL +$2.51, MSTX -$0.14), consistent with the individually logged trades. `unsettled_funds` shows $388.49 in `get_accounts`, an artifact of `limited_margin` tracking today's sale proceeds internally — doesn't constrain buying power (already confirmed $204.69 = full account value).
+
+**D3 report:** both trades already logged in full at their own checkpoints (12:00 CONL exit, 1:31 MSTX exit), including verified fills, P&L in $/%/R, slippage both sides, and D4 reviews. No new trade closed at this checkpoint — nothing further to append to `archive/trades.csv`.
+
+**D1 early shutdown:** flat at 4:00 → delete 4:30–7:30 regardless, per D1's own unconditional rule for this slot. 8:00pm arming and 8:20pm backup stay untouched.
+
+**Open thread from the governor, not yet resolved:** mid-afternoon discussion proposed two concrete rule additions — a giveback-ceiling tightening on the ratchet (to capture more of a peak like CONL's $6.56 high, only 1.28% of which was realized at exit) and an Efficiency-Ratio-based chop filter for entries (to avoid afternoon re-entries like MSTX's, which scored ER≈0.12 against CONL's morning ER≈0.37). Neither has been built yet — awaiting the governor's choice of which to build first, or both.
+
 ---
 
 ## Current state
 
-**Flat.** Two round trips closed today: CONL (+$2.51, r=+0.230) at noon, MSTX (-$0.135, r=-0.011, essentially flat) at 1:31pm — both rule-driven exits via the same noon-crossing/afternoon-stall mechanism, not discretionary calls. **Weekly day-trade count: 8/10** — a third entry today is still technically possible but would leave only 1 trade of room this week; weigh that before taking one, not just whether a candidate clears the gates.
+**Flat, market closed for the day.** Account value **$204.69**, up from $202.32 this morning — net **+$2.37** across two rule-driven round trips: CONL (+$2.51, r=+0.230) at noon, MSTX (-$0.135, r=-0.011, essentially flat) at 1:31pm. Both exits fired via the same noon-crossing/afternoon-stall mechanism, no discretionary calls either time. **Weekly day-trade count: 8/10.**
 
-**Both new v3.11 mechanisms (C10, the noon-crossing stall table) have now been live-tested twice in one day, correctly, including a subtle edge case.** MSTX's 1:30pm stall count is the sharper lesson: price ticked to a marginal new high ($12.6663 vs. the $12.6591 seed) but did **not** clear the required stall_threshold_pct margin, so per B3's literal two-branch logic it still counted as a stall, not a progression — an easy point to misread as "the position is fine, it just made a new high." Caught correctly by deriving cold from the rule text rather than eyeballing the price direction.
+**Both new v3.11 mechanisms (C10, the noon-crossing stall table) got real, correct live tests today, including a subtle edge case** — MSTX's 1:30pm stall count derived from a marginal new high that still didn't clear the required threshold, correctly read as a stall rather than progress per B3's literal logic, not by eyeballing price direction.
 
-**A real execution error, caught and corrected:** MSTX's protective stop was first placed at $11.86 — a miscalculation (correct value: fill × (1 − 6.77%) = $11.80). Caught within about 30 seconds on recomputation, wrong stop cancelled with zero fill verified, correct $11.80 stop placed before any adverse move could have exploited the gap.
+**Two real things caught and corrected today, logged plainly rather than glossed over:** MSTX's protective stop was first placed at $11.86 instead of the correct $11.80 — caught in ~30 seconds, fixed before any adverse move. Separately, the MSTX exit write-up initially had the MAE timing backwards (claimed the true low came after the exit; it was ~8.5 minutes before) — caught during a later review and corrected in place, numeric fields unaffected.
+
+**Open, unbuilt proposal from this afternoon's discussion:** a giveback-ceiling tightening for the ratchet (CONL only realized 1.28% of its 3.64% peak) and a time-scaled Efficiency-Ratio chop filter for entries (today's MSTX afternoon hold scored ER≈0.12 vs. CONL's morning ER≈0.37) — governor hasn't picked which to build yet.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
-**Loss streak 1 of 3** — the CONL win reset it to zero at noon; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Buying power: reconfirm live at each checkpoint, don't assume a stale figure carries forward.
+**Loss streak 1 of 3** — the CONL win reset it to zero at noon; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Buying power: reconfirm live at the next 9:00 checkpoint, don't assume today's figure carries forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
