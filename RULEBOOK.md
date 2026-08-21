@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.12.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.13.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -138,6 +138,18 @@ trail_pct         = 1.0 × 1.45                          = 1.45%
 | 3 — breakeven | $100.00 × (1 + 0.0165) = **$101.65** | **$100.00** (fill) |
 | 4 — trail, e.g. `run_high` runs to $103.00 | — | $103.00 × (1 − 0.0145) = **$101.51** |
 | target | live price reaches $100.00 × (1 + 0.0375) = **$103.75** | **SELL ALL** — B4, overrides every stage |
+
+### Velocity trigger — a fast checkpoint move flips the position to a permanent tight trail
+
+**Checked every checkpoint, alongside the staged ratchet above — an independent trigger, not a fifth stage in the sequence.** Compares this checkpoint's price to the *immediately prior* checkpoint's price only (not `run_high`, not the day's total change):
+
+`checkpoint_gain = (price_now − price_prior_checkpoint) ÷ price_prior_checkpoint`
+
+**If `checkpoint_gain ≥ 3 × stall_threshold_pct`, a fast move has occurred and this position is flagged for the rest of the hold** — the flag never clears once set. **From the triggering checkpoint onward, at every checkpoint (fast or not), the stop becomes `max(staged-ratchet stop, run_high × (1 − stall_threshold_pct))`** — a continuous tight trail using the candidate's own noise-calibrated cushion, layered on top of the staged ratchet, never replacing it, always taking whichever is higher. Still subject to B2's own rules: up only, never down, minimum re-placement move applies.
+
+**Why this exists as its own check, not folded into the staged stages:** the ratchet moves in fixed jumps tied to the fill price and only unlocks continuous trailing once stage 3 (breakeven) is fully reached. A position that runs hard but stalls just short of stage 3 gets *zero* additional protection the whole time it gives that gain back — CONL on 2026-08-21 peaked at $6.56 against a stage-3 bar of $6.60, four cents short, and the stop sat flat at stage 2's $6.15 for the entire decline that followed. This check reacts to *how fast the position got there*, not just *how far*: a checkpoint that jumps well past the instrument's own normal noise is treated as proof enough to start locking in gains immediately, ahead of the staged schedule. This account trades on margin with real money and no room for a large loss — once a position has shown it can move fast, prioritize keeping what's been won over giving it room to keep running.
+
+**Verified against real trade history before building, not designed and assumed:** CONL's 10:30→11:00 checkpoint move was +4.01%, against a required bar of `3 × 0.65% = 1.95%` — a genuine fast move. Snapping to `$6.5213 × (1 − 0.65%) = $6.4789` at 11:00 would have exited the position around 11:25–11:30am (real intraday lows crossed that level then, confirmed from minute bars) for roughly **$4.62 realized instead of the actual $2.51** — nearly double. Checked against both MSTX trades too: neither had a checkpoint-visible fast move (both true peaks happened *between* checkpoints), so this trigger would not have fired on either — same checkpoint-granularity limit as every other mechanism in this file. Not yet live-tested against a real trade.
 
 **The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp. **Time-gated at 12:00pm ET**, evaluated by the checkpoint's own clock time, not entry time:
 
@@ -742,7 +754,9 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Two real things caught and corrected today, logged plainly rather than glossed over:** MSTX's protective stop was first placed at $11.86 instead of the correct $11.80 — caught in ~30 seconds, fixed before any adverse move. Separately, the MSTX exit write-up initially had the MAE timing backwards (claimed the true low came after the exit; it was ~8.5 minutes before) — caught during a later review and corrected in place, numeric fields unaffected.
 
-**New this update (v3.12) — C11, a time-scaled Efficiency Ratio chop filter, plus B6 to feed it real data.** Governor picked this half of the afternoon's two-part proposal; the ratchet giveback-ceiling idea (Problem 1) is still open, not yet built. C11 requires 3 real formal checkpoint reads per candidate to compute — which today's actual data collection didn't provide for MSTX's 12:30 re-entry (no reads between 9:40 and 12:30), so B6 now requires every management checkpoint to log a one-line shortlist price snapshot, whether or not that name is the held position. Until that habit accumulates a few sessions of real history, expect C11 to default-pass on afternoon re-entries for lack of data rather than genuinely clearing them — flagged explicitly each time that happens, not silently treated as a clean pass. Not yet live-tested against a real trade.
+**v3.12 — C11 (time-scaled Efficiency Ratio chop filter) plus B6 (shortlist price tracking to feed it).** C11 needs 3 real formal checkpoint reads per candidate to compute — today's actual data collection didn't provide that for MSTX's 12:30 re-entry, so B6 now requires every management checkpoint to log a one-line price for the full shortlist, not just the held position. Expect C11 to default-pass on re-entries until that habit accumulates real history — flagged explicitly each time, never silently treated as a clean pass.
+
+**v3.13 — the velocity trigger (B2), a genuinely different fix for Problem 1 than the three originally proposed.** Backtesting the original three options (continuous trailing, giveback ceiling, mid-ladder stage) against CONL's real data showed **none of them would have changed the outcome** — CONL's exit was decided by the stall-count rule (B3), not the stop (B2), so tightening the stop alone did nothing; a fast-acting giveback trigger would have sold into an 11:30 dip and done *worse* than the actual trade (giveback was 86.9% at 11:30, only 57.6% at the eventual exit). The velocity trigger instead watches checkpoint-to-checkpoint speed: a single-interval move ≥3× the candidate's own `stall_threshold_pct` flags the position for a permanent tight trail (`run_high × (1 − stall_threshold_pct)`) from then on, layered on the existing ratchet, whichever stop is higher. Verified against CONL before building: would have exited around $6.48 instead of the actual $6.41 — nearly double the realized gain ($4.62 vs $2.51). Same checkpoint-granularity blind spot as everything else here: doesn't fire if the fast move happens entirely between two checks, which is why it wouldn't have helped either MSTX trade. Not yet live-tested against a real trade.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
