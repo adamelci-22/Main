@@ -473,154 +473,62 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*As of Aug 20 2026, ~9:05am ET (premarket):* **Crypto is the real story — a named, sourced catalyst, not a mood.** Trump is pressing Congress to pass a key crypto bill; Bitcoin jumped on the news and MSTR/COIN are moving hard alongside it. Broader tape is soft: Nasdaq-100 futures -0.5%, S&P/Dow flat, tech mostly lower (Oracle, AMD, Micron, Marvell all down) on renewed yield pressure — the Treasury announced it will more than double its debt-repurchase program after yields hit levels last seen ~20 years ago, though the S&P actually rose Wednesday once yields eased on that same announcement. Oil holds its four-day run near $85.
+*As of Aug 21 2026, ~9:03am ET (premarket):* **Crypto is still the story, third session running.** MSTR and COIN are both up hard again premarket, and their leveraged wrappers are up harder still — same shape as Wed/Thu (Trump's crypto-legislation push, Bitcoin rallying). No new headline confirmed yet this morning specifically; treat this as continuation of the existing catalyst until B5's hourly check finds something fresher, not as a new, independently-sourced story. Gold/miners are also strong (GDX +2.74% premarket) — second axis worth watching alongside crypto.
 
-**⚠ Unexpected account state, resolved before this checkpoint's work began:** found 3 shares of BSX (Boston Scientific, not a tracked instrument) held at $52.00 avg cost — `placed_agent: "user"` on both the buy and a queued sell confirmed via `get_equity_orders`, so this is the governor's own manual trade, not a system error or a rogue fill. The sell is a market order placed overnight (queued, since market orders don't execute outside regular hours) — expected to clear at the 9:30 open. **A1's "position already open" blocks new entries until it does; re-verify at 9:30/9:40, don't assume it's cleared.** Buying power currently shows $46.21, artificially low while those shares are held — not this morning's real number.
+**A1 verified fresh:** `get_equity_positions` empty, `get_equity_orders` since 2026-08-21T00:00:00Z empty — flat, no resting orders, nothing pending. **Account fully settled:** `get_accounts` shows `unsettled_funds: $0.00`; `get_portfolio` confirms **buying power $202.32 = full account value** — this is the real, uncomplicated full-deployment number the governor described, no T+1 asterisk this time. Streak unchanged at 1 of 3 (last loss: MSTX, 2026-08-20). **Weekly day-trade count (E2, trailing 7 calendar days, Aug 15–21): 4** (MSTX + BSX 8/20, GUSH 8/19, GUSH 8/17) — well under the cap of 10, not blocking.
 
-**Premarket individual moves** (vs. adjusted previous close, broker quotes): **MSTR +9.39%**, **COIN +5.96%** (both crypto-bill driven, real catalyst), NVDA +0.19%, AVGO +0.43%, META +0.36%, MSFT ~flat, AAPL ~flat, GOOGL −0.44%, PLTR −0.25%, AMD −0.63%, MU −0.77%, TSM −0.43%, SMCI −0.14%, AMZN −0.88%, **TSLA −1.71%** (worst). MSTR/COIN are the clear standout — everything else is noise-range on a soft, yield-pressured tape.
+**Premarket individual moves** (underlying vs. adjusted previous close, broker quotes): **MSTR +7.39%**, **COIN +4.60%** (crypto, third day running), TSM +1.80%, AVGO +1.53%, SMCI +1.59%, AMD +1.35%, MU +1.40%, TSLA +1.30%, NVDA +0.42% (weakest of the semis complex). Plain stocks all essentially flat: GOOGL +0.74%, AMZN +0.72% (both just under the +0.75% bar), AAPL +0.29%, MSFT +0.28%, META +0.32%, PLTR +0.17%.
 
-**Sector proxies (premarket, informational only — not the C1 baseline):** XLE +1.15% (oil's 4-day run continuing) · SPY −0.39% · QQQ −0.57% · SMH −0.50% · GDX −1.21% (gold miners actually red today, opposite of yesterday).
+**Wrapper premarket moves** (leverage effect confirmed again — wrapper move is larger than the underlying's): **MSTX +14.48%**, **CONL +9.14%**, TSMU +3.34%, SMCX +3.30%, AVGX +2.82%, AMDL +2.71%, MUU +2.71%, TSLL +2.36%, NVDL +0.57%.
 
-**20-name watchlist**, re-profiled just-in-time (B1) fresh this morning on 38 sessions through Aug 19 close (`tools/profile.py`, never reused from yesterday) — ✓ = affordable against **expected ~$202 buying power once BSX clears** (not the current $46.21, which is temporary):
+**Sector proxies (premarket, informational only — not the C1 baseline):** GDX +2.74% (gold miners strong, opposite of Wednesday) · SMH +1.31% · QQQ +0.75% · SPY +0.52% · XLE −0.05% (energy essentially flat, GUSH's 3-session grind may be pausing).
+
+**20-name watchlist, re-profiled just-in-time (B1) fresh this morning on 43 sessions through Aug 20 close** (`tools/profile.py`, never reused from yesterday) — ✓ = affordable against the real, uncomplicated **$202.32**:
 
 *15 individuals:*
-| Rank | Symbol | Underlying | Premarket chg | mfe_per_stop | Price | Afford (~$202) |
+| Rank | Symbol | Underlying | Premarket chg | mfe_per_stop | Ask | Afford |
 |---|---|---|---|---|---|---|
-| 1 | TSLL | TSLA | −3.16%* | 1.010 | $8.90 | ✓ (but TSLA red — not a candidate) |
-| 2 | MSTX | MSTR | **+18.59%*** | 1.001 | $11.44 | ✓ |
-| 3 | PLTR | — | −0.25% | 0.923 | $175.00 | ✓ (barely) |
-| 4 | CONL | COIN | **+12.69%*** | 0.779 | $5.24 | ✓ |
-| 5 | SMCX | SMCI | ~flat* | 0.744 | $11.74 | ✓ |
-| 6 | MUU | MU | −0.77%* | 0.663 | $29.43 | ✓ (but MU red — not a candidate) |
-| 7 | NVDL | NVDA | +0.19%* | 0.614 | $34.40 | ✓ |
-| 8 | META | — | +0.36% | 0.579 | $548.30 | ✗ |
-| 9 | TSMU | TSM | −0.43%* | 0.539 | $64.85 | ✓ (but TSM red — not a candidate) |
-| 10 | MSFT | — | ~flat | 0.520 | $483.50 | ✗ |
-| 11 | AMDL | AMD | −0.63%* | 0.511 | $47.64 | ✓ (but AMD red — not a candidate) |
-| 12 | AMZN | — | −0.88% | 0.477 | $263.49 | ✗ |
-| 13 | GOOGL | — | −0.44% | 0.432 | $343.33 | ✗ |
-| 14 | AVGX | AVGO | +0.43%* | 0.391 | $41.66 | ✓ |
-| 15 | AAPL | — | ~flat | 0.368 | $316.85 | ✗ |
+| 1 | PLTR | — | +0.17% | 0.906 | $174.56 | ✓ (barely, but not a candidate — underlying flat) |
+| 2 | MSTX | MSTR | **+14.48%*** | 0.844 | $12.73 | ✓ |
+| 3 | CONL | COIN | **+9.14%*** | 0.773 | $5.88 | ✓ |
+| 4 | TSLL | TSLA | +2.36%* | 0.765 | $9.09 | ✓ |
+| 5 | SMCX | SMCI | +3.30%* | 0.749 | $12.12 | ✓ |
+| 6 | MUU | MU | +2.71%* | 0.644 | $32.98 | ✓ |
+| 7 | TSMU | TSM | +3.34%* | 0.595 | $68.81 | ✓ |
+| 8 | MSFT | — | +0.28% | 0.520 | $482.90 | ✗ |
+| 9 | META | — | +0.32% | 0.508 | $548.29 | ✗ |
+| 10 | AMDL | AMD | +2.71%* | 0.506 | $50.01 | ✓ |
+| 11 | AMZN | — | +0.72% | 0.464 | $261.97 | ✗ |
+| 12 | NVDL | NVDA | +0.57%* | 0.450 | $34.26 | ✓ (but NVDA underlying weak — not a candidate) |
+| 13 | GOOGL | — | +0.74% | 0.443 | $343.20 | ✗ |
+| 14 | AVGX | AVGO | +2.82%* | 0.377 | $42.72 | ✓ |
+| 15 | AAPL | — | +0.29% | 0.373 | $312.25 | ✗ |
 
-*Wrapper premarket % is the wrapper's own move where it differs materially from the underlying (leverage effect, e.g. MSTX +18.6% vs MSTR's own +9.4%); shown as the underlying's move where the two track closely.
+*Wrapper premarket % shown where it differs materially from the underlying (leverage effect); underlying's own move used for the plain names.
 
 *5 sector/index vehicles* (feed C1; leveraged form noted for C4 rank-2/3):
-| Symbol | Proxy | Premarket chg | Leveraged form | mfe_per_stop | Price | Afford (~$202) |
-|---|---|---|---|---|---|---|
-| GUSH | Energy | **+1.15%*** (XLE) | — | 0.928 | $45.47 | ✓ |
-| NUGT | Gold miners | −1.21%* (GDX) | — | 0.832 | $182.45 | ✓ (but GDX red — not a candidate) |
-| SOXL | Semis | −0.50%* (SMH) | — | 0.521 | $119.34 | ✓ (but SMH red — not a candidate) |
-| TQQQ | Tech/index | −0.57%* (QQQ) | — | 0.487 | $70.92 | ✓ (but QQQ red — not a candidate) |
-| SPXL | Broad market | −0.39%* (SPY) | — | 0.469 | $287.48 | ✗ |
+| Symbol | Proxy | Premarket chg | mfe_per_stop | Ask | Afford |
+|---|---|---|---|---|---|
+| GUSH | Energy (XLE) | −0.05% | 0.933 | $44.80 | ✓ (but proxy flat/negative — not a candidate) |
+| NUGT | Gold miners (GDX) | **+2.74%** | 0.907 | $207.30 | ✗ (unaffordable, $5 short) |
+| SOXL | Semis (SMH) | +1.31% | 0.520 | $127.62 | ✓ |
+| TQQQ | Tech/index (QQQ) | +0.75% | 0.454 | $71.95 | ✓ |
+| SPXL | Broad market (SPY) | +0.52% | 0.450 | $287.50 | ✗ |
 
-**The real story: MSTX (#2, 1.001) and CONL (#6 overall, 0.779) are both up huge on the same named catalyst** (Trump's crypto bill push, Bitcoin rallying) — a genuine, sourced, two-sided confirmation (both crypto-adjacent names moving together), not a single-headline fluke. **Both are now easily affordable, including multiple shares, once the expanded capital is actually usable** — contingent on the BSX sell clearing before 9:40. GUSH (#3 overall among sector-leveraged, 0.928) continues its energy grind for a third session, also affordable, also still directionally alive. Every other rank-1 candidate (TSLL, MUU, TSMU, AMDL) is red today despite decent `mfe_per_stop` scores — direction matters more than the ranking number, and none of those clear C3 as written. **Nothing decided yet — re-confirm everything live at 9:30/9:40 per C1/C3/C7, and re-confirm A1 is actually clear before touching any of this.**
+**The real story, third session running: MSTX (#2, 0.844) and CONL (#3, 0.779) are both up huge premarket on the same crypto catalyst as Wed/Thu** — both easily affordable, both with real intraday history now (MSTX traded yesterday; today would be the first live test of the new C10 momentum-direction gate on this exact name, which is worth watching given yesterday's gap-and-fade). TSLL, SMCX, MUU, TSMU, AMDL, AVGX are all real, all clear C3's premarket bar, all affordable — genuine depth in the shortlist today, not a one-name morning. NUGT is the highest-ranked sector vehicle after GUSH but **unaffordable by about $5** — worth noting as a real cost of the current capital base. **Nothing decided yet — re-confirm everything live at 9:30/9:40 per C1/C2/C3/C7/C10, and re-verify A1 fresh before touching any of this.**
 
 **Stale for any later session; refresh before trusting.**
-
-### A1 re-verified, BSX cleared
-
-**Position check fresh from the broker at 9:31 ET: no positions, no resting orders.** The overnight BSX shares are gone — the queued market sell cleared at the open as expected. A1's blocking condition is clear; nothing prevents an entry today on that front.
-
-### C1 Gate-1 baseline — formal 9:30 reading
-
-**Recorded 9:30 checkpoint, read time 2026-08-20T13:31:15Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
-
-| Proxy | 9:30 day change | vs. premarket |
-|---|---|---|
-| XLE | **+1.274%** | strengthened (+1.15%→+1.27%) — energy's third-session grind continues |
-| SMH | +0.255% | flipped positive (was −0.50% premarket) |
-| GDX | −0.380% | recovered most of its premarket loss but still negative — fails leg 1 |
-| SPY | −0.365% | ~flat, still negative — fails leg 1 |
-| QQQ | −0.434% | still negative — fails leg 1 |
-
-**Only XLE and SMH are alive for C1 at 9:30** — SPY, QQQ, GDX all fail leg 1. XLE remains the strongest and most consistent; SMH just barely flipped positive and needs to hold, not just print green once.
-
-**Individual candidates — wrapper prices at 9:30, holding vs. premarket:**
-
-*Still strong or newly clearing C3's bar:* MSTX +11.27% (down from the premarket spike but still enormous — MSTR/crypto-bill thesis intact), CONL +12.15% (held essentially flat vs. premarket, still enormous), **SMCX +6.70%** (flipped hugely positive from ~flat premarket — SMCI rallying, unclear catalyst yet, worth checking at 9:40), AVGX +1.26% (positive), **MUU +0.77%** (flipped positive, clears C3's +0.75% bar), **AAPL +0.81%** (flipped positive, clears the bar), NVDL +0.60% (positive but short of the bar).
-
-*Still negative, not candidates:* TSLL −2.29% (TSLA still weak), AMZN −1.41% (worsened), PLTR −0.86%, GOOGL −0.75%, META ~flat, MSFT ~flat, TSMU/AMDL both showing 0.00% (stale prints, no fresh trade yet at read time).
-
-**Five real candidates already clearing C3's magnitude bar at 9:30 (informational, formal check is 9:40 live):** MSTX, CONL, SMCX, MUU, AAPL. MSTX and CONL remain the clearest story — same named catalyst (crypto bill), still moving together, still enormous. SMCX's sudden strength is unexplained so far and needs a headline check before trusting it. **Re-confirm everything live at 9:40 — this reading is 9-10 minutes old already and today's tape is moving fast.**
-
-### 9:40 entry — MSTX, individual leveraged stock (C4 rank 1)
-
-**A1 re-confirmed fresh: no positions, no resting orders, streak 0/3, floor clear.** **Real correction to this morning's capital note:** `get_portfolio` shows buying power **$46.21**, not the ~$157-202 speculated at 9:00 — `get_accounts` shows $156.65 of today's $202.86 cash is `unsettled_funds` (the BSX sale proceeds, T+1, same rule that constrained yesterday's own GUSH sale). **Settled, spendable cash today is $46.21, materially smaller than assumed this morning.**
-
-**C1 re-checked at 9:40 (read ~2026-08-20T13:40:52Z):** XLE +1.681% (up from 9:30's +1.274% — passes all three legs). SMH +0.428% (up from +0.255% — also passes all three legs). Both sector-leveraged paths (GUSH, SOXL) are technically alive, but moot — no individual-stock candidate is needed today, see below.
-
-**C3 magnitude re-confirmed live for all 15 individuals — 8 clear the +0.75% bar:** MSTX +11.735%, CONL +10.215%, SMCX +7.980%, AMDL +2.249%, MUU +1.778%, AVGX +1.676%, NVDL +1.344%, TSMU +1.070%. **AAPL fell back below the bar** (+0.29%, was +0.81% at 9:30) — dropped from contention. Everything else stayed negative (TSLL, PLTR, GOOGL, AMZN, META, MSFT).
-
-**C7 ranking (mfe_per_stop, ignoring price):** MSTX 1.001 > CONL 0.779 > SMCX 0.744 > MUU 0.663 > NVDL 0.614 > TSMU 0.539 > AMDL 0.511 > AVGX 0.391. **Affordability against the real $46.21:** MSTX ✓ ($10.92 ask) · CONL ✓ ($5.13) · SMCX ✓ ($12.74) · MUU ✓ ($30.34) · NVDL ✓ ($34.69) · AVGX ✓ ($41.80) · **TSMU ✗** ($66.13, $19.92 short) · **AMDL ✗** ($49.25, $3.04 short). Top two for the record: MSTX 1.001, CONL 0.779.
-
-**C4:** all eight are rank 1 (individual leveraged stock, C3 cleared, wrapper affordable) — no rank-2/3 fallback needed.
-
-**C2 checked for the top pick, MSTX:** underlying MSTR +6.791% vs. its sector proxy IBIT (crypto, per E3) +4.358% — **underlying leads**, passes. (MSTR itself, not the 2x wrapper, is the correct comparison per C2's text.)
-
-**C5 catalyst:** Trump pressing Congress on crypto legislation, Bitcoin rallying on the news, MSTR and COIN moving together — real, named, sourced this morning, two-sided confirmation. Not "it's going up."
-
-**C9 checked:** within the preferred window (9:40, right at open of it). Spread priced: bid $10.86/ask $10.88 at review (1-2¢ wide), round-trip ~4¢ against a target move of roughly $1.30/share (12% of ~$10.85) — trivial. `all_day_tradability` confirmed tradable beforehand.
-
-**Sizing per C8 (v3.8):** floor($46.21 ÷ $10.92 ask) = **4 shares**, not a flat 1 — the first real test of the new full-deployment rule.
-
-**Entry executed:** BUY 4 MSTX, marketable limit $10.98, **filled avg $10.8399** (order `6a87043d`, verified via order response, 09:42:21 ET), total cost **$43.36**. Filled *below* the limit and the review-time ask — favorable. `shares_available_for_sells` etc. not yet checked, position confirmed via the fill itself.
-
-**Protective stop placed immediately, confirmed resting** (order `6a870454`, state `confirmed`): stop_market, **$10.17** (stage 1 = fill × (1 − 6.19%)), quantity 4.
-
-**Full ratchet schedule for this fill ($10.8399), from this morning's fresh profile (stop_pct 6.19%, target_pct 12.00%, breakeven_trigger 6.20%, trail_pct 4.13%, stall_threshold 0.93%, min_stop_move 1.00%):**
-
-| Stage | `run_high` reaches | Stop becomes |
-|---|---|---|
-| 1 — entry | $10.84 (fill) | **$10.17** ← resting now |
-| 2 — half-risk | $11.18 | $10.50 |
-| 3 — breakeven | $11.51 | $10.84 (fill) |
-| 4 — trail | past stage 3 | `run_high × (1 − 4.13%)`, recomputed every checkpoint |
-| target | $12.14 | **SELL ALL** |
-
-**Pre-commit for 10:00:** derive the stall count cold from checkpoint prices per B3; before noon, 3 stalls needed to sell and stalls 1–2 don't move the stop (only the ratchet stages above can). This is a wide-stop, wide-target instrument (6.19%/12.00%) — a normal-looking dollar move will be a small percentage of it; don't mistake a few-cent wiggle for a real signal.
-
-### 10:00 management checkpoint — progressed (barely), run_high advances, stop unchanged
-
-**A1 confirmed fresh: position 4 MSTX @ $10.8399 avg cost, stop resting confirmed** (`6a870454`, state `confirmed`, $10.17).
-
-**Stall derivation, cold, per B3:** `run_high` seeded at fill $10.8399. Progression threshold: $10.8399 × 1.0093 = $10.9407. Checkpoint price at 10:00 (read ~2026-08-20T14:01:31Z): **$10.9415** — clears the threshold by less than a tenth of a cent, but clears it. **Progressed, not stalled. Count: 0.** `run_high` advances to $10.9415. No ratchet stage triggered yet (half-risk needs $11.18). **Stop stays at $10.17, unchanged.**
-
-**B5 headlines:** the catalyst is real and specific — Trump hosted crypto executives (Coinbase's Armstrong, the Winklevoss twins, Kraken's co-CEO, and Robinhood's own Vlad Tenev) at the White House Aug 19 pushing the "Clarity Act," a bill defining securities-vs-commodities status for crypto. Bitcoin rose to $71,834 (+11.5%), Ether +18.3%. This is the actual driver behind MSTX/CONL's move, confirmed by name — not a vague "crypto is up" guess.
-
-**Pre-commit for 10:30:** re-derive the stall count cold against the new `run_high` $10.9415 and a new progression threshold of $10.9415 × 1.0093 = **$11.0433**. No stop move expected unless price clears $11.18 (stage 2, half-risk) or a fresh high resets `run_high` again.
-
-### 10:26 ET — off-cycle manual exit by the governor, before the 10:30 pre-commit ran
-
-**Not a checkpoint-driven decision.** The governor sold all 4 MSTX shares directly ("I sold I didn't like the trend"), ahead of the scheduled 10:30 check. Verified via `get_equity_orders`: sell order `6a870e85`, `placed_agent: "user"`, filled 4 @ **$10.705** avg, 10:26:13 ET. The resting protective stop (`6a870454`) was auto-cancelled by the broker at the same moment, not left orphaned.
-
-**A1 re-confirmed: no positions, no resting orders.** Result: **-$0.5396, -1.24% on the position, r = -0.201** — a small loss. Pulled real minute-bar historicals for the full hold rather than estimating from checkpoint samples: true high **$11.15** (13:45 UTC, MFE +2.87%), true low **$10.63** (14:20 UTC, MAE +1.94%) — the position was actually still up (+0.94%) as of the 10:00 checkpoint and touched +2.87% intraday before the reversal that prompted the exit. Full detail in `archive/trades.csv`.
-
-**This exit is not B2/B3's output — it's a discretionary override, logged honestly as such.** The entry-side gates (C1-C9) still ran correctly and are valid data; the exit timing simply isn't evidence for or against the stall ladder. Per governor instruction, the next entry uses **full settled capital** — expected to be close to the full ~$202 once both today's BSX and MSTX sale proceeds settle T+1 (by tomorrow's session; re-verify fresh at 9:00, don't assume).
-
-**E2's one round trip is now spent for today — no further entries possible.** D1 early shutdown executed: 11 remaining intraday slots deleted (10:30 through 3:30), verified via `list_triggers` — exactly 3 left: 4:00 close, 8:00 arming, 8:20 backup.
-
-**10:30 — stray, fired anyway.** This slot had already been queued before its deletion landed (same race as prior sessions' stray half-hour slots). Re-verified fresh: no positions, no new orders since the 10:26 exit. Nothing to do — already covered above.
-
-**MSTX post-exit finding, from real 5-minute bars (not checkpoint samples):** MSTX opened at $11.30 at 9:30 ET, then sold off ~5% in the first 5 minutes to $10.76. The $10.8399 entry at 9:42 was a bounce off that opening selloff, not a new high — the position's best moment ($11.15, at 9:45) came 3 minutes after entry and never got back above the 9:30 open. The governor's own read at the time ("I sold I didn't like the trend") was correct: this was a gap-and-fade day (MSTX gapped up hard on the Bitcoin/Clarity-Act catalyst, opened at its high, got sold into immediately), not a continuation. **Named as a pattern to watch, not a rule change on one trade:** C3's magnitude gate measures the day's move against yesterday's close, and C1/C2 don't check whether today's own session is fading from its own open. A candidate can be "up big on the day" by that measure while actually declining all session. If this shape recurs on a future entry, that's the signal to add an explicit intraday-fade check — not before.
-
-**v3.10 update (this same afternoon, prior checkpoint pass):** PDT was confirmed eliminated via a fetch of Robinhood's support page, replacing the v3.9 day-trade budget with a self-imposed weekly pacing cap. Independently re-verified in this session via WebSearch + WebFetch against FINRA.org (Regulatory Notice 26-10, the "Understanding the New Intraday Margin Requirements" investor page), an SEC.gov filing, and the Federal Register — all confirm: FINRA Rule 4210's Pattern Day Trader framework (the 4-day-trades-in-5-business-days count, the $25,000 minimum) was eliminated effective **2026-06-04**, replaced by an intraday margin-deficit standard. That standard targets accounts using leverage; `limited_margin` trades only with available cash (no borrowing), so it's structurally unlikely to trigger a deficit as long as C8's sizing (never exceed available cash) holds. The residual uncertainty E2 already flags (whether `limited_margin` is explicitly named vs. inferred, whether the $2,000 margin-minimum applies here) stands as written — still not blocking, still worth watching for an actual broker-side restriction message.
-
-**4:00pm close:** confirmed flat (`get_equity_positions`: empty) and no orders since the 10:26 MSTX exit (`get_equity_orders` since 14:26 UTC: none). No new trade to log. Weekly day-trade count unchanged at 4/10 — not binding. D1: nothing to delete for 4:30–7:30, already absent from this morning's early shutdown; `list_triggers` shows only the 8:00pm arming and 8:20pm backup remaining, as expected.
 
 ---
 
 ## Current state
 
-**Flat, market closed for the day (4:00pm ET close confirmed, no position, no new trade after the 10:26 MSTX exit).** **Account converted to limited margin today (2026-08-20, governor instruction)** — verified via `get_accounts`/`get_portfolio`, buying power now equals full account value ($202.32), no T+1 gate.
+**Flat, pre-market Fri Aug 21.** Fully settled: `unsettled_funds: $0.00`, buying power **$202.32 = full account value**, no asterisks this morning. Weekly day-trade count (trailing 7 calendar days, Aug 15–21): **4** (MSTX + BSX 8/20, GUSH 8/19, GUSH 8/17) — well under the cap of 10, not blocking.
 
-**PDT is confirmed eliminated — now independently verified twice.** First from Robinhood's own support page (earlier checkpoint pass), then re-confirmed this session from primary sources (FINRA.org Regulatory Notice 26-10, an SEC.gov filing, the Federal Register): FINRA's new intraday margin standard replaced PDT on **June 4, 2026** — already ~2.5 months in the past. No more 4-trades-in-5-days restriction, no more $25,000 minimum, any prior PDT flag auto-removed. Full detail and the residual smaller uncertainty (whether this explicitly covers `limited_margin` vs. only full margin, and whether the separate $2,000 margin-minimum applies here) is in E2 — not blocking, just flagged to watch for.
-
-**Weekly day-trade count as of 2026-08-20: 4** (MSTX + BSX today, GUSH 8/19, GUSH 8/17), well under the new self-imposed cap of 10 in a trailing 7 calendar days (E2) — **not blocking further entries today.** Multiple different candidates per day are now explicitly authorized per governor instruction, not just repeats of one symbol.
-
-**New this update — C10, the momentum-direction gate (v3.11).** Built directly from today's MSTX trade: governor correctly read a gap-and-fade (MSTX opened at its day high and sold off from there) that C1–C9 couldn't see, since none of them check a candidate's own reading against its immediately-prior checkpoint or against its own recent swing low. C10 now declines entry into any candidate that's currently falling checkpoint-to-checkpoint, but reopens once a *confirmed* bounce (sized to that candidate's own `stall_threshold_pct`, not a flat number) clears off the local low — so a real second-wave rally later in the day is still tradeable even if the candidate never reclaims its original high. A 65% giveback ceiling backstops it against buying a small bounce inside an otherwise-collapsed move. Not yet live-tested — first real read happens at the next entry.
+**C10 (v3.11, the momentum-direction gate) has not yet been live-tested against a real trade.** Today is the first session it's active for. MSTX and CONL are both showing large premarket moves again (third session running on the same crypto catalyst) — if MSTX specifically repeats Thursday's gap-and-fade shape, that's the first real read on whether C10 actually catches it.
 
 Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit).
 
-**Loss streak 1 of 3** (the 2026-08-19 GUSH win reset it to zero; today's MSTX loss is the first since). Buying power: reconfirm live at the next checkpoint, don't assume today's figures carry forward.
+**Loss streak 1 of 3** (the 2026-08-19 GUSH win reset it to zero; the 2026-08-20 MSTX loss is the only one since). Buying power: reconfirm live at each checkpoint, don't assume this morning's figure carries forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
