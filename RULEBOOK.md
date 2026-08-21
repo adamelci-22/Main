@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.11.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.12.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -212,6 +212,12 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 *(While flat and no candidate is live, hourly is enough (D1's cadence reduction already drops the check frequency). Don't stop checking just because an earlier trade already closed today — a later opportunity is still tradeable.)*
 
+## B6. Shortlist price snapshot — feeds C10 and C11, whether or not it's the held position
+
+**At every management checkpoint (10:00–3:30), log one line per name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 20-name watchlist) — symbol and current price, nothing more, even while holding a different position. Cheap: a quote most checkpoints already pull for other reasons, or one extra light call.
+
+**Why this exists as its own duty, not left implicit:** C10 (session_high/session_low) and C11 (Efficiency Ratio) both need continuous, real checkpoint-price history *per candidate* to work as designed. Without this habit, a candidate re-considered later in the day after not being the held position — like MSTX on 2026-08-21, re-entered at 12:30 with no formal reads since 9:40 — has no real history for either gate to check, and both default-pass for lack of data rather than genuinely clearing anything. That default-pass is safe (never block on a gap) but silently defeats the point of building the gates in the first place if the gap becomes routine instead of the exception.
+
 ---
 
 # PART C — ENTRY (9:00 · 9:30 · 9:40 primarily; any 10:00–3:30 checkpoint while flat)
@@ -339,6 +345,25 @@ Then:
 Fails leg 1 → blocked outright, full stop, regardless of how the candidate otherwise ranks. Fails leg 2 or 3 while leg 1 passes → the "bounce" isn't real yet or the move is too far gone; wait for the next checkpoint rather than forcing it (C9's "never force a trade because the window is closing" applies here too).
 
 Reset `session_high`/`session_low` at 9:00 daily — nothing carries between sessions (per this file's own opening line).
+
+## C11. Chop filter — Efficiency Ratio, time-scaled
+
+**Applies to every candidate at every entry-eligible checkpoint, in addition to C1–C10.** Built to catch a candidate that's technically up on the day and technically not falling (passes C10) but is genuinely just chopping sideways rather than trending — the shape that produced a near-flat, whipsawed hold on 2026-08-21's afternoon MSTX re-entry.
+
+**Efficiency Ratio (ER):** over the candidate's last 3 formal checkpoint reads (2 consecutive moves), `ER = |price_now − price_2_checkpoints_ago| ÷ (|move 1| + |move 2|)`. Near 1 = clean directional move; near 0 = pure back-and-forth with little net progress. **Fewer than 3 formal reads exist → ER is not yet computable, gate passes by default** — same not-enough-data handling as C10's TSMU case; never block on a gap, but never pretend the check ran either.
+
+**Minimum ER required to enter, scaled to how forgiving the hour should be** (early moves are naturally noisier as they establish; afternoon entries into an already-mature move should be held to a materially higher bar):
+
+| Checkpoint window | Minimum ER |
+|---|---|
+| 9:40 – 10:30 | 0.15 |
+| 11:00 – 12:00 | 0.25 |
+| 12:30 – 2:00 | 0.30 |
+| 2:30 – 3:30 | 0.35 |
+
+Below the window's minimum → declined as too choppy, regardless of C1–C10 all passing. This is a real, separate failure mode from C10: C10 asks "is it currently falling," C11 asks "is the recent path actually going anywhere, net."
+
+**Data dependency — read before assuming this gate is live:** ER needs three real formal checkpoint prices for the *specific candidate under consideration*, not just the one currently held. Today's actual entry-side gates (C1, C3, C10) only formally re-checked the full shortlist at 9:30/9:40 and thereafter tracked whatever was held — a candidate like MSTX, re-considered at 12:30 after not being the held position, had no formal reads between 9:40 and 12:30 to build an ER from. **Management checkpoints must now log a one-line price snapshot for every name on the day's shortlist (not only the held position) at every checkpoint** — cheap (quotes already fetched or easily added), and it's the only way C11 (and C10, for that matter) actually has continuous data to work with for a candidate the system isn't currently holding. Until that habit is established, expect C11 to pass by default on most re-entry candidates simply for lack of history — flag that explicitly at entry rather than letting a default-pass look like a deliberate clearance.
 
 ---
 
@@ -717,7 +742,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Two real things caught and corrected today, logged plainly rather than glossed over:** MSTX's protective stop was first placed at $11.86 instead of the correct $11.80 — caught in ~30 seconds, fixed before any adverse move. Separately, the MSTX exit write-up initially had the MAE timing backwards (claimed the true low came after the exit; it was ~8.5 minutes before) — caught during a later review and corrected in place, numeric fields unaffected.
 
-**Open, unbuilt proposal from this afternoon's discussion:** a giveback-ceiling tightening for the ratchet (CONL only realized 1.28% of its 3.64% peak) and a time-scaled Efficiency-Ratio chop filter for entries (today's MSTX afternoon hold scored ER≈0.12 vs. CONL's morning ER≈0.37) — governor hasn't picked which to build yet.
+**New this update (v3.12) — C11, a time-scaled Efficiency Ratio chop filter, plus B6 to feed it real data.** Governor picked this half of the afternoon's two-part proposal; the ratchet giveback-ceiling idea (Problem 1) is still open, not yet built. C11 requires 3 real formal checkpoint reads per candidate to compute — which today's actual data collection didn't provide for MSTX's 12:30 re-entry (no reads between 9:40 and 12:30), so B6 now requires every management checkpoint to log a one-line shortlist price snapshot, whether or not that name is the held position. Until that habit accumulates a few sessions of real history, expect C11 to default-pass on afternoon re-entries for lack of data rather than genuinely clearing them — flagged explicitly each time that happens, not silently treated as a clean pass. Not yet live-tested against a real trade.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
