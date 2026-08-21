@@ -627,18 +627,34 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 12:00:** re-check against the same `run_high`/threshold. A 2nd stall still doesn't move the stop; a 3rd stall before noon forces SELL ALL — noon is close, watch the clock as well as the price.
 
+### 12:00pm management checkpoint — noon-crossing rule fires, SELL ALL, real rule-driven exit
+
+**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a8868c1`, state `confirmed`, $6.15).
+
+**Checkpoint price at 12:00 (read ~2026-08-21T16:01:51Z): $6.425** — below `run_high` $6.5213 and the $6.5637 threshold. **Stalled.** This is the **2nd consecutive stall since the 11:00 reset** (stall 1 at 11:30, stall 2 now) — the count is derived cold and carries continuously across the noon boundary per B2's explicit rule, it does not reset just because the clock crossed 12:00.
+
+**Regime check: this checkpoint runs at 12:00pm ET — the at-or-after-noon table applies, not the before-noon table.** Per B2: *"A count that's already at 2 when a 12:00 checkpoint runs means SELL ALL immediately under the now-current rule."* Stall count is 2. **SELL ALL fires, unconditionally, overriding the resting $6.15 stop.**
+
+**Executed per B3's exit protocol ("cancel the resting stop first, then exit on a marketable limit"):** cancelled the $6.15 stop (`6a8868c1`, verified `cancelled` with zero fill before selling), sold 31 CONL on a marketable limit $6.35, **filled avg $6.4110** (order `6a8876ae`, verified via order response, 12:02:54 ET) — filled **above** the limit, favorable.
+
+**Result: +$2.51, +1.28% on the position, r = +0.230 — a genuine, rule-driven win.** Pulled real minute-bar historicals for the full hold: true high **$6.56** (14:57 UTC, MFE +3.64%), true low **$6.16** (14:42 UTC, MAE +2.68%) — both occurred mid-hold, well inside the eventual exit. Full detail in `archive/trades.csv`.
+
+**This is the first live test of two new v3.11 mechanisms landing in the same trade: C10's entry gate (blocked TSLL and AMDL, let MSTX/CONL/others through) and the noon-crossing stall rule (correctly tightened from "3 stalls, no stop move" to "2 stalls, unconditional SELL ALL" the moment the clock crossed 12:00, exactly as designed).** One trade is not a pattern — no rule changes proposed off this alone — but both mechanisms did exactly what they were built to do, which is worth recording plainly rather than only noting failures.
+
+**A1 re-confirmed: no positions, no resting orders. Weekly day-trade count: 6/10** (today's CONL round trip is now closed) — still well under the cap, no blocking effect. D1: no early shutdown — flat with the weekly cap still open means a fresh entry is still possible at any checkpoint through 3:30 per v3.10, not just today's first one.
+
 ---
 
 ## Current state
 
-**Holding 31 CONL @ $6.3299 avg (entered 09:43:19 ET), stop resting at $6.15 (stage 2 half-risk, moved from $5.98 at 11:00 on a new high of $6.5213).** Weekly day-trade count now 5/10 (today's CONL round trip will make it 6 once closed) — still well under the cap of 10, not blocking.
+**Flat.** Round trip closed for 2026-08-21: CONL, +$2.51, r=+0.230, a genuine rule-driven win (afternoon noon-crossing stall rule, not discretionary). Weekly day-trade count now **6/10** — still well under the cap, not blocking; a fresh entry remains possible at any checkpoint through 3:30 per v3.10.
 
-**C10 lived up to its design on its first real use.** TSLL and AMDL both still cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint (down from their own 9:30 readings) — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined separately on **C2** (its underlying MSTR no longer led sector proxy IBIT, by a thin 0.14pp) — a reminder that C10 and C2 catch genuinely different failure modes, and a candidate can clear one while failing the other. CONL, ranked #2, passed both and became the actual entry.
+**C10 lived up to its design on its first real use, and the noon-crossing stall rule did too, in the same trade.** TSLL and AMDL both still cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined separately on **C2** (its underlying MSTR no longer led sector proxy IBIT, by a thin 0.14pp) — C10 and C2 catch genuinely different failure modes. CONL, ranked #2, passed both, ran to a stage-2 ratchet advance, then correctly got sold under B2's tighter at-or-after-noon table the moment the clock crossed 12:00 with a stall count already at 2.
 
-**Order execution note:** the first attempt (32 shares, limit $6.29) went unfilled on a fast-moving tape and was cancelled cleanly (verified zero fill before re-pricing) — re-priced to a $6.38 limit and filled 31 shares at $6.3299, still favorable. Worth watching whether this kind of slippage-from-speed recurs on crypto-catalyst mornings specifically.
+**Order execution note:** the first entry attempt (32 shares, limit $6.29) went unfilled on a fast-moving tape and was cancelled cleanly (verified zero fill before re-pricing) — re-priced to a $6.38 limit and filled 31 shares at $6.3299. Worth watching whether this kind of slippage-from-speed recurs on crypto-catalyst mornings specifically.
 
-Prior trades: 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit).
+Prior trades: 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
 
-**Loss streak 1 of 3** (the 2026-08-19 GUSH win reset it to zero; the 2026-08-20 MSTX loss is the only one since). Buying power: reconfirm live at each checkpoint, don't assume this morning's figure carries forward.
+**Loss streak 0 of 3** — today's CONL win resets it to zero per E1 ("a winner anywhere resets to zero"), clearing the 2026-08-20 MSTX loss. Buying power: reconfirm live at each checkpoint, don't assume a stale figure carries forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
