@@ -519,6 +519,30 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Stale for any later session; refresh before trusting.**
 
+### C1 Gate-1 baseline — formal 9:30 reading
+
+**A1 re-verified fresh at 9:31 ET: flat, no orders, no positions.** Nothing has changed since 9:00.
+
+**Recorded 9:30 checkpoint, read ~2026-08-21T13:31:26Z (~9:31am ET).** Compare against the 9:40 reading; two fixed observations decide C1, no intermediate reads.
+
+| Proxy | 9:30 day change | vs. premarket |
+|---|---|---|
+| GDX | **+3.095%** | strengthened sharply (premarket +2.74% → +3.10%) |
+| SMH | +1.018% | strengthened (premarket +1.31%, but base shifted — still clearly positive) |
+| QQQ | +0.414% | roughly steady |
+| SPY | +0.355% | roughly steady |
+| XLE | +0.329% | flipped positive (premarket was −0.05%) |
+
+**All five proxies are alive for C1 at 9:30** — a stronger, broader tape than either of the last two mornings, where 2-3 proxies failed leg 1 outright. GDX is the clear standout.
+
+**Individual candidates — wrapper day-change at 9:30:**
+
+*Clearing C3's +0.75% bar:* **CONL +11.15%**, **MSTX +9.80%** (both still enormous, crypto catalyst intact), AVGX +3.36%, AMDL +3.15%, SMCX +3.84%, MUU +3.02%, TSLL +2.44%.
+
+*Not candidates:* NVDL +0.56% (short of the bar), GOOGL +0.12%, PLTR 0.00%, AMZN −0.56%, AAPL −0.25%, META −0.21%, MSFT −0.34%. **TSMU shows a stale 0.00% print** (last trade timestamped to yesterday's close, no fresh trade yet at read time) — same pattern as prior mornings, re-check at 9:40 before trusting either way.
+
+**Seven real candidates clearing C3's magnitude bar at 9:30 (informational; formal check is 9:40 live):** MSTX, CONL, SMCX, MUU, AMDL, AVGX, TSLL. Same lineup as the 9:00 premarket read, now confirmed live and, in most cases, stronger. **C10 note: this is the first formal checkpoint of the day for every candidate — `session_high` is seeded at today's 9:30 reading for each one; nothing to compare it against yet, so C10's leg 1 is trivially open at this checkpoint.** Re-confirm everything live at 9:40.
+
 ---
 
 ## Current state
