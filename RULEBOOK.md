@@ -679,18 +679,32 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 1:30:** re-check against `run_high` $12.6591 and threshold $12.7680. If a 2nd stall occurs regardless of price vs. fill, B2's table is unconditional at that count: SELL ALL.
 
+### 1:30pm management checkpoint — stall 2, unconditional SELL ALL, second rule-driven exit of the day
+
+**A1 confirmed fresh: position 15 MSTX @ $12.6591 avg cost, stop resting confirmed** (`6a887dd0`, state `confirmed`, $11.80).
+
+**Checkpoint price at 1:30 (read ~2026-08-21T17:30:45Z): $12.6663.** This is marginally *above* the seed run_high ($12.6591) but does **not** clear the progression threshold ($12.7680, 0.86% above run_high). **Per B3's literal two-branch logic — step 2 requires price to exceed `run_high` by *more than* `stall_threshold_pct` to count as progressed and update `run_high`; anything else, including a small uptick that doesn't clear that bar, is step 3: stalled, count increments.** Verified this carefully before acting, since it's a genuinely easy point to misapply (a higher print looking like "progress" at a glance) — `run_high` stays at $12.6591, unchanged. **Stalled. Count: 2** (stall 1 at 1:00, stall 2 now).
+
+**Regime: at-or-after-noon table, count 2 → unconditional SELL ALL**, per B2's own text (*"2 | either | SELL ALL — complete."*) — the price-vs-fill branch only matters at count 1; count 2 fires regardless.
+
+**Executed per B3's exit protocol:** cancelled the $11.80 stop (`6a887dd0`, verified `cancelled` with zero fill before selling), sold 15 MSTX on a marketable limit $12.55, **filled avg $12.6501** (order `6a888b80`, verified via order response, 13:31:44 ET) — filled well above the limit.
+
+**Result: -$0.135, -0.07% on the position, r = -0.011 — essentially flat, a rounding-error-sized loss.** Pulled real minute-bar historicals for the full 59-minute hold: true high **$12.7655** (17:11 UTC, MFE +0.84%), true low **$12.44** (17:23 UTC, MAE +1.73%) — the true low happened **after** this position was already closed. Worth noting plainly: the rule got this position out before its actual worst point of the day arrived, even though the specific trigger (a tiny stall) had nothing to do with predicting that low. Full detail in `archive/trades.csv`.
+
+**A1 re-confirmed: no positions, no resting orders. Weekly day-trade count: 8/10** — getting close to the self-imposed cap; a third entry today would need to clear it fresh and would leave only 1 remaining trade of room this week. Loss streak: this is a loss by the letter (E1: any negative realized P&L, however small), so **streak moves to 1 of 3** — the CONL win reset it to zero at noon, this now starts a fresh count.
+
 ---
 
 ## Current state
 
-**Holding 15 MSTX @ $12.6591 avg (entered 12:32:31 ET), stop resting at $11.80.** This is the day's **second** round trip — CONL closed +$2.51 at noon, MSTX opened 30 minutes later once C2 (the gate that had declined it that morning) reversed decisively in its favor. Weekly day-trade count now **7/10** (will be 8/10 once this one closes) — still under the cap, watch it more closely if a third trade is considered today.
+**Flat.** Two round trips closed today: CONL (+$2.51, r=+0.230) at noon, MSTX (-$0.135, r=-0.011, essentially flat) at 1:31pm — both rule-driven exits via the same noon-crossing/afternoon-stall mechanism, not discretionary calls. **Weekly day-trade count: 8/10** — a third entry today is still technically possible but would leave only 1 trade of room this week; weigh that before taking one, not just whether a candidate clears the gates.
 
-**C10 and the noon-crossing stall rule both did exactly what they were built for on CONL, the day's first trade.** TSLL and AMDL cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined on **C2** (MSTR no longer led IBIT, by a thin 0.14pp). CONL, ranked #2, passed both, ratcheted once, then correctly got sold under B2's tighter at-or-after-noon table the moment the clock crossed 12:00 with a stall count already at 2.
+**Both new v3.11 mechanisms (C10, the noon-crossing stall table) have now been live-tested twice in one day, correctly, including a subtle edge case.** MSTX's 1:30pm stall count is the sharper lesson: price ticked to a marginal new high ($12.6663 vs. the $12.6591 seed) but did **not** clear the required stall_threshold_pct margin, so per B3's literal two-branch logic it still counted as a stall, not a progression — an easy point to misread as "the position is fine, it just made a new high." Caught correctly by deriving cold from the rule text rather than eyeballing the price direction.
 
-**A real execution error, caught and corrected:** MSTX's protective stop was first placed at $11.86 — a miscalculation (correct value: fill × (1 − 6.77%) = $11.80). Caught immediately on recomputation, wrong stop cancelled with zero fill verified, correct $11.80 stop placed. Worth naming plainly rather than glossing past it.
+**A real execution error, caught and corrected:** MSTX's protective stop was first placed at $11.86 — a miscalculation (correct value: fill × (1 − 6.77%) = $11.80). Caught within about 30 seconds on recomputation, wrong stop cancelled with zero fill verified, correct $11.80 stop placed before any adverse move could have exploited the gap.
 
-Prior trades: 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade; 2026-08-17 GUSH (-$0.02, r=-0.02).
+Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, closed early by the governor's own off-cycle decision, not a rule-triggered exit); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
-**Loss streak 0 of 3** — the 2026-08-21 CONL win reset it to zero, clearing the 2026-08-20 MSTX loss. Buying power: reconfirm live at each checkpoint, don't assume a stale figure carries forward.
+**Loss streak 1 of 3** — the CONL win reset it to zero at noon; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Buying power: reconfirm live at each checkpoint, don't assume a stale figure carries forward.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
