@@ -607,11 +607,23 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pre-commit for 11:00:** re-check against the same `run_high` $6.435 and threshold $6.4768. A 2nd stall still doesn't move the stop; a 3rd stall before noon forces SELL ALL regardless of price.
 
+### 11:00 management checkpoint — new high, stage 2 half-risk triggers, stop moves to $6.15
+
+**A1 confirmed fresh: position 31 CONL, stop resting confirmed** (`6a885613`, state `confirmed`, $5.98 — about to be replaced below).
+
+**Checkpoint price at 11:00 (read ~2026-08-21T15:02:44Z): $6.5213** — a fresh high, well clear of $6.435. **Progressed. Stall count resets to 0.** `run_high` advances to $6.5213.
+
+**Ratchet stage check: clears stage 2's half-risk threshold ($6.47), does not yet reach stage 3's breakeven threshold ($6.60).** Per the ratchet schedule set at entry, stage 2 triggers: **stop moves from $5.98 to $6.15.**
+
+**Executed:** cancelled the $5.98 stop (`6a885613`, verified `cancelled` with zero fill before replacing), placed a fresh stop_market at **$6.15** (`6a8868c1`, state `confirmed`), quantity 31. Locked-in protection improved from -5.57% to -2.79% on the position, real progress on this trade regardless of what happens next.
+
+**Pre-commit for 11:30:** re-derive stall count against `run_high` $6.5213 and a fresh progression threshold of $6.5213 × 1.0065 = **$6.5637**. Watch for stage 3 (breakeven, $6.60) if the run continues.
+
 ---
 
 ## Current state
 
-**Holding 31 CONL @ $6.3299 avg (entered 09:43:19 ET), stop resting at $5.98.** Weekly day-trade count now 5/10 (today's CONL round trip will make it 6 once closed) — still well under the cap of 10, not blocking.
+**Holding 31 CONL @ $6.3299 avg (entered 09:43:19 ET), stop resting at $6.15 (stage 2 half-risk, moved from $5.98 at 11:00 on a new high of $6.5213).** Weekly day-trade count now 5/10 (today's CONL round trip will make it 6 once closed) — still well under the cap of 10, not blocking.
 
 **C10 lived up to its design on its first real use.** TSLL and AMDL both still cleared C3's magnitude bar at 9:40 but were falling checkpoint-to-checkpoint (down from their own 9:30 readings) — C10 blocked both. MSTX ranked #1 and passed C10 cleanly but was declined separately on **C2** (its underlying MSTR no longer led sector proxy IBIT, by a thin 0.14pp) — a reminder that C10 and C2 catch genuinely different failure modes, and a candidate can clear one while failing the other. CONL, ranked #2, passed both and became the actual entry.
 
