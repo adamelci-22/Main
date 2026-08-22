@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.18.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.19.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -258,9 +258,11 @@ Any failure at 9:40 → no entry **at 9:40** in that sector's leveraged vehicle.
 
 **Does not gate a single-stock trade.** A stock moving decisively on its own does not need its sector to confirm; it is judged on its own move, and on Gate 2 if traded leveraged. **Every candidate, including single stocks, is still subject to C10's direction/reversal test** — this gate's leg 3 is the sector-proxy-only version of that same idea.
 
-## C2. Gate 2 — a leveraged single-stock ETF's underlying must lead its sector
+## C2. Gate 2 — top 3 sector leaders
 
-Both as day change; proxy map in **E3**. If `underlying_pct < sector_pct` → **decline.** Buying the laggard with leverage turns a correct sector call into a losing trade. Does not apply to sector or index vehicles — those *are* the group.
+**Replaces the old single "must beat the proxy" comparison with a relative shortlist.** For a leveraged single-stock ETF, read the live day change of every name in its **E3** sector group (its own reading where the group has no separate underlying — e.g. RIOT/MARA/CLSK/BITX/BITU/ETHU/ETHT — or the underlying's reading where one exists — COIN for CONL, MSTR for MSTX). Rank the group by day change. **Only the top 3 pass Gate 2**; every other group member is declined here regardless of its own day change being positive. Does not apply to sector or index vehicles — those *are* the group.
+
+The top 3 still have to individually clear C3 (magnitude) to be tradeable at all — Gate 2 narrows *which* names in an already-moving group are worth a wrapper, it doesn't waive the move requirement. **C7's `mfe_per_stop` ranking then picks the entry from among the (up to) 3 survivors**, same as it does for any other multi-candidate shortlist.
 
 ## C3. Major-move gate — what qualifies an individual stock
 
@@ -522,7 +524,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8 of 15** as of Friday close (cap raised from 10 with v3.15's multi-trade confirmation) — recompute fresh Monday; GUSH 8/17 and 8/19 age out over the weekend.
 
-**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, and v3.18's lower profit target (B1/B4: `target_pct` now `1.25×` median favourable instead of `2.0×`, all-or-nothing exit) all shipped after Friday's close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.18), not repeated here.
+**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, v3.18's lower profit target (B1/B4: `target_pct` now `1.25×` median favourable instead of `2.0×`, all-or-nothing exit), and v3.19's C2 rewrite (top-3 sector-leader shortlist replacing the old single underlying-vs-proxy comparison) all shipped after Friday's close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.19), not repeated here.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
