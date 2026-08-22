@@ -128,16 +128,7 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 | 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger` | `fill` (breakeven) |
 | 4 — trail | past stage 3 | `run_high × (1 − trail_pct)` — **the only continuous stage**, recomputed every checkpoint as `run_high` climbs |
 
-**Worked example — AGQ's actual profiled numbers, fill at $100.00:**
-
-```
-median adverse = 1.45%   median favourable = 1.65%
-
-stop_pct          = clamp(1.5 × 1.45, 2.5, 7.0)        = 2.50%
-target_pct        = clamp(1.25 × 1.65, 1.5 × 2.50, 12.0) = 3.75%
-breakeven_trigger = max(1.65, 0.5 × 2.50)               = 1.65%
-trail_pct         = 1.0 × 1.45                          = 1.45%
-```
+**Worked example — AGQ's actual profiled numbers, fill at $100.00, `stop_pct` 2.50%, `target_pct` 3.75%, `breakeven_trigger` 1.65%, `trail_pct` 1.45%** (each per B1's formulas above):
 
 | Stage | `run_high` reaches | Stop becomes |
 |---|---|---|
@@ -191,7 +182,7 @@ A **stalled check** = a checkpoint whose `bar_high` (the true high reached since
 3. Otherwise → **stalled**: count increments, `run_high` unchanged.
 4. Total = consecutive stalled checks ending at the most recent.
 
-**Before 12:00pm ET:** stalls 1–2 do nothing to the stop; **3 stalls → SELL ALL.** **At or after 12:00pm ET:** 1 stall moves the stop to whichever is higher — breakeven, or the ratcheting stop's current level; **2 stalls → SELL ALL.** Full detail and the noon-crossing rule in B2 — whatever the result.
+**Apply the count to B2's noon-gated action table** — 3-stall SELL ALL before noon, 2-stall SELL ALL (with an earlier profit-lock on stall 1) at or after — full detail and the noon-crossing rule there.
 
 **SELL means now, not next checkpoint.** Cancel the resting stop first — a pending sell locks the share — then exit on a marketable limit.
 
@@ -218,7 +209,7 @@ Name the **specific, falsifiable** condition that would exit at the next checkpo
 
 At any checkpoint showing a `bar_close` gain ≥ `target_pct` → **sell the entire position.** No scaling out, no runner, at any share count. Target is a ceiling; most trades exit on the stall ladder first.
 
-**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1: `clamp(1.25 × median favourable, 1.5 × stop_pct, 12.0%)`), and it does not change for the life of that trade.** A different candidate gets a different target; a fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number too, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
+**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1), and does not change for the life of that trade.** A fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** State the intended exit at entry.
 
@@ -397,9 +388,7 @@ C11 self-supplies its window with a fresh pull at the moment of the check — it
 
 Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
 
-**This is a chance to re-check, not a mandate to re-enter.** C12 exists to make the *check* happen sooner — it creates zero obligation to *act* sooner. C5's "no read = no trade" and C9's "never force a trade because the window is closing" apply to the T+10 check exactly as hard as they apply to 9:40 itself. A mediocre candidate doesn't get waved through because the mini-cycle went to the trouble of looking; staying flat is still the correct, default outcome whenever nothing genuinely clears every gate.
-
-**Everything else already in force still binds.** C9's "after 11:00, a new entry must be clearly better than the morning offered" is judged by the mini-cycle's own clock time, same as any other checkpoint — a 2:10pm mini-9:40 faces the same higher bar a regular 2:00pm entry would. The weekly day-trade cap (E2) and A1's "one position at a time" gate are unchanged — this rule shortens *when* the next attempt happens, it doesn't relax *whether* one is allowed.
+**A chance to re-check, never a mandate to re-enter — everything else already in force still binds at full strength.** C5's "no read = no trade" and C9's "never force a trade" apply to the T+10 check exactly as hard as at 9:40; C9's "after 11:00, clearly better than the morning offered" is judged by the mini-cycle's own clock time (a 2:10pm mini-9:40 faces the same bar a regular 2:00pm entry would); the weekly cap (E2) and A1's one-position gate are untouched. This rule only shortens *when* the next attempt happens, never *whether* one is allowed.
 
 ---
 
@@ -540,9 +529,9 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## Current state
 
-**Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8 of 15** as of Friday close (cap raised from 10 with v3.15's multi-trade confirmation) — recompute fresh Monday; GUSH 8/17 and 8/19 age out over the weekend.
+**Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8 of 15** as of Friday close — recompute fresh Monday; GUSH 8/17 and 8/19 age out over the weekend.
 
-**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, v3.18's lower profit target (B1/B4: `target_pct` now `1.25×` median favourable instead of `2.0×`, all-or-nothing exit), and v3.19/v3.20's C2 rewrite (top-3 sector-leader shortlist, leverage-normalized, replacing the old single underlying-vs-proxy comparison), and v3.21/v3.22's C12 (an exit before 4:00 triggers an accelerated 9:30-then-9:40-style re-entry check, 10 minutes apart, before the regular grid resumes — a chance to re-check, never a mandate to re-enter) all shipped after Friday's close — Monday is their first live session. Backtested against Friday's real crypto-group data: CONL would still have won the C7 ranking among the top 3 (CONL 0.773 vs. BITX 0.734 vs. MARA 0.499 mfe_per_stop) — same pick as the actual trade. Full design rationale and backtests in the commit history (v3.11–v3.22), not repeated here.
+**Not yet live-tested, watch their first real firings:** B2's velocity trigger, C11, B1b, and v3.18–v3.22's changes to B4, C2, and C12 all shipped after Friday's close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.22), not repeated here.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
