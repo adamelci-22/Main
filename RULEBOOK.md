@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.20.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.21.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -238,7 +238,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 # PART C — ENTRY (9:00 · 9:30 · 9:40 primarily; any 10:00–3:30 checkpoint while flat)
 
-> **No position may be opened outside 9:40–4:00.** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause and the weekly day-trade cap (E2). Check the cap fresh before every entry, not just the first.
+> **No position may be opened outside 9:40–4:00.** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause and the weekly day-trade cap (E2). Check the cap fresh before every entry, not just the first. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
 ## C1. Gate 1 — the sector must hold, 9:30 → 9:40
 
@@ -387,6 +387,18 @@ Below the window's minimum → declined as too choppy, regardless of C1–C10 al
 
 C11 self-supplies its window with a fresh pull at the moment of the check — it does not depend on B6 having tracked the candidate at prior checkpoints. (B6 exists for C10, whose `session_high`/`session_low` need day-long continuity a trailing window can't provide.)
 
+## C12. Re-entry cycle — an exit restarts the entry clock, not the whole day
+
+**Applies whenever a position closes before 4:00, regardless of why** — stop, target, stall ladder, reversal, any B3 exit. The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next half-hour grid slot.
+
+1. **At the exit itself (T+0), same turn, no new trigger needed:** run the 9:30-style check (C1) against today's existing shortlist — the candidates and sector proxies already built at 9:00, not a fresh market-wide scan. Record each sector proxy's current day change and note which shortlist names are still holding their move. C7 re-ranks fresh here too — the capital base just changed (the position closed), which by C7's own rule voids the earlier ranking.
+2. **10 minutes later (T+10):** run the full 9:40-style entry gate stack, C1–C11, against whatever T+0 turned up. Enter if a candidate clears every gate, exactly as any other entry checkpoint would. Arm one ad hoc trigger for exactly 10 minutes out to run this — in addition to, not a replacement for, the regular grid triggers already armed for the rest of the day.
+3. **After T+10, whether or not a new position was opened, resume the standard grid at its own next slot — not exit-relative.** Exit at 10:45 → mini-cycle at 10:45 and 10:55 → the next check is the regular 11:00 slot, then 11:30, unchanged.
+
+Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
+
+**Everything else already in force still binds.** C9's "after 11:00, a new entry must be clearly better than the morning offered" is judged by the mini-cycle's own clock time, same as any other checkpoint — a 2:10pm mini-9:40 faces the same higher bar a regular 2:00pm entry would. The weekly day-trade cap (E2) and A1's "one position at a time" gate are unchanged — this rule shortens *when* the next attempt happens, it doesn't relax *whether* one is allowed.
+
 ---
 
 # PART D — SCHEDULE & ADMIN
@@ -528,7 +540,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8 of 15** as of Friday close (cap raised from 10 with v3.15's multi-trade confirmation) — recompute fresh Monday; GUSH 8/17 and 8/19 age out over the weekend.
 
-**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, v3.18's lower profit target (B1/B4: `target_pct` now `1.25×` median favourable instead of `2.0×`, all-or-nothing exit), and v3.19/v3.20's C2 rewrite (top-3 sector-leader shortlist, leverage-normalized, replacing the old single underlying-vs-proxy comparison) all shipped after Friday's close — Monday is their first live session. Backtested against Friday's real crypto-group data: CONL would still have won the C7 ranking among the top 3 (CONL 0.773 vs. BITX 0.734 vs. MARA 0.499 mfe_per_stop) — same pick as the actual trade. Full design rationale and backtests in the commit history (v3.11–v3.20), not repeated here.
+**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, v3.18's lower profit target (B1/B4: `target_pct` now `1.25×` median favourable instead of `2.0×`, all-or-nothing exit), and v3.19/v3.20's C2 rewrite (top-3 sector-leader shortlist, leverage-normalized, replacing the old single underlying-vs-proxy comparison), and v3.21's C12 (an exit before 4:00 triggers an accelerated 9:30-then-9:40-style re-entry check, 10 minutes apart, before the regular grid resumes) all shipped after Friday's close — Monday is their first live session. Backtested against Friday's real crypto-group data: CONL would still have won the C7 ranking among the top 3 (CONL 0.773 vs. BITX 0.734 vs. MARA 0.499 mfe_per_stop) — same pick as the actual trade. Full design rationale and backtests in the commit history (v3.11–v3.21), not repeated here.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
