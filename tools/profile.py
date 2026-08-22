@@ -43,7 +43,7 @@ def main():
     med_mae, med_mfe = median(mae), median(mfe)
 
     stop      = clamp(1.5 * med_mae, 2.5, 7.0)
-    target    = clamp(2.0 * med_mfe, 1.5 * stop, 12.0)
+    target    = clamp(1.25 * med_mfe, 1.5 * stop, 12.0)
     breakeven = max(med_mfe, 0.5 * stop)
     trail     = 1.0 * med_mae
     stall     = clamp(0.15 * med_mfe, 0.10, 1.00)

@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.15.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.16.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -82,7 +82,7 @@ median adverse    = median of (open − low)  / open      across the window
 median favourable = median of (high − open) / open
 
 stop_pct           = clamp(1.5 × median adverse,    2.5%, 7.0%)
-target_pct         = clamp(2.0 × median favourable, 1.5 × stop_pct, 12.0%)
+target_pct         = clamp(1.25 × median favourable, 1.5 × stop_pct, 12.0%)
 breakeven_trigger  = max(median favourable, 0.5 × stop_pct)
 trail_pct          = 1.0 × median adverse, below the running high
 stall_threshold_pct = clamp(0.15 × median favourable, 0.10%, 1.00%)
@@ -134,7 +134,7 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 median adverse = 1.45%   median favourable = 1.65%
 
 stop_pct          = clamp(1.5 × 1.45, 2.5, 7.0)        = 2.50%
-target_pct        = clamp(2.0 × 1.65, 1.5 × 2.50, 12.0) = 3.75%
+target_pct        = clamp(1.25 × 1.65, 1.5 × 2.50, 12.0) = 3.75%
 breakeven_trigger = max(1.65, 0.5 × 2.50)               = 1.65%
 trail_pct         = 1.0 × 1.45                          = 1.45%
 ```
@@ -214,17 +214,11 @@ Not on one red candle, midday noise, or impatience.
 
 Name the **specific, falsifiable** condition that would exit at the next checkpoint, with instrument and direction. Then honour it. To override, say explicitly that you are overriding a pre-commitment and name the **new** information. *"It looks like it's turning back up" does not qualify.*
 
-## B4. Profit-taking — bank half at the typical move, let the rest run protected
+## B4. Profit-taking
 
-Two tiers, checked in this order at every checkpoint (target first — if both trigger at once, the full exit wins):
+At any checkpoint showing a `bar_close` gain ≥ `target_pct` → **sell the entire position.** No scaling out, no runner, at any share count. Target is a ceiling; most trades exit on the stall ladder first.
 
-**Full exit — `bar_close` gain ≥ `target_pct` → sell the entire position** (or the entire remainder, if half was already banked). Target is a ceiling; most trades exit on the stall ladder first.
-
-**Partial lock — `bar_close` gain ≥ `median favourable` → sell `floor(quantity ÷ 2)` immediately, once per trade.** The trigger is the instrument's own typical good day (B1), reachable by construction, unlike the 2× target. Execution order matters because a pending sell locks shares: cancel the resting stop first → sell the half on a marketable limit → re-place the stop for the remaining quantity at **`max(current ratchet stop, breakeven)`**. That floor is the point of the tier: with half banked at +`median favourable` and the rest stopped no lower than fill, the whole trade can no longer finish negative (gap risk aside). The remainder then runs under everything else unchanged — ratchet stages, velocity trail, stall ladder (a stall SELL ALL sells the remainder), same-day close.
-
-At final close, one row in `archive/trades.csv` with the blended exit across both fills; both fills named in `notes`.
-
-**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1: `clamp(2.0 × median favourable, 1.5 × stop_pct, 12.0%)`), and it does not change for the life of that trade.** A different candidate gets a different target; a fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number too, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
+**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1: `clamp(1.25 × median favourable, 1.5 × stop_pct, 12.0%)`), and it does not change for the life of that trade.** A different candidate gets a different target; a fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number too, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** State the intended exit at entry.
 
@@ -466,7 +460,7 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 - **Floor: stop trading below 50% of *deposited* cash** — not account value. `deposited = total_value − all-time realized P&L − unrealized P&L`. Derived, never cached. **The floor does not rise with gains.**
 - **Limited margin, since 2026-08-20** (verified via `get_accounts`: `type: "limited_margin"`; verified via `get_portfolio`: `buying_power` now equals `total_value`, unsettled proceeds usable immediately). This removes the old T+1 settlement gate — same-day rotation across sequential positions is now mechanically possible. It does **not** grant borrowing/leverage beyond the account's own cash, and does **not** by itself confirm anything about GFV exposure beyond what's stated below. If the account type changes again, re-verify from primary sources before the first trade — port nothing forward blind.
 - **PDT (Pattern Day Trader) restriction is gone** — FINRA eliminated the framework effective 2026-06-04 (verified from Robinhood's support page, FINRA.org Regulatory Notice 26-10, SEC.gov, and the Federal Register; full sourcing in commits `ebac8c7`/`10d9379`). No 4-in-5-days trigger, no $25,000 minimum. **Residual uncertainty, not fully closed:** whether the replacement intraday-margin standard names `limited_margin` explicitly (inferred covered), and whether the separate $2,000 margin-minimum applies to `limited_margin`'s cash-only operation (inferred not). Both are inference, not citation — treat any broker-side restriction message as the signal that inference was wrong.
-- **Weekly day-trade cap — self-imposed pacing, not a compliance requirement.** With PDT gone, this exists purely to bound churn/slippage on a small account, per governor instruction to set an explicit weekly limit. Cap: **no more than 15 day trades in the trailing 7 calendar days** (today inclusive). Count: every `archive/trades.csv` row is a day trade (B4/Part C force same-day entry and same-day close) — a partial-then-final exit (B4) is still **one** round trip, not two — plus any governor-placed manual round trip visible in `get_equity_orders` that wouldn't appear in the trade log. Recompute fresh at every entry-eligible checkpoint, never cached. Revisit the number if it binds often (too tight) or never binds (too loose).
+- **Weekly day-trade cap — self-imposed pacing, not a compliance requirement.** With PDT gone, this exists purely to bound churn/slippage on a small account, per governor instruction to set an explicit weekly limit. Cap: **no more than 15 day trades in the trailing 7 calendar days** (today inclusive). Count: every `archive/trades.csv` row is a day trade (B4/Part C force same-day entry and same-day close), plus any governor-placed manual round trip visible in `get_equity_orders` that wouldn't appear in the trade log. Recompute fresh at every entry-eligible checkpoint, never cached. Revisit the number if it binds often (too tight) or never binds (too loose).
 - **Multiple different candidates per day are explicitly authorized.** Not limited to repeating the same symbol — if a real, gate-clearing opportunity in a *different* instrument appears after an earlier position closed, take it, subject to A1's "position already open" gate (still only one position at a time) and the weekly cap above. Governor instruction, 2026-08-20: *"you now have instant cash with margins and are allowed to trade multiple different things within one day if presented with an opportunity."*
 - **No short selling is authorized** — not part of this system's mandate regardless of account type. Bearish views go through inverse ETFs bought long.
 - **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
@@ -530,7 +524,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8 of 15** as of Friday close (cap raised from 10 with v3.15's multi-trade confirmation) — recompute fresh Monday; GUSH 8/17 and 8/19 age out over the weekend.
 
-**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, and v3.15's partial profit lock (B4: bank half at +1× median favourable, remainder stopped no lower than breakeven) all shipped after Friday's close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.15), not repeated here.
+**Not yet live-tested, watch their first real firings:** the velocity trigger (B2), C11's ER chop filter, B1b's range-based reads, and v3.16's lower profit target (B1/B4: `target_pct` now `1.25×` median favourable instead of `2.0×`, all-or-nothing exit preserved) all shipped after Friday's close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.16), not repeated here.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
