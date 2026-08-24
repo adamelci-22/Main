@@ -523,18 +523,24 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-*Friday 2026-08-21 closed: two rule-driven round trips (CONL +$2.51, MSTX -$0.14), account $204.69, flat into the weekend. Full day narrative in git history and `archive/trades.csv`. Next 9:00 research (Monday 2026-08-24) replaces this block wholesale per this section's own rule.*
+*Monday 2026-08-24, 9:00 research. Headlines: Iran sanctions escalation (Treasury announcing new measures today) + failed US-Canada tariff talks pressuring broad futures; Nvidia earnings Wednesday, Jackson Hole Friday. Real, dated catalyst behind today's crypto strength: an ETH short squeeze over the weekend (~$131M liquidated) plus large BTC/ETH ETF inflows and Coinbase's CEO publicly backing the CLARITY Act.*
+
+*5 sector proxies (day change, ~9:05 ET): IBIT +2.47% · UNG +3.41% · GDX +1.16% · GLD +1.12% · XLB +0.84%. Broad market (SPY -0.17%, QQQ -0.60%, SMH -1.38%) and semis (NVDA +0.23%, AMD -1.85%, MU -3.49%, TSM -0.68%, SMCI -2.45%, AVGO -1.13%) both soft/red — crypto is today's one clear theme.*
+
+*15 individual candidates, profiled fresh (`tools/profile.py`), ranked by `mfe_per_stop`: SMCX 0.842 · BITX 0.785 · BITU 0.763 · MUU 0.734 · CONL 0.726 · RIOT 0.699 · ETHU 0.671 · MSTX 0.669 · ETHT 0.608 · TSMX 0.499 · MARA 0.495 · CLSK 0.434 · AMDL 0.386 · AVGX 0.385 · NVDL 0.381. Of these, only 7 cleared C3's +0.75% magnitude bar as of ~9:05 ET: CONL(COIN +1.70%), MSTX(MSTR +2.94%), BITX +5.06%, BITU +5.03%, ETHU +7.69%, ETHT +7.52%, MARA +0.88% — informal per C3, re-confirmed live at 9:40.*
+
+*Account: $204.69 cash/buying power, fully settled, flat, no resting orders (verified live). Next 9:00 research (Tuesday 2026-08-25) replaces this block wholesale per this section's own rule.*
 
 ---
 
 ## Current state
 
-**Flat into the weekend (Fri 2026-08-21 close).** Account value **$204.69** — net **+$2.37** on the day across two rule-driven round trips: CONL (+$2.51, r=+0.230), MSTX (-$0.135, r=-0.011). **Weekly day-trade count: 8 of 15** as of Friday close — recompute fresh Monday; GUSH 8/17 and 8/19 age out over the weekend.
+**Flat, Monday 2026-08-24, 9:00 research done.** Account value **$204.69**, fully settled cash and buying power, no resting orders (verified live via `get_portfolio`/`get_equity_positions`/`get_equity_orders`). **Weekly day-trade count: 4 of 15** — recomputed fresh from `archive/trades.csv`: only the 8/17 GUSH trade aged out of the trailing 7 calendar days (8/18–8/24); 8/19 GUSH, 8/20 MSTX, and both 8/21 trades are still inside the window. (Friday's "8 of 15" note in this section was stale — corrected here per A1's own "never from a number written here" rule.)
 
-**Not yet live-tested, watch their first real firings:** B2's velocity trigger, C11, B1b, and v3.18–v3.22's changes to B4, C2, and C12 all shipped after Friday's close — Monday is their first live session. Full design rationale and backtests in the commit history (v3.11–v3.22), not repeated here.
+**First live session for B2's velocity trigger, C11, B1b, and v3.18–v3.22's changes to B4, C2, and C12** — all shipped after Friday's close. Full design rationale and backtests in the commit history (v3.11–v3.22), not repeated here.
 
 Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
 
-**Loss streak 1 of 3** — the CONL win reset it to zero; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Buying power: reconfirm live at the next 9:00 checkpoint, don't assume Friday's figure carries forward.
+**Loss streak 1 of 3** — the CONL win reset it to zero; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Deposited capital ≈ $201.48 (all-time realized P&L ≈ +$3.21), floor ≈ $100.74 — not binding.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
