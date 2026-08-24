@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.24.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.25.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -537,6 +537,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 *15 individual candidates, profiled fresh (`tools/profile.py`), ranked by `mfe_per_stop`: SMCX 0.842 · BITX 0.785 · BITU 0.763 · MUU 0.734 · CONL 0.726 · RIOT 0.699 · ETHU 0.671 · MSTX 0.669 · ETHT 0.608 · TSMX 0.499 · MARA 0.495 · CLSK 0.434 · AMDL 0.386 · AVGX 0.385 · NVDL 0.381. Of these, only 7 cleared C3's +0.75% magnitude bar as of ~9:05 ET: CONL(COIN +1.70%), MSTX(MSTR +2.94%), BITX +5.06%, BITU +5.03%, ETHU +7.69%, ETHT +7.52%, MARA +0.88% — informal per C3, re-confirmed live at 9:40.*
 
 *Account: $204.69 cash/buying power, fully settled, flat, no resting orders (verified live). Next 9:00 research (Tuesday 2026-08-25) replaces this block wholesale per this section's own rule.*
+
+## E6. Known issues — backlog, not yet fixed
+
+**Stop-order placement can come back `cancelled` with zero fill and no error message.** First observed 2026-08-24, twice in one day, both immediately after a ratchet/velocity stop-move on MSTX. Neither `place_equity_order` nor a follow-up `review_equity_order` surfaced any error string — the order just came back cancelled. Both resolved clean on an immediate retry (came back `confirmed`, `shares_held_for_sells` matched position size), and minute-bar data confirmed after the fact that price never actually traded through either stop level during the brief unprotected gap — so no real exposure either time, but the position was briefly resting with no live stop at all.
+
+**Current mitigation is manual, not systemic:** after every stop placement, verify it actually landed via `get_equity_orders` before considering the position protected; retry immediately if it didn't. This has worked twice but relies on catching it by eye every time, which doesn't scale and isn't guaranteed under E4 ("a capability is verified only by an order response or a successful call" — a silent cancellation is exactly the gap that principle exists to catch).
+
+**Worth a harder look, not yet built:** an automatic retry-and-verify wrapper around stop placement specifically — place, confirm via a follow-up read, and auto-retry on anything other than a confirmed live order, without waiting for a human or a lucky manual check to notice. Flagged here so it isn't lost; revisit before treating "the last two retries worked" as a solved problem.
 
 ---
 
