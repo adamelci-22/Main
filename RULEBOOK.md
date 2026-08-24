@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.28.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.29.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -25,8 +25,8 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | **9:30** observation | A · C1 | Watchlist only — no new scan; records the Gate-1 baseline |
 | **9:40** entry | A · C | The primary entry slot |
 | **10:00–3:30** management ×12 | A · B (+ C if flat and a candidate looks live) | Holding, or flat and open to a fresh opportunity |
-| **4:00** close | A · B4 · D3 | Exit and report |
-| **8:00** arming | A · D | Report and arm tomorrow |
+| **4:00** close | A · B4 · D | Exit, report, and arm tomorrow (primary) |
+| **8:00** backup | A · D | Verify tomorrow is armed; re-arm only if missing |
 
 **Part E is reference — pull it only when a rule in A–D sends you there.** Never read it front to back.
 
@@ -53,7 +53,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 1. List triggers. **Delete every one with `ended_reason='run_once_fired'`** — a fired trigger reschedules itself ~24h later carrying its original, now-stale prompt.
 2. Delete any trigger on a slot about to be armed. Exactly one per slot.
 3. Never delete the trigger you are running from until tomorrow is armed.
-4. **Never delete the 8:00pm arming checkpoint.** Single point of failure for the whole chain.
+4. **Never delete the 4:00pm close checkpoint (primary arming) or the 8:00pm checkpoint (backup verification, D1).** Together they replace what used to be a single point of failure.
 
 A past-due trigger still enabled = a **missed** checkpoint, not a pending one. Do its work now, say it was missed, then delete it.
 
@@ -412,6 +412,14 @@ Cadence is 30 minutes from 10:00 on. ET → UTC: EDT = UTC−4; after Sun Nov 1 
 
 Runs indefinitely until the governor pauses it. Never stop on your own initiative.
 
+### Arming — primary at 4:00, backup at 8:00
+
+**Tomorrow's full checkpoint chain gets created at the 4:00 close, right after that day's exit/report work (D3) — not held until 8:00.** This runs regardless of whether the book is flat or still holding into extended hours; a still-open position doesn't delay next-day arming, it just means 4:30–7:30 also run alongside it. Skip the weekend the same way as always — Friday's 4:00 arms Monday.
+
+**8:00pm is a verification pass, not a second independent arming.** Check that tomorrow's chain already exists (`list_triggers`, looking for tomorrow's date). If it does, this is a non-event — stay silent per D3, nothing to report. **If it's missing or incomplete — the 4:00 arming failed or was skipped somehow — create it now, and say so explicitly**, the same way A2 already treats any past-due, still-enabled trigger as a missed checkpoint that gets done late and flagged, not silently absorbed.
+
+**Together these replace what used to be a single point of failure.** Never delete either the 4:00 close checkpoint or the 8:00 backup checkpoint.
+
 ### Cadence reduction — flat and idle
 
 If flat at **11:00** with no candidate that cleared C3 or C1, drop to **hourly** (12:00 · 1:00 · 2:00 · 3:00 · 4:00) and delete the half-hour slots. The preferred window has closed and the bar for a late entry is already "clearly better" — half-hourly checks past that point produce nothing but cost.
@@ -420,7 +428,7 @@ Resume the 30-minute grid immediately on any entry.
 
 ### Early shutdown
 
-Flat · no resting orders · **and** no entry possible (buying power short, or the weekly day-trade cap (E2) reached) → delete remaining intraday checkpoints. **Keep exactly three: 4:00 report, 8:00 arming, 8:20 backup.** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable unless one of the two conditions above is actually true.
+Flat · no resting orders · **and** no entry possible (buying power short, or the weekly day-trade cap (E2) reached) → delete remaining intraday checkpoints. **Keep exactly two: 4:00 close (report + primary arming) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable unless one of the two conditions above is actually true.
 
 Flat at 4:00 → delete 4:30–7:30 regardless.
 
@@ -446,7 +454,7 @@ Flat at 4:00 → delete 4:30–7:30 regardless.
 - **Most checkpoints are non-events — stay silent.** No "checked, nothing to do."
 - **Report immediately:** entry · exit · stop fired · circuit breaker · error · a break in the checkpoint chain · a balance change indicating funding · a notable setup declined.
 - **A no-trade day gets no evening message.**
-- **Friday 8:00pm always reports**, trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat.
+- **Friday 4:00pm always reports**, trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat. (Moved here from 8:00pm under D1's arming restructure — 8:00 is now a silent-unless-broken backup check, even on Fridays; the real weekly data already lives at the 4:00 close, not four hours later.)
 
 **At exit, append one row to `archive/trades.csv`** — the live append-only log. Compute `r_multiple = (exit% − entry%) ÷ initial_stop_pct` **now**, while the entry stop is known — it cannot be reconstructed later. Set `counts_toward_streak` and `counts_toward_expectancy` (`no` only for a mechanical abort or a funded execution test) and say why in `notes`. **Append-only — never edit a past row**; a mistake gets a correcting row.
 
