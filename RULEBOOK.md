@@ -542,12 +542,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## Current state
 
-**Flat, Monday 2026-08-24, 9:00 research done.** Account value **$204.69**, fully settled cash and buying power, no resting orders (verified live via `get_portfolio`/`get_equity_positions`/`get_equity_orders`). **Weekly day-trade count: 4 of 15** — recomputed fresh from `archive/trades.csv`: only the 8/17 GUSH trade aged out of the trailing 7 calendar days (8/18–8/24); 8/19 GUSH, 8/20 MSTX, and both 8/21 trades are still inside the window. (Friday's "8 of 15" note in this section was stale — corrected here per A1's own "never from a number written here" rule.)
+**Flat into the close, Monday 2026-08-24.** Account value **$218.50**, fully settled cash and buying power, no resting orders (verified live at 4:00 close). Net **+$13.81 on the day** (+6.75% of the day's opening balance), one trade: MSTX entered 9:40 ET, stopped out 10:43 ET via the velocity trail at $13.79, r=+1.050 — the largest single-trade gain logged on this account to date. Ten management checkpoints after the exit (11:00 through 3:30) all correctly declined re-entry into the same names as the crypto complex round-tripped through the afternoon — C1's late-entry test, C2's leverage-normalized ranking, C10's momentum test, and above all C11's Efficiency Ratio chop filter (which never once cleared its rising intraday threshold) did that work. **Weekly day-trade count: 5 of 15** (adds today's MSTX round trip to Friday's 4).
 
-**First live session for B2's velocity trigger, C11, B1b, and v3.18–v3.22's changes to B4, C2, and C12** — all shipped after Friday's close. Full design rationale and backtests in the commit history (v3.11–v3.22), not repeated here.
+**First live session for B2's velocity trigger, C11, B1b, and v3.18–v3.24's changes to B4, C2, C12, and D2** — all confirmed working as designed on real fills, not just backtests. Full design rationale and backtests in the commit history (v3.11–v3.24), not repeated here.
 
-Prior trades: 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194); 2026-08-18 no trade.
+Prior trades: 2026-08-24 MSTX (+$13.81, r=+1.050); 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194).
 
-**Loss streak 1 of 3** — the CONL win reset it to zero; MSTX's small loss (any negative realized P&L counts per E1, regardless of size) starts a fresh count. Deposited capital ≈ $201.48 (all-time realized P&L ≈ +$3.21), floor ≈ $100.74 — not binding.
+**Loss streak 0 of 3** — today's MSTX win reset it to zero. Deposited capital ≈ $201.48 (all-time realized P&L ≈ +$17.02 — deposited itself is unchanged by trading gains, only by actual deposits/withdrawals), floor ≈ $100.74 — not binding.
 
 **Live files:** `archive/trades.csv` is the append-only trade log and the circuit-breaker's only input; a row gets appended at exit, not at entry. `tools/profile.py` computes risk numbers on demand (B1). Nothing else is required to trade.
