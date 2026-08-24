@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.27.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.28.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -24,7 +24,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | **9:00** research | A · C · D | Builds the day's candidates |
 | **9:30** observation | A · C1 | Watchlist only — no new scan; records the Gate-1 baseline |
 | **9:40** entry | A · C | The primary entry slot |
-| **10:00–3:30** management ×13 | A · B (+ C if flat and a candidate looks live) | Holding, or flat and open to a fresh opportunity |
+| **10:00–3:30** management ×12 | A · B (+ C if flat and a candidate looks live) | Holding, or flat and open to a fresh opportunity |
 | **4:00** close | A · B4 · D3 | Exit and report |
 | **8:00** arming | A · D | Report and arm tomorrow |
 
@@ -353,7 +353,7 @@ Then:
 
 **All three must hold, checked fresh at every entry-eligible checkpoint (never cached):**
 
-1. **Not currently falling.** This checkpoint's `bar_close` ≥ the immediately prior formal checkpoint's `bar_close`, for this candidate specifically — **"immediately prior" means whichever checkpoint actually ran last in real time, grid or C12 ad hoc, never a reach-back past it to the last *scheduled* slot — with one exception: a C12 mini-cycle's own first (opening) pass compares against the candidate's price at the exit's fill timestamp (C12 step 3), not against the last grid slot.** Worked example: a position exits (fill) at 11:15; the 11:30 grid check discovers it, and since 15 minutes have already passed (`elapsed ≥ 10`), the full gate stack runs immediately at 11:30 — leg 1 there compares 11:30's `bar_close` against the candidate's price *at 11:15*, not against 11:00's close. Declined → the next check is the regular 12:00 slot, and *that* leg 1 compares against the 11:30 read's own `bar_close` (normal chaining resumes here, per C12 step 4) — not back against 11:15 again, and not against 11:00. From there it's fully normal: 12:30 vs 12:00, 1:00 vs 12:30, and so on. (The per-candidate, universal version of C1 leg 3 — C1 itself stays scoped to sector proxies only.) Uses `bar_close`, not `bar_high`, here — this leg asks where the candidate actually settled, not the fastest point it touched.
+1. **Not currently falling.** This checkpoint's `bar_close` ≥ the immediately prior formal checkpoint's `bar_close`, for this candidate specifically — **"immediately prior" means whichever checkpoint actually ran last in real time, grid or C12 ad hoc, never a reach-back past it to the last *scheduled* slot.** One exception, owned by C12 not restated here: a C12 mini-cycle's own opening gate-stack pass compares against the candidate's price at the exit's fill timestamp instead (C12 steps 3–4 have the full rule and worked example — read there, not here, if this exception is in play). (The per-candidate, universal version of C1 leg 3 — C1 itself stays scoped to sector proxies only.) Uses `bar_close`, not `bar_high`, here — this leg asks where the candidate actually settled, not the fastest point it touched.
 2. **If below `session_high`, the bounce off `session_low` must be real, not noise.** `bar_high` must clear `session_low × (1 + stall_threshold_pct)`, using *this candidate's own* `stall_threshold_pct` from today's fresh JIT profile (B1) — a choppier name needs a bigger bounce to count, a calmer one needs less. Automatically satisfied when price is at or above `session_high` (no pullback active, nothing to confirm).
 3. **Giveback ceiling.** Decline regardless of a qualifying bounce if `(session_high − bar_close) / (session_high − prior_close) > 65%` — more than roughly two-thirds of the day's move already erased reads as a broken trend, not a dip. (`prior_close` = the official prior-session close, same reference C3 uses.) In practice this rarely binds on its own — a candidate that's given back that much has usually also failed C3's magnitude gate outright — but it exists as a backstop against buying a confirmed-but-small bounce inside an otherwise-collapsed move.
 
@@ -367,14 +367,14 @@ Reset `session_high`/`session_low` at 9:00 daily — nothing carries between ses
 
 **Efficiency Ratio (ER), computed from a direct minute-bar pull (B1b's technique), not sparse checkpoint points:** pull the trailing 60 minutes of minute bars for the candidate (or back to 9:30, whichever is shorter, early in the session). `ER = |last close − first close| ÷ Σ|close(n) − close(n−1)|` across every minute in the window — net progress over total path length. Near 1 = clean directional move; near 0 = pure back-and-forth with little net progress. Fewer than ~20 minutes of window available → too little to be meaningful, gate passes by default — never block on a gap, never pretend the check ran.
 
-**Minimum ER required to enter, scaled to how forgiving the hour should be** (early moves are naturally noisier as they establish; afternoon entries into an already-mature move should be held to a materially higher bar):
+**Minimum ER required to enter, scaled to how forgiving the hour should be** (early moves are naturally noisier as they establish; afternoon entries into an already-mature move should be held to a materially higher bar). **Ranges are continuous — every clock time from 9:40 to end of day falls in exactly one row, no gaps.** This matters beyond the regular grid: a C12 mini-cycle check can land at any minute (fill-time-anchored, not just on the half hour), and needs an unambiguous minimum wherever it lands, not just at :00/:30:
 
-| Checkpoint window | Minimum ER |
+| Checkpoint time | Minimum ER |
 |---|---|
-| 9:40 – 10:30 | 0.15 |
-| 11:00 – 12:00 | 0.25 |
-| 12:30 – 2:00 | 0.30 |
-| 2:30 – 3:30 | 0.35 |
+| 9:40 – 10:59 | 0.15 |
+| 11:00 – 12:29 | 0.25 |
+| 12:30 – 2:29 | 0.30 |
+| 2:30 – end of day | 0.35 |
 
 Below the window's minimum → declined as too choppy, regardless of C1–C10 all passing. This is a real, separate failure mode from C10: C10 asks "is it currently falling," C11 asks "is the recent path actually going anywhere, net."
 
@@ -391,6 +391,8 @@ C11 self-supplies its window with a fresh pull at the moment of the check — it
    Enter if a candidate clears every gate, exactly as any other entry checkpoint would. This is in addition to, not a replacement for, the regular grid triggers already armed for the rest of the day.
 3. **The comparison baseline for this gate stack's first run is each candidate's price *at the fill timestamp itself*, not at whenever the check happens to execute, and not the last regular grid slot.** Pull minute-bar historicals for that exact minute, for every shortlist name — the same one fixed moment for all of them, the same way 9:30 is one fixed moment for the whole watchlist, not something recomputed per candidate. This is what C10 leg 1 ("not currently falling") and C1's baseline reading compare against for this mini-cycle's first pass — whether that pass runs immediately (the `elapsed ≥ 10` branch) or at the armed T+10 trigger (the `elapsed < 10` branch). Being "free to trade" (timing, step 2) and "what you compare against" (this step) are two separate questions — 15 minutes already elapsed since the fill clears you to act *now*, but the price you're judging "still rising since I sold" against is still the price *at the fill*, not the price at whatever minute you happened to look.
 4. **After the gate stack runs, whether or not a new position was opened, resume the standard grid at its own next slot — not exit-relative.** Exit at 10:45, discovered and gated promptly → the next check is the regular 11:00 slot, then 11:30, unchanged. This mini-cycle's first read (step 3) is itself a formal checkpoint in the single chronological chain C10 tracks and B6 logs (v3.26) — the regular slot that follows it compares against *that* read's own `bar_close`, not back past it to the fill-timestamp baseline again. The fill-timestamp anchor is a one-time reference for this mini-cycle's opening comparison only, never a standing reference point afterward.
+
+**Worked example, steps 2–4 together (this is the authority C10 leg 1 points back to):** a position exits (fill) at 11:15. The 11:30 grid check discovers it; 15 minutes have already passed (`elapsed ≥ 10`), so the full gate stack runs immediately at 11:30 — C10 leg 1 there compares 11:30's `bar_close` against the candidate's price *at 11:15* (step 3), not against 11:00's close. Declined → the next check is the regular 12:00 slot, and *that* leg 1 compares against the 11:30 read's own `bar_close` (step 4) — not back against 11:15 again, and not against 11:00. From there it's fully normal: 12:30 vs 12:00, 1:00 vs 12:30, and so on.
 
 Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
 
@@ -553,7 +555,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## Current state
 
-**Flat into the close, Monday 2026-08-24.** Account value **$218.50**, fully settled cash and buying power, no resting orders (verified live at 4:00 close). Net **+$13.81 on the day** (+6.75% of the day's opening balance), one trade: MSTX entered 9:40 ET, stopped out 10:43 ET via the velocity trail at $13.79, r=+1.050 — the largest single-trade gain logged on this account to date. Ten management checkpoints after the exit (11:00 through 3:30) all correctly declined re-entry into the same names as the crypto complex round-tripped through the afternoon — C1's late-entry test, C2's leverage-normalized ranking, C10's momentum test, and above all C11's Efficiency Ratio chop filter (which never once cleared its rising intraday threshold) did that work. **Weekly day-trade count: 5 of 15** (adds today's MSTX round trip to Friday's 4).
+**Flat into the close, Monday 2026-08-24.** Account value **$218.50**, fully settled cash and buying power, no resting orders (verified live at 4:00 close). Net **+$13.81 on the day** (+6.75% of the day's opening balance), one trade: MSTX entered 9:40 ET, stopped out 10:43 ET via the velocity trail at $13.79, r=+1.050 — the largest single-trade gain logged on this account to date. Ten management checkpoints after the exit (11:00 through 3:30) all correctly declined re-entry into the same names as the crypto complex round-tripped through the afternoon — C1's late-entry test, C2's leverage-normalized ranking, C10's momentum test, and above all C11's Efficiency Ratio chop filter (which never once cleared its rising intraday threshold) did that work. **Weekly day-trade count: 5 of 15** (adds today's MSTX round trip to the 4 already in the trailing week: GUSH 8/19, MSTX 8/20, CONL 8/21, MSTX 8/21).
 
 **First live session for B2's velocity trigger, C11, B1b, and v3.18–v3.24's changes to B4, C2, C12, and D2** — all confirmed working as designed on real fills, not just backtests. Full design rationale and backtests in the commit history (v3.11–v3.24), not repeated here.
 
