@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.23.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.24.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -426,7 +426,11 @@ Flat at 4:00 → delete 4:30–7:30 regardless.
 3. **Earnings reactions** from last night's after-close reporters.
 4. **Scan for individual movers clearing C3 first.** Rank sector leadership second, only where nothing cleared C3 but a group is moving.
 5. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
-6. **Write the watchlist — 20 names: 5 sector/index vehicles + 15 individual stocks.** Profile each just-in-time (B1) and rank by `mfe_per_stop`; mark affordability second, never first. Include unaffordable names — they measure what capital is costing. The 5 sectors feed C1 (Gate 1); the 15 individuals feed C3 (major-move gate) and C4's rank-1/rank-2 tracks.
+6. **Write the watchlist — 5 sectors, each genuinely different, 3 individual stocks per sector.** Structured, not just ranked:
+   - **Pick 5 sector proxies that don't overlap.** No two from the same correlated complex — GDX and GLD and SLV are one theme (precious metals), not three; XLE and USO are one theme (energy), not two. Choose the 5 most active, most distinct themes the morning's scan and headlines actually support. A single dominant story (today: crypto) still gets only one of the five slots, however many names in it are moving — concentration in one theme is exactly what this structure exists to prevent, since a reversal in that one theme otherwise leaves nothing uncorrelated to fall back on.
+   - **For each of the 5 sectors, take its 3 best individual names from E3's own grouping** (by mfe_per_stop first, same as always — never by price). If a sector's E3 group can't support 3 real names, that sector doesn't get a slot; pick a different one that can. Never pad a group with a name that isn't a genuine candidate just to hit 3 — C5's "no read = no trade" still governs which names are real.
+   - 5 sectors × 3 names = 15 individuals, plus the 5 sector proxies themselves = 20 total, same overall count as before.
+   - Profile every individual just-in-time (B1); mark affordability second, never first — include unaffordable names, they measure what capital is costing. The 5 sectors feed C1 (Gate 1); the 15 individuals feed C3 (major-move gate) and C4's rank-1/rank-2 tracks.
 7. **Refresh the live-context block (E5).** Commit and push.
 
 ## D3. Reporting
