@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.22.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.23.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -382,9 +382,12 @@ C11 self-supplies its window with a fresh pull at the moment of the check — it
 
 **Applies whenever a position closes before 4:00, regardless of why** — stop, target, stall ladder, reversal, any B3 exit. The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next half-hour grid slot.
 
-1. **At the exit itself (T+0), same turn, no new trigger needed:** run the 9:30-style check (C1) against today's existing shortlist — the candidates and sector proxies already built at 9:00, not a fresh market-wide scan. Record each sector proxy's current day change and note which shortlist names are still holding their move. C7 re-ranks fresh here too — the capital base just changed (the position closed), which by C7's own rule voids the earlier ranking.
-2. **10 minutes later (T+10):** run the full 9:40-style entry gate stack, C1–C11, against whatever T+0 turned up. Enter if a candidate clears every gate, exactly as any other entry checkpoint would. Arm one ad hoc trigger for exactly 10 minutes out to run this — in addition to, not a replacement for, the regular grid triggers already armed for the rest of the day.
-3. **After T+10, whether or not a new position was opened, resume the standard grid at its own next slot — not exit-relative.** Exit at 10:45 → mini-cycle at 10:45 and 10:55 → the next check is the regular 11:00 slot, then 11:30, unchanged.
+1. **At the moment the exit is discovered (T+0), same turn, no new trigger needed:** run the 9:30-style check (C1) against today's existing shortlist — the candidates and sector proxies already built at 9:00, not a fresh market-wide scan. Record each sector proxy's current day change and note which shortlist names are still holding their move. C7 re-ranks fresh here too — the capital base just changed (the position closed), which by C7's own rule voids the earlier ranking.
+2. **T+10 is measured from the exit's actual fill timestamp (from the order response), never from when it happened to be noticed.** Detection lags the real fill whenever the exit fires between scheduled checkpoints — get the real fill time first, then compute `elapsed = now − fill_time`:
+   - **`elapsed ≥ 10 minutes`** — the window has already passed. Run the full 9:40-style entry gate stack, C1–C11, immediately, same turn as T+0. No trigger to arm, no further wait.
+   - **`elapsed < 10 minutes`** — arm one ad hoc trigger for `10 − elapsed` minutes out (the nearest possible time to exactly `fill_time + 10min`, not a flat 10 minutes from T+0) to run the gate stack then.
+   Enter if a candidate clears every gate, exactly as any other entry checkpoint would. This is in addition to, not a replacement for, the regular grid triggers already armed for the rest of the day.
+3. **After the gate stack runs, whether or not a new position was opened, resume the standard grid at its own next slot — not exit-relative.** Exit at 10:45, discovered and gated promptly → the next check is the regular 11:00 slot, then 11:30, unchanged.
 
 Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
 
