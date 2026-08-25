@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.32.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.33.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -43,10 +43,9 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | Loss streak ≥ 3 | Count closed trades in `archive/trades.csv` (E1) |
 | Account below 50% of deposited cash | Recompute; never cache (E2) |
 | Candidate's risk numbers not computed | No profile → no stop → no trade (B1) |
-| Weekly day-trade cap reached | ≥15 day trades already in the trailing 7 calendar days (E2) — self-imposed pacing limit |
 | Position already open | One position, one resting order (E2) |
 
-**Most recent governor clearance of the breaker: 2026-08-15** — count only trades closed after that date (E1). Both the streak and the weekly day-trade count are computed fresh from `archive/trades.csv` (plus `get_equity_orders` for manual round trips) at every check — never from a number written here, which goes stale the day after it's written. **A missing or unreadable trade log must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
+**Most recent governor clearance of the breaker: 2026-08-15** — count only trades closed after that date (E1). The streak is computed fresh from `archive/trades.csv` (plus `get_equity_orders` for manual round trips) at every check — never from a number written here, which goes stale the day after it's written. **A missing or unreadable trade log must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
 
 ## A2. Trigger hygiene
 
@@ -229,7 +228,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 # PART C — ENTRY (9:00 · 9:30 · 9:40 primarily; any 10:00–3:30 checkpoint while flat)
 
-> **No position may be opened outside 9:40–4:00.** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause and the weekly day-trade cap (E2). Check the cap fresh before every entry, not just the first. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
+> **No position may be opened outside 9:40–4:00.** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
 ## C1. Gate 1 — the sector must hold, 9:30 → 9:40
 
@@ -396,7 +395,7 @@ C11 self-supplies its window with a fresh pull at the moment of the check — it
 
 Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
 
-**A chance to re-check, never a mandate to re-enter — everything else already in force still binds at full strength.** C5's "no read = no trade" and C9's "never force a trade" apply to the T+10 check exactly as hard as at 9:40; C9's "after 11:00, clearly better than the morning offered" is judged by the mini-cycle's own clock time (a 2:10pm mini-9:40 faces the same bar a regular 2:00pm entry would); the weekly cap (E2) and A1's one-position gate are untouched. This rule only shortens *when* the next attempt happens, never *whether* one is allowed.
+**A chance to re-check, never a mandate to re-enter — everything else already in force still binds at full strength.** C5's "no read = no trade" and C9's "never force a trade" apply to the T+10 check exactly as hard as at 9:40; C9's "after 11:00, clearly better than the morning offered" is judged by the mini-cycle's own clock time (a 2:10pm mini-9:40 faces the same bar a regular 2:00pm entry would); A1's one-position gate is untouched. This rule only shortens *when* the next attempt happens, never *whether* one is allowed.
 
 ---
 
@@ -428,7 +427,7 @@ Resume the 30-minute grid immediately on any entry.
 
 ### Early shutdown
 
-Flat · no resting orders · **and** no entry possible (buying power short, or the weekly day-trade cap (E2) reached) → delete remaining intraday checkpoints. **Keep exactly two: 4:00 close (report + primary arming) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable unless one of the two conditions above is actually true.
+Flat · no resting orders · **and** no entry possible (buying power short) → delete remaining intraday checkpoints. **Keep exactly two: 4:00 close (report + primary arming) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable unless one of the two conditions above is actually true.
 
 Flat at 4:00 → delete 4:30–7:30 regardless.
 
@@ -487,8 +486,8 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 - **Floor: stop trading below 50% of *deposited* cash** — not account value. `deposited = total_value − all-time realized P&L − unrealized P&L`. Derived, never cached. **The floor does not rise with gains.**
 - **Limited margin, since 2026-08-20** (verified via `get_accounts`: `type: "limited_margin"`; verified via `get_portfolio`: `buying_power` now equals `total_value`, unsettled proceeds usable immediately). This removes the old T+1 settlement gate — same-day rotation across sequential positions is now mechanically possible. It does **not** grant borrowing/leverage beyond the account's own cash, and does **not** by itself confirm anything about GFV exposure beyond what's stated below. If the account type changes again, re-verify from primary sources before the first trade — port nothing forward blind.
 - **PDT (Pattern Day Trader) restriction is gone** — FINRA eliminated the framework effective 2026-06-04 (verified from Robinhood's support page, FINRA.org Regulatory Notice 26-10, SEC.gov, and the Federal Register; full sourcing in commits `ebac8c7`/`10d9379`). No 4-in-5-days trigger, no $25,000 minimum. **Residual uncertainty, not fully closed:** whether the replacement intraday-margin standard names `limited_margin` explicitly (inferred covered), and whether the separate $2,000 margin-minimum applies to `limited_margin`'s cash-only operation (inferred not). Both are inference, not citation — treat any broker-side restriction message as the signal that inference was wrong.
-- **Weekly day-trade cap — self-imposed pacing, not a compliance requirement.** With PDT gone, this exists purely to bound churn/slippage on a small account, per governor instruction to set an explicit weekly limit. Cap: **no more than 15 day trades in the trailing 7 calendar days** (today inclusive). Count: every `archive/trades.csv` row is a day trade (B4/Part C force same-day entry and same-day close), plus any governor-placed manual round trip visible in `get_equity_orders` that wouldn't appear in the trade log. Recompute fresh at every entry-eligible checkpoint, never cached. Revisit the number if it binds often (too tight) or never binds (too loose).
-- **Multiple different candidates per day are explicitly authorized.** Not limited to repeating the same symbol — if a real, gate-clearing opportunity in a *different* instrument appears after an earlier position closed, take it, subject to A1's "position already open" gate (still only one position at a time) and the weekly cap above. Governor instruction, 2026-08-20: *"you now have instant cash with margins and are allowed to trade multiple different things within one day if presented with an opportunity."*
+- **No weekly day-trade cap.** A self-imposed pacing limit (15 day trades / trailing 7 calendar days) was in force from 2026-08-20 through 2026-08-25 and is now removed by explicit governor instruction, 2026-08-25 — it never bound in practice (peak observed: 7 of 15) and the governor decided the extra bookkeeping wasn't earning its keep. PDT itself is already gone (below), so nothing regulatory replaces it. Frequency of entry is still bounded by the real gates — C9's timing/selection discipline, C5's "no read = no trade," A1's one-position-at-a-time — not by a count.
+- **Multiple different candidates per day are explicitly authorized.** Not limited to repeating the same symbol — if a real, gate-clearing opportunity in a *different* instrument appears after an earlier position closed, take it, subject to A1's "position already open" gate (still only one position at a time). Governor instruction, 2026-08-20: *"you now have instant cash with margins and are allowed to trade multiple different things within one day if presented with an opportunity."*
 - **No short selling is authorized** — not part of this system's mandate regardless of account type. Bearish views go through inverse ETFs bought long.
 - **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
 - 24-hour tradability is optionality, never obligation.
