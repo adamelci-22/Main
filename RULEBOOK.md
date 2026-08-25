@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.30.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.31.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -559,17 +559,19 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 *9:40 entry outcome: both proxies (SMH, IBIT) slipped 9:30→9:40, but that only gates true sector vehicles (SOXL) and crypto's no-underlying names, not single-stock wrappers — blocked BITX/BITU outright (C1); MSTX separately failed C3 (negative on the day). Gate 2 run across the full SMH group put SMCX #1 and AMDL (not shortlisted) #2, dropping TSMX to 4th — declined. MUU failed C10 (falling vs. its own 9:30 print). **SMCX was the sole survivor** — entered 9:44 ET, 17sh @ $12.1899 avg, stop $11.34 (-7.00%, capped) confirmed resting.*
 
+*10:00 checkpoint: velocity trigger fired (checkpoint_gain 3.90% vs. 2.37% threshold), correct new stop computed at $12.56. Three consecutive placement attempts came back `cancelled` with zero fill — the E6 glitch, now escalated (see E6). Price fell through $12.56 during the unprotected gap; exited immediately on a marketable limit at $12.44 rather than keep retrying. Net +$4.25, +2.05%, r=+0.293 — a real but mechanically-forced exit, not rule-triggered. Full detail in `archive/trades.csv`. Flat again as of 10:04 ET.*
+
 *Today's watchlist: 8 names total (2 proxies + 6 individuals) — SMH, IBIT, SMCX, MUU, TSMX, BITX, MSTX, BITU.*
 
-*Account: $218.50 cash/buying power, fully settled, unsettled funds $0.00, flat, no resting orders (verified live). Deposited capital ≈$201.48 (all-time realized P&L ≈+$17.02, recomputed fresh from trades.csv), floor ≈$100.74 — not binding, unchanged from Monday's close (no deposits/withdrawals). A1 clear: loss streak 0, weekly day-trade count 5 of 15. Next 9:00 research (Wednesday 2026-08-26) replaces this block wholesale per this section's own rule.*
+*Account: $222.75 cash/buying power (post-SMCX exit, verified live), fully settled, unsettled funds $0.00, flat, no resting orders. Deposited capital ≈$201.48 (all-time realized P&L ≈+$21.27 after SMCX, recomputed fresh from trades.csv), floor ≈$100.74 — not binding. A1 clear: loss streak 0, weekly day-trade count 6 of 15 (adds today's SMCX round trip). Next 9:00 research (Wednesday 2026-08-26) replaces this block wholesale per this section's own rule.*
 
 ## E6. Known issues — backlog, not yet fixed
 
-**Stop-order placement can come back `cancelled` with zero fill and no error message.** First observed 2026-08-24, twice in one day, both immediately after a ratchet/velocity stop-move on MSTX. Neither `place_equity_order` nor a follow-up `review_equity_order` surfaced any error string — the order just came back cancelled. Both resolved clean on an immediate retry (came back `confirmed`, `shares_held_for_sells` matched position size), and minute-bar data confirmed after the fact that price never actually traded through either stop level during the brief unprotected gap — so no real exposure either time, but the position was briefly resting with no live stop at all.
+**Stop-order placement can come back `cancelled` with zero fill and no error message.** First observed 2026-08-24, twice in one day, both on MSTX, both resolved clean on one retry with no real exposure. **Escalated 2026-08-25: SMCX's 10:00 checkpoint hit it three times in a row on the same stop placement** — worse than the prior single-retry pattern. This time price actually moved through the intended stop level ($12.665 high down to $12.4667) during the window the position had no resting protection at all, and the position had to be exited manually on a marketable limit rather than via a working stop. Real exposure this time, not a near-miss. Full detail in the 2026-08-25 SMCX row of `archive/trades.csv`.
 
-**Current mitigation is manual, not systemic:** after every stop placement, verify it actually landed via `get_equity_orders` before considering the position protected; retry immediately if it didn't. This has worked twice but relies on catching it by eye every time, which doesn't scale and isn't guaranteed under E4 ("a capability is verified only by an order response or a successful call" — a silent cancellation is exactly the gap that principle exists to catch).
+**Current mitigation is manual, not systemic, and is no longer proving reliably fast enough.** After every stop placement, verify it actually landed via `get_equity_orders` before considering the position protected; retry immediately if it didn't. This caught both the 08-24 and 08-25 incidents, but three consecutive failures on 08-25 means the manual retry loop itself now has to run three times inside a live, moving market before the position is actually protected — and this time the market didn't wait. Doesn't scale, isn't guaranteed under E4 ("a capability is verified only by an order response or a successful call" — a silent cancellation is exactly the gap that principle exists to catch), and the two-occurrences-then-two-more-in-a-row trend is the wrong direction.
 
-**Worth a harder look, not yet built:** an automatic retry-and-verify wrapper around stop placement specifically — place, confirm via a follow-up read, and auto-retry on anything other than a confirmed live order, without waiting for a human or a lucky manual check to notice. Flagged here so it isn't lost; revisit before treating "the last two retries worked" as a solved problem.
+**Worth a harder look, no longer just "worth" it — this needs building before the next occurrence, not after.** An automatic retry-and-verify wrapper around stop placement specifically — place, confirm via a follow-up read, and auto-retry on anything other than a confirmed live order, without waiting for a human or a lucky manual check to notice, and fast enough that a multi-attempt failure doesn't leave a real gap during a live move. Three failures in one placement on 08-25 is the evidence that "the last retry worked" was never a solved problem, just an untested one.
 
 ---
 
