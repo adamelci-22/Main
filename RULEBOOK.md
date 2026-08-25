@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.35.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.36.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -381,6 +381,8 @@ Below the window's minimum → declined as too choppy, regardless of C1–C10 al
 
 C11 self-supplies its window with a fresh pull at the moment of the check — it does not depend on B6 having tracked the candidate at prior checkpoints. (B6 exists for C10, whose `session_high`/`session_low` need day-long continuity a trailing window can't provide.)
 
+**Fetch once when B1b/B6 also apply to this candidate this checkpoint.** C11's window (60 min, or back to 9:30) always contains B1b/B6's shorter since-prior-checkpoint gap. Pull the larger window a single time and derive both from it — C11's ER from the full pull, B1b's `bar_high`/`bar_low`/`bar_close` from its tail subset — rather than two overlapping minute-bar calls for the same symbol. Same numbers either way; this only removes a duplicate call.
+
 ## C12. Re-entry cycle — an exit restarts the entry clock, not the whole day
 
 **Applies whenever a position closes before 4:00, regardless of why** — stop, target, stall ladder, reversal, any B3 exit. The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next half-hour grid slot.
@@ -543,6 +545,8 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
+
+**Structured, not narrated.** Log facts as compact bullets grouped by checkpoint/event — numbers, gate results, times — not flowing prose paragraphs. Same information, cheaper to write and cheaper to re-read within the day (Part E is pulled on demand, but the pull still costs whatever E5 has grown to since 9:00).
 
 *Tuesday 2026-08-25, 9:00 research. Headlines: chip stocks rebounding as a group premarket (Intel +3%, Nvidia ~+1%, SMH +1%+) — a real reversal of Monday's selloff (AMD/AVGO -3%/-2%), driven by a named catalyst: Raymond James upgraded AMD to Strong Buy, $641 price target (~40% implied upside), expecting AMD to overtake Intel in CPUs. Broad futures up ahead of Wednesday's Nvidia earnings and Friday's PCE inflation data. Iran sanctions escalation continues (Bessent expanding sanctions, Iran vowing retaliation) but oil is described as "stabilizing after a steep decline" — consistent with energy actually trading soft this morning, not a fresh mover. [Sources: CNBC premarket movers, Bloomberg/Benzinga/TheStreet market wraps, 2026-08-25.]*
 
