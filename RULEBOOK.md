@@ -562,7 +562,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Profiles (`tools/profile.py`, 32 daily sessions each), ranked by `mfe_per_stop`: UUUU 1.072 · ARCT 0.946 · UEC 0.935 · DNN 0.903 · ZSL 0.590 · SMMT 0.587 · ZYME 0.558 · DUST 0.456 · TSMX 0.388 · AMDL 0.376.
 - Today's watchlist: 14 names (4 proxies + 10 individuals/vehicles) — SMH/AMDL/TSMX, XBI/SMMT/ARCT/ZYME, URA/UUUU/UEC/DNN, DUST/ZSL.
 - Buying power $229.61 (unchanged from yesterday's close), unsettled funds $0. Deposited ≈$201.48, floor ≈$100.74, not binding.
-- 9:30 formal Gate-1 baseline: next checkpoint.
+- **9:30 observation (C1 baseline).** Proxies: SMH -0.25% (faded negative, was flat) · XBI -1.21% · URA +2.58% (strengthening) · DUST +3.89% (strengthening, the actual traded vehicle here, so this is C1's live gate reading). Individuals: AMDL +2.38% ✓ · TSMX **-0.18%, faded negative, no longer holding** · SMMT +8.01% ✓ · ARCT +4.66% ✓ · ZYME +4.23% ✓ · UUUU +2.04% ✓ (now clears C3 outright) · UEC +2.41% ✓ (now clears C3) · DNN +2.14% ✓ (now clears C3) · ZSL +1.94% ✓. Only TSMX is flagged as not holding; everything else strengthened since 9:00. 9:40 re-confirms live.
 
 ## E6. Known issues — backlog, not yet fixed
 
