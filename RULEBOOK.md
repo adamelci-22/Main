@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.39.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.40.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -120,24 +120,33 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 
 **One `run_high`, shared with B3 — not a second high-water mark.** Same value, same derivation: `run_high` is `max(run_high, bar_high)` at every checkpoint (B1b) — the true highest price reached in the gap, not a lucky-or-unlucky point sample. Advances only when `bar_high` clears the prior `run_high` by more than `stall_threshold_pct` (B3 steps 1–2); a stalled check does not advance it even if `bar_close` alone would have looked like a new high.
 
-**The three stepped stages below are measured against `run_high`, never the live price.** `run_high` only moves up, so once a stage is reached it cannot un-reach itself on a pullback — that is what "up only" requires. Each is a one-time jump, evaluated fresh every checkpoint, applied only if it raises the stop:
+**The seven stepped stages below are measured against `run_high`, never the live price.** `run_high` only moves up, so once a stage is reached it cannot un-reach itself on a pullback — that is what "up only" requires. Each is a one-time jump, evaluated fresh every checkpoint, applied only if it raises the stop. Stages 2–6 are five even steps between the initial stop and breakeven — both the trigger fraction of `breakeven_trigger` and the recovered fraction of `stop_pct` advance together, `k ÷ 6` at a time:
 
 | Stage | Trigger (on `run_high`) | Stop goes to |
 |---|---|---|
 | 1 — entry | — | `fill × (1 − stop_pct)` |
-| 2 — half-risk | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger ÷ 3` | `fill × (1 − stop_pct ÷ 2)` |
-| 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 2 ÷ 3` | `fill` (breakeven) |
-| 4 — trail | past stage 3 | `run_high × (1 − trail_pct)` — **the only continuous stage**, recomputed every checkpoint as `run_high` climbs |
+| 2 | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 1 ÷ 6` | `fill × (1 − stop_pct × 5 ÷ 6)` |
+| 3 | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 2 ÷ 6` | `fill × (1 − stop_pct × 4 ÷ 6)` |
+| 4 | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 3 ÷ 6` | `fill × (1 − stop_pct × 3 ÷ 6)` |
+| 5 | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 4 ÷ 6` | `fill × (1 − stop_pct × 2 ÷ 6)` |
+| 6 | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 5 ÷ 6` | `fill × (1 − stop_pct × 1 ÷ 6)` |
+| 7 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger` | `fill` (breakeven) |
+| 8 — trail | past stage 7 | `run_high × (1 − trail_pct)` — **the only continuous stage**, recomputed every checkpoint as `run_high` climbs |
 
-**Worked example — AGQ's actual profiled numbers, fill at $100.00, `stop_pct` 2.50%, `target_pct` 3.75%, `breakeven_trigger` 1.65%, `trail_pct` 1.45%** (each per B1's formulas above):
+**No fixed profit-taking target — the ratchet is the only thing that locks in gains.** See B4: removed as a separate rule; stage 8's continuous trail (tightened further by the velocity trigger below, once it fires) is what catches a big move now.
+
+**Worked example — AGQ's actual profiled numbers, fill at $100.00, `stop_pct` 2.50%, `breakeven_trigger` 1.65%, `trail_pct` 1.45%** (each per B1's formulas above; `target_pct` still computed and stated at entry per C8, but no longer drives an exit):
 
 | Stage | `run_high` reaches | Stop becomes |
 |---|---|---|
 | 1 — entry | $100.00 (fill) | $100.00 × (1 − 0.0250) = **$97.50** |
-| 2 — half-risk | $100.00 × (1 + 0.0165÷3) = **$100.55** | $100.00 × (1 − 0.0125) = **$98.75** |
-| 3 — breakeven | $100.00 × (1 + 0.0165×2÷3) = **$101.10** | **$100.00** (fill) |
-| 4 — trail, e.g. `run_high` runs to $103.00 | — | $103.00 × (1 − 0.0145) = **$101.51** |
-| target | live price reaches $100.00 × (1 + 0.0375) = **$103.75** | **SELL ALL** — B4, overrides every stage |
+| 2 | $100.00 × (1 + 0.0165×1÷6) = **$100.28** | $100.00 × (1 − 0.0250×5÷6) = **$97.92** |
+| 3 | $100.00 × (1 + 0.0165×2÷6) = **$100.55** | $100.00 × (1 − 0.0250×4÷6) = **$98.33** |
+| 4 | $100.00 × (1 + 0.0165×3÷6) = **$100.83** | $100.00 × (1 − 0.0250×3÷6) = **$98.75** |
+| 5 | $100.00 × (1 + 0.0165×4÷6) = **$101.10** | $100.00 × (1 − 0.0250×2÷6) = **$99.17** |
+| 6 | $100.00 × (1 + 0.0165×5÷6) = **$101.38** | $100.00 × (1 − 0.0250×1÷6) = **$99.58** |
+| 7 — breakeven | $100.00 × (1 + 0.0165) = **$101.65** | **$100.00** (fill) |
+| 8 — trail, e.g. `run_high` runs to $103.00 | — | $103.00 × (1 − 0.0145) = **$101.51** |
 
 ### Velocity trigger — a fast checkpoint move flips the position to a permanent tight trail
 
@@ -147,9 +156,9 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 
 **If `checkpoint_gain ≥ 3 × stall_threshold_pct`, a fast move has occurred and this position is flagged for the rest of the hold** — the flag never clears once set. **From the triggering checkpoint onward, at every checkpoint (fast or not), the stop becomes `max(staged-ratchet stop, run_high × (1 − stall_threshold_pct))`** — a continuous tight trail using the candidate's own noise-calibrated cushion, layered on top of the staged ratchet, never replacing it, always taking whichever is higher. Still subject to B2's own rules: up only, never down, minimum re-placement move applies.
 
-**Why this is its own check, not a fifth stage:** the staged ratchet only unlocks continuous trailing once stage 3 (breakeven) is fully reached — a position that runs hard but stalls just short of that bar gets zero additional protection while it gives the gain back. This check reacts to *how fast* the position moved, not just how far: a jump well past the instrument's own normal noise is proof enough to start locking in gains ahead of the staged schedule. Once a position has shown it can move fast, keeping what's been won outranks giving it room to keep running.
+**Why this is its own check, not just another stage:** the staged ratchet only unlocks continuous trailing once stage 7 (breakeven) is fully reached — a position that runs hard but stalls just short of that bar gets zero additional protection while it gives the gain back. This check reacts to *how fast* the position moved, not just how far: a jump well past the instrument's own normal noise is proof enough to start locking in gains ahead of the staged schedule. Once a position has shown it can move fast, keeping what's been won outranks giving it room to keep running.
 
-**The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 3 is reached by the ramp. **Time-gated at 12:00pm ET**, evaluated by the checkpoint's own clock time, not entry time:
+**The stall consequences below are a separate, faster-acting check against the *live* price, not `run_high`** — they can fire before stage 7 is reached by the ramp. **Time-gated at 12:00pm ET**, evaluated by the checkpoint's own clock time, not entry time:
 
 **Before 12:00pm ET — more room to develop.** SELL ALL needs **3** stalls, not 2, and stalls 1–2 force **no stop move at all**; the stop can only rise via the percentage-based ratchet stages above. A pause in the first couple hours doesn't trigger an early breakeven lock — it only has to not go on for three checks straight. Trade-off, stated plainly: this accepts more downside room in exchange for not shaking a real move out on its first pause.
 
@@ -168,8 +177,6 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 | 2 | either | **SELL ALL — complete.** Overrides every stage above, no exceptions. |
 
 **Crossing noon mid-hold:** apply whichever table matches the *current* checkpoint's clock time to the stall count as derived cold at that same checkpoint (B3) — don't backdate which regime a past stall happened under. A count that's already at 2 when a 12:00 checkpoint runs means SELL ALL immediately under the now-current rule; a count of 1 or 2 left over from the morning is simply read against the afternoon table from that point on.
-
-**Any checkpoint where the live price ≥ `target_pct` → SELL ALL**, overriding everything above (B4).
 
 ## B3. Exits — any one fires
 
@@ -206,11 +213,9 @@ Not on one red candle, midday noise, or impatience.
 
 Name the **specific, falsifiable** condition that would exit at the next checkpoint, with instrument and direction. Then honour it. To override, say explicitly that you are overriding a pre-commitment and name the **new** information. *"It looks like it's turning back up" does not qualify.*
 
-## B4. Profit-taking
+## B4. Same-day close — no fixed profit target
 
-At any checkpoint showing a `bar_close` gain ≥ `target_pct` → **sell the entire position.** No scaling out, no runner, at any share count. Target is a ceiling; most trades exit on the stall ladder first.
-
-**`target_pct` is variable, not a fixed number — computed once, per candidate, at entry (B1), and does not change for the life of that trade.** A fresh `tools/profile.py` run on the same symbol mid-trade would likely produce a different number, but the trade holds the value locked in at entry, stated at entry (C8) — recomputing it mid-hold would make the exit a moving target.
+**Removed as of v3.40: no checkpoint sells purely for hitting a price level.** The 8-stage ratchet (B2) plus the velocity trigger's tight trail are what lock in gains now — a big move is expected to give back at most `stall_threshold_pct` (once velocity has fired) or `trail_pct` (before it has), never the whole thing, without needing a hard ceiling. `target_pct` is still computed at entry (B1) and still stated at entry (C8) and used by C7's `mfe_to_target` ranking check — it's informational only now, never an autonomous trigger. **Trade-off, stated plainly:** a single checkpoint that spikes straight through the old target level and reverses before velocity has fired gives back more than it used to (up to `trail_pct`, since stage 8 hasn't tightened yet) — a real, accepted cost of removing the ceiling, not a hidden one.
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** State the intended exit at entry.
 
