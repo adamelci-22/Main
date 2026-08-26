@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.38.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.39.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -126,7 +126,7 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 |---|---|---|
 | 1 — entry | — | `fill × (1 − stop_pct)` |
 | 2 — half-risk | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger ÷ 3` | `fill × (1 − stop_pct ÷ 2)` |
-| 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger` | `fill` (breakeven) |
+| 3 — breakeven | `(run_high − fill) ÷ fill` ≥ `breakeven_trigger × 2 ÷ 3` | `fill` (breakeven) |
 | 4 — trail | past stage 3 | `run_high × (1 − trail_pct)` — **the only continuous stage**, recomputed every checkpoint as `run_high` climbs |
 
 **Worked example — AGQ's actual profiled numbers, fill at $100.00, `stop_pct` 2.50%, `target_pct` 3.75%, `breakeven_trigger` 1.65%, `trail_pct` 1.45%** (each per B1's formulas above):
@@ -135,7 +135,7 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 |---|---|---|
 | 1 — entry | $100.00 (fill) | $100.00 × (1 − 0.0250) = **$97.50** |
 | 2 — half-risk | $100.00 × (1 + 0.0165÷3) = **$100.55** | $100.00 × (1 − 0.0125) = **$98.75** |
-| 3 — breakeven | $100.00 × (1 + 0.0165) = **$101.65** | **$100.00** (fill) |
+| 3 — breakeven | $100.00 × (1 + 0.0165×2÷3) = **$101.10** | **$100.00** (fill) |
 | 4 — trail, e.g. `run_high` runs to $103.00 | — | $103.00 × (1 − 0.0145) = **$101.51** |
 | target | live price reaches $100.00 × (1 + 0.0375) = **$103.75** | **SELL ALL** — B4, overrides every stage |
 
