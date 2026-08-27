@@ -570,6 +570,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Buying power $224.07 (unchanged from yesterday's close), unsettled funds $0. Deposited ≈$201.48, floor ≈$100.74, not binding.
 - **Today's watchlist: 24 names (6 proxies + 18 individuals)** — SMH/NVDL/MUU/SMCX, IBIT/MSTX/CONL/BITU, GDX/DUST/JDST/ZSL, XBI/VEEV/GENB/SMMT, XLF/FAZ/JPM/GS, FXI/YANG/BABA/JD.
 - All premarket reads (9:01–9:07 ET) — informal/stale per C3, first formal read is 9:30.
+- **9:30 observation (C1 baseline, first formal read).** Proxies: SMH +2.71% (holding, even stronger) · IBIT +1.06% · GDX **+0.32%, flipped positive** — inverse vehicles now negative, metals-reversal thesis reversed at the open · XBI -0.45% (doesn't gate) · XLF -0.70% · FXI -0.72%. Individuals: NVDL +13.34% ✓ · MUU +5.46% ✓ · SMCX +5.95% ✓ · MSTX +6.28% ✓ · CONL +2.01% ✓ · BITU +2.17% ✓ · **DUST -0.55%, JDST -0.81%, ZSL -0.47% — all flipped negative, not holding** · VEEV +12.44% ✓ (stronger) · GENB +1.64% (weaker but still positive) · SMMT +2.46% (weaker but still positive) · FAZ +2.34% ✓ (stronger) · JPM -0.61% · GS -0.21% · YANG +2.11% ✓ (stronger) · BABA -1.98% · JD -1.02%. **Precious-metals reversal's C1 leg 1 already fails** (vehicles negative at 9:30, not positive) — dead for the formal 9:40 entry, late-entry clause only if a vehicle later exceeds its own 9:30 print. Semis, Crypto, Financials-reversal, China-reversal all holding cleanly. 9:40 re-confirms live.
 
 ## E6. Known issues — backlog, not yet fixed
 
