@@ -517,6 +517,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Biotech: XBI -1.49% (weaker than premarket -0.14%, doesn't gate individuals per C5) · NVCR +0.61% (weakened sharply from premarket +3.45%) · RGNX +6.30% (still strong, down from premarket +8.31%) · ORIC -1.64% (flipped negative from premarket +3.71%)
 - **Real divergence from the 9:00 read**: FCX, SCCO, and ORIC all reversed to negative at the open. Only SBSW and RGNX are still clearly holding their premarket strength; NVCR faded to barely positive. 9:40's gate stack will need to weigh this — the open didn't confirm most of premarket's move.
 
+**9:40 entry — no trade.** State check: flat, no resting orders (verified live). Day-change vs prior close: XLB +0.42% · FCX -0.77% · SCCO -0.20% · SBSW +2.86% · XBI -1.40% · NVCR -0.02% · RGNX +3.58% · ORIC -0.44%.
+
+- **C3 (individual magnitude, ≥+0.75%)**: only SBSW and RGNX pass; FCX, SCCO, NVCR, ORIC all declined — negative or sub-threshold vs prior close.
+- **C10 leg 1 (not currently falling vs the prior formal checkpoint's close)**: SBSW's 9:40 bar_close $12.61 < its 9:30 read $12.65 → **fails, blocked outright.** RGNX's 9:40 bar_close ~$9.70 < its 9:30 read $9.96 → **fails, blocked outright.** Both were real day-change winners but faded within the session since 9:30 (per B1b minute-bar pull, 13:30–13:40 UTC: SBSW range $12.585–$12.758, RGNX range $9.680–$10.100).
+- **C1 Gate 1 (sector proxies)**: XLB passes legs 1–2 but fails leg 3 (9:40 +0.42% below 9:30 +0.93%) — no Materials sector-leveraged entry. XBI fails leg 1 outright (negative at 9:30) — no Biotech sector-leveraged entry. Neither gates the individual-stock declines above (C1 doesn't gate single stocks), just forecloses the sector-vehicle path too.
+- **No candidate cleared the full stack.** Correct flat outcome per C5/C9 — nothing forced. Re-check resumes at the next 10:00–12:30 grid slot (management, C applies while flat) or sooner via C12 if this changes; ESTC/GAP/SOLS/AFRM/UMC remain un-added, still awaiting governor confirmation.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
