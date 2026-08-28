@@ -536,6 +536,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **C12 T+10 mini-cycle result: no re-entry.** Re-verified against the *exit* fill timestamp (10:17:21 ET, $84.40) — the armed trigger had mislabeled this as the entry timestamp; corrected before running the check. C3 still passed by SOLS/ESTC/GAP/UMC (all comfortably above +0.75%), but **C10 leg 1 failed for all four** versus their 14:17 UTC bar-close price: SOLS $65.925→$65.520, ESTC $98.900→$98.230, GAP $23.985→$23.948, UMC $20.315→$20.220 — the broad pullback flagged at T+0 continued through T+10 rather than reversing. Correctly flat. Resume the regular grid at 10:30.
 
+**10:30 management (flat) — no trade.** C3 still passed by SOLS/ESTC/GAP/UMC. C10 leg 1 (vs. the T+10 mini-cycle's own read, the prior formal checkpoint in the chain): ESTC and GAP still falling (declined outright); **SOLS and UMC turned — both now rising** vs. their 10:27 ET reads, cleared legs 2/3 too (real bounces off fresh session lows, giveback well under 65%). **C11 chop filter tightens to min ER 0.25 in the 10:30–11:29 band (was 0.15 before 10:30)** — both failed it: SOLS 0.076, UMC 0.198, neither making genuine net progress over the trailing 60-minute window despite real intraday range. No candidate cleared the full stack. Correctly flat, per C5/C9. Next check: 10:45.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
