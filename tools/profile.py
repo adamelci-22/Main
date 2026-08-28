@@ -44,8 +44,6 @@ def main():
 
     stop      = clamp(1.5 * med_mae, 2.5, 7.0)
     target    = clamp(1.25 * med_mfe, 1.5 * stop, 12.0)
-    breakeven = max(med_mfe, 0.5 * stop)
-    trail     = 1.0 * med_mae
     stall     = clamp(0.15 * med_mfe, 0.10, 1.00)
     min_move  = clamp(0.25 * med_mae, 0.20, 1.00)
     at_cap    = 1.5 * med_mae > 7.0
@@ -58,8 +56,6 @@ def main():
     print(f"  ---")
     print(f"  stop             {stop:6.2f}%   " + ("<-- AT THE 7% CAP, noise is wider than the stop" if at_cap else ""))
     print(f"  target           {target:6.2f}%")
-    print(f"  breakeven trigger{breakeven:6.2f}%   (half-risk step at {breakeven/2:.2f}%)")
-    print(f"  trail            {trail:6.2f}%   below the running high")
     print(f"  stall threshold  {stall:6.2f}%")
     print(f"  min stop move    {min_move:6.2f}%")
     print(f"  ---")
