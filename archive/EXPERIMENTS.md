@@ -28,100 +28,19 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 ## Open
 
-### EXP-012 · Should the trail be 0.4 x stop instead of 1.0 x median MAE?
+**Nothing currently open.** EXP-001 through EXP-016 below were all written between 2026-08-11 and 2026-08-13, against an earlier architecture (`OPERATIONS.md` with numbered §-sections, `tools/replay.py`, `tools/calibrate_stops.py`, `tools/preflight.py`, `data/vol_profile.csv`, `limits.json`). None of that tooling or document structure exists in this repo anymore — it was superseded by `RULEBOOK.md`'s Part A–E structure and the single `tools/profile.py` script, which have since gone through their own many versions (currently v3.45). Swept to Closed below, 2026-08-28, per this file's own "prefer killing to letting it linger" rule — most were already well past a month old and untestable against tooling that no longer exists.
 
-- **State:** 🟡 `PROPOSED` — awaiting governor decision. Raised 2026-08-11 and deliberately NOT applied.
-- **Origin:** the governor's stop ladder spec (`-5% → +1% gain → -3% → +2% gain → 0 → then gain - 2`) implies a trail of **2pp against a 5% stop = 0.4 x stop**. The live trail is **1.0 x median adverse excursion ≈ 0.67 x stop**.
-- **The trade-off, stated as a testable claim:** a trail at 0.4 x stop sits **inside one normal adverse excursion**, so it is hit by ordinary noise rather than by reversal. It should therefore raise the share of winners that end as small scratches, while raising the average locked-in gain on the winners that do run.
-- **Falsifiable test:** re-run `tools/replay.py` at both trail values over the available sessions and compare (a) expectancy in R, (b) share of trades exiting between 0 and +0.5R, (c) average R of trades exiting above +1R. If expectancy is materially higher at 0.4, adopt it; if the only effect is more scratches, reject it.
-- **Blocked on:** sample size. The effective expectancy sample is **1 trade**. This cannot be settled by evidence yet, so it stays a governor preference call rather than a measurement.
-- **Why it was not silently applied:** the governor gave explicit numbers, and departing from them without saying so would hide a real change in behaviour. The departure is recorded in `OPERATIONS.md`'s git history and here.
+## Closed
 
-### EXP-001 · Stall exit at 3 checks or 4?
+### EXP-007 · A single global stop cannot serve this universe — **LIVE, still true**
 
-- **State:** `PROPOSED`
-- **Opened:** 2026-08-11
-- **Rule today:** three stalled checks force a sale at any gain (§8.1).
-- **Question:** does four work better than three?
-- **Reasoning:** at two stalls the stop is already at breakeven, so extending costs nothing on the downside — the position scratches instead of losing. What is being bought is one more 30-minute window for the move to resume; what is being spent is the gain that would have been banked at three. Payoff is roughly +4 points against −2, so **break-even is about a 33% resumption rate.**
-- **Evidence needed:** the resumption rate. Every stall-2 event is logged with whether the position later made a qualifying new high (§8.1). This is in-trade data, so collecting it requires no exception to §9.
-- **Sample so far:** 0. The rule postdates the only closed trade.
-- **Hypotheses examined against this data:** 1.
-- **Do not promote on fewer than ~20 stall-2 events.**
-
-### EXP-002 · Do catalyst categories differ in hit rate?
-
-- **State:** `PROPOSED`
-- **Opened:** 2026-08-11
-- **Rule today:** §4 requires "a catalyst you can name." All eleven categories are treated as equally valid.
-- **Question:** are they? A plausible outcome is that `geopolitical` and `earnings` carry real edge while `analyst` and `sector_sympathy` carry none — in which case the entry gate should exclude the weak ones.
-- **Evidence needed:** `catalyst` records paired with `catalyst_outcome` records, grouped by `type`. Both traded and untraded catalysts count, which is why untraded ones are logged.
-- **Sample so far:** 0.
-- **Hypotheses examined against this data:** 1.
-- **Trap to avoid:** eleven categories against a few dozen catalysts is a few observations per bucket. **Do not propose dropping a category on fewer than ~15 observations of that category.** With eleven buckets, one will look terrible by chance.
-
-### EXP-003 · Does catalyst age predict anything?
-
-- **State:** `PROPOSED`
-- **Opened:** 2026-08-11
-- **Rule today:** none. Age is recorded but never used.
-- **Question:** does a catalyst stop being tradeable after some interval — is stale news already priced?
-- **Evidence needed:** `age_min` against outcome, across catalyst records. Only records with `source_time_confidence` of `exact` or `approximate` may be used; `unknown` must be excluded rather than guessed at.
-- **Sample so far:** 0.
-- **Hypotheses examined against this data:** 1.
-- **Note:** if this produces a threshold it becomes an entry gate, which makes it a higher-consequence change than most. Require a larger sample than usual.
-
-### EXP-004 · Is stated confidence calibrated?
-
-- **State:** `PROPOSED`
-- **Opened:** 2026-08-11
-- **Rule today:** none. `confidence` 1–5 is recorded on every catalyst and used for nothing.
-- **Question:** do high-confidence catalysts outperform low-confidence ones?
-- **Why it matters either way:** if yes, confidence becomes a usable input. **If no, that is the more valuable result** — it would be direct evidence that this agent's self-reported certainty is noise, which is worth knowing well beyond this one field.
-- **Evidence needed:** outcome grouped by `confidence`, checking for monotonicity rather than just a difference between the extremes.
-- **Sample so far:** 0.
-- **Hypotheses examined against this data:** 1.
-
-### EXP-005 · Is 30 minutes the right stall window? — **RETIRED 2026-08-11, question dissolved**
-
-> **This experiment no longer has a variable to test.** The stall is now measured at the checkpoint price (§8.1), so there is no window separate from the cadence — the window IS the wake schedule. 'Window length' and 'cadence' collapsed into one parameter, which is EXP-011's subject. Retired rather than deleted, so the reasoning survives.
-
-- **State:** `PROPOSED`
-- **Opened:** 2026-08-11
-- **Rule today:** a stalled window is 30 minutes of market time; three of them force a sale (§8.1).
-- **Question:** why 30? **There is no empirical justification — it is inherited from the old checkpoint spacing**, which is exactly the circularity the cadence decoupling was meant to remove. The window is now a free parameter and has simply kept its historical value.
-- **Evidence needed:** 5-minute bars are collected, so windows of 15, 20, 30, 45 and 60 minutes can all be reconstructed after the fact from the same data. Replay each against closed trades and compare what the exit would have been.
-- **Sample so far:** 0 trades under the current rule.
-- **Hypotheses examined against this data:** 1 — but note that testing five window lengths against a small history is **five chances to find a winner by luck.** Whichever looks best will look better than it is. Require a large margin, not a small edge.
-- **Trap:** this is replay, not live evidence. It shows what would have happened to entries that were actually taken, which is not the same as what would happen if the rule changed and different trades resulted.
-
-### EXP-006 · Does wake cadence change outcomes?
-
-> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
-> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
-> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
-> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
-> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
-
-
-- **State:** `PROPOSED`
-- **Opened:** 2026-08-11
-- **Rule today:** **30 minutes, flat or holding** (§2), set by governor decision 2026-08-11 and supported by the replay evidence below.
-- **Question:** does checking more often actually improve results, or just cost more? The stated reason for 15 minutes is reduced ratchet latency — a threshold crossed at 10:07 sits unacted-on for 23 minutes at 30-minute spacing. That is a plausible mechanism, **not a measured one.**
-- **Evidence needed:** `cadence_min` is recorded on every observation. Compare stop-move latency and outcomes across cadences. Because 5-minute bars are stored, the counterfactual — where the stop *would* have moved at a different cadence — can be reconstructed exactly.
-- **Sample so far:** 0.
-- **Hypotheses examined against this data:** 1.
-- **Note:** more frequent is not automatically better. A shorter cadence gives more opportunities to react to meaningless noise, and every extra checkpoint is a chance to talk oneself out of a sound position.
-
-### EXP-007 · A single global stop cannot serve this universe — **IMPLEMENTED, closed**
-
-- **State:** ✅ `LIVE` — approved by the governor 2026-08-11, policy **v1.1**. Implemented in `OPERATIONS.md` §6, `tools/vol_profile.py`, `data/vol_profile.csv`, `limits.json`, `tools/preflight.py`.
-- **Locked evaluation period:** may not change again for **20 closed trades** (§17).
+- **State:** ✅ `LIVE` — approved by the governor 2026-08-11, policy **v1.1**. The concept survives every rewrite since: `RULEBOOK.md`'s current B1 computes `stop_pct = clamp(1.5 × median adverse, 2.5%, 7.0%)` per instrument via `tools/profile.py` — same formula, same floor/cap, just reimplemented after the original `vol_profile.csv`/`calibrate_stops.py`/`limits.json`/`preflight.py` pipeline this entry names was retired. Original evidence and reasoning below, unedited.
+- **Locked evaluation period:** may not change again for **20 closed trades** (§17 — an old section number; no longer a live cross-reference).
 - **Previously:** `TESTED` — real data
 - **Opened:** 2026-08-11 · **Rerun on the correct universe** 2026-08-11
 - **Data:** `data/calibration_daily.csv` — **293 sessions, 14 instruments, leveraged sector ETFs and leveraged single-stock ETFs only.** An earlier run wrongly included index-leveraged (SQQQ, TZA) and an unleveraged single name (RIOT); those are not what this strategy trades and the run was discarded.
 - **Method:** `tools/calibrate_stops.py`. Long entry at the open — crude, but uses no hindsight about which entries were good.
-- **Rule today:** −5% default stop applied identically to every instrument (§6).
+- **Rule at the time:** −5% default stop applied identically to every instrument.
 
 **Share of sessions a 5% stop would have been touched:**
 
@@ -133,7 +52,7 @@ Every entry moves through these states in order. It may be killed at any stage.
 | Comfortable <15% | GUSH 14% · FNGU 10% · ERX 5% · YINN 0% |
 
 - **Median adverse excursion spans 0.9% (YINN) to 6.6% (SOXL) — a sevenfold range.** No single number serves that. **Five of fourteen instruments would be stopped on 38% or more of sessions** by noise rather than by being wrong.
-- **SOXL's median adverse move (6.6%) is wider than the 5% stop itself**, and 1.5× it exceeds the 7% ceiling — so under §6, which declines any setup needing more room, **SOXL is structurally untradeable by this system.** Independent of it also costing $140.
+- **SOXL's median adverse move (6.6%) is wider than the 5% stop itself**, and 1.5× it exceeds the 7% ceiling — so under the current cap, which declines any setup needing more room, **SOXL is structurally untradeable by this system.** Independent of it also costing $140.
 
 **Proposed rule:** `stop = 1.5 × median adverse excursion`, floored at **2.5%** and capped at **7%**; exclude any instrument whose scaled stop exceeds the cap.
 
@@ -144,15 +63,15 @@ Every entry moves through these states in order. It may be killed at any stage.
 - Only SOXL is excluded. The floor exists because a stop inside the spread plus normal tick noise is a coin toss, not a stop.
 - **Sample:** 293 sessions, one month. **Hypotheses examined against this data: 1.**
 
-### EXP-008 · Stop quality and target reachability are INVERSE — the pair is mismatched everywhere — **IMPLEMENTED, closed**
+### EXP-008 · Stop quality and target reachability are INVERSE — the pair is mismatched everywhere — **LIVE, still true**
 
-> **Closed 2026-08-11.** The second half of this finding — that the flat +8% target was unreachable wherever the stop was comfortable — is now fixed too: the target is `clamp(2.0 x median MFE, 1.5 x stop, 12.0%)` per instrument, which cut effectively-unreachable instruments from **18 of 31 to 8 of 31**. Do not re-argue this experiment; measure the replacement.
+> **Closed 2026-08-11.** The second half of this finding — that the flat +8% target was unreachable wherever the stop was comfortable — is now fixed too, and the fix survives every rewrite since: `RULEBOOK.md`'s current B1 computes `target_pct = clamp(1.25 × median favourable, 1.5 × stop_pct, 12.0%)` per instrument. Note `target_pct` is informational-only as of v3.40 — no exit is target-triggered anymore (B4) — so this finding's original consequence (a fixed target being unreachable) matters less than it did, but the scaled-target concept itself is still exactly how B1 computes the number. Do not re-argue this experiment; the replacement has been live and stable for many rulebook versions.
 
-- **State:** ✅ `LIVE` — approved 2026-08-11, policy **v1.1**. Target now `2.0 x stop` per instrument; the flat +8–12% is retired (`RULEBOOK.md` §7).
+- **State:** ✅ `LIVE` — approved 2026-08-11, policy **v1.1**. Target now scaled per instrument (see above); the flat +8–12% is retired.
 - **Locked evaluation period:** 20 closed trades.
 - **Previously:** `TESTED` — real data · **the more important of the two findings**
 - **Same data and method as EXP-007.**
-- **Rule today:** −5% stop and a +8–12% target, both fixed, both applied to every instrument (§6, §7).
+- **Rule at the time:** −5% stop and a +8–12% target, both fixed, both applied to every instrument.
 
 **Sessions reaching +8% from the open, against the 5% stop-out rate. Both are upper bounds** — a daily bar cannot say whether the high came before the low.
 
@@ -163,186 +82,71 @@ Every entry moves through these states in order. It may be killed at any stage.
 
 - **The relationship is monotone and it is the finding.** Every instrument where +8% is achievable is an instrument where a 5% stop gets hit constantly. Every instrument where the stop is comfortable never reaches +8%. **The fixed stop/target pair is wrong on essentially all fourteen — one end or the other always is.**
 - Six of fourteen did not reach +8% once in 21 sessions: NRGU, NUGT, DUST, GUSH, ERX, YINN.
-- **Corroborates the only real trade.** GUSH exited at **+3.25%** on a stall. GUSH reached +8% on zero of 21 sessions, so that target was never available and the stall ladder was always going to be the exit.
-- **Consequence.** Scaling only the stop leaves the target unreachable on the calm names and scaling only the target leaves the stop broken on the volatile ones. **Both must scale together to the same volatility measure**, or the system keeps taking trades whose stated target is unreachable and whose stop is decorative.
+- **Corroborates the only real trade at the time.** GUSH exited at **+3.25%** on a stall (the stall ladder itself is retired as of v3.43 — see below). GUSH reached +8% on zero of 21 sessions, so that target was never available.
+- **Consequence.** Scaling only the stop leaves the target unreachable on the calm names and scaling only the target leaves the stop broken on the volatile ones. **Both must scale together to the same volatility measure.**
 - **Sample:** 293 sessions, one month. **Hypotheses examined: 1.**
 
 > **Do not read the favourable/adverse ratios as instrument quality.** NUGT looks asymmetric because gold miners rallied from 115 to 160 during this window; that is a fact about July–August 2026, not about NUGT. Entry-at-open has no edge, so direction over the sample contaminates any up-versus-down comparison.
 
-### EXP-009 · The exit rules are approximately VALUE-NEUTRAL on random entries
+### EXP-015 · Gate 1 is INVERTED for inverse vehicles — **RESOLVED, independently**
 
-> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
-> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
-> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
-> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
-> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+- **State:** ⚪ `KILLED` (as an open item) 2026-08-28 — **the underlying concern is resolved, just not by a change traceable to this entry.** Found at the 2026-08-13 09:30 observation: Gate 1 required the sector proxy positive at 9:30/9:45, which an inverse ETF's proxy can never satisfy by construction, silently removing SOXS/DUST/YANG/ZSL/SCO from the tradeable universe. **Current C1 does not have this hole**: real trades since (DUST/JDST/ZSL as "precious metals reversal," YANG as "China reversal," FAZ as "financials reversal" — see `RULEBOOK.md` E5's live logs) evaluate the *vehicle's own* self-referencing day change, not the raw underlying sector proxy's move — exactly the polarity-aware fix this entry proposed. Whether that was a deliberate fix or fell out of the sector-first/leveraged-priority research rewrite (v3.41) isn't recorded; either way, the gap this entry found does not exist in the live rule today.
+- Original finding, unedited: Gate 1 (§4, old numbering) required the sector proxy to be **positive at 9:30, positive at 9:45**, and not lower at 9:45. An inverse ETF's entire thesis is that its proxy **falls**. Read literally, an inverse vehicle could never pass Gate 1. On Aug 13 the single most decisive move on the board was GDX **−2.47%** at 9:31, holding **−2.50%** at 9:46 — a clean, sustained, high-conviction directional move. Its vehicle, DUST, was class priority 1 and affordable at ~$42, and was unreachable on a technicality rather than a market judgement.
+- **If this specific self-referencing evaluation is ever removed from C1 in a future rewrite, re-open this concern** — the failure mode (inverse vehicles structurally unbuyable) is real and was hit on real tape once already.
 
+### EXP-014 · Gate 1 has no minimum margin, and a foreign-market gap is not a trend — **KILLED, partially superseded**
 
-- **State:** `TESTED` — real data · **the most consequential result so far**
-- **Opened:** 2026-08-11 · **Method:** `tools/calibrate_stops.py`, 293 sessions, 14 leveraged instruments.
-- **Question:** applied to entries with no selection edge, do the exit rules make money?
+- **State:** ⚪ `KILLED` 2026-08-28 — dead references (§4, old numbering; no replacement tooling to test the margin question quantitatively). **Partially addressed by the current rule, not fully.** Two sub-findings from the Wed 2026-08-12 session (ended flat, no P&L):
+- **(1) No minimum margin.** Both surviving proxies passed Gate 1 on Aug 12 by noise-sized margins (EWY +2.4bp, SMH +0.6bp) — a gate meant to confirm a *holding* trend passed on a tape that had gone dead flat. **Current C1's late-entry clause requires the reading to be *strictly higher* than the 9:30 baseline (real margin), but the original 9:40 pass/fail test itself still only requires "not below"** — so the initial-entry version of this concern is not fully resolved. Worth re-raising quantitatively if a near-zero-margin 9:40 pass produces a bad trade.
+- **(2) A foreign-market gap can be a fully spent move.** KORU's entire +13.5% on Aug 12 was an opening reprice of a KOSPI session that closed ~7 hours earlier — no further Korean price discovery was available. C10's `session_high`/`session_low`/giveback-ceiling logic (added since) catches a *faded* gap-and-go, but not this specific argument (a gap can be "spent" even while still holding, if its catalyst already finished). Not the same mechanism, so not fully superseded either.
+- **Not proposing a foreign-ETF ban** — KORU/YINN/YANG have genuine US-session price discovery too; the narrow point is that a gap repricing an already-closed session isn't by itself evidence of a live trend.
 
-| Scenario | n | % profitable | Expectancy | Profit factor |
-|---|---|---|---|---|
-| Current rules — 5% stop, 8% target | 293 | 48.5–48.8% | +0.01 to +0.02R | 1.04–1.07 |
-| Proposed — scaled stop, target 2× stop | 272 | 48.5–48.9% | +0.02 to +0.03R | 1.06–1.09 |
+### EXP-016 · The already-extended check — a pre-entry test for an unreachable target — **KILLED, premise weakened**
 
-Bounds are pessimistic (assume the stop was touched first whenever both were) and optimistic (target first). The truth is between and **cannot be narrowed with daily bars.**
+- **State:** ⚪ `KILLED` 2026-08-28 — the underlying worry (buying a spent gap with no reachable target left) is now much less consequential than when this was written, because **no exit is target-triggered as of v3.40** — the chandelier trail (B2) locks in gains continuously regardless of any fixed target, so "is the target still reachable from here" no longer gates whether a late entry can produce a good outcome the way it did under the old fixed +8% target. C7's `mfe_to_target` (instrument-level reachability) and C10 (momentum/reversal, added since) together cover most of what this entry was reaching for, from a different angle.
+- Original finding, unedited: FNGU opened at $32.750 and topped at $34.000; Gate 1's mandatory wait meant the earliest legal fill was 09:45, filled 09:48:39 at $33.5999 having watched +2.60% of a +3.82% move go past. At entry the instrument was already +4.38% on the day against a median daily MFE of 2.405% — 1.82× its typical whole-day excursion before entry was permitted. The scaled target (+4.81%) was arithmetically out of reach from that fill. True MFE that trade was +1.19%, exit −0.059% — no rule banked the sub-1% move.
+- **If fixed-target exits are ever reintroduced, re-open this** — the mechanism (`day_change_at_entry / median_mfe_pct >= ~1.5` flags an unreachable target from *today's* fill, distinct from `mfe_to_target`'s instrument-general reachability) is still a reasonable, cheap pre-entry check.
 
-- **At n=293 the standard error on a 48.5% rate is ±2.9%. This is indistinguishable from a coin flip, and expectancy is indistinguishable from zero.**
-- **This is the correct and expected result, not a failure.** Entry at the open has no edge by construction. A value-neutral outcome means **the exit machinery neither creates nor destroys value** — it bounds losses without generating profit.
-- **The conclusion that matters:** every bit of hypothesised edge in this system rests on the **entry gates** — sector leadership, breadth, a nameable catalyst, trend over chop. Those are the components that **cannot be backtested** (§ no structured historical news, and the gates need judgment), and they have a sample size of **one closed trade.**
-- **Do not read this as "the strategy is break-even."** It says nothing about the strategy. It says the exits are sound plumbing and the entries are entirely unvalidated.
+### EXP-013 · preflight's class-priority tripwire is blind to 1x single-stock names — **KILLED**
 
-**Second-order finding, and it corrects how EXP-007 should be sold.** The proposed scaled stop improves expectancy by roughly **+0.01R** — noise. So volatility-scaling the stop is a **risk-consistency fix, not a return fix**: it makes R mean the same thing across instruments and stops SOXL-class names being stopped by noise. It should be argued on those grounds and not as a profit improvement, which the data does not support.
+- **State:** ⚪ `KILLED` 2026-08-28 — `preflight.py` and `limits.json`, the tools this entry's fix targets, no longer exist. **The specific blind spot (a lookup map that only lists leveraged single-stock ETFs, so plain 1x names like RIOT/MARA/CLSK got no class-priority warning) has no equivalent in the current C4** (Instrument priority), which ranks by whether an affordable leveraged wrapper exists for the mover, not by class-priority map membership — a different design that doesn't have this failure mode.
 
-### EXP-011 · Cadence — FIRST REAL EVIDENCE, and it is nearly irrelevant
+### EXP-012 · Should the trail be 0.4× stop instead of 1.0× median MAE? — **KILLED, mechanism replaced**
 
-> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
-> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
-> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
-> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
-> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+- **State:** ⚪ `KILLED` 2026-08-28 — moot. B2's trail has been fully redesigned twice since this was written (v3.43: stepped ratchet → continuous average-based; v3.44: average-based → chandelier off `run_high`, discount `2 × stall_threshold_pct`). Neither "0.4× stop" nor "1.0× median MAE" describes anything in the current rule, and `tools/replay.py` no longer exists to test a trail multiplier against history the way this entry proposed. See `RULEBOOK.md` B2 and Current State (v3.44) for how the discount multiplier question was actually settled — backtested 1×–5× against real trade data, landed on 2× off `run_high`.
 
+### EXP-010 · The stall ladder is a LOSS LIMITER below entry, not only a gain-banker — **KILLED, mechanism retired**
 
-> **Renumbered 2026-08-11.** This was filed as a second EXP-006, colliding with the open experiment above. Two entries sharing an ID makes both unciteable.
+- **State:** ⚪ `KILLED` 2026-08-28 — the stall-count ladder this entry is about was retired entirely in v3.43 (B3). The finding (a stalled position below entry gets cut before the stop, at a smaller loss than −1.0R) doesn't have an equivalent question under the current continuous chandelier trail, which tightens every checkpoint regardless of stall count.
 
-- **State:** `TESTED` — first replay evidence · **n = 1 session, so directional only**
-- **Method:** `tools/replay.py` on `data/bars_5min_GUSH_2026-08-05.csv`. Models the real structure: the resting stop is checked **continuously** because it is an actual broker order; target, stall count and ratchet only at **checkpoint boundaries**; stall windows are 30-minute market-time windows independent of the cadence.
+### EXP-011 · Cadence — FIRST REAL EVIDENCE, and it is nearly irrelevant — **KILLED, superseded by later cadence changes**
 
-| Cadence | Exit | Result |
-|---|---|---|
-| 10 min | 18:35, stall ×3 | −3.02% / −0.60R |
-| **15 min (current)** | 18:30, stall ×3 | **−2.91% / −0.58R** |
-| 30 min (old) | 18:45, stall ×3 | −3.07% / −0.61R |
+- **State:** ⚪ `KILLED` 2026-08-28 — `tools/replay.py` no longer exists. The cadence question itself was later resolved by a *different* kind of evidence than this entry used (counterfactual replay of one session): v3.43 shortened the trading day to 9:00–12:30 and tightened the grid to 15 minutes based on real multi-week trade P&L showing profit concentrated in the first 1–2 hours of the day — live outcome data, not a replay study. This entry's finding (cadence barely moves the exit because the stall clock ran on market time) is also moot since the stall clock it describes no longer exists.
 
-- **Total spread across a 3× range of cadence: 0.16 percentage points, or 0.03R.** All three took the same exit for the same reason, minutes apart.
-- **This is what the decoupling was for.** Because the stall clock runs on market time, tripling the wake rate does not change the exit — it only shifts *when* the same decision gets executed. Direct support for refusing uniform 10-minute cadence (§2).
-- **Sample: one session.** Not evidence of a general result. But the *mechanism* is now demonstrated rather than argued.
+### EXP-009 · The exit rules are approximately VALUE-NEUTRAL on random entries — **KILLED, superseded architecture**
 
-### EXP-010 · The stall ladder is a LOSS LIMITER below entry, not only a gain-banker
+- **State:** ⚪ `KILLED` 2026-08-28 — `tools/calibrate_stops.py` and the exit rules this measured (flat stall windows, old ratchet) no longer exist. The core conclusion — that the exit machinery's job is to bound losses, not generate edge, and that all hypothesised edge lives in the entry gates — is still a reasonable prior but hasn't been re-measured against the current chandelier trail; would need fresh evidence, not a revival of this entry.
 
-> ### ⚠ STALE AS OF 2026-08-11 — computed under exit rules that no longer exist.
-> The stall is now measured at the **checkpoint price** with **no volume condition**, the target is
-> **per-instrument** rather than a flat +8%, and the ratchet has a **new half-risk step**. Every number
-> below was produced by `replay.py` before those changes. **The conclusions may still hold; the figures
-> do not.** Re-run before citing, and do not treat these as evidence for or against the current rules.
+### EXP-006 · Does wake cadence change outcomes? — **KILLED, superseded**
 
+- **State:** ⚪ `KILLED` 2026-08-28 — see EXP-011's closing note; cadence has since been changed twice (30min→15min in v3.43) based on real trade timing data, answering the practical question this entry asked by a different route than the counterfactual-replay method it proposed. `tools/replay.py` no longer exists to run that method anyway.
 
-- **State:** `TESTED` · **arose from a rulebook error this replay exposed**
-- The rules claimed the three-window sell "can only ever cost upside — never a loss," because the stop would already be at breakeven. **False.** The ratchet only engages at +2–3%; a position that goes down from entry and stalls has no breakeven stop, and the sell closes it at a loss. **Corrected in `OPERATIONS.md` §8.1** as a factual fix, not a policy change.
-- **The rule survives on better grounds.** In the same session the −5% stop *would* have been hit — GUSH closed −5.5% below entry. The stall exit took **−0.58R instead of −1.0R.**
-- **So the ladder does two different jobs**, and conflating them hid the error: above +2–3% it banks a gain the ratchet already protected; below entry it cuts a dead trade before the stop does. The second job is arguably the more valuable and was undocumented.
-- **Open question this raises:** if the ladder reliably exits red positions near −0.6R rather than −1.0R, then the *effective* average loss is smaller than the stop implies, which changes the expectancy arithmetic in §14 in our favour. **Needs many more sessions before believing it** — one trade proves nothing, and the ladder could equally fire at −4.5% on a different tape.
+### EXP-005 · Is 30 minutes the right stall window? — **RETIRED 2026-08-11, question dissolved; now KILLED outright**
 
-### EXP-013 · preflight's class-priority tripwire is blind to 1x single-stock names
+- **State:** ⚪ `KILLED` 2026-08-28 (previously `RETIRED`, its question already dissolved before the stall ladder itself was retired in v3.43). Kept as a two-line pointer rather than the original entry: the stall window / wake cadence distinction this asked about no longer applies to anything live.
 
-- **State:** `PROPOSED` · found at the 2026-08-12 09:00 checkpoint while ranking the profiled universe.
-- `preflight.py` fires the single-stock underlying gate AND the class-priority warning off one lookup:
-  `limits.json -> single_stock_leveraged.map`. That map only lists **leveraged** single-stock ETFs.
-- **RIOT, MARA, CLSK** are plain 1x equities. They are still class-priority 3 (single-stock), and they
-  are on the watchlist and affordable — but preflight prints **no** class-priority warning for them,
-  so an entry could take the lowest-priority class with the tripwire silent. The underlying gate
-  correctly does not apply (the underlying *is* the instrument), but the priority warning should.
-- **Fix:** derive the priority class from `data/vol_profile.csv`'s instrument class (`single_1x`,
-  `single_2x`) rather than from map membership, and keep the map for the underlying-vs-sector gate only.
-- **Deliberately NOT changed at the 09:00 checkpoint.** Editing the tripwire 45 minutes before an
-  entry decision is the same mistake as the fractional-stop episode: verify capability on a calm slot,
-  not against a clock. Scheduled for the 20:00 rule-change slot.
-- **Bounded risk today:** the three affected names rank 27, 29 and 30 of 31 on `mfe_per_stop`, so the
-  ranking rule already puts them last. The tripwire gap is real but is not load-bearing this session.
+### EXP-004 · Is stated confidence calibrated? — **KILLED, data no longer collected**
 
-### EXP-014 · Gate 1 passes on a dead-flat reading, and a foreign-market gap is not a trend
+- **State:** ⚪ `KILLED` 2026-08-28 — the `confidence` 1–5 field this asks about isn't part of the current `archive/trades.csv` schema; nothing has been collecting it. Would need a new field added deliberately before this could be re-opened.
 
-- **State:** `PROPOSED` · from the Wed 2026-08-12 session, which ended FLAT. **No outcome data — nothing was traded.**
-- **Two observations, one underlying issue.**
-- **(1) Gate 1 has no minimum margin.** It requires the 9:45 sector reading to be "not below" the 9:30
-  one. On Aug 12 both surviving proxies passed on noise: EWY +4.54% -> +4.57% (**+2.4bp**) and
-  SMH +2.66% -> +2.66% (**+0.6bp**). A tape that gapped and then went completely flat for fifteen
-  minutes satisfied a gate whose stated purpose is to establish that a trend is *holding*. The gate
-  did its literal job and told us nothing.
-- **(2) A foreign-market ETF's gap can be a fully spent move.** KORU was the only affordable
-  class-priority-2 vehicle expressing the day's leading theme, and its entire +13.5% was an opening
-  reprice of a KOSPI session that had closed roughly seven hours before our open. There was no
-  further Korean price discovery available during our session. §4 demands "continuation, not
-  prediction"; buying 3x into a gap whose catalyst has already finished is closer to the latter.
-- **What I am NOT proposing.** Not a ban on foreign-market leveraged ETFs — Asian markets are always
-  shut during US hours, so that would delete KORU, YINN and YANG from the universe on a technicality,
-  and those ETFs do have genuine US-session price discovery. The narrow version is what matters:
-  *a gap that reprices a closed session is not by itself evidence of a live trend.*
-- **DELIBERATELY NOT CHANGING ANY RULE.** Adding a minimum margin to Gate 1 would be tuning a
-  threshold against a **single session in which no trade was taken** — there is no P&L, not even a
-  bad one, to fit to. That is curve-fitting in its purest form, and §17's locked evaluation period
-  binds: the effective sample is 1 trade against ~14 rule changes on Aug 11. Filing the observation
-  is the correct output; supplying the parameter is not.
-- **What would make this decidable:** count sessions where Gate 1 passes with a margin inside
-  roughly +/-5bp, and record what the sector did over the following hour. If a near-zero-margin pass
-  is no better than a coin flip while a clearly positive one is not, the gate needs a margin. That
-  needs many sessions, and the RESEARCHER is currently SUSPENDED, so it is not collectable today.
+### EXP-003 · Does catalyst age predict anything? — **KILLED, revivable if volume grows**
 
-### EXP-015 · Gate 1 is INVERTED for inverse vehicles, making five universe names unbuyable
+- **State:** ⚪ `KILLED` 2026-08-28 — the specific `age_min`/`source_time_confidence` fields this names don't exist, but `archive/trades.csv` does carry a `catalyst_age_min` field today (mostly unfilled in practice). **Worth re-opening once trade volume is large enough** — at 15 trades total, nowhere close.
 
-- **State:** `PROPOSED` · found at the 2026-08-13 09:30 observation. **A logic hole, not a threshold.**
-- Gate 1 (§4) requires the sector proxy to be **positive at 9:30, positive at 9:45**, and not lower at
-  9:45. An inverse ETF's entire thesis is that its proxy **falls**. So the gate demands the exact
-  condition under which the instrument loses money.
-- **Read literally, an inverse vehicle can never pass Gate 1.** That silently removes five names from
-  the permitted universe: **SOXS · DUST · YANG · ZSL · SCO**.
-- **This is not academic.** On Aug 13 the single most decisive move on the board was GDX **−2.47%** at
-  9:31, holding **−2.50%** at 9:46 — a clean, sustained, high-conviction directional move, and the
-  only proxy going anywhere at 9:31. Its vehicle, DUST, is **class priority 1** and affordable at ~$42.
-  SOXS ranked **2nd of 31** on `mfe_per_stop` that morning. Both were unreachable on a technicality
-  rather than on a market judgement.
-- **Likely fix (NOT yet applied):** evaluate Gate 1 against the proxy's move *in the direction the
-  instrument profits from* — for a long vehicle the proxy must hold positive; for an inverse vehicle
-  the proxy must hold **negative**, and the 9:45 reading must not be **above** the 9:30 one. Same
-  three-part structure, sign flipped by instrument polarity. `instrument_class` already carries the
-  polarity (`*_inverse`), so it is derivable rather than a new field.
-- **Open question the fix must answer**, and the reason it is not a one-line change: an inverse ETF
-  bought into a falling sector is by construction **not** "continuation of an established move" in the
-  sector — it is continuation of a *decline*. §4's continuation-not-prediction rule needs to be read
-  against the instrument, not the proxy, or the polarity fix will pass trades the spirit of §4 refuses.
-- **Deliberately deferred to the 20:00 rule slot.** Flagged at 09:30, fifteen minutes before an entry
-  decision; editing an entry gate on that clock is the fractional-stop mistake and the EXP-013
-  mistake. It is recorded here so the finding survives a context compaction.
+### EXP-002 · Do catalyst categories differ in hit rate? — **KILLED, revivable if volume grows**
 
-### EXP-016 · The already-extended check — a pre-entry test for an unreachable target
+- **State:** ⚪ `KILLED` 2026-08-28 — same as EXP-003. `archive/trades.csv` does carry `catalyst_type` today, so the data this needs is closer to hand than when written, but 15 total trades across many catalyst types is nowhere near the ~15-observations-per-bucket this entry itself said was the minimum. **Revisit once real volume exists.**
 
-- **State:** `PROPOSED` · from the FNGU trade, 2026-08-13. **Sample of one. Do not implement on this.**
-- **The observation.** FNGU opened at $32.750 and topped at $34.000. Gate 1's mandatory 15-minute
-  wait meant the earliest legal fill was 09:45; I filled 09:48:39 at **$33.5999**, having watched
-  **+2.60% of a +3.82% move** go past. At entry the instrument was already **+4.38% on the day**
-  against a median daily MFE of **2.405%** — it had delivered **1.82x its typical whole-day
-  excursion before I was permitted to buy**. The profile's target (+4.81%, i.e. $35.216) was not
-  unlikely from that fill; it was arithmetically out of reach.
-- **What the trade actually produced:** true intraday MFE **+1.19%** ($34.000 at 10:35), true MAE
-  −0.44%, exit −0.059%. Breakeven trigger (+2.30%) never reached, so the ratchet never engaged and
-  there was never a protected gain. **No rule in the system banks a sub-1% move** — correctly — which
-  means a late entry into a spent move has no profitable exit available to it at all.
-- **Proposed test, applied BEFORE entry so it cannot be fitted to an outcome:**
-  `day_change_at_entry / median_mfe_pct >= ~1.5` -> the scaled target is unreachable from here.
-  Either decline, or state at entry that this is a trail-or-stall exit with no reachable target and
-  size the expectation accordingly. Both inputs already exist; nothing new needs collecting.
-- **Relationship to `mfe_to_target`.** That ratio asks whether the target is reachable *for the
-  instrument in general*. This asks whether it is reachable *from today's entry price* — the same
-  question shifted from the instrument to the fill. FNGU passed the first (2.10, comfortably under
-  the 2.5 line) and would have failed the second.
-- **The uncomfortable implication, which the governor should weigh, not me.** This is really a
-  measurement of what **Gate 1 costs**. The gate exists to avoid buying a gap that fades, and on
-  Aug 12 it correctly kept us out. But it structurally enters after the first fifteen minutes, and
-  on a gap-and-go day that is most of the move. The honest framing is not "Gate 1 is wrong" but
-  "Gate 1's premium is now measurable, and on some tapes it exceeds the whole remaining move."
-  **Deciding that trade-off is a governor call.**
-- **Secondary finding, logged not proposed.** The half-risk ratchet trigger ($33.986) was touched
-  intraday at $34.000 but missed at the 10:42 checkpoint reading of $33.890. The ratchet carries the
-  same checkpoint-only discretisation deliberately chosen for the stall rule. **It changed nothing
-  today** — a $33.06 stop was never threatened — and it is recorded only so the property is known.
-- **NOT IMPLEMENTED, deliberately.** One losing trade, and §17's locked evaluation period binds:
-  the sample is 2 closed trades against ~14 rule changes on Aug 11. Changing an entry rule on the
-  day a trade lost is curve-fitting even when the arithmetic looks clean.
+### EXP-001 · Stall exit at 3 checks or 4? — **KILLED, mechanism retired**
 
----
-
-## Closed
-
-*None yet.*
+- **State:** ⚪ `KILLED` 2026-08-28 — the three-stall-forces-a-sale rule this asks about was retired in v3.43 along with the rest of the stall-count ladder. No equivalent question under the current continuous trail.
