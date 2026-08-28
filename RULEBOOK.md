@@ -542,6 +542,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:00 management (flat) — no trade, SBSW came closest yet.** C3 passed SBSW/SOLS/ESTC/GAP/UMC — RGNX faded back under +0.75%, dropped. Baseline unchanged (still the 10:17:21 ET AFRM exit price, no entry/exit since). **SBSW cleared all of C10 this time**: leg 1 rising ($12.34→$12.495 bar_close), leg 2 a real bounce off the $12.185 session low, and **leg 3's giveback dropped to 59.8%** (was 76.9% at 10:45) — back under the 65% ceiling as price recovered further. SOLS/ESTC/GAP/UMC still failed leg 1 outright. **SBSW then failed C11**, the chop filter: ER 0.154 over the trailing 60 minutes, well under the 0.25 minimum for this band — real range, not real net progress. No candidate cleared the full stack. Correctly flat. Next check: 11:15.
 
+**11:15 management (flat) — no trade.** C3 passed SBSW/RGNX/SOLS/ESTC/GAP/UMC (RGNX back above threshold). C10 leg 1 vs. the still-fixed baseline: SBSW and RGNX both still rising, SOLS/ESTC/GAP/UMC still falling. **SBSW's giveback ticked back over the ceiling: 66.7%** (was 59.8% at 11:00) as the bounce stalled around $12.45–12.50 without a fresh push — declined. RGNX's giveback stayed extreme at 84.9%. No candidate cleared the full stack. Correctly flat. Next check: 11:30.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
