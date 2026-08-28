@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.43.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.44.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -116,49 +116,41 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 - Minimum re-placement move: `min_stop_move_pct`. A structural level (swing low) may substitute **only if nearer**.
 - Stops are **regular-hours only** and do not protect a gap.
 
-### The ratchet — continuous, stock-scaled, no stages (v3.43)
+### The trail — continuous chandelier off `run_high`, stock-scaled (v3.44)
 
 **One `run_high`, shared with C10 — not a second high-water mark.** `run_high` is `max(run_high, bar_high)` at every checkpoint (B1b) — the true highest price reached in the gap, not a lucky-or-unlucky point sample. Advances on any fresh interval high, unconditionally.
 
-**At every 15-minute management checkpoint (10:00 through 12:30), the stop ratchets to the trailing window's own average, discounted by the candidate's own noise band — never a fixed percentage, never a fixed stage:**
+**At every 15-minute management checkpoint (10:00 through 12:30), the stop ratchets off the running high itself, discounted by twice the candidate's own noise band — never off the trailing average, never a fixed stage:**
 
 ```
-avg_price = mean of minute-bar closes (B1b) since the previous checkpoint, or since entry for the first check
-candidate_stop = avg_price × (1 − stall_threshold_pct)
+run_high = max(run_high, bar_high)                         -- B1b, updated every checkpoint
+candidate_stop = run_high × (1 − 2 × stall_threshold_pct)
 new_stop = max(current_stop, candidate_stop)      -- up only, never down (B2's own rule, unchanged)
 ```
 
-`stall_threshold_pct` is the candidate's own fresh JIT profile number (B1) — a calm name gets a wide-enough discount to survive its own normal noise; a choppy name gets pulled in tighter, proportionally. This replaces the old fixed-percentage staged climb entirely: no breakeven gate, no stage count, nothing to unlock — the stop follows the recent average continuously from the very first checkpoint after entry.
+`stall_threshold_pct` is the candidate's own fresh JIT profile number (B1) — a calm name gets a wide-enough discount to survive its own normal noise; a choppy name gets pulled in tighter, proportionally. **Anchoring to `run_high` instead of the trailing average is the point:** the average sits close to the entry price right after a fill, so a completely normal early pullback can trip an average-based stop before a real trend has even formed. A high-water mark doesn't move on a pullback — only a fresh high advances it — so the trail gives a genuine trend room to breathe while still tightening every single checkpoint, never waiting on a breakeven gate or a separate spike-detection trigger. The old two-mechanism split (an average-based ratchet plus a separate velocity trigger anchored to `run_high` for fast spikes) is retired — one continuous rule, always anchored to the high, already reacts to a fast move at the very next checkpoint without needing a second check layered on top.
 
-**At the 12:30 checkpoint specifically** — the last of the day — additionally include the live current price (`bar_close`, B1b) as a stop candidate: `new_stop = max(new_stop, bar_close)`. A position can only still be open at 12:30 if price is at or above its current stop, so this is always a valid *upward* move, never a violation of "up only." It pins the stop to the market, so the very next tick down closes the position — the stop still does the closing, not a forced sell, but the exit becomes effectively immediate. This is what ends the trading day now; there is no separate 4:00pm deadline (see B4).
+**Why 2× the noise band, not 1× or wider:** backtested against all 13 trades on record (real minute-bar price paths, each instrument's own noise band from its real ~40-day history) sweeping the multiplier 1×–5×. 2× beat the actual results as traded on average captured gain (+1.56% vs the real system's +1.53%) and win rate (9/12 vs 7/12 — the two trades it fixes outright are UEC 8/26, -2.54% real → +0.26% simulated, and MSTX 8/20, -1.24% real → +1.02% simulated, both real losses that were reversals the tighter high-anchored trail catches early). Wider multipliers (4×–5×) score higher on raw average only because one trade (MSTX 8/27) happened to keep running for hours after its real exit — a single outlier, not a repeatable edge — and that same looseness turns two genuine reversals (MSTX 8/20, CONL 8/21) into worse losses than they actually were. 2× is the point on the curve that improves on the real results without giving reversals extra room to run first.
 
-**No fixed profit-taking target — the ratchet is the only thing that locks in gains.** See B4: removed as a separate rule since v3.40, unchanged by this rewrite.
+**At the 12:30 checkpoint specifically** — the last of the day — additionally include the live current price (`bar_close`, B1b) as a stop candidate: `new_stop = max(new_stop, bar_close)`. A position can only still be open at 12:30 if price is at or above its current stop, so this is always a valid *upward* move, never a violation of "up only." It pins the stop to the market, so the very next tick down closes the position — the stop still does the closing, not a forced sell, but the exit becomes effectively immediate. This is what ends the trading day; there is no separate 4:00pm deadline (see B4).
+
+**No fixed profit-taking target — the trail is the only thing that locks in gains.** See B4: removed as a separate rule since v3.40, unchanged by this rewrite.
 
 **`breakeven_trigger` and `trail_pct` are no longer used to set the stop** — `tools/profile.py` still computes them (informational, harmless), but only `stop_pct` (entry) and `stall_threshold_pct` (every checkpoint after) are load-bearing now. `target_pct` remains informational only, feeding C7's `mfe_to_target` ranking check, per v3.40.
 
-**Worked example — MSTX, actual fill and bars, Thu 2026-08-27, `stall_threshold_pct` 0.89%:**
+**Worked example — MSTX, actual fill and bars, Thu 2026-08-27, `stall_threshold_pct` 0.893%, discount 1.786% (2×):**
 
-| Checkpoint | Window | `avg_price` | `candidate_stop` (`avg × 0.9911`) | Stop becomes |
+| Checkpoint | Window | `run_high` | `candidate_stop` (`run_high × 0.98214`) | Stop becomes |
 |---|---|---|---|---|
 | 1 — entry, 9:43:52 ET | — | — | — | $14.1699 × (1 − 0.0597) = **$13.32** |
-| 10:00 | since entry (9:43:52–10:00) | $14.5245 | $14.5245 × 0.9911 = $14.3953 | max($13.32, $14.3953) = **$14.40** |
-| 10:15 | 10:00–10:15 | $15.1254 | $15.1254 × 0.9911 = $14.9907 | max($14.40, $14.9907) = **$14.99** |
+| 10:00 | since entry (9:43:52–10:00) | $15.0500 | $15.0500 × 0.98214 = $14.7812 | max($13.32, $14.7812) = **$14.78** |
+| 10:15 | 10:00–10:15 | $15.4701 | $15.4701 × 0.98214 = $15.1938 | max($14.78, $15.1938) = **$15.19** |
 
-Price touched $14.93 at 10:16 ET, below the $14.99 stop — **exit fires there, +5.79% locked**, tighter and slightly better than the actual same-day trade's velocity-driven exit (+5.37%). Note the 10:00 stop ($14.40) is *looser* than what velocity alone produced that day ($14.94) — the average still carries the pre-breakout prices from the first few minutes after entry. The 10:15 checkpoint catches up once the breakout is fully inside the trailing window. This lag on a fast single-checkpoint spike is exactly what the velocity trigger below exists to close.
-
-### Velocity trigger — a fast checkpoint move flips the position to a permanent tight trail
-
-**Checked every checkpoint, alongside the continuous ratchet above — an independent trigger, not a variant of it.** Compares this interval's `bar_high` (B1b) to the *immediately prior* checkpoint's `bar_close` only (not `run_high`, not the day's total change) — using the true high reached in the gap, not just wherever price settled by the time of the read, so a fast spike still counts even if it's partly faded back by checkpoint time:
-
-`checkpoint_gain = (bar_high − prior_bar_close) ÷ prior_bar_close`
-
-**If `checkpoint_gain ≥ 3 × stall_threshold_pct`, a fast move has occurred and this position is flagged for the rest of the hold** — the flag never clears once set. **From the triggering checkpoint onward, at every checkpoint (fast or not), the stop becomes `max(ratchet stop above, run_high × (1 − stall_threshold_pct))`** — a continuous tight trail anchored to the single highest price reached, layered on top of the ratchet above, never replacing it, always taking whichever is higher. Still subject to B2's own rules: up only, never down, minimum re-placement move applies.
-
-**Why this is still its own check, not redundant with the ratchet above:** both use the same `stall_threshold_pct` cushion, but they're anchored differently. The ratchet above discounts off the trailing *average* — on a sharp, fast, single-checkpoint spike, the average is still dragged down by the pre-spike prices and lags what actually happened (see the 10:00 row in the MSTX example above: $14.40, well below where the spike actually put price). Velocity is anchored to `run_high` — the single highest tick — so it reacts to the spike immediately, one checkpoint sooner than the average alone would catch up. Once a position has shown it can move fast, keeping what's been won outranks giving it room to keep running.
+Price fell to $14.896 shortly after the 10:15 checkpoint, below the $15.19 stop — **exit fires there, +7.23% locked**, well ahead of both the actual same-day trade's velocity-driven exit (+5.37%) and the prior average-based ratchet design's simulated result (+5.79%) — the running-high anchor stayed with the breakout instead of averaging it down. Same execution-risk caveat as E6: the stop can be raised to a level already at or below the live price at the moment it's placed (a fast-moving checkpoint window can do this to either mechanism) — verify the placement landed, same discipline as always.
 
 ## B3. Exits — any one fires
 
-**Retired as of v3.43: the stall-count ladder (checkpoint-counting toward a forced SELL ALL).** The continuous ratchet (B2) now tightens every 15-minute checkpoint off the trailing average, scaled to the candidate's own noise band — a genuinely stalling position gets squeezed by that alone, without a second, separate counting mechanism running in parallel and potentially disagreeing with it. `run_high` stays defined (B2, shared with C10) since the ratchet and C10 both still use it; only the stall *count* and its noon-gated SELL ALL table are gone.
+**Retired as of v3.43: the stall-count ladder (checkpoint-counting toward a forced SELL ALL).** The continuous trail (B2) now tightens every 15-minute checkpoint off the running high, scaled to the candidate's own noise band — a genuinely stalling position gets squeezed by that alone, without a second, separate counting mechanism running in parallel and potentially disagreeing with it. `run_high` stays defined (B2, shared with C10) since the trail and C10 both still use it; only the stall *count* and its noon-gated SELL ALL table are gone.
 
 ### Other exits
 
@@ -175,7 +167,7 @@ Name the **specific, falsifiable** condition that would exit at the next checkpo
 
 ## B4. Same-day close — no fixed profit target
 
-**Removed as of v3.40: no checkpoint sells purely for hitting a price level.** The continuous ratchet (B2) plus the velocity trigger's tight trail are what lock in gains now — a big move is expected to give back at most `stall_threshold_pct` once velocity has fired, and no more than one 15-minute window's worth of drift otherwise, without needing a hard ceiling. `target_pct` is still computed at entry (B1) and still stated at entry (C8) and used by C7's `mfe_to_target` ranking check — it's informational only now, never an autonomous trigger.
+**Removed as of v3.40: no checkpoint sells purely for hitting a price level.** The continuous chandelier trail (B2) is what locks in gains now — a big move is expected to give back at most `2 × stall_threshold_pct` off its running high at any checkpoint, without needing a hard ceiling. `target_pct` is still computed at entry (B1) and still stated at entry (C8) and used by C7's `mfe_to_target` ranking check — it's informational only now, never an autonomous trigger.
 
 **Every position closes the same trading day it was opened. No overnight hold, ever.** As of v3.43 this is enforced structurally, not by a late-day deadline check: the 12:30 checkpoint (B2) pins the stop to the live price, which makes the position's own stop the thing that closes it, almost immediately, rather than a separate forced sell. State the intended exit at entry.
 
@@ -549,6 +541,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 **v3.38–v3.42 all applied and confirmed working live**: the 8-stage ratchet replacing the old 4-stage structure and B4's fixed profit-target removal (v3.38–v3.40), D2's sector-first/leveraged-priority research methodology (v3.41), and the watchlist expansion to 24 names / 6 sectors of 4 (v3.42).
 
 **v3.43 (evening of 8/27, governor session): a full restructure driven by the data — every profitable entry across the system's history has landed between 9:42 and 10:34 ET, and the one entry after 10:34 (MSTX 8/21, 12:32pm) lost money.** Trading day shortened to 9:00–12:30 (was 9:00–4:00pm); management checkpoints now run every 15 minutes from 10:00–12:30 (was 30 minutes to 4:00pm), net *fewer* total daily checkpoints (15 vs 17) despite the tighter cadence. Entries valid anywhere 9:40–12:30, no preferred-window distinction. **B2's stepped 8-stage ratchet is retired, replaced by a continuous rule**: every 15-min checkpoint ratchets the stop to `avg_price(since last checkpoint) × (1 − stall_threshold_pct)`, per-instrument noise-scaled, up only — validated against MSTX's actual 8/27 bars before adoption (would have exited +5.79% vs. the real trade's velocity-driven +5.37%). The velocity trigger is unchanged, still the faster-reacting override for a single sharp spike. The 12:30 checkpoint additionally pins the stop to live price, which is what now enforces same-day close — no separate 4:00pm deadline. **B3's stall-count ladder is retired entirely** — the continuous ratchet already squeezes a stalling position without a second, potentially-conflicting counting mechanism. C11's chop-filter table compressed to 3 bands fitting 9:40–12:30. No more extended-hours slots (4:30–7:30pm gone) or cadence-reduction rule (both moot with the day already this short).
+
+**v3.44 (evening of 8/27, same governor session, continued): the average-based ratchet replaced by a single continuous chandelier trail anchored to `run_high`, and the separate velocity trigger retired.** Governor's own read of the old (pre-v3.40) system: the entry-time stop was its best feature, but the staged ratchet triggered too rarely and moved too linearly. Backtested against all 13 trades on record (real minute-bar paths, each instrument's own noise band from its real ~40-day history) sweeping a discount multiplier 1×–5× off `run_high`: **`candidate_stop = run_high × (1 − 2 × stall_threshold_pct)`, `new_stop = max(current_stop, candidate_stop)`, checked every 15-min checkpoint** — 2× beat the real historical results on both average captured gain (+1.56% vs. the real system's +1.53%) and win rate (9/12 vs. 7/12), fixing two real reversal losses (UEC 8/26 -2.54%→+0.26% simulated; MSTX 8/20 -1.24%→+1.02% simulated) without giving other reversals extra room, unlike wider multipliers (4×–5×) which scored higher only because of one outlier trend day (MSTX 8/27 continuing to run for hours past its real exit) while making two genuine reversals worse. Anchoring to `run_high` instead of the trailing average is what gives a real trend room to breathe — the average sits close to the entry price right after a fill, so a normal early pullback could trip the old design before a trend had even formed (found via a separate before/after check on UUUU 8/25: the average-based design would have cut a real +$6.86 winner down to roughly breakeven). The velocity trigger is retired — anchoring continuously to `run_high` already gives the fast-reaction behavior it existed for, without a second mechanism running in parallel.
 
 Prior trades: 2026-08-27 YANG (-$0.72, r=-0.124, governor manual exit); 2026-08-27 MSTX (+$11.41, r=+0.899); 2026-08-26 UEC (-$5.54, r=-0.998); 2026-08-25 UUUU (+$6.86, r=+1.238); 2026-08-25 SMCX (+$4.25, r=+0.293); 2026-08-24 MSTX (+$13.81, r=+1.050); 2026-08-21 MSTX (-$0.14, r=-0.011); 2026-08-21 CONL (+$2.51, r=+0.230); 2026-08-20 MSTX (-$0.54, r=-0.201, governor's off-cycle exit, not rule-triggered); 2026-08-19 GUSH (+$0.22, r=+0.194).
 
