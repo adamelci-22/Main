@@ -509,6 +509,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Today's watchlist: 8 names (2 proxies + 6 individuals)** — XLB/FCX/SCCO/SBSW, XBI/NVCR/RGNX/ORIC.
 - All premarket reads (9:01–9:07 ET) — informal/stale per C3, first formal read is 9:30. **Plan for the 10am collision with the Fed speech: the checkpoint still runs as scheduled** (verify state, manage or gate-check per the normal stack) — but treat any position entered before 10am as one to watch extra closely into the speech, and treat a 10am-adjacent entry signal skeptically until the immediate post-speech volatility has had at least one checkpoint to settle, per C9's "never force a trade" and B3's "unwanted event approaching" exit.
 
+**9:30 observation** (first formal read, watchlist only, no new scan — C1 Gate-1 baseline, no gating decision at this checkpoint):
+
+- Materials: XLB +0.93% (holding) · FCX -0.89% (flipped negative from premarket +1.11%) · SCCO -0.55% (flipped negative from premarket +0.80%) · SBSW +3.18% (holding, ~flat vs premarket)
+- Biotech: XBI -1.49% (weaker than premarket -0.14%, doesn't gate individuals per C5) · NVCR +0.61% (weakened sharply from premarket +3.45%) · RGNX +6.30% (still strong, down from premarket +8.31%) · ORIC -1.64% (flipped negative from premarket +3.71%)
+- **Real divergence from the 9:00 read**: FCX, SCCO, and ORIC all reversed to negative at the open. Only SBSW and RGNX are still clearly holding their premarket strength; NVCR faded to barely positive. 9:40's gate stack will need to weigh this — the open didn't confirm most of premarket's move.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
