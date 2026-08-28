@@ -546,6 +546,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:30 management (flat) — no trade, C11 tightens again.** C3 passed the same six. C10: SBSW and RGNX both still rising vs. the fixed baseline; SOLS/ESTC/GAP/UMC still falling. **SBSW's giveback dropped back under the ceiling (64.1%)** — cleared all of C10 again. RGNX improved (+2.14% now) but its giveback (72.6%) is still well outside the 65% cap. **C11's minimum ER steps up to 0.30 at 11:30** (was 0.25) — SBSW's ER came in at 0.184, below even the looser prior bar, let alone the new one. No candidate cleared the full stack. Correctly flat. Next check: 11:45.
 
+**11:45 management (flat) — no trade, ESTC turns.** SBSW dropped back under C3's threshold (+0.63%), dropped from consideration. **ESTC crossed back above the fixed baseline** ($99.49 vs. its $98.90 10:17 ET baseline) and cleared C10 fully — real bounce off a $96.82 session low, and giveback fell to just 35.3% (its early spike-reversal at 9:34 ET inflated the reference high, so even a partial recovery reads as a small giveback). **Failed C11 anyway**: ER 0.083 over the trailing 60 minutes, far under the 0.30 minimum — same story as its 10:00 rejection, still genuinely choppy despite the net move. RGNX stayed on the board (C3 passed) but its giveback (74.0%) is still well outside the 65% ceiling. No candidate cleared the full stack. Correctly flat. Next check: 12:00.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
