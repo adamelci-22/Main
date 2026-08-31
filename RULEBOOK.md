@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.47.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.48.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -177,7 +177,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 ## B6. Shortlist range snapshot — feeds C10/C11, maintained incrementally, whether or not it's the held position
 
-**At every management checkpoint (10:00–12:30), pull minute-bar historicals covering only the gap since the previous checkpoint** (B1b's own small window — never the whole day) **for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 24-name watchlist), even while holding something else. One extra minute-bar call per name, the same call already run for the held position, not a new kind of lookup.
+**Starts at 9:30, not 10:00.** Every checkpoint that produces a B1b-style range read for a candidate — 9:30's observation, 9:40's entry gate stack, and every 10:00–12:30 management checkpoint — pulls minute-bar historicals covering only the gap since that candidate's *previous* range read (B1b's own small window — never the whole day) **for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 24-name watchlist), even while holding something else. One extra minute-bar call per name, the same call already run for the held position, not a new kind of lookup. This is what gives C11's "back to 9:30, whichever is shorter" window real coverage from the day's first read onward, instead of an artificially short one at the first management checkpoint.
 
 **Update the running values, never re-derive them from scratch:**
 - `session_high = max(session_high, bar_high)`. If this raises `session_high`, `session_low` clears — a fresh high ends the pullback episode (C10's own rule).
@@ -576,6 +576,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.48 (pre-open Monday 8/31, governor readiness check): fixed a real bug in v3.47 before it ever ran live.** B6's log-population duty was scoped to "every management checkpoint (10:00–12:30)" only — but C11's own ER window is defined as "trailing 60 minutes, or back to 9:30, whichever is shorter." Under the literal v3.47 wording, the log would have exactly one entry at the 10:00 checkpoint (nothing from 9:30/9:40), giving the very first management checkpoint's ER an artificially short, wrong window instead of the real ~30-minute one. Fixed: B6 now explicitly starts logging at 9:30's observation and 9:40's entry check, not just the 10:00+ management phase — the same checkpoints that already produce B1b range reads for other reasons (C1, C3, C10) now seed the same rolling log, so by 10:00 the shortlist's logs already carry proper 9:30-onward history. No live trading occurred under the unfixed v3.47 (Friday's day was already closed when it was written), so no trade decision was ever affected — caught during a pre-open readiness check, not a live incident.
 
 **v3.47 (evening 8/28, governor session, post-close): B6's `session_high`/`session_low`/ER moved from re-derived-every-checkpoint to incrementally maintained.** Root cause, found while discussing a proposed multi-file architecture split for token cost: the actual expensive pattern today wasn't the rulebook's own size — it was re-pulling and hand-summing the *entire day's* minute bars at nearly every 10:00–12:30 checkpoint to compute `session_high`/`session_low` (C10) and Efficiency Ratio (C11), when B1b already specifies pulling only the small since-last-checkpoint gap. Fixed at the actual point of waste rather than by restructuring files: B6 now updates `session_high`/`session_low` with an O(1) comparison against each checkpoint's own small pull, and keeps a short rolling log of `(checkpoint_time, bar_close, path_length)` — ER is then computed from the ~4–5 log entries inside the trailing 60-minute window, not 40–90 raw minute bars re-summed by hand. Same formulas, same thresholds, same gate outcomes — only how the inputs get computed changes. No backfill needed; Friday's trading day was already closed when this was written, so it takes effect cleanly starting Monday's grid. (The broader RULEBOOK.md/state-file split proposal was discussed and set aside for now — real risk of introducing a new drift-between-files failure mode for a live system, revisit later if this narrower fix isn't enough.)
 
