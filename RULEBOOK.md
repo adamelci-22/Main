@@ -525,6 +525,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **C12 re-entry cycle, T+0** (~10:08 ET, fill 10:02:01 ET): whole group pulling back vs. the exit's fill-time reads — XLE $63.970→$63.810, HAL $37.330→$37.240, OXY $60.310→$60.055, CVX $206.660→$206.290 — consistent with GUSH's own post-entry reversal, not isolated to it. C7 re-ranked fresh (capital base changed on the exit) — unchanged order, GUSH still tops `mfe_per_stop`. **T+10 gate stack armed for 10:12:01 ET** (fill_time+10min, elapsed <10min at T+0 per C12 step 2) — comparison baseline fixed at the **10:02:01 ET exit fill-time price** per C12 step 3, entries authorized per the governor's override above.
 
+**C12 T+10 mini-cycle result: no re-entry.** All five still falling vs. the 10:02:01 ET fill-time baseline: XLE $63.970→$63.765, HAL $37.330→$37.240, OXY $60.310→$59.985, CVX $206.660→$206.500, GUSH $45.2456→$44.570 — the pullback that started right after GUSH's entry never reversed, it just kept going. C10 leg 1 fails across the board; day-change (C3) still comfortably positive for all five (XLE +1.73%/HAL +2.93%/OXY +1.50%/CVX +2.30%/GUSH +1.90%), so nothing's broken, the group is just consolidating off its early highs. Correctly flat. Resume the regular grid at 10:15.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
