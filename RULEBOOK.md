@@ -511,6 +511,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Today's watchlist: 5 names (1 proxy + 3 individuals + 1 leveraged sector vehicle)** — XLE/HAL/OXY/CVX/GUSH, all Energy.
 - All premarket reads (9:01–9:03 ET) — informal/stale per C3, first formal read is 9:30. **Watch for headline risk all day**: an active shooting conflict (Iran/US) can escalate or de-escalate on short notice — treat any energy position as one to watch extra closely for a sharp headline-driven reversal, per B5's hourly check and B3's "unwanted event approaching" exit, even though B5 is nominally hourly.
 
+**9:30 observation** (first formal read, watchlist only, no new scan — C1 Gate-1 baseline; also the first B6 log-seeding checkpoint under v3.48):
+
+- XLE +1.80% (holding, essentially unchanged from premarket +1.76%) · HAL +2.20% · OXY +2.12% · CVX +2.15% · GUSH +3.80% — **the whole group opened holding its premarket strength, no divergence.** A cleaner open than Friday's, which saw most of the watchlist reverse.
+- B6 log seeded for all five (`session_high`/`session_low`/rolling log initialized from the 13:30–13:32 UTC open): XLE range $63.680–$63.900 · HAL $36.730–$37.195 · OXY $60.145–$60.5205 · CVX $205.320–$206.500 · GUSH $45.355–$45.615.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
