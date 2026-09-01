@@ -515,6 +515,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Earnings check (`get_earnings_calendar`, high-market-cap filter, 8/31–9/1 window): SAIC and MDT reported and beat; NIO/MMED/RZLV/SBSW/SSL also in the window — none Energy-related, none on today's watchlist. GTLB/PANW/DELL/CRDO/MDB report **tonight** (pm), not a same-day factor.
 - All premarket reads (~9:01–9:03 ET) — informal/stale per C3, first formal read is 9:30. **Watch for headline risk all day**: the Iran/US conflict is active and can escalate or de-escalate on short notice — treat any energy position as one to watch extra closely for a sharp headline-driven reversal, per B5's hourly check and B3's "unwanted event approaching" exit.
 
+**9:30 observation** (first formal read, watchlist only, no new scan — C1 Gate-1 baseline; also the first B6 log-seeding checkpoint of the day). State check: flat, no resting orders.
+
+- XLE +1.12% (day change at official open) · VLO +1.00% · OXY +0.95% · XOM +1.50% · GUSH +2.68% — **whole group still holding positive, pulled back a touch off premarket highs but nothing broken.** Individuals all still up: VLO/OXY/XOM all confirmed continuing.
+- **C1 Gate-1 baseline recorded for XLE (leveraged-vehicle gate, applies to GUSH): +1.118%** (64.675 vs 63.960 prior close) — leg 1 (positive at 9:30) clears; legs 2/3 pending the 9:40 reading.
+- B6 log seeded for all five (`session_high`/`session_low`/rolling log initialized from the 13:30–13:32 UTC open): XLE $64.615–$64.950 · VLO $362.515–$364.9031 · OXY $60.7045–$61.230 · XOM $162.880–$163.820 · GUSH $46.300–$46.730.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
