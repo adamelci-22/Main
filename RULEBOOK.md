@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.48.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.49.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -429,7 +429,9 @@ If a pattern suggests a rule is causing early exits or missed continuation, name
 
 **3 consecutive losing closed trades → stop entering until the governor clears it.**
 
-A loss is any negative realised P&L, however small. Consecutive **closed trades**, not days — a winner anywhere resets to zero. Rows marked `counts_toward_streak=no` are excluded (a mechanical abort is not a trade). **Compute from the trade log, never from memory.**
+**A loss is a closed trade with `pnl_pct_position` worse than −1.0%** (v3.49 — was "any negative P&L, however small"). A negative print at or above −1.0% is a scratch, not a loss for streak purposes — it resets the streak to zero exactly like a winner would, it just doesn't itself extend one. Consecutive **closed trades**, not days — a winner or a scratch anywhere resets to zero; only a run of sub-(−1.0%) trades builds the count. Rows marked `counts_toward_streak=no` are excluded outright (a mechanical abort is not a trade). **Compute from the trade log, never from memory.**
+
+**Why a magnitude threshold instead of classifying by `exit_reason`:** a small negative print is very often execution friction — a mechanically-forced early exit on a real move, a spread eaten by slippage — not a signal-quality failure, and the two look identical to a bare "negative P&L" count. Classifying case-by-case by `exit_reason` was considered and rejected: it requires a judgment call at every trade about which reasons count as "mechanical," and that judgment is exactly the kind of thing this system tries to make structural rather than discretionary. A flat magnitude cutoff needs no classification and no memory of precedent — it reads directly off `pnl_pct_position`, already in every row.
 
 **Counting starts after the most recent governor clearance** (dated in A1). Trades closed before it are history, not streak. The log stays append-only — a clearance is recorded as a date in A1, never by editing or deleting a past row.
 
@@ -546,6 +548,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.49 (9/1, governor session, rulebook edit): E1's loss definition changed from "any negative P&L, however small" to "`pnl_pct_position` worse than −1.0%."** A scratch at or above −1.0% no longer builds the streak — it resets it to zero, same as a winner. Prompted by Monday 8/31's trip (below): the governor's own clearance already judged that two of the three streak trades (YANG, GUSH) were mechanically-forced early exits on real moves, not signal-quality failures, and cleared the breaker same-day on that read. This rule makes that judgment structural instead of re-litigated by hand every time a small loss lands. **Checked against the record, not just asserted:** re-run under the new threshold, only AFRM (8/28, −1.275%) clears −1.0%; YANG (8/27, −0.31%) and GUSH (8/31, −0.9291%) both fall under it and would each have reset the count. The streak would have read 0/3 for the entire 8/27–8/31 stretch instead of tripping to 3/3 on GUSH — the breaker would not have fired Monday at all. Considered and rejected: classifying by `exit_reason` instead (e.g. treat `trail_breached_before_placement`/`governor_manual_exit` as non-loss) — rejected because it requires naming which reasons qualify as "mechanical" up front and re-litigating edge cases as new exit reasons appear; a flat magnitude cutoff needs no such list and reads directly off a number already in every row. No trade decision is retroactively changed — the historical entries below stand as reported under the rule in force at the time; this governs from here forward.
 
 **Monday 2026-08-31 closed flat, $230.45, -$2.12 on the day (one trade, GUSH).** Loss streak reset to 0 by the governor's mid-day breaker clearance (A1, effective 2026-08-31). A second MCP-connector drop cost the entire 10:15–12:30 window and the 8:00pm backup (~8 hours, queue read ~20:01 ET) — account was flat throughout, nothing unprotected, but Tuesday 9/1's grid was found completely unarmed and had to be armed fresh at ~20:02 ET. Full detail in E5. Post-day analysis of the AFRM/GUSH ratchet-breach pattern is still owed, deferred by governor instruction.
 
