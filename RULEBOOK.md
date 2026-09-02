@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.50.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.51.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -264,9 +264,9 @@ The two rank-2 rows are **parallel, never competing** — which is live depends 
 
 ## C6. Commodities and materials — replaces the catalyst requirement
 
-All three legs must hold: **(1)** multi-session higher highs *and* higher lows · **(2)** confirmation from the related complex (metal vs miners, crude vs E&P) · **(3)** pullback not breakdown — inside the prior session's range, above its low.
+**Two legs, on top of C10's own intraday trend check** (which already applies to every candidate, commodities included — no separate multi-session requirement here, v3.51: every position closes same-day, never held overnight (B4), so a multi-day chart shape *before* today doesn't bind a trade that opens and closes *within* today's session; only today's own intraday trend matters, and C10 already tests exactly that for every candidate): **(1)** confirmation from the related complex (metal vs miners, crude vs E&P) · **(2)** pullback not breakdown — inside the prior session's range, above its low.
 
-A replacement, not a relaxation — every other rule still binds.
+A replacement, not a relaxation — every other rule still binds. (v3.51 dropped the old "multi-session higher highs and higher lows" leg — it was blocking legitimate same-day moves for a reason that doesn't apply to a same-day-only system; a prior downtrend across days is irrelevant here the way it would matter to a multi-day swing system, which this isn't.)
 
 ## C7. Ranking
 
@@ -527,6 +527,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Energy still doesn't clear C3.** XLE -0.11%, USO -1.27%. CVX and VLO flipped positive (+0.35%, +0.49%) but neither reaches the 0.75% bar; XOM/OXY still negative. No entry.
 - **Metals' move got materially bigger and broader — GDX now +3.12%, GLD +0.90%, SLV +1.69% — and a run of the saved "Materials/uranium gainers today" scan (`a82d62da`) turned up 91 Basic-Materials names up >2% on the day, gold/silver/copper/steel all represented (SCCO +2.2%, FCX +2.8%, WPM +3.3%, VALE +3.2%, STLD +3.4%, PAAS +3.9%, CDE +4.2%, HL +4.8%, SBSW +6.9%, among many others).** This is a genuinely broad, sector-wide move, not a handful of gold miners — but breadth and size don't substitute for C6 leg 1's specific test. GDX/SLV/GLD are each one up-session into a downtrend that ran from 8/21–8/25's peak through 9/1's low; "multi-session higher highs and higher lows" means completed prior sessions showing that pattern, and today (in progress) can't retroactively supply that regardless of how strong it is. **Declined on the rule as written, not overridden by how compelling the tape looks** — C6 says "a replacement, not a relaxation," and chasing exactly this kind of outsized single-day move inside a prior downtrend is the scenario the gate exists to filter out. **Flagged explicitly for tomorrow's 9:00 research**: if GDX/SLV/GLD print a higher high *and* higher low tomorrow relative to today's session, that's session 2 toward a real multi-session read — worth checking first thing rather than re-deriving from scratch.
 - No entry today from either read. Resume the regular grid at 10:00.
+
+**Correction, ~9:49 ET: governor overruled the metals decline — C6 leg 1's multi-session requirement was wrong for a system that never holds past today (v3.51, C6 rewritten in RULEBOOK.md).** Prior-session chart structure doesn't bind a trade that opens and closes within today's session; only today's own intraday trend matters, and C10 already tests exactly that for every candidate. Re-ran the gate stack live, off-cycle, same methodology as any entry-eligible checkpoint (C9: valid 9:40–12:30):
+
+- **C10, re-checked against the 9:30 baseline for GDX/SLV and the actual tradeable vehicles**: GDX $97.890 vs $97.429 baseline (above, passes) · NUGT $187.190 vs $185.1299 (above, passes) · SLV $58.985 vs $58.825 (above, passes) · AGQ $79.545 vs $79.059 (above, passes). Leg 2 (bounce quality) and leg 3 (giveback ceiling, all under 15% vs the 65% cap) clear for all four using each one's own fresh `stall_threshold_pct`. C11 (ER, computed directly from the 9:30–9:49 minute closes since no B6 log existed for these names): NUGT 0.158, JNUG 0.195, AGQ 0.215 — all clear the 9:40–10:29 bracket's 0.15 minimum, NUGT thinnest but still a pass.
+- **C6's remaining two legs**: (1) complex confirmation — GDX's move is confirmed by the underlying miners themselves (NEM/GOLD/AEM/AU/KGC all up 1.3–2.5% earlier, now more), and independently by the 91-name Materials scan; SLV confirmed by its own miner complex (PAAS/CDE/HL/AG etc., also in that scan). (2) Pullback not breakdown — current price for all four sits inside today's own range, nowhere near a breakdown. Both clear.
+- **C4 instrument priority**: no single-stock leveraged wrapper exists for an individual gold or silver miner (this is a genuine group move, not one company) — the leveraged-sector-ETF track applies. Profiled the three real candidates (`tools/profile.py`, 48 daily sessions each): **NUGT 0.825** (stop 3.03% · target 4.55%) · JNUG 0.793 (stop 3.94% · target 5.91%) · AGQ 0.717 (stop 2.54% · target 3.82%). NUGT tops `mfe_per_stop` and is affordable (floor($230.55÷$186.52 ask) = 1 share).
+- **Entry: NUGT, 1 share @ $186.2099 fill** (marketable limit $186.75, reviewed clean — Bid $186.20×100 · Ask $186.50×200 · Last $186.21×100, 9:50 AM ET) — total cost $186.21. Slippage: filled $0.29/sh better than the $186.50 ask (price improvement). Live quote re-verified immediately before placing per v3.50 — still $186.21, comfortably above the $185.1299 baseline, no repeat of yesterday's stale-gate gap. **Stop placed and verified resting**: stop_market, 1 sh, **$180.57 (−3.03%)**, confirmed via `get_equity_orders` (state=`confirmed`). Target **4.55%** (~$194.70), `mfe_per_stop` 0.825. Catalyst: broad Materials/precious-metals rally — inflation fears from the surging bond yield (10Y at 4.814%, highest since Nov 2023) plus safe-haven flows on the deepening Iran conflict, confirmed at proxy, miner-complex, and 91-name-scan level; NUGT is the sector's leveraged vehicle, GDX (its underlying) is one intraday session above its 9:30 open with a clean bounce off the session low. **Pre-commit for 10:00**: expect NUGT's `bar_close` to hold at/above the trail level; a close back below today's 9:30 baseline ($185.13) would be the falsified case for the "not currently falling" read that got it in.
 
 ## E6. Known issues — backlog, not yet fixed
 
