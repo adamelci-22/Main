@@ -516,6 +516,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Earnings check (`get_earnings_calendar`, high-market-cap filter, 9/1–9/2 window): last night's after-close reporters (MDB, GTLB, PANW, DELL, CRDO, all beat) are tech names, none on any candidate list. Today's after-close list includes **GOLD** (noted above) and **AVGO** — neither a same-day intraday factor for this account.
 - All premarket reads (~9:00–9:02 ET) — informal/stale per C3, first formal read is 9:30. Watching for whether Energy's reversal deepens (a real rollover, not just profit-taking) or metals finds a floor — either could still produce a real 9:30/9:40 candidate.
 
+**9:30 observation — no formal watchlist to record a Gate-1 baseline for (0 sectors selected at 9:00), so this is a refresh of the two research-stage reads, not a new scan.** State check: flat, no resting orders.
+
+- **Energy still not a candidate.** XLE -0.43%, USO -1.10% at the open. HAL flipped marginally positive (+0.14%) but the rest of the group stayed negative or flat (OXY -0.73%, CVX -0.09%, VLO -0.20%, XOM ~flat/stale quote) — no real confirmation, still a rollover day for this group.
+- **Metals extended its bounce at the open — GDX +2.77%, GLD +0.78%, SLV +1.54%, all stronger than premarket — but this still doesn't clear C6.** Leg 1 needs *multi-session* higher highs and higher lows; one strong session, even a big one, is a single up-day inside the still-intact 8/21–9/1 downtrend identified at 9:00, not yet a trend reversal. Declining to trade it on today's strength alone would be exactly the discipline C6 exists to enforce — noted as worth re-checking tomorrow's 9:00 survey if it follows through with a second confirming session, not treated as cleared today.
+- No candidates clear for 9:40. Watchlist stays empty; C9's "never force a trade" applies.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
