@@ -554,6 +554,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Still worth building eventually, no longer treated as urgent.** An automatic retry-and-verify wrapper around stop placement — place, confirm via a follow-up read, re-check price before a blind retry, all without waiting on a manual catch — remains a real improvement over a human-speed read-decide-act loop inside a moving market. But per governor sign-off, this stays a nice-to-have on the backlog, not a same-day priority. Revisit if a future incident actually produces a loss (not just forced friction on a winning trade), or if the failure rate climbs further.
 
+**Standing watch item, governor instruction 9/1: the AFRM (8/28)/GUSH (8/31) ratchet-breach pattern — a quick post-entry pop reversing before the trail's first checkpoint could lock any of it in.** Two-for-two so far, both logged in `archive/trades.csv`'s notes and in Current State's 8/31 entry. Per D4, two instances isn't yet grounds for a unilateral B2 change — **but the governor has asked this be actively watched, not just left in the log**: if the identical shape (stop math already breached by live price before the very first 10:00-or-first-checkpoint read after entry) shows up a third time on any future trade, name it explicitly at that checkpoint and raise it for a real B2 discussion rather than filing it away as one more data point. Not resolved by v3.50's C10/C8 fix (2026-09-01) — that closed a different gap (a stale *entry* gate), not this one (a trail that hasn't caught up by its first tick).
+
 ---
 
 ## Current state
