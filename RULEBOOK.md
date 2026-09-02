@@ -549,6 +549,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Handled the same way as the prior two**: cancelled the stale $185.82 resting stop (verified cancelled), exited immediately via marketable limit rather than attempting to place a stop already at/above market — 1 sh @ **$187.8001** (limit $187.60, filled $0.20/sh better, price improvement). **Net +$1.59, +0.85% on the position, r=+0.282 — a real, solid win**, well above what the resting stop alone would have captured. Logged to `archive/trades.csv`, `exit_reason=trail_breached_before_placement`, same convention as AFRM/GUSH. Honest range for the full ~30-minute hold: MAE −0.17% ($185.885 low, 13:56 ET), MFE +2.11% ($190.130 high, 14:07 ET) — the trail gave back real ground between the peak and the exit, the exact mechanical cost E6 already names. **Loss streak unaffected (0 of 3)** — a clear win.
 - **Flat.** Resume the regular grid whenever the next trigger actually fires; state checks in the meantime if the schedule stays unreliable.
 
+**10:30 management — the 10:15 trigger arrived late (queued 14:19:16 UTC, after the off-cycle handling above) and this 10:30 one landed at 14:30:06 UTC, ~9m23s after NUGT's 14:20:43 fill — close enough to C12's T+10 mark that it doubles as that mini-cycle's gate stack rather than arming a separate ~14-second trigger.** State check: flat, confirmed.
+
+- **C12 T+10 result: no re-entry.** Fill-time baseline (14:20 bar close) vs now: GDX $98.270→$97.420 (down), SLV $59.085→$58.885 (down), NUGT $188.4846→$185.5401 (down), AGQ $79.730→$79.3201 (down) — the whole complex is still pulling back from its post-exit peak, the same move that triggered NUGT's exit in the first place. C10 leg 1 fails across the board. Day change (C3) still strongly positive throughout (GDX +2.91%), so nothing's broken — the group is consolidating, not reversing. Correctly flat, same shape as the 8/31 GUSH mini-cycle. Resume the regular grid at 10:45.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
