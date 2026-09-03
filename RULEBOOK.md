@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.52.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.53.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -153,7 +153,7 @@ Price fell to $14.896 shortly after the 10:15 checkpoint, below the $15.19 stop 
 
 ### Other exits
 
-- **Reversal** — broke the level or VWAP that justified entry, or the sector rolled over. The level must have been **named at entry** or the claim is unfalsifiable.
+- **Reversal** — broke the level or VWAP that justified entry, or (commodity trades only) the complex rolled over. The level must have been **named at entry** or the claim is unfalsifiable.
 - **Risk/reward flipped** — small remaining upside against a large distance to the stop.
 - **Unwanted event approaching** — earnings or macro data not intended to be held through.
 - **Approaching the same-day close deadline** with the move finished.
@@ -178,7 +178,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 ## B6. Shortlist range snapshot — feeds C10/C11, maintained incrementally, whether or not it's the held position
 
-**Starts at 9:30, not 10:00.** Every checkpoint that produces a B1b-style range read for a candidate — 9:30's observation, 9:40's entry gate stack, and every 10:00–12:30 management checkpoint — pulls minute-bar historicals covering only the gap since that candidate's *previous* range read (B1b's own small window — never the whole day) **for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 24-name watchlist), even while holding something else. One extra minute-bar call per name, the same call already run for the held position, not a new kind of lookup. This is what gives C11's "back to 9:30, whichever is shorter" window real coverage from the day's first read onward, instead of an artificially short one at the first management checkpoint.
+**Starts at 9:30, not the first management checkpoint.** Every checkpoint that produces a B1b-style range read for a candidate — 9:30's observation, 9:40's entry gate stack, and every management checkpoint from 9:50 through 12:30 (whichever cadence is in force, v3.52) — pulls minute-bar historicals covering only the gap since that candidate's *previous* range read (B1b's own small window — never the whole day) **for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 25-name watchlist), even while holding something else. One extra minute-bar call per name, the same call already run for the held position, not a new kind of lookup. This is what gives C11's "back to 9:30, whichever is shorter" window real coverage from the day's first read onward, instead of an artificially short one at the first management checkpoint.
 
 **Update the running values, never re-derive them from scratch:**
 - `session_high = max(session_high, bar_high)`. If this raises `session_high`, `session_low` clears — a fresh high ends the pullback episode (C10's own rule).
@@ -193,37 +193,33 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 > **No position may be opened outside 9:40–12:30 (v3.43).** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
-## C1. Gate 1 — the sector must hold, 9:30 → 9:40
+## C1. Gate 1 — the commodity must hold, 9:30 → 9:40
 
-**9:30 is scoped to the 24-name watchlist only — no new market scan.** Record the day change of the **6 sector proxies** (feeds the Gate 1 test below) and note whether each of the **18 individual candidates** is still holding its move. That's an observational check, not a formal re-run of C3 — the formal re-confirmation of C3's legs happens live at 9:40.
+**v3.53 — scope narrowed to commodity trades only.** Since sectors are no longer a tradeable category (D2/C4), this gate now applies exclusively to the commodity vehicles named in E3 (energy, gold, silver, copper, uranium, broader materials) — never to an individual stock or its leveraged wrapper, which are judged purely on their own move (C3/C10).
 
-Applies to a **sector- or index-leveraged trade** only. Record the sector proxy's day change at **9:30** and again at **9:40**. All three must hold:
+**9:30 is scoped to whatever commodity groups are on today's watchlist — no new market scan.** Record the day change of each commodity's plain proxy (feeds the Gate 1 test below) and note whether the confirming complex (miners, E&P, etc.) is still holding. That's an observational check, not a formal re-run of C3/C6 — the formal re-confirmation happens live at 9:40.
+
+Applies to a **commodity-leveraged trade** only. Record the commodity proxy's day change at **9:30** and again at **9:40**. All three must hold:
 
 1. positive at 9:30, **and**
 2. positive at 9:40, **and**
 3. the 9:40 reading **not below** the 9:30 reading.
 
-Any failure at 9:40 → no entry **at 9:40** in that sector's leveraged vehicle.
+Any failure at 9:40 → no entry **at 9:40** in that commodity's leveraged vehicle.
 
-**Late entry, any checkpoint after 9:40:** the door isn't permanently closed by a 9:40 failure. At any later checkpoint, entry is still allowed if the sector proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:40's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). Recovered sector strength after 9:40 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
+**Late entry, any checkpoint after 9:40:** the door isn't permanently closed by a 9:40 failure. At any later checkpoint, entry is still allowed if the commodity proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:40's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). Recovered commodity strength after 9:40 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
 
 **Two fixed observations (9:30, 9:40) decide the 9:40 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
 
-**Does not gate a single-stock trade.** A stock moving decisively on its own does not need its sector to confirm; it is judged on its own move, and on Gate 2 if traded leveraged. **Every candidate, including single stocks, is still subject to C10's direction/reversal test** — this gate's leg 3 is the sector-proxy-only version of that same idea.
+**Does not gate an individual-stock trade — nothing does, anymore.** A stock (or its leveraged wrapper) moving decisively on its own is judged purely on its own move (C3, C10, C11) and never needs a group to confirm it, because there is no group. **Every candidate, commodity or individual stock, is still subject to C10's direction/reversal test** — this gate's leg 3 is the commodity-proxy-only version of that same idea, for the one category that still has a proxy.
 
-## C2. Gate 2 — top 3 sector leaders
+## C2. [Retired, v3.53]
 
-**Replaces the old single "must beat the proxy" comparison with a relative shortlist.** For a leveraged single-stock ETF, read the live day change of every name in its **E3** sector group (its own reading where the group has no separate underlying — e.g. RIOT/MARA/CLSK/BITX/BITU/ETHU/ETHT — or the underlying's reading where one exists — COIN for CONL, MSTR for MSTX).
-
-**Normalize for embedded leverage before ranking.** A group member that is itself a leveraged product (BITX/BITU ≈2× bitcoin, ETHU/ETHT ≈2× ether — or any other name in the universe carrying a stated multiple with no separate underlying) gets its day change divided by that multiple first. Comparing raw leveraged-product returns against unleveraged stocks in the same list just rewards whoever already carries a multiplier — it isn't a read on which name is genuinely leading.
-
-Rank the group by (normalized) day change. **Only the top 3 pass Gate 2**; every other group member is declined here regardless of its own day change being positive. Does not apply to sector or index vehicles — those *are* the group.
-
-The top 3 still have to individually clear C3 (magnitude) to be tradeable at all — Gate 2 narrows *which* names in an already-moving group are worth a wrapper, it doesn't waive the move requirement. **C7's `mfe_per_stop` ranking then picks the entry from among the (up to) 3 survivors**, same as it does for any other multi-candidate shortlist.
+**Was "Gate 2 — top 3 sector leaders."** Existed to rank several individual companies sharing one leveraged wrapper (crypto miners under BITX/BITU, etc.) before picking which one's move justified the trade. With sectors gone and crypto's group-leveraged products (BITX/BITU/ETHU/ETHT) retired outright (E3), nothing left in the system has more than one candidate per wrapper — each individual stock and its own leveraged ETF (if any) stands entirely on its own merit through C3/C5/C10/C11/C7, with no group to rank against. Number kept, not renumbered, so old trade notes and commits citing "C2" still resolve to this entry.
 
 ## C3. Major-move gate — what qualifies an individual stock
 
-**Long-only, end to end.** Every single-stock name in the universe is a leveraged-*long* wrapper, so this gate cannot produce a short or inverse trade and does not try. Inverse views go through the sector path (C1 + an inverse sector ETF).
+**Long-only, end to end.** Every single-stock name in the universe is a leveraged-*long* wrapper, so this gate cannot produce a short or inverse trade and does not try. Inverse views go through the commodity path (C1 + an inverse commodity ETF) — there is no individual-stock inverse path.
 
 1. **Magnitude** — day change **≥ +0.75%** from prior close, up only. Measure the *underlying stock*, never the leveraged wrapper; the wrapper is just the multiple.
 
@@ -235,29 +231,31 @@ Screen leg 1 at **9:00** with the scanner (`% Change`, or the gainers preset). *
 
 > **Scanner filter values are decimals, not whole percents** (`0.0075` = 0.75%, not `0.75`) — `update_scan_filters` takes the same units. A stray whole-percent value doesn't error, it silently matches nothing (found 2026-08-28: `FILTER_TYPE_PERCENT_CHANGE_FROM_CLOSE` stored as `0.75` returned 0 matches all morning; corrected to `0.0075` returned 250). After any filter edit, verify with a live run before trusting a "no matches" read — zero results is itself a signal to check the filter, not evidence the tape is quiet. `update_scan_filters` also wants wire-format predicate enums (`PREDICATE_GREATER_THAN_OR_EQUAL`, etc.), not the human-readable symbols (`>=`) that `get_scans`/`run_scan` display.
 
-Fails leg 1 → not a major-move candidate; fall back to a sector read or no trade.
+Fails leg 1 → not a major-move candidate; fall back to a commodity read (C1/C6) or no trade.
 
-> +0.75% is a **starting default, not a backtested constant.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check, Gate 2 and ranking carry the filtering load downstream.
+> +0.75% is a **starting default, not a backtested constant.** The bar is deliberately low to catch momentum early, so it surfaces many candidates — the catalyst check (C5), C10/C11, and C7's ranking carry the filtering load downstream.
 
 ## C4. Instrument priority
 
+**v3.53 — sectors dropped entirely; commodities are the one exception, since a physical commodity has no "individual stock" of its own.**
+
 | Rank | Vehicle | When |
 |---|---|---|
-| **1** | Individual leveraged stock | A single stock is the mover (C3) and its wrapper is affordable |
-| **2** | Plain stock | Single stock is the mover, no affordable wrapper |
-| **2** | Leveraged sector/index ETF | No single name cleared C3, but a group is moving together (C1 applies), wrapper affordable |
-| **3** | Plain sector/index ETF | Sector is the mover, no affordable leveraged vehicle |
+| **1** | Individual leveraged stock ETF | The mover is one company (C3) and it has its own leveraged wrapper (E3), affordable |
+| **2** | Plain stock | The mover is one company, no affordable wrapper exists |
+| **1c** | Leveraged commodity/miner-basket ETF | The mover is a commodity (energy, gold, silver, copper, uranium, broader materials — E3), C1/C6 clear, wrapper affordable |
+| **2c** | Plain commodity ETF | Commodity is the mover, no affordable leveraged vehicle |
 
-The two rank-2 rows are **parallel, never competing** — which is live depends only on whether the mover is one name or a group.
+**Two parallel tracks, never competing — individual stock (ranks 1/2) or commodity (ranks 1c/2c), decided purely by what's actually moving, never by picking a "sector" and working down into it.** A single company moving on its own always goes through the individual-stock track, even if it happens to sit in a space (semis, biotech, financials, whatever) that used to have its own sector-leveraged ETF — those broad-sector vehicles are retired outright (E3), not a fallback.
 
-1. **Identify the mover first** — individual stock, then sector. Individual is the first pass, not a fallback.
+1. **Identify the mover first** — one company, or a commodity. There is no third option; a "sector rotating together" that isn't a commodity is not a tradeable read under this system anymore, however real the move looks (find the specific stock leading it instead, per D2's market-wide scan).
 2. **Prefer the leveraged vehicle** within whichever track applies.
 3. **No leveraged vehicle affordable → take it plain.** Missing a real move for lack of a wrapper is the wrong trade-off.
 
 ## C5. Signals
 
 - **Leadership ranked from data.** Never default to something you have been watching.
-- **Breadth** applies to a *sector* trade — the vehicle should reflect a real group move. It does **not** disqualify a single-stock trade.
+- **Breadth** applies to a *commodity* trade — the vehicle should reflect a real complex-wide move (miners confirming metal, E&P confirming crude, etc.). It does **not** disqualify an individual-stock trade.
 - **A catalyst you can name.** "It's going up" is not one. *Exceptions:* commodities/materials use C6 instead; **tech and semis** are volatile enough that a clean catalyst often does not exist — look for one, but its absence does not exclude the name. Take it and say plainly none was found.
 - **Trend, not chop.** Leveraged ETFs decay in chop.
 - **Continuation, not prediction.**
@@ -285,7 +283,7 @@ If the capital base or the thesis moved, the 9:00 shortlist is **void** — re-r
 
 **Size to the maximum whole shares settled cash affords for the chosen candidate** — floor(settled cash ÷ ask), not 1 share by default. Only one position is ever open at a time (E2), so this is full deployment into that single candidate, not a per-trade allocation decision. Everything downstream still scales correctly: stop/target/breakeven are percentages of the fill, so dollar risk and reward scale with share count exactly as they should. Recompute the affordable quantity fresh at entry from live settled cash and the live ask — never reuse a quantity implied by an earlier affordability check.
 
-Before placing, confirm every A1 blocking condition is clear, plus: stop present and inside the 7% cap and matching the profile · affordability against **settled** cash, not account value · order type · C2 if single-stock leveraged.
+Before placing, confirm every A1 blocking condition is clear, plus: stop present and inside the 7% cap and matching the profile · affordability against **settled** cash, not account value · order type.
 
 Then:
 - `review_equity_order` first — **a clean review proves nothing about placement** (E4). **Its response's live quote is also the last chance to re-check C10 leg 1 (v3.50): price must be strictly above the candidate's 9:30 baseline right now, not just at the earlier checkpoint read.** At or below baseline → the candidate is no longer eligible, decline and stop (do not place the order); re-rank the remaining shortlist or pass this checkpoint per C9 rather than forcing a name whose own gate has already flipped.
@@ -306,7 +304,7 @@ Then:
 
 ## C10. Momentum direction — decline a fading price, allow a confirmed reversal
 
-**Applies to every candidate, every entry-eligible checkpoint** — sector proxies, individual stocks, plain or leveraged, in addition to (never instead of) C1–C9. Built to catch a candidate that's fading right now without permanently locking out a genuine second-wave rally later in the same session.
+**Applies to every candidate, every entry-eligible checkpoint** — commodity proxies, individual stocks, plain or leveraged, in addition to (never instead of) C1–C9. Built to catch a candidate that's fading right now without permanently locking out a genuine second-wave rally later in the same session.
 
 **Track, per candidate, from the day's own range-based checkpoint reads (B1b, via B6's shortlist snapshot)** — not point quotes (9:30 is the first formal read; the 9:00 scan is informal/stale per C3 and does not count here):
 
@@ -347,7 +345,7 @@ Below the window's minimum → declined as too choppy, regardless of C1–C10 al
 
 **Applies whenever a position closes before 12:30, regardless of why** — stop (including the 12:30 pin's near-immediate trigger, if the position is somehow re-entered and stopped again inside the same window), reversal, any other B3 exit. The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next regular grid slot (whatever cadence is in force there, v3.52).
 
-1. **The exit's fill timestamp is the mini-cycle's actual "9:30-equivalent" moment — not whenever it's later discovered or read.** At the moment the exit is discovered (T+0), same turn, no new trigger needed: run the 9:30-style check (C1) against today's existing shortlist — the candidates and sector proxies already built at 9:00, not a fresh market-wide scan. Record each sector proxy's current day change and note which shortlist names are still holding their move. C7 re-ranks fresh here too — the capital base just changed (the position closed), which by C7's own rule voids the earlier ranking.
+1. **The exit's fill timestamp is the mini-cycle's actual "9:30-equivalent" moment — not whenever it's later discovered or read.** At the moment the exit is discovered (T+0), same turn, no new trigger needed: run the 9:30-style check (C1, if any commodity is on today's shortlist) against today's existing shortlist — the 25-name individual-stock list and any commodities already built at 9:00, not a fresh market-wide scan. Record any commodity's current day change and note which shortlist names are still holding their move. C7 re-ranks fresh here too — the capital base just changed (the position closed), which by C7's own rule voids the earlier ranking.
 2. **T+10 is measured from the exit's actual fill timestamp (from the order response), never from when it happened to be noticed.** Detection lags the real fill whenever the exit fires between scheduled checkpoints — get the real fill time first, then compute `elapsed = now − fill_time`:
    - **`elapsed ≥ 10 minutes`** — the window has already passed. Run the full 9:40-style entry gate stack, C1–C11, immediately, same turn as T+0. No trigger to arm, no further wait.
    - **`elapsed < 10 minutes`** — arm one ad hoc trigger for `10 − elapsed` minutes out (the nearest possible time to exactly `fill_time + 10min`, not a flat 10 minutes from T+0) to run the gate stack then.
@@ -389,17 +387,19 @@ Flat · no resting orders · **and** no entry possible (buying power short) → 
 
 ## D2. 9:00am research — standard work
 
+**v3.53 — sectors dropped. Individual-stock-first, market-wide; commodities are the one exception, tracked separately, never blended into the 25.**
+
 1. **Headlines** — macro, geopolitical, overnight.
 2. **Pre-market prices** across the universe and yesterday's watchlist.
 3. **Earnings reactions** from last night's after-close reporters.
-4. **Survey sector proxies (E3) to find distinct, genuinely moving themes — sector-first, not individual-stock-first.** Scan across sector proxies, not a market-wide list of individual tickers, to identify which themes are actually active today. Individual names are pulled only from within a sector once that sector is provisionally selected (step 6) — never from an open-ended market-wide hunt for movers.
-5. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
-6. **Write the watchlist — 6 sectors, each genuinely different, 3 individual stocks per sector.** Structured, not just ranked:
-   - **Pick 6 sector proxies that don't overlap.** No two from the same correlated complex — GDX and GLD and SLV are one theme (precious metals), not three; XLE and USO are one theme (energy), not two. Choose the 6 most active, most distinct themes the morning's scan and headlines actually support. A single dominant story (today: crypto) still gets only one of the six slots, however many names in it are moving — concentration in one theme is exactly what this structure exists to prevent, since a reversal in that one theme otherwise leaves nothing uncorrelated to fall back on. **Leveraged coverage is a real factor in which 6 themes win a slot, not just a detail decided afterward** — when two candidate themes are similarly active, prefer the one with genuine leveraged-vehicle coverage (E3) over one that would need plain-stock substitutes for its individuals.
-   - **For each of the 6 sectors, take its 3 best individual names — leveraged wrappers are the priority, plain stocks only fill what leveraged coverage can't.** Prefer E3's own grouping (by mfe_per_stop, never by price) — most sectors have real leveraged single-stock coverage there (semis, crypto). Where E3's group can't supply 3 leveraged names on its own, fill the remaining slots with plain (unleveraged) stocks from that same sector — real, liquid, currently-moving names found via a live sector-scoped scan (the scanner's Sector filter, or direct quotes on known sector constituents), never invented from memory and never padded with a name that isn't a genuine mover today. Profile every individual the same way regardless (B1) — a plain stock isn't a lesser candidate, C4's rank-2 path already exists for exactly this case, this just extends that same logic to which names make the watchlist in the first place, not only which vehicle gets traded once a name is already shortlisted. A sector only gets skipped entirely if it can't produce 3 real candidates even counting plain stocks — C5's "no read = no trade" still governs which names are real, leveraged or not.
-   - 6 sectors × 3 names = 18 individuals, plus the 6 sector proxies themselves = 24 total (6 groups of 4).
-   - Profile every individual just-in-time (B1); mark affordability second, never first — include unaffordable names, they measure what capital is costing. The 6 sectors feed C1 (Gate 1); the 18 individuals feed C3 (major-move gate) and C4's rank-1/rank-2 tracks.
-7. **Refresh the live-context block (E5).** Commit and push.
+4. **Market-wide magnitude scan — individual stocks, no sector scoping.** Run the scanner's `% Change` gainers filter (C3's threshold, `≥0.75%`) across the whole market, with a liquidity floor (average volume — `FILTER_TYPE_AVERAGE_VOLUME`, same mechanism as any other scan) to keep the results real and tradeable rather than illiquid noise. No `Sector` filter this time — the point is to find whichever individual names are actually moving today, wherever they sit.
+5. **Separately, check the fixed commodity list (E3) for a real move** — the one category still allowed a group vehicle. Energy, gold, silver, copper, uranium, and broader materials each get a quick day-change read on their plain proxy; a commodity only makes today's list provisionally on that premarket read — real qualification still needs C1's formal 9:30→9:40 test and C6's two legs to clear live, same discipline as any other candidate, never assumed from the headline alone.
+6. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
+7. **Write the watchlist — 25 individual-stock names, plus whichever commodities cleared step 5, tracked as a separate short list, not counted against the 25.**
+   - **Rank the scan's results by day-change magnitude.** Fill the 25 slots from the top down, but names that carry an existing single-stock leveraged ETF wrapper (E3's lookup table) get priority fill over plain stocks when both clear C3's 0.75% floor — matches C4's own preference for the leveraged vehicle once a name is already a candidate, applied one step earlier at watchlist-build time. A real mover without a wrapper still fills a slot on its own merit (C4 rank-2) once the wrapper-carrying names are placed; never pad the list with a name that isn't a genuine mover today just to reach 25 — a thinner list is a correct outcome, per C5's "no read = no trade."
+   - **No pre-grouping, no diversity requirement.** Unlike the retired sector structure, there's no rule capping how many of the 25 can come from one theme (crypto, AI infrastructure, whatever is actually moving) — breadth of *individual* names, not breadth of *themes*, is what the 25 slots buy; C10/C11/C7 still do the real filtering at entry time regardless of how many names share a narrative.
+   - Profile every individual just-in-time (B1); mark affordability second, never first — include unaffordable names, they measure what capital is costing. The 25 feed C3 (major-move gate) and C4's rank-1/rank-2 individual-stock track. Any commodity that cleared step 5 feeds C1/C6 and C4's rank-1c/2c track separately.
+8. **Refresh the live-context block (E5).** Commit and push.
 
 ## D3. Reporting
 
@@ -451,39 +451,41 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 - **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
 - 24-hour tradability is optionality, never obligation.
 
-## E3. Sector proxy map
+## E3. Vehicle map — commodity groups, and individual-stock leveraged wrappers
 
-| Instrument | Underlying → Proxy |
+**v3.53 — split in two. Commodities are the only category that still gates as a group (C1/C6); everything else is an individual stock judged on its own move, with this table used only to look up whether a leveraged wrapper exists for it — never to confirm against a proxy.**
+
+**Commodity groups — plain and leveraged vehicles together, C1/C6 apply:**
+
+| Instrument(s) | Commodity |
 |---|---|
-| SOXL · SOXS · USD | → SMH |
-| NVDL · NVDX · NVDU | NVDA → SMH |
-| AMDL | AMD → SMH |
-| MUU | MU → SMH |
-| TSMX · TSMU | TSM → SMH |
-| SMCX | SMCI → SMH |
-| AVGX | AVGO → SMH |
-| TQQQ · SQQQ · FNGU · BULZ · TECL | → QQQ |
-| SPXL · UPRO · SPXS · SDOW · UDOW | → SPY |
-| TNA · TZA | → IWM |
-| GUSH · ERX · ERY · NRGU · DRIP · OILU · OILD | → XLE |
-| UCO · SCO | → USO |
-| BOIL · KOLD | → UNG |
-| NUGT · DUST · GDXU · JNUG · JDST | → GDX |
-| AGQ · ZSL · SIL · SILJ | → SLV |
-| UGL · GLL | → GLD |
-| LABU | → XBI |
-| UYM · SMN | → XLB |
-| COPX · CPER | → copper |
-| URA · URNM | → uranium |
-| YINN · YANG | → FXI |
-| KORU | → EWY |
-| TSLL | TSLA → QQQ |
-| CONL | COIN → IBIT |
-| MSTX | MSTR → IBIT |
-| RIOT · MARA · CLSK · BITX · BITU · ETHU · ETHT | → IBIT (crypto) |
-| UVIX · VXX | → VIX |
+| XLE · GUSH · ERX · ERY · NRGU · DRIP · OILU · OILD | Energy / E&P complex |
+| USO · UCO · SCO | Crude oil (direct) |
+| UNG · BOIL · KOLD | Natural gas |
+| GDX · NUGT · DUST · GDXU · JNUG · JDST | Gold miners |
+| GLD · UGL · GLL | Gold (direct) |
+| SLV · AGQ · ZSL · SIL · SILJ | Silver |
+| COPX · CPER | Copper |
+| URA · URNM | Uranium |
+| XLB · UYM · SMN | Broader materials/mining ("or such," per the governor's own framing) |
 
-Not on the map → name the closest unleveraged proxy and say it was chosen ad hoc.
+**Individual-stock leveraged-ETF lookup — no proxy, no confirmation gate; exists only to answer "does this mover have a wrapper":**
+
+| Wrapper(s) | Underlying stock |
+|---|---|
+| NVDL · NVDX · NVDU | NVDA |
+| AMDL | AMD |
+| MUU | MU |
+| TSMX · TSMU | TSM |
+| SMCX | SMCI |
+| AVGX | AVGO |
+| TSLL | TSLA |
+| CONL | COIN |
+| MSTX | MSTR |
+
+**Retired outright, v3.53 — no longer tradeable vehicles under "individual stocks and individual leveraged ETFs, commodities excepted":** SOXL/SOXS/USD, TQQQ/SQQQ/FNGU/BULZ/TECL, SPXL/UPRO/SPXS/SDOW/UDOW, TNA/TZA, LABU, YINN/YANG, KORU, IBIT, BITX/BITU/ETHU/ETHT, UVIX/VXX — every one was a broad-sector, index, or crypto-group leveraged product with no single-company underlying, or (IBIT) a proxy that no longer confirms anything. **Crypto is individual-stock-only, governor instruction 2026-09-02**: RIOT, MARA, CLSK trade as plain stocks now, no group wrapper; COIN and MSTR keep their real single-stock wrappers (CONL, MSTX) above, unaffected.
+
+**Individual stock not on the wrapper map → trade it plain (C4 rank-2).** There is no proxy fallback anymore; a mover without a listed leveraged wrapper is just a plain-stock candidate, not a reason to substitute some other instrument.
 
 ### Known leveraged vehicles
 
@@ -573,6 +575,19 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.53 (9/2 late evening, governor session): sectors dropped entirely — individual stocks and individual leveraged ETFs only, commodities (metals/energy/etc.) the sole exception.** Governor instruction, prompted by a real miss the same day: NVDA closed +3.2% and its leveraged wrapper NVDL closed +6.3%, but semis (SMH) read -0.41% premarket at 9:00 and never got re-surveyed once the sector-first structure declined it — the old design had no way to notice an individual name running hard inside a sector that failed its own morning read. Rather than patch that one gap, the governor asked for the structural fix: stop organizing research around sectors at all.
+
+**What changed, mechanically:**
+- **D2 (9:00 research):** replaced the sector-first survey with a market-wide `%Change` gainers scan (no `Sector` filter, average-volume floor for liquidity), ranked by magnitude, wrapper-carrying names given priority fill. Builds a flat **25-name individual-stock watchlist** — no sector buckets, no 3-per-theme diversity rule, no cap on how many names share one narrative.
+- **Commodities carved out as the one group exception**, checked separately from the 25 (energy, gold, silver, copper, uranium, broader materials — E3) since a physical commodity has no individual company to trade instead.
+- **C1** rescoped to commodity trades only (was any sector- or index-leveraged trade).
+- **C2 retired outright** — it existed to rank several companies sharing one group wrapper; with sectors gone and crypto's group products dropped, nothing has more than one candidate per wrapper anymore. Number kept unused rather than renumbered, so old references still resolve.
+- **C4** rewritten around two parallel tracks — individual stock (ranks 1/2) or commodity (ranks 1c/2c) — with the old sector/index-ETF rank-2 row removed completely.
+- **E3** split into a commodity-groups table (unchanged in substance, still gates via C1/C6) and a slimmer individual-stock leveraged-wrapper lookup (NVDL/AMDL/MUU/TSMX/SMCX/AVGX/TSLL/CONL/MSTX). **Retired outright**: every broad sector/index-leveraged product (SOXL, TQQQ, SPXL, TNA, LABU, YINN, KORU, UVIX/VXX) and every crypto group-leveraged product (IBIT, BITX/BITU/ETHU/ETHT) — governor's explicit call: **crypto is individual-stock-only** now (RIOT/MARA/CLSK trade plain, COIN/MSTR keep their real wrappers).
+- Swept remaining live-rule references to "sector" in B3, C5, C10, C12, B6 to "commodity" or generic wording; historical E5/Current-State log entries left untouched since they're dated records of what was actually done under the rule in force at the time.
+
+**Not yet done, flagged for the next research cycle**: today's actual watchlist-building tools (the scanner, `get_scanner_filter_specs`) haven't been re-verified against this exact new workflow — Thursday 9/3's 9:00 research is the first live run under v3.53 and may surface mechanical wrinkles (filter syntax, liquidity-floor tuning) the same way v3.51's C6 rewrite did; expect to iterate once, not treat this as fully proven yet.
 
 **v3.52 (9/2 evening, governor session): two-speed management cadence — 10 minutes from 9:50 through 10:50, 15 minutes from 11:00 through 12:30.** Governor instruction, direct response to the day's own live experience: the AFRM/GUSH/NUGT ratchet-breach pattern (E6) has now hit three times, and every instance so far has landed in the morning's fastest-moving stretch, where a 15-minute gap is long enough for `run_high` to build real distance before the next checkpoint can lock any of it in. Tightening the cadence exactly where the pattern has actually bitten, while leaving it at 15 minutes once the morning settles, is a direct answer to E6's open question rather than a separate fix. New grid: `9:00 · 9:30 · 9:40 · 9:50 · 10:00 · 10:10 · 10:20 · 10:30 · 10:40 · 10:50 · 11:00 · 11:15 · 11:30 · 11:45 · 12:00 · 12:15 · 12:30 · 8:00` — 17 intraday checkpoints plus the 8:00pm backup (was 15). Updated everywhere the old flat 15-minute cadence was assumed: D1's grid line, the READ MAP's management row (now split in two), B1b's and B2's checkpoint-cadence language, and C12's worked example (times updated to match the new slots, logic unchanged). C11's ER-minimum table needed no change — it's keyed to wall-clock time, not checkpoint count, so it already adapts. Thursday 9/3's already-armed 15-trigger grid gets replaced with the new 18-trigger version before market open. Does not touch E6's still-open question of whether 15 minutes was ever the right cadence for the *later* window too — only the 9:50–10:50 stretch changes for now; revisit the 11:00–12:30 leg separately if the pattern starts showing up there instead.
 
