@@ -557,6 +557,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (MSTR still well above its $131.345 fill-timestamp baseline), no R/R flip, no event, not near close. **Hold.**
 - **Pre-commit for 10:10**: the $14.57 stop is now the live falsifiable line — a close back through it is the exit.
 
+**10:10 management — HOLD MSTX, stop ratcheted up sharply.** State check: 15 sh MSTX, `shares_held_for_sells=15`, stop confirmed resting at $14.57 going in. B1b since-10:00 pull (14:00–14:10 UTC): `bar_high` reached **$15.07** (14:10 UTC bar) on a strong continuation — MSTX ran from $14.73 to $15.02+ over the ten minutes, volume elevated throughout (no single-bar spike-and-fade shape).
+
+- Live quote checked immediately before acting: **$15.15/$15.17** (14:15:17 UTC) — already above the last bar's high, so `run_high = max($14.82 prior, $15.07 bar_high, $15.15 live) = $15.15`, using the freshest genuine print rather than a stale bar.
+- `candidate_stop = run_high × (1 − 2×0.86%) = 15.15 × 0.9828 = $14.8894`. `new_stop = max($14.57, $14.8894) = $14.89` — a large upward move (+$0.32, well above `min_stop_move_pct`). Cancelled the $14.57 stop (verified `cancelled`), re-checked live price ($15.15, safely clear), placed and verified resting: stop_market, 15 sh, **$14.89**, confirmed via `get_equity_orders` (state=`confirmed`).
+- B3 exits checked: no reversal (MSTR $133.96, still well above its $131.345 fill-timestamp baseline and its own session high), no R/R flip (stop now locks in real gain — $14.89 vs $14.7379 fill, position is risk-free), no event, not near close. B5 headline check not yet due (next due ~10:35, one hour from 9:35 entry). **Hold.**
+- **Pre-commit for 10:20**: the $14.89 stop is now the live falsifiable line — a close back through it is the exit. This stop already sits above the $14.7379 entry fill, so from here the trade cannot close as a loss on this leg.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
