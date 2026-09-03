@@ -578,6 +578,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (MSTR $136.39, still climbing, well above its $131.345 fill-timestamp baseline), no R/R flip (locked gain now $0.64/sh above fill, ~4.3% on the position), no event, not near close. B5 headline check not yet due (first due ~10:35, one hour after the 9:35 entry). **Hold.**
 - **Pre-commit for 10:40**: the $15.38 stop is now the live falsifiable line — a close back through it is the exit.
 
+**10:40 management — HOLD MSTX, stop unchanged (min-move gate held).** State check: 15 sh MSTX, `shares_held_for_sells=15`, stop confirmed resting at $15.38 going in. B1b since-10:30 pull (14:30–14:40 UTC): `bar_high` reached **$15.71** (14:32–14:33 UTC), then pulled back — live quote now **$15.47/$15.49** (14:41:06 UTC), off the highs but still well above the fill.
+
+- `run_high = max($15.645 prior, $15.71 bar_high, $15.47 live) = $15.71`. `candidate_stop = 15.71 × 0.9828 = $15.4398`. Move from the current $15.38 stop would be only **0.39%**, below MSTX's `min_stop_move_pct` (1.00%, capped at the ceiling per B1) — **no structural level nearer, so per B2 the stop is left unchanged rather than incurring a cancel/replace for a sub-threshold move.** Verified via `get_equity_orders` that the $15.38 stop is still resting, state=`confirmed` — untouched, no unprotected gap this checkpoint.
+- **B5 hourly headline check (first due since the 9:35 entry, now performed)**: pulled `get_equity_news` for MSTX (no articles) and MSTR. Nothing new and MSTR-specific beyond the already-known 8:01 AM B. Riley $175 PT (maintained Buy) — Saylor's 5:42 AM reserve-capital remark is same-day but not a fresh tradeable catalyst, and no negative headline. **Catalyst still stands.**
+- B3 exits checked: no reversal (MSTR $135.81, still comfortably above its $131.345 fill-timestamp baseline despite its own pullback from $136.44), no R/R flip, no event, not near close. **Hold.**
+- **Pre-commit for 10:50**: the $15.38 stop is still the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
