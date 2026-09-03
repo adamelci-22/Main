@@ -585,6 +585,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (MSTR $135.81, still comfortably above its $131.345 fill-timestamp baseline despite its own pullback from $136.44), no R/R flip, no event, not near close. **Hold.**
 - **Pre-commit for 10:50**: the $15.38 stop is still the live falsifiable line — a close back through it is the exit.
 
+**10:50 management — HOLD MSTX, stop ratcheted up sharply, cleared $16.** State check: 15 sh MSTX, `shares_held_for_sells=15`, stop confirmed resting at $15.38 going in. B1b since-10:40 pull (14:40–14:50 UTC): the position kept extending hard — `bar_high` reached **$16.055** (14:49 UTC), the position's first print above $16, on a strong volume bar (54k shares).
+
+- Live quote checked immediately before acting: **$15.95/$15.96** (14:50:40 UTC), a modest pullback off the $16.055 top but still well clear. `run_high = max($15.71 prior, $16.055 bar_high, $15.95 live) = $16.055`.
+- `candidate_stop = 16.055 × 0.9828 = $15.7789`, rounded to **$15.78**. `new_stop = max($15.38, $15.78) = $15.78` — a real move (+2.6%, clears the min-move gate easily this time). Cancelled the $15.38 stop (verified `cancelled`), re-checked live price ($15.95, safely clear), placed and verified resting: stop_market, 15 sh, **$15.78**, confirmed via `get_equity_orders` (state=`confirmed`).
+- B3 exits checked: no reversal (MSTR $138.30, new highs, well above its $131.345 fill-timestamp baseline), no R/R flip (locked gain now **$1.04/sh above fill, ~7.1% on the position**), no event, not near close. **Hold.**
+- Note: this is the last 10-min-cadence slot per the v3.54 grid — **11:00 reverts to 15-min cadence.**
+- **Pre-commit for 11:00**: the $15.78 stop is now the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
