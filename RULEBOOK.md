@@ -518,6 +518,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Position: flat, no resting orders** (`get_equity_positions`/`get_equity_orders`, verified).
 - Profiling (`tools/profile.py`) and affordability marking deferred to the 9:30/9:35 live re-checks per D2 step 7 — **today's full shortlist is now all 105 scan names (not just the top-25-by-magnitude cut) plus the 5 sub-$5 momentum names plus the four commodity proxies** (gold/silver/copper/uranium), per the governor override above. Full 105-name list is live via `run_scan` on scan `4ceac364-d887-4afc-b3e1-7cfe991001e1` — not re-pasted here to keep this section a targeted read; the top-25-by-magnitude table above is still a fair starting point for ranking, it's just no longer the *complete* candidate set.
 
+**9:30 observation — C1 Gate-1 baseline recorded (watchlist only, no new scan).** State check: flat, no resting orders (`get_equity_orders`, most recent order still 9/2's NUGT exit).
+
+- **C1 baseline (9:30, first of two fixed observations): all four commodity proxies confirm the premarket read, now with real regular-hours prints.** GLD +1.91% ($410.465 vs $402.78 close) · SLV +1.56% ($59.99 vs $59.07) · COPX +2.11% ($91.795 vs $89.90) · URA +2.48% ($45.42 vs $44.32). All comfortably positive — leg 1 of C1 (positive at 9:30) clears for all four; leg 3 (9:35 not below this baseline) will decide at the next checkpoint.
+- **Confirming complex still holding at the open**, same names flagged at 9:00: HL +3.76%, AG +2.85%, CDE +2.43%, EQX +3.48% (silver/gold miners) · FCX +1.38%, DNN +3.18% (copper, uranium). Breadth intact, nothing rolled over between premarket and the open.
+- **Energy stays excluded** — XLE +0.15% at the open, essentially flat, consistent with the premarket read (+0.20%) and yesterday's crude retreat. Not a candidate.
+- No new scan run (C1's own rule) — the 105-name-plus-sub-$5 shortlist from 9:00 (governor-expanded) stands unchanged into the 9:35 entry checkpoint.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
