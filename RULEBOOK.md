@@ -564,6 +564,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (MSTR $133.96, still well above its $131.345 fill-timestamp baseline and its own session high), no R/R flip (stop now locks in real gain — $14.89 vs $14.7379 fill, position is risk-free), no event, not near close. B5 headline check not yet due (next due ~10:35, one hour from 9:35 entry). **Hold.**
 - **Pre-commit for 10:20**: the $14.89 stop is now the live falsifiable line — a close back through it is the exit. This stop already sits above the $14.7379 entry fill, so from here the trade cannot close as a loss on this leg.
 
+**10:20 management — HOLD MSTX, stop ratcheted up again, third straight raise.** State check: 15 sh MSTX, `shares_held_for_sells=15`, stop confirmed resting at $14.89 going in. B1b since-10:10 pull (14:10–14:20 UTC): `bar_high` reached **$15.2575** (14:17 UTC bar) — MSTX kept extending, now +4% over the ten minutes on top of the prior leg's move, still with real volume on every bar (no thin spike).
+
+- Live quote checked immediately before acting: **$15.38/$15.39** (14:26:58 UTC), again above the last bar's high — `run_high = max($15.15 prior, $15.2575 bar_high, $15.38 live) = $15.38`.
+- `candidate_stop = 15.38 × 0.9828 = $15.1155`, rounded to **$15.12**. `new_stop = max($14.89, $15.12) = $15.12` — another real upward move (+$0.23). Cancelled the $14.89 stop (verified `cancelled`), re-checked live price ($15.38, safely clear), placed and verified resting: stop_market, 15 sh, **$15.12**, confirmed via `get_equity_orders` (state=`confirmed`).
+- B3 exits checked: no reversal (MSTR $135.30, still climbing, well above its $131.345 fill-timestamp baseline), no R/R flip (locked gain now $0.38/sh above fill, ~2.6% on the position), no event, not near close. B5 headline check not yet due (next due ~10:35). **Hold.**
+- **Pre-commit for 10:30**: the $15.12 stop is now the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
