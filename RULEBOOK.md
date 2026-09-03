@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.53.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.54.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -23,10 +23,10 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 |---|---|---|
 | **9:00** research | A · C · D | Builds the day's candidates |
 | **9:30** observation | A · C1 | Watchlist only — no new scan; records the Gate-1 baseline |
-| **9:40** entry | A · C | The primary entry slot |
-| **9:50–10:50** management ×7 (10-min cadence) | A · B (+ C — entries valid anywhere in this window) | Holding, or flat and open to a fresh opportunity — tighter cadence through the morning's most active stretch |
-| **11:00–12:15** management ×6 (15-min cadence) | A · B (+ C — entries valid anywhere in this window) | Same as above, reverting to the wider cadence once the morning settles |
-| **12:30** close | A · B4 · D | Exit, report, and arm tomorrow (primary) |
+| **9:35** entry | A · C | The primary entry slot (v3.54 — moved up from 9:40) |
+| **9:40–11:00** management ×9 (10-min cadence) | A · B (+ C — entries valid anywhere in this window) | Holding, or flat and open to a fresh opportunity — tighter cadence through the morning's most active stretch |
+| **11:15–11:45** management ×3 (15-min cadence) | A · B (+ C — entries valid anywhere in this window) | Same as above, reverting to the wider cadence once the morning settles |
+| **12:00** close | A · B4 · D | Exit, report, and arm tomorrow (primary) — pins the stop to current price (v3.54 — moved up from 12:30) |
 | **8:00** backup | A · D | Verify tomorrow is armed; re-arm only if missing |
 
 **Part E is reference — pull it only when a rule in A–D sends you there.** Never read it front to back. **The same on-demand pattern applies to any inline pointer that lands outside your row's named part(s), not only ones into Part E** — C7/C8/C10's `(B1)`, C10/C11's `(B1b)`, D2's `(B1)`/`(E3)`/`(E5)`, and every other parenthetical citation. A row's letter code names the part(s) it reads in full; a pointer found while reading sends you to grep and pull just the one subsection it names — never the whole part the pointer lands in, and never skip it because it's outside your row's headline letters.
@@ -55,7 +55,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 1. List triggers. **Delete every one with `ended_reason='run_once_fired'`** — a fired trigger reschedules itself ~24h later carrying its original, now-stale prompt.
 2. Delete any trigger on a slot about to be armed. Exactly one per slot.
 3. Never delete the trigger you are running from until tomorrow is armed.
-4. **Never delete the 12:30pm close checkpoint (primary arming) or the 8:00pm checkpoint (backup verification, D1).** Together they replace what used to be a single point of failure.
+4. **Never delete the 12:00pm close checkpoint (primary arming) or the 8:00pm checkpoint (backup verification, D1).** Together they replace what used to be a single point of failure.
 
 A past-due trigger still enabled = a **missed** checkpoint, not a pending one. Do its work now, say it was missed, then delete it.
 
@@ -105,7 +105,7 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 - `bar_low` — the lowest low reached anywhere in the gap.
 - `bar_close` — the window's final close, used wherever a mechanism needs the actual live tradable price (order placement, comparing a proposed stop against where price sits right now) — ranges inform the analysis, but a real order still needs a real current quote.
 
-**Ranges close the observation gap without changing decision frequency.** Checkpoints run every 10 minutes from 9:50 through 10:50, then every 15 minutes from 11:00 through 12:30 (v3.52) — a hard cost constraint, tighter through the morning's most active stretch. Each one knows the true high and low reached since the last, so a spike-and-reverse inside one interval is visible to every rule, even though action still waits for a scheduled checkpoint. Everywhere below, `run_high`, `session_high`/`session_low`, and checkpoint-to-checkpoint comparisons read from this range, never a point.
+**Ranges close the observation gap without changing decision frequency.** Checkpoints run every 10 minutes from 9:40 through 11:00, then every 15 minutes from 11:15 through 12:00 (v3.54) — a hard cost constraint, tighter through the morning's most active stretch. Each one knows the true high and low reached since the last, so a spike-and-reverse inside one interval is visible to every rule, even though action still waits for a scheduled checkpoint. Everywhere below, `run_high`, `session_high`/`session_low`, and checkpoint-to-checkpoint comparisons read from this range, never a point.
 
 ## B2. Stops — UP ONLY, NEVER DOWN
 
@@ -119,7 +119,7 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 
 **`run_high` tracks the high since *this position's entry* — a different window than C10's day-anchored `session_high`, even though both reuse the same B1b range-tracking technique.** Initialized to the fill price at entry, then `run_high = max(run_high, bar_high)` at every checkpoint (B1b) — the true highest price reached since the fill, not a lucky-or-unlucky point sample. Advances on any fresh interval high, unconditionally. **Never substitute `session_high` here** — a candidate can legitimately enter below its own day's high (C10 leg 2 allows a confirmed bounce off a pullback), in which case `session_high` at entry sits above the fill and would produce a stop tighter than the hold has actually earned.
 
-**At every management checkpoint (9:50 through 12:30, on whichever cadence is currently in force — 10-min through 10:50, 15-min from 11:00, v3.52), the stop ratchets off the running high itself, discounted by twice the candidate's own noise band — never off the trailing average, never a fixed stage:**
+**At every management checkpoint (9:40 through 12:00, on whichever cadence is currently in force — 10-min through 11:00, 15-min from 11:15, v3.54), the stop ratchets off the running high itself, discounted by twice the candidate's own noise band — never off the trailing average, never a fixed stage:**
 
 ```
 run_high = max(run_high, bar_high)                         -- B1b, updated every checkpoint
@@ -131,7 +131,7 @@ new_stop = max(current_stop, candidate_stop)      -- up only, never down (B2's o
 
 **Why 2× the noise band:** backtested 1×–5× against all trades on record; 2× was the point that improved on the real historical results without giving reversals extra room to run first — full comparison in Current State (v3.44) and the git history, not restated here.
 
-**At the 12:30 checkpoint specifically** — the last of the day — additionally include the live current price (`bar_close`, B1b) as a stop candidate: `new_stop = max(new_stop, bar_close)`. A position can only still be open at 12:30 if price is at or above its current stop, so this is always a valid *upward* move, never a violation of "up only." It pins the stop to the market, so the very next tick down closes the position — the stop still does the closing, not a forced sell, but the exit becomes effectively immediate. This is what ends the trading day; there is no separate 4:00pm deadline (see B4).
+**At the 12:00 checkpoint specifically** — the last of the day (v3.54 — moved up from 12:30) — additionally include the live current price (`bar_close`, B1b) as a stop candidate: `new_stop = max(new_stop, bar_close)`. A position can only still be open at 12:00 if price is at or above its current stop, so this is always a valid *upward* move, never a violation of "up only." It pins the stop to the market, so the very next tick down closes the position — the stop still does the closing, not a forced sell, but the exit becomes effectively immediate. This is what ends the trading day; there is no separate 4:00pm deadline (see B4).
 
 **No fixed profit-taking target — the trail is the only thing that locks in gains.** See B4: removed as a separate rule since v3.40, unchanged by this rewrite.
 
@@ -168,17 +168,17 @@ Name the **specific, falsifiable** condition that would exit at the next checkpo
 
 **No checkpoint sells purely for hitting a price level.** The continuous chandelier trail (B2) is what locks in gains — a big move is expected to give back at most `2 × stall_threshold_pct` off its running high at any checkpoint. `target_pct` is still computed at entry (B1) and used by C7's `mfe_to_target` ranking check — informational only, never an autonomous trigger.
 
-**Every position closes the same trading day it was opened. No overnight hold, ever.** Enforced structurally, not by a deadline check: the 12:30 checkpoint (B2) pins the stop to the live price, so the position's own stop closes it, almost immediately, rather than a separate forced sell. State the intended exit at entry.
+**Every position closes the same trading day it was opened. No overnight hold, ever.** Enforced structurally, not by a deadline check: the 12:00 checkpoint (B2) pins the stop to the live price, so the position's own stop closes it, almost immediately, rather than a separate forced sell. State the intended exit at entry.
 
 ## B5. Headlines while holding
 
 Check **every hour**, position-relevant only, same-day news only — yesterday's is already in the price. Name the catalyst in the report.
 
-*(The trading window (9:00–12:30) is short enough that this may only fire once or twice in a given hold. Don't stop checking just because an earlier trade already closed today — a later opportunity is still tradeable within the window.)*
+*(The trading window (9:00–12:00) is short enough that this may only fire once or twice in a given hold. Don't stop checking just because an earlier trade already closed today — a later opportunity is still tradeable within the window.)*
 
 ## B6. Shortlist range snapshot — feeds C10/C11, maintained incrementally, whether or not it's the held position
 
-**Starts at 9:30, not the first management checkpoint.** Every checkpoint that produces a B1b-style range read for a candidate — 9:30's observation, 9:40's entry gate stack, and every management checkpoint from 9:50 through 12:30 (whichever cadence is in force, v3.52) — pulls minute-bar historicals covering only the gap since that candidate's *previous* range read (B1b's own small window — never the whole day) **for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 25-name watchlist), even while holding something else. One extra minute-bar call per name, the same call already run for the held position, not a new kind of lookup. This is what gives C11's "back to 9:30, whichever is shorter" window real coverage from the day's first read onward, instead of an artificially short one at the first management checkpoint.
+**Starts at 9:30, not the first management checkpoint.** Every checkpoint that produces a B1b-style range read for a candidate — 9:30's observation, 9:35's entry gate stack, and every management checkpoint from 9:40 through 12:00 (whichever cadence is in force, v3.54) — pulls minute-bar historicals covering only the gap since that candidate's *previous* range read (B1b's own small window — never the whole day) **for every name still on today's shortlist** (the candidates that cleared C3 at 9:40, not the full 25-name watchlist), even while holding something else. One extra minute-bar call per name, the same call already run for the held position, not a new kind of lookup. This is what gives C11's "back to 9:30, whichever is shorter" window real coverage from the day's first read onward, instead of an artificially short one at the first management checkpoint.
 
 **Update the running values, never re-derive them from scratch:**
 - `session_high = max(session_high, bar_high)`. If this raises `session_high`, `session_low` clears — a fresh high ends the pullback episode (C10's own rule).
@@ -189,27 +189,27 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 ---
 
-# PART C — ENTRY (9:00 · 9:30 · 9:40 primarily; any 10:00–12:30 checkpoint while flat)
+# PART C — ENTRY (9:00 · 9:30 · 9:35 primarily; any 9:40–12:00 checkpoint while flat)
 
-> **No position may be opened outside 9:40–12:30 (v3.43).** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
+> **No position may be opened outside 9:35–12:00 (v3.54).** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:35, subject to C1's late-entry clause. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
-## C1. Gate 1 — the commodity must hold, 9:30 → 9:40
+## C1. Gate 1 — the commodity must hold, 9:30 → 9:35
 
 **v3.53 — scope narrowed to commodity trades only.** Since sectors are no longer a tradeable category (D2/C4), this gate now applies exclusively to the commodity vehicles named in E3 (energy, gold, silver, copper, uranium, broader materials) — never to an individual stock or its leveraged wrapper, which are judged purely on their own move (C3/C10).
 
-**9:30 is scoped to whatever commodity groups are on today's watchlist — no new market scan.** Record the day change of each commodity's plain proxy (feeds the Gate 1 test below) and note whether the confirming complex (miners, E&P, etc.) is still holding. That's an observational check, not a formal re-run of C3/C6 — the formal re-confirmation happens live at 9:40.
+**9:30 is scoped to whatever commodity groups are on today's watchlist — no new market scan.** Record the day change of each commodity's plain proxy (feeds the Gate 1 test below) and note whether the confirming complex (miners, E&P, etc.) is still holding. That's an observational check, not a formal re-run of C3/C6 — the formal re-confirmation happens live at 9:35.
 
-Applies to a **commodity-leveraged trade** only. Record the commodity proxy's day change at **9:30** and again at **9:40**. All three must hold:
+Applies to a **commodity-leveraged trade** only. Record the commodity proxy's day change at **9:30** and again at **9:35**. All three must hold:
 
 1. positive at 9:30, **and**
-2. positive at 9:40, **and**
-3. the 9:40 reading **not below** the 9:30 reading.
+2. positive at 9:35, **and**
+3. the 9:35 reading **not below** the 9:30 reading.
 
-Any failure at 9:40 → no entry **at 9:40** in that commodity's leveraged vehicle.
+Any failure at 9:35 → no entry **at 9:35** in that commodity's leveraged vehicle.
 
-**Late entry, any checkpoint after 9:40:** the door isn't permanently closed by a 9:40 failure. At any later checkpoint, entry is still allowed if the commodity proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:40's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). Recovered commodity strength after 9:40 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
+**Late entry, any checkpoint after 9:35:** the door isn't permanently closed by a 9:35 failure. At any later checkpoint, entry is still allowed if the commodity proxy's live reading at that checkpoint is **strictly higher than the 9:30 baseline** — not merely "not below" (that looser bar is 9:35's own test, leg 3 above; a later checkpoint must clear the higher bar of actually exceeding 9:30, not just matching or nearly matching it). Recovered commodity strength after 9:35 is tradeable, but only past a real, higher threshold — never on a bare return to the 9:30 level.
 
-**Two fixed observations (9:30, 9:40) decide the 9:40 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
+**Two fixed observations (9:30, 9:35) decide the 9:35 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
 
 **Does not gate an individual-stock trade — nothing does, anymore.** A stock (or its leveraged wrapper) moving decisively on its own is judged purely on its own move (C3, C10, C11) and never needs a group to confirm it, because there is no group. **Every candidate, commodity or individual stock, is still subject to C10's direction/reversal test** — this gate's leg 3 is the commodity-proxy-only version of that same idea, for the one category that still has a proxy.
 
@@ -227,7 +227,7 @@ Any failure at 9:40 → no entry **at 9:40** in that commodity's leveraged vehic
 
 2. **Moving average — optional, adds weight only, never a trigger and never a veto.** When price is actually testing the 50- or 200-day SMA, check its slope over 5–10 sessions. Rising MA + bounce up → extra confirmation for the long. Falling MA + rejection → **not counted at all**, neither as a reason to decline nor as an inverse trigger. Skip if price is not near either average.
 
-Screen leg 1 at **9:00** with the scanner (`% Change`, or the gainers preset). **Re-confirm live at 9:40** — a 9:00 read is stale by the open.
+Screen leg 1 at **9:00** with the scanner (`% Change`, or the gainers preset). **Re-confirm live at 9:35** — a 9:00 read is stale by the open.
 
 > **Scanner filter values are decimals, not whole percents** (`0.0075` = 0.75%, not `0.75`) — `update_scan_filters` takes the same units. A stray whole-percent value doesn't error, it silently matches nothing (found 2026-08-28: `FILTER_TYPE_PERCENT_CHANGE_FROM_CLOSE` stored as `0.75` returned 0 matches all morning; corrected to `0.0075` returned 250). After any filter edit, verify with a live run before trusting a "no matches" read — zero results is itself a signal to check the filter, not evidence the tape is quiet. `update_scan_filters` also wants wire-format predicate enums (`PREDICATE_GREATER_THAN_OR_EQUAL`, etc.), not the human-readable symbols (`>=`) that `get_scans`/`run_scan` display.
 
@@ -295,8 +295,8 @@ Then:
 
 ## C9. Timing and selection
 
-- **Entries are valid at any checkpoint from 9:40 through 12:30** — no preferred-window distinction inside that range; the whole window is short enough (v3.43) that lateness within it isn't itself a signal.
-- **After 12:30, none** — the window is closed for new positions regardless of what's setting up (B2/B4).
+- **Entries are valid at any checkpoint from 9:35 through 12:00** — no preferred-window distinction inside that range; the whole window is short enough (v3.43) that lateness within it isn't itself a signal.
+- **After 12:00, none** — the window is closed for new positions regardless of what's setting up (B2/B4).
 - Never force a trade because the window is closing.
 - Verify `all_day_tradability` before entering.
 - **Price the spread:** read the actual bid/ask, **double it** for the round trip, subtract from the expected move — take it only if it still clears the target with room.
@@ -329,35 +329,35 @@ Reset `session_high`/`session_low` at 9:00 daily — nothing carries between ses
 
 **Efficiency Ratio (ER), read from B6's maintained rolling log (v3.47) — never a fresh full-window pull re-summed by hand.** Take every log entry whose `checkpoint_time` falls inside the trailing 60 minutes (or back to 9:30, whichever is shorter): `ER = |current bar_close − oldest-in-window entry's bar_close| ÷ Σ(those entries' path_length)` — net progress over total path length. Near 1 = clean directional move; near 0 = pure back-and-forth with little net progress. Typically 4–5 log entries, not 40–90 individual minute bars. Fewer than ~20 minutes of logged window available → too little to be meaningful, gate passes by default — never block on a gap, never pretend the check ran.
 
-**Minimum ER required to enter, scaled to how forgiving the moment should be** (early moves are naturally noisier as they establish; entries later in the — now much shorter — window are into an already-maturing move and should be held to a higher bar). **Ranges are continuous — every clock time from 9:40 to 12:30 falls in exactly one row, no gaps.** This matters beyond the regular grid: a C12 mini-cycle check can land at any minute (fill-time-anchored, not just on the quarter hour), and needs an unambiguous minimum wherever it lands:
+**Minimum ER required to enter, scaled to how forgiving the moment should be** (early moves are naturally noisier as they establish; entries later in the — now much shorter — window are into an already-maturing move and should be held to a higher bar). **Ranges are continuous — every clock time from 9:35 to 12:00 falls in exactly one row, no gaps.** This matters beyond the regular grid: a C12 mini-cycle check can land at any minute (fill-time-anchored, not just on the quarter hour), and needs an unambiguous minimum wherever it lands:
 
 | Checkpoint time | Minimum ER |
 |---|---|
-| 9:40 – 10:29 | 0.15 |
-| 10:30 – 11:29 | 0.25 |
-| 11:30 – 12:30 | 0.30 |
+| 9:35 – 10:24 | 0.15 |
+| 10:25 – 11:24 | 0.25 |
+| 11:25 – 12:00 | 0.30 |
 
 Below the window's minimum → declined as too choppy, regardless of C1–C10 all passing. This is a real, separate failure mode from C10: C10 asks "is it currently falling," C11 asks "is the recent path actually going anywhere, net."
 
-**C11 now depends on B6's rolling log (v3.47)** — a reversal from before, when it self-supplied a fresh full-window pull independent of B6. A candidate with a real gap in its own B6 history (nothing logged since 9:40, say) simply has no window to compute ER from; same default-pass-and-flag rule above, not a special case.
+**C11 now depends on B6's rolling log (v3.47)** — a reversal from before, when it self-supplied a fresh full-window pull independent of B6. A candidate with a real gap in its own B6 history (nothing logged since 9:35, say) simply has no window to compute ER from; same default-pass-and-flag rule above, not a special case.
 
 ## C12. Re-entry cycle — an exit restarts the entry clock, not the whole day
 
-**Applies whenever a position closes before 12:30, regardless of why** — stop (including the 12:30 pin's near-immediate trigger, if the position is somehow re-entered and stopped again inside the same window), reversal, any other B3 exit. The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next regular grid slot (whatever cadence is in force there, v3.52).
+**Applies whenever a position closes before 12:00, regardless of why** — stop (including the 12:00 pin's near-immediate trigger, if the position is somehow re-entered and stopped again inside the same window), reversal, any other B3 exit. The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next regular grid slot (whatever cadence is in force there, v3.54).
 
 1. **The exit's fill timestamp is the mini-cycle's actual "9:30-equivalent" moment — not whenever it's later discovered or read.** At the moment the exit is discovered (T+0), same turn, no new trigger needed: run the 9:30-style check (C1, if any commodity is on today's shortlist) against today's existing shortlist — the 25-name individual-stock list and any commodities already built at 9:00, not a fresh market-wide scan. Record any commodity's current day change and note which shortlist names are still holding their move. C7 re-ranks fresh here too — the capital base just changed (the position closed), which by C7's own rule voids the earlier ranking.
 2. **T+10 is measured from the exit's actual fill timestamp (from the order response), never from when it happened to be noticed.** Detection lags the real fill whenever the exit fires between scheduled checkpoints — get the real fill time first, then compute `elapsed = now − fill_time`:
-   - **`elapsed ≥ 10 minutes`** — the window has already passed. Run the full 9:40-style entry gate stack, C1–C11, immediately, same turn as T+0. No trigger to arm, no further wait.
+   - **`elapsed ≥ 10 minutes`** — the window has already passed. Run the full 9:35-style entry gate stack, C1–C11, immediately, same turn as T+0. No trigger to arm, no further wait.
    - **`elapsed < 10 minutes`** — arm one ad hoc trigger for `10 − elapsed` minutes out (the nearest possible time to exactly `fill_time + 10min`, not a flat 10 minutes from T+0) to run the gate stack then.
    Enter if a candidate clears every gate, exactly as any other entry checkpoint would. This is in addition to, not a replacement for, the regular grid triggers already armed for the rest of the day.
 3. **The comparison baseline for this gate stack's first run is each candidate's price *at the fill timestamp itself*, not at whenever the check happens to execute, and not the last regular grid slot.** Pull minute-bar historicals for that exact minute, for every shortlist name — the same one fixed moment for all of them, the same way 9:30 is one fixed moment for the whole watchlist, not something recomputed per candidate. This is what C10 leg 1 ("not currently falling") and C1's baseline reading compare against for this mini-cycle's first pass — whether that pass runs immediately (the `elapsed ≥ 10` branch) or at the armed T+10 trigger (the `elapsed < 10` branch). Being "free to trade" (timing, step 2) and "what you compare against" (this step) are two separate questions — 15 minutes already elapsed since the fill clears you to act *now*, but the price you're judging "still rising since I sold" against is still the price *at the fill*, not the price at whatever minute you happened to look.
 4. **After the gate stack runs, whether or not a new position was opened, resume the standard grid at its own next slot — not exit-relative.** Exit at 10:40, discovered and gated promptly → the next check is the regular 10:50 slot, then 11:00, unchanged. This mini-cycle's first read (step 3) is itself a formal checkpoint in the single chronological chain C10 tracks and B6 logs (v3.26) — the regular slot that follows it compares against *that* read's own `bar_close`, not back past it to the fill-timestamp baseline again. The fill-timestamp anchor is a one-time reference for this mini-cycle's opening comparison only, never a standing reference point afterward.
 
-**Worked example, steps 2–4 together (this is the authority C10 leg 1 points back to; v3.52 — times updated for the two-speed cadence, logic unchanged):** a position exits (fill) at 10:32. The 10:40 grid check discovers it; only 8 minutes have passed (`elapsed < 10`), so an ad hoc trigger arms for 10:42 (`fill_time + 10min`). At 10:42 the full gate stack runs — C10 leg 1 there compares 10:42's `bar_close` against the candidate's price *at 10:32* (step 3), not against 10:40's close. Declined → the next check is the regular 10:50 slot, and *that* leg 1 compares against the 10:42 read's own `bar_close` (step 4) — not back against 10:32 again, and not against 10:40. From there it's fully normal: 11:00 vs 10:50, then the cadence widens to 15 minutes — 11:15 vs 11:00, 11:30 vs 11:15, and so on through 12:30.
+**Worked example, steps 2–4 together (this is the authority C10 leg 1 points back to; v3.52 — times updated for the two-speed cadence, logic unchanged):** a position exits (fill) at 10:32. The 10:40 grid check discovers it; only 8 minutes have passed (`elapsed < 10`), so an ad hoc trigger arms for 10:42 (`fill_time + 10min`). At 10:42 the full gate stack runs — C10 leg 1 there compares 10:42's `bar_close` against the candidate's price *at 10:32* (step 3), not against 10:40's close. Declined → the next check is the regular 10:50 slot, and *that* leg 1 compares against the 10:42 read's own `bar_close` (step 4) — not back against 10:32 again, and not against 10:40. From there it's fully normal: 11:00 vs 10:50, then the cadence widens to 15 minutes — 11:15 vs 11:00, 11:30 vs 11:15, and so on through 12:00.
 
 Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
 
-**A chance to re-check, never a mandate to re-enter — everything else already in force still binds at full strength.** C5's "no read = no trade" and C9's "never force a trade" apply to the T+10 check exactly as hard as at 9:40; C9's 9:40–12:30 entry window (v3.43) still governs — a mini-cycle triggered late enough that `fill_time + 10min` would land past 12:30 simply finds no entry available, same as any other post-12:30 moment; A1's one-position gate is untouched. This rule only shortens *when* the next attempt happens, never *whether* one is allowed.
+**A chance to re-check, never a mandate to re-enter — everything else already in force still binds at full strength.** C5's "no read = no trade" and C9's "never force a trade" apply to the T+10 check exactly as hard as at 9:35; C9's 9:35–12:00 entry window (v3.54) still governs — a mini-cycle triggered late enough that `fill_time + 10min` would land past 12:00 simply finds no entry available, same as any other post-12:00 moment; A1's one-position gate is untouched. This rule only shortens *when* the next attempt happens, never *whether* one is allowed.
 
 ---
 
@@ -365,25 +365,25 @@ Fires once per exit, not a new recurring cadence. If T+10 finds nothing that cle
 
 ## D1. The grid (ET)
 
-`9:00 · 9:30 · 9:40 · 9:50 · 10:00 · 10:10 · 10:20 · 10:30 · 10:40 · 10:50 · 11:00 · 11:15 · 11:30 · 11:45 · 12:00 · 12:15 · 12:30 · 8:00`
+`9:00 · 9:30 · 9:35 · 9:40 · 9:50 · 10:00 · 10:10 · 10:20 · 10:30 · 10:40 · 10:50 · 11:00 · 11:15 · 11:30 · 11:45 · 12:00 · 8:00`
 
-**No extended-hours slots.** As of v3.43 the trading day ends at 12:30 structurally — the 12:30 checkpoint's stop-pin (B2) closes whatever's open almost immediately, so there is nothing left to manage into the afternoon or evening. 8:00pm exists purely to verify tomorrow got armed (below), not to trade.
+**No extended-hours slots.** As of v3.54 the trading day ends at 12:00 structurally — the 12:00 checkpoint's stop-pin (B2) closes whatever's open almost immediately, so there is nothing left to manage into the afternoon or evening. 8:00pm exists purely to verify tomorrow got armed (below), not to trade.
 
-**Two-speed cadence (v3.52): 10 minutes from 9:50 through 10:50, then 15 minutes from 11:00 through 12:30.** The tighter early cadence targets the morning's most active stretch — closer to entry, closer to the fastest part of most moves, and closer to where the ratchet-breach pattern (E6) has actually bitten. 10:50 → 11:00 is itself a 10-minute gap, so the cadence hands off cleanly with no seam. ET → UTC: EDT = UTC−4; after Sun Nov 1 2026, EST = UTC−5. Skip market holidays — **verify the calendar, never assume.** On an early close, end the grid at whichever of 12:30 or the early-close time comes first. **Friday arms Monday**, not the weekend.
+**Two-speed cadence (v3.54): 10 minutes from 9:40 through 11:00, then 15 minutes from 11:15 through 12:00.** The tighter early cadence targets the morning's most active stretch — closer to entry, closer to the fastest part of most moves, and closer to where the ratchet-breach pattern (E6) has actually bitten. 10:50 → 11:00 is itself a 10-minute gap, so the cadence hands off cleanly with no seam. ET → UTC: EDT = UTC−4; after Sun Nov 1 2026, EST = UTC−5. Skip market holidays — **verify the calendar, never assume.** On an early close, end the grid at whichever of 12:00 or the early-close time comes first. **Friday arms Monday**, not the weekend.
 
 Runs indefinitely until the governor pauses it. Never stop on your own initiative.
 
-### Arming — primary at 12:30, backup at 8:00
+### Arming — primary at 12:00, backup at 8:00
 
-**Tomorrow's full checkpoint chain gets created at the 12:30 close, right after that day's exit/report work (D3) — not held until 8:00.** Skip the weekend the same way as always — Friday's 12:30 arms Monday.
+**Tomorrow's full checkpoint chain gets created at the 12:00 close, right after that day's exit/report work (D3) — not held until 8:00.** Skip the weekend the same way as always — Friday's 12:00 arms Monday.
 
-**8:00pm is a verification pass, not a second independent arming.** Check that tomorrow's chain already exists (`list_triggers`, looking for tomorrow's date). If it does, this is a non-event — stay silent per D3, nothing to report. **If it's missing or incomplete — the 12:30 arming failed or was skipped somehow — create it now, and say so explicitly**, the same way A2 already treats any past-due, still-enabled trigger as a missed checkpoint that gets done late and flagged, not silently absorbed.
+**8:00pm is a verification pass, not a second independent arming.** Check that tomorrow's chain already exists (`list_triggers`, looking for tomorrow's date). If it does, this is a non-event — stay silent per D3, nothing to report. **If it's missing or incomplete — the 12:00 arming failed or was skipped somehow — create it now, and say so explicitly**, the same way A2 already treats any past-due, still-enabled trigger as a missed checkpoint that gets done late and flagged, not silently absorbed.
 
 Never delete either checkpoint (A2's rule, not restated here).
 
 ### Early shutdown
 
-Flat · no resting orders · **and** no entry possible (buying power short) → delete remaining intraday checkpoints. **Keep exactly two: 12:30 close (report + primary arming) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable within the window unless one of the two conditions above is actually true.
+Flat · no resting orders · **and** no entry possible (buying power short) → delete remaining intraday checkpoints. **Keep exactly two: 12:00 close (report + primary arming) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable within the window unless one of the two conditions above is actually true.
 
 ## D2. 9:00am research — standard work
 
@@ -393,7 +393,7 @@ Flat · no resting orders · **and** no entry possible (buying power short) → 
 2. **Pre-market prices** across the universe and yesterday's watchlist.
 3. **Earnings reactions** from last night's after-close reporters.
 4. **Market-wide magnitude scan — individual stocks, no sector scoping.** Run the scanner's `% Change` gainers filter (C3's threshold, `≥0.75%`) across the whole market, with a liquidity floor (average volume — `FILTER_TYPE_AVERAGE_VOLUME`, same mechanism as any other scan) to keep the results real and tradeable rather than illiquid noise. No `Sector` filter this time — the point is to find whichever individual names are actually moving today, wherever they sit.
-5. **Separately, check the fixed commodity list (E3) for a real move** — the one category still allowed a group vehicle. Energy, gold, silver, copper, uranium, and broader materials each get a quick day-change read on their plain proxy; a commodity only makes today's list provisionally on that premarket read — real qualification still needs C1's formal 9:30→9:40 test and C6's two legs to clear live, same discipline as any other candidate, never assumed from the headline alone.
+5. **Separately, check the fixed commodity list (E3) for a real move** — the one category still allowed a group vehicle. Energy, gold, silver, copper, uranium, and broader materials each get a quick day-change read on their plain proxy; a commodity only makes today's list provisionally on that premarket read — real qualification still needs C1's formal 9:30→9:35 test and C6's two legs to clear live, same discipline as any other candidate, never assumed from the headline alone.
 6. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
 7. **Write the watchlist — 25 individual-stock names, plus whichever commodities cleared step 5, tracked as a separate short list, not counted against the 25.**
    - **Rank the scan's results by day-change magnitude.** Fill the 25 slots from the top down, but names that carry an existing single-stock leveraged ETF wrapper (E3's lookup table) get priority fill over plain stocks when both clear C3's 0.75% floor — matches C4's own preference for the leveraged vehicle once a name is already a candidate, applied one step earlier at watchlist-build time. A real mover without a wrapper still fills a slot on its own merit (C4 rank-2) once the wrapper-carrying names are placed; never pad the list with a name that isn't a genuine mover today just to reach 25 — a thinner list is a correct outcome, per C5's "no read = no trade."
@@ -410,7 +410,7 @@ Flat · no resting orders · **and** no entry possible (buying power short) → 
 - **When you do report, state the outcome, not the reasoning already committed to the file.** Full gate-stack reasoning belongs in `archive/trades.csv`'s notes field and E5 — both durable, both re-readable on demand. The chat reply is a line or two: what happened, the key number. It does not re-narrate reasoning that's already been written down. **This session runs every checkpoint indefinitely — Robinhood's connector grant can't be replicated in a fresh session, confirmed 2026-08-25, so there is no periodic reset.** Every word written into a reply becomes permanent, compounding context for the life of the system; duplicating file content into prose is a real, ongoing cost, not a one-time one.
 - **Report immediately:** entry · exit · stop fired · circuit breaker · error · a break in the checkpoint chain · a balance change indicating funding · a notable setup declined.
 - **A no-trade day gets no evening message.**
-- **Friday 12:30pm always reports**, trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat. (Moved here from 8:00pm under D1's arming restructure — 8:00 is now a silent-unless-broken backup check, even on Fridays; the real weekly data already lives at the 12:30 close, not seven-and-a-half hours later.)
+- **Friday 12:00pm always reports**, trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat. (Moved here from 8:00pm under D1's arming restructure — 8:00 is now a silent-unless-broken backup check, even on Fridays; the real weekly data already lives at the 12:00 close, not eight hours later.)
 
 **At exit, append one row to `archive/trades.csv`** — the live append-only log. Compute `r_multiple = (exit% − entry%) ÷ initial_stop_pct` **now**, while the entry stop is known — it cannot be reconstructed later. Set `counts_toward_streak` and `counts_toward_expectancy` (`no` only for a mechanical abort or a funded execution test) and say why in `notes`. **Append-only — never edit a past row**; a mistake gets a correcting row.
 
@@ -575,6 +575,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.54 (9/3 premarket, governor session): grid compressed — entry moves up to 9:35, close moves up to 12:00.** Governor instruction, requested before Thursday 9/3's open. New checkpoint chain: `9:00 · 9:30 · 9:35 · 9:40 · 9:50 · 10:00 · 10:10 · 10:20 · 10:30 · 10:40 · 10:50 · 11:00 · 11:15 · 11:30 · 11:45 · 12:00 · 8:00` — 16 intraday checkpoints plus the 8:00pm backup (was 17). **9:35 is the new primary entry slot**, taking over the role 9:40 held under v3.53 — C1's Gate-1 test now reads 9:30/9:35 instead of 9:30/9:40, and C9's entry window is 9:35–12:00. **9:40 becomes the first management checkpoint** (5 minutes after entry rather than 10), starting the same two-speed cadence one notch earlier: 10-minute checkpoints run 9:40 through 11:00 (nine slots, was seven at 9:50–10:50), then 15-minute checkpoints run 11:15 through 11:45 (three slots, was six at 11:00–12:15). **12:00 is the new close** — B2's stop-pin-to-current-price mechanism (`new_stop = max(new_stop, bar_close)`) that used to fire at 12:30 now fires at 12:00, ending the trading day and arming tomorrow's grid there; 12:15 and 12:30 are retired as slots entirely. Updated everywhere the old times were assumed: the READ MAP, B1b/B2/B6's checkpoint-cadence language, C1/C9/C11/C12's entry-window and gate-timing references, D1's grid line and arming section, and D3's Friday-report line. C11's ER-minimum table windows were rescaled proportionally to the shorter 9:35–12:00 span rather than left keyed to the old clock times. Thursday 9/3's already-armed trigger grid gets replaced with the new times before market open — see A2. Historical journal/log entries below (dated records of checkpoints run under earlier policy versions) are left untouched, same convention as v3.53.
 
 **v3.53 (9/2 late evening, governor session): sectors dropped entirely — individual stocks and individual leveraged ETFs only, commodities (metals/energy/etc.) the sole exception.** Governor instruction, prompted by a real miss the same day: NVDA closed +3.2% and its leveraged wrapper NVDL closed +6.3%, but semis (SMH) read -0.41% premarket at 9:00 and never got re-surveyed once the sector-first structure declined it — the old design had no way to notice an individual name running hard inside a sector that failed its own morning read. Rather than patch that one gap, the governor asked for the structural fix: stop organizing research around sectors at all.
 
