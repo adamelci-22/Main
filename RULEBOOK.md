@@ -571,6 +571,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (MSTR $135.30, still climbing, well above its $131.345 fill-timestamp baseline), no R/R flip (locked gain now $0.38/sh above fill, ~2.6% on the position), no event, not near close. B5 headline check not yet due (next due ~10:35). **Hold.**
 - **Pre-commit for 10:30**: the $15.12 stop is now the live falsifiable line — a close back through it is the exit.
 
+**10:30 management — HOLD MSTX, stop ratcheted up again, fourth straight raise.** State check: 15 sh MSTX, `shares_held_for_sells=15`, stop confirmed resting at $15.12 going in. B1b since-10:20 pull (14:20–14:30 UTC): `bar_high` reached **$15.57** (14:30 UTC bar) — MSTX kept extending with no pullback of any real size across the whole ten minutes, volume strong throughout (one 65k-share bar at 14:26).
+
+- Live quote checked immediately before acting: **$15.645/$15.655** (14:30:39 UTC), again above the last bar's high — `run_high = max($15.38 prior, $15.57 bar_high, $15.645 live) = $15.645`.
+- `candidate_stop = 15.645 × 0.9828 = $15.3759`, rounded to **$15.38**. `new_stop = max($15.12, $15.38) = $15.38` — another real upward move (+$0.26). Cancelled the $15.12 stop (verified `cancelled`), re-checked live price ($15.645, safely clear), placed and verified resting: stop_market, 15 sh, **$15.38**, confirmed via `get_equity_orders` (state=`confirmed`).
+- B3 exits checked: no reversal (MSTR $136.39, still climbing, well above its $131.345 fill-timestamp baseline), no R/R flip (locked gain now $0.64/sh above fill, ~4.3% on the position), no event, not near close. B5 headline check not yet due (first due ~10:35, one hour after the 9:35 entry). **Hold.**
+- **Pre-commit for 10:40**: the $15.38 stop is now the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
