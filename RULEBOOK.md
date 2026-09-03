@@ -534,6 +534,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Profiled MSTX** (`tools/profile.py`, 45 daily sessions): stop 6.06%, target 9.08%, stall threshold 0.86%, **mfe_per_stop 0.944**. C7: sole survivor after C1/C10 eliminated the commodity vehicles and the rest of the miners complex — no ranking contest needed.
 - **Order execution**: reviewed at $14.42 ask, repriced twice as the tape moved fast (ask ran to $14.65, then $14.72, in under 90 seconds) — final marketable limit $14.85, filled **$14.6499** (price improvement, $0.20/sh better than the limit). 15 shares (floor($232.14 buying power ÷ $14.72 live ask) = 15), total cost $219.75. **C10 re-verified live immediately before placement** (v3.50/C8): MSTR $132.08 (+7.21%), well clear of the $128.42 baseline. **Stop placed and confirmed resting**: stop_market, 15 sh, **$13.76 (−6.06%)**, confirmed via `get_equity_orders` (state=`confirmed`) — no E6 placement-glitch this time. Target 9.08% (~$15.97), `mfe_per_stop` 0.944. **Pre-commit for 9:40**: expect `bar_close` to hold at/above the trail level; a close back below MSTR's own 9:30 baseline ($128.42) would be the falsified case for the "not currently falling" read that got it in.
 
+**9:40 management — HOLD MSTX, stop ratcheted up.** State check: 15 sh MSTX, `shares_held_for_sells=15`. B1b since-entry pull (13:39–13:41 UTC): `run_high` (entry-anchored) touched **$14.7598** at 13:40 ET.
+
+- `candidate_stop = run_high × (1 − 2×0.86%) = 14.7598 × 0.9828 = $14.5066`. `new_stop = max($13.76, $14.5066) = $14.51` — a real upward move. Cancelled the $13.76 stop (verified cancelled), placed and verified resting: stop_market, 15 sh, **$14.51**, confirmed via `get_equity_orders` (state=`confirmed`), safely below the live quote at placement ($14.705).
+- B3 exits checked: no reversal (no named level broken — day change still strongly positive), no R/R flip, no event, not near close. **Hold.**
+- **Pre-commit for 9:50**: the $14.51 stop is now the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
