@@ -551,6 +551,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **C7**: MSTX the sole real survivor after GDX/NUGT failed C11 and the individual miners split — no ranking contest.
 - **C8 execution**: reviewed at $14.75 ask, marketable limit $14.90, filled **$14.7379** (price improvement). 15 sh (floor($229.96 ÷ $14.75) = 15), total cost $221.07. Live MSTR re-verified immediately before placement: $132.46, well clear of baseline. **Stop placed and confirmed resting**: stop_market, 15 sh, **$13.85 (−6.06%)**, confirmed via `get_equity_orders` (state=`confirmed`). **Pre-commit for 10:00**: expect `bar_close` to hold at/above the trail; a close back below MSTR's $131.345 fill-timestamp baseline would be the falsified case.
 
+**10:00 management — HOLD MSTX, stop ratcheted up.** State check: 15 sh MSTX, `shares_held_for_sells=15`. B1b since-entry (re-entry-anchored) pull (14:00 UTC): `run_high` touched **$14.82**.
+
+- `candidate_stop = run_high × (1 − 2×0.86%) = 14.82 × 0.9828 = $14.5652`. `new_stop = max($13.85, $14.5652) = $14.57` — a real upward move. Live quote checked immediately before acting ($14.630) — safely above the candidate, no E6 risk. Cancelled the $13.85 stop (`get_equity_orders` initially showed `pending_cancelled`, re-checked and confirmed true `cancelled`), placed and verified resting: stop_market, 15 sh, **$14.57**, confirmed via `get_equity_orders` (state=`confirmed`), safely below a fresh quote taken right before placement ($14.650).
+- B3 exits checked: no reversal (MSTR still well above its $131.345 fill-timestamp baseline), no R/R flip, no event, not near close. **Hold.**
+- **Pre-commit for 10:10**: the $14.57 stop is now the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
