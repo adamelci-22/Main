@@ -571,6 +571,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **C12 mini-cycle armed**: fill timestamp 14:16:13 UTC. Ad hoc T+10 trigger armed immediately for ~14:27 UTC (`trig_01DeeaVNyyqcfiwy7edVM12Q`).
 - **Note**: the earlier v3.55 entry+5 catch-up trigger (armed for ~14:08 UTC) did arrive, just delayed — delivered at 14:16:51 UTC, after this checkpoint had already exited the position. Non-event, nothing to act on (already flat). Worth watching whether ad hoc trigger delivery lag recurs; not yet a pattern on one instance.
 
+**C12 T+10 gate stack, ~10:28 ET — no re-entry.** Checked against fill-timestamp baselines (14:16:13 UTC):
+
+- **C10 leg 1**: KLAC declining since the exit (185.29 → 183.98, -0.71%) — failed outright, confirms the pullback that stopped KLAG out was real, not just wrapper noise on that one tick. MRVL also failed (-0.44%). MU/SNDK/ORCL/USAR all technically passed but by tiny margins (+0.07% to +0.57%).
+- **C11 killed MU (ER 0.063), SNDK (ER 0.042), and ORCL (ER 0.121)** — all comfortably below the 0.15 floor, pure chop. **USAR passed both** (ER 0.217) — but a closer look showed why: USAR's day change has collapsed to **+0.45%**, down from +7.4% this morning. The "+0.57% since fill" reading was measuring a tiny bounce inside a stock that's round-tripped nearly its entire day's gain, not fresh momentum. Declined as a low-quality read despite mechanically clearing both gates — consistent with C5's "no read = no trade" and C9's "never force a trade."
+- **Staying flat.** Resume the standard grid at its own next slot (10:30 management) per C12 step 4.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
