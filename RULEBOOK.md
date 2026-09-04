@@ -545,6 +545,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Cancelled the stale $18.05 stop (verified `cancelled`), exited immediately via marketable limit at $18.25, filled better at **$18.4101** (price improvement). Net: **-$4.80, -2.13% on the position, r=-0.526**. True MAE/MFE for the ~3.5-minute hold: MFE +0.93% ($18.985, at/near the fill itself), MAE +3.14% ($18.220, 13:39 UTC) — underwater almost the entire hold after a brief spike. Logged to `archive/trades.csv`, `exit_reason=trail_breached_before_placement`. **Loss streak: 1 of 3.**
 - **C12 mini-cycle armed**: fill timestamp 13:41:59 UTC is the new "9:30-equivalent." Ad hoc T+10 trigger armed for ~13:52 UTC (`trig_01Uh8zySoJjCsu5EDmRFHCjQ`) — armed immediately this time, not deferred to other work, learning directly from Thursday's missed-arming gap.
 
+**C12 T+10 gate stack, ~9:53 ET — no re-entry, nothing clears every gate.** Checked against fill-timestamp baselines (13:41:59 UTC):
+
+- **C10 leg 1**: USAR (-1.0% since fill), ORCL (-1.0%), NCPL (-0.2%), PLAG (-4.3%) all declining since the exit — failed outright, real volume throughout so the reads are trustworthy. MTNB/CYCU/CELZ/VBIO showed mostly flat/interpolated bars — too thin and illiquid to trade on, passed over rather than forced. **ASTS was the one real pass** (+0.72% since fill, real volume every bar) — but **C11 killed it**: ER computed fresh over the fill-to-now window came back **0.138, below the 9:40–10:29 bracket's 0.15 minimum** — genuinely choppy (net progress $0.46 against $3.31 of total path), not trending.
+- **Commodities re-checked live**: URA briefly ticked positive on the day (+0.13% vs Thursday's close) but its actual **9:30 print was $45.63, itself -0.16% below Thursday's close** — C1 leg 1 (positive at 9:30) never passed, so the late-entry clause doesn't apply (that clause rescues a leg-3 failure after a genuine leg-1 pass, not a leg-1 failure itself). URA has no valid path to entry today regardless of the current bounce. XLE/GLD/SLV/COPX/XLB all still clearly negative, no change from 9:30.
+- **Staying flat.** Resume the standard grid at its own next slot (10:00 management) per C12 step 4.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
