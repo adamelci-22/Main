@@ -590,6 +590,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (AXTI still well above its $56.5825 9:30 baseline), no R/R flip (stop now locks in real gain — $60.02 vs $60.5601 fill is a tiny residual risk, position nearly risk-free), no event, not near close. **Hold.**
 - **Pre-commit for 10:40**: the $60.02 stop is now the live falsifiable line — a close back through it is the exit.
 
+**10:40 management — HOLD AXTI, stop unchanged (min-move gate held).** State check: 3 sh AXTI, `shares_held_for_sells=3`, stop confirmed resting at $60.02 going in. B1b since-14:40 pull: `bar_high` reached **$61.23** (14:40 UTC bar) — a new high, four minutes after the last ratchet.
+
+- `run_high = max($60.8868 prior, $61.23 bar_high) = $61.23`. `candidate_stop = 61.23 × 0.9858 = $60.3605`. Move from the current $60.02 stop is only **0.57%**, below AXTI's `min_stop_move_pct` (1.00%) — per B2, left unchanged rather than churned. Verified via `get_equity_orders` that the $60.02 stop is still resting, state=`confirmed`.
+- B3 exits checked: no reversal (AXTI still well above its 9:30 baseline, new highs being made), no R/R flip, no event, not near close. **Hold.**
+- **Pre-commit for 10:50**: the $60.02 stop is still the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
