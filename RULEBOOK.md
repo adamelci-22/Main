@@ -521,6 +521,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Buying power $245.46, unsettled funds $0** (`get_portfolio`, limited-margin account, no pending deposits) — unchanged since Thursday's close, confirming no funding activity overnight. **Position: flat, no resting orders** (`get_equity_positions`/`get_equity_orders`, verified).
 - Profiling (`tools/profile.py`) and affordability marking deferred to the 9:30/9:35 live checks per D2 step 7, per usual. Full 29-name shortlist is live via `run_scan` on the same saved scan id — not re-pasted here; the ranked table above is the complete candidate set for today (no commodity names to add on top of it).
 
+**9:30 observation — C1 Gate-1 baseline recorded, all six commodities fail leg 1 outright.** State check: flat, no resting orders (`get_equity_orders`, verified).
+
+- **XLE -0.82%, GLD -1.23%, SLV -2.16%, COPX -1.14%, URA -0.04%, XLB -0.66%** vs Thursday's close — every proxy negative at the open, confirming the premarket read from 9:00 rather than reversing it. **None clear C1 leg 1 (positive at 9:30)** — no commodity is entry-eligible at 9:35; the late-entry clause (strictly above 9:30's reading at a later checkpoint) stays open if any of the six turns around, but none currently qualifies. No new scan run (C1's own rule) — the 25-name individual-stock watchlist from 9:00 stands unchanged into the 9:35 entry checkpoint.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
