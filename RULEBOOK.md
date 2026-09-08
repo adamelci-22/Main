@@ -638,6 +638,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Order execution**: reviewed at $7.03 ask, marketable limit $7.10, filled **$7.0399** (price improvement). 68 shares (floor($485.32 buying power ÷ $7.10) = 68). **Stop placed and confirmed resting**: stop_market, 68 sh, **$6.66 (−5.42%)**, confirmed via `get_equity_orders` (state=`confirmed`). Target 8.13% (~$7.61). **v3.55 entry+5 catch-up armed** (`trig_01FwT8tCgvYiaBbjFKnQoSm9`, fires ~15:38 UTC) since the next regular checkpoint (11:45) is more than 5 minutes out.
 - **Pre-commit for the 11:36 catch-up (or 11:45, whichever comes first)**: expect `bar_close` to hold at/above the trail; a close back below QBTS's own fill-timestamp baseline ($18.065, the underlying's reading — QBTX itself wasn't part of the 15:03 baseline set) would be the falsified case for the underlying thesis.
 
+**11:30 regular checkpoint — non-event, already covered.** Fired ~15:30:45 UTC, essentially concurrent with the T+10 gate stack above (fill landed 15:31:51 UTC, moments later). State check confirms 68 sh QBTX held, stop resting at $6.66. Same overlap pattern as 9:50/10:00 earlier today — the regular grid slot and an ad hoc C12 trigger landing close together, one supersedes the other rather than duplicating work. Next real check is the armed 11:36 entry+5 catch-up.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
