@@ -621,6 +621,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (BE still well above its fill-timestamp baseline, at fresh highs), no R/R flip (stop now locks in a real gain — $274.83 vs $276.2999 fill is a tiny residual risk), no event, not near close. **Hold.**
 - **Pre-commit for 11:15** (next slot reverts to 15-min cadence, v3.56): the $274.83 stop is now the live falsifiable line — a close back through it is the exit.
 
+**11:15 management — EXIT BE, 1 sh @ $274.88, clean stop trigger. Then flat, checked, no re-entry.** State check: position now flat, resting $274.83 stop confirmed fired via `get_equity_orders` (state=`filled`, executed 15:03:49 UTC, $0.05 better than the stop price).
+
+- Price rolled over hard from the $277.44 peak (14:59 ET) down through $273.17 (15:08 ET), breaching the newly-ratcheted stop within 5 minutes of being placed. Net: **-$1.42, -0.51% on the position, r=-0.109**. Logged to `archive/trades.csv`, `exit_reason=stop_triggered_clean`. **Loss streak recomputed fresh: 0 of 3**, unchanged (a scratch). Second genuinely clean stop trigger of the day (after URA) — the mechanism doing exactly what it's built to do, not another manual emergency exit.
+- **C12 mini-cycle armed**: fill timestamp 15:03:49 UTC. Ad hoc T+10 trigger armed for ~15:29 UTC (`trig_01Et8Zw2d9G3KhJbU1sRV4iS`).
+- **This regular 11:15 slot ran its own live check ahead of the T+10 trigger** (same pattern as 9:50 after the IONX exit): re-pulled minute bars for COPX/URA/FCX since the BE exit's own fill baseline (15:03:49 UTC). **COPX (ER 0.094) and URA (ER 0.059) both still chopping**, unchanged from the T+10 check that declined them 15 minutes ago. **FCX's ER read high (0.415) but on closer look this is an *efficient decline*, not an uptrend** — `bar_close` at 15:17 ($78.22) sits below the 15:03 baseline ($78.61), failing C10 leg 1 outright; a high ER measures directional efficiency in either direction, and this one is efficiently going the wrong way. Caught before being mistaken for a real signal. **No entry — staying flat.** Resume the standard grid/T+10 trigger, whichever comes first.
+- **Pre-commit for the T+10 check (~11:29 ET) or 11:30, whichever comes first**: no falsifiable line on an open position (flat) — the check is whether any shortlist name clears the full gate stack fresh, with a fresh look for any real (not merely direction-agnostic ER) trend.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
