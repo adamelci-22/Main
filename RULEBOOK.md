@@ -652,6 +652,25 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (QBTX still well above fill, at fresh highs), no R/R flip (stop now locks in a real gain of ~0.4%), no event, not near close. **Hold.**
 - **Pre-commit for 12:00 close**: the $7.07 stop is now the live falsifiable line — a close back through it is the exit. The 12:00 checkpoint will additionally pin the stop to live price per B2, ending the trading day.
 
+**12:00 close — QBTX already exited before this checkpoint started; flat, nothing to pin.** State check: `get_equity_positions` empty, no resting orders (`get_equity_orders`, verified). The resting $7.07 stop fired on its own at 15:54:44 UTC (~6 minutes before this checkpoint's 16:00 fire time) — third clean stop trigger of the day, and the first that closed as a real win. Net: **+$2.19, +0.459% on the position, r=0.085**. True MAE 0% — price never dropped below the $7.0399 fill at any point in the ~23-minute hold, a pure give-back-of-open-gain exit. Logged to `archive/trades.csv`, `exit_reason=stop_triggered_clean`.
+
+**D3 report — Tuesday 9/8 summary.** Five trades today, net small loss on a day that included a real process-improvement arc:
+
+1. **IONQ** 9:44 $43.2899 → wrapper-switch exit 9:47 $43.7071 (+$4.59, +0.267R) — not a stop exit; caught a C4 miss (missed wrapper) within 2 minutes and corrected it at near-zero cost.
+2. **IONX** (the wrapper switched into) 9:48 $28.2399 → 9:51 $27.6384 (**-$10.23, -0.460R**) — the day's one real loss, a ratchet-breach at the very first checkpoint post-switch (fifth occurrence of the AFRM/GUSH/NUGT/USAR pattern, see E6 update).
+3. **URA** 9:55 $47.9696 → clean stop 10:35 $47.8200 (-$1.50, -0.125R) — first clean stop trigger of the day.
+4. **BE** 9:55 $276.2999 → clean stop 10:03 $274.8800 (-$1.42, -0.109R) — second clean stop trigger.
+5. **QBTX** 11:31 $7.0399 → clean stop 11:54 $7.0722 (+$2.19, +0.085R) — third clean stop trigger, first win via that mechanism.
+
+**Net day: -$6.37, account value $486.09** (up from $242.46 Friday's close + $250 deposit = $492.46 starting today, so -$6.37 net on the trading itself). **Loss streak: 0 of 3** — only one trade (IONX) breached the -1.0% threshold, and it was immediately offset by the next trade's smaller-than-threshold moves resetting nothing further. **Deposited capital recomputed**: `total_value ($486.09) − all-time realized P&L ($35.26, get_realized_pnl) − unrealized P&L ($0)` = **$450.83**. **Floor: $225.42** (50% of deposited) — essentially unchanged from this morning's pre-market figure.
+
+**Real process work today, beyond the trades themselves**:
+- **C4 wrapper-search discipline strengthened twice** — first from the IONQ miss (a single empty `search` isn't proof no wrapper exists), then reinforced by the governor directly (search harder, give found wrappers a real liquidity look) after spotting URAA/IONX on the live app. Applied correctly on QBTX's entry: first query empty, retry found four products, correctly distinguished the real long wrapper (QBTX) from a short (QBTZ) and an income product (QBY).
+- **E6's ratchet-breach watch item updated** — the "no real losses" framing from 9/2 no longer holds; USAR (9/4) and IONX (9/8) both closed as real losses under the identical mechanical shape, reframing the open governor question with real cost attached.
+- **Three clean stop triggers today** (URA, BE, QBTX) — the mechanism working exactly as designed, a useful contrast against the two manual-intervention exits (IONQ switch, IONX breach) earlier in the day.
+
+**Wednesday 9/9's full checkpoint chain armed** (17 triggers: 9:00 research through 12:00 close, plus 8:00pm backup) — verified via `list_triggers`, all confirmed `enabled=true` with correct `next_run_at` times. No market holiday between today and Wednesday.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
