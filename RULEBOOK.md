@@ -599,6 +599,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal named at entry has broken (still above the $46.85 9:30 baseline), no R/R flip beyond the normal trail mechanics, no event, not near close. **Hold.** Real pullback underway (from the $48.14 peak) but not yet at the stop.
 - **Pre-commit for 10:40**: the $47.83 stop is still the live falsifiable line — a close back through it is the exit.
 
+**10:40 management — EXIT URA, 10 sh @ $47.82, clean stop trigger.** State check: position now flat (`get_equity_positions` empty) — the resting $47.83 stop-market order itself fired and filled, confirmed via `get_equity_orders` (state=`filled`, executed 14:35:52 UTC). **First genuinely clean stop exit of the day** — no cancel-and-manual-exit needed, unlike IONQ's wrapper switch or IONX's ratchet-breach.
+
+- Price peaked at $48.14 (10:12 ET), rolled over through the 10:30–10:35 window, and the low of the 14:36 UTC bar ($47.75) breached the resting stop — filled at **$47.82**, essentially no slippage ($0.01 better than the $47.83 stop price). Net: **-$1.50, -0.31% on the position, r=-0.125**. Logged to `archive/trades.csv`, `exit_reason=stop_triggered_clean`. **Loss streak recomputed fresh from trades.csv: 0 of 3** — a scratch (E1's -1.0% threshold), resets from 1 back to 0.
+- True MAE/MFE for the ~40-minute hold: MFE 0.354% ($48.14, 10:12 ET), MAE 0.457% ($47.75, the bar that triggered the stop). A clean, unremarkable trade — the trail did exactly what it's designed to do.
+- **C12 mini-cycle armed**: fill timestamp 14:35:52 UTC. Ad hoc T+10 trigger armed for ~14:52 UTC (`trig_01HM34t6qRshW5EhGDoQFu5E`). **T+0 re-check**: COPX +5.16% ($95.345 vs $90.66, continuing to strengthen), URA itself back to $47.92 (+0.21% since its own exit fill, C10's baseline resets per C12 step 3), FCX +7.06% ($77.87 vs $72.73, the individual-stock runner-up still running hard) — all three worth a fresh look at T+10.
+- **Pre-commit for the T+10 check (~10:52 ET) or 10:50, whichever comes first**: no falsifiable line on an open position (flat) — the check is whether any shortlist name clears the full gate stack fresh.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
