@@ -640,6 +640,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:30 regular checkpoint — non-event, already covered.** Fired ~15:30:45 UTC, essentially concurrent with the T+10 gate stack above (fill landed 15:31:51 UTC, moments later). State check confirms 68 sh QBTX held, stop resting at $6.66. Same overlap pattern as 9:50/10:00 earlier today — the regular grid slot and an ad hoc C12 trigger landing close together, one supersedes the other rather than duplicating work. Next real check is the armed 11:36 entry+5 catch-up.
 
+**v3.55 entry+5 catch-up — HOLD QBTX, stop ratcheted up.** Fired 15:38:37 UTC. State check: 68 sh QBTX, stop confirmed resting at $6.66 going in. B1b since-entry pull (15:31:51–15:37 UTC): `bar_high` reached **$7.0799** (15:33 bar) — a real new high above the $7.0399 fill.
+
+- `run_high = max($7.0399, $7.0799) = $7.0799`. `candidate_stop = 7.0799 × (1 − 2×0.74%) = 7.0799 × 0.9852 = $6.9752`, rounded to **$6.98**. `new_stop = max($6.66, $6.98) = $6.98` — move of 4.80%, well above `min_stop_move_pct` (0.90%). **Live price re-verified before placing** ($7.075, 15:38:11 UTC, comfortably clear). Cancelled the $6.66 stop (verified `cancelled`), placed and verified resting: stop_market, 68 sh, **$6.98**, confirmed via `get_equity_orders` (state=`confirmed`).
+- B3 exits checked: no reversal (QBTX still well above its fill price, at fresh highs), no R/R flip (stop now locks in a real gain — $6.98 vs $7.0399 fill is a tiny residual risk), no event, not near close. **Hold.**
+- **Pre-commit for 11:45**: the $6.98 stop is now the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
