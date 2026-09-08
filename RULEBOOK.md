@@ -587,6 +587,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (URA still well above its 9:30 baseline, consolidating $47.87–$48.14 rather than breaking down), no R/R flip, no event, not near close. **Hold.**
 - **Pre-commit for 10:20**: the $47.83 stop is still the live falsifiable line — a close back through it is the exit.
 
+**10:20 management — HOLD URA, stop unchanged.** State check: 10 sh URA, `shares_held_for_sells=10`, stop confirmed resting at $47.83 going in. B1b since-10:10 pull (14:12–14:20 UTC): no new high — `bar_high` topped out at $48.14 (14:12/14:16 bars, unchanged from the prior checkpoint), price consolidating $47.90–$48.14 since.
+
+- `run_high` stays $48.14, `candidate_stop` stays $47.9282 → $47.93 — still only 0.21% above the current $47.83 stop, below `min_stop_move_pct` (0.31%). Left unchanged per B2. Verified via `get_equity_orders` that the $47.83 stop is still resting, state=`confirmed`.
+- B3 exits checked: no reversal (URA still well above its 9:30 baseline, consolidating not breaking down), no R/R flip, no event, not near close. **Hold.**
+- **Pre-commit for 10:30**: the $47.83 stop is still the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
