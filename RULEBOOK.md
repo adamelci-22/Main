@@ -579,6 +579,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (URA still well above its $46.85 9:30 baseline, at/near fresh highs), no R/R flip (stop now locks in a small real gain — $47.83 vs $47.9696 fill is near-breakeven risk), no event, not near close. **Hold.**
 - **Pre-commit for 10:10**: the $47.83 stop is now the live falsifiable line — a close back through it is the exit.
 
+**IONX exit's C12 T+10 trigger fired (~14:05 UTC), correctly skipped — non-event.** State check: 10 sh URA held, `A1`'s one-position gate blocks any new entry. This trigger's purpose (checking for re-entry after the 9:45 IONX exit) was already satisfied by the regular 9:50 grid checkpoint's own URA entry, exactly as anticipated in that entry's own log note. No gate stack run, no action taken. Resuming the standard grid at its own next slot (10:10) per C12 step 4.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
