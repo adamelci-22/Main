@@ -581,6 +581,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **IONX exit's C12 T+10 trigger fired (~14:05 UTC), correctly skipped — non-event.** State check: 10 sh URA held, `A1`'s one-position gate blocks any new entry. This trigger's purpose (checking for re-entry after the 9:45 IONX exit) was already satisfied by the regular 9:50 grid checkpoint's own URA entry, exactly as anticipated in that entry's own log note. No gate stack run, no action taken. Resuming the standard grid at its own next slot (10:10) per C12 step 4.
 
+**10:10 management — HOLD URA, stop unchanged (min-move gate held).** State check: 10 sh URA, `shares_held_for_sells=10`, stop confirmed resting at $47.83 going in. B1b since-10:00 pull (14:00–14:12 UTC): `bar_high` reached **$48.14** (14:12 bar) — a modest new high above the prior $48.04.
+
+- `run_high = max($48.04 prior, $48.14) = $48.14`. `candidate_stop = 48.14 × 0.9956 = $47.9282`, rounded to $47.93. Move from the current $47.83 stop is only **0.21%**, below URA's `min_stop_move_pct` (0.31%) — left unchanged per B2. Verified via `get_equity_orders` that the $47.83 stop is still resting, state=`confirmed`.
+- B3 exits checked: no reversal (URA still well above its 9:30 baseline, consolidating $47.87–$48.14 rather than breaking down), no R/R flip, no event, not near close. **Hold.**
+- **Pre-commit for 10:20**: the $47.83 stop is still the live falsifiable line — a close back through it is the exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
