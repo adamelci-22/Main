@@ -646,6 +646,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B3 exits checked: no reversal (QBTX still well above its fill price, at fresh highs), no R/R flip (stop now locks in a real gain — $6.98 vs $7.0399 fill is a tiny residual risk), no event, not near close. **Hold.**
 - **Pre-commit for 11:45**: the $6.98 stop is now the live falsifiable line — a close back through it is the exit.
 
+**11:45 management — HOLD QBTX, stop ratcheted up.** State check: 68 sh QBTX, stop confirmed resting at $6.98 going in. B1b since-15:38 pull: `bar_high` reached **$7.1753** (15:42 bar) — a real new high.
+
+- `run_high = max($7.0799, $7.1753) = $7.1753`. `candidate_stop = 7.1753 × 0.9852 = $7.0692`, rounded to **$7.07**. `new_stop = max($6.98, $7.07) = $7.07` — move of 1.29%, above `min_stop_move_pct` (0.90%). **Live price re-verified before placing** ($7.115, 15:46:05 UTC, comfortably clear). Cancelled the $6.98 stop (verified `cancelled`), placed and verified resting: stop_market, 68 sh, **$7.07**, confirmed via `get_equity_orders` (state=`confirmed`).
+- B3 exits checked: no reversal (QBTX still well above fill, at fresh highs), no R/R flip (stop now locks in a real gain of ~0.4%), no event, not near close. **Hold.**
+- **Pre-commit for 12:00 close**: the $7.07 stop is now the live falsifiable line — a close back through it is the exit. The 12:00 checkpoint will additionally pin the stop to live price per B2, ending the trading day.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Stop-order placement can fail silently, in more than one way, and the pattern is escalating rather than resolving.**
