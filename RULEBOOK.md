@@ -533,6 +533,15 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Deposited capital recomputed**: `total_value ($486.09) − all-time realized P&L ($35.26, get_realized_pnl) − unrealized P&L ($0)` = **$450.83**. **Floor: $225.42** (50% of deposited) — unchanged from Tuesday.
 - Profiling (`tools/profile.py`) and affordability marking deferred to the 9:30/9:40 live checks per D2 step 7, per usual (v3.57 — second observation still coincides with the entry checkpoint). Full 36-name shortlist is live via `run_scan` on the same saved scan id — not re-pasted here; the ranked table above is the complete individual-stock candidate set for today, plus the four provisionally-qualified commodities.
 
+**Wednesday 9:30 observation (A1 · C1 Gate-1 baseline)**: git verified in sync (`git fetch` + `status` clean) before starting. A1 re-checked fresh: loss streak still **0 of 3** (last closed trade, QBTX, was a win), position **flat**, no resting orders, buying power **$486.09**, no pending deposits — not blocked. C1 9:30 baseline recorded for all five provisionally-qualified commodity proxies, **all strengthened further since premarket and all positive**:
+  - **SLV +2.97%** ($61.135 vs $59.37 close)
+  - **GLD +1.58%** ($406.04 vs $399.72)
+  - **COPX +1.72%** ($96.0018 vs $94.38)
+  - **XLE +1.34%** ($65.64 vs $64.77)
+  - **XLB +0.02%** ($51.95 vs $51.94) — still razor-thin/marginal, same as premarket; watch closely at 9:40, first sign of red drops it
+  - **URA -0.23%** ($47.39 vs $47.50) — stays negative/excluded, consistent with premarket
+  No new scan run (per C1, 9:30 is observation-only on the existing watchlist). Next: 9:40 entry checkpoint — re-confirm all C1 legs live, run C3/C10/C11/C4 on the individual-stock watchlist and any qualifying commodity vehicle.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **This session's local git working copy can silently desync from the actual remote branch — found and fixed 2026-09-09.** Picking this session back up after the date rolled to 9/9, the local `archive/trades.csv` had only 24 rows against the verified-correct 30 on `origin/claude/agentic-portfolio-growth-08ppdw` — missing the 9/4 AXTI governor-exit row and all six of 9/8's trades, while `RULEBOOK.md` locally was current. No data was ever actually lost (everything had been correctly committed and pushed at the time, confirmed via `git log` on the remote); the local checkout just hadn't picked up the accumulated history, root cause not fully diagnosed (possibly a container/checkout artifact from resuming after the date change). Fixed via `git checkout origin/... -- archive/trades.csv` plus a clean `git merge` to reconcile the diverged branch. **Standing practice going forward: if `git push` is ever rejected as non-fast-forward, or if trades.csv/RULEBOOK.md ever look wrong or thinner than expected, verify against the actual remote (`git log origin/...`, `git diff origin/...`) before trusting local state or force-pushing** — never assume local is authoritative.
