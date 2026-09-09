@@ -491,6 +491,7 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 | KLAG | KLAC |
 | IONX · IONL | IONQ |
 | QBTX | QBTS |
+| METU | META |
 
 **This table is not exhaustive by construction — verify with `search` before ruling out a wrapper, don't just check this list.** Found missing 2026-09-04: USAR's entry (9/4 9:35) went into the plain stock because this table didn't have it, when USGG (Themes 2X Long USAR Daily ETF) and USAX (Tradr 2X Long USAR Daily ETF) both exist and are tradeable — a real C4 miss, not a hypothetical one. New single-stock leveraged products launch continuously; this table only grows when someone happens to add an entry. **Before declaring "no wrapper exists" at C4/E3, run a quick `search` for the underlying's name/ticker plus "leveraged" or "2X"/"3X" as a live check, not just a table lookup.**
 
@@ -541,6 +542,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
   - **XLB +0.02%** ($51.95 vs $51.94) — still razor-thin/marginal, same as premarket; watch closely at 9:40, first sign of red drops it
   - **URA -0.23%** ($47.39 vs $47.50) — stays negative/excluded, consistent with premarket
   No new scan run (per C1, 9:30 is observation-only on the existing watchlist). Next: 9:40 entry checkpoint — re-confirm all C1 legs live, run C3/C10/C11/C4 on the individual-stock watchlist and any qualifying commodity vehicle.
+
+**Wednesday 9:40 entry — METU (2x META wrapper) taken, C7 rank-1 over the commodity track.** Live re-scan at 9:40 (56 names now cleared, up from 36 at 9:00 — tape broadened). C1 re-checked on all five provisional commodity proxies: **only XLE cleared all three legs** (9:30 +1.34% → 9:40 +1.57%, still rising) — **SLV, GLD, COPX all pulled back slightly from their 9:30 highs** (still strongly positive on the day but each below its own 9:30 reading, failing leg 3) and **XLB flipped negative** (-0.15%), joining URA as excluded. Real complex-wide confirmation for XLE: XOM +2.6%, SLB +2.9%, HAL +1.9%, DVN +1.6% all up together on the same Iran/oil-price catalyst (C6).
+  - **META** (individual-stock track): live day change **+5.23%**, well clear of C3's 0.75% floor, real named catalyst (Muse AI agent launch, C5) still standing. **C4 wrapper search: two empty retries, third (bare "META") found METU — Direxion Daily META Bull 2X ETF** — confirms E3's standing rule that one or two empty searches aren't proof; real, liquid (2.7M–19.5M daily volume, ~$0.03 spread) — no liquidity decline needed, unlike URAA/IONC.
+  - **Profiled both finalists on their own bars** (B1, 26 sessions each): **METU** stop 2.50% / target 3.90% / stall 0.47% / **mfe_per_stop 1.248**. **ERX** (direct 2x XLE wrapper, C4 rank-1c) stop 2.50% / target 3.75% / stall 0.24% / **mfe_per_stop 0.634**. **METU ranks #1 by C7**, nearly double ERX's ratio — picked over the commodity track despite XLE clearing C1 cleanly.
+  - **C10 on METU** (9:30 baseline pulled fresh via minute bars, added-after-9:30 candidate per C10's own rule): baseline $24.735 (9:30 bar close) — current bar_close $24.92, strictly above (leg 1 pass). session_high $25.425 (9:30 print), session_low $24.465 (9:32) — bounce cleared session_low×1.0047 easily (leg 2 pass). Giveback 17.9% of the day's move, well under the 65% ceiling (leg 3 pass). **C11**: no B6 history yet for METU (first checkpoint) — default-pass per the <20min-window rule, flagged not skipped.
+  - **Entry executed**: reviewed (live quote $24.99, re-verified >$24.735 baseline per C8), marketable limit buy 19 sh @ $25.05, **filled 19 @ $24.9799 avg** (fill 13:43:22 UTC / 9:43:22 ET), cost **$474.62**, slippage **-0.04%** (filled inside the reviewed ask). **Protective stop placed and confirmed resting**: stop_market sell 19 sh @ **$24.35** (2.50% below fill). Entry+5 catch-up trigger **skipped** — 9:45 grid slot is ~2 min out, already ≤5 min (C8). **mfe_per_stop top two at entry: METU 1.248, ERX 0.634** (stated per C7). Intended exit: stop $24.35 (-2.50%) or target ~$25.95 (+3.90%), whichever first, ratcheting up only (B2) through 11:00 close.
 
 ## E6. Known issues — backlog, not yet fixed
 
