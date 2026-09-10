@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.60.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.61.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -218,6 +218,16 @@ Any failure at 9:40 → no entry **at 9:40** in that commodity's leveraged vehic
 
 **Two fixed observations (9:30, 9:40) decide the 9:40 pass/fail — never add intermediate readings there.** The late-entry test above is the one exception, evaluated fresh at whichever checkpoint is asking, using that checkpoint's own live reading against the fixed 9:30 baseline.
 
+**Inverse leg — the same test, mirrored (v3.61).** A commodity trending down all morning is exactly as tradeable as one trending up, via the group's own inverse vehicle (E3) — bought long, never short-sold (E2 forbids short selling outright; an inverse ETF is how a bearish view gets expressed here, same mechanic as any other position). Direct governor instruction, prompted by a live question on a day where every commodity proxy read negative and the system had no path to act on it. Record the same day-change numbers already being tracked — no new data collection, just a second test applied to them. All three must hold:
+
+1. negative at 9:30, **and**
+2. negative at 9:40, **and**
+3. the 9:40 reading **not above** the 9:30 reading (the decline hasn't eased).
+
+Any failure at 9:40 → no inverse entry at 9:40 in that commodity's inverse vehicle — exactly mirrors the long side's own leg 3 failure. **Late entry, mirrored**: at any later checkpoint, an inverse entry is allowed if the live reading is **strictly lower than the 9:30 baseline** — a fresh, deeper decline past the original baseline, not just matching it. A commodity can clear the long test, the inverse test, or neither in a given window — it cannot clear both at once (they're mutually exclusive by construction), and clearing neither (chopping around flat) is a correct no-trade outcome for that commodity, same as always.
+
+**Held and managed identically to any other position once entered** — B2's trail, B3's exits, B4's same-day close all apply unchanged, because the traded instrument (the inverse ETF itself) is still just a long position whose price needs to go up to win. Nothing about the ratchet, the stop math, or the close mechanic cares which direction the underlying commodity was moving; they only ever look at the price of what's actually held.
+
 **Does not gate an individual-stock trade — nothing does, anymore.** A stock (or its leveraged wrapper) moving decisively on its own is judged purely on its own move (C3, C10, C11) and never needs a group to confirm it, because there is no group. **Every candidate, commodity or individual stock, is still subject to C10's direction/reversal test** — this gate's leg 3 is the commodity-proxy-only version of that same idea, for the one category that still has a proxy.
 
 ## C2. [Retired, v3.53]
@@ -252,8 +262,10 @@ Fails leg 1 → not a major-move candidate; fall back to a commodity read (C1/C6
 | **2** | Plain stock | The mover is one company, no affordable wrapper exists |
 | **1c** | Leveraged commodity/miner-basket ETF | The mover is a commodity (energy, gold, silver, copper, uranium, broader materials — E3), C1/C6 clear, wrapper affordable |
 | **2c** | Plain commodity ETF | Commodity is the mover, no affordable leveraged vehicle |
+| **1i** | Leveraged inverse commodity/miner-basket ETF | Commodity is moving down, C1's inverse leg / C6's inverse leg clear (v3.61), wrapper affordable |
+| **2i** | Plain inverse commodity ETF | Commodity moving down, no affordable leveraged inverse vehicle |
 
-**Two parallel tracks, never competing — individual stock (ranks 1/2) or commodity (ranks 1c/2c), decided purely by what's actually moving, never by picking a "sector" and working down into it.** A single company moving on its own always goes through the individual-stock track, even if it happens to sit in a space (semis, biotech, financials, whatever) that used to have its own sector-leveraged ETF — those broad-sector vehicles are retired outright (E3), not a fallback.
+**Three parallel tracks, never competing — individual stock (ranks 1/2), commodity long (ranks 1c/2c), or commodity inverse (ranks 1i/2i, v3.61) — decided purely by what's actually moving and which direction, never by picking a "sector" and working down into it.** **No plain-short fallback below 2i** — E2 forbids short selling outright, so if a commodity group has no listed (or no live-verified) inverse vehicle, is illiquid, or is unaffordable, there is simply no trade on that side, full stop, the same dead end as a stock with no wrapper and no affordable plain shares. Verify a group's inverse vehicle actually exists and is liquid with a live `search` before relying on E3's table alone — same standing discipline as individual-stock wrappers (E3), and E3 itself flags which groups currently have no listed inverse product. A single company moving on its own always goes through the individual-stock track, even if it happens to sit in a space (semis, biotech, financials, whatever) that used to have its own sector-leveraged ETF — those broad-sector vehicles are retired outright (E3), not a fallback.
 
 1. **Identify the mover first** — one company, or a commodity. There is no third option; a "sector rotating together" that isn't a commodity is not a tradeable read under this system anymore, however real the move looks (find the specific stock leading it instead, per D2's market-wide scan).
 2. **Prefer the leveraged vehicle** within whichever track applies.
@@ -271,6 +283,8 @@ Fails leg 1 → not a major-move candidate; fall back to a commodity read (C1/C6
 ## C6. Commodities and materials — replaces the catalyst requirement
 
 **Two legs, on top of C10's own intraday trend check** (which already applies to every candidate, commodities included — no separate multi-session requirement here, v3.51: every position closes same-day, never held overnight (B4), so a multi-day chart shape *before* today doesn't bind a trade that opens and closes *within* today's session; only today's own intraday trend matters, and C10 already tests exactly that for every candidate): **(1)** confirmation from the related complex (metal vs miners, crude vs E&P) · **(2)** pullback not breakdown — inside the prior session's range, above its low.
+
+**Leg 2, mirrored for an inverse trade (v3.61): real breakdown, not just a red day — below the prior session's range, under its low.** The long side's leg 2 exists to keep from buying a name that's actually broken structurally; the inverse mirror exists to keep from shorting (via the inverse ETF) a name that's merely pulling back inside an otherwise-intact uptrend — that's a bounce setup for longs, not a breakdown worth being on the other side of. Leg 1 (complex confirmation) applies to an inverse trade unchanged — the same complex moving down together is exactly as real a signal as moving up together.
 
 A replacement, not a relaxation — every other rule still binds. (v3.51 dropped the old "multi-session higher highs and higher lows" leg — it was blocking legitimate same-day moves for a reason that doesn't apply to a same-day-only system; a prior downtrend across days is irrelevant here the way it would matter to a multi-day swing system, which this isn't.)
 
@@ -403,7 +417,7 @@ Flat · no resting orders · **and** no entry possible (buying power short) → 
 2. **Pre-market prices** across the universe and yesterday's watchlist.
 3. **Earnings reactions** from last night's after-close reporters.
 4. **Market-wide magnitude scan — individual stocks, no sector scoping.** Run the scanner's `% Change` gainers filter (C3's threshold, `≥0.75%`) across the whole market, with a liquidity floor (average volume — `FILTER_TYPE_AVERAGE_VOLUME`, same mechanism as any other scan) to keep the results real and tradeable rather than illiquid noise. No `Sector` filter this time — the point is to find whichever individual names are actually moving today, wherever they sit.
-5. **Separately, check the fixed commodity list (E3) for a real move** — the one category still allowed a group vehicle. Energy, gold, silver, copper, uranium, and broader materials each get a quick day-change read on their plain proxy; a commodity only makes today's list provisionally on that premarket read — real qualification still needs C1's formal 9:30→9:40 test and C6's two legs to clear live, same discipline as any other candidate, never assumed from the headline alone.
+5. **Separately, check the fixed commodity list (E3) for a real move, either direction (v3.61)** — the one category still allowed a group vehicle. Energy, gold, silver, copper, uranium, and broader materials each get a quick day-change read on their plain proxy; a commodity makes today's list provisionally on that premarket read whether it's clearly positive (long track, C1/C4/C6) or clearly negative (inverse track, C1's inverse leg, C4's 1i/2i, C6's inverse leg 2) — real qualification either way still needs the formal 9:30→9:40 test to clear live, same discipline as any other candidate, never assumed from the headline alone.
 6. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
 7. **Write the watchlist — 25 individual-stock names, plus whichever commodities cleared step 5, tracked as a separate short list, not counted against the 25.**
    - **Rank the scan's results by day-change magnitude.** Fill the 25 slots from the top down, but names that carry an existing single-stock leveraged ETF wrapper (E3's lookup table) get priority fill over plain stocks when both clear C3's 0.75% floor — matches C4's own preference for the leveraged vehicle once a name is already a candidate, applied one step earlier at watchlist-build time. A real mover without a wrapper still fills a slot on its own merit (C4 rank-2) once the wrapper-carrying names are placed; never pad the list with a name that isn't a genuine mover today just to reach 25 — a thinner list is a correct outcome, per C5's "no read = no trade."
@@ -465,19 +479,21 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 
 **v3.53 — split in two. Commodities are the only category that still gates as a group (C1/C6); everything else is an individual stock judged on its own move, with this table used only to look up whether a leveraged wrapper exists for it — never to confirm against a proxy.**
 
-**Commodity groups — plain and leveraged vehicles together, C1/C6 apply:**
+**Commodity groups — plain and leveraged vehicles together, C1/C6 apply. Inverse vehicles (v3.61) are the ones on each row prefixed with a direction below — bought long, never short-sold (E2), same as everything else:**
 
-| Instrument(s) | Commodity |
-|---|---|
-| XLE · GUSH · ERX · ERY · NRGU · DRIP · OILU · OILD | Energy / E&P complex |
-| USO · UCO · SCO | Crude oil (direct) |
-| UNG · BOIL · KOLD | Natural gas |
-| GDX · NUGT · DUST · GDXU · JNUG · JDST | Gold miners |
-| GLD · UGL · GLL | Gold (direct) |
-| SLV · AGQ · ZSL · SIL · SILJ | Silver |
-| COPX · CPER | Copper |
-| URA · URNM | Uranium |
-| XLB · UYM · SMN | Broader materials/mining ("or such," per the governor's own framing) |
+| Instrument(s) | Commodity | Inverse (v3.61) |
+|---|---|---|
+| XLE · GUSH · ERX · NRGU | Energy / E&P complex | ERY · DRIP · OILD |
+| USO · UCO | Crude oil (direct) | SCO |
+| UNG · BOIL | Natural gas | KOLD |
+| GDX · NUGT · GDXU · JNUG | Gold miners | DUST · JDST |
+| GLD · UGL | Gold (direct) | GLL |
+| SLV · AGQ · SIL · SILJ | Silver | ZSL |
+| COPX · CPER | Copper | **none listed — verify live** |
+| URA · URNM | Uranium | **none listed — verify live** |
+| XLB · UYM | Broader materials/mining ("or such," per the governor's own framing) | SMN |
+
+**Copper and uranium have no inverse vehicle listed above** — checked at v3.61's adoption, nothing obviously real turned up on a first pass, but per the standing wrapper-search discipline (below), a live `search` is still required before concluding no inverse path exists for either — this table is a convenience index, not the boundary. If a real, liquid one is found, add it here rather than re-discovering it next time.
 
 **Individual-stock leveraged-ETF lookup — no proxy, no confirmation gate; exists only to answer "does this mover have a wrapper":**
 
@@ -581,6 +597,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.61 (9/10, governor session, mid-morning): commodity inverse trades enabled — C1, C4, and C6 all get a mirrored bearish leg.** Prompted by a direct governor question, live, on a day where every one of the six tracked commodity proxies read negative and the system had no path to act on it — a real gap, not a hypothetical one: C3 already forbids inverse entirely for individual stocks, and while C3's own text described an inverse *path* running through commodities, C1's actual gate mechanics were only ever written for the long case. **C1 gets a mirrored three-leg inverse test** (negative at 9:30, negative at 9:40, 9:40 not above 9:30 — plus a mirrored late-entry clause, strictly lower than the 9:30 baseline). **C4 gets two new ranks, 1i/2i** (leveraged inverse commodity ETF, then plain inverse), with an explicit no-plain-short-fallback note since E2 forbids short selling outright — an inverse view can only be expressed by buying an inverse ETF; no listed/liquid one means no trade on that side, full stop. **C6's leg 2 gets a mirror** (real breakdown — below the prior session's low — rather than a healthy pullback that's really a bounce setup for longs). **E3's commodity table restructured to a three-column form** listing each group's inverse vehicle alongside its long ones (ERY/DRIP/OILD, SCO, KOLD, DUST/JDST, GLL, ZSL, SMN) — **copper and uranium currently have no inverse vehicle found**, flagged explicitly rather than silently assumed tradeable, pending a live-search check same as any wrapper claim. **D2 step 5 updated** to check the commodity list in both directions during 9:00 research. **B2/B3/B4 need no changes at all** — an inverse trade still just buys and holds shares of the inverse ETF, so the trail, exits, and close mechanic are already direction-agnostic; only the entry gates needed mirroring. No position was open at the time of this change; takes effect immediately, same session. Historical E5/trades.csv entries before today are left untouched, same convention as every prior version bump.
 
 **v3.60 (9/9 evening, governor session, same discussion as v3.59): close moved from 11:00 to 11:30, with three more full-protection management checkpoints (11:00, 11:10, 11:20) added ahead of it — not a suspension of stop management, a rejected earlier version of this idea.** Direct governor instruction. The governor first proposed extending the day to 11:30 while *not* moving the stop during the extra 30 minutes; checked against Wednesday's actual bars before adopting anything — MUU (the day's second trade) fell another -2.9% between 11:00 and 11:24 before a partial bounce, so holding it unprotected to 11:30 would have given back real, avoidable ground for no offsetting benefit, while METU (already stopped out well before 11:00 under the day's own rules) showed no meaningful edge to the extra half hour either way. The governor confirmed the safer version instead: keep the normal 10-minute ratchet running through the new 11:00/11:10/11:20 slots exactly like any other management checkpoint, and only move the market-sell-if-still-open moment itself to 11:30. **Updated everywhere the fixed close/window times were assumed**: the READ MAP, B1b/B2/B4/B6's checkpoint-cadence and window language, Part C's header, the "no position outside the window" line, C9's entry window (now 9:40–11:20, 11:30 itself is exit-only), C11's ER-minimum table (**restored to three rows** — the 0.30 "late, mature move" bracket retired in v3.57 comes back, keyed to the new 11:00–11:20 span, not a revival of the old 15-minute cadence), C12's "before 11:30"/"past 11:20" references and worked example, D1's grid line, arming section, and early-shutdown section, and D3's Friday-report line. **Thursday 9/10's already-armed grid updated in place**: 11:00's trigger converted from CLOSE+ARMING back to a plain MANAGEMENT prompt, new 11:10 and 11:20 MANAGEMENT triggers created, and a new 11:30 CLOSE+PRIMARY ARMING trigger created carrying the v3.58 direct-market-sell instruction. No position was open at the time of this change. Historical E5/trades.csv entries for Wednesday 9/9 and earlier are left untouched, same convention as every prior version bump.
 
