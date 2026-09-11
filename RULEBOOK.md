@@ -557,7 +557,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Deposited capital recomputed**: `total_value ($481.51) − all-time realized P&L ($30.68) − unrealized P&L ($0)` = **$450.83** — unchanged from Thursday (no deposits, no open positions carrying unrealized P&L). **Floor: $225.42** (50% of deposited), unchanged.
 - Profiling (`tools/profile.py`) and affordability marking deferred to the 9:30/9:40 live checks per D2 step 7, per usual. Full 25-name shortlist is live via `run_scan` on the same saved scan id (136 total matches) — not re-pasted here.
 
-**9:30 observation, 9:40 entry, and all subsequent checkpoints to be appended below, not wiped.**
+**9:30 observation (A1 · C1 Gate-1 baseline)**: git verified in sync. A1 re-checked fresh: loss streak still **1 of 3**, flat, no resting orders, buying power **$481.51**, unchanged. **All six commodity proxies opened positive** — a full flip from the premarket read (XLE alone had been negative): XLE +0.23% ($65.08 vs $64.93, flipped from premarket -0.71%), SLV +1.98% ($58.64 vs $57.50), GLD +1.53% ($402.41 vs $396.36), COPX +1.10% ($89.59 vs $88.61), XLB +0.75% ($51.14 vs $50.76), URA +0.04% ($45.02 vs $45.00, barely positive). **No commodity qualifies for the inverse leg today** — leg 1 requires negative at 9:30, and none is — so the standing C10 inverse-mirror gap (E6) is moot for the whole session regardless of how it resolves; only the long track is live today. No new scan (per C1). Next: 9:40 entry checkpoint — re-confirm all six commodities' C1 legs live, run C3/C10/C11/C4 on the 25-name individual-stock watchlist.
 
 ## E6. Known issues — backlog, not yet fixed
 
