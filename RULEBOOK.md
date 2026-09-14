@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.64.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.65.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -357,6 +357,14 @@ Then:
 
 Fails leg 1 → blocked outright, full stop, regardless of how the candidate otherwise ranks. Fails leg 2 or 3 while leg 1 passes → the "bounce" isn't real yet or the move is too far gone; wait for the next checkpoint rather than forcing it (C9's "never force a trade because the window is closing" applies here too).
 
+**Inverse leg — the same three tests, mirrored (v3.65).** Exactly like C1's own inverse leg (v3.61), this checks the commodity's **plain proxy** — never the inverse vehicle's own price — to decide whether the inverse vehicle is a valid entry; `session_high`/`session_low` here are the same proxy-tracked fields above (B6), read with the comparison flipped, not a second tracked pair. Closes the gap found live 2026-09-10 and left open since (E6): v3.61 built C1/C6's inverse legs but never gave C10 one, so an inverse candidate — falling by construction — could clear C1/C6 and still be silently blocked at C10's long-only leg 1. All three, checked fresh at every entry-eligible checkpoint:
+
+1. **Not currently rising.** This checkpoint's proxy `bar_close` **strictly below** the fixed baseline (the same 9:30/exit-reset baseline leg 1 above uses, tracked on the proxy). Re-verify against a live quote immediately before order placement, same as leg 1 — decline this checkpoint if the live proxy quote is at or above the baseline even though the aggregated `bar_close` passed.
+2. **If above `session_low`, the pullback off `session_high` must be real, not noise.** `bar_low` must clear `session_high × (1 − stall_threshold_pct)`, using the proxy's own fresh JIT profile `stall_threshold_pct`. Automatically satisfied when price is at or below `session_low` (no relief bounce active, nothing to confirm).
+3. **Giveback ceiling, mirrored.** Decline regardless of a qualifying pullback if `(bar_close − session_low) / (prior_close − session_low) > 65%` — more than roughly two-thirds of the day's decline already recovered reads as a broken decline, not a fresh leg down.
+
+Fails leg 1 → blocked outright. Fails leg 2 or 3 while leg 1 passes → the pullback off the low isn't confirmed yet or the decline's too far gone; wait for the next checkpoint, same discipline as the long side. A commodity can clear the long-side legs, the inverse legs, or neither — never both at once, mirroring C1's own mutual-exclusivity note.
+
 Reset `session_high`/`session_low` at 9:00 daily — nothing carries between sessions (per this file's own opening line).
 
 ## C11. Chop filter — Efficiency Ratio, time-scaled
@@ -574,7 +582,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 ## E6. Known issues — backlog, not yet fixed
 
-**C10 has no inverse mirror — v3.61 built C1 and C6 mirrors for inverse commodity trades but never touched C10, leaving the universal momentum-direction gate structurally long-only.** Found live 2026-09-10 10:50 checkpoint: SLV cleared C1's inverse late-entry test and C6's mirrored legs, with a real, liquid inverse vehicle (ZSL) available — the first live candidate that would have gotten all the way to C10 under v3.61. C10 leg 1 literally requires `bar_close` above a fixed baseline ("not currently falling"), which an inverse candidate — falling by construction — can never satisfy. As written, this silently forecloses every inverse commodity trade C1/C6/C4 were just built to enable. Declined to patch this unilaterally mid-checkpoint; needs an explicit governor-confirmed mirror (candidate wording: leg 1 becomes "not currently rising" — `bar_close` strictly below baseline — with leg 2/3 mirrored the same way C1/C6 already were) before any inverse commodity trade can actually execute.
+**Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
 
 
 
@@ -590,6 +598,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
 
+**v3.65** — C10 given an inverse leg mirroring C1/C6's (checks the commodity proxy, not the inverse vehicle), closing the gap that silently blocked every inverse commodity trade since v3.61. Direct governor instruction, 9/14 9:40 checkpoint, live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups at the time.
 **v3.64** — management cadence tightened 10min→5min, 9:45–11:15, 19 checkpoints. `a4f9669`
 **v3.63** — ratchet now gated on being in profit (live price > entry fill); replaces v3.59's checkpoint-count grace outright. `9871740`
 **v3.62** — live staleness guard: fresh quote pulled before finalizing `candidate_stop`, skips the ratchet if already breached. `d0bdfd5`
