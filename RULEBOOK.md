@@ -606,6 +606,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:40 management — no ratchet, live price dipped below entry fill.** `run_high` $49.470 (14:38 bar, one minute after fill). Live $49.22 < entry fill $49.3418 — per v3.63, the profit gate blocks any ratchet. Stop stays at $48.11, untouched. Unrealized: -$1.10 (-0.25%). No B3 exit.
 
+**10:45 management — still no ratchet, drifting lower.** `run_high` unchanged at $49.470. Live $49.195, still below entry fill. Stop stays at $48.11. Unrealized: -$1.32 (-0.30%). No B3 exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
