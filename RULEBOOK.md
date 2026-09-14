@@ -587,6 +587,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **9:55 management — second ratchet.** `run_high` $47.905 → **$48.190** (13:52 bar). Live $47.89 still above entry fill — ratchet applies. `candidate_stop = 48.190 × (1 − 2×0.39%) = 47.8141`. Staleness guard clear (live $47.89 > candidate). Cancelled $47.53 stop (confirmed), placed and confirmed resting: stop_market sell 9 sh @ **$47.81**. Unrealized: +$0.81 (+0.19%). No B3 exit.
 
+**10:00 management — third ratchet, position clearly trending.** `run_high` $48.190 → **$48.400** (14:00 bar). Live $48.32 well above entry fill — ratchet applies. `candidate_stop = 48.400 × (1 − 2×0.39%) = 48.0225`. Staleness guard clear. Cancelled $47.81 stop (confirmed), placed and confirmed resting: stop_market sell 9 sh @ **$48.02**. Unrealized: +$4.68 (+1.09%) — first genuinely meaningful gain of the day. No B3 exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
