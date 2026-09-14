@@ -618,6 +618,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:10 management — new high, best ratchet yet, position now +1.25%.** `run_high` $49.900 → **$50.077** (15:10 bar) — RBLX has now cleared $50 intraday. Live $49.96, comfortably above entry fill. `candidate_stop = 50.077 × (1 − 2×0.39%) = 49.6864`. Staleness guard clear. Cancelled $49.51 stop (confirmed), placed and confirmed resting: stop_market sell 9 sh @ **$49.69**. Unrealized: +$5.56 (+1.25%) — new best mark. No B3 exit.
 
+**11:15 management — last entry-eligible slot (C9/v3.64), moot while holding. New high, stop unchanged (rounds to the same level).** `run_high` $50.077 → **$50.085** (live quote, fresh high). `candidate_stop = 50.085 × (1 − 2×0.39%) = 49.6943`, rounds to the same $49.69 already resting — no order action needed. Unrealized: +$6.69 (+1.51%) — new best mark. No B3 exit. Next: 11:30 close — direct market sell if still open (B2/v3.58), full D3 report, and primary arming for tomorrow.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
