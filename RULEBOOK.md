@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.68.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.70.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -214,11 +214,11 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 > **No position may be opened outside 9:40–11:15 (v3.60 extended the window to 11:20 when the close moved to 11:30; v3.64 tightens the management cadence to 5 minutes, moving the last checkpoint — and so the last entry opportunity — to 11:15).** Multiple round trips per day, across different candidates, are now possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:40, subject to C1's late-entry clause. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
-## C1. Gate 1 — the commodity must hold, 9:30 → 9:40
+## C1. Gate 1 — the commodity or sector proxy must hold, 9:30 → 9:40
 
-**v3.53 — scope narrowed to commodity trades only.** Since sectors are no longer a tradeable category (D2/C4), this gate now applies exclusively to the commodity vehicles named in E3 (energy, gold, silver, copper, uranium, broader materials) — never to an individual stock or its leveraged wrapper, which are judged purely on their own move (C3/C10).
+**v3.53 narrowed scope to commodity trades only; v3.70 reopens it to sector/broad-index proxies too (E3's sector table, C4's 1s/1si tracks), on identical mechanics.** This gate applies to the commodity vehicles named in E3 (energy, gold, silver, copper, uranium, broader materials) and, as of v3.70, the sector/index proxies also named there (SOXX/QQQ/SPY) — never to an individual stock or its leveraged wrapper, which are judged purely on their own move (C3/C10). Wherever "commodity" appears below, read it as "commodity or sector proxy" — the test is identical either way, just applied to a different underlying.
 
-**9:30 is scoped to whatever commodity groups are on today's watchlist — no new market scan.** Record the day change of each commodity's plain proxy (feeds the Gate 1 test below) and note whether the confirming complex (miners, E&P, etc.) is still holding. That's an observational check, not a formal re-run of C3/C6 — the formal re-confirmation happens live at 9:40 (v3.56 — the second observation now coincides with the entry checkpoint, same as pre-v3.54).
+**9:30 is scoped to whatever commodity/sector groups are on today's watchlist — no new market scan.** Record the day change of each commodity or sector proxy (feeds the Gate 1 test below) and note whether the confirming complex (miners, E&P, or — for a sector — the multi-name cluster itself, C4) is still holding. That's an observational check, not a formal re-run of C3/C6, or C4's cluster requirement — the formal re-confirmation happens live at 9:40 (v3.56 — the second observation now coincides with the entry checkpoint, same as pre-v3.54).
 
 Applies to a **commodity-leveraged trade** only. Record the commodity proxy's day change at **9:30** and again at **9:40**. All three must hold:
 
@@ -268,7 +268,7 @@ Fails leg 1 → not a major-move candidate; fall back to a commodity read (C1/C6
 
 ## C4. Instrument priority
 
-**v3.53 — sectors dropped entirely; commodities are the one exception, since a physical commodity has no "individual stock" of its own.**
+**v3.70 — sectors and broad indexes reinstated as a fourth track, leveraged/inverse only.** v3.53 had dropped this category entirely; reopened by direct governor instruction, 2026-09-15, given a real Fed-decision/AI-selloff backdrop and two live, tradeable, never-considered instruments (SOXS/SOXL, SQQQ) found sitting unused the same day. Commodities remain the other structural exception, since a physical commodity has no "individual stock" of its own.
 
 | Rank | Vehicle | When |
 |---|---|---|
@@ -278,10 +278,16 @@ Fails leg 1 → not a major-move candidate; fall back to a commodity read (C1/C6
 | **2c** | Plain commodity ETF | Commodity is the mover, no affordable leveraged vehicle |
 | **1i** | Leveraged inverse commodity/miner-basket ETF | Commodity is moving down, C1's inverse leg / C6's inverse leg clear (v3.61), wrapper affordable |
 | **2i** | Plain inverse commodity ETF | Commodity moving down, no affordable leveraged inverse vehicle |
+| **1s** | Leveraged sector/broad-index ETF (v3.70) | A real multi-name cluster (E3's sector table) is moving together, the sector's own proxy clears C1's long-side test, wrapper affordable |
+| **2s** | Plain sector/index ETF | Cluster moving up, no affordable leveraged vehicle (the proxy itself, e.g. SOXX/QQQ/SPY) |
+| **1si** | Leveraged inverse sector/broad-index ETF (v3.70) | Cluster moving down together, the sector's own proxy clears C1's inverse-side test, wrapper affordable |
+| **2si** | Plain inverse sector/index ETF | Cluster moving down, no affordable leveraged inverse vehicle |
 
-**Three parallel tracks, never competing — individual stock (ranks 1/2), commodity long (ranks 1c/2c), or commodity inverse (ranks 1i/2i, v3.61) — decided purely by what's actually moving and which direction, never by picking a "sector" and working down into it.** **No plain-short fallback below 2i** — E2 forbids short selling outright, so if a commodity group has no listed (or no live-verified) inverse vehicle, is illiquid, or is unaffordable, there is simply no trade on that side, full stop, the same dead end as a stock with no wrapper and no affordable plain shares. Verify a group's inverse vehicle actually exists and is liquid with a live `search` before relying on E3's table alone — same standing discipline as individual-stock wrappers (E3), and E3 itself flags which groups currently have no listed inverse product. A single company moving on its own always goes through the individual-stock track, even if it happens to sit in a space (semis, biotech, financials, whatever) that used to have its own sector-leveraged ETF — those broad-sector vehicles are retired outright (E3), not a fallback.
+**Four parallel tracks, never competing — individual stock (1/2), commodity long/inverse (1c/2c, 1i/2i), or sector/broad-index long/inverse (1s/2s, 1si/2si, v3.70) — decided purely by what's actually moving and which direction.** **No plain-short fallback below 2i/2si** — E2 forbids short selling outright, so if a group has no listed (or no live-verified) inverse vehicle, is illiquid, or is unaffordable, there is simply no trade on that side, full stop, the same dead end as a stock with no wrapper and no affordable plain shares. **Verify every wrapper live with `search` before trading it or ruling it out — never rely on E3's table alone, for any of the four tracks.** This is not optional and is not satisfied by checking only the name that ends up ranking highest: **run the wrapper search for every individual-stock candidate being profiled for C7, before ranking, not after** (v3.70 — direct fix, 2026-09-15: AMD/MRVL/NBIS were all profiled and ranked today on plain-stock bars despite each having a real, live, affordable leveraged wrapper — AMUU/AMDL for AMD, MVLL/MRVU/MRVX for MRVL, NBIL/NBIG for NBIS — none of which were checked until the governor asked why. B1's "profile the exact instrument being traded" already required this; it just wasn't being run as a checkpoint step).
 
-1. **Identify the mover first** — one company, or a commodity. There is no third option; a "sector rotating together" that isn't a commodity is not a tradeable read under this system anymore, however real the move looks (find the specific stock leading it instead, per D2's market-wide scan).
+**A sector/broad-index cluster qualifies the same way a commodity complex does (C5's breadth check): at least 3 names on today's individual-stock watchlist sharing the same identifiable theme, moving the same direction — not one company having a good or bad day.** The theme itself already gets named qualitatively in D2's research write-up (today's was the semis/AI-infra bounce: MU/AMD/MRVL/INTC/NBIS/AXTI) — v3.70 makes that qualitative observation a tradeable signal instead of color commentary. **Every commodity and sector cluster that clears C1's own two-observation test (9:30 positive/negative, 9:40 confirmed) must actually be profiled and ranked via C7 against the individual-stock candidates — never waved off qualitatively as "the other one looks stronger" without running the numbers** (v3.70 — same fix, second instance: COPX and XLB both cleared C1's inverse leg cleanly at both 9:40 and 9:55 today and were never profiled at all).
+
+1. **Identify the mover first** — one company, a commodity, or a real multi-name sector/index cluster (v3.70). A single company moving on its own always goes through the individual-stock track even if it sits in a space that also has a sector ETF — the sector track is for when *several* names in that space are moving together, not a substitute for naming the specific leading stock.
 2. **Prefer the leveraged vehicle** within whichever track applies.
 3. **No leveraged vehicle affordable → take it plain.** Missing a real move for lack of a wrapper is the wrong trade-off.
 
@@ -520,13 +526,25 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 
 **Copper and uranium have no inverse vehicle listed above** — checked at v3.61's adoption, nothing obviously real turned up on a first pass, but per the standing wrapper-search discipline (below), a live `search` is still required before concluding no inverse path exists for either — this table is a convenience index, not the boundary. If a real, liquid one is found, add it here rather than re-discovering it next time.
 
+**Sector/broad-index groups (v3.70) — same shape as the commodity table, C4's 1s/2s/1si/2si tracks, gated exactly like a commodity under C1 (proxy's day change, 9:30 then 9:40, same three-leg test on each side):**
+
+| Proxy (unleveraged) | Group | Leveraged long | Leveraged inverse |
+|---|---|---|---|
+| SOXX | Semiconductors | SOXL | SOXS |
+| QQQ | Nasdaq-100 / broad tech | TQQQ | SQQQ |
+| SPY | S&P 500 / broad market | UPRO | SPXU |
+
+**All six confirmed live and tradeable via `search` on 2026-09-15** — SOXL, SOXS, TQQQ, SQQQ, UPRO, SPXU. A short starting list, not exhaustive — same convenience-index caveat as the commodity table above: verify live at time of use regardless, add real ones found, don't treat absence here as proof none exists.
+
 **Individual-stock leveraged-ETF lookup — no proxy, no confirmation gate; exists only to answer "does this mover have a wrapper":**
 
 | Wrapper(s) | Underlying stock |
 |---|---|
 | NVDL · NVDX · NVDU | NVDA |
-| AMDL | AMD |
+| AMDL · AMUU | AMD |
 | MUU | MU |
+| MVLL · MRVU · MRVX | MRVL |
+| NBIL · NBIG | NBIS |
 | TSMX · TSMU | TSM |
 | SMCX | SMCI |
 | AVGX | AVGO |
@@ -606,6 +624,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Governor correction, same session: RKLB's 9:55 re-entry was a real rule-application error, fixed as v3.68.** The 9:52 close-out narrative above states plainly that a losing exit "skips v3.67's step 0" — true, but incomplete: skipping the shortcut still let RKLB compete fairly in the full C7 ranking at 9:55, and it won that ranking on a static 43-session `mfe_per_stop` that had nothing to say about the reversal-prone live action it had just shown, minutes earlier, at its own exit. The governor's original v3.67 instruction was specifically about re-entering a stock after a *winning* exit ("the next check should be on the stock that just exited... if that's true it should be re-entered") — a losing exit was never meant to get that same benefit of the doubt, fast-tracked or fairly ranked. **Fixed via v3.68**: a losing exit's own instrument is now excluded outright from the shortlist for every gate-stack run for the rest of the day, not merely denied the step-0 shortcut. The second RKLB loss (9:58 entry, -1.59% exit) would not have happened under this corrected rule — RKLB would have been struck from the candidate pool at 9:55 and never reached the C7 ranking at all.
 
+**Second governor correction, same session: leveraged/inverse instrument selection was materially incomplete today, fixed as v3.69 + v3.70.** Live-verified via `search` after the governor asked directly: **AMD had two real wrappers (AMUU, AMDL), MRVL had three (MVLL, MRVU, MRVX), NBIS had two (NBIL, NBIG)** — all profiled and ranked on plain-stock bars at both 9:40 and 9:55 without ever checking C4's wrapper preference, a rule that already existed and simply wasn't run as a checkpoint step. Separately, **COPX and XLB both cleared C1's inverse leg cleanly at both 9:40 and 9:55** and were noted in the log, then dismissed qualitatively ("not chased further") instead of being profiled and ranked via C7 like every other candidate. **Fixed via v3.69**: the wrapper search is now a mandatory step for every individual-stock candidate before C7 ranking, and any commodity/sector leg clearing C1 must be profiled and ranked, never waved off by feel. Separately, the governor asked whether sector/broad-index leveraged ETFs (retired under v3.53) should be reopened given today's Fed-decision/AI-selloff backdrop — confirmed **SOXL/SOXS (semis), TQQQ/SQQQ (Nasdaq-100), UPRO/SPXU (S&P 500)** all real and tradeable, none previously usable under the current rules despite today's environment being exactly the kind of setup they exist for. **Fixed via v3.70**: reinstated as C4's fourth track (1s/2s/1si/2si), gated identically to a commodity under C1, requiring a real 3+ name cluster (today's semis/AI-infra theme would have qualified). Neither fix changes today's already-closed trades — both take effect starting with tomorrow's grid.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
@@ -624,6 +644,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
 
+**v3.70** — Sector/broad-index leveraged and inverse ETFs reinstated as a fourth C4 track (1s/2s/1si/2si), reversing v3.53's retirement. Direct governor instruction, 9/15, after SOXS/SOXL/SQQQ/TQQQ/UPRO/SPXU were all confirmed live and tradeable the same day they sat unconsidered, against a real Fed-decision/AI-selloff macro backdrop. Gated exactly like a commodity under C1 (proxy day-change, 9:30 then 9:40), requires a real 3+ name cluster on today's watchlist sharing one theme (C4/C5's breadth check), never a single stock's own move. E3 given a starting sector-vehicle table (semis/SOXX, Nasdaq-100/QQQ, S&P 500/SPY).
+**v3.69** — C4's wrapper-search discipline made a hard checkpoint step (every individual-stock candidate gets a live search before C7 ranking, not just the eventual pick) and C4/C7's ranking requirement extended explicitly to any commodity/sector leg that clears C1 (must be profiled and ranked, never waved off qualitatively). Direct governor correction, 9/15: AMD/MRVL/NBIS were all profiled and ranked on plain-stock bars today despite each having a real, affordable leveraged wrapper (never checked), and COPX/XLB both cleared C1's inverse leg twice today and were never profiled at all — both are rules that already existed (B1, C4, C7) but weren't being executed as required steps.
 **v3.68** — C12: a losing exit's own instrument is now excluded outright from re-entry for the rest of the day, not just denied v3.67's shortcut. Direct governor correction, 9/15, after RKLB stopped out at -2.01% (9:50) and was still allowed to compete in — and win — a normal C7 ranking ten minutes later on its static historical `mfe_per_stop`, ignoring the reversal-prone live action it had just shown at its own exit; re-entered, reversed again, closed a second time at -1.59%. Governor's original instruction was specifically about re-entering a stock after a *winning* exit — a loser was never meant to get the same benefit of the doubt, and "goes straight to the full gate stack" (v3.67) wrongly let it still compete instead of being excluded.
 **v3.67** — C12 given a new step 0: a profitable exit checks its own instrument first for continuation (re-run C10 on it alone) before falling through to the full shortlist gate stack — a stop is a pause to reassess, not an automatic move-on. Direct governor instruction, 9/14 10:35 checkpoint, prompted by RBLX's own session: stopped out +0.46%, kept climbing, re-entered a few checkpoints later only because it happened to still win a fresh full-shortlist ranking — the governor wants that continuation check to be the *first* thing checked after any winning exit, not a byproduct of re-ranking against unrelated candidates. Applies to inverse exits identically (C10's mirror). Losing-exit handling was tightened further in v3.68.
 **v3.66** — C10 leg 1's baseline given a hard floor: `effective_baseline = max(true 9:30 open, C12 reset price)`, never below the real open. Governor correction, 9/14 10:30 checkpoint, after RIG was entered via a C12-reset baseline ($5.570) that sat below RIG's own 9:30 open ($5.700) — RIG had been falling all morning and never once cleared its actual open; the reset (from RBLX's unrelated exit) made a bounce off RIG's own low look like "not falling." A live, real-money entry that shouldn't have cleared the gate, not a hypothetical. Inverse leg mirrored (ceiling, `min(...)`). C12 step 3 updated to match.
