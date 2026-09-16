@@ -501,6 +501,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:50 — flat, no trade.** QQQ, TLT, XRT all still breaking bullish, none clear RVOL (~0.47×, ~0.51×, ~0.60×). XLE still bearish and still excluded (ERY). Same edge case, no new information.
 
+**10:55 — flat, no trade. Last entry-eligible checkpoint of the day (C9/v3.77).** QQQ, SPY, XRT breaking bullish, none clear RVOL (~0.46×, ~0.33×, ~0.57×); XLE still bearish, still excluded. Day ends flat if nothing else clears from here — **11:00 is exit-only**, no new positions regardless of what sets up. Today's tally so far: SOXL +$1.28, ERY -$1.03, net +$0.25 on 2 trades; daily cap used 2 of 3, loss streak 0 of 3.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
