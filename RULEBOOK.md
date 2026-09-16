@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.73.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.74.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -93,7 +93,7 @@ mfe_to_target = target_pct ÷ median favourable   (>2.5 → target unreachable; 
 
 No flat constants, and **nothing is pre-computed or cached** — volatility moves, and a profile written last night is a different instrument by this morning. Recompute per candidate, per session.
 
-**Hard ceiling 7%.** A setup needing more room is not a setup. Where 1.5 × median adverse exceeds the cap, the stop is capped and flagged — a warning that noise is wider than the stop, not a disqualification.
+**Hard ceiling 7%, now a real disqualification (v3.74) — direct governor instruction, 2026-09-16.** Where `1.5 × median_adverse` exceeds 7%, the candidate is no longer capped-and-entered with a warning — it's declined outright, full stop. **Execution blackout**: no order placed, flagged in that day's report as excluded for noise exceeding the stop ceiling. Applies per candidate, per session, same as the profile itself (B1's own "recompute per candidate, per session" — a ticker excluded this checkpoint on today's volatility isn't permanently blacklisted, it's just re-profiled fresh next time it's considered, same as everything else in this file).
 
 Fewer than ~15 sessions available → the sample is thin; treat the numbers as provisional and say so at entry.
 
@@ -563,6 +563,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ## Current state
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
+
+**v3.74** — B1's 7% stop ceiling is now a real decline ("execution blackout"), not a cap-and-enter-with-a-warning. Direct governor instruction, 2026-09-16, delivered as a 4-part "system patch." Of the other three parts: the proposed switch from `stop_market` to `stop_limit` protective orders was declined — a stop-limit can fail to fill entirely if a leveraged instrument gaps through both the stop and limit price, which is worse than the slippage a stop-market accepts, for exactly the volatility profile the patch cited as its own rationale; the async post-placement verification it also asked for was already standing C8 discipline. The other two parts (underwater ratchet freeze, 2% max trailing tightness) were already the exact v3.63/B2 rules in force, restated — no change made.
 
 **v3.73** — Close moved back to double duty at 11:15 (last management ratchet, then direct market sell if still open), reversing v3.60's split into a separate 11:30 slot. Entry window shortens to 9:45-11:10 accordingly (11:15 is exit-only, same as any close slot). Grid drops to 21 intraday slots + 8pm backup. Direct governor instruction, 2026-09-16.
 
