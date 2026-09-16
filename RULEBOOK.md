@@ -485,6 +485,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:10 — regular checkpoint (also doubling as the C12 fill+10min re-check), flat, no trade.** Four proxies broke their own opening range this read: QQQ (709.36 > 708.81, bull), SOXX (508.21 > 507.99, bull, recovered again), GLD (397.46 < 397.92, bear → GLL), XRT (83.70 > 83.61, bull → RETL, a fresh breakout). **None cleared RVOL (~42 min elapsed): QQQ ~0.64×, SOXX ~1.37× (down from 1.61× at 9:55 as volume growth slowed), GLD ~0.43×, XRT ~0.80×.** Step 1's fallback (rank all ten by raw cumulative volume, carry the top into step 2) was checked: **XLE ranks highest** (≈3.08M shares) but is still sitting inside its own $64.485-$65.14 range — fails step 2. **Zero proxies clear both steps — correct no-trade.** Daily trade count holds at 1 of 3, loss streak 0 of 3.
 
+**10:15 — flat, no trade.** Only QQQ (709.52 > 708.81) and SOXX (508.05 > 507.99) still breaking bullish; GLD and XRT faded back inside their ranges. Neither QQQ (~0.63×) nor SOXX (~1.32×, still decaying) clears RVOL; the fallback's top-raw-volume proxy (XLE) remains inside its own range. Correct no-trade, nothing new to report.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
