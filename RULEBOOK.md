@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.77.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.78.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -21,8 +21,8 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 | Checkpoint | Read | Why |
 |---|---|---|
-| **9:00** research | A · C · D | Builds the day's candidates |
-| **9:30** observation | A · C1 | Watchlist only — no new scan; opening range starts forming |
+| **9:00** research | A · C · D | Pre-market context only (headlines, proxy/ticker pre-market prices, buying power) — the Core Ten universe is already fixed (C4), nothing to build or scan for (v3.78) |
+| **9:30** observation | A · C1 | Starts the 9:30–9:45 opening-range tracker (B6) on the ten proxies — RVOL/ORB can't complete yet, no decision made here either (v3.78) |
 | **9:45–10:55** entry/management ×15 (5-min cadence, v3.64/v3.72/v3.77) | A · B · C | 9:45 is the primary entry slot (v3.72 — moved from 9:40, so C1's Opening Range Breakout has its full 9:30–9:45 window; the 9:40 slot itself is removed from the grid, not just repurposed). Every slot from here is holding, or flat and open to a fresh opportunity, one uniform 5-minute cadence throughout |
 | **11:00** close (double duty, v3.77) | A · B · B4 · D | Last management ratchet of the day, then — if still open — exit, report, and arm tomorrow (primary), direct market sell (v3.58). No new entries taken here (same as any close slot). Moved 15 minutes earlier, from 11:15 (v3.73) to 11:00, direct governor instruction 2026-09-16. |
 | **8:00** backup | A · D | Verify tomorrow is armed; re-arm only if missing |
@@ -45,6 +45,9 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 | Account below 50% of deposited cash | Recompute; never cache (E2) |
 | Candidate's risk numbers not computed | No profile → no stop → no trade (B1) |
 | Position already open | One position, one resting order (E2) |
+| 3 trades already opened today | Count today's entries (below, v3.78) |
+
+**Daily trade cap — 3 entries per day absolute maximum, 2 recommended (v3.78, direct governor instruction, 2026-09-16).** Count every entry fill opened today, win/loss/scratch alike, whichever of the twenty tickers it was and regardless of whether it's a fresh candidate or the same instrument re-entered (C12) — RKLB's two round-trips on 9/15 would count as 2 under this rule, not 1. Computed the same way as the loss streak: today's rows in `archive/trades.csv` (which appends at exit, D3) **plus the currently open position if it was opened today and hasn't closed yet** — it counts toward today's total from the moment it's filled, not from whenever it's later logged. **The 3rd entry is discretionary, not automatic**: take it only if it clears every gate at exactly the same bar as the first two (C1's full three-step test, C4's ranking, no loosened standard for being "due" a trade), and say plainly in the report that it's the 3rd trade of the day, past the recommended 2-trade pace. **The 4th entry is never allowed, full stop, not a judgement call** — same tier as the loss-streak breaker below. A day that stops at 2 because nothing else cleared the gate is the preferred outcome, not a shortfall to make up.
 
 **Most recent governor clearance of the breaker: 2026-09-14** — count only trades closed after that date (E1). (Tripped 9/11 on AAPU (-1.19%, 9/10) / MVLL (-1.01%, 9/11) / MSTX (-2.42%, 9/11). Root-caused to the stale-`run_high` defect (E6) — confirmed the mechanism behind AAPU and MVLL specifically, and fixed via v3.62 (live staleness guard) + v3.63 (profit-gated ratchet, replaces v3.59 outright); both retrospectively verified to have prevented both losses. MSTX was a separate, discretionary governor manual exit, not a signal-quality failure. Governor's explicit clearance, given the root-cause fix and the tightened 5-min management cadence (v3.64) landing the same session: resume live trading 2026-09-14 under the new rules.) The streak is computed fresh from `archive/trades.csv` (plus `get_equity_orders` for manual round trips) at every check — never from a number written here, which goes stale the day after it's written. **A missing or unreadable trade log must never be read as a streak of zero**; that silently disables the breaker at the moment it matters most.
 
@@ -221,7 +224,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 # PART C — ENTRY (9:00 · 9:30 · 9:45 primarily; any 9:50–10:55 checkpoint while flat)
 
-> **No position may be opened outside 9:45–10:55 (v3.72 — moved from 9:40 to 9:45, direct governor instruction 2026-09-16, so C1's Opening Range Breakout has a full 9:30–9:45 window to form before any entry decision; v3.77 — the window's close end moved 15 minutes earlier, from 11:15 to 10:55, matching the close moving from 11:15 to 11:00).** The 9:40 slot is removed from the grid entirely, not kept as an observation-only no-op — the opening range forms fine unattended over that gap, nothing needs to actively watch it. Multiple round trips per day, across different candidates, are still possible (limited margin, since 2026-08-20) — a fresh entry may be taken at **any** checkpoint while flat, not only 9:45. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
+> **No position may be opened outside 9:45–10:55 (v3.72 — moved from 9:40 to 9:45, direct governor instruction 2026-09-16, so C1's Opening Range Breakout has a full 9:30–9:45 window to form before any entry decision; v3.77 — the window's close end moved 15 minutes earlier, from 11:15 to 10:55, matching the close moving from 11:15 to 11:00).** The 9:40 slot is removed from the grid entirely, not kept as an observation-only no-op — the opening range forms fine unattended over that gap, nothing needs to actively watch it. Multiple round trips per day, across different candidates, are still possible (limited margin, since 2026-08-20), **subject to A1's daily trade cap (3 absolute max, 2 recommended — v3.78)** — a fresh entry may be taken at **any** checkpoint while flat, not only 9:45. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
 ## C1. Gate 1 — RVOL → Opening Range Breakout → ATR-expansion rank
 
@@ -304,12 +307,13 @@ Then:
 - **Place the protective stop immediately after the fill.**
 - **Arm the entry+5 catch-up check (v3.55).** Once the stop is confirmed resting, check how far away the next regularly-scheduled grid checkpoint is. **If more than 5 minutes**, arm one ad hoc trigger for `fill_time + 5min` — a B1b/B2 ratchet-only read on this position, nothing more (not a full gate-stack re-run). This is separate from C12's own `fill_time + 10min` trigger, which decides whether to open a *different* position after an *exit* — this one manages the position just opened, regardless of which path opened it (primary 9:45 slot, an off-cycle entry, or a C12 re-entry). If the next grid checkpoint is already ≤5 minutes out (true for every entry now, v3.64 — the 5-min cadence means this is always the case, so this ad hoc trigger is never actually armed anymore), skip it — nothing to add. **Real-world note (v3.56, USAR 9/4):** this check is scoped to the gap *between checkpoints*, not the gap between the fill and the position's own peak — a reversal that happens inside the first minute or two after the fill can still outrun even a 5-minute catch-up. It closes the AFRM/GUSH/NUGT-style multi-checkpoint gap; it doesn't guarantee catching every fast spike-and-reverse.
 - Report slippage against the intended price.
-- State at entry: fill · **quantity and total cost** · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · intended exit · the falsifiable pre-commit for the next checkpoint.
+- State at entry: fill · **quantity and total cost** · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · **today's trade count (n of 3, v3.78)** · intended exit · the falsifiable pre-commit for the next checkpoint.
 
 ## C9. Timing and selection
 
 - **Entries are valid at any checkpoint from 9:45 through 10:55** (v3.72 — moved from 9:40 to give C1's Opening Range Breakout its full 9:30–9:45 window; v3.73 — the last entry-eligible checkpoint became 11:10, since 11:15 took over the close; v3.77 — both shifted 15 minutes earlier, to 10:55 and 11:00, direct governor instruction 2026-09-16) — no preferred-window distinction inside that range beyond C1's own ATR-expansion ranking. **11:00 itself is exit-only** — the close checkpoint doesn't take new entries, same as it didn't when it was the double-duty slot at 11:00 the first time around (v3.57) or at 11:15 (v3.73).
 - **After 10:55, none** — the window is closed for new positions regardless of what's setting up (B2/B4).
+- **Daily trade cap applies (A1, v3.78)** — 3 entries max, 2 recommended; the cap blocks a new entry structurally, same tier as any other A1 condition, regardless of how clean the setup or how much window remains.
 - Never force a trade because the window is closing.
 - Verify `all_day_tradability` before entering.
 - **Price the spread:** read the actual bid/ask, **double it** for the round trip, subtract from the expected move — take it only if it still clears the target with room.
@@ -325,7 +329,7 @@ Then:
 
 ## C12. Re-entry cycle — an exit restarts the entry clock, not the whole day
 
-**Applies whenever a position closes before 11:00, regardless of why** — stop, reversal, any other B3 exit. (The 11:00 close itself is a direct market sell, v3.58/v3.77, not a stop trigger — nothing re-enters after it, since 10:55 is the end of the entry window, C9, v3.77.) The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next regular grid slot (the uniform 5-min cadence, v3.64).
+**Applies whenever a position closes before 11:00, regardless of why** — stop, reversal, any other B3 exit. **Every step below is still subject to A1's daily trade cap (v3.78)** — a re-entry that would be the day's 4th trade is blocked exactly like any other entry attempt; being triggered by an exit is not an exception. (The 11:00 close itself is a direct market sell, v3.58/v3.77, not a stop trigger — nothing re-enters after it, since 10:55 is the end of the entry window, C9, v3.77.) The moment of exit becomes an ad hoc **"9:30-equivalent,"** rather than waiting for the next regular grid slot (the uniform 5-min cadence, v3.64).
 
 **v3.72 note: steps below updated for the Core Ten/RVOL-ORB-ATR system.** "Shortlist" now means the Core Ten's fixed twenty tickers, always the same set — there is no daily-built list to re-derive. **v3.76: C1 itself runs on the ten proxies, not the twenty tickers directly** — see below. C1's Opening Range Breakout window (9:30–9:45) is fixed for the whole day and does **not** reset on an exit — unlike the old baseline system, there is no per-candidate baseline to recompute at the fill timestamp, so that mechanic (old step 3) is gone outright, not just renamed.
 
@@ -427,7 +431,7 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 - **Floor: stop trading below 50% of *deposited* cash** — not account value. `deposited = total_value − all-time realized P&L − unrealized P&L`. Derived, never cached. **The floor does not rise with gains.**
 - **Limited margin, since 2026-08-20** (verified via `get_accounts`: `type: "limited_margin"`; verified via `get_portfolio`: `buying_power` now equals `total_value`, unsettled proceeds usable immediately). This removes the old T+1 settlement gate — same-day rotation across sequential positions is now mechanically possible. It does **not** grant borrowing/leverage beyond the account's own cash, and does **not** by itself confirm anything about GFV exposure beyond what's stated below. If the account type changes again, re-verify from primary sources before the first trade — port nothing forward blind.
 - **PDT (Pattern Day Trader) restriction is gone** — FINRA eliminated the framework effective 2026-06-04 (verified from Robinhood's support page, FINRA.org Regulatory Notice 26-10, SEC.gov, and the Federal Register; full sourcing in commits `ebac8c7`/`10d9379`). No 4-in-5-days trigger, no $25,000 minimum. **Residual uncertainty, not fully closed:** whether the replacement intraday-margin standard names `limited_margin` explicitly (inferred covered), and whether the separate $2,000 margin-minimum applies to `limited_margin`'s cash-only operation (inferred not). Both are inference, not citation — treat any broker-side restriction message as the signal that inference was wrong.
-- **No weekly day-trade cap.** A self-imposed pacing limit (15 day trades / trailing 7 calendar days) was in force from 2026-08-20 through 2026-08-25 and is now removed by explicit governor instruction, 2026-08-25 — it never bound in practice (peak observed: 7 of 15) and the governor decided the extra bookkeeping wasn't earning its keep. PDT itself is already gone (below), so nothing regulatory replaces it. Frequency of entry is still bounded by the real gates — C9's timing/selection discipline, C5's "no read = no trade," A1's one-position-at-a-time — not by a count.
+- **No weekly day-trade cap.** A self-imposed pacing limit (15 day trades / trailing 7 calendar days) was in force from 2026-08-20 through 2026-08-25 and is now removed by explicit governor instruction, 2026-08-25 — it never bound in practice (peak observed: 7 of 15) and the governor decided the extra bookkeeping wasn't earning its keep. PDT itself is already gone (below), so nothing regulatory replaces it. **A daily cap replaced it 2026-09-16 (v3.78, A1): 3 entries per day absolute max, 2 recommended** — not a revival of the old weekly count, a new, tighter, day-scoped one. Within that ceiling, frequency of entry is still governed by the real gates — C9's timing/selection discipline, C5's "no read = no trade," A1's one-position-at-a-time.
 - **Multiple different candidates per day are explicitly authorized.** Not limited to repeating the same symbol — if a real, gate-clearing opportunity in a *different* instrument appears after an earlier position closed, take it, subject to A1's "position already open" gate (still only one position at a time). Governor instruction, 2026-08-20: *"you now have instant cash with margins and are allowed to trade multiple different things within one day if presented with an opportunity."*
 - **No short selling is authorized** — not part of this system's mandate regardless of account type. Bearish views go through inverse ETFs bought long.
 - **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
@@ -435,71 +439,9 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 
 ## E3. Vehicle map — the Core Ten, and retired history below it
 
-**v3.72 — the tradeable universe is now exactly the Core Ten table in C4, direct governor instruction, 2026-09-16. Everything below this point in E3 (commodity groups, the v3.70 sector table, the individual-stock wrapper lookup) is retired history, not active reference — kept for the record, not consulted at a checkpoint.** See C4 for the current, authoritative ten-row table (theme / long ticker / inverse ticker / proxy).
+**v3.72 — the tradeable universe is now exactly the Core Ten table in C4, direct governor instruction, 2026-09-16.** See C4 for the current, authoritative ten-row table (theme / long ticker / inverse ticker / proxy). The commodity/sector/individual-stock-wrapper history that used to follow was retired here and fully removed under v3.78, below.
 
-**Retired below — v3.53's original split, then v3.61's inverse vehicles, then v3.70's sector reopening, all superseded by v3.72's closed list:**
-
-| Instrument(s) | Commodity | Inverse (v3.61) |
-|---|---|---|
-| XLE · GUSH · ERX · NRGU | Energy / E&P complex | ERY · DRIP · OILD |
-| USO · UCO | Crude oil (direct) | SCO |
-| UNG · BOIL | Natural gas | KOLD |
-| GDX · NUGT · GDXU · JNUG | Gold miners | DUST · JDST |
-| GLD · UGL | Gold (direct) | GLL |
-| SLV · AGQ · SIL · SILJ | Silver | ZSL |
-| COPX · CPER | Copper | **none listed — verify live** |
-| URA · URNM | Uranium | **none listed — verify live** |
-| XLB · UYM | Broader materials/mining ("or such," per the governor's own framing) | SMN |
-
-**Copper and uranium have no inverse vehicle listed above** — checked at v3.61's adoption, nothing obviously real turned up on a first pass, but per the standing wrapper-search discipline (below), a live `search` is still required before concluding no inverse path exists for either — this table is a convenience index, not the boundary. If a real, liquid one is found, add it here rather than re-discovering it next time.
-
-**Sector/broad-index groups (v3.70) — same shape as the commodity table, C4's 1s/2s/1si/2si tracks, gated exactly like a commodity under C1 (proxy's day change, 9:30 then 9:40, same three-leg test on each side):**
-
-| Proxy (unleveraged) | Group | Leveraged long | Leveraged inverse |
-|---|---|---|---|
-| SOXX | Semiconductors | SOXL | SOXS |
-| QQQ | Nasdaq-100 / broad tech | TQQQ | SQQQ |
-| SPY | S&P 500 / broad market | UPRO | SPXU |
-
-**All six confirmed live and tradeable via `search` on 2026-09-15** — SOXL, SOXS, TQQQ, SQQQ, UPRO, SPXU. A short starting list, not exhaustive — same convenience-index caveat as the commodity table above: verify live at time of use regardless, add real ones found, don't treat absence here as proof none exists.
-
-**Individual-stock leveraged-ETF lookup — no proxy, no confirmation gate; exists only to answer "does this mover have a wrapper":**
-
-| Wrapper(s) | Underlying stock |
-|---|---|
-| NVDL · NVDX · NVDU | NVDA |
-| AMDL · AMUU | AMD |
-| MUU | MU |
-| MVLL · MRVU · MRVX | MRVL |
-| NBIL · NBIG | NBIS |
-| TSMX · TSMU | TSM |
-| SMCX | SMCI |
-| AVGX | AVGO |
-| TSLL | TSLA |
-| CONL | COIN |
-| MSTX | MSTR |
-| USGG · USAX | USAR |
-| KLAG | KLAC |
-| IONX · IONL | IONQ |
-| QBTX | QBTS |
-| METU | META |
-| MVLL · MRVU · MRVX | MRVL |
-
-**This table is not exhaustive by construction — verify with `search` before ruling out a wrapper, don't just check this list.** Found missing 2026-09-04: USAR's entry (9/4 9:35) went into the plain stock because this table didn't have it, when USGG (Themes 2X Long USAR Daily ETF) and USAX (Tradr 2X Long USAR Daily ETF) both exist and are tradeable — a real C4 miss, not a hypothetical one. New single-stock leveraged products launch continuously; this table only grows when someone happens to add an entry. **Before declaring "no wrapper exists" at C4/E3, run a quick `search` for the underlying's name/ticker plus "leveraged" or "2X"/"3X" as a live check, not just a table lookup.**
-
-**A single failed `search` call is not proof either — found 2026-09-08.** IONQ's 9:40 entry ran `search` ("IonQ 2x daily long leveraged single stock ETF") and got zero results, so it traded plain — but three real, live wrappers exist (IONX/Defiance, IONL/GraniteShares, both liquid and tradeable; IONC/Corgi exists too but is stale/illiquid, correctly excludable on Friday's AXTC precedent). The governor caught it from the live Robinhood app search within minutes. **When a candidate is posting a large, obviously wrapper-worthy move (double-digit day change, mega-cap-adjacent liquidity, a "hot" theme like quantum/AI), one empty `search` result is a weak signal, not confirmation** — a differently-phrased retry (drop qualifiers, try just the ticker + "ETF", or try "2x" and "leveraged" as separate calls) costs one extra tool call against a real risk of trading the wrong vehicle. Cheap to switch immediately if the position is fresh and near-flat (as it was here — cancel the stop, exit, re-enter the wrapper, no real cost); expensive if caught late (as USAR was on 9/4) — the earlier this is caught, the cheaper the fix, which argues for the extra verification pass *before* placing the plain-stock order, not after.
-
-**Standing governor instruction, 2026-09-08 9:50 checkpoint: search harder for leveraged plays, every time, before any commodity or individual-stock entry.** At the 9:50 URA entry, `search` *did* find URAA (Direxion Daily Uranium Industry Bull 2X ETF) on a second, differently-phrased retry — not a miss like IONQ — but it was then declined on liquidity grounds (28K-165K daily volume vs URA's own millions). The governor's instruction is broader than any single incident: **exhaust search variants (ticker alone, ticker + "ETF", "2x"/"3x" + the theme name, the company/commodity's full name) before concluding a wrapper doesn't exist, and don't be quick to wave off a found wrapper on liquidity without a real look** (full daily volume history, live spread, whether the last-trade/bid gap is a momentary quirk or a persistent thin-market signal) — a fast pass isn't the same as a real check. Applies going forward to every C4 instrument-priority decision, not just when a name is already suspected to be wrapper-worthy. **Does not mean switch out of an already-held position on a later, better-verified find** — if a position is already open and performing, chasing a marginally-better vehicle open-ended is its own risk (execution cost, fresh entry risk on the new vehicle, as IONX itself just demonstrated); this rule governs the *search* discipline at entry, not a standing invitation to rotate vehicles mid-hold.
-
-**Retired outright, v3.53 — no longer tradeable vehicles under "individual stocks and individual leveraged ETFs, commodities excepted":** SOXL/SOXS/USD, TQQQ/SQQQ/FNGU/BULZ/TECL, SPXL/UPRO/SPXS/SDOW/UDOW, TNA/TZA, LABU, YINN/YANG, KORU, IBIT, BITX/BITU/ETHU/ETHT, UVIX/VXX — every one was a broad-sector, index, or crypto-group leveraged product with no single-company underlying, or (IBIT) a proxy that no longer confirms anything. **Crypto is individual-stock-only, governor instruction 2026-09-02**: RIOT, MARA, CLSK trade as plain stocks now, no group wrapper; COIN and MSTR keep their real single-stock wrappers (CONL, MSTX) above, unaffected.
-
-**Individual stock not on the wrapper map → trade it plain (C4 rank-2).** There is no proxy fallback anymore; a mover without a listed leveraged wrapper is just a plain-stock candidate, not a reason to substitute some other instrument.
-
-### Known leveraged vehicles
-
-**Index** TQQQ · SPXL · UPRO · TNA · UDOW — **Sector** SOXL · TECL · GUSH · ERX · FNGU · BULZ · LABU · NUGT · GDXU · NRGU · YINN · KORU · USD — **Single-stock** NVDL · NVDX · TSLL · CONL · MSTX · SMCX · MUU · AMDL · TSMX — **Inverse** SQQQ · SOXS · SPXS · SDOW · TZA · DUST · ERY · YANG · ZSL · JDST · SCO · DRIP · KOLD — **Commodity/materials** AGQ · UGL · GLL · JNUG · SIL · SILJ · UCO · BOIL · OILU · OILD · UYM · SMN · COPX · CPER · URA · URNM · LIT · REMX · SLX — **Crypto** BITX · BITU · ETHU · ETHT · RIOT · MARA · CLSK — **Volatility** UVIX · VXX, event/intraday only, never a hold.
-
-This list is a **convenience index, not a boundary** — any liquid name may be traded (C4). Equities and ETFs only: **no options**, no short selling.
+**v3.78 lean cleanup: the commodity table, sector table, individual-stock wrapper lookup, and wrapper-search-discipline history that used to fill the rest of this section are removed from the live file, not just marked retired.** They described a market-wide-scanning, wrapper-hunting system (multiple individual stocks/commodities considered per checkpoint, a standing "search harder for leveraged plays" discipline) that the Core Ten's closed 20-ticker universe has no use for — C4's fixed table is the only lookup a checkpoint ever needs now, and there is no wrapper search left to run (every row's long/inverse pair is already named). Keeping ~60 lines of a different system's reference tables around, already marked "not active reference" (v3.72, above), cost real tokens on every E3 pull for zero behavioral value. **Full original text, unedited: `git show 2cd3b57:RULEBOOK.md` (the commit immediately before the v3.71/v3.72 restructuring).** If the universe ever reopens to individual stocks or commodities, restore from that commit rather than re-deriving it from memory.
 
 ## E4. Capability verification
 
@@ -577,6 +519,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ## Current state
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
+
+**v3.78** — Two changes, direct governor instruction, 2026-09-16: (1) **daily trade cap** — 3 entries per day absolute max, 2 recommended, added to A1 as a structural blocking condition (same tier as the loss-streak breaker); cross-referenced into Part C's intro, C9, C12, C8's entry report, and E2's now-superseded "not by a count" line. (2) **lean cleanup** — E3's ~60 lines of retired commodity/sector/individual-stock-wrapper reference tables (already marked "not active reference" since v3.72) removed from the live file outright, replaced by a one-line git pointer (`2cd3b57`); READ MAP's stale "builds the day's candidates" / "watchlist only" wording for 9:00/9:30 corrected to state plainly that neither checkpoint makes an entry decision — C1's RVOL/ORB/ATR test can't run until 9:45, once the opening range is complete.
 
 **v3.77** — Close moved 15 minutes earlier, from 11:15 back to 11:00 (double duty: last ratchet, then direct market sell if still open, report, arm tomorrow). Entry window shortens to 9:45-10:55 accordingly (11:00 is exit-only, same as any close slot). The 11:05 and 11:10 slots are removed from the grid entirely, not repurposed. Grid drops to 19 total slots (17 intraday management/entry + the 11:00 close + 8pm backup). Direct governor instruction, 2026-09-16.
 
