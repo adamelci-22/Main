@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.74.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.75.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -119,11 +119,12 @@ Fewer than ~15 sessions available → the sample is thin; treat the numbers as p
 
 **`run_high` tracks the high since *this position's entry* — a different window than B6's day-anchored `session_high`, even though both reuse the same B1b range-tracking technique.** Initialized to the fill price at entry, then `run_high = max(run_high, bar_high)` at every checkpoint (B1b) — the true highest price reached since the fill, not a lucky-or-unlucky point sample. Advances on any fresh interval high, unconditionally. **Never substitute `session_high` here** — a ticker can legitimately be entered below its own day's high (an ORB breakout, C1, can happen well after the day's actual peak), in which case `session_high` at entry sits above the fill and would produce a stop tighter than the hold has actually earned.
 
-**At every management checkpoint (9:45 through 11:15, one uniform 5-min cadence throughout, v3.64), the stop ratchets off the running high itself, discounted by twice the candidate's own noise band — but only while the position is currently in profit (v3.63, below) — never off the trailing average, never a fixed stage:**
+**At every management checkpoint (9:45 through 11:15, one uniform 5-min cadence throughout, v3.64), the stop ratchets off the running high itself, discounted by the candidate's own noise band times a multiplier (2, or 3 for a widened 3x ticker — v3.75, below) — but only while the position is currently in profit (v3.63, below) — never off the trailing average, never a fixed stage:**
 
 ```
 run_high = max(run_high, bar_high)                         -- B1b, updated every checkpoint
-candidate_stop = run_high × (1 − 2 × stall_threshold_pct)
+multiplier = 3 if this ticker's widening conditions hold (v3.75) else 2
+candidate_stop = run_high × (1 − multiplier × stall_threshold_pct)
 live_price = fresh live quote, pulled now, not the B1b range read          -- v3.62
 if live_price <= candidate_stop: new_stop = current_stop                   -- v3.62 staleness guard, skip this ratchet
 else: new_stop = max(current_stop, candidate_stop)      -- up only, never down (B2's own rule, unchanged)
@@ -135,11 +136,20 @@ else: new_stop = max(current_stop, candidate_stop)      -- up only, never down (
 
 **Why 2× the noise band:** backtested 1×–5× against all trades on record; 2× was the point that improved on the real historical results without giving reversals extra room to run first — full comparison in Current State (v3.44) and the git history, not restated here.
 
+**Multiplier widening for 3x leveraged instruments only, 2× → 3×, gated on a strict historical audit — the "2-of-3 Hindsight Rule" (v3.75, direct governor instruction, 2026-09-16).** The discount multiplier in `candidate_stop = run_high × (1 − multiplier × stall_threshold_pct)` defaults to 2 for every instrument, same as always. It may widen to 3, **for that one specific 3x-leveraged ticker only** (TQQQ/SQQQ, UPRO/SPXU, SOXL/SOXS, TNA/TZA, FAS/FAZ, TMF/TMV, LABU/LABD, RETL — never the eight 2x tickers, ERX/ERY/UGL/GLL/SZK), when the entry-eligible checkpoint's fresh scan of `trades.csv` for that exact ticker finds:
+
+1. **Count condition** — of that ticker's last 3 closed trades, at least 2 were exited by the ratchet stop (`exit_reason` indicating a stop trigger, not a pre-commit exit, a manual exit, or the 11:15 close).
+2. **Continuation condition (the proof)** — for those stopped-out trades, minute-bar historicals in the 30 minutes following the stop's fill show the price went on to a new local high (long) or low (inverse) that would have cleared a 1:1 risk/reward against that trade's own entry fill — real, checkable evidence the stop was cut too tight, not a guess.
+
+**Reset protocol takes priority over the count above, checked first:** if that ticker's *most recent* closed trade was itself entered under the widened 3× multiplier and closed well (target reached, or a clean trailing exit without a premature reversal — not itself another missed-continuation stop-out), the multiplier resets to the 2× baseline for the next entry on that ticker, regardless of what the raw last-3 count would otherwise say. Without this explicit override the naive count doesn't actually reset itself — a single successful widened trade still leaves 2 stop-outs sitting in the trailing 3-trade window, which would wrongly re-trigger widening. Check the reset condition first, every time; only fall through to the count/continuation check above if the reset doesn't apply.
+
+Recomputed fresh from `trades.csv` at every entry-eligible checkpoint, never cached, same discipline as every other JIT number in this file — there is no persistent "widened" flag stored anywhere, just a deterministic function of that ticker's own recent closed-trade history.
+
 **Ratchet gated on being in profit, not on checkpoint count (v3.63 — retires v3.59's two-checkpoint entry grace outright, not an addition on top of it).** Direct governor instruction, 2026-09-14, given as part of a full reassessment after the loss streak that tripped the circuit breaker on 9/11 — two of the three losses (AAPU 9/10, MVLL 9/11) shared the identical stale-`run_high` mechanism (E6), and v3.59's softer early-checkpoint discount rates hadn't stopped it from recurring. **At every management checkpoint, for the entire life of the hold — not just the first two — the stop only ratchets if the live price is currently above the entry fill price:**
 
 ```
 if live_price > entry_fill_price:
-    candidate_stop = run_high × (1 − 2 × stall_threshold_pct)   -- full rate, always, no half-rate stage
+    candidate_stop = run_high × (1 − multiplier × stall_threshold_pct)   -- full rate, always, no half-rate stage; multiplier per v3.75
     new_stop = max(current_stop, candidate_stop)                -- subject to v3.62's staleness guard above
 else:
     new_stop = current_stop                                     -- unconditionally unchanged
@@ -563,6 +573,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ## Current state
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
+
+**v3.75** — B2's ratchet discount multiplier can widen 2×→3×, for a single 3x-leveraged ticker only, on a strict "2-of-3 Hindsight Rule" audit against `trades.csv`: 2 of that ticker's last 3 closed trades stopped out by the ratchet, each with real minute-bar evidence the price recovered to a 1:1 R:R within 30 minutes of the stop. Resets to baseline the moment a widened trade closes well, checked first, ahead of the raw count (a naive last-3 window doesn't self-reset otherwise). Direct governor instruction, 2026-09-16, given as a concrete, falsifiable replacement for an originally-proposed subjective "frequent premature stop-outs" trigger.
 
 **v3.74** — B1's 7% stop ceiling is now a real decline ("execution blackout"), not a cap-and-enter-with-a-warning. Direct governor instruction, 2026-09-16, delivered as a 4-part "system patch." Of the other three parts: the proposed switch from `stop_market` to `stop_limit` protective orders was declined — a stop-limit can fail to fill entirely if a leveraged instrument gaps through both the stop and limit price, which is worse than the slippage a stop-market accepts, for exactly the volatility profile the patch cited as its own rationale; the async post-placement verification it also asked for was already standing C8 discipline. The other two parts (underwater ratchet freeze, 2% max trailing tightness) were already the exact v3.63/B2 rules in force, restated — no change made.
 
