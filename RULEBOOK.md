@@ -471,7 +471,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Deposited capital recomputed**: `total_value ($455.66) − all-time realized P&L ($4.85, get_realized_pnl 3-month sum) − unrealized P&L ($0)` = **$450.81** — unchanged from yesterday (no new deposits; total value and realized P&L both moved down together by yesterday's -$16.29). **Floor: $225.41** (50% of deposited, unchanged).
 - RVOL/ATR profiling deferred to 9:45, once the day's own volume has accrued and the opening range is complete (C1) — nothing to compute yet at 9:00.
 
-**9:30 observation**: pending — B6 starts tracking each proxy's 9:30-9:45 opening range at this checkpoint (v3.76); no decision made here (READ MAP, v3.78).
+**9:30 observation**: git verified in sync (pushed at 9:00). A1 re-checked: loss streak still **2 of 3**, flat, no resting orders (`get_equity_positions` empty), daily trade count still **0 of 3**. **B6 opening-range tracker initialized on the ten proxies** — each proxy's 9:30 print is this checkpoint's `session_high`/`session_low` starting point, the baseline C1 step 2 will check the 9:45 breakout against: QQQ $708.54 (+0.57% vs close) · SPY $759.52 (+0.28%) · SOXX $507.09 (+1.65%, firmest mover) · IWM $285.95 (+0.28%) · XLF $56.73 (-0.21%, flipped negative from the pre-market read) · XLE $64.83 (-1.67%, deepened negative) · GLD $399.05 (+1.25%) · TLT $80.99 (+0.35%) · XBI $154.97 (+0.61%) · XRT $83.50 (+0.34%, much softer than its pre-market +1.10% stale read). No decision made here (READ MAP, v3.78) — RVOL and the ORB breakout test both need the full 9:30-9:45 window, first real gate run is 9:45.
 
 ## E6. Known issues — backlog, not yet fixed
 
