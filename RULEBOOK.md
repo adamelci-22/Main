@@ -471,6 +471,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **9:50 — flat, no trade.** Two proxies broke this read: XLF below its $55.78 opening-range low (bear, candidate FAZ), TLT above its $81.575 opening-range high (bull, candidate TMF). Neither clears RVOL (XLF ~0.77×, TLT ~0.95×). **v3.79 fallback**: QQQ still tops the RVOL-ratio ranking (~1.32×) but remains inside its own range — fails step 2 again. XLF and TLT rank 9th and 5th respectively, nowhere near the top, so neither gets checked. Correct no-trade.
 
+**9:55 — flat, no trade.** SOXX joined the breakout list (above its $518.31 opening-range high, bull, candidate SOXL) alongside XLF and TLT (both still breaking, unchanged direction). None of the three clear RVOL (SOXX ~0.77×, XLF ~0.71×, TLT ~0.92×). **v3.79 fallback**: IWM now tops the RVOL ranking (~1.23×, narrowly ahead of QQQ's ~1.21×) but is inside its own range — fails. SOXX, the one actually breaking out, ranks 7th. Correct no-trade — three checkpoints in a row now where the fallback's top RVOL pick isn't the proxy that's actually moving.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
