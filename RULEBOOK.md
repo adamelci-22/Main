@@ -465,6 +465,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Earnings: no after-close reporters overnight land on a Core Ten theme; nothing to flag.
 - RVOL/ATR profiling deferred to 9:45, once the day's own volume has accrued and the opening range is complete (C1) — nothing to compute yet at 9:00.
 
+**9:30 observation**: git verified in sync. A1 re-checked: loss streak still **0 of 3**, flat, no resting orders, daily trade count still **0 of 3**. **B6 opening-range tracker initialized on the ten proxies** — each proxy's 9:30 print is the baseline C1 step 2 will check the 9:45 breakout against: QQQ $715.79 (+1.57% vs Wed close) · SPY $763.00 (+1.19%) · SOXX $517.11 (+3.00%, firmest again) · IWM $288.07 (+1.46%) · XLF $56.20 (+0.48%) · XLE $63.55 (-0.76%, the lone negative proxy) · GLD $400.44 (+2.22%) · TLT $81.55 (+0.82%) · XBI $157.87 (+2.39%) · XRT $83.80 (+1.29%). The relief rally held into the open — nine of ten proxies positive, consistent with pre-market. No decision made here — first real gate run is 9:45.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
