@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.81.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.82.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -378,7 +378,7 @@ Never delete either checkpoint (A2's rule, not restated here).
 
 ### Early shutdown
 
-Flat · no resting orders · **and** no entry possible (buying power short) → delete remaining intraday checkpoints. **Keep exactly two: 12:00 close (report + primary arming, v3.80) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable within the window unless one of the two conditions above is actually true.
+Flat · no resting orders · **and** no entry possible — either buying power short, **or the daily trade cap is already at 3 of 3 (v3.82, direct governor instruction, 2026-09-23)** — → delete remaining intraday checkpoints. **Keep exactly two: 12:00 close (report + primary arming, v3.80) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable within the window unless one of these conditions is actually true. The 3-of-3 case differs from the buying-power case only in *why* no entry is possible — A1 blocks it structurally either way, not a judgement call, so every remaining slot through 11:55 would read flat, gate-blocked, non-event; deleting them removes that dead cost. **Act on this the moment the 3rd trade's count becomes final** (an entry fill, not merely an exit) — don't wait for the next checkpoint to notice.
 
 ## D2. 9:00am research — standard work
 
@@ -511,7 +511,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Worth stating plainly for the record:** this SOXX/$563.97 boundary chopped hard all morning (four crossings 10:00-10:05 alone) before finally breaking decisively against the position at 10:55 — exactly the risk flagged explicitly in the 10:05 re-entry's own notes ("a real risk this re-entry chops the same way the first one did"). A level surviving one whipsaw test doesn't mean it survives every test; today it survived once (favorably) and failed once (unfavorably) on the same signal. No rule was broken and no read was late — B3's reversal exit worked exactly as designed, cutting the loss well before the resting stop would have. **Net across all three SOXS trades today: -$3.17 (scratch) + $9.73 (win) - $12.72 (loss) = -$6.16** — the signal ends the day a net loser despite one excellent trade in the middle, a useful reminder that a strong middle trade doesn't retroactively validate re-entering the same setup a third time.
 
-**11:00–11:55 — flat, daily cap reached (3 of 3), non-events.** A1 blocks every remaining checkpoint structurally regardless of what the gate stack would otherwise show — not a judgement call. Nothing to manage, nothing to gate. Per D3, checkpoints in this stretch stay silent unless something breaks (a balance change, a chain gap) — resuming full reporting at 12:00's close.
+**11:00 — flat, daily cap reached (3 of 3). Early shutdown triggered (v3.82, direct governor instruction, 2026-09-23).** A1 blocks every further entry today structurally, same tier as the existing buying-power-short case — extended D1's Early shutdown rule to cover it explicitly and acted on it immediately: deleted the 11 remaining intraday checkpoints (11:05 through 11:55). Kept exactly the 12:00 close (report + primary arming) and 8:00 backup, per the rule. No further checkpoints until 12:00.
 
 ## E6. Known issues — backlog, not yet fixed
 
@@ -532,6 +532,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ## Current state
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
+
+**v3.82** — D1 early shutdown extended to the daily trade cap, direct governor instruction, 2026-09-23. Once the 3rd trade's entry fill makes today's count final at 3 of 3, A1 blocks every further entry structurally for the rest of the day — same shape as the existing buying-power-short shutdown case, just a different reason. Delete the remaining intraday checkpoints immediately (act on the fill, don't wait for the next slot to notice), keep exactly the 12:00 close and 8:00 backup, unchanged from the existing rule. Prompted directly by today: the 3rd SOXS trade closed at 10:55, leaving 11:05 through 11:55 (11 slots) armed and running as pure non-event overhead until this was raised.
 
 **v3.81** — D4 watch-list addition, direct governor instruction, 2026-09-23: **RVOL decay on same-day repeat entries** now gets named explicitly in the entry report when present, win or lose — not a new threshold, RVOL still only needs to clear 1.5× to qualify. Prompted by SOXS's 3rd trade that day: cleared 1.5× at entry (~2.18×) but was riding a monotonically falling RVOL reading since the original entry (3.26× → 2.56× → 2.48× → 2.18×), unflagged at the time, on the trade that turned out to be the day's only real loss. One trade isn't a pattern (D4's own discipline) — this makes the trend visible for D4's review to actually catch a pattern if one exists, not a rule change on its own.
 
