@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.80.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.81.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -412,6 +412,8 @@ Flat · no resting orders · **and** no entry possible (buying power short) → 
 
 If a pattern suggests a rule is causing early exits or missed continuation, name the rule and propose the change. **Look for a repeated pattern — never rewrite a rule from one trade.** Changing a rule right after a single loss under it is fitting noise, not learning.
 
+**Watch list — RVOL decay on same-day repeat entries, added 2026-09-23, direct governor instruction.** SOXS's 3rd trade that day (10:30, a C12 step 0 re-entry doubling as the discretionary 3rd slot) cleared 1.5× RVOL at entry (~2.18×) but was riding a reading that had fallen at every single re-check since the original 9:45 entry (3.26× → 2.56× → 2.48× → 2.18×) — a clean, monotonic downward trend, unflagged at the time, on the trade that turned out to be the day's only real loss (-2.611%). **Not a new threshold or blocking condition — RVOL still only needs to clear 1.5× to qualify, nothing here changes that mechanically.** But whenever a same-day repeat or re-entry candidate (C12 step 0, or the v3.80 3rd-entry path) shows a declining RVOL trend across its prior checks that day, name it plainly in the entry report, win or lose, so the pattern is visible across multiple instances rather than reconstructed after the fact from trade notes. If repeated instances show declining RVOL on a repeat entry correlating with worse outcomes, that's the kind of pattern D4 exists to surface for an actual rule proposal — one trade is not that pattern yet.
+
 ---
 
 # PART E — REFERENCE (pull on demand)
@@ -528,6 +530,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ## Current state
 
 **Pull on demand only — like Part E, never read this section front to back (added 2026-09-14, token-cost cleanup).** Every entry below is a historical rule-change record; the full reasoning behind each one already lives permanently in the git commit that made it. Only entries actively cited by an inline pointer elsewhere in this file are kept in full — currently **v3.43, v3.44, v3.46**. Everything else is one line: what changed, one-sentence why, and a pointer. If a rule's fuller rationale is genuinely needed and it isn't one of those three, `git show <hash>` (or `git log --all --grep=vX.XX -- RULEBOOK.md` for versions predating this file's per-version commit convention) has the original text, unedited, in full.
+
+**v3.81** — D4 watch-list addition, direct governor instruction, 2026-09-23: **RVOL decay on same-day repeat entries** now gets named explicitly in the entry report when present, win or lose — not a new threshold, RVOL still only needs to clear 1.5× to qualify. Prompted by SOXS's 3rd trade that day: cleared 1.5× at entry (~2.18×) but was riding a monotonically falling RVOL reading since the original entry (3.26× → 2.56× → 2.48× → 2.18×), unflagged at the time, on the trade that turned out to be the day's only real loss. One trade isn't a pattern (D4's own discipline) — this makes the trend visible for D4's review to actually catch a pattern if one exists, not a rule change on its own.
 
 **v3.80** — Two changes, direct governor instruction, 2026-09-21: (1) **close extended, 11:00 → 12:00** — reversing v3.77's tightening after a review of 9/17–9/21 found consistent afternoon continuation on all three sessions and no reversal example yet on record; the 11:05–11:55 slots are added back, same uniform 5-min cadence, entry window extends to 9:45–11:55 to match (C9). Grid grows from 19 to 31 total slots. Explicitly a staged test on a thin, selection-biased three-day sample, not a settled reversal — see D1. (2) **3rd-entry restriction** — once today's count is already 2, the discretionary 3rd trade may only re-enter an instrument already traded today that was stopped out clean (a win or scratch, not a real loss), never a fresh candidate (A1). Prompted by 9/21's TQQQ trade: stopped out clean at 10:05 on ordinary chop before the underlying move resumed and ran hard the rest of the session.
 
