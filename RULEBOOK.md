@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.85.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.86.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -545,8 +545,6 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 **MCP connection can drop mid-session and miss checkpoints — first hit 2026-09-17, resolved on reconnect, root cause not diagnosed.** The Robinhood/GitHub/Docs MCP connection dropped sometime after the 10:40 checkpoint on Thursday 9/17 and didn't reconnect until ~8:00pm ET, missing 10:45, 10:50, 10:55, 11:00 (close/primary arming), and the 8:00pm backup outright — no checkpoint fired into a live session during the gap. On reconnection, account state was verified first (flat, no resting orders, P&L exactly matched the one known trade) before anything else, then the missed 11:00 close's D3 report was done late and Friday's full chain was armed from the 8:00pm slot instead of 11:00. No capital was at risk during the gap (position had already closed at 10:15) and no rule needed to change — A2/D1's existing "missed checkpoint, not a pending one, do it late and flag it" discipline covered this cleanly. Flagging because it's a new failure mode for this system (prior E6 entries are git/data issues, not tool connectivity) — **if it recurs, especially while a position is open, prioritize an immediate flat/orders/portfolio check the moment tools come back, before any other checkpoint work**, exactly as done this time.
 
 **Resolved 2026-09-14, v3.65.** C10 given the mirrored inverse leg exactly as scoped when this was first found (9/10) — checks the commodity's plain proxy, never the inverse vehicle's own price, mirroring C1/C6's existing pattern. Direct governor instruction, given live mid-session with SLV/GLD/COPX/URA all sitting on qualifying inverse setups. Reopen only if a gap in the mirror itself turns up.
-
-
 
 **Local git working copy can silently desync from the actual remote branch — found and fixed 2026-09-09.** Local `trades.csv` was missing 7 rows already safely committed on `origin`; no data was actually lost, root cause not fully diagnosed (likely a container/checkout artifact from resuming after a date change). Fixed via checkout-from-origin plus a merge. **Standing practice: if `git push` is ever rejected non-fast-forward, or trades.csv/RULEBOOK.md ever look thinner than expected, verify against `origin` (`git log origin/...`, `git diff origin/...`) before trusting local state or force-pushing.** Full incident: `git show dd716ce:RULEBOOK.md` (E6).
 
