@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.102.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.103.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -205,15 +205,15 @@ Price fell to $14.896 shortly after the 10:15 checkpoint, below the $15.19 stop 
 
 - **Reversal — [retired as an independent exit, v3.100, direct governor instruction, 2026-10-03].** Was "broke the level or VWAP that justified entry... the level must have been named at entry or the claim is unfalsifiable." **Provably redundant now that v3.99 places the initial stop at that exact level:** the resting stop starts there and only ever ratchets up (never down, B2), while this check only runs at 5-minute checkpoints (B1b) — a continuously-live order always reaches the same price before a checkpoint-gated judgment call can act on it, so this condition could never fire first. Confirmed against real history, same day: simulating v3.99's stop placement (plus the unchanged ratchet) against the 6 trades that actually exited this way shows all 6 improve or come out flat (total −6.29% actual vs. −0.01% simulated) — the old discretionary exit was consistently firing at a worse price than the resting stop would have. **Commodity complex rollover is carved out and stays live below** — not a price level, so v3.99's stop can't absorb it.
 - **Commodity complex rollover** (commodity trades only) — the complex rolled over; not a price level, so it can't be expressed as a stop and remains a direct exit here.
-- **Risk/reward flipped** — small remaining upside against a large distance to the stop.
-- **Unwanted event approaching** — earnings or macro data not intended to be held through.
-- **Approaching the same-day close deadline** with the move finished.
+- **Risk/reward flipped — [retired, v3.103, direct governor instruction, 2026-10-03].** Was "small remaining upside against a large distance to the stop." A judgment call the ratchet already answers mechanically: once a trade is in profit the stop trails 0.20% off its running high, so the distance to the stop is never large on a trade that's run. Never once used in the log's 66 trades (8/10–10/2).
+- **Unwanted event approaching** — earnings or macro data not intended to be held through. Kept: the one discretionary exit tied to a known, scheduled risk rather than a read of the chart.
+- **Approaching the same-day close deadline with the move finished — [retired, v3.103, direct governor instruction, 2026-10-03].** The 12:30 market sell (B2/B4) is the deadline, and the ratchet already locks in a finished move. Never once used in the log's 66 trades.
 
-Not on one red candle, midday noise, or impatience.
+**The complete list of ways a position closes (v3.103):** (1) the resting stop firing — initial stop at the ticker's own opening-range low (B1, v3.99), ratcheting up only (B2); (2) the 12:30 direct market sell (B2/B4); (3) an unwanted scheduled event approaching; (4) commodity complex rollover. Nothing else. No exit on a red candle, midday noise, impatience, or a feeling that the move is done or turning.
 
-### Pre-commit — end every holding report with it
+### Pre-commit — end every holding report with it (rewritten v3.103)
 
-Name the **specific, falsifiable** condition that would exit at the next checkpoint, with instrument and direction. Then honour it. To override, say explicitly that you are overriding a pre-commitment and name the **new** information. *"It looks like it's turning back up" does not qualify.*
+State the exits that are actually live: **the current resting stop price** (and the price the next ratchet would move it to, if the trade is in profit), **the 12:30 close**, and **any scheduled event before 12:30** (earnings, Fed, CPI, etc.) that would trigger the event exit — or "none." Since every other exit is retired, there is no discretionary exit to pre-commit to and nothing to override; the pre-commit exists so the report shows exactly what will close the trade. *(Replaces the pre-v3.103 text, which asked for a falsifiable exit condition each checkpoint and allowed overriding it — that habit produced the reversal exits retired in v3.100.)*
 
 ## B4. Same-day close — no fixed profit target
 
@@ -333,7 +333,7 @@ Then:
 - **Place the protective stop immediately after the fill.**
 - **Arm the entry+5 catch-up check (v3.55).** Once the stop is confirmed resting, check how far away the next regularly-scheduled grid checkpoint is. **If more than 5 minutes**, arm one ad hoc trigger for `fill_time + 5min` — a B1b/B2 ratchet-only read on this position, nothing more (not a full gate-stack re-run). This is separate from C12's own `fill_time + 10min` trigger, which decides whether to open a *different* position after an *exit* — this one manages the position just opened, regardless of which path opened it (primary 9:45 slot, an off-cycle entry, or a C12 re-entry). If the next grid checkpoint is already ≤5 minutes out (true for every entry now, v3.64 — the 5-min cadence means this is always the case, so this ad hoc trigger is never actually armed anymore), skip it — nothing to add. **Real-world note (v3.56, USAR 9/4):** this check is scoped to the gap *between checkpoints*, not the gap between the fill and the position's own peak — a reversal that happens inside the first minute or two after the fill can still outrun even a 5-minute catch-up. It closes the AFRM/GUSH/NUGT-style multi-checkpoint gap; it doesn't guarantee catching every fast spike-and-reverse.
 - Report slippage against the intended price.
-- State at entry: fill · **quantity and total cost** · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · **today's entry count (n of 3 — fresh or re-entry, v3.101)** · intended exit · the falsifiable pre-commit for the next checkpoint.
+- State at entry: fill · **quantity and total cost** · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · **today's entry count (n of 3 — fresh or re-entry, v3.101)** · the pre-commit (B3, v3.103: resting stop price, 12:30 close, any scheduled event before 12:30).
 
 ## C9. Timing and selection
 
@@ -595,6 +595,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.103** — B3's "risk/reward flipped" and "approaching the close with the move finished" exits retired. Direct governor instruction, 2026-10-03. Full text: B3, above. Neither was used once in all 66 logged trades (8/10–10/2); the ratchet and the 12:30 market sell already cover both mechanically. B3 now lists the complete set of ways a position closes: the resting stop, the 12:30 close, an unwanted scheduled event, commodity rollover. The pre-commit is rewritten to state those live exits (stop price, 12:30, any scheduled event) instead of a falsifiable discretionary exit condition with an override clause.
 
 **v3.102** — Housekeeping, direct governor instruction, 2026-10-03, three parts: (1) **Objective** restated to the governor's actual goal — a minimum average of 0.5% per trading day across a full trading year, reach goal 0.7–0.8% per day — replacing "at least 1% daily, roughly 15% a month," and framed explicitly as a yearly average, not a daily quota. (2) **B2's v3.75 "2-of-3 Hindsight Rule" retired** — the ratchet multiplier is now a fixed 2 for every instrument. Audited first: the rule never widened a stop in live history; only TMV had enough trades to test it, and the continuation proof failed at all 4 TMV entries where the count condition was met. Zero effect on any past trade. (3) **Header policy version** corrected — it had been left at 3.86 since mid-September.
 
