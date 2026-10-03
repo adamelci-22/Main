@@ -71,7 +71,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 1. List triggers. **Delete every one with `ended_reason='run_once_fired'`** — a fired trigger reschedules itself ~24h later carrying its original, now-stale prompt.
 2. Delete any trigger on a slot about to be armed. Exactly one per slot.
 3. Never delete the trigger you are running from until tomorrow is armed.
-4. **Never delete the 12:00pm close checkpoint (primary arming, v3.80) or the 8:00pm checkpoint (backup verification, D1).** Together they replace what used to be a single point of failure.
+4. **Never delete the 12:30pm close checkpoint (primary arming — v3.80 set it at 12:00, v3.92 moved it to 12:30) or the 8:00pm checkpoint (backup verification, D1).** Together they replace what used to be a single point of failure.
 
 A past-due trigger still enabled = a **missed** checkpoint, not a pending one. Do its work now, say it was missed, then delete it.
 
@@ -219,13 +219,13 @@ State the exits that are actually live: **the current resting stop price** (and 
 
 **No checkpoint sells purely for hitting a price level.** The continuous chandelier trail (B2) is what locks in gains — a big move is expected to give back at most `2 × stall_threshold_pct` off its running high at any checkpoint. `target_pct` is still computed at entry (B1) — informational only (C7's own ranking use of it retired v3.72), never an autonomous trigger.
 
-**Every position closes the same trading day it was opened. No overnight hold, ever.** Enforced structurally, not by a deadline check: the 12:00 checkpoint (B2, v3.80) closes anything still open with a direct market sell (v3.58). State the intended exit at entry.
+**Every position closes the same trading day it was opened. No overnight hold, ever.** Enforced structurally, not by a deadline check: the 12:30 checkpoint (B2, v3.92 — moved from v3.80's 12:00) closes anything still open with a direct market sell (v3.58). State the intended exit at entry.
 
 ## B5. Headlines while holding
 
 Check **every hour**, position-relevant only, same-day news only — yesterday's is already in the price. Name the catalyst in the report.
 
-*(The trading window (9:00–12:00, v3.80) is short enough that this may only fire once or twice in a given hold. Don't stop checking just because an earlier trade already closed today — a later opportunity is still tradeable within the window.)*
+*(The trading window (9:00–12:30, v3.92) is short enough that this may only fire once or twice in a given hold. Don't stop checking just because an earlier trade already closed today — a later opportunity is still tradeable within the window.)*
 
 ## B6. Shortlist range snapshot — feeds C1's Opening Range Breakout, whether or not it's the held position
 
@@ -396,7 +396,7 @@ Then:
    Enter the top-ranked ticker if anything clears all three steps, exactly as any other entry checkpoint would. This is in addition to, not a replacement for, the regular grid triggers already armed for the rest of the day.
 3. **After C1 runs, whether or not a new position was opened, resume the standard grid at its own next slot — not exit-relative.** Exit at 10:40, discovered and gated promptly → the next check is the regular 10:50 slot, then 10:55, 11:00, and onward through the rest of the grid, unchanged.
 
-**Worked example (v3.64 — cadence is uniform 5-min throughout):** a position exits (fill) at 10:32. The 10:35 grid check discovers it; only 3 minutes have passed (`elapsed < 10`), so an ad hoc trigger arms for 10:42 (`fill_time + 10min`) — landing between two regular slots, the normal case under the tighter cadence. At 10:42 C1 runs fresh across the field. Declined → the next check is the regular 10:45 slot, fully normal from there through the rest of the grid — and 12:00 (v3.80) is the close, the last event of the day.
+**Worked example (v3.64 — cadence is uniform 5-min throughout):** a position exits (fill) at 10:32. The 10:35 grid check discovers it; only 3 minutes have passed (`elapsed < 10`), so an ad hoc trigger arms for 10:42 (`fill_time + 10min`) — landing between two regular slots, the normal case under the tighter cadence. At 10:42 C1 runs fresh across the field. Declined → the next check is the regular 10:45 slot, fully normal from there through the rest of the grid — and 12:30 (v3.92) is the close, the last event of the day.
 
 Fires once per exit, not a new recurring cadence. If T+10 finds nothing that clears every gate, the book just stays flat until the next regular grid slot — same as any other declined entry.
 
@@ -452,7 +452,7 @@ Flat · no resting orders · **and** no entry possible — either buying power s
 - **When you do report, state the outcome, not the reasoning already committed to the file.** Full gate-stack reasoning belongs in `archive/trades.csv`'s notes field and E5 — both durable, both re-readable on demand. The chat reply is a line or two: what happened, the key number. It does not re-narrate reasoning that's already been written down. **This session runs every checkpoint indefinitely — Robinhood's connector grant can't be replicated in a fresh session, confirmed 2026-08-25, so there is no periodic reset.** Every word written into a reply becomes permanent, compounding context for the life of the system; duplicating file content into prose is a real, ongoing cost, not a one-time one.
 - **Report immediately:** entry · exit · stop fired · circuit breaker · error · a break in the checkpoint chain · a balance change indicating funding · a notable setup declined.
 - **A no-trade day gets no evening message.**
-- **Friday 12:00pm always reports** (v3.73 — moved to double duty at the close; v3.77 — that close moved to 11:00, moved 15 minutes earlier from 11:15; v3.80 — that close is now 12:00, extended one hour later from 11:00), trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat. (Moved here from 8:00pm under D1's arming restructure — 8:00 is now a silent-unless-broken backup check, even on Fridays; the real weekly data already lives at the close, not eight hours later.)
+- **Friday 12:30pm always reports** (v3.73 — moved to double duty at the close; v3.77 — that close moved to 11:00, moved 15 minutes earlier from 11:15; v3.80 — moved to 12:00, extended one hour later from 11:00; v3.92 — now 12:30), trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat. (Moved here from 8:00pm under D1's arming restructure — 8:00 is now a silent-unless-broken backup check, even on Fridays; the real weekly data already lives at the close, not eight hours later.)
 
 **At exit, append one row to `archive/trades.csv`** — the live append-only log. Compute `r_multiple = (exit% − entry%) ÷ initial_stop_pct` **now**, while the entry stop is known — it cannot be reconstructed later. Set `counts_toward_streak` and `counts_toward_expectancy` (`no` only for a mechanical abort or a funded execution test) and say why in `notes`. **Append-only — never edit a past row**; a mistake gets a correcting row.
 
