@@ -186,17 +186,6 @@ If live price is at or below the entry fill, `new_stop = current_stop` no matter
 
 Price fell to $14.896 shortly after the 10:15 checkpoint, below the $15.19 stop — **exit fires there, +7.23% locked**, well ahead of both the actual same-day trade's velocity-driven exit (+5.37%) and the prior average-based ratchet design's simulated result (+5.79%) — the running-high anchor stayed with the breakout instead of averaging it down. Same execution-risk caveat as E6: the stop can be raised to a level already at or below the live price at the moment it's placed (a fast-moving checkpoint window can do this to either mechanism) — verify the placement landed, same discipline as always.
 
-**Reversal level is a stop floor, not a separate exit (v3.99, direct governor instruction, 2026-10-03).** The falsifiable invalidation level named at entry (the level or VWAP that justified the trade — B3's former "Reversal" bullet, retired as an independent exit below) now feeds the stop formula directly instead of triggering its own market-sell decision:
-
-```
-reversal_stop = the named level itself — a fixed price, never recomputed from bars, same number the pre-commit already states
-new_stop = max(current_stop, candidate_stop, reversal_stop)   -- up only, never down, same B2 invariant
-```
-
-**Applied unconditionally, every checkpoint, not gated on v3.63's profit check** — unlike the ratchet's own `candidate_stop`, `reversal_stop` doesn't wait for the position to be in profit, because the thesis can invalidate whether the trade is green or red. If the named level sits above where the ratchet alone would have pulled the stop, the resting stop is raised to it immediately on the next checkpoint, same cancel-then-replace mechanic as any other raise (B2's own rules above — never widen, minimum re-placement move still applies). Once price actually trades through a level this close, the resting stop simply fires on its own; there is no cancel-the-stop-and-sell-on-a-marketable-limit maneuver anymore (the mechanic used on LABD 10/2, E5 10:00 log) and no separate judgment call about whether "the level really broke." Every protective exit is now the one stop order, logged `stop_triggered_clean` the same way regardless of which floor — ratchet or named level — ended up setting the price.
-
-**Why (quantified against all 27 Core-Ten-era trades, 2026-10-03):** the 16 trades that exited through the ratchet stop averaged a −0.27% loss, worst single case −0.62%. The 6 trades that exited through B3's old separate reversal path (precommitted + manual) averaged a −0.95% loss, worst −2.61% (LABD 10/2) — more than 4× the ratchet's worst outcome, off the *same kind* of named level, because the separate path was never bound by the ratchet's own tight discount. Folding the level into the stop formula gives it the ratchet's discipline for free: it can only tighten, it can't be re-litigated mid-hold ("it looks like it's turning back up"), and it fires through ordinary order mechanics instead of a live cancel-and-resell under pressure. Full numbers: `git show` this commit's session, or re-derive from `archive/trades.csv`'s `exit_reason` column.
-
 **Entry+5 catch-up check (v3.55).** What changes is *when* the first post-entry read happens, not the ratchet rule above — this read is governed by the same profit-gated logic as any other checkpoint (v3.63), no special first-checkpoint case anymore. See C8: immediately after any fresh fill, if the regular grid's next scheduled checkpoint is more than 5 minutes away, one ad hoc read runs at `fill_time + 5min` instead of waiting for it. Directly closes the AFRM/GUSH/NUGT gap (E6) — every instance of that pattern was a fast pop-then-reverse landing entirely inside the interval between a fill and the first checkpoint able to catch it. **Effectively dormant since v3.64's 5-min cadence**: with every checkpoint at most 5 minutes from the last, no entry can ever be *more* than 5 minutes from the next scheduled one, so the "more than 5 minutes away" trigger condition can no longer fire. Left in place rather than deleted — harmless as written, and it becomes live again automatically if the cadence is ever widened back out.
 
 ## B3. Exits — any one fires
@@ -205,8 +194,7 @@ new_stop = max(current_stop, candidate_stop, reversal_stop)   -- up only, never 
 
 ### Other exits
 
-- **Reversal — [retired as an independent exit, v3.99 — folded into B2's stop, see "Reversal level is a stop floor" above].** Broke the level or VWAP that justified entry. The level must still be **named at entry** (or the claim is unfalsifiable) — it now feeds B2's `reversal_stop` directly rather than firing its own exit decision here.
-- **Commodity complex rollover** (commodity trades only) — not a price level, so it can't become a stop; stays a direct exit here, the one case v3.99 didn't fold in.
+- **Reversal** — broke the level or VWAP that justified entry, or (commodity trades only) the complex rolled over. The level must have been **named at entry** or the claim is unfalsifiable.
 - **Risk/reward flipped** — small remaining upside against a large distance to the stop.
 - **Unwanted event approaching** — earnings or macro data not intended to be held through.
 - **Approaching the same-day close deadline** with the move finished.
@@ -597,8 +585,6 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
-
-**v3.99** — B3's standalone "Reversal" exit retired; the named invalidation level now feeds B2's stop formula directly (`new_stop = max(current_stop, candidate_stop, reversal_stop)`, unconditional, not profit-gated) instead of triggering a separate market-sell decision. Direct governor instruction, 2026-10-03. Full text and rationale: B2 ("Reversal level is a stop floor") and B3, above. Prompted by a same-day quantified backtest of all 27 Core-Ten-era trades: the 16 ratchet-stopped exits averaged −0.27% (worst −0.62%); the 6 exits through the old separate reversal path averaged −0.95% (worst −2.61%, LABD 10/2) — the same named-level discipline, but without the ratchet's tight discount, because it executed as a judgment-driven cancel-and-resell instead of a resting order. One exit mechanism now, not two: every protective exit is the stop firing, logged `stop_triggered_clean` regardless of which floor (ratchet or named level) set the price. The commodity-complex-rollover case stays a direct exit in B3 — not a price level, can't become a stop.
 
 **v3.98** — C1 step 3's ranking direction reversed: instead of ranking by ATR-expansion highest-wins (the proxy that already used the most of its typical daily range), now ranks by `room_left = 1 − expansion` highest-wins (the proxy that's used the least). Direct governor instruction, 2026-10-03. Full text and rationale: C1, above. Motivated by the governor's stated goal of a modest, consistent ~0.5%/day base case rather than chasing the biggest mover — step 2 already confirms the move is real, so step 3 now optimizes for runway remaining before typical exhaustion rather than for which breakout already looks hottest. Tradeoff accepted openly: a low-expansion breakout could be weaker/less-confirmed than a high-expansion one; this is not a free upgrade, it's a deliberate fit to a smaller target.
 
