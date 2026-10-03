@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.104.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.105.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -335,7 +335,18 @@ Read fresh at every checkpoint that runs C1 (a live SPY quote, never cached), an
 
 **Whole shares only.** A fractional position cannot carry a resting stop. Unaffordable whole → unavailable; take the next candidate or no trade.
 
-**Size to the maximum whole shares settled cash affords for the chosen candidate** — floor(settled cash ÷ ask), not 1 share by default. Only one position is ever open at a time (E2), so this is full deployment into that single candidate, not a per-trade allocation decision. Everything downstream still scales correctly: stop/target/breakeven are percentages of the fill, so dollar risk and reward scale with share count exactly as they should. Recompute the affordable quantity fresh at entry from live settled cash and the live ask — never reuse a quantity implied by an earlier affordability check.
+**Size by risk — at most 3% of the account lost if the stop fires, capped at what settled cash affords (v3.105, direct governor instruction, 2026-10-03; replaces "size to the maximum whole shares settled cash affords").**
+
+```
+account        = total_value from get_portfolio, read fresh at entry
+risk_budget    = 3% × account
+risk_per_share = ask − stop_price          -- stop_price = the ticker's own 9:30–10:00 opening-range low (B1, v3.99)
+shares         = floor( min( settled_cash ÷ ask ,  risk_budget ÷ risk_per_share ) )
+```
+
+**Stop 3% or less below the entry → nothing changes, full size as before. Stop further away → the position shrinks so a full stop-out costs 3% of the account** (e.g. a stop 6% below entry → about half size). Rounded down to whole shares (a fractional share can't carry a stop, above); 0 shares → no trade. B1's 7% hard ceiling still disqualifies any candidate whose stop is more than 7% away, so every entry is at least ~43% of full size. One position at a time is unchanged (E2) — a size-capped trade simply leaves the rest of the cash idle until it exits. The 3% is before any slippage through the stop on a fast move. Stop, ratchet, and close mechanics are all percentages of the fill, so they're unaffected by share count. Recompute every input fresh at entry from live values — never reuse a quantity from an earlier check.
+
+**What it is and isn't:** a cap on the worst single loss, not a profit lever. With the opening-range stop, a stop-out at full size would have cost anywhere from 0.7% to 6.2% of the account on 9/16–10/2 (median 1.8%), depending only on where the opening range happened to sit. Replayed over that period, the 3% cap shrinks 4 of 22 trades and changes the average by +0.01% a day — noise. What it buys: no single stop-out can cost more than 3% of the account (about 6 trading days at the 0.5%/day objective) instead of up to 7% (about 15).
 
 Before placing, confirm every A1 blocking condition is clear, plus: stop present at the ticker's own 9:30–10:00 opening-range low (B1, v3.99 — not `entry_price × (1 − stop_pct)` anymore) and inside the 7% cap · affordability against **settled** cash, not account value · order type.
 
@@ -346,7 +357,7 @@ Then:
 - **Place the protective stop immediately after the fill.**
 - **Arm the entry+5 catch-up check (v3.55).** Once the stop is confirmed resting, check how far away the next regularly-scheduled grid checkpoint is. **If more than 5 minutes**, arm one ad hoc trigger for `fill_time + 5min` — a B1b/B2 ratchet-only read on this position, nothing more (not a full gate-stack re-run). This is separate from C12's own `fill_time + 10min` trigger, which decides whether to open a *different* position after an *exit* — this one manages the position just opened, regardless of which path opened it (primary 9:45 slot, an off-cycle entry, or a C12 re-entry). If the next grid checkpoint is already ≤5 minutes out (true for every entry now, v3.64 — the 5-min cadence means this is always the case, so this ad hoc trigger is never actually armed anymore), skip it — nothing to add. **Real-world note (v3.56, USAR 9/4):** this check is scoped to the gap *between checkpoints*, not the gap between the fill and the position's own peak — a reversal that happens inside the first minute or two after the fill can still outrun even a 5-minute catch-up. It closes the AFRM/GUSH/NUGT-style multi-checkpoint gap; it doesn't guarantee catching every fast spike-and-reverse.
 - Report slippage against the intended price.
-- State at entry: fill · **quantity and total cost** · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · **today's entry count (n of 3 — fresh or re-entry, v3.101)** · the pre-commit (B3, v3.103: resting stop price, 12:30 close, any scheduled event before 12:30).
+- State at entry: fill · **quantity and total cost** (as % of the account, and whether the 3% risk cap bound — v3.105) · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · **today's entry count (n of 3 — fresh or re-entry, v3.101)** · the pre-commit (B3, v3.103: resting stop price, 12:30 close, any scheduled event before 12:30).
 
 ## C9. Timing and selection
 
@@ -608,6 +619,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.105** — Position sizing by risk: `shares = floor(min(settled_cash ÷ ask, 3% × account ÷ (ask − stop_price)))`. Direct governor instruction, 2026-10-03. Full text: C8, above. A stop 3% or less below entry trades full size as before; a wider stop shrinks the position so a full stop-out costs 3% of the account. Framed honestly as a cap on the worst single loss, not a profit lever: replayed on 9/16–10/2 it shrank 4 of 22 trades and moved the average +0.01%/day (noise), while capping any one stop-out at 3% instead of up to 7%. B1's 7% ceiling stays, so every entry is at least ~43% of full size.
 
 **v3.104** — C1 step 2b added: SPY must agree with the breakout direction on the seven stock-market rows (QQQ, SPY, SOXX, IWM, XLF, XLE, XBI). SPY more than 0.10% above its prior close → bull legs only; more than 0.10% below → bear legs only; inside ±0.10% → no filter. Exempt: TLT, GDXJ, UNG, XOP, SLV. Direct governor instruction, 2026-10-03, adopted as a full rule. Full text: C1, above; re-checked at C8's final pre-order check; SPY's prior close recorded at 9:00 (D2). Only removes candidates — the ORB and its timing are unchanged. On 9/16–10/2 it blocks 5 trades (4 bear-leg losers on up days, −3.37%; 1 bull-leg winner on a down day, +1.55%), net +1.83 points; every block is logged in E5 so the record grows from here.
 
