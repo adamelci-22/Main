@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.107.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.108.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -42,7 +42,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 | Blocked when | Verify by |
 |---|---|
-| Loss streak ≥ 3 | Count closed trades in `archive/trades.csv` (E1) |
+| Loss streak ≥ 5 — the hard lockout (v3.108; 3–4 losses throttle risk to 0.5% instead of blocking, E1) | Count closed trades in `archive/trades.csv` (E1) |
 | Account below 50% of deposited cash | Recompute; never cache (E2) |
 | Candidate's risk numbers not computed | No profile → no stop → no trade (B1) |
 | Position already open | One position, one resting order (E2) |
@@ -334,7 +334,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 ```
 account        = total_value from get_portfolio, read fresh at entry
-risk_budget    = 3% × account
+risk_budget    = 3% × account               -- 0.5% while the risk throttle is on (E1, v3.108)
 risk_per_share = ask − stop_price          -- stop_price = the ticker's own 9:30–10:00 opening-range low (B1, v3.99)
 shares         = floor( min( settled_cash ÷ ask ,  risk_budget ÷ risk_per_share ) )
 ```
@@ -445,7 +445,7 @@ Flat · no resting orders · **and** no entry possible — either buying power s
 - **Correct your own errors promptly**, including ones that look bad.
 - **Most checkpoints are non-events — stay silent.** No "checked, nothing to do."
 - **When you do report, state the outcome, not the reasoning already committed to the file.** Full gate-stack reasoning belongs in `archive/trades.csv`'s notes field and E5 — both durable, both re-readable on demand. The chat reply is a line or two: what happened, the key number. It does not re-narrate reasoning that's already been written down. **This session runs every checkpoint indefinitely — Robinhood's connector grant can't be replicated in a fresh session, confirmed 2026-08-25, so there is no periodic reset.** Every word written into a reply becomes permanent, compounding context for the life of the system; duplicating file content into prose is a real, ongoing cost, not a one-time one.
-- **Report immediately:** entry · exit · stop fired · circuit breaker · error · a break in the checkpoint chain · a balance change indicating funding · a notable setup declined.
+- **Report immediately:** entry · exit · stop fired · circuit breaker (risk throttle on or off, 5-loss lockout — E1, v3.108) · error · a break in the checkpoint chain · a balance change indicating funding · a notable setup declined.
 - **A no-trade day gets no evening message.**
 - **Friday 12:30pm always reports** (v3.73 — moved to double duty at the close; v3.77 — that close moved to 11:00, moved 15 minutes earlier from 11:15; v3.80 — moved to 12:00, extended one hour later from 11:00; v3.92 — now 12:30), trades or not — balance, every trade, loss-streak count, what was declined and why, any rulebook change. The guaranteed heartbeat. (Moved here from 8:00pm under D1's arming restructure — 8:00 is now a silent-unless-broken backup check, even on Fridays; the real weekly data already lives at the close, not eight hours later.)
 
@@ -475,7 +475,16 @@ rvol_decay_pct = (RVOL_first_entry − RVOL_reentry) ÷ RVOL_first_entry × 100
 
 ## E1. Circuit breaker
 
-**3 consecutive losing closed trades → stop entering until the governor clears it.**
+**v3.108 — the risk throttle, direct governor instruction, 2026-10-05 (replaces the 3-loss lockout below).**
+
+- **3 or 4 consecutive losses → throttled, not locked out.** Entries continue under every normal gate, but the risk budget drops from 3% to **0.5% of the account** (C8's sizing formula, same math, smaller budget). Report it the moment it starts ("risk throttled to 0.5% after 3 straight losses") and in every entry report while it lasts.
+- **5 consecutive losses → hard lockout:** no new entries until the governor clears it — the old breaker's mechanics, unchanged, moved from 3 to 5. Five in a row is the "something may be broken" signal for a human to look.
+- **Restoring full size: 2 consecutive winning trades** (each `pnl_pct_position` > 0) taken while throttled lift the budget back to 3%. A single win still resets the loss count to zero, as always, but doesn't lift the throttle on its own — a +0.01% win shouldn't restore full risk. A loss after one throttled win keeps the throttle and starts the loss count again. After a governor clearance of the 5-loss lockout, trading resumes throttled at 0.5% until 2 consecutive wins, unless the governor says otherwise.
+- **Computed from the trade log, never stored:** walk `archive/trades.csv` from the most recent governor clearance — the throttle switches on when the loss count reaches 3 and off after 2 consecutive wins. The definition of a loss (v3.87, below) and the counting rules are unchanged.
+
+**Why:** the 3-loss lockout tripped twice in about a month (9/14, 9/30), and each trip stopped all trading until a manual clearance — losing days the strategy could have traded. The throttle keeps the system live on real data at one-sixth of the risk, while 5 straight losses still brings in a human.
+
+**[Superseded by v3.108, above — kept for history.] 3 consecutive losing closed trades → stop entering until the governor clears it.**
 
 **A loss is any closed trade with `pnl_pct_position` below zero, however small** (v3.87, direct governor instruction, 2026-09-29 — reverts v3.49's −1.0% magnitude threshold outright, not a refinement of it). Any negative print is a loss for streak purposes, full stop — magnitude doesn't soften it. Consecutive **closed trades**, not days — only a winner (or a scratch at exactly 0.000%) resets the streak to zero; any run of negative-however-small trades builds the count. Rows marked `counts_toward_streak=no` are excluded outright (a mechanical abort is not a trade). **Compute from the trade log, never from memory — this reclassifies every existing row's win/loss/scratch status on the next computation, without editing any past row:** `pnl_pct_position` was already recorded at the time of each trade; only the threshold applied to it changes, and append-only history is never rewritten to reflect a later rule change.
 
@@ -614,6 +623,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.108** — The 3-loss lockout becomes a risk throttle. Direct governor instruction, 2026-10-05 (from an outside review, with two corrections made before adopting). Full text: E1, above. 3–4 consecutive losses cut the risk budget from 3% to 0.5% instead of halting entries; 5 consecutive losses is the hard lockout needing governor clearance. Full size returns after 2 consecutive throttled wins — not 1, as the review proposed, so a +0.01% win can't restore full risk. The review's pseudocode could never restore at all (its reset branch only ran when the loss count was below 3); this version is defined on the existing loss count and computed from the trade log. Why: the old breaker tripped twice in about a month, each time stopping all trading until manual clearance.
 
 **v3.107** — A4 added: fixed responses to three broker-connection failures. Direct governor instruction, 2026-10-05 (from an outside engineering review, rewritten for how this agent actually works — it calls broker tools, it isn't a script). (1) **Halts:** keep the existing stop, skip that checkpoint's stop change, log it, re-check; a halt over the close is sold the moment it resumes, and a halt past 4:00pm is the one forced exception to "no overnight hold." (2) **Rate limits / transient errors:** retry up to 3 times at about 1/2/4-second spacing, checking `get_equity_orders` before re-sending any order so nothing is placed twice; then the missed-checkpoint rule. (3) **Partial fills:** stop and close quantities always equal the live share count from `get_equity_positions`; a partial entry fill has its remainder cancelled; a partial stop fill gets an immediate new stop for the remaining shares. Strategy unchanged.
 
