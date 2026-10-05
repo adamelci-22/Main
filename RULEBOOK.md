@@ -646,6 +646,17 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:00 — FAS STOP RAISED $141.97 → $142.73 (now above the $142.26 fill, locking in +$0.47/sh).** run_high $143.22 (11:59 bar); live $143.11. candidate = 143.22 × 0.9966 = 142.733 → $142.73; move $0.76 ≥ $0.654 ✓. Old `6ac3bbc4` cancelled, new 13 @ $142.73 `6ac3c9bb` confirmed (~4 s unprotected). Locked-in gain ≈ +$6.11 if the stop fills at its price. 12:30 market sell to follow.
 
+**12:05–12:25** — FAS held at $142.86–143.24 (run_high $143.235 at 12:14); candidate stops were all under the $0.654 minimum move over $142.73 → no change.
+
+**Monday 2026-10-05, 12:30 — CLOSE + D3 end-of-day report.** Final ratchet: none (run_high $143.235 → candidate $142.75, +$0.02). Stop `6ac3c9bb` cancelled (confirmed), **13 FAS sold at market @ $143.2567** (order `6ac3d0c2`, 12:30:58). Flat confirmed.
+- **Trades:** (1) **UTSL** 54 sh, 10:17→10:52, **−$1.99** (−0.119% position, r −0.03), stop at $30.39 filled $30.34 on a thin-tape drop. (2) **FAS** 13 sh, 10:57→12:30, **+$12.92** (+0.701% position, +0.656% account, r +0.37), 12:30 structural close; stop trailed $139.55 → $141.97 → $142.73.
+- **Day net: +$10.93, +0.554% of the $1,971.38 start** — inside the 0.5–0.6%/day target band. Account $1,982.32 (buying power; the portfolio's equity/cash split was still settling at 12:31).
+- **A1/E1:** entries 2 of 3 (2 fresh, no re-entry). Consecutive losses: 0 (FAS win reset it). Throttle off. No lockout.
+- **Selection log (2 rows appended):** UTSL/XLU — no runner-up (n/a). FAS/XLF +0.67% lev hold to 12:30 vs. **XLE +1.06%** and XLU +0.94% (blocked) → `selected_vs_runners_up_score` **−0.39**, selected_was_best = **no**. XLE had the lowest score (expansion 0.91) and moved most. One data point — the 30-row review decides.
+- **Ops issues:** 10:10 trigger never fired; 10:05/10:15 fired late (E6). Several connector disconnect/reconnect cycles mid-session; no order or stop was affected. Pending $1,000 deposit disappeared from `pending_deposits` overnight without landing (flagged at 9:00).
+- **Declined/notable:** SPY and XLF broke out at 10:10 but failed RVOL; XLE broke out at 10:45 but ranked below XLF at 10:57.
+- **Arming:** Tuesday 2026-10-06's chain armed from D1's templates (see the 12:30 commit).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Scheduler skipped or delayed checkpoints — 2026-10-05.** The 10:10 trigger never fired (still enabled, `next_run_at` 14:10Z in the past, no `last_fired_at`); 10:05 fired ~1 min late and 10:15 ~1m41s late. Cause is on the scheduler side, not diagnosed. The 10:10 trigger was disabled at 10:18 so a stale fire can't arrive later. Mitigations already in place: the resting stop protects a position between checks, and B1b reads every bar since the previous read, so a missed slot loses timing, not data. Watch for repeats.
