@@ -619,6 +619,21 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:40 — STOP RAISED to $30.39 (breakeven +$0.01).** UTSL ran to $30.53 (run_high) at 10:40; live $30.53 > fill $30.38 → profit gate met. candidate = 30.53 × (1 − 2 × 0.22%) = 30.3957 → $30.39; live above candidate ✓; move $1.08 ≥ min 0.59% ($0.18) ✓. Old stop `6ac3b165` cancelled (confirmed), new sell-stop 54 @ $30.39 `6ac3b6f4` confirmed. Unprotected ~13 s. Pre-commit: stop $30.39; next raise needs run_high ≥ ~$30.71 (candidate ≥ stop + $0.18); 12:30 market sell.
 
+**10:45–10:50** — held UTSL; high since entry $30.57; candidate stop $30.43 was under the $0.18 minimum move → no change.
+
+**10:52:23 — UTSL STOP FIRED, real loss.** 54 @ $30.3438 (stop $30.39; filled 4.6¢ through on a thin-tape drop 30.42→30.33). −$1.99 incl. $0.04 fee, −0.119% position, −0.101% account, r −0.03. MAE −0.45%, MFE +0.63%, 35 min. Logged in `trades.csv`. Consecutive losses 0→1; throttle off. UTSL excluded for the day (v3.68). Account $1,969.40.
+
+**~10:57 — C12 T+0 re-run (exit discovered at the 10:55 slot) → TRADE OPENED: FAS long, entry 2 of 3 (2nd fresh instrument).**
+- **Step 1 (RVOL ≥1.0×):** XLRE 1.44 · **XLF 1.41** (lifted by a 2.33M-share 10:15 bar and a 658k 10:45 bar) · TLT 1.13 · XLU 1.12 · EEM 1.08 · XLE 1.03.
+- **Step 2 (2 closes outside the range + volume test):** XLF bull — above its 53.555 ORH on every close since 10:05; triggering bar 10:05 = 197,678 vs. 3-bar avg 158,478 → pass. XLE bull — run began at the 10:45 bar (63.045 > 62.99), 325,351 vs. 279,146 → pass. XLU bull — pass, but its leg UTSL is excluded (v3.68). TLT, XLRE and EEM were inside their ranges (EEM 68.72 had closed above its 68.70 ORH only once).
+- **Step 3:** XLF **+0.46** (RVOL 1.41, expansion 0.67) > XLE +0.09 (1.03, 0.91) > XLU +0.01 (1.12, 0.99).
+- **Selection-log record (v3.114):** chosen XLF bull · +0.46 · RVOL 1.41 · exp 0.67 · proxy price at entry **53.63**. Runner 1: XLE bull · +0.09 · **63.17**. Runner 2: XLU bull · +0.01 · **40.025** — blocked (UTSL loss, v3.68).
+- **B1 profile (FAS, 31 sessions):** median adverse 1.85% · favourable 1.10% · stop_pct 2.77% · stall 0.17% · min move 0.46%. **Initial stop = FAS's own 9:30–10:00 low $139.55**, 1.90% below the fill.
+- **C8:** account $1,969.40; 3% risk budget $59.08 → 22 shares by risk, **13 by cash** (cash bound; the 3% cap did not bind). Proxy re-check at review: XLF 53.63 > 53.555 ✓. Spread $0.18 (0.13%).
+- **Fill:** 13 @ **$142.2599** (limit $142.30, order `6ac3bad5`, 10:57:25 ET) — $1,849.38, 93.9% of the account; slippage −$0.00 vs. the $142.26 ask. Max loss at stop ≈ $35.23 (1.79%).
+- **Stop:** sell-stop 13 @ **$139.55**, order `6ac3badd`, confirmed.
+- **Pre-commit (B3):** stop $139.55; once in profit, ratchet = run_high × (1 − 2 × 0.17%) = × 0.9966, moved only by ≥0.46% ($0.65); 12:30 market sell; no known scheduled event before 12:30. The T+10 ad hoc check (C12) was not armed: a position is now open, so there is nothing for it to enter.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Scheduler skipped or delayed checkpoints — 2026-10-05.** The 10:10 trigger never fired (still enabled, `next_run_at` 14:10Z in the past, no `last_fired_at`); 10:05 fired ~1 min late and 10:15 ~1m41s late. Cause is on the scheduler side, not diagnosed. The 10:10 trigger was disabled at 10:18 so a stale fire can't arrive later. Mitigations already in place: the resting stop protects a position between checks, and B1b reads every bar since the previous read, so a missed slot loses timing, not data. Watch for repeats.
