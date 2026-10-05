@@ -602,6 +602,17 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:05** — flat; no proxy closed outside its range on the 10:00–10:05 bar (step-1 group now TLT, XLRE, EEM, XLU). No trade.
 
+**10:10 and 10:15 — MISSED (A2).** No trigger notification reached this session for either slot; the work was done late at ~10:16 when the governor checked in. Both slots' bars are folded into the 10:16 run below.
+
+**Monday 2026-10-05, ~10:16 entry (late 10:15 slot) — TRADE OPENED: UTSL long, 1st entry of 3 (fresh).**
+- **C1:** step 1 group (RVOL ≥1.0×) TLT 1.14 · XLRE 1.18 · EEM 1.23 · XLU 1.10. Step 2: **XLU closed above its 39.94 ORH on the 10:05 (39.99) and 10:10 (40.03) bars → bullish, confirmed.** Volume test: triggering bar 10:05 = 300,410 vs. prior-3 avg 253,706 → **pass**. TLT, XLRE, EEM inside their ranges. (SPY and XLF also closed above their ORHs on both bars but failed step 1 — RVOL 0.92 and 0.57.) Step 3: one candidate, no ranking; XLU `selection_score` +0.18 (expansion 0.83, RVOL 1.10).
+- **Selection-log record (v3.114):** chosen XLU bull · score +0.18 · RVOL 1.10 · expansion 0.83 · proxy price at entry **40.02**. Runners-up: **none** cleared steps 1–2 (selected_was_best = n/a).
+- **B1 profile (UTSL, 31 sessions):** median adverse 2.38% · favourable 1.45% · stop_pct 3.56% · stall 0.22% · min stop move 0.59%. **Initial stop = UTSL's own 9:30–10:00 low $29.31** (3.52% below fill, under the 7% ceiling).
+- **C8:** account $1,971.38; risk budget 3% = $59.14; ask $30.39 − stop → 54 shares (**3% cap bound**; cash would allow 64). Proxy re-check at review: XLU 40.02 > 39.94 ✓. Spread 0.05 (0.16%).
+- **Fill:** 54 @ **$30.3799** (limit $30.40, order `6ac3b15e`, 10:17:02 ET) — $1,640.51, 83.2% of the account; slippage −$0.01 vs. the $30.39 ask (favourable). Max loss at stop ≈ $57.77 (2.93%).
+- **Stop:** sell-stop 54 @ **$29.31**, order `6ac3b165`, state confirmed.
+- **Pre-commit (B3):** resting stop $29.31; ratchet once in profit = run_high × 0.9956, moved only by ≥0.59%; 12:30 market sell; no known scheduled event before 12:30.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **MCP connection can drop mid-session and miss checkpoints — first hit 2026-09-17, resolved on reconnect, root cause not diagnosed.** The Robinhood/GitHub/Docs MCP connection dropped sometime after the 10:40 checkpoint on Thursday 9/17 and didn't reconnect until ~8:00pm ET, missing 10:45, 10:50, 10:55, 11:00 (close/primary arming), and the 8:00pm backup outright — no checkpoint fired into a live session during the gap. On reconnection, account state was verified first (flat, no resting orders, P&L exactly matched the one known trade) before anything else, then the missed 11:00 close's D3 report was done late and Friday's full chain was armed from the 8:00pm slot instead of 11:00. No capital was at risk during the gap (position had already closed at 10:15) and no rule needed to change — A2/D1's existing "missed checkpoint, not a pending one, do it late and flag it" discipline covered this cleanly. Flagging because it's a new failure mode for this system (prior E6 entries are git/data issues, not tool connectivity) — **if it recurs, especially while a position is open, prioritize an immediate flat/orders/portfolio check the moment tools come back, before any other checkpoint work**, exactly as done this time.
