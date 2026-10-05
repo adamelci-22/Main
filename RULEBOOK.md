@@ -640,6 +640,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:20–11:35** — FAS held, last $142.68, run_high $142.815 (11:31); candidate stop $142.33 is only +$0.36 over $141.97, under the $0.65 minimum → no change. A raise needs run_high ≥ ~$143.11.
 
+**11:40–11:50** — FAS high since entry $143.11 (11:41); last $143.06. Candidate stop 143.11 × 0.9966 = $142.623 → +$0.653 over $141.97, just under the $0.654 minimum (0.46% × $142.26) → no change.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Scheduler skipped or delayed checkpoints — 2026-10-05.** The 10:10 trigger never fired (still enabled, `next_run_at` 14:10Z in the past, no `last_fired_at`); 10:05 fired ~1 min late and 10:15 ~1m41s late. Cause is on the scheduler side, not diagnosed. The 10:10 trigger was disabled at 10:18 so a stale fire can't arrive later. Mitigations already in place: the resting stop protects a position between checks, and B1b reads every bar since the previous read, so a missed slot loses timing, not data. Watch for repeats.
