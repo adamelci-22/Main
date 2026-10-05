@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.109.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.110.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -446,7 +446,17 @@ Never delete either checkpoint (A2's rule, not restated here).
 
 ### Early shutdown
 
-Flat · no resting orders · **and** no entry possible — either buying power short, **or the daily trade cap is already at 3 of 3 (v3.82, direct governor instruction, 2026-09-23)** — → delete remaining intraday checkpoints. **Keep exactly two: 12:30 close (report + primary arming, v3.92) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable within the window unless one of these conditions is actually true. The 3-of-3 case differs from the buying-power case only in *why* no entry is possible — A1 blocks it structurally either way, not a judgement call, so every remaining slot through 12:25 would read flat, gate-blocked, non-event; deleting them removes that dead cost. **Act on this the moment the 3rd trade's count becomes final** (an entry fill, not merely an exit) — don't wait for the next checkpoint to notice.
+**v3.110 — when to delete the rest of the day's checks, direct governor instruction, 2026-10-05 (replaces the v3.82 wording below).** Delete every remaining intraday checkpoint for the day the moment **any one** of these is true:
+
+1. **3 of 3 entries are done and the third has closed** — today's entry allowance is used up (A1, v3.101) and no position or resting order remains.
+2. **It's 12:00 or later and no position is held** (and no resting order) — no entry can happen after 11:55 (v3.94), so nothing is left to manage. Checked at 12:00 and again at every later slot: a position that closes at 12:10 shuts down 12:15–12:25 the same way.
+3. **No position is held and buying power can't cover any entry** (the original v3.82 case).
+
+**Always keep exactly two checkpoints: the 12:30 close and the 8:00pm backup** — never delete either (A2). If the account is flat, 12:30 has nothing to sell, but it still writes the day's report and arms tomorrow; 8:00pm verifies tomorrow is armed. Act in the same turn the condition becomes true, never waiting for the next slot to notice. Being flat **before** 12:00 with entries still available is **not** a reason to shut down — a later opportunity can still qualify.
+
+**The day's timeline this sits inside (unchanged rules, restated):** entries only 10:00–11:55 (v3.94); 12:00–12:25 management only, no new entries; 12:30 sells anything still open at market and ends the trading day (v3.92/v3.58).
+
+**[Superseded by v3.110, above.]** Flat · no resting orders · **and** no entry possible — either buying power short, **or the daily trade cap is already at 3 of 3 (v3.82, direct governor instruction, 2026-09-23)** — → delete remaining intraday checkpoints. **Keep exactly two: 12:30 close (report + primary arming, v3.92) and 8:00 backup (verify tomorrow is armed; re-arm only if it isn't).** Being flat because an earlier trade already closed today is **not** by itself a reason to shut down — a later opportunity is still tradeable within the window unless one of these conditions is actually true. The 3-of-3 case differs from the buying-power case only in *why* no entry is possible — A1 blocks it structurally either way, not a judgement call, so every remaining slot through 12:25 would read flat, gate-blocked, non-event; deleting them removes that dead cost. **Act on this the moment the 3rd trade's count becomes final** (an entry fill, not merely an exit) — don't wait for the next checkpoint to notice.
 
 ## D2. 9:00am research — standard work
 
@@ -644,6 +654,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.110** — D1 Early shutdown rewritten as one clear rule, direct governor instruction, 2026-10-05. Full text: D1, above. Delete all remaining intraday checkpoints the moment any of these is true: (1) 3 of 3 entries done and the third has closed; (2) 12:00 or later with no position held — new, since no entry can happen after 11:55; (3) flat with buying power too short for any entry. Always keep the 12:30 close (report + arming tomorrow) and the 8:00pm backup. Fixes the old wording, which said to act "the moment the 3rd trade fills" while also requiring the account to be flat. Entry and close times themselves are unchanged (entries 10:00–11:55, management only 12:00–12:25, sell everything at 12:30).
 
 **v3.109** — Two entry changes, both exactly as the governor specified, direct governor instruction, 2026-10-05. Full text: C1, above. (1) **Volume-confirmed breakout:** a break only counts if its triggering 5-minute bar (the first to close outside the 30-minute range) has more volume than the average of the 3 bars before it. (2) **Step 3 ranking:** `selection_score = (1 − expansion) × RVOL`, highest wins, replacing v3.98's room-left rank. Backtest (simulated, 12 proxies, 23 days, 12 assumption sets): current −0.05%/day, volume rule +0.05% (beat current in 10/12), selection_score +0.19% (12/12), both +0.14% with the best worst case (−0.03%). Tested against a zero-floored variant of the score; the formula as specified did as well or better, so it was adopted unchanged. The same test found the base breakout signal has little edge on its own.
 
