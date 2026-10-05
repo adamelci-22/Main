@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.106.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.107.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -80,6 +80,14 @@ Do not start work that outlasts the current slot.
 ## A3. State check
 
 Read from the broker, never assume: position · resting orders · settled cash · unsettled funds.
+
+## A4. Broker faults — halts, rate limits, partial fills (v3.107)
+
+**v3.107, direct governor instruction, 2026-10-05.** Three failure modes of the live broker connection, each with a fixed response:
+
+1. **Halted ticker.** If the held ticker is halted — the broker reports it untradable, or a stop placement or replacement is rejected or cancelled because of a halt — skip that checkpoint's stop change: the existing resting stop stays exactly as it is. Log the halt in E5 with its time and re-check at the next checkpoint. Never send a market order into a halt. **A halt over the 12:30 close:** keep checking every 5 minutes and sell at market the moment trading resumes; if it hasn't resumed by 4:00pm, the overnight hold is forced, not chosen — report it immediately (D3) and exit at the next open.
+2. **Rate limits and transient errors.** A broker call that fails with a rate limit (HTTP 429), a timeout, or another transient error is retried up to 3 more times, waiting about 1, 2, then 4 seconds between attempts. **Before retrying any order placement, check `get_equity_orders` first** — a slow call can still have gone through, and a blind retry would place the order twice. Still failing after the third retry → the checkpoint is missed under A2 (do its work late, say so). If a position is open and its stop is not confirmed resting, report that gap immediately (D3) and keep retrying at every checkpoint until it is.
+3. **Partial fills.** Share counts always come from the broker, never from the order you sent or from memory: read `get_equity_positions` at every management checkpoint and before every stop placement or close. **The resting stop's quantity, and the 12:30 sell's quantity, equal the live share count exactly.** An entry that fills only partly → cancel the unfilled remainder, then size the stop to the shares actually held. A stop that fills only partly → the remaining shares are unprotected: immediately place a new stop for exactly the remaining live quantity at the same price (or sell them at market if price is already through it), and verify it landed (E6). On this account, selling more shares than are held is rejected rather than opening a short — the real danger is shares sitting unprotected, not an accidental short.
 
 ---
 
@@ -219,7 +227,7 @@ State the exits that are actually live: **the current resting stop price** (and 
 
 **No checkpoint sells purely for hitting a price level.** The continuous chandelier trail (B2) is what locks in gains — a big move is expected to give back at most `2 × stall_threshold_pct` off its running high at any checkpoint. `target_pct` is still computed at entry (B1) — informational only (C7's own ranking use of it retired v3.72), never an autonomous trigger.
 
-**Every position closes the same trading day it was opened. No overnight hold, ever.** Enforced structurally, not by a deadline check: the 12:30 checkpoint (B2, v3.92 — moved from v3.80's 12:00) closes anything still open with a direct market sell (v3.58). State the intended exit at entry.
+**Every position closes the same trading day it was opened. No overnight hold, ever** — the one forced exception is a trading halt that runs past 4:00pm, which can't be sold into (A4, v3.107). Enforced structurally, not by a deadline check: the 12:30 checkpoint (B2, v3.92 — moved from v3.80's 12:00) closes anything still open with a direct market sell (v3.58). State the intended exit at entry.
 
 ## B5. Headlines while holding
 
@@ -341,7 +349,7 @@ Then:
 - `review_equity_order` first — **a clean review proves nothing about placement** (E4). **Its response's live quote on the candidate ticker is also the last chance to re-check C1 step 2 on that ticker's own proxy (v3.50's discipline, carried forward, v3.76 — checked on the proxy, not the leveraged ticker): the proxy's price must still be on the correct side of its own opening-range high/low right now (above the high for a long candidate, below the low for an inverse candidate), not just at the earlier checkpoint read.** Fallen back inside the range → the row is no longer eligible, decline and stop (do not place the order); check the next-ranked proxy from step 3 or pass this checkpoint per C9 rather than forcing one whose own breakout has already failed.
 - **Marketable limit, never plain market.**
 - **Verify the fill from the order response.** Never report an unconfirmed fill.
-- **Place the protective stop immediately after the fill.**
+- **Place the protective stop immediately after the fill** — for exactly the live share count from `get_equity_positions`; a partial entry fill gets its unfilled remainder cancelled first (A4, v3.107).
 - **Arm the entry+5 catch-up check (v3.55).** Once the stop is confirmed resting, check how far away the next regularly-scheduled grid checkpoint is. **If more than 5 minutes**, arm one ad hoc trigger for `fill_time + 5min` — a B1b/B2 ratchet-only read on this position, nothing more (not a full gate-stack re-run). This is separate from C12's own `fill_time + 10min` trigger, which decides whether to open a *different* position after an *exit* — this one manages the position just opened, regardless of which path opened it (primary 9:45 slot, an off-cycle entry, or a C12 re-entry). If the next grid checkpoint is already ≤5 minutes out (true for every entry now, v3.64 — the 5-min cadence means this is always the case, so this ad hoc trigger is never actually armed anymore), skip it — nothing to add. **Real-world note (v3.56, USAR 9/4):** this check is scoped to the gap *between checkpoints*, not the gap between the fill and the position's own peak — a reversal that happens inside the first minute or two after the fill can still outrun even a 5-minute catch-up. It closes the AFRM/GUSH/NUGT-style multi-checkpoint gap; it doesn't guarantee catching every fast spike-and-reverse.
 - Report slippage against the intended price.
 - State at entry: fill · **quantity and total cost** (as % of the account, and whether the 3% risk cap bound — v3.105) · stop price and % · target % · the ATR-expansion rank for the top two (C1 step 3) · **today's entry count (n of 3 — fresh or re-entry, v3.101)** · the pre-commit (B3, v3.103: resting stop price, 12:30 close, any scheduled event before 12:30).
@@ -606,6 +614,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.107** — A4 added: fixed responses to three broker-connection failures. Direct governor instruction, 2026-10-05 (from an outside engineering review, rewritten for how this agent actually works — it calls broker tools, it isn't a script). (1) **Halts:** keep the existing stop, skip that checkpoint's stop change, log it, re-check; a halt over the close is sold the moment it resumes, and a halt past 4:00pm is the one forced exception to "no overnight hold." (2) **Rate limits / transient errors:** retry up to 3 times at about 1/2/4-second spacing, checking `get_equity_orders` before re-sending any order so nothing is placed twice; then the missed-checkpoint rule. (3) **Partial fills:** stop and close quantities always equal the live share count from `get_equity_positions`; a partial entry fill has its remainder cancelled; a partial stop fill gets an immediate new stop for the remaining shares. Strategy unchanged.
 
 **v3.106** — Two changes, direct governor instruction, 2026-10-03: (1) **v3.104's SPY-direction filter (C1 step 2b) reverted, same day, before it ever ran live.** A no-lookahead replay of 9/16–10/2 under the full current rules (no entries before 10:00, opening-range stop, ratchet, 12:30 close, 2 fresh + 1 re-entry, 3% sizing) found it costs about 0.17% a day: its case rested on the bear trades' *actual* results, but those losses came mostly from the discretionary reversal exits v3.100 already removed. Under today's exits the trades it blocks are one loser (TZA 9/17 −0.60%), one scratch (TZA 9/30) and two winners (RETL 9/28 +1.60%, LABD 10/2 +1.71%). Same replay: +0.46%/day without the filter vs +0.29% with it. (2) **Objective target set to an average of 0.5–0.6% per trading day** across a trading year (reach goal 0.7–0.8% unchanged). The 3% risk budget (v3.105) stays — it fits this target; tighter budgets cost return the target needs.
 
