@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.114.** Bump on every rule/threshold change; record it in the commit.
+**Policy version: 3.115.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -21,7 +21,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 | Checkpoint | Read | Why |
 |---|---|---|
-| **9:00** research | A · C · D | Pre-market context only (headlines, proxy/ticker pre-market prices, buying power) — the Core Fourteen universe is already fixed (C4), nothing to build or scan for (v3.78) |
+| **9:00** research | A · C · D | Pre-market context only (headlines, proxy/ticker pre-market prices, buying power) — the Core Twelve universe (C4, v3.113) is already fixed, nothing to build or scan for (v3.78) |
 | **9:30** observation | A · C | Market-open pulse check on the twelve proxies (v3.92/v3.113, kept on the grid by direct governor instruction even after the 30-minute ORB moved entry to 10:00) — read-only, no decision, no B6 range-building role; the 30-minute range still can't complete until 10:00 |
 | **10:00–11:55** entry/management ×24 (5-min cadence, v3.64/v3.92/v3.94) | A · B · C | 10:00 is the primary entry slot (v3.92 — moved from 9:45, so C1's Opening Range Breakout has its full 9:30–10:00 window; the 9:45/9:50/9:55 slots are removed from the grid, not just repurposed). **11:55 is the last entry-eligible slot (v3.94, direct governor instruction 2026-10-02)** — no new entries after 12:00, even though the grid itself keeps running through 12:30. Every slot from here is holding, or flat and open to a fresh opportunity, one uniform 5-minute cadence throughout |
 | **12:00–12:25** management only ×6 (5-min cadence, v3.94) | A · B | Exit-only — **no new entries from 12:00 onward (v3.94)**, same restriction the close slot always had, just starting 5 minutes earlier than the close itself now. Only a still-open position gets managed here; flat means a non-event. |
@@ -30,7 +30,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 **Part E is reference — pull it only when a rule in A–D sends you there.** Never read it front to back. **The same on-demand pattern applies to any inline pointer that lands outside your row's named part(s), not only ones into Part E** — C7/C8/C10's `(B1)`, C10/C11's `(B1b)`, D2's `(B1)`/`(E3)`/`(E5)`, and every other parenthetical citation. A row's letter code names the part(s) it reads in full; a pointer found while reading sends you to grep and pull just the one subsection it names — never the whole part the pointer lands in, and never skip it because it's outside your row's headline letters.
 
-**How to read only your row — this file is ~600 lines; a full read costs roughly 30k tokens, a targeted one costs 2k–14k.** `Grep` this file for `^# PART` (and `^---$` if narrowing further) to get each Part's current line span — **never hardcode line numbers**, edits shift them every commit. Then `Read` with `offset`/`limit` bounded to Part A plus only the part(s) your row names; for a single named subsection (9:30's C1, 4:00's B4), grep that subsection's own `^## ` heading instead of pulling its whole Part. A plain whole-file `Read` is the single largest token cost in running this system — do it only when genuinely unsure which span you need, and even then prefer a fresh `Grep` over repeating it.
+**How to read only your row — this file is ~800 lines; a full read costs roughly 40k tokens, a targeted one costs 2k–14k.** `Grep` this file for `^# PART` (and `^---$` if narrowing further) to get each Part's current line span — **never hardcode line numbers**, edits shift them every commit. Then `Read` with `offset`/`limit` bounded to Part A plus only the part(s) your row names; for a single named subsection (9:30's C1, 4:00's B4), grep that subsection's own `^## ` heading instead of pulling its whole Part. A plain whole-file `Read` is the single largest token cost in running this system — do it only when genuinely unsure which span you need, and even then prefer a fresh `Grep` over repeating it.
 
 ---
 
@@ -248,7 +248,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 ---
 
-# PART C — ENTRY (9:00 · 10:00 primarily; any 10:05–12:25 checkpoint while flat)
+# PART C — ENTRY (9:00 · 10:00 primarily; any 10:05–11:55 checkpoint while flat, v3.94)
 
 > **No position may be opened outside 10:00–11:55 (v3.94, direct governor instruction 2026-10-02 — no new entries after 12:00, tightened from v3.92's 10:00–12:25; see D1 for the full history of earlier shifts).** The 9:45, 9:50, and 9:55 slots are removed from the grid entirely; 9:30 stays, but as a read-only research checkpoint, not an entry-eligible one — the opening range forms fine unattended either way, nothing needs to actively watch it. Multiple round trips per day, across different candidates, are still possible (limited margin, since 2026-08-20), **subject to A1's daily trade cap (3 absolute max, 2 recommended — v3.78)** — a fresh entry may be taken at **any** checkpoint while flat, not only 10:00. **A position that closes mid-day gets an accelerated re-check instead of waiting for the next grid slot — see C12.**
 
@@ -403,7 +403,7 @@ Then:
 
 **Applies whenever a position closes before 12:30, regardless of why** — stop, reversal, any other B3 exit. **Every step below is still subject to A1's daily entry allowance (v3.101)** — a re-entry when the day's one re-entry is already used, or a fresh instrument when 2 distinct instruments are already entered, is blocked exactly like any other entry attempt (in the latter case step 1's field re-run covers only those two rows); being triggered by an exit is not an exception. (The 12:30 close itself is a direct market sell, v3.58/v3.92, not a stop trigger — nothing re-enters after it, since 12:25 is the end of the entry window, C9, v3.92.) The moment of exit becomes an ad hoc **"opening-range-equivalent,"** rather than waiting for the next regular grid slot (the uniform 5-min cadence, v3.64).
 
-**v3.72 note: steps below updated for the Core Ten/RVOL-ORB-ATR system.** "Shortlist" now means the Core Ten's fixed twenty tickers, always the same set — there is no daily-built list to re-derive. **v3.76: C1 itself runs on the ten proxies, not the twenty tickers directly** — see below. C1's Opening Range Breakout window (9:30–9:45) is fixed for the whole day and does **not** reset on an exit — unlike the old baseline system, there is no per-candidate baseline to recompute at the fill timestamp, so that mechanic (old step 3) is gone outright, not just renamed.
+**v3.72 note: steps below updated for the Core Ten/RVOL-ORB-ATR system.** "Shortlist" now means the C4 table's fixed leveraged tickers (twenty-four since v3.113; twenty when this note was written), always the same set — there is no daily-built list to re-derive. **v3.76: C1 itself runs on the ten proxies, not the twenty tickers directly** — see below. C1's Opening Range Breakout window (9:30–10:00 since v3.92; 9:30–9:45 when this note was written) is fixed for the whole day and does **not** reset on an exit — unlike the old baseline system, there is no per-candidate baseline to recompute at the fill timestamp, so that mechanic (old step 3) is gone outright, not just renamed.
 
 0. **A profitable exit checks its own instrument first — a stop is a pause to reassess, not a verdict (v3.67).** If the exit's `pnl_pct_position` was positive, before anything else in this mini-cycle, run C1's three steps (RVOL/ORB/ATR) on that row's proxy, alone, checking specifically whether it's still breaking the same direction (long or inverse) as the leg that just closed. **Still clearing all three, same direction, and the proxy has printed a fresh extreme beyond the just-closed trade's own high-water mark (v3.86, below)** — still a valid breakout, not reversed — **re-enter that same leg directly**, sized fresh off current settled cash (C8), without waiting to rank it against the other nine proxies. Only fall through to step 1 below (the full field, freshly re-run) if the same row no longer qualifies in that direction, **the proxy hasn't cleared its own prior trade's extreme (v3.86)**, **the instrument is already at its 2-entry daily cap (v3.83)**, **or `rvol_decay_pct` against that instrument's first entry today is ≥30% (v3.85)** — the shortcut never re-enters a name for a 3rd time, on a meaningfully cooled signal, or on a move that hasn't actually extended past where it already got to, regardless of how clean the breakout still looks.
 
@@ -450,6 +450,14 @@ Runs indefinitely until the governor pauses it. Never stop on your own initiativ
 
 Never delete either checkpoint (A2's rule, not restated here).
 
+**Prompt templates for the chain (v3.115).** Arm each slot with the matching wording below (fill in time and date), so a checkpoint's prompt never cites retired rules. Every prompt ends: "RULEBOOK.md governs wherever this prompt differs. This is a real live trading account (Robinhood 462514035) acting on real capital."
+- **9:00 research:** read Part A + C + D; pre-market context only (headlines, proxy/ticker pre-market prices, buying power).
+- **9:30 observation:** read Part A + C; pulse check on the twelve C4 proxies; read-only, no decision.
+- **10:00–11:55 entry/management** (11:55 marked "last entry-eligible slot"): if holding, Part B management (B2 ratchet; B3 lists the only live exits); if flat, the Part C gate stack on the twelve C4 proxies (C1: RVOL → volume-confirmed 30-min ORB → `selection_score`), subject to A1 (allowance, E1 throttle/lockout) and C8's 3% risk sizing; on any entry, record the top three candidates in E5 for the selection log; apply D1's early shutdown the moment it triggers.
+- **12:00–12:25 management only:** no entries; if holding, Part B management; if flat with no resting order, early shutdown — delete the remaining slots before 12:30.
+- **12:30 close:** final ratchet, market-sell anything open, log to `trades.csv`, append `selection_log.csv` rows, D3 report, arm the next trading day with these templates, commit and push.
+- **8:00pm backup:** verify the next trading day's chain exists; create it only if missing, and say so.
+
 ### Early shutdown
 
 **v3.110 — when to delete the rest of the day's checks, direct governor instruction, 2026-10-05 (replaces the v3.82 wording below).** Delete every remaining intraday checkpoint for the day the moment **any one** of these is true:
@@ -468,7 +476,7 @@ Never delete either checkpoint (A2's rule, not restated here).
 
 **v3.71 — market-wide scanning removed entirely, direct governor instruction, 2026-09-16.** No `run_scan`, no individual-stock discovery, no 25-name watchlist, ever, until the governor explicitly reopens it. The tradeable universe is now fixed and closed: **the Core Ten (E3)** — ten macro/sector themes, each with its own named leveraged long and inverse ETF, nothing else. "These are all the positions you will ever enter" — direct quote, binding until changed the same explicit way.
 
-1. **Headlines** — macro, geopolitical, overnight. Same discipline as always, just read now for which of the Core Ten's themes it actually touches (Fed decision → Treasury Bonds and Broad Market rows; a chip-specific story → Semiconductors; etc.) rather than as raw material for a stock hunt.
+1. **Headlines** — macro, geopolitical, overnight. Same discipline as always, just read now for which of the C4 table's twelve themes (v3.113) it actually touches (Fed decision → Treasury Bonds and Broad Market rows; a chip-specific story → Semiconductors; etc.) rather than as raw material for a stock hunt.
 2. **Pre-market prices for the twelve proxies (v3.113)** (QQQ, SPY, SOXX, IWM, XLF, XLE, TLT, XBI, XLRE, EEM, XOP, XLU — C4), the actual C1 gate surface (v3.76), plus the twenty-four leveraged tickers (TQQQ/SQQQ, UPRO/SPXU, SOXL/SOXS, TNA/TZA, FAS/FAZ, ERX/ERY, TMF/TMV, LABU/LABD, DRN/DRV, EDC/EDZ, GUSH/DRIP, UTSL/SDP — E3/C4) for context on what's actually tradeable. This is the entire "watchlist build" step now — there is nothing else to scan for.
 3. **Earnings reactions** from last night's after-close reporters, scoped to whether they move one of the twelve themes (v3.113), not individual names outside the list.
 4. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
@@ -557,7 +565,7 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 - **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
 - 24-hour tradability is optionality, never obligation.
 
-## E3. Vehicle map — the Core Fourteen, and retired history below it
+## E3. Vehicle map — see C4 for the live Core Twelve (v3.113); retired history below
 
 **v3.96/v3.97 note: this section's own header and the v3.72 paragraph below it still say "Core Ten" — left as an accurate historical record of what was true on 2026-09-16, per this file's convention of not editing old version-tagged paragraphs. See C4 for the current, authoritative table (twelve rows since v3.113).**
 
@@ -673,6 +681,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.115** — Cleanup, 2026-10-05, no trading-rule change. D1 gains prompt templates for arming the checkpoint chain, so prompts no longer cite retired rules (Monday 10/5's chain was re-worded to match). Stale live-text references fixed: READ MAP 9:00 row and E3 heading (Core Fourteen → Core Twelve), Part C heading's entry window (10:05–11:55), C12's v3.72 note (ticker count, 30-min range), D2 headlines step, and the file-size note in the READ MAP.
 
 **v3.114** — Selection log added, direct governor instruction, 2026-10-05. Full text: D3, above. At the 12:30 close, one row per entry taken today goes into the new append-only `archive/selection_log.csv`: the chosen proxy against the next two by `selection_score`, each measured from the entry checkpoint to 12:30 in leveraged terms (plain move and best move reached), plus `selected_vs_runners_up_score` (selected minus best runner-up) and `selected_was_best`. C1 step 3 now records the top three candidates and their prices in E5 at entry. A review is reported every 30 comparable rows. Informational only — gates nothing. Kept out of `trades.csv` because trades rows are written at exit, before 12:30, and are never edited.
 
