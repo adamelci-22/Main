@@ -655,7 +655,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Selection log (2 rows appended):** UTSL/XLU — no runner-up (n/a). FAS/XLF +0.67% lev hold to 12:30 vs. **XLE +1.06%** and XLU +0.94% (blocked) → `selected_vs_runners_up_score` **−0.39**, selected_was_best = **no**. XLE had the lowest score (expansion 0.91) and moved most. One data point — the 30-row review decides.
 - **Ops issues:** 10:10 trigger never fired; 10:05/10:15 fired late (E6). Several connector disconnect/reconnect cycles mid-session; no order or stop was affected. Pending $1,000 deposit disappeared from `pending_deposits` overnight without landing (flagged at 9:00).
 - **Declined/notable:** SPY and XLF broke out at 10:10 but failed RVOL; XLE broke out at 10:45 but ranked below XLF at 10:57.
-- **Arming:** Tuesday 2026-10-06's chain armed from D1's templates (see the 12:30 commit).
+- **Arming:** Tuesday 2026-10-06's full chain — all 34 slots (9:00, 9:30, 10:00–11:55 ×24, 12:00–12:25 ×6, 12:30, 8:00pm) — armed from D1's templates, created 12:32–12:35 ET in four batches because of the scheduler's ~10/min limit (E6). Monday's 8:00pm backup is still armed.
 
 ## E6. Known issues — backlog, not yet fixed
 
