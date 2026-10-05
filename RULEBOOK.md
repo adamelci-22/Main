@@ -615,6 +615,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:20–10:30 management** — UTSL 54 sh held, stop $29.31 resting (54 held for sells). run_high $30.41; last $30.27–30.33, below the $30.38 fill → profit gate not met, no ratchet. Thin tape (several interpolated minutes).
 
+**10:35** — held, last $30.24–30.31, not in profit, no ratchet.
+
+**10:40 — STOP RAISED to $30.39 (breakeven +$0.01).** UTSL ran to $30.53 (run_high) at 10:40; live $30.53 > fill $30.38 → profit gate met. candidate = 30.53 × (1 − 2 × 0.22%) = 30.3957 → $30.39; live above candidate ✓; move $1.08 ≥ min 0.59% ($0.18) ✓. Old stop `6ac3b165` cancelled (confirmed), new sell-stop 54 @ $30.39 `6ac3b6f4` confirmed. Unprotected ~13 s. Pre-commit: stop $30.39; next raise needs run_high ≥ ~$30.71 (candidate ≥ stop + $0.18); 12:30 market sell.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Scheduler skipped or delayed checkpoints — 2026-10-05.** The 10:10 trigger never fired (still enabled, `next_run_at` 14:10Z in the past, no `last_fired_at`); 10:05 fired ~1 min late and 10:15 ~1m41s late. Cause is on the scheduler side, not diagnosed. The 10:10 trigger was disabled at 10:18 so a stale fire can't arrive later. Mitigations already in place: the resting stop protects a position between checks, and B1b reads every bar since the previous read, so a missed slot loses timing, not data. Watch for repeats.
