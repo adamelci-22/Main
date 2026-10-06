@@ -643,6 +643,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Stop:** stop_market sell 205 @ **$8.17**, gfd, **confirmed** (order `6ac50d88-993e`). Worst case ≈ −$59.16 (2.98% of account) before slippage.
 - B2: candidate = run_high × (1 − 0.32%); moves only when ≥ $0.0423 above the current stop. Entries today **2 of 3** (LABD's re-entry still available, gated on a fresh XBI low).
 
+**11:05 checkpoint (fired 15:06:33Z).** DRN 8.445 (below the 8.4587 fill; thin tape, one interpolated minute), XLRE 41.20. Stop confirmed, unfilled. run_high 8.4601 → live below fill → no ratchet; stop $8.17.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
