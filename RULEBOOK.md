@@ -676,7 +676,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Selection log:** 2 rows appended. LABD/XBI: no runners. DRN/XLRE: score +0.23; runner XBI bear (blocked) would have made +0.375% leveraged by 12:30 vs XLRE's +0.036% → selected_was_best **no**, gap −0.34.
 - **What the day showed:** both signals were right in direction at entry but stalled within ~30 min; the tight trailing stops (B2) took both out near breakeven. XBI's bear leg made its low (149.68) at 10:40 and bounced to 151.61; a plain hold of LABD to 12:30 would have lost ~1.5% leveraged, so the stop helped there. DRN's thin tape (many interpolated minutes) made the 0.32% trail very tight.
 - **Scheduler:** the 10:10 trigger again fired ~10 min late (E6); 12:05–12:25 deleted at 12:00 (early shutdown).
-- **Arming:** Wednesday 2026-10-07's 34-slot chain is being created now in batches of ≤10/min (E6).
+- **Arming:** Wednesday 2026-10-07's full **34-slot chain created** (9:00 → 8:00pm backup), 16:31–16:35Z in batches; one batch hit the rate limit ("try again in 17s") and was retried successfully (E6). The 12:30 slot arms Thursday 2026-10-08.
 
 ## E6. Known issues — backlog, not yet fixed
 
