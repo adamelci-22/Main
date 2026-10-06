@@ -669,6 +669,15 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:00 checkpoint (fired 16:00:21Z) — early shutdown.** Flat (no positions), no open orders. D1 condition 2 true → **deleted** the five unfired 12:05/12:10/12:15/12:20/12:25 triggers. Kept: 12:30 close + arming (`trig_01YMQdsC8PocajAJtiM4fp6q`) and 8:00pm backup (`trig_01LKsqzMH9n8fyLG2hbfQcwk`), both still enabled.
 
+**Tuesday 2026-10-06, 12:30 close — end-of-day report (D3).** Flat since 11:53; nothing to sell. Account **$1,976.43** (cash = buying power), from $1,982.32 at the open → **−$5.89 (−0.30%)**.
+- **Trades (2 of 3 entries):** LABD (XBI bear) 65 sh 10:18:59 @ 8.0176 → stop 10:50:18 @ 8.05, **+$2.09** (+0.40%) · DRN (XLRE bull) 205 sh 11:01:55 @ 8.4587 → stop 11:53:15 @ 8.42, **−$7.97** (−0.46%). Both exits were the trailing stop.
+- **Streak / throttle:** consecutive losses **1** (DRN); throttle off (0.5% risk applies at 3–4). No lockout.
+- **Rule change today:** **v3.116** — the 7% stop ceiling removed (governor instruction, 10:17). First use: LABD at an 11.3% stop, sized to 3% risk (65 sh, 26% of the account).
+- **Selection log:** 2 rows appended. LABD/XBI: no runners. DRN/XLRE: score +0.23; runner XBI bear (blocked) would have made +0.375% leveraged by 12:30 vs XLRE's +0.036% → selected_was_best **no**, gap −0.34.
+- **What the day showed:** both signals were right in direction at entry but stalled within ~30 min; the tight trailing stops (B2) took both out near breakeven. XBI's bear leg made its low (149.68) at 10:40 and bounced to 151.61; a plain hold of LABD to 12:30 would have lost ~1.5% leveraged, so the stop helped there. DRN's thin tape (many interpolated minutes) made the 0.32% trail very tight.
+- **Scheduler:** the 10:10 trigger again fired ~10 min late (E6); 12:05–12:25 deleted at 12:00 (early shutdown).
+- **Arming:** Wednesday 2026-10-07's 34-slot chain is being created now in batches of ≤10/min (E6).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
