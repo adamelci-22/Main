@@ -623,6 +623,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:35 checkpoint (fired 14:35:45Z).** LABD 8.075, XBI 150.20. Stop confirmed, unfilled (10:30–10:35 low 8.005). run_high unchanged 8.115 → no ratchet; stop $7.99.
 
+**10:40 checkpoint (fired 14:40:54Z).** LABD 8.14, XBI 149.74 (new low). run_high **8.14** (10:38 bar) → candidate 8.0553; move $0.065 ≥ $0.0513 → **stop ratcheted $7.99 → $8.05** (old cancelled, new stop_market 65 @ 8.05 **confirmed**, order `6ac5088c-f510`). Locked ≈ +$2.11 (+0.40%) before slippage.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
