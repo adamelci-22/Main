@@ -635,6 +635,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:55 checkpoint (fired 14:55:17Z) — flat, no entry.** Bars through 10:50. Passing RVOL: SPY 1.04 · XLE 1.01 · XBI 2.55 · XLRE 1.40 · XLU 1.88. XLE bull break still the same run (volume-failed 10:10 trigger → skipped). XBI 151.15 live, above signal_extreme 149.68 → LABD re-entry still gated (v3.86/A1). SPY (10:50 close 780.325) and XLRE (41.135) each have one close above their ORH — not yet confirmed (need two). Watch at 11:00 (also C12's T+10).
 
+**11:00 checkpoint (fired 15:00:41Z; also C12 T+10) — DRN entered.** Bars through 10:55. Flat, A1: 1 of 3 used (LABD); this is the **2nd fresh instrument** → after it, C1 runs only on XBI and XLRE rows for the rest of the day.
+- **Candidates (top three for the selection log):** **XLRE bull — selected**: closes 10:50 41.135 and 10:55 41.165 above ORH 41.095; triggering bar 10:50 24,100 vs avg 22,006 → pass; RVOL 1.43, expansion 0.84, **score +0.23**. · **XBI bear** (LABD re-entry) — RVOL 2.58, score −2.22, **blocked**: live 151.80 above signal_extreme 149.68 (v3.86/A1). · **SPY bull** — RVOL 1.05, closes 10:50/10:55 above ORH 779.97, but triggering bar 10:50 141,592 vs avg 190,462 → **volume fail**, score +0.66. XLE fell out of step 1 (RVOL just under 1.0) and its run was volume-failed anyway.
+- **DRN profile** (31 sessions): median adverse 2.00% · stop_pct 3.00% · **stall 0.16%** · **min move 0.50%** (mfe_to_target 4.35 flag — informational only). DRN 9:30–10:00 low **$8.17**.
+- **Sizing (C8):** review ask $8.46 → risk $0.29/sh → floor(3% × ~$1,984.41 ÷ 0.29) = **205 sh** (cash cap ~234). XLRE 41.215 live at entry, still above ORH.
+- **Entry:** buy 205 DRN limit $8.47 → **filled 11:01:55 @ $8.4587** ($1,734.03, ~87% of the account; order `6ac50d63-c74a`). Stop distance 3.41%.
+- **Stop:** stop_market sell 205 @ **$8.17**, gfd, **confirmed** (order `6ac50d88-993e`). Worst case ≈ −$59.16 (2.98% of account) before slippage.
+- B2: candidate = run_high × (1 − 0.32%); moves only when ≥ $0.0423 above the current stop. Entries today **2 of 3** (LABD's re-entry still available, gated on a fresh XBI low).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
