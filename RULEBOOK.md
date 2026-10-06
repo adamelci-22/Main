@@ -627,6 +627,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:45 checkpoint (fired 14:46:31Z).** LABD 8.10, XBI 150.05. Stop confirmed, unfilled. run_high **8.1577** (10:41 bar) → candidate 8.0729; move $0.023 < $0.0513 → no ratchet; stop $8.05.
 
+**10:50 checkpoint (fired 14:50:42Z) — LABD stopped out, +$2.09.** Stop fired **10:50:18 @ $8.05** (fee $0.02): +0.404% position, +0.105% account, 31 min, r = 0.04. Win → consecutive losses stay **0**. Account ≈ $1,984.41. Entries today **1 of 3** (1 fresh instrument used; LABD has its 1 re-entry available).
+- **C12 step 0 (profitable exit):** XBI bear still clears RVOL (2.48) and is below ORL, but `signal_extreme` (lowest XBI 5-min low 10:15–10:50) = **149.68**; live 150.38 → **no fresh extreme → shortcut fails** (v3.86).
+- **Step 1, T+0 field re-run (bars through 10:45):** passing RVOL: SPY 1.05 · XLE 1.04 · XBI 2.48 · XLRE 1.41 · XLU 1.91. Breaks: **XLE bull** — triggering bar 10:10, 128,644 vs avg 326,046 → **fails volume test**, skipped for this run · **XBI bear** — a LABD re-entry, but A1 (v3.101) lists v3.86's fresh-extreme requirement among the re-entry gates → **blocked until XBI prints below 149.68** (confirmed on two live reads). SPY/XLRE/XLU inside or at their ranges. **No entry.**
+- **T+10** = 11:00:18; the 11:00 grid slot (fires ~11:00–11:01) serves as the T+10 run — no separate trigger armed.
+- Selection-log row for LABD/XBI is written at 12:30 (needs XBI's 12:30 price).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
