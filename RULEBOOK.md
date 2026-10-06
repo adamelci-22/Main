@@ -592,6 +592,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Headlines:** the only search result dated near today was off-topic/stale (it described first-half 2026 returns) — treated as no usable headline signal; proceeding on price action, as C1 is technical.
 - **Pre-market, twelve proxies (last extended-hours print vs. Monday close, ~9:01 ET):** **XLU 40.44 (+1.18%)** · SOXX 593.19 (+0.62%) · QQQ 760.05 (+0.51%) · IWM 284.56 (+0.42%) · XBI 156.80 (+0.39%) · SPY 777.82 (+0.39%) · TLT 77.38 (+0.35%) · XLF 54.02 (+0.26%) · XLRE ~40.73 (+0.14%, stale) · EEM 68.79 (+0.09%, stale 8:31 print) · **XOP 185.66 (−0.95%)** · **XLE 62.81 (−1.01%)**. Broad risk-on gap; energy weak; XLU strong again (Monday's UTSL leg is no longer locked out — v3.68 is same-day only).
 
+**Tuesday 2026-10-06, 9:30 observation** (read-only). Flat. First prints vs. Monday close, 9:31 ET: **XLU 40.56 (+1.48%)** · SOXX 595.23 (+0.97%) · QQQ 761.58 (+0.71%) · SPY 778.63 (+0.49%) · IWM 284.09 (+0.25%) · XLRE 40.75 (+0.20%) · TLT 77.21 (+0.13%) · XBI 156.40 (+0.13%) · XLF 53.92 (+0.07%) · EEM 68.75 (+0.03%) · XOP 187.29 (−0.08%) · XLE 63.30 (−0.24%). Energy's pre-market deficit mostly closed at the open.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
