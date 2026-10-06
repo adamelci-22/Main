@@ -270,6 +270,8 @@ valid only if    volume(triggering bar) > average volume of the 3 consecutive 5-
 
 Read on the proxy's own 5-minute bars. A break whose triggering bar fails the test is skipped — not a candidate at this or any later checkpoint while that same run of closes outside the range continues. If price comes back inside the range and breaks out again, the new run's first bar is a new triggering bar with its own test. Report the triggering bar's volume against the 3-bar average whenever a break is taken or skipped.
 
+**From the 11:00 checkpoint onward the volume test is not applied (v3.117, direct governor instruction, 2026-10-06).** At 11:00 and every later entry checkpoint (through 11:55), a break counts if it meets the two-close confirmation alone — including a run whose triggering bar failed the test earlier in the morning (today's XLE: triggering bar 10:10 failed, still outside its range at 11:00). Before 11:00 the test applies exactly as above. Still report the triggering bar's volume against its 3-bar average for every break taken after 11:00, so D4 can compare these entries with volume-passing ones.
+
 **Step 3 — rank by `selection_score` (v3.109, direct governor instruction, 2026-10-05; supersedes v3.98's room-left rank, kept below for history).** Zero proxies clearing steps 1–2 → correct no-trade. Exactly one → enter it. **Two or more, at any checkpoint → the highest score wins:**
 
 ```
@@ -695,6 +697,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.117** — **Volume test dropped from 11:00 on.** Direct governor instruction, 2026-10-06 ("after 10:30 the reversal-trap time has already passed"; the governor chose 11:00 after seeing the replay). Full text: C1 step 2. Prompted by XLE: its 10:10 triggering bar failed the test, it held above its range all morning and gained +1.20% (2x) from 11:01 to 12:30 — the day's best move. Replay of 9/1–10/5 (24 days, current rules, XLU absent from the data): volume test all day +0.10%/day; off from 10:30 −0.05% (the added trades included XBI 9/24 −2.44%, EEM 10/2 −1.94%, IWM 9/28 −1.54%); off from 10:45 +0.09%; **off from 11:00 +0.08%** (−0.02%/day vs current, P(better) 43% — a wash), worst day −1.32% vs −1.39%. D4 tracks post-11:00 volume-failed entries separately.
 
 **v3.116** — **7% stop ceiling removed.** Direct governor instruction, 2026-10-06, after XBI's confirmed bear break was declined at 10:10 because LABD's opening-range-low stop sat 10.6% below the ask: "if you can do partial sizes to only risk 3% of the account there shouldn't be a limit." C8's sizing already holds a full stop-out to 3% of the account at any distance, so the ceiling no longer limits risk — it only blocked trades. Edits: B1 (v3.74 paragraph marked superseded; v3.99's ceiling sentence struck), C8 sizing text and pre-placement check. Caveats kept in view: the 3% is before slippage through the stop, and a wide stop means a small position (10% stop ≈ 30% of cash). Not backtested before adoption; D4 should compare wide-stop (>7%) entries against the rest.
 
