@@ -651,6 +651,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:20 checkpoint (fired 15:20:38Z).** DRN 8.415 (below fill; very thin tape), XLRE 41.165. Stop confirmed, unfilled. No ratchet; stop $8.17.
 
+**11:25 checkpoint (fired 15:26:00Z).** DRN 8.4599 (just above the 8.4587 fill), XLRE 41.235. run_high **8.4601** (completed bars; the in-progress 11:25 bar's 8.465 gives the same rounded stop) → candidate 8.433 → **stop ratcheted $8.17 → $8.43** (old cancelled, new stop_market 205 @ 8.43 **confirmed**, order `6ac51320-cf38`). Worst case ≈ −$5.88 (−0.34%) before slippage. Tight on DRN's thin tape, as the formula gives for a 0.16% stall threshold.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
