@@ -585,77 +585,12 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Structured, not narrated.** Log facts as compact bullets grouped by checkpoint/event — numbers, gate results, times — not flowing prose paragraphs. Same information, cheaper to write and cheaper to re-read within the day (Part E is pulled on demand, but the pull still costs whatever E5 has grown to since 9:00).
 
-**Monday 2026-10-05, 9:00 research.** Rulebook v3.115 (weekend/overnight changes v3.99–v3.115 — see Current state). Friday's session (LABD −1.727% loss, TMF +0.011% win) is in `archive/trades.csv`; not restated here.
+**Tuesday 2026-10-06, 9:00 research.** Monday's session (UTSL −$1.99 stop-out; FAS +$12.92 at the 12:30 close; day +$10.93, +0.554%) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Monday's E5, last commit `c0e59b9`+); not restated here.
 
-- **State (A3):** flat (`get_equity_positions` empty) · no orders since 10/3 · total_value = cash = buying_power **$1,971.38** · unsettled $0. **`pending_deposits` now $0** (was $1,000 at 05:45 UTC today, with cash unchanged) — the pending deposit is no longer shown and has not landed as cash; flagged to the governor, not assumed either way. Deposited-capital floor unchanged.
-- **A1:** consecutive-loss count **0** since the 9/30 clearance (L TZA, W FAZ, L FAZ, L LABD, W TMF) → **risk throttle off, full 3% budget ≈ $59.14** (C8, E1 v3.108). Entries today 0 of 3 (2 fresh + 1 re-entry). No lockouts.
-- **Headlines (search summaries, pages not opened — treat as unverified):** US futures slightly lower; Treasury yields elevated near multiyear highs; Fed September minutes due later this week; Brazil rallied premarket on Sunday's presidential election (EWZ reportedly +13%). Themes touched: EEM (Brazil), TLT/XLRE/XLU (rates). No earnings catalyst identified for the twelve themes.
-- **Pre-market, twelve proxies (last extended-hours print vs. Friday close, ~9:01 ET):** **EEM 68.45 (+1.15%)** · XBI 155.55 (+0.73%) · XLU 39.93 (+0.25%) · XLF 53.58 (+0.17%) · IWM 281.74 (+0.08%) · XLRE ~40.82 (≈0.0%, bid/ask mid; last print stale) · SPY 768.82 (−0.11%) · QQQ 748.14 (−0.19%) · XLE 62.67 (−0.24%) · TLT 77.14 (−0.44%) · XOP 183.75 (−0.64%) · **SOXX 585.00 (−0.66%)**. Observational only — RVOL and the 9:30–10:00 range decide at 10:00 (C1).
-- **Leveraged legs (bid/ask or last print):** TQQQ 80.54/SQQQ 33.33 · UPRO 150.35/SPXU 34.02 · SOXL 160.09/SOXS 30.40 · TNA 60.00/TZA 45.62 · FAS 141.76/FAZ 39.35 · ERX 103.00–104.97/ERY 9.15 · TMF 25.24/TMV 50.79 · LABU 254.03/LABD 7.36 · DRN 8.18–8.31/DRV 22.99–23.98 · EDC 81.75–82.77/EDZ 13.41–13.57 · GUSH 42.37–42.79/DRIP 35.35–35.70 · UTSL 30.07–30.47/**SDP 24.42–43.96 (no real pre-market market — re-check the spread before any SDP entry, C9)**.
-
-**Monday 2026-10-05, 9:30 observation** (read-only, no decision; range builds 9:30–10:00 and is pulled at 10:00, B6). Flat confirmed. First prints vs. Friday close, 9:31 ET: **EEM 68.47 (+1.18%)** · XBI 155.14 (+0.46%) · XOP 185.37 (+0.24%) · XLE 62.90 (+0.13%) · SPY 770.45 (+0.11%) · XLU 39.86 (+0.06%) · QQQ 749.96 (+0.05%) · IWM 281.61 (+0.03%) · XLF 53.50 (+0.02%) · XLRE 40.71 (−0.25%) · SOXX 586.68 (−0.38%) · **TLT 77.16 (−0.41%)**. Broad equity opened flat-to-firm after a soft pre-market; EEM's Brazil-driven gap held; TLT weak on yields.
-
-**Monday 2026-10-05, 10:00 entry — no trade (range just completed).** Flat, A1 clear (0 of 3 entries, throttle off). 30-min opening range (9:30–10:00, B6) and RVOL at 10:00 (cum. volume ÷ 20-day same-time avg) per proxy — `RVOL · ORH/ORL · last · expansion`:
-- **EEM 1.20 · 68.70/68.41 · 68.44 · 0.29** · **XLRE 1.20 · 40.83/40.4311 · 40.53 · 0.79** · **XLU 1.06 · 39.94/39.58 · 39.78 · 0.64** (the three ≥1.0× — step 1 passing group)
-- TLT 0.98 · 77.19/77.01 · 77.02 · 0.21 · QQQ 0.82 · 753.46/749.08 · 751.74 · 0.45 · SPY 0.80 · 770.97/769.65 · 770.68 · 0.19 · XLE 0.79 · 62.99/62.05 · 62.76 · 0.75 · IWM 0.76 · 282.21/280.03 · 280.63 · 0.57 · XBI 0.56 · 155.90/154.19 · 155.13 · 0.40 · SOXX 0.53 · 588.00/582.17 · 583.87 · 0.37 · XOP 0.50 · 185.78/182.38 · 184.95 · 0.72 · XLF 0.49 · 53.555/53.30 · 53.39 · 0.34
-- Step 2: no confirmed break possible yet — two 5-min closes outside the range are needed, so 10:10 is the earliest. Watch: EEM and TLT sit just above their range lows.
-
-**10:05** — flat; no proxy closed outside its range on the 10:00–10:05 bar (step-1 group now TLT, XLRE, EEM, XLU). No trade.
-
-**10:10 and 10:15 — MISSED (A2).** No trigger notification reached this session for either slot; the work was done late at ~10:16 when the governor checked in. Both slots' bars are folded into the 10:16 run below.
-
-**Monday 2026-10-05, ~10:16 entry (late 10:15 slot) — TRADE OPENED: UTSL long, 1st entry of 3 (fresh).**
-- **C1:** step 1 group (RVOL ≥1.0×) TLT 1.14 · XLRE 1.18 · EEM 1.23 · XLU 1.10. Step 2: **XLU closed above its 39.94 ORH on the 10:05 (39.99) and 10:10 (40.03) bars → bullish, confirmed.** Volume test: triggering bar 10:05 = 300,410 vs. prior-3 avg 253,706 → **pass**. TLT, XLRE, EEM inside their ranges. (SPY and XLF also closed above their ORHs on both bars but failed step 1 — RVOL 0.92 and 0.57.) Step 3: one candidate, no ranking; XLU `selection_score` +0.18 (expansion 0.83, RVOL 1.10).
-- **Selection-log record (v3.114):** chosen XLU bull · score +0.18 · RVOL 1.10 · expansion 0.83 · proxy price at entry **40.02**. Runners-up: **none** cleared steps 1–2 (selected_was_best = n/a).
-- **B1 profile (UTSL, 31 sessions):** median adverse 2.38% · favourable 1.45% · stop_pct 3.56% · stall 0.22% · min stop move 0.59%. **Initial stop = UTSL's own 9:30–10:00 low $29.31** (3.52% below fill, under the 7% ceiling).
-- **C8:** account $1,971.38; risk budget 3% = $59.14; ask $30.39 − stop → 54 shares (**3% cap bound**; cash would allow 64). Proxy re-check at review: XLU 40.02 > 39.94 ✓. Spread 0.05 (0.16%).
-- **Fill:** 54 @ **$30.3799** (limit $30.40, order `6ac3b15e`, 10:17:02 ET) — $1,640.51, 83.2% of the account; slippage −$0.01 vs. the $30.39 ask (favourable). Max loss at stop ≈ $57.77 (2.93%).
-- **Stop:** sell-stop 54 @ **$29.31**, order `6ac3b165`, state confirmed.
-- **Pre-commit (B3):** resting stop $29.31; ratchet once in profit = run_high × 0.9956, moved only by ≥0.59%; 12:30 market sell; no known scheduled event before 12:30.
-
-**10:20–10:30 management** — UTSL 54 sh held, stop $29.31 resting (54 held for sells). run_high $30.41; last $30.27–30.33, below the $30.38 fill → profit gate not met, no ratchet. Thin tape (several interpolated minutes).
-
-**10:35** — held, last $30.24–30.31, not in profit, no ratchet.
-
-**10:40 — STOP RAISED to $30.39 (breakeven +$0.01).** UTSL ran to $30.53 (run_high) at 10:40; live $30.53 > fill $30.38 → profit gate met. candidate = 30.53 × (1 − 2 × 0.22%) = 30.3957 → $30.39; live above candidate ✓; move $1.08 ≥ min 0.59% ($0.18) ✓. Old stop `6ac3b165` cancelled (confirmed), new sell-stop 54 @ $30.39 `6ac3b6f4` confirmed. Unprotected ~13 s. Pre-commit: stop $30.39; next raise needs run_high ≥ ~$30.71 (candidate ≥ stop + $0.18); 12:30 market sell.
-
-**10:45–10:50** — held UTSL; high since entry $30.57; candidate stop $30.43 was under the $0.18 minimum move → no change.
-
-**10:52:23 — UTSL STOP FIRED, real loss.** 54 @ $30.3438 (stop $30.39; filled 4.6¢ through on a thin-tape drop 30.42→30.33). −$1.99 incl. $0.04 fee, −0.119% position, −0.101% account, r −0.03. MAE −0.45%, MFE +0.63%, 35 min. Logged in `trades.csv`. Consecutive losses 0→1; throttle off. UTSL excluded for the day (v3.68). Account $1,969.40.
-
-**~10:57 — C12 T+0 re-run (exit discovered at the 10:55 slot) → TRADE OPENED: FAS long, entry 2 of 3 (2nd fresh instrument).**
-- **Step 1 (RVOL ≥1.0×):** XLRE 1.44 · **XLF 1.41** (lifted by a 2.33M-share 10:15 bar and a 658k 10:45 bar) · TLT 1.13 · XLU 1.12 · EEM 1.08 · XLE 1.03.
-- **Step 2 (2 closes outside the range + volume test):** XLF bull — above its 53.555 ORH on every close since 10:05; triggering bar 10:05 = 197,678 vs. 3-bar avg 158,478 → pass. XLE bull — run began at the 10:45 bar (63.045 > 62.99), 325,351 vs. 279,146 → pass. XLU bull — pass, but its leg UTSL is excluded (v3.68). TLT, XLRE and EEM were inside their ranges (EEM 68.72 had closed above its 68.70 ORH only once).
-- **Step 3:** XLF **+0.46** (RVOL 1.41, expansion 0.67) > XLE +0.09 (1.03, 0.91) > XLU +0.01 (1.12, 0.99).
-- **Selection-log record (v3.114):** chosen XLF bull · +0.46 · RVOL 1.41 · exp 0.67 · proxy price at entry **53.63**. Runner 1: XLE bull · +0.09 · **63.17**. Runner 2: XLU bull · +0.01 · **40.025** — blocked (UTSL loss, v3.68).
-- **B1 profile (FAS, 31 sessions):** median adverse 1.85% · favourable 1.10% · stop_pct 2.77% · stall 0.17% · min move 0.46%. **Initial stop = FAS's own 9:30–10:00 low $139.55**, 1.90% below the fill.
-- **C8:** account $1,969.40; 3% risk budget $59.08 → 22 shares by risk, **13 by cash** (cash bound; the 3% cap did not bind). Proxy re-check at review: XLF 53.63 > 53.555 ✓. Spread $0.18 (0.13%).
-- **Fill:** 13 @ **$142.2599** (limit $142.30, order `6ac3bad5`, 10:57:25 ET) — $1,849.38, 93.9% of the account; slippage −$0.00 vs. the $142.26 ask. Max loss at stop ≈ $35.23 (1.79%).
-- **Stop:** sell-stop 13 @ **$139.55**, order `6ac3badd`, confirmed.
-- **Pre-commit (B3):** stop $139.55; once in profit, ratchet = run_high × (1 − 2 × 0.17%) = × 0.9966, moved only by ≥0.46% ($0.65); 12:30 market sell; no known scheduled event before 12:30. The T+10 ad hoc check (C12) was not armed: a position is now open, so there is nothing for it to enter.
-
-**11:00 — FAS STOP RAISED $139.55 → $141.97.** run_high $142.46 (11:00 bar); live $142.46 > fill $142.26 → in profit. candidate = 142.46 × 0.9966 = 141.976 → $141.97; live above ✓; move $2.42 ≥ $0.65 min ✓. Old `6ac3badd` cancelled, new 13 @ $141.97 `6ac3bbc4` confirmed (~4 s unprotected). Worst case now ≈ −$3.77 (−0.2%). Next raise needs run_high ≥ ~$143.11.
-
-**11:05–11:15** — FAS held at $142.20–142.55 (run_high $142.55); the candidate stop (~$142.07) is under the $0.65 minimum move → stop stays $141.97.
-
-**11:20–11:35** — FAS held, last $142.68, run_high $142.815 (11:31); candidate stop $142.33 is only +$0.36 over $141.97, under the $0.65 minimum → no change. A raise needs run_high ≥ ~$143.11.
-
-**11:40–11:50** — FAS high since entry $143.11 (11:41); last $143.06. Candidate stop 143.11 × 0.9966 = $142.623 → +$0.653 over $141.97, just under the $0.654 minimum (0.46% × $142.26) → no change.
-
-**11:55** — FAS held, high since entry $143.11, no raise. No entry possible: a position is open, and the only remaining allowance is an FAS re-entry, which needs an exit first.
-
-**12:00 — FAS STOP RAISED $141.97 → $142.73 (now above the $142.26 fill, locking in +$0.47/sh).** run_high $143.22 (11:59 bar); live $143.11. candidate = 143.22 × 0.9966 = 142.733 → $142.73; move $0.76 ≥ $0.654 ✓. Old `6ac3bbc4` cancelled, new 13 @ $142.73 `6ac3c9bb` confirmed (~4 s unprotected). Locked-in gain ≈ +$6.11 if the stop fills at its price. 12:30 market sell to follow.
-
-**12:05–12:25** — FAS held at $142.86–143.24 (run_high $143.235 at 12:14); candidate stops were all under the $0.654 minimum move over $142.73 → no change.
-
-**Monday 2026-10-05, 12:30 — CLOSE + D3 end-of-day report.** Final ratchet: none (run_high $143.235 → candidate $142.75, +$0.02). Stop `6ac3c9bb` cancelled (confirmed), **13 FAS sold at market @ $143.2567** (order `6ac3d0c2`, 12:30:58). Flat confirmed.
-- **Trades:** (1) **UTSL** 54 sh, 10:17→10:52, **−$1.99** (−0.119% position, r −0.03), stop at $30.39 filled $30.34 on a thin-tape drop. (2) **FAS** 13 sh, 10:57→12:30, **+$12.92** (+0.701% position, +0.656% account, r +0.37), 12:30 structural close; stop trailed $139.55 → $141.97 → $142.73.
-- **Day net: +$10.93, +0.554% of the $1,971.38 start** — inside the 0.5–0.6%/day target band. Account $1,982.32 (buying power; the portfolio's equity/cash split was still settling at 12:31).
-- **A1/E1:** entries 2 of 3 (2 fresh, no re-entry). Consecutive losses: 0 (FAS win reset it). Throttle off. No lockout.
-- **Selection log (2 rows appended):** UTSL/XLU — no runner-up (n/a). FAS/XLF +0.67% lev hold to 12:30 vs. **XLE +1.06%** and XLU +0.94% (blocked) → `selected_vs_runners_up_score` **−0.39**, selected_was_best = **no**. XLE had the lowest score (expansion 0.91) and moved most. One data point — the 30-row review decides.
-- **Ops issues:** 10:10 trigger never fired; 10:05/10:15 fired late (E6). Several connector disconnect/reconnect cycles mid-session; no order or stop was affected. Pending $1,000 deposit disappeared from `pending_deposits` overnight without landing (flagged at 9:00).
-- **Declined/notable:** SPY and XLF broke out at 10:10 but failed RVOL; XLE broke out at 10:45 but ranked below XLF at 10:57.
-- **Arming:** Tuesday 2026-10-06's full chain — all 34 slots (9:00, 9:30, 10:00–11:55 ×24, 12:00–12:25 ×6, 12:30, 8:00pm) — armed from D1's templates, created 12:32–12:35 ET in four batches because of the scheduler's ~10/min limit (E6). Monday's 8:00pm backup is still armed.
+- **State (A3):** flat · no orders since Monday's close · total_value = cash = buying power **$1,982.32** · pending deposits $0 (the $1,000 that vanished Monday has not reappeared). **Trade approvals: off** (`human_must_approve_trades` false — agent orders execute without a manual step).
+- **A1:** consecutive losses **0** (Monday ended on the FAS win) → throttle off, full 3% budget ≈ **$59.47**. Entries today 0 of 3. No lockouts.
+- **Headlines:** the only search result dated near today was off-topic/stale (it described first-half 2026 returns) — treated as no usable headline signal; proceeding on price action, as C1 is technical.
+- **Pre-market, twelve proxies (last extended-hours print vs. Monday close, ~9:01 ET):** **XLU 40.44 (+1.18%)** · SOXX 593.19 (+0.62%) · QQQ 760.05 (+0.51%) · IWM 284.56 (+0.42%) · XBI 156.80 (+0.39%) · SPY 777.82 (+0.39%) · TLT 77.38 (+0.35%) · XLF 54.02 (+0.26%) · XLRE ~40.73 (+0.14%, stale) · EEM 68.79 (+0.09%, stale 8:31 print) · **XOP 185.66 (−0.95%)** · **XLE 62.81 (−1.01%)**. Broad risk-on gap; energy weak; XLU strong again (Monday's UTSL leg is no longer locked out — v3.68 is same-day only).
 
 ## E6. Known issues — backlog, not yet fixed
 
