@@ -615,6 +615,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:10 trigger, delivered 14:20Z (late, E6) → management check ~10:22.** LABD 8.05, XBI 150.34. run_high **8.115** (10:20 bar) → candidate 8.0306; move $0.0406 < $0.0513 minimum → **no ratchet**, stop stays $7.99.
 
+**10:20 checkpoint (fired 14:21:58Z) → ~10:22.** LABD 8.035 (bid 8.01), XBI 150.63. Position 65 sh, all held for the stop. run_high unchanged 8.115 → no ratchet; stop $7.99.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
