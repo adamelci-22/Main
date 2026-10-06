@@ -633,6 +633,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **T+10** = 11:00:18; the 11:00 grid slot (fires ~11:00–11:01) serves as the T+10 run — no separate trigger armed.
 - Selection-log row for LABD/XBI is written at 12:30 (needs XBI's 12:30 price).
 
+**10:55 checkpoint (fired 14:55:17Z) — flat, no entry.** Bars through 10:50. Passing RVOL: SPY 1.04 · XLE 1.01 · XBI 2.55 · XLRE 1.40 · XLU 1.88. XLE bull break still the same run (volume-failed 10:10 trigger → skipped). XBI 151.15 live, above signal_extreme 149.68 → LABD re-entry still gated (v3.86/A1). SPY (10:50 close 780.325) and XLRE (41.135) each have one close above their ORH — not yet confirmed (need two). Watch at 11:00 (also C12's T+10).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
