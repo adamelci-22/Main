@@ -663,6 +663,10 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:50 checkpoint (fired 15:50:41Z).** DRN 8.4499 (below fill; 11:49 low 8.445), XLRE 41.22. Stop confirmed, unfilled. run_high 8.4801 unchanged → no ratchet; stop $8.43.
 
+**11:55 checkpoint (fired 15:55:45Z; last entry-eligible slot) — DRN stopped out, −$7.97.** Stop fired **11:53:15 @ $8.42** (1¢ through the 8.43 trigger; fee $0.04): −0.458% position, −0.402% account, 51 min, r = −0.13. A real loss → consecutive losses **0 → 1**; throttle stays off (E1). DRN excluded for the day (v3.68). Account ≈ **$1,976.44**. Day so far: LABD +2.09, DRN −7.97 → **−$5.88**.
+- **C12 T+0:** XLRE row — DRN excluded; its bear leg DRV would be a 3rd distinct instrument (A1: never). XBI row — LABD re-entry needs a fresh low below 149.68; XBI live **152.84** → blocked. **No entry.** T+10 (12:03) lands past 11:55 → no entry possible (C12/C9).
+- **D1 early shutdown:** condition 2 (12:00+, flat, no resting order) becomes true at 12:00 → the 12:00 slot disables 12:05–12:25; 12:30 (report + arm Wednesday) and 8:00pm stay.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
