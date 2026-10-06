@@ -667,6 +667,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **C12 T+0:** XLRE row — DRN excluded; its bear leg DRV would be a 3rd distinct instrument (A1: never). XBI row — LABD re-entry needs a fresh low below 149.68; XBI live **152.84** → blocked. **No entry.** T+10 (12:03) lands past 11:55 → no entry possible (C12/C9).
 - **D1 early shutdown:** condition 2 (12:00+, flat, no resting order) becomes true at 12:00 → the 12:00 slot disables 12:05–12:25; 12:30 (report + arm Wednesday) and 8:00pm stay.
 
+**12:00 checkpoint (fired 16:00:21Z) — early shutdown.** Flat (no positions), no open orders. D1 condition 2 true → **deleted** the five unfired 12:05/12:10/12:15/12:20/12:25 triggers. Kept: 12:30 close + arming (`trig_01YMQdsC8PocajAJtiM4fp6q`) and 8:00pm backup (`trig_01LKsqzMH9n8fyLG2hbfQcwk`), both still enabled.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
