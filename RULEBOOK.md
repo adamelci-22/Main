@@ -594,6 +594,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Tuesday 2026-10-06, 9:30 observation** (read-only). Flat. First prints vs. Monday close, 9:31 ET: **XLU 40.56 (+1.48%)** · SOXX 595.23 (+0.97%) · QQQ 761.58 (+0.71%) · SPY 778.63 (+0.49%) · IWM 284.09 (+0.25%) · XLRE 40.75 (+0.20%) · TLT 77.21 (+0.13%) · XBI 156.40 (+0.13%) · XLF 53.92 (+0.07%) · EEM 68.75 (+0.03%) · XOP 187.29 (−0.08%) · XLE 63.30 (−0.24%). Energy's pre-market deficit mostly closed at the open.
 
+**Tuesday 2026-10-06, 10:00 entry — no trade (range just completed).** Flat; A1 clear (0 of 3). 30-min ranges and RVOL at 10:00 (`RVOL · ORH/ORL · last · expansion`):
+- Step-1 group (≥1.0×): **XLU 1.57 · 40.92/40.41 · 40.67 · 0.91** · **XLRE 1.37 · 41.095/40.74 · 41.085 · 0.70** · **XLE 1.36 · 63.43/62.93 · 63.20 · 0.40**
+- Others: SPY 0.94 · 779.97/777.96 · XBI 0.82 · 157.47/154.08 (last 154.11, near its low) · QQQ 0.74 · 761.70/759.10 · IWM 0.74 · 284.64/283.16 · TLT 0.72 · 77.22/77.075 · XLF 0.67 · 54.17/53.905 · XOP 0.67 · 187.82/185.57 · SOXX 0.65 · 595.41/590.90 · EEM 0.64 · 68.75/68.525.
+- No confirmed break is possible until 10:10 (two closes outside the range). Watch: XLRE is sitting at its range high.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
