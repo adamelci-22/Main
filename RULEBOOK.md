@@ -649,6 +649,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:15 checkpoint (fired 15:16:56Z).** DRN 8.43 (below fill), XLRE 41.19. Stop confirmed, unfilled. No ratchet; stop $8.17.
 
+**11:20 checkpoint (fired 15:20:38Z).** DRN 8.415 (below fill; very thin tape), XLRE 41.165. Stop confirmed, unfilled. No ratchet; stop $8.17.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
