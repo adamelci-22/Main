@@ -634,6 +634,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:55 checkpoint (fired 14:55:27Z) — flat, no entry.** Bars through 10:50. Same four breaks, all still volume-failed (before 11:00). v3.119 momentum now: IWM bear 277.625 vs 277.605 ✗ · XLRE bear 40.735 vs 40.66 ✗ · XBI bull 152.04 vs 151.67 ✓ (score +0.18) · TLT bull 76.92 vs 76.84 ✓ (score +0.45). XLE 63.37, RVOL 0.86. Watch 11:00 (volume test off): TLT bull (TMF) would lead if it holds.
 
+**11:00 checkpoint (fired 15:01:07Z) — TMF entered.** Bars through 10:55. A1: 1 of 3 used (ERY) → second entry, 2nd fresh instrument (after it, C1 runs only on the XLE and TLT rows). Volume test off from 11:00 (v3.117); v3.119 momentum check applies.
+- **Candidates (top three for the selection log):** **TLT bull — selected**: closes above ORH 76.725 since 10:00; momentum 76.9625 > 76.875 ✓; RVOL 1.04, expansion 0.63, **score +0.38**; triggering bar 10:00 398,126 vs avg 543,954 (volume-**failed**, allowed after 11:00 — tracked per v3.117). · **XBI bull** — momentum 151.93 > 151.92 ✓, RVOL 1.12, score +0.18. · IWM bear (score +0.64) and XLRE bear fail momentum (277.56 vs 277.51; 40.75 vs 40.69); XLE RVOL 0.86, no fresh low.
+- **TMF profile** (31 sessions): median adverse 1.03% · stop_pct 2.50% · **stall 0.11%** · **min move 0.26%** (mfe_to_target 5.28 flag, informational). TMF 9:30–10:00 low **$24.52**.
+- **Sizing (C8):** ask $25.06 → risk $0.54/sh; 3% rule allows 110 sh, **cash-bound at 79 sh**. TLT 76.97 live at entry, still above ORH.
+- **Entry:** buy 79 TMF limit $25.07 → **filled 11:01:52 @ $25.06** ($1,979.74; order `6ac65ee0-9b08`). Stop distance 2.15%.
+- **Stop:** stop_market sell 79 @ **$24.52**, gfd, **confirmed** (order `6ac65ee7-0e0c`). Worst case ≈ −$42.66 (2.15%) before slippage.
+- B2: candidate = run_high × (1 − 0.22%); moves only when ≥ $0.0652 above the current stop. Entries today **2 of 3** (one re-entry left, on ERY or TMF only).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
