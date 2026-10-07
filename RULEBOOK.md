@@ -596,6 +596,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Wednesday 2026-10-07, 9:30 observation** (read-only). Flat. First prints vs Tuesday close, 9:31 ET: **SOXX 577.89 (−1.96%)** · **EEM 67.17 (−1.61%)** · IWM 278.32 (−1.07%) · TLT 76.46 (−1.06%) · XBI 149.59 (−0.87%) · XLF 53.59 (−0.78%) · QQQ 754.33 (−0.70%) · XLU 40.90 (−0.63%) · SPY 775.93 (−0.41%) · XLRE 40.98 (−0.29%) · **XLE 64.15 (+0.63%)** · **XOP 189.97 (+0.80%)**. Opened in line with pre-market: risk-off, energy alone green.
 
+**Wednesday 2026-10-07, 10:00 entry — no trade (range just completed).** Flat; A1 clear (0 of 3). 30-min ranges and RVOL at 10:00 (`RVOL · ORH/ORL · last · expansion`):
+- Step-1 group (≥1.0×): **XLU 1.52 · 41.09/40.855 · 40.965 · 0.39** · **XBI 1.51 · 151.30/148.64 · 150.72 · 0.59** · **TLT 1.41 · 76.725/76.43 · 76.705 · 0.34** (near its high) · **IWM 1.32 · 279.04/277.87 · 278.415 · 0.32** · **XLE 1.08 · 64.51/63.792 · 63.845 · 0.61** (near its low) · **XLRE 1.08 · 41.1463/40.7961 · 40.83 · 0.72** (near its low) · **QQQ 1.04 · 754.82/751.76 · 753.975 · 0.32**
+- Others: XLF 0.99 · 53.69/53.425 (last 53.45, near its low) · SPY 0.98 · 776.15/774.10 · EEM 0.93 · 67.205/66.892 · XOP 0.90 · 191.245/189.34 · SOXX 0.85 · 579.77/574.13.
+- No confirmed break possible until 10:10 (two closes outside the range).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
