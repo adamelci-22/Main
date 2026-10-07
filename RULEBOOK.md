@@ -603,6 +603,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Wednesday 2026-10-07, 10:05 checkpoint — no trade (one close outside at most).** Bars through the 10:00 close. Single closes outside the range (watch for 10:10 confirmation): **XLE** 63.68 < ORL 63.792 (bear; trigger-bar vol 202,666 vs prior-3 avg 176,357 → would pass) · **TLT** 76.735 > ORH 76.725 (bull; vol 398,126 vs avg 543,954 → would **fail** the volume test) · XOP 189.01 < ORL 189.34 (bear; RVOL 0.96, outside step 1). RVOL group: XLU 1.65 · XBI 1.38 · TLT 1.34 · IWM 1.25 · XLRE 1.06 · XLE 1.04 · XLF 1.03.
 
+**Wednesday 2026-10-07, 10:10 checkpoint (fired 14:11:30Z) — ERY entered.** Bars through the 10:05 close. Flat; A1 0 of 3 → first entry of the day (v3.119's momentum check does not apply).
+- **Candidates (top three for the selection log):** **XLE bear — selected**: closes 10:00 63.68 and 10:05 63.56 below ORL 63.792; triggering bar 10:00 202,666 vs prior-3 avg 176,357 → **pass**; RVOL 1.02, expansion 0.81, **score +0.19**. · **TLT bull** — closes 76.735/76.805 above ORH 76.725, but triggering bar 10:00 398,126 vs avg 543,954 → **volume fail** (before 11:00), skipped; RVOL 1.29, score +0.69. No other proxy had two closes outside (XLRE 40.75 and XLU 40.85 one close below their ORLs at 10:05).
+- **ERY profile** (31 sessions): median adverse 1.43% · stop_pct 2.50% · **stall 0.19%** · **min move 0.36%** (mfe_to_target 2.94 flag, informational). ERY 9:30–10:00 low **$8.62**.
+- **Sizing (C8):** ask $8.89 → risk $0.27/sh → floor(3% × $1,976.43 ÷ 0.27) = **219 sh** (cash cap 222). XLE 63.575 live at entry, still below ORL.
+- **Entry:** buy 219 ERY limit $8.90 → **filled 10:12:13 @ $8.8899** ($1,946.88, ~99% of the account; order `6ac6533d-e701`). Stop distance 3.04%.
+- **Stop:** stop_market sell 219 @ **$8.62**, gfd, **confirmed** (order `6ac65343-a7dd`). Worst case ≈ −$59.11 (2.99%) before slippage.
+- B2: candidate = run_high × (1 − 0.38%); moves only when ≥ $0.0320 above the current stop. Entries today **1 of 3**.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
