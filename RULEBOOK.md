@@ -646,6 +646,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:10 checkpoint (fired 15:11:33Z) — TMF hold, stop $25.02.** Stop `6ac66083` confirmed and unfilled. 1-min bars 11:08–11:10 high 25.077, so run_high is still **$25.078**; candidate 25.0228 → no move. Live 25.07; TLT 76.995, still above ORH 76.725.
 
+**11:15 checkpoint (fired 15:16:13Z) — TMF stopped out; C12 T+0, no entry.** Stop `6ac66083` **filled 11:13:05 @ $25.02** (79 sh, fee $0.04). TMF high 25.078 at 11:07, then a drift to 25.015. **Net −$3.20** (−0.160% position, −0.161% account, r = −0.08), logged to trades.csv. A loss under v3.87: **consecutive losses 0 → 1**, throttle off. **TMF excluded for the day** (v3.68). Day: ERY +8.73, TMF −3.20 = **+$5.53**; account ≈ $1,981.96.
+- **C12:** step 0 n/a (losing exit). A1: 2 distinct instruments used, entries 2 of 3 → the only eligible entry is an ERY re-entry on the XLE row (TMF excluded; TMV would be a third instrument).
+- **T+0 field (bars through 11:10):** XLE **RVOL 0.85** (< 1.0 ✗); still below ORL 63.792, but v3.119 momentum fails (63.35 vs 63.19 two bars earlier ✗); live 63.38, ERY 8.94 → **no entry**.
+- **T+10:** elapsed 3.1 min since the fill → ad hoc trigger armed for **11:23:05** (`trig_011RuXxe3XRg6ngxMzpY1eJD`). Then resume the grid at 11:25.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
