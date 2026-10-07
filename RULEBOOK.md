@@ -628,6 +628,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Step 1, T+0 field re-run (bars through 10:40):** RVOL group IWM 1.18 · TLT 1.10 · XBI 1.14 · XLRE 1.06 · XLU 1.50. Breaks: IWM bear (trigger 10:25, 96,190 vs 129,888), TLT bull (trigger 10:00, fail), XBI bull (trigger 10:35, 39,438 vs 63,426), XLRE bear (trigger 10:05, 57,869 vs 72,678) — **all fail the volume test** (before 11:00). **No entry.**
 - **T+10:** fill 10:42:29 → ad hoc trigger armed for **10:52:30** (`trig_01WQ7UZc5zkEitCJVVqhZBX7`).
 
+**10:50 checkpoint (fired 14:51:00Z) — flat, no entry.** Bars through 10:45. Breaks outside the range: IWM bear (score +0.66), TLT bull (+0.47), XBI bull (+0.29), XLRE bear (−0.02) — all still fail the volume test (before 11:00). v3.119 momentum (last close vs two bars earlier): IWM 277.51 < 277.81 ✓ · XBI 151.92 > 151.45 ✓ · XLRE 40.69 < 40.7195 ✓ · TLT 76.875 < 76.90 ✗. XLE RVOL 0.89, no fresh low. Watch 11:00: the volume test drops, so IWM bear (TZA) would lead if its breakout and momentum hold.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
