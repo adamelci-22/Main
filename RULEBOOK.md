@@ -677,7 +677,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Declined:** the TLT bull break at 10:10 (score +0.69) failed the volume test before 11:00; it was taken at 11:00 once the test dropped and faded within 12 minutes. From 10:45 to 11:55, IWM, XBI and XLRE breaks failed the volume test (before 11:00) or v3.119 momentum. After 11:13 the only eligible entry was an ERY re-entry, and XLE stayed at RVOL 0.80–0.85 (< 1.0) all session.
 - **Selection log:** 2 rows appended. ERY/XLE — no runner-up; a plain XLE hold to 12:30 would have made +1.31% leveraged vs the trade's +0.45% (XLE kept sliding after the stop). TMF/TLT — selected −0.35% leveraged vs runner XBI −0.04% → selected_was_best **no** (−0.31).
 - **Ops:** GitHub push 500s from 11:05 to 11:16 (all commits pushed once it recovered). Early shutdown at 12:00 (12:05–12:25 deleted).
-- **Arming:** Thursday 2026-10-08's 34-slot chain created at 12:30 (see the hygiene line below).
+- **Arming:** Thursday 2026-10-08's chain armed, **34 of 34** triggers verified via list_triggers (13:00Z–00:00Z, 34 distinct times). Four batches because of the rate limit. Also enabled: tonight's 8:00pm backup and the bimonthly reset reminder.
 
 ## E6. Known issues — backlog, not yet fixed
 
