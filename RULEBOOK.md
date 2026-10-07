@@ -661,7 +661,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:35 checkpoint (fired 15:35:30Z) — flat, no entry.** Bars through 11:30: XLE momentum ✓ (63.135 < 63.21), **RVOL 0.83** ✗. New day low 63.105, but RVOL still blocks the ERY re-entry → no entry.
 
-**11:40 checkpoint (fired 15:40:47Z) — flat, no entry.** Bars through 11:35: XLE momentum ✗ (63.19 vs 63.175 two bars earlier), **RVOL 0.83** ✗ → no ERY re-entry.
+**11:40 checkpoint (fired 15:40:47Z) — flat, no entry.** Bars through 11:35: XLE momentum ✗ (63.19 vs 63.175 two bars earlier), **RVOL 0.82** ✗ → no ERY re-entry.
 
 ## E6. Known issues — backlog, not yet fixed
 
