@@ -272,6 +272,8 @@ Read on the proxy's own 5-minute bars. A break whose triggering bar fails the te
 
 **From the 11:00 checkpoint onward the volume test is not applied (v3.117, direct governor instruction, 2026-10-06).** At 11:00 and every later entry checkpoint (through 11:55), a break counts if it meets the two-close confirmation alone — including a run whose triggering bar failed the test earlier in the morning (today's XLE: triggering bar 10:10 failed, still outside its range at 11:00). Before 11:00 the test applies exactly as above. Still report the triggering bar's volume against its 3-bar average for every break taken after 11:00, so D4 can compare these entries with volume-passing ones.
 
+**Second and third entries also need the move still going (v3.119, direct governor instruction, 2026-10-06).** Once any position has been entered today, every later entry — a fresh instrument or a re-entry, including C12's T+0/T+10 runs — must meet, on its proxy's 5-minute closes, both: (1) the usual two consecutive closes outside the 30-minute range, and (2) **the latest close beyond the first of the last three closes** (the close two bars earlier): higher for a bullish break, lower for a bearish one. Equal = fails. This keeps the second and third entries out of breakouts that are still outside the range but fading back toward it. The day's first entry is unchanged. A re-entry after a win still needs C12's fresh extreme (v3.86) as well. Report the three closes at entry.
+
 **Step 3 — rank by `selection_score` (v3.109, direct governor instruction, 2026-10-05; supersedes v3.98's room-left rank, kept below for history).** Zero proxies clearing steps 1–2 → correct no-trade. Exactly one → enter it. **Two or more, at any checkpoint → the highest score wins:**
 
 ```
@@ -699,6 +701,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.119** — **Momentum check on second and third entries.** Direct governor instruction, 2026-10-06. Full text: C1 step 2. After the day's first entry, a candidate needs two closes outside the range AND its latest 5-minute close beyond the close two bars earlier (bull: higher; bear: lower). Prompted by the governor's question about a proxy still outside its range but falling for two bars at a second-entry check — the old rule would have entered it. 1-minute replay, 9/1–10/6, 25 days, 12 proxies, avg over 1–3 min latency: current +0.105%/day; **this rule +0.190%/day** (+0.085 vs current, P(better) 80%; later trades 56% win vs 51%); 1 close + the same check +0.111%; the strict version (each of the last three closes beyond the one before) −0.124%/day (P 5%) — chasing a three-bar burst catches its top. Same 25 days used for many tests: promising, not proven.
 
 **v3.118** — **Latest-breakout ranking before 10:30.** Direct governor instruction, 2026-10-06. Full text: C1 step 3. At the 10:00–10:25 checkpoints the freshest breakout (most recent triggering bar) is entered, ties to `selection_score`; from 10:30 the `selection_score` rank is unchanged. Evidence (1-minute replay, 9/1–10/6, 25 days, 12 proxies, averaged over 1–3 min entry latency): 15 rankings tested — `selection_score` +0.105%/day vs random picks −0.063%; latest breakout all day +0.113%; **latest before 10:30 then score +0.142%/day** (+0.037 vs current, P(better) 88%), but it changed the pick on only 4 of 25 days and the cutoff is sensitive (10:45/11:00 +0.119%, 11:15 +0.103%); the reverse order lost at every cutoff. Adopted knowingly on thin evidence; the selection log's rule column tracks it.
 
