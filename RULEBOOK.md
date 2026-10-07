@@ -621,6 +621,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:35 checkpoint (fired 14:36:10Z).** ERY 8.955, XLE 63.30 (falling further). run_high **8.9399** (10:35 bar) → candidate 8.9059; move $0.046 ≥ $0.032 → **stop ratcheted $8.86 → $8.90** (old cancelled, new stop_market 219 @ 8.90 **confirmed**, order `6ac658f3-4887`). Locked ≈ +$2.21 (+0.11%) before slippage.
 
+**10:40 checkpoint (fired 14:41:07Z).** ERY 8.955, XLE 63.31. run_high **8.9677** (10:39 bar) → candidate 8.9336; move $0.0336 ≥ $0.032 → **stop ratcheted $8.90 → $8.93** (tick-rounded down; old cancelled, new stop_market 219 @ 8.93 **confirmed**, order `6ac65a13-27fa`). Locked ≈ +$8.78 (+0.45%) before slippage.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
