@@ -671,6 +671,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:00 checkpoint (fired 16:00:22Z) — D1 early shutdown.** Flat: no positions, no confirmed orders since 13:00Z. Deleted the 12:05, 12:10, 12:15, 12:20 and 12:25 triggers (all unfired). Kept the 12:30 close/arming slot (`trig_01GK5rKivxVthxt5YAw7mvQa`) and the 8:00pm backup (`trig_01NMcsFAX2QjRgF2ovTd5izr`).
 
+**12:30 close (fired 16:30:15Z) — D3 end-of-day report, Wednesday 2026-10-07.** Flat since 11:13; no close mechanics needed. Account **$1,981.96** (all cash), from ≈ $1,976.43 at the open → **+$5.53 (+0.28%)**.
+- **Trades (2):** ERY 219 sh, 10:12 → 10:42, $8.8899 → $8.93, **+$8.73** (+0.451% position, r +0.15) · TMF 79 sh, 11:02 → 11:13, $25.06 → $25.02, **−$3.20** (−0.160% position, r −0.08). Slippage ≤ 1c both sides on both trades.
+- **Streak:** consecutive losses **1** (TMF); throttle off (starts at 3), lockout at 5.
+- **Declined:** the TLT bull break at 10:10 (score +0.69) failed the volume test before 11:00; it was taken at 11:00 once the test dropped and faded within 12 minutes. From 10:45 to 11:55, IWM, XBI and XLRE breaks failed the volume test (before 11:00) or v3.119 momentum. After 11:13 the only eligible entry was an ERY re-entry, and XLE stayed at RVOL 0.80–0.85 (< 1.0) all session.
+- **Selection log:** 2 rows appended. ERY/XLE — no runner-up; a plain XLE hold to 12:30 would have made +1.31% leveraged vs the trade's +0.45% (XLE kept sliding after the stop). TMF/TLT — selected −0.35% leveraged vs runner XBI −0.04% → selected_was_best **no** (−0.31).
+- **Ops:** GitHub push 500s from 11:05 to 11:16 (all commits pushed once it recovered). Early shutdown at 12:00 (12:05–12:25 deleted).
+- **Arming:** Thursday 2026-10-08's 34-slot chain created at 12:30 (see the hygiene line below).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
