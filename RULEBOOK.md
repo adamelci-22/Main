@@ -630,6 +630,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:50 checkpoint (fired 14:51:00Z) — flat, no entry.** Bars through 10:45. Breaks outside the range: IWM bear (score +0.66), TLT bull (+0.47), XBI bull (+0.29), XLRE bear (−0.02) — all still fail the volume test (before 11:00). v3.119 momentum (last close vs two bars earlier): IWM 277.51 < 277.81 ✓ · XBI 151.92 > 151.45 ✓ · XLRE 40.69 < 40.7195 ✓ · TLT 76.875 < 76.90 ✗. XLE RVOL 0.89, no fresh low. Watch 11:00: the volume test drops, so IWM bear (TZA) would lead if its breakout and momentum hold.
 
+**C12 T+10 (fired 14:53:12Z) — no entry.** No new 5-min bar since 10:50 (bars through 10:45), so the field result is unchanged: every break still fails the volume test before 11:00. Step 0: XLE live 63.40, no fresh low below 63.2421. Live: IWM 277.60 · XBI 152.29 · XLRE 40.735. Resume at the 10:55 grid slot.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
