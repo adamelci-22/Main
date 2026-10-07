@@ -623,6 +623,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:40 checkpoint (fired 14:41:07Z).** ERY 8.955, XLE 63.31. run_high **8.9677** (10:39 bar) → candidate 8.9336; move $0.0336 ≥ $0.032 → **stop ratcheted $8.90 → $8.93** (tick-rounded down; old cancelled, new stop_market 219 @ 8.93 **confirmed**, order `6ac65a13-27fa`). Locked ≈ +$8.78 (+0.45%) before slippage.
 
+**10:45 checkpoint (fired 14:45:34Z) — ERY stopped out, +$8.73.** Stop fired **10:42:29 @ $8.93** (fee $0.05): +0.451% position, +0.442% account, 30 min, r = 0.15. Win → consecutive losses **1 → 0**. Account ≈ **$1,985.16**. Entries today **1 of 3**.
+- **C12 step 0 (profitable exit):** XLE RVOL now **0.89** (< 1.0, fails step 1) and `signal_extreme` (lowest XLE 5-min low 10:10–10:40) = 63.2421 vs live 63.38 → **no re-entry shortcut**.
+- **Step 1, T+0 field re-run (bars through 10:40):** RVOL group IWM 1.18 · TLT 1.10 · XBI 1.14 · XLRE 1.06 · XLU 1.50. Breaks: IWM bear (trigger 10:25, 96,190 vs 129,888), TLT bull (trigger 10:00, fail), XBI bull (trigger 10:35, 39,438 vs 63,426), XLRE bear (trigger 10:05, 57,869 vs 72,678) — **all fail the volume test** (before 11:00). **No entry.**
+- **T+10:** fill 10:42:29 → ad hoc trigger armed for **10:52:30** (`trig_01WQ7UZc5zkEitCJVVqhZBX7`).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
