@@ -667,6 +667,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:50 checkpoint (fired 15:50:29Z) — flat, no entry.** Bars through 11:45: XLE momentum ✗ (63.195 vs 63.19), **RVOL 0.80** ✗ → no ERY re-entry. One entry slot left (11:55).
 
+**11:55 checkpoint (fired 15:55:44Z) — flat, no entry; entry window closed.** Bars through 11:50: XLE momentum ✗ (63.14, equal to 63.14 two bars earlier, so not strictly lower), **RVOL 0.82** ✗ → no ERY re-entry. Last entry-eligible slot (C9): the day's entries end at 2 of 3. D1 early shutdown is due at the 12:00 slot (flat).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
