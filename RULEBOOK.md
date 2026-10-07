@@ -653,6 +653,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:20 checkpoint (fired 15:20:55Z) — flat, no entry.** Positions empty. Only the XLE row (ERY re-entry) is eligible. Bars through 11:15: XLE **RVOL 0.84** ✗; momentum 63.355 vs 63.265 two bars earlier ✗ (rising, not a bear continuation). No entry. T+10 at 11:23:05 is still armed.
 
+**C12 T+10 (fired 15:23:28Z) — no entry.** No new completed 5-min bar since 11:20 (bars through 11:15), so the result is unchanged: XLE RVOL 0.84 ✗, momentum ✗. Live XLE 63.26, ERY 8.97. Resume at the 11:25 grid slot.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
