@@ -643,6 +643,15 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:10 checkpoint (fired 15:11:29Z) — LABD hold, stop $8.62.** Stop `6ac7b026` confirmed and unfilled. run_high **$8.7299** (11:06 bar); candidate 8.6391, only $0.019 above $8.62 → no move. Live 8.655 (3.5c above the stop); XBI 146.75, bouncing.
 
+**11:15 checkpoint (fired 15:17:29Z) — LABD re-entry stopped out; DRV entered (C12 T+0).** Stop `6ac7b026` **filled 11:14:00 @ $8.6218** (153 sh, fee $0.03). **Net −$0.93** (−0.068% position, r = −0.02), logged to trades.csv. A loss under v3.87: **consecutive losses 0 → 1**, throttle off. **LABD excluded for the day** (losing exit; also at its 2-entry cap). Day so far **+$10.91**; account ≈ $1,992.87.
+- **A1:** entries 2 of 3; the re-entry is used, so the third entry must be a fresh instrument (the 2nd distinct). Volume test off from 11:00 (v3.117); v3.119 momentum applies.
+- **T+0 field (bars through 11:10) — candidates (top three for the selection log):** **XLRE bear — selected**: closes 11:05 40.35 and 11:10 40.33 below ORL 40.38; momentum 40.33 < 40.36 ✓; RVOL 1.25, expansion 0.53, **score +0.59**; trigger bar 10:45 26,189 vs avg 26,091 (passes anyway). · **IWM bear** — below ORL 275.68 since 10:45 (274.73 last); momentum 274.73 < 275.19 ✓; RVOL 1.01, **score +0.42** (runner-up). · XLE bull (65.05, score +0.32) fails momentum (65.05 vs 65.185); XBI bear excluded (LABD lost); EEM one close below ORL 66.31 (66.27) only.
+- **DRV profile** (31 sessions): median adverse 0.85% · stop_pct 2.50% · **stall 0.32%** · **min move 0.21%** (mfe_to_target 1.76). DRV 9:30–10:00 low **$23.94**. Thin tape (5-min volume ~100–8,000 sh at the open).
+- **Sizing (C8):** ask $24.38 → risk $0.44/sh; 3% rule allows 135 sh, **cash-bound at 81 sh**.
+- **Entry:** buy 81 DRV limit $24.39 → **filled 11:18:48 @ $24.38** ($1,974.78; order `6ac7b458-3608`). Stop distance 1.80%.
+- **Stop:** stop_market sell 81 @ **$23.94**, gfd, **confirmed** (order `6ac7b45f-66e9`). Worst case ≈ −$35.64 (1.79% of the account) before slippage.
+- B2: candidate = run_high × (1 − 0.64%); moves only when ≥ $0.0512 above the current stop. Entries today **3 of 3** — no further entries; D1 early shutdown applies once DRV closes. (C12's T+10 is moot: a position is open.)
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
