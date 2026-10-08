@@ -603,6 +603,14 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Thursday 2026-10-08, 10:05 checkpoint — no trade (one close outside at most).** Bars through the 10:00 close. Single close outside the range (watch for 10:10 confirmation): **XBI** 147.225 < ORL 147.62 (bear → LABD; trigger-bar vol 170,223 vs prior-3 avg 65,101 → would pass; RVOL 1.24, expansion 0.55, score +0.55). Everything else is inside its range. RVOL group: EEM 1.51 · XLE 1.40 · XBI 1.24 · XOP 1.10 · SOXX 1.01.
 
+**Thursday 2026-10-08, 10:10 checkpoint (fired 14:11:18Z) — LABD entered.** Bars through the 10:05 close. Flat; A1 0 of 3 → first entry of the day (v3.119's momentum check does not apply).
+- **Candidates (top three for the selection log):** **XBI bear — selected**: closes 10:00 147.225 and 10:05 147.115 below ORL 147.62; triggering bar 10:00 170,223 vs prior-3 avg 65,101 → **pass**; RVOL 1.31, expansion 0.58, **score +0.55**. No runner-up: no other proxy had even one close outside its range (RVOL group EEM 1.53 · XLE 1.42 · XBI 1.31 · XLRE 1.05 · XOP 1.03 · XLF 1.03 · SOXX 1.01, all inside).
+- **LABD profile** (31 sessions): median adverse 2.56% · stop_pct 3.85% · **stall 0.52%** · **min move 0.64%** (mfe_to_target 1.67). LABD 9:30–10:00 low **$8.24**.
+- **Sizing (C8):** ask $8.53 at quote → 205 sh; ask moved to $8.54 at review → risk $0.30/sh → floor(3% × $1,981.96 ÷ 0.30) = **198 sh** (cash cap 232). XBI 147.55 live at entry, still below ORL.
+- **Entry:** buy 198 LABD limit $8.54 → **filled 10:11:59 @ $8.54** ($1,690.92, ~85% of the account; order `6ac7a4af-7ecf`). Stop distance 3.51%.
+- **Stop:** stop_market sell 198 @ **$8.24**, gfd, **confirmed** (order `6ac7a4b6-bc0b`). Worst case ≈ −$59.40 (3.00%) before slippage.
+- B2: candidate = run_high × (1 − 1.04%); moves only when ≥ $0.0547 above the current stop. Entries today **1 of 3**.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
