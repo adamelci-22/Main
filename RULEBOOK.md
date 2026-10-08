@@ -587,97 +587,12 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-**Wednesday 2026-10-07, 9:00 research.** Tuesday's session (LABD +$2.09 stop at 10:50; DRN −$7.97 stop at 11:53; day −$5.89, −0.30%) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Tuesday's E5, last commit `2b18f33`); not restated here. Rules in force from today: v3.116 (no stop-distance cap), v3.117 (volume test only before 11:00), v3.119 (second/third entries need the latest close beyond the close two bars earlier); v3.118 reverted.
+**Thursday 2026-10-08, 9:00 research.** Wednesday's session (ERY +$8.73, stopped at 10:42; TMF −$3.20, stopped at 11:13; day +$5.53, +0.28%) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Wednesday's E5); not restated here. No rule changes since v3.119.
 
-- **State (A3):** flat · no open orders · total_value = cash = buying power **$1,976.43** · pending deposits $0. Trade approvals off.
-- **A1:** consecutive losses **1** (DRN, 10/6) → throttle off (0.5% applies at 3–4), full 3% budget ≈ **$59.29**. Entries today 0 of 3. No lockouts carried over (v3.68 is same-day only).
-- **Headlines:** search returned nothing dated today — no usable headline signal; proceeding on price action.
-- **Pre-market, twelve proxies (last extended-hours print vs Tuesday close, ~9:01 ET):** **SOXX 578.31 (−1.89%)** · **EEM 67.14 (−1.66%, 8:43 print)** · TLT 76.57 (−0.92%) · IWM 278.95 (−0.85%) · XBI 149.76 (−0.76%) · QQQ 754.30 (−0.71%) · XLF 53.72 (−0.54%) · XLU 40.98 (−0.44%) · SPY 776.09 (−0.39%) · XLRE 41.05 (−0.12%) · **XOP 189.50 (+0.55%)** · **XLE 64.18 (+0.67%)**. Broad risk-off gap led by semis and EM, bonds weaker (yields up); energy the only green group.
-
-**Wednesday 2026-10-07, 9:30 observation** (read-only). Flat. First prints vs Tuesday close, 9:31 ET: **SOXX 577.89 (−1.96%)** · **EEM 67.17 (−1.61%)** · IWM 278.32 (−1.07%) · TLT 76.46 (−1.06%) · XBI 149.59 (−0.87%) · XLF 53.59 (−0.78%) · QQQ 754.33 (−0.70%) · XLU 40.90 (−0.63%) · SPY 775.93 (−0.41%) · XLRE 40.98 (−0.29%) · **XLE 64.15 (+0.63%)** · **XOP 189.97 (+0.80%)**. Opened in line with pre-market: risk-off, energy alone green.
-
-**Wednesday 2026-10-07, 10:00 entry — no trade (range just completed).** Flat; A1 clear (0 of 3). 30-min ranges and RVOL at 10:00 (`RVOL · ORH/ORL · last · expansion`):
-- Step-1 group (≥1.0×): **XLU 1.52 · 41.09/40.855 · 40.965 · 0.39** · **XBI 1.51 · 151.30/148.64 · 150.72 · 0.59** · **TLT 1.41 · 76.725/76.43 · 76.705 · 0.34** (near its high) · **IWM 1.32 · 279.04/277.87 · 278.415 · 0.32** · **XLE 1.08 · 64.51/63.792 · 63.845 · 0.61** (near its low) · **XLRE 1.08 · 41.1463/40.7961 · 40.83 · 0.72** (near its low) · **QQQ 1.04 · 754.82/751.76 · 753.975 · 0.32**
-- Others: XLF 0.99 · 53.69/53.425 (last 53.45, near its low) · SPY 0.98 · 776.15/774.10 · EEM 0.93 · 67.205/66.892 · XOP 0.90 · 191.245/189.34 · SOXX 0.85 · 579.77/574.13.
-- No confirmed break possible until 10:10 (two closes outside the range).
-
-**Wednesday 2026-10-07, 10:05 checkpoint — no trade (one close outside at most).** Bars through the 10:00 close. Single closes outside the range (watch for 10:10 confirmation): **XLE** 63.68 < ORL 63.792 (bear; trigger-bar vol 202,666 vs prior-3 avg 176,357 → would pass) · **TLT** 76.735 > ORH 76.725 (bull; vol 398,126 vs avg 543,954 → would **fail** the volume test) · XOP 189.01 < ORL 189.34 (bear; RVOL 0.96, outside step 1). RVOL group: XLU 1.65 · XBI 1.38 · TLT 1.34 · IWM 1.25 · XLRE 1.06 · XLE 1.04 · XLF 1.03.
-
-**Wednesday 2026-10-07, 10:10 checkpoint (fired 14:11:30Z) — ERY entered.** Bars through the 10:05 close. Flat; A1 0 of 3 → first entry of the day (v3.119's momentum check does not apply).
-- **Candidates (top three for the selection log):** **XLE bear — selected**: closes 10:00 63.68 and 10:05 63.56 below ORL 63.792; triggering bar 10:00 202,666 vs prior-3 avg 176,357 → **pass**; RVOL 1.02, expansion 0.81, **score +0.19**. · **TLT bull** — closes 76.735/76.805 above ORH 76.725, but triggering bar 10:00 398,126 vs avg 543,954 → **volume fail** (before 11:00), skipped; RVOL 1.29, score +0.69. No other proxy had two closes outside (XLRE 40.75 and XLU 40.85 one close below their ORLs at 10:05).
-- **ERY profile** (31 sessions): median adverse 1.43% · stop_pct 2.50% · **stall 0.19%** · **min move 0.36%** (mfe_to_target 2.94 flag, informational). ERY 9:30–10:00 low **$8.62**.
-- **Sizing (C8):** ask $8.89 → risk $0.27/sh → floor(3% × $1,976.43 ÷ 0.27) = **219 sh** (cash cap 222). XLE 63.575 live at entry, still below ORL.
-- **Entry:** buy 219 ERY limit $8.90 → **filled 10:12:13 @ $8.8899** ($1,946.88, ~99% of the account; order `6ac6533d-e701`). Stop distance 3.04%.
-- **Stop:** stop_market sell 219 @ **$8.62**, gfd, **confirmed** (order `6ac65343-a7dd`). Worst case ≈ −$59.11 (2.99%) before slippage.
-- B2: candidate = run_high × (1 − 0.38%); moves only when ≥ $0.0320 above the current stop. Entries today **1 of 3**.
-
-**10:15 checkpoint (fired 14:18:42Z, ~3.7 min late).** ERY 8.855 (below the 8.8899 fill), XLE 63.66 (still below ORL 63.792). Stop confirmed, unfilled. run_high 8.8923 (10:14 bar); live below fill → no ratchet; stop $8.62.
-
-**10:20 checkpoint (fired 14:21:11Z).** ERY 8.8501 (below fill), XLE 63.685 (below ORL). Stop confirmed, unfilled. No ratchet; stop $8.62.
-
-**10:25 checkpoint (fired 14:25:43Z).** ERY 8.88 (still just below the 8.8899 fill), XLE 63.565. Stop confirmed, unfilled. No ratchet; stop $8.62.
-
-**10:30 checkpoint (fired 14:30:45Z).** ERY 8.8902 (just above the 8.8899 fill), XLE 63.525. run_high **8.90** (10:26 bar) → candidate 8.8662 → **stop ratcheted $8.62 → $8.86** (old cancelled, new stop_market 219 @ 8.86 **confirmed**, order `6ac657a6-b1fd`). Worst case ≈ −$6.55 (−0.33%) before slippage.
-
-**10:35 checkpoint (fired 14:36:10Z).** ERY 8.955, XLE 63.30 (falling further). run_high **8.9399** (10:35 bar) → candidate 8.9059; move $0.046 ≥ $0.032 → **stop ratcheted $8.86 → $8.90** (old cancelled, new stop_market 219 @ 8.90 **confirmed**, order `6ac658f3-4887`). Locked ≈ +$2.21 (+0.11%) before slippage.
-
-**10:40 checkpoint (fired 14:41:07Z).** ERY 8.955, XLE 63.31. run_high **8.9677** (10:39 bar) → candidate 8.9336; move $0.0336 ≥ $0.032 → **stop ratcheted $8.90 → $8.93** (tick-rounded down; old cancelled, new stop_market 219 @ 8.93 **confirmed**, order `6ac65a13-27fa`). Locked ≈ +$8.78 (+0.45%) before slippage.
-
-**10:45 checkpoint (fired 14:45:34Z) — ERY stopped out, +$8.73.** Stop fired **10:42:29 @ $8.93** (fee $0.05): +0.451% position, +0.442% account, 30 min, r = 0.15. Win → consecutive losses **1 → 0**. Account ≈ **$1,985.16**. Entries today **1 of 3**.
-- **C12 step 0 (profitable exit):** XLE RVOL now **0.89** (< 1.0, fails step 1) and `signal_extreme` (lowest XLE 5-min low 10:10–10:40) = 63.2421 vs live 63.38 → **no re-entry shortcut**.
-- **Step 1, T+0 field re-run (bars through 10:40):** RVOL group IWM 1.18 · TLT 1.10 · XBI 1.14 · XLRE 1.06 · XLU 1.50. Breaks: IWM bear (trigger 10:25, 96,190 vs 129,888), TLT bull (trigger 10:00, fail), XBI bull (trigger 10:35, 39,438 vs 63,426), XLRE bear (trigger 10:05, 57,869 vs 72,678) — **all fail the volume test** (before 11:00). **No entry.**
-- **T+10:** fill 10:42:29 → ad hoc trigger armed for **10:52:30** (`trig_01WQ7UZc5zkEitCJVVqhZBX7`).
-
-**10:50 checkpoint (fired 14:51:00Z) — flat, no entry.** Bars through 10:45. Breaks outside the range: IWM bear (score +0.66), TLT bull (+0.47), XBI bull (+0.29), XLRE bear (−0.02) — all still fail the volume test (before 11:00). v3.119 momentum (last close vs two bars earlier): IWM 277.51 < 277.81 ✓ · XBI 151.92 > 151.45 ✓ · XLRE 40.69 < 40.7195 ✓ · TLT 76.875 < 76.90 ✗. XLE RVOL 0.89, no fresh low. Watch 11:00: the volume test drops, so IWM bear (TZA) would lead if its breakout and momentum hold.
-
-**C12 T+10 (fired 14:53:12Z) — no entry.** No new 5-min bar since 10:50 (bars through 10:45), so the field result is unchanged: every break still fails the volume test before 11:00. Step 0: XLE live 63.40, no fresh low below 63.2421. Live: IWM 277.60 · XBI 152.29 · XLRE 40.735. Resume at the 10:55 grid slot.
-
-**10:55 checkpoint (fired 14:55:27Z) — flat, no entry.** Bars through 10:50. Same four breaks, all still volume-failed (before 11:00). v3.119 momentum now: IWM bear 277.625 vs 277.605 ✗ · XLRE bear 40.735 vs 40.66 ✗ · XBI bull 152.04 vs 151.67 ✓ (score +0.18) · TLT bull 76.92 vs 76.84 ✓ (score +0.45). XLE 63.37, RVOL 0.86. Watch 11:00 (volume test off): TLT bull (TMF) would lead if it holds.
-
-**11:00 checkpoint (fired 15:01:07Z) — TMF entered.** Bars through 10:55. A1: 1 of 3 used (ERY) → second entry, 2nd fresh instrument (after it, C1 runs only on the XLE and TLT rows). Volume test off from 11:00 (v3.117); v3.119 momentum check applies.
-- **Candidates (top three for the selection log):** **TLT bull — selected**: closes above ORH 76.725 since 10:00; momentum 76.9625 > 76.875 ✓; RVOL 1.04, expansion 0.63, **score +0.38**; triggering bar 10:00 398,126 vs avg 543,954 (volume-**failed**, allowed after 11:00 — tracked per v3.117). · **XBI bull** — momentum 151.93 > 151.92 ✓, RVOL 1.12, score +0.18. · IWM bear (score +0.64) and XLRE bear fail momentum (277.56 vs 277.51; 40.75 vs 40.69); XLE RVOL 0.86, no fresh low.
-- **TMF profile** (31 sessions): median adverse 1.03% · stop_pct 2.50% · **stall 0.11%** · **min move 0.26%** (mfe_to_target 5.28 flag, informational). TMF 9:30–10:00 low **$24.52**.
-- **Sizing (C8):** ask $25.06 → risk $0.54/sh; 3% rule allows 110 sh, **cash-bound at 79 sh**. TLT 76.97 live at entry, still above ORH.
-- **Entry:** buy 79 TMF limit $25.07 → **filled 11:01:52 @ $25.06** ($1,979.74; order `6ac65ee0-9b08`). Stop distance 2.15%.
-- **Stop:** stop_market sell 79 @ **$24.52**, gfd, **confirmed** (order `6ac65ee7-0e0c`). Worst case ≈ −$42.66 (2.15%) before slippage.
-- B2: candidate = run_high × (1 − 0.22%); moves only when ≥ $0.0652 above the current stop. Entries today **2 of 3** (one re-entry left, on ERY or TMF only).
-
-**11:05 checkpoint (fired 15:07:23Z) — TMF stop ratcheted.** Stop `6ac65ee7` was still confirmed and unfilled. Completed 1-min bars 11:01–11:07 → run_high **$25.078**; live 25.0758 (above the 25.06 fill); TLT 76.995. Candidate 25.078 × 0.9978 = 25.0228, which is $0.50 above the current stop (≥ $0.0652) → cancelled `6ac65ee7` (cancelled ✓) and placed stop_market sell 79 @ **$25.02**, gfd, **confirmed** (order `6ac66083-e2fd`). Worst case now ≈ −$3.16 (−0.16%) before slippage.
-
-**11:10 checkpoint (fired 15:11:33Z) — TMF hold, stop $25.02.** Stop `6ac66083` confirmed and unfilled. 1-min bars 11:08–11:10 high 25.077, so run_high is still **$25.078**; candidate 25.0228 → no move. Live 25.07; TLT 76.995, still above ORH 76.725.
-
-**11:15 checkpoint (fired 15:16:13Z) — TMF stopped out; C12 T+0, no entry.** Stop `6ac66083` **filled 11:13:05 @ $25.02** (79 sh, fee $0.04). TMF high 25.078 at 11:07, then a drift to 25.015. **Net −$3.20** (−0.160% position, −0.161% account, r = −0.08), logged to trades.csv. A loss under v3.87: **consecutive losses 0 → 1**, throttle off. **TMF excluded for the day** (v3.68). Day: ERY +8.73, TMF −3.20 = **+$5.53**; account ≈ $1,981.96.
-- **C12:** step 0 n/a (losing exit). A1: 2 distinct instruments used, entries 2 of 3 → the only eligible entry is an ERY re-entry on the XLE row (TMF excluded; TMV would be a third instrument).
-- **T+0 field (bars through 11:10):** XLE **RVOL 0.85** (< 1.0 ✗); still below ORL 63.792, but v3.119 momentum fails (63.35 vs 63.19 two bars earlier ✗); live 63.38, ERY 8.94 → **no entry**.
-- **T+10:** elapsed 3.1 min since the fill → ad hoc trigger armed for **11:23:05** (`trig_011RuXxe3XRg6ngxMzpY1eJD`). Then resume the grid at 11:25.
-
-**11:20 checkpoint (fired 15:20:55Z) — flat, no entry.** Positions empty. Only the XLE row (ERY re-entry) is eligible. Bars through 11:15: XLE **RVOL 0.84** ✗; momentum 63.355 vs 63.265 two bars earlier ✗ (rising, not a bear continuation). No entry. T+10 at 11:23:05 is still armed.
-
-**C12 T+10 (fired 15:23:28Z) — no entry.** No new completed 5-min bar since 11:20 (bars through 11:15), so the result is unchanged: XLE RVOL 0.84 ✗, momentum ✗. Live XLE 63.26, ERY 8.97. Resume at the 11:25 grid slot.
-
-**11:25 checkpoint (fired 15:26:05Z) — flat, no entry.** Only the XLE row (ERY re-entry) is eligible. Bars through 11:20: momentum now passes (63.21 < 63.35 ✓), but XLE **RVOL 0.83** ✗ (< 1.0) → no entry.
-
-**11:30 checkpoint (fired 15:30:49Z) — flat, no entry.** Bars through 11:25: XLE momentum ✓ (63.175 < 63.355), **RVOL 0.82** ✗ (falling every bar since 11:00). Only the XLE row is eligible → no entry.
-
-**11:35 checkpoint (fired 15:35:30Z) — flat, no entry.** Bars through 11:30: XLE momentum ✓ (63.135 < 63.21), **RVOL 0.83** ✗. New day low 63.105, but RVOL still blocks the ERY re-entry → no entry.
-
-**11:40 checkpoint (fired 15:40:47Z) — flat, no entry.** Bars through 11:35: XLE momentum ✗ (63.19 vs 63.175 two bars earlier), **RVOL 0.82** ✗ → no ERY re-entry.
-
-**11:45 checkpoint (fired 15:46:24Z) — flat, no entry.** Positions empty. Bars through 11:40: XLE momentum ✗ (63.14 vs 63.135), **RVOL 0.82** ✗ (the 11:40 bar traded only 31,857) → no ERY re-entry.
-
-**11:50 checkpoint (fired 15:50:29Z) — flat, no entry.** Bars through 11:45: XLE momentum ✗ (63.195 vs 63.19), **RVOL 0.80** ✗ → no ERY re-entry. One entry slot left (11:55).
-
-**11:55 checkpoint (fired 15:55:44Z) — flat, no entry; entry window closed.** Bars through 11:50: XLE momentum ✗ (63.14, equal to 63.14 two bars earlier, so not strictly lower), **RVOL 0.82** ✗ → no ERY re-entry. Last entry-eligible slot (C9): the day's entries end at 2 of 3. D1 early shutdown is due at the 12:00 slot (flat).
-
-**12:00 checkpoint (fired 16:00:22Z) — D1 early shutdown.** Flat: no positions, no confirmed orders since 13:00Z. Deleted the 12:05, 12:10, 12:15, 12:20 and 12:25 triggers (all unfired). Kept the 12:30 close/arming slot (`trig_01GK5rKivxVthxt5YAw7mvQa`) and the 8:00pm backup (`trig_01NMcsFAX2QjRgF2ovTd5izr`).
-
-**12:30 close (fired 16:30:15Z) — D3 end-of-day report, Wednesday 2026-10-07.** Flat since 11:13; no close mechanics needed. Account **$1,981.96** (all cash), from ≈ $1,976.43 at the open → **+$5.53 (+0.28%)**.
-- **Trades (2):** ERY 219 sh, 10:12 → 10:42, $8.8899 → $8.93, **+$8.73** (+0.451% position, r +0.15) · TMF 79 sh, 11:02 → 11:13, $25.06 → $25.02, **−$3.20** (−0.160% position, r −0.08). Slippage ≤ 1c both sides on both trades.
-- **Streak:** consecutive losses **1** (TMF); throttle off (starts at 3), lockout at 5.
-- **Declined:** the TLT bull break at 10:10 (score +0.69) failed the volume test before 11:00; it was taken at 11:00 once the test dropped and faded within 12 minutes. From 10:45 to 11:55, IWM, XBI and XLRE breaks failed the volume test (before 11:00) or v3.119 momentum. After 11:13 the only eligible entry was an ERY re-entry, and XLE stayed at RVOL 0.80–0.85 (< 1.0) all session.
-- **Selection log:** 2 rows appended. ERY/XLE — no runner-up; a plain XLE hold to 12:30 would have made +1.31% leveraged vs the trade's +0.45% (XLE kept sliding after the stop). TMF/TLT — selected −0.35% leveraged vs runner XBI −0.04% → selected_was_best **no** (−0.31).
-- **Ops:** GitHub push 500s from 11:05 to 11:16 (all commits pushed once it recovered). Early shutdown at 12:00 (12:05–12:25 deleted).
-- **Arming:** Thursday 2026-10-08's chain armed, **34 of 34** triggers verified via list_triggers (13:00Z–00:00Z, 34 distinct times). Four batches because of the rate limit. Also enabled: tonight's 8:00pm backup and the bimonthly reset reminder.
+- **State (A3):** flat · no open orders · total_value = cash = buying power **$1,981.96** · pending deposits $0. Trade approvals off.
+- **A1:** consecutive losses **1** (TMF, 10/7) → throttle off (0.5% applies at 3–4), full 3% budget ≈ **$59.46**. Entries today 0 of 3. No lockouts carried over.
+- **Headlines:** a web search found nothing dated today; proceeding on price action.
+- **Pre-market, twelve proxies (last extended-hours print vs Wednesday close, ~9:01 ET; EEM 8:27, XLRE/XOP ~8:49 prints):** SOXX 572.11 (-1.84%) · EEM 66.41 (-1.42%) · IWM 275.7 (-0.72%) · XLF 53.431 (-0.59%) · QQQ 753.31 (-0.58%) · XBI 149.436 (-0.53%) · SPY 774.45 (-0.36%) · XLRE 40.4394 (-0.32%) · TLT 76.95 (-0.25%) · XLU 41.15 (+0.00%) · XOP 191.9 (+1.94%) · XLE 64.6097 (+1.97%). Broad risk-off gap again, led by SOXX and EEM; energy (XLE, XOP) the only green group, as on Wednesday.
 
 ## E6. Known issues — backlog, not yet fixed
 
