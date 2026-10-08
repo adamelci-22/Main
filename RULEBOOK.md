@@ -664,6 +664,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:45 checkpoint (fired 15:45:22Z) — DRV hold, stop $24.23 (not yet triggered).** Stop `6ac7b737` confirmed and unfilled. Last print 24.24 (11:44); bid 24.19 is already below the stop, but the stop triggers on a trade at or below 24.23 and none has printed. XLRE 40.415, back inside its range. The stop remains the live exit.
 
+**11:50 checkpoint (fired 15:50:29Z) — DRV stopped out; D1 early shutdown.** Stop `6ac7b737` **filled 11:48:02 @ $24.2209** (81 sh, fee $0.05; 1c through the stop on thin tape). **Net −$12.94** (−0.653% position, −0.649% account, r = −0.36), logged to trades.csv. **Consecutive losses 1 → 2**; throttle off (0.5% risk starts at 3). Entries **3 of 3** and flat → **D1 early shutdown (condition 1)**: deleted the 11:55, 12:00, 12:05, 12:10, 12:15, 12:20 and 12:25 triggers (all unfired); kept the 12:30 close/arming slot (`trig_01FxNLYpgVtGd2zK1Mf73pd9`) and the 8:00pm backup (`trig_01Ez8fquxLVtAzafRuGZyVMu`). Day: **−$2.03**; account ≈ $1,979.93.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
