@@ -617,6 +617,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:25 checkpoint (fired 14:25:14Z) — LABD hold, stop $8.60.** Stop `6ac7a6e2` confirmed and unfilled. No new high (bars 10:20–10:24 peak 8.6886 < run_high 8.695) → candidate unchanged, no move. Live 8.62 (2c above the stop); XBI 147.00, back up from 146.71 but still below ORL 147.62.
 
+**10:30 checkpoint (fired 14:30:49Z) — LABD stopped out (win); C12, no entry.** Stop `6ac7a6e2` **filled 10:25:23 @ $8.60** (198 sh, fee $0.04). **Net +$11.84** (+0.703% position, +0.597% account, r = +0.20), logged to trades.csv. A win: **consecutive losses 1 → 0**. Account ≈ $1,993.80. Entries **1 of 3** (1 fresh instrument).
+- **C12 step 0 (profitable exit):** XBI still bear and above the RVOL floor (1.26; decay vs the first entry's 1.31 = 4%, under 30%), but `signal_extreme` = 146.50 (10:15 bar low) and live XBI is 146.66 → **no fresh low → shortcut denied**.
+- **T+0 field (bars through 10:25):** only XBI bear has two closes outside (146.86 last); as a re-entry it needs v3.119 momentum: 146.86 vs 146.58 two bars earlier ✗. **EEM** one close above ORH 66.54 (66.59; RVOL 1.56) — watch for a second. XLRE 40.42 sits just above ORL 40.38. RVOL group: EEM 1.56 · XLE 1.42 · XLRE 1.35 · XBI 1.26 · XLF 1.10 · XOP 1.03 → **no entry**.
+- **T+10:** fill + 10 min = 10:35:23; the 10:35 grid slot serves as the T+10 run (same 5-min bar set), so no separate trigger was armed.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
