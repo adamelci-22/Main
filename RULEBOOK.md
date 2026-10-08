@@ -601,6 +601,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - Others: IWM 0.97 · XLRE 0.95 · XLF 0.94 (53.855, near its 53.90 high) · TLT 0.90 · XLU 0.82 · SPY 0.79 · QQQ 0.76.
 - No confirmed break possible until 10:10 (two closes outside the range). The 5-min history now includes Wednesday 10/7.
 
+**Thursday 2026-10-08, 10:05 checkpoint — no trade (one close outside at most).** Bars through the 10:00 close. Single close outside the range (watch for 10:10 confirmation): **XBI** 147.225 < ORL 147.62 (bear → LABD; trigger-bar vol 170,223 vs prior-3 avg 65,101 → would pass; RVOL 1.24, expansion 0.55, score +0.55). Everything else is inside its range. RVOL group: EEM 1.51 · XLE 1.40 · XBI 1.24 · XOP 1.10 · SOXX 1.01.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
