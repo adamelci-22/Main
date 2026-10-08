@@ -652,6 +652,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Stop:** stop_market sell 81 @ **$23.94**, gfd, **confirmed** (order `6ac7b45f-66e9`). Worst case ≈ −$35.64 (1.79% of the account) before slippage.
 - B2: candidate = run_high × (1 − 0.64%); moves only when ≥ $0.0512 above the current stop. Entries today **3 of 3** — no further entries; D1 early shutdown applies once DRV closes. (C12's T+10 is moot: a position is open.)
 
+**11:20 checkpoint (fired 15:21:05Z) — DRV hold, stop $23.94.** Stop `6ac7b45f` confirmed and unfilled. No real 1-min bars since the fill (11:19–11:20 interpolated, no trades), so there is no run_high to ratchet from. Quote bid 24.38 / ask 24.43; XLRE 40.305, lower.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
