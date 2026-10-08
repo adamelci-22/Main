@@ -666,6 +666,15 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:50 checkpoint (fired 15:50:29Z) — DRV stopped out; D1 early shutdown.** Stop `6ac7b737` **filled 11:48:02 @ $24.2209** (81 sh, fee $0.05; 1c through the stop on thin tape). **Net −$12.94** (−0.653% position, −0.649% account, r = −0.36), logged to trades.csv. **Consecutive losses 1 → 2**; throttle off (0.5% risk starts at 3). Entries **3 of 3** and flat → **D1 early shutdown (condition 1)**: deleted the 11:55, 12:00, 12:05, 12:10, 12:15, 12:20 and 12:25 triggers (all unfired); kept the 12:30 close/arming slot (`trig_01FxNLYpgVtGd2zK1Mf73pd9`) and the 8:00pm backup (`trig_01Ez8fquxLVtAzafRuGZyVMu`). Day: **−$2.03**; account ≈ $1,979.93.
 
+**12:30 close (fired 16:30:54Z) — D3 end-of-day report, Thursday 2026-10-08.** Flat since 11:48; no close mechanics needed. Account **$1,979.93** (all cash), from $1,981.96 at the open → **−$2.03 (−0.10%)**.
+- **Trades (3, all stop exits):** LABD 198 sh, 10:12 → 10:25, $8.54 → $8.60, **+$11.84** (+0.703%, r +0.20) · LABD re-entry 153 sh, 10:47 → 11:14, $8.6277 → $8.6218, **−$0.93** (−0.068%, r −0.02) · DRV 81 sh, 11:19 → 11:48, $24.38 → $24.2209, **−$12.94** (−0.653%, r −0.36). Slippage ≤ 1c on every fill (DRV's exit 1c through the stop).
+- **Streak:** consecutive losses **2** (LABD re-entry, DRV); throttle off (0.5% risk starts at 3), lockout at 5.
+- **Declined / blocked:** EEM bull broke out at 10:30 but failed the volume test before 11:00, then fell back inside. XBI step-0 re-entry was denied at 10:30 (no fresh low), then allowed at 10:45 under v3.119 momentum. At 11:15 XLE bull failed momentum; XBI bear was excluded after the LABD loss.
+- **What happened:** XBI kept falling all morning (146.01 low at 12:05), but the tight LABD trail (2 × 0.52%) took both LABD trades out on bounces. A plain hold of the first entry to 12:30 would have made +1.69% leveraged vs +0.70% taken. DRV was a thin, slow fill on a weak late break; XLRE reversed back into its range within 30 minutes.
+- **Selection log:** 3 rows appended. Entries 1–2 had no runner-up. Entry 3: XLRE (−0.89% leveraged hold) vs runner IWM (−1.21%) → selected_was_best **yes**.
+- **Ops:** the volume-test 10-min (T+10) re-check after the 10:25 exit was folded into the 10:35 grid slot. Early shutdown at 11:50 (3 of 3 entries), seven triggers deleted.
+- **Arming:** Friday 2026-10-09's chain — see the next line once verified. Friday's 12:30 arms Monday 2026-10-12 (Columbus Day: NYSE open, bond market closed).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
