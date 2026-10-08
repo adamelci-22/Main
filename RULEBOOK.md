@@ -656,6 +656,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:25 checkpoint (fired 15:25:46Z) — DRV hold, stop $23.94.** Stop confirmed and unfilled. Still no real 1-min bars since the fill (all interpolated; the last consolidated print is 24.32 at 11:11, our 11:18 fill not among them); no run_high → no ratchet. Bid 24.38 / ask 24.43; XLRE 40.305.
 
+**11:30 checkpoint (fired 15:30:46Z) — DRV stop ratcheted.** First real print since the fill: 1,000 sh @ 24.39 (11:29 bar) → run_high **$24.39**; live 24.39 (above the 24.38 fill), bid 24.41; XLRE 40.285, lower. Candidate 24.39 × 0.9936 = 24.2339, $0.29 above $23.94 → cancelled `6ac7b45f` (cancelled ✓) and placed stop_market sell 81 @ **$24.23**, gfd, **confirmed** (order `6ac7b737-7f2f`). Worst case now ≈ −$12.15 (−0.62% position) before slippage — thin tape, so slippage could be wider than usual.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
