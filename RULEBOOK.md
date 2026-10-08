@@ -626,6 +626,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:40 checkpoint (fired 14:40:45Z) — flat, no entry.** Bars through 10:35. EEM closed back inside its range (66.515 < ORH 66.54) — break voided. XBI bear re-entry: momentum 147.07 vs 146.86 ✗; no fresh low below 146.50 (live 147.15). No other closes outside a range.
 
+**10:45 checkpoint (fired 14:46:28Z) — LABD re-entered (C12 step 1).** Bars through 10:40. A1: 1 of 3 used, the day's one re-entry still open; LABD was a win (not excluded) and has 1 of 2 daily entries.
+- **Candidates (top three for the selection log):** **XBI bear — selected (re-entry)**: closes below ORL 147.62 since 10:00; triggering bar 10:00 passed the volume test; **v3.119 momentum 146.95 < 147.19 ✓** (first pass since the exit); RVOL 1.25 (decay vs the first entry's 1.31 = 4%, under 30%), expansion 0.67, **score +0.41**. No runner-up: no other proxy had two closes outside (XLE one close above ORH 64.975 at 64.98; EEM back inside; XLRE exactly at ORL 40.38).
+- **Sizing (C8):** ask $8.63 → risk $0.39/sh → floor(3% × $1,993.80 ÷ 0.39) = **153 sh** (cash cap 231). XBI 146.97 live.
+- **Entry:** buy 153 LABD limit $8.64 → **filled 10:47:10 @ $8.6277** ($1,320.04; order `6ac7aced-97bf`). Stop distance 4.49%.
+- **Stop:** stop_market sell 153 @ **$8.24** (LABD's 9:30–10:00 low), gfd, **confirmed** (order `6ac7acf4-32eb`). Worst case ≈ −$59.32 (2.98% of the account) before slippage.
+- B2 as before: candidate = run_high × (1 − 1.04%), min move $0.0552. Entries today **2 of 3** (re-entry used; a third entry can only be a fresh instrument).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
