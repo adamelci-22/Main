@@ -672,8 +672,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Declined / blocked:** EEM bull broke out at 10:30 but failed the volume test before 11:00, then fell back inside. XBI step-0 re-entry was denied at 10:30 (no fresh low), then allowed at 10:45 under v3.119 momentum. At 11:15 XLE bull failed momentum; XBI bear was excluded after the LABD loss.
 - **What happened:** XBI kept falling all morning (146.01 low at 12:05), but the tight LABD trail (2 × 0.52%) took both LABD trades out on bounces. A plain hold of the first entry to 12:30 would have made +1.69% leveraged vs +0.70% taken. DRV was a thin, slow fill on a weak late break; XLRE reversed back into its range within 30 minutes.
 - **Selection log:** 3 rows appended. Entries 1–2 had no runner-up. Entry 3: XLRE (−0.89% leveraged hold) vs runner IWM (−1.21%) → selected_was_best **yes**.
-- **Ops:** the volume-test 10-min (T+10) re-check after the 10:25 exit was folded into the 10:35 grid slot. Early shutdown at 11:50 (3 of 3 entries), seven triggers deleted.
-- **Arming:** Friday 2026-10-09's chain — see the next line once verified. Friday's 12:30 arms Monday 2026-10-12 (Columbus Day: NYSE open, bond market closed).
+- **Ops:** C12's T+10 re-check after the 10:25 exit was folded into the 10:35 grid slot. Early shutdown at 11:50 (3 of 3 entries), seven triggers deleted.
+- **Arming:** Friday 2026-10-09's chain armed, **34 of 34** verified via list_triggers (13:00Z–00:00Z, 34 distinct times), in four batches. Friday's 12:30 arms Monday 2026-10-12 (Columbus Day: NYSE open, bond market closed).
 
 ## E6. Known issues — backlog, not yet fixed
 
