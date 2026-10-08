@@ -624,6 +624,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:35 checkpoint = C12 T+10 (fired 14:35:26Z) — flat, no entry.** Bars through 10:30. **EEM bull** now has two closes above ORH 66.54 (66.59, 66.60; RVOL 1.54, expansion 0.29, score +1.10) but its triggering 10:25 bar traded 134,162 vs a prior-3 average of 166,608 → **volume-failed** (before 11:00). **XBI bear** re-entry: v3.119 momentum 147.19 vs 146.86 ✗ (bounced); step 0 still has no fresh low below 146.50 (live 147.10). Nothing else has a close outside its range. Watch 11:00: the volume test drops then, and EEM bull (EDC) would qualify if it is still above ORH with momentum.
 
+**10:40 checkpoint (fired 14:40:45Z) — flat, no entry.** Bars through 10:35. EEM closed back inside its range (66.515 < ORH 66.54) — break voided. XBI bear re-entry: momentum 147.07 vs 146.86 ✗; no fresh low below 146.50 (live 147.15). No other closes outside a range.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
