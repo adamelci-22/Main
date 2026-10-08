@@ -662,6 +662,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:40 checkpoint (fired 15:40:56Z) — DRV hold, stop $24.23.** Stop `6ac7b737` confirmed and unfilled. No new high (run_high 24.41); last print 24.33 (11:40), bid 24.24 / ask 24.29 — 1c above the stop. XLRE bounced to 40.385, back above ORL 40.38. No action outside B3 (the stop is the live exit).
 
+**11:45 checkpoint (fired 15:45:22Z) — DRV hold, stop $24.23 (not yet triggered).** Stop `6ac7b737` confirmed and unfilled. Last print 24.24 (11:44); bid 24.19 is already below the stop, but the stop triggers on a trade at or below 24.23 and none has printed. XLRE 40.415, back inside its range. The stop remains the live exit.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
