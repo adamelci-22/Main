@@ -635,6 +635,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:50 checkpoint (fired 14:51:00Z) — LABD stop ratcheted.** Stop `6ac7acf4` was still confirmed and unfilled. Completed 1-min bars 10:47–10:50 → run_high **$8.64**; live 8.6397 (above the 8.6277 fill); XBI 146.86. Candidate 8.64 × 0.9896 = 8.5501, which is $0.31 above $8.24 → cancelled `6ac7acf4` (cancelled ✓) and placed stop_market sell 153 @ **$8.55**, gfd, **confirmed** (order `6ac7ade8-9d9d`). Worst case now ≈ −$11.89 (−0.90% position) before slippage.
 
+**10:55 checkpoint (fired 14:55:59Z) — LABD hold, stop $8.55.** Stop `6ac7ade8` confirmed and unfilled. run_high **$8.68** (10:55 bar); candidate 8.68 × 0.9896 = 8.5897, only $0.04 above $8.55 (< $0.0552 min move) → no move. Live 8.69; XBI 146.55, a new low for the day.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
