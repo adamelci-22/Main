@@ -594,6 +594,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Headlines:** a web search found nothing dated today; proceeding on price action.
 - **Pre-market, twelve proxies (last extended-hours print vs Wednesday close, ~9:01 ET; EEM 8:27, XLRE/XOP ~8:49 prints):** SOXX 572.11 (-1.84%) · EEM 66.41 (-1.42%) · IWM 275.7 (-0.72%) · XLF 53.431 (-0.59%) · QQQ 753.31 (-0.58%) · XBI 149.436 (-0.53%) · SPY 774.45 (-0.36%) · XLRE 40.4394 (-0.32%) · TLT 76.95 (-0.25%) · XLU 41.15 (+0.00%) · XOP 191.9 (+1.94%) · XLE 64.6097 (+1.97%). Broad risk-off gap again, led by SOXX and EEM; energy (XLE, XOP) the only green group, as on Wednesday.
 
+**Thursday 2026-10-08, 9:30 observation** (read-only). Flat. First prints vs Wednesday close, 9:30 ET: SOXX 571.36 (-1.97%) · EEM 66.44 (-1.38%) · XBI 148.72 (-1.01%) · QQQ 753.45 (-0.56%) · IWM 276.29 (-0.51%) · XLF 53.53 (-0.41%) · SPY 774.67 (-0.33%) · XLRE 40.5 (-0.17%) · XLU 41.15 (+0.00%) · TLT 77.1989 (+0.07%) · XLE 64.38 (+1.61%) · XOP 191.51 (+1.74%). Opened in line with pre-market: risk-off led by SOXX and EEM, energy green; TLT turned slightly positive.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
