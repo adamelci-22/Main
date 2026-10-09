@@ -595,6 +595,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Friday 2026-10-09, 9:30 observation** (read-only). Flat. First prints vs Thursday close, ~9:31 ET: SOXX 569.47 (+1.10%) · QQQ 751.81 (+0.57%) · IWM 278.67 (+0.40%) · XBI 149.87 (+0.39%) · SPY 776.36 (+0.31%) · XLF 54.28 (+0.09%) · TLT 77.71 (−0.21%) · XLE 65.07 (−0.26%). Gap-up holding but semis faded from +1.64% pre-market; opening range still builds until 10:00.
 
+**Friday 2026-10-09, 10:00 checkpoint — no trade (range just completed, no closes outside yet).** Opening range from the 9:30–9:55 bars. RVOL: XBI 1.41 · SOXX 1.13 · XLF 0.86 · QQQ 0.83 · XLE 0.80 · IWM 0.71 · TLT 0.55 · SPY 0.53 → only XBI and SOXX clear 1.0×, so the top-3 floor adds XLF. Ranges: XBI 149.03–152.53 (last 152.51, 0.02 under its high) · SOXX 558.89–571.34 (last 561.61) · XLF 54.21–54.54 (54.45). No post-range 5-min close exists yet, so no break can be confirmed; watch XBI bull at 10:05–10:10. Scores if they break: XLF +0.44, SOXX +0.25, XBI +0.29 (expansion 0.49 / 0.78 / 0.80). Gate numbers now come from `tools/live/gate.py` (committed; the container's scratchpad scripts were lost in a reset).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
