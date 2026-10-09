@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """C1 gate snapshot for the eight proxies (RULEBOOK C1/C4, v3.121).
 
-    python3 tools/live/gate.py HISTORICALS.json [K]
+    python3 tools/live/gate.py HIST.json [HIST2.json ...] [K]
 
-HISTORICALS.json = saved get_equity_historicals output (5minute, regular) covering at least
-the last day before today plus today. History before that comes from tools/replay/data.
+HIST*.json = saved get_equity_historicals output (5minute, regular); later files override
+earlier ones bar by bar. Together they must cover the last two sessions plus today. History before that comes from tools/replay/data.
 K = number of COMPLETED 5-min bars today (default: all bars in the file whose
 volume is final = every bar but the last, which is assumed in progress).
 Prints RVOL, opening range, closes outside it, expansion and selection_score.
@@ -16,24 +16,27 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SYMS = ['QQQ', 'SPY', 'SOXX', 'IWM', 'XLF', 'XLE', 'TLT', 'XBI']
 
 
-def load(path):
+def load(paths):
     bars = defaultdict(lambda: defaultdict(dict))            # sym -> day -> ts -> (o,h,l,c,v)
     old = json.load(gzip.open(os.path.join(HERE, '..', 'replay', 'data', 'proxies_5m_v2.json.gz')))
     for s in SYMS:
         for t, o, h, l, c, v, _ in old[s]:
             bars[s][t[:10]][t] = (o, h, l, c, v)
-    for r in json.load(open(path))['data']['results']:
-        for b in r['bars']:
-            bars[r['symbol']][b['begins_at'][:10]][b['begins_at']] = tuple(
-                float(b[k]) if k != 'volume' else b[k]
-                for k in ('open_price', 'high_price', 'low_price', 'close_price', 'volume'))
+    for path in paths:
+        for r in json.load(open(path))['data']['results']:
+            for b in r['bars']:
+                bars[r['symbol']][b['begins_at'][:10]][b['begins_at']] = tuple(
+                    float(b[k]) if k != 'volume' else b[k]
+                    for k in ('open_price', 'high_price', 'low_price', 'close_price', 'volume'))
     return {s: {d: [v for _, v in sorted(ts.items())] for d, ts in days.items()} for s, days in bars.items()}
 
 
 def main():
-    B = load(sys.argv[1])
+    args = sys.argv[1:]
+    k = int(args.pop()) if args[-1].isdigit() else None
+    B = load(args)
     today = max(B['QQQ'])
-    k = int(sys.argv[2]) if len(sys.argv) > 2 else len(B['QQQ'][today]) - 1
+    k = k or len(B['QQQ'][today]) - 1
     rows = []
     for s in SYMS:
         days = sorted(d for d in B[s] if d < today and len(B[s][d]) >= 78)
