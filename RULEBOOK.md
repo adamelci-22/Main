@@ -585,93 +585,13 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-**Thursday 2026-10-08, 9:00 research.** Wednesday's session (ERY +$8.73, stopped at 10:42; TMF −$3.20, stopped at 11:13; day +$5.53, +0.28%) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Wednesday's E5); not restated here. No rule changes since v3.119.
+**Friday 2026-10-09, 9:00 research.** Thursday's session (LABD +$11.84, LABD re-entry −$0.93, DRV −$12.94; day −$2.03, −0.10%) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Thursday's E5); not restated here. Rule change since Thursday: **v3.121 — the Core Twelve became the Core Eight** (XLU, XLRE, XOP, EEM and their legs removed; C4).
 
-- **State (A3):** flat · no open orders · total_value = cash = buying power **$1,981.96** · pending deposits $0. Trade approvals off.
-- **A1:** consecutive losses **1** (TMF, 10/7) → throttle off (0.5% applies at 3–4), full 3% budget ≈ **$59.46**. Entries today 0 of 3. No lockouts carried over.
-- **Headlines:** a web search found nothing dated today; proceeding on price action.
-- **Pre-market, twelve proxies (last extended-hours print vs Wednesday close, ~9:01 ET; EEM 8:27, XLRE/XOP ~8:49 prints):** SOXX 572.11 (-1.84%) · EEM 66.41 (-1.42%) · IWM 275.7 (-0.72%) · XLF 53.431 (-0.59%) · QQQ 753.31 (-0.58%) · XBI 149.436 (-0.53%) · SPY 774.45 (-0.36%) · XLRE 40.4394 (-0.32%) · TLT 76.95 (-0.25%) · XLU 41.15 (+0.00%) · XOP 191.9 (+1.94%) · XLE 64.6097 (+1.97%). Broad risk-off gap again, led by SOXX and EEM; energy (XLE, XOP) the only green group, as on Wednesday.
-
-**Thursday 2026-10-08, 9:30 observation** (read-only). Flat. First prints vs Wednesday close, 9:30 ET: SOXX 571.36 (-1.97%) · EEM 66.44 (-1.38%) · XBI 148.72 (-1.01%) · QQQ 753.45 (-0.56%) · IWM 276.29 (-0.51%) · XLF 53.53 (-0.41%) · SPY 774.67 (-0.33%) · XLRE 40.5 (-0.17%) · XLU 41.15 (+0.00%) · TLT 77.1989 (+0.07%) · XLE 64.38 (+1.61%) · XOP 191.51 (+1.74%). Opened in line with pre-market: risk-off led by SOXX and EEM, energy green; TLT turned slightly positive.
-
-**Thursday 2026-10-08, 10:00 entry — no trade (range just completed).** Flat; A1 clear (0 of 3). 30-min ranges and RVOL at 10:00 (`RVOL · ORH/ORL · last · expansion`):
-- Step-1 group (≥1.0×): **EEM 1.35 · 66.54/66.31 · 66.36 · 0.23** (near its low) · **XOP 1.18 · 192.28/191.13 · 192.01 · 0.26** · **XBI 1.14 · 149.40/147.62 · 147.985 · 0.41** (near its low) · **XLE 1.11 · 64.975/64.31 · 64.77 · 0.55** · **SOXX 1.04 · 574.31/568.05 · 569.27 · 0.41** (near its low)
-- Others: IWM 0.97 · XLRE 0.95 · XLF 0.94 (53.855, near its 53.90 high) · TLT 0.90 · XLU 0.82 · SPY 0.79 · QQQ 0.76.
-- No confirmed break possible until 10:10 (two closes outside the range). The 5-min history now includes Wednesday 10/7.
-
-**Thursday 2026-10-08, 10:05 checkpoint — no trade (one close outside at most).** Bars through the 10:00 close. Single close outside the range (watch for 10:10 confirmation): **XBI** 147.225 < ORL 147.62 (bear → LABD; trigger-bar vol 170,223 vs prior-3 avg 65,101 → would pass; RVOL 1.24, expansion 0.55, score +0.55). Everything else is inside its range. RVOL group: EEM 1.51 · XLE 1.40 · XBI 1.24 · XOP 1.10 · SOXX 1.01.
-
-**Thursday 2026-10-08, 10:10 checkpoint (fired 14:11:18Z) — LABD entered.** Bars through the 10:05 close. Flat; A1 0 of 3 → first entry of the day (v3.119's momentum check does not apply).
-- **Candidates (top three for the selection log):** **XBI bear — selected**: closes 10:00 147.225 and 10:05 147.115 below ORL 147.62; triggering bar 10:00 170,223 vs prior-3 avg 65,101 → **pass**; RVOL 1.31, expansion 0.58, **score +0.55**. No runner-up: no other proxy had even one close outside its range (RVOL group EEM 1.53 · XLE 1.42 · XBI 1.31 · XLRE 1.05 · XOP 1.03 · XLF 1.03 · SOXX 1.01, all inside).
-- **LABD profile** (31 sessions): median adverse 2.56% · stop_pct 3.85% · **stall 0.52%** · **min move 0.64%** (mfe_to_target 1.67). LABD 9:30–10:00 low **$8.24**.
-- **Sizing (C8):** ask $8.53 at quote → 205 sh; ask moved to $8.54 at review → risk $0.30/sh → floor(3% × $1,981.96 ÷ 0.30) = **198 sh** (cash cap 232). XBI 147.55 live at entry, still below ORL.
-- **Entry:** buy 198 LABD limit $8.54 → **filled 10:11:59 @ $8.54** ($1,690.92, ~85% of the account; order `6ac7a4af-7ecf`). Stop distance 3.51%.
-- **Stop:** stop_market sell 198 @ **$8.24**, gfd, **confirmed** (order `6ac7a4b6-bc0b`). Worst case ≈ −$59.40 (3.00%) before slippage.
-- B2: candidate = run_high × (1 − 1.04%); moves only when ≥ $0.0547 above the current stop. Entries today **1 of 3**.
-
-**10:15 checkpoint (fired 14:16:23Z) — LABD stop ratcheted.** Stop `6ac7a4b6` was still confirmed and unfilled. Completed 1-min bars 10:12–10:15 → run_high **$8.57**; live 8.59 (above the 8.54 fill); XBI 147.185 (below ORL). Candidate 8.57 × 0.9896 = 8.4809, which is $0.24 above the stop (≥ $0.0547) → cancelled `6ac7a4b6` (cancelled ✓) and placed stop_market sell 198 @ **$8.48**, gfd, **confirmed** (order `6ac7a5ce-b294`). Worst case now ≈ −$11.88 (−0.70% position) before slippage.
-
-**10:20 checkpoint (fired 14:21:00Z) — LABD stop ratcheted again.** Completed 1-min bars through 10:20 → run_high **$8.695** (10:19 bar); live 8.66; XBI 146.71. Candidate 8.695 × 0.9896 = 8.6046, which is $0.12 above $8.48 → cancelled `6ac7a5ce` (cancelled ✓) and placed stop_market sell 198 @ **$8.60**, gfd, **confirmed** (order `6ac7a6e2-eb88`). Locked in ≈ +$11.88 (+0.70% position) before slippage.
-
-**10:25 checkpoint (fired 14:25:14Z) — LABD hold, stop $8.60.** Stop `6ac7a6e2` confirmed and unfilled. No new high (bars 10:20–10:24 peak 8.6886 < run_high 8.695) → candidate unchanged, no move. Live 8.62 (2c above the stop); XBI 147.00, back up from 146.71 but still below ORL 147.62.
-
-**10:30 checkpoint (fired 14:30:49Z) — LABD stopped out (win); C12, no entry.** Stop `6ac7a6e2` **filled 10:25:23 @ $8.60** (198 sh, fee $0.04). **Net +$11.84** (+0.703% position, +0.597% account, r = +0.20), logged to trades.csv. A win: **consecutive losses 1 → 0**. Account ≈ $1,993.80. Entries **1 of 3** (1 fresh instrument).
-- **C12 step 0 (profitable exit):** XBI still bear and above the RVOL floor (1.26; decay vs the first entry's 1.31 = 4%, under 30%), but `signal_extreme` = 146.50 (10:15 bar low) and live XBI is 146.66 → **no fresh low → shortcut denied**.
-- **T+0 field (bars through 10:25):** only XBI bear has two closes outside (146.86 last); as a re-entry it needs v3.119 momentum: 146.86 vs 146.58 two bars earlier ✗. **EEM** one close above ORH 66.54 (66.59; RVOL 1.56) — watch for a second. XLRE 40.42 sits just above ORL 40.38. RVOL group: EEM 1.56 · XLE 1.42 · XLRE 1.35 · XBI 1.26 · XLF 1.10 · XOP 1.03 → **no entry**.
-- **T+10:** fill + 10 min = 10:35:23; the 10:35 grid slot serves as the T+10 run (same 5-min bar set), so no separate trigger was armed.
-
-**10:35 checkpoint = C12 T+10 (fired 14:35:26Z) — flat, no entry.** Bars through 10:30. **EEM bull** now has two closes above ORH 66.54 (66.59, 66.60; RVOL 1.54, expansion 0.29, score +1.10) but its triggering 10:25 bar traded 134,162 vs a prior-3 average of 166,608 → **volume-failed** (before 11:00). **XBI bear** re-entry: v3.119 momentum 147.19 vs 146.86 ✗ (bounced); step 0 still has no fresh low below 146.50 (live 147.10). Nothing else has a close outside its range. Watch 11:00: the volume test drops then, and EEM bull (EDC) would qualify if it is still above ORH with momentum.
-
-**10:40 checkpoint (fired 14:40:45Z) — flat, no entry.** Bars through 10:35. EEM closed back inside its range (66.515 < ORH 66.54) — break voided. XBI bear re-entry: momentum 147.07 vs 146.86 ✗; no fresh low below 146.50 (live 147.15). No other closes outside a range.
-
-**10:45 checkpoint (fired 14:46:28Z) — LABD re-entered (C12 step 1).** Bars through 10:40. A1: 1 of 3 used, the day's one re-entry still open; LABD was a win (not excluded) and has 1 of 2 daily entries.
-- **Candidates (top three for the selection log):** **XBI bear — selected (re-entry)**: closes below ORL 147.62 since 10:00; triggering bar 10:00 passed the volume test; **v3.119 momentum 146.95 < 147.19 ✓** (first pass since the exit); RVOL 1.25 (decay vs the first entry's 1.31 = 4%, under 30%), expansion 0.67, **score +0.41**. No runner-up: no other proxy had two closes outside (XLE one close above ORH 64.975 at 64.98; EEM back inside; XLRE exactly at ORL 40.38).
-- **Sizing (C8):** ask $8.63 → risk $0.39/sh → floor(3% × $1,993.80 ÷ 0.39) = **153 sh** (cash cap 231). XBI 146.97 live.
-- **Entry:** buy 153 LABD limit $8.64 → **filled 10:47:10 @ $8.6277** ($1,320.04; order `6ac7aced-97bf`). Stop distance 4.49%.
-- **Stop:** stop_market sell 153 @ **$8.24** (LABD's 9:30–10:00 low), gfd, **confirmed** (order `6ac7acf4-32eb`). Worst case ≈ −$59.32 (2.98% of the account) before slippage.
-- B2 as before: candidate = run_high × (1 − 1.04%), min move $0.0552. Entries today **2 of 3** (re-entry used; a third entry can only be a fresh instrument).
-
-**10:50 checkpoint (fired 14:51:00Z) — LABD stop ratcheted.** Stop `6ac7acf4` was still confirmed and unfilled. Completed 1-min bars 10:47–10:50 → run_high **$8.64**; live 8.6397 (above the 8.6277 fill); XBI 146.86. Candidate 8.64 × 0.9896 = 8.5501, which is $0.31 above $8.24 → cancelled `6ac7acf4` (cancelled ✓) and placed stop_market sell 153 @ **$8.55**, gfd, **confirmed** (order `6ac7ade8-9d9d`). Worst case now ≈ −$11.89 (−0.90% position) before slippage.
-
-**10:55 checkpoint (fired 14:55:59Z) — LABD hold, stop $8.55.** Stop `6ac7ade8` confirmed and unfilled. run_high **$8.68** (10:55 bar); candidate 8.68 × 0.9896 = 8.5897, only $0.04 above $8.55 (< $0.0552 min move) → no move. Live 8.69; XBI 146.55, a new low for the day.
-
-**11:00 checkpoint (fired 15:00:37Z) — LABD stop ratcheted.** run_high **$8.7186** (10:59 bar); live 8.6877; XBI 146.53. Candidate 8.7186 × 0.9896 = 8.6279, $0.078 above $8.55 → cancelled `6ac7ade8` (cancelled ✓) and placed stop_market sell 153 @ **$8.62**, gfd, **confirmed** (order `6ac7b026-f5d1`). Worst case ≈ −$1.18 (−0.09% position, about breakeven) before slippage.
-
-**11:05 checkpoint (fired 15:06:19Z) — LABD hold, stop $8.62.** Stop `6ac7b026` confirmed and unfilled. run_high **$8.72** (11:05 bar); candidate 8.6291, only $0.009 above $8.62 → no move. Live 8.7223; XBI 146.33, a new low for the day.
-
-**11:10 checkpoint (fired 15:11:29Z) — LABD hold, stop $8.62.** Stop `6ac7b026` confirmed and unfilled. run_high **$8.7299** (11:06 bar); candidate 8.6391, only $0.019 above $8.62 → no move. Live 8.655 (3.5c above the stop); XBI 146.75, bouncing.
-
-**11:15 checkpoint (fired 15:17:29Z) — LABD re-entry stopped out; DRV entered (C12 T+0).** Stop `6ac7b026` **filled 11:14:00 @ $8.6218** (153 sh, fee $0.03). **Net −$0.93** (−0.068% position, r = −0.02), logged to trades.csv. A loss under v3.87: **consecutive losses 0 → 1**, throttle off. **LABD excluded for the day** (losing exit; also at its 2-entry cap). Day so far **+$10.91**; account ≈ $1,992.87.
-- **A1:** entries 2 of 3; the re-entry is used, so the third entry must be a fresh instrument (the 2nd distinct). Volume test off from 11:00 (v3.117); v3.119 momentum applies.
-- **T+0 field (bars through 11:10) — candidates (top three for the selection log):** **XLRE bear — selected**: closes 11:05 40.35 and 11:10 40.33 below ORL 40.38; momentum 40.33 < 40.36 ✓; RVOL 1.25, expansion 0.53, **score +0.59**; trigger bar 10:45 26,189 vs avg 26,091 (passes anyway). · **IWM bear** — below ORL 275.68 since 10:45 (274.73 last); momentum 274.73 < 275.19 ✓; RVOL 1.01, **score +0.42** (runner-up). · XLE bull (65.05, score +0.32) fails momentum (65.05 vs 65.185); XBI bear excluded (LABD lost); EEM one close below ORL 66.31 (66.27) only.
-- **DRV profile** (31 sessions): median adverse 0.85% · stop_pct 2.50% · **stall 0.32%** · **min move 0.21%** (mfe_to_target 1.76). DRV 9:30–10:00 low **$23.94**. Thin tape (5-min volume ~100–8,000 sh at the open).
-- **Sizing (C8):** ask $24.38 → risk $0.44/sh; 3% rule allows 135 sh, **cash-bound at 81 sh**.
-- **Entry:** buy 81 DRV limit $24.39 → **filled 11:18:48 @ $24.38** ($1,974.78; order `6ac7b458-3608`). Stop distance 1.80%.
-- **Stop:** stop_market sell 81 @ **$23.94**, gfd, **confirmed** (order `6ac7b45f-66e9`). Worst case ≈ −$35.64 (1.79% of the account) before slippage.
-- B2: candidate = run_high × (1 − 0.64%); moves only when ≥ $0.0512 above the current stop. Entries today **3 of 3** — no further entries; D1 early shutdown applies once DRV closes. (C12's T+10 is moot: a position is open.)
-
-**11:20 checkpoint (fired 15:21:05Z) — DRV hold, stop $23.94.** Stop `6ac7b45f` confirmed and unfilled. No real 1-min bars since the fill (11:19–11:20 interpolated, no trades), so there is no run_high to ratchet from. Quote bid 24.38 / ask 24.43; XLRE 40.305, lower.
-
-**11:25 checkpoint (fired 15:25:46Z) — DRV hold, stop $23.94.** Stop confirmed and unfilled. Still no real 1-min bars since the fill (all interpolated; the last consolidated print is 24.32 at 11:11, our 11:18 fill not among them); no run_high → no ratchet. Bid 24.38 / ask 24.43; XLRE 40.305.
-
-**11:30 checkpoint (fired 15:30:46Z) — DRV stop ratcheted.** First real print since the fill: 1,000 sh @ 24.39 (11:29 bar) → run_high **$24.39**; live 24.39 (above the 24.38 fill), bid 24.41; XLRE 40.285, lower. Candidate 24.39 × 0.9936 = 24.2339, $0.29 above $23.94 → cancelled `6ac7b45f` (cancelled ✓) and placed stop_market sell 81 @ **$24.23**, gfd, **confirmed** (order `6ac7b737-7f2f`). Worst case now ≈ −$12.15 (−0.62% position) before slippage — thin tape, so slippage could be wider than usual.
-
-**11:35 checkpoint (fired 15:35:37Z) — DRV hold, stop $24.23.** Stop `6ac7b737` confirmed and unfilled. run_high **$24.41** (11:32 bar); candidate 24.2538, only $0.024 above $24.23 → no move. Live 24.40 (bid 24.40); XLRE 40.30.
-
-**11:40 checkpoint (fired 15:40:56Z) — DRV hold, stop $24.23.** Stop `6ac7b737` confirmed and unfilled. No new high (run_high 24.41); last print 24.33 (11:40), bid 24.24 / ask 24.29 — 1c above the stop. XLRE bounced to 40.385, back above ORL 40.38. No action outside B3 (the stop is the live exit).
-
-**11:45 checkpoint (fired 15:45:22Z) — DRV hold, stop $24.23 (not yet triggered).** Stop `6ac7b737` confirmed and unfilled. Last print 24.24 (11:44); bid 24.19 is already below the stop, but the stop triggers on a trade at or below 24.23 and none has printed. XLRE 40.415, back inside its range. The stop remains the live exit.
-
-**11:50 checkpoint (fired 15:50:29Z) — DRV stopped out; D1 early shutdown.** Stop `6ac7b737` **filled 11:48:02 @ $24.2209** (81 sh, fee $0.05; 1c through the stop on thin tape). **Net −$12.94** (−0.653% position, −0.649% account, r = −0.36), logged to trades.csv. **Consecutive losses 1 → 2**; throttle off (0.5% risk starts at 3). Entries **3 of 3** and flat → **D1 early shutdown (condition 1)**: deleted the 11:55, 12:00, 12:05, 12:10, 12:15, 12:20 and 12:25 triggers (all unfired); kept the 12:30 close/arming slot (`trig_01FxNLYpgVtGd2zK1Mf73pd9`) and the 8:00pm backup (`trig_01Ez8fquxLVtAzafRuGZyVMu`). Day: **−$2.03**; account ≈ $1,979.93.
-
-**12:30 close (fired 16:30:54Z) — D3 end-of-day report, Thursday 2026-10-08.** Flat since 11:48; no close mechanics needed. Account **$1,979.93** (all cash), from $1,981.96 at the open → **−$2.03 (−0.10%)**.
-- **Trades (3, all stop exits):** LABD 198 sh, 10:12 → 10:25, $8.54 → $8.60, **+$11.84** (+0.703%, r +0.20) · LABD re-entry 153 sh, 10:47 → 11:14, $8.6277 → $8.6218, **−$0.93** (−0.068%, r −0.02) · DRV 81 sh, 11:19 → 11:48, $24.38 → $24.2209, **−$12.94** (−0.653%, r −0.36). Slippage ≤ 1c on every fill (DRV's exit 1c through the stop).
-- **Streak:** consecutive losses **2** (LABD re-entry, DRV); throttle off (0.5% risk starts at 3), lockout at 5.
-- **Declined / blocked:** EEM bull broke out at 10:30 but failed the volume test before 11:00, then fell back inside. XBI step-0 re-entry was denied at 10:30 (no fresh low), then allowed at 10:45 under v3.119 momentum. At 11:15 XLE bull failed momentum; XBI bear was excluded after the LABD loss.
-- **What happened:** XBI kept falling all morning (146.01 low at 12:05), but the tight LABD trail (2 × 0.52%) took both LABD trades out on bounces. A plain hold of the first entry to 12:30 would have made +1.69% leveraged vs +0.70% taken. DRV was a thin, slow fill on a weak late break; XLRE reversed back into its range within 30 minutes.
-- **Selection log:** 3 rows appended. Entries 1–2 had no runner-up. Entry 3: XLRE (−0.89% leveraged hold) vs runner IWM (−1.21%) → selected_was_best **yes**.
-- **Ops:** C12's T+10 re-check after the 10:25 exit was folded into the 10:35 grid slot. Early shutdown at 11:50 (3 of 3 entries), seven triggers deleted.
-- **Arming:** Friday 2026-10-09's chain armed, **34 of 34** verified via list_triggers (13:00Z–00:00Z, 34 distinct times), in four batches. Friday's 12:30 arms Monday 2026-10-12 (Columbus Day: NYSE open, bond market closed).
+- **State (A3):** flat · no open orders or positions · total_value = cash = buying power **$1,979.93** · pending deposits $0.
+- **A1:** consecutive losses **2** (LABD re-entry, DRV) → throttle off (0.5% starts at 3), full 3% budget ≈ **$59.40**. Entries today 0 of 3. No lockouts.
+- **Headlines:** none checked beyond price action; proceeding on the tape.
+- **Pre-market, eight proxies (last extended-hours print vs Thursday close, ~9:00 ET; XBI's last print was 7:48 ET, quote 149.65/150.01):** SOXX 572.50 (+1.64%) · QQQ 753.36 (+0.77%) · SPY 776.65 (+0.35%) · IWM 278.36 (+0.28%) · XBI 149.65 (+0.24%) · XLF 54.27 (+0.08%) · TLT 77.73 (−0.18%) · XLE 65.04 (−0.31%). Risk-on gap, led by semis; energy and Treasuries slightly red.
+- **Thin legs to watch:** ERX 111.08/113.78 and LABU 223.62/226.40 show wide pre-market spreads (re-check at entry per C9); ERY 8.43/8.52 likewise.
 
 ## E6. Known issues — backlog, not yet fixed
 
