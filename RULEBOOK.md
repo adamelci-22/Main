@@ -606,6 +606,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Stop:** stop_market 3 sh @ **$222.88** gfd, order `6ac8f633-e166` — **confirmed**, unfilled. Max loss at the stop ≈ $57.36 (2.9% of account).
 - B2: candidate = run_high × (1 − 0.76%); moves only when ≥ 0.86% of fill ($2.08) above the current stop. Entries today **1 of 3**; consecutive losses 2 (throttle off). Pre-commit: resting stop $222.88, close by 12:30, no scheduled event before then known.
 
+**10:15 checkpoint (fired 14:17:04Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high $242.40 (14:12 bar); live 240.115 is below the 242.00 fill → no ratchet. XBI 153.13 (above ORH 152.53).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
