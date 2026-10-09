@@ -593,6 +593,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Pre-market, eight proxies (last extended-hours print vs Thursday close, ~9:00 ET; XBI's last print was 7:48 ET, quote 149.65/150.01):** SOXX 572.50 (+1.64%) · QQQ 753.36 (+0.77%) · SPY 776.65 (+0.35%) · IWM 278.36 (+0.28%) · XBI 149.65 (+0.24%) · XLF 54.27 (+0.08%) · TLT 77.73 (−0.18%) · XLE 65.04 (−0.31%). Risk-on gap, led by semis; energy and Treasuries slightly red.
 - **Thin legs to watch:** ERX 111.08/113.78 and LABU 223.62/226.40 show wide pre-market spreads (re-check at entry per C9); ERY 8.43/8.52 likewise.
 
+**Friday 2026-10-09, 9:30 observation** (read-only). Flat. First prints vs Thursday close, ~9:31 ET: SOXX 569.47 (+1.10%) · QQQ 751.81 (+0.57%) · IWM 278.67 (+0.40%) · XBI 149.87 (+0.39%) · SPY 776.36 (+0.31%) · XLF 54.28 (+0.09%) · TLT 77.71 (−0.21%) · XLE 65.07 (−0.26%). Gap-up holding but semis faded from +1.64% pre-market; opening range still builds until 10:00.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
