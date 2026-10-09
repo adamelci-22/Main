@@ -597,7 +597,7 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **Friday 2026-10-09, 10:00 checkpoint — no trade (range just completed, no closes outside yet).** Opening range from the 9:30–9:55 bars. RVOL: XBI 1.41 · SOXX 1.13 · XLF 0.86 · QQQ 0.83 · XLE 0.80 · IWM 0.71 · TLT 0.55 · SPY 0.53 → only XBI and SOXX clear 1.0×, so the top-3 floor adds XLF. Ranges: XBI 149.03–152.53 (last 152.51, 0.02 under its high) · SOXX 558.89–571.34 (last 561.61) · XLF 54.21–54.54 (54.45). No post-range 5-min close exists yet, so no break can be confirmed; watch XBI bull at 10:05–10:10. Scores if they break: XLF +0.44, SOXX +0.25, XBI +0.29 (expansion 0.49 / 0.78 / 0.80). Gate numbers now come from `tools/live/gate.py` (committed; the container's scratchpad scripts were lost in a reset).
 
-**10:05 checkpoint — no trade (one close outside).** Bars through the 10:00 bar. **XBI bull**: 10:00 close 152.885 > ORH 152.53 (first close outside; triggering bar volume 170,964 vs prior-3 avg 134,185 → pass); needs the 10:05 close to confirm at 10:10. RVOL 1.47, expansion 1.02 (already past its 14-day ATR), score −0.03. Others inside their ranges: SOXX 1.09 (561.94) · XLF 0.81 · QQQ 0.80 · IWM 0.76 · XLE 0.75 · TLT 0.52 · SPY 0.52.
+**10:05 checkpoint — no trade (one close outside).** Bars through the 10:00 bar. **XBI bull**: 10:00 close 152.885 > ORH 152.53 (first close outside; triggering bar volume 170,964 vs prior-3 avg 100,852 → pass); needs the 10:05 close to confirm at 10:10. RVOL 1.47, expansion 1.02 (already past its 14-day ATR), score −0.03. Others inside their ranges: SOXX 1.09 (561.94) · XLF 0.81 · QQQ 0.80 · IWM 0.76 · XLE 0.75 · TLT 0.52 · SPY 0.52.
 
 ## E6. Known issues — backlog, not yet fixed
 
