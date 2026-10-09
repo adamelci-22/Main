@@ -640,6 +640,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:35 checkpoint (fired 15:35:33Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 238.595 (−1.4% vs the 242.00 fill) → no ratchet. XBI 152.80, above its ORH 152.53.
 
+**11:40 checkpoint (fired 15:40:49Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 239.85 (−0.9% vs the 242.00 fill) → no ratchet. XBI 152.97, above its ORH 152.53.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
