@@ -671,6 +671,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Arming:** Monday 2026-10-12's chain (34 slots: 9:00, 9:30, 10:00–11:55, 12:00–12:25, 12:30, 8:00pm; NYSE open, Columbus Day) — see the arming line below once verified.
 - **Notes:** the 11:15 checkpoint fired ~6 min late (11:20 followed in the same minute); no effect, stops were resting.
 
+**Arming (Friday 12:30):** Monday 2026-10-12's chain armed — **34 of 34** verified via list_triggers (34 distinct run times, all enabled; created in three batches of ≤10/min). The Friday 8:00pm backup (verifies Monday) and the bimonthly reminder (next 2026-11-01) are the only other enabled triggers.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
