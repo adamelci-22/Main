@@ -599,6 +599,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:05 checkpoint — no trade (one close outside).** Bars through the 10:00 bar. **XBI bull**: 10:00 close 152.885 > ORH 152.53 (first close outside; triggering bar volume 170,964 vs prior-3 avg 100,852 → pass); needs the 10:05 close to confirm at 10:10. RVOL 1.47, expansion 1.02 (already past its 14-day ATR), score −0.03. Others inside their ranges: SOXX 1.09 (561.94) · XLF 0.81 · QQQ 0.80 · IWM 0.76 · XLE 0.75 · TLT 0.52 · SPY 0.52.
 
+**10:10 checkpoint (fired 14:11:09Z) — LABU ENTERED (entry 1 of 3).** XBI bull confirmed: closes 10:00 152.885 and 10:05 153.59 above ORH 152.53; triggering bar (10:00) volume 170,964 vs prior-3 avg 100,852 → pass; RVOL 1.47. SPY filter (v3.104) is reverted, not applied. Only XBI had cleared steps 1–2, so no runner-up (selection log: none). XBI at review 153.48, still above ORH.
+- **Candidates (top three for the selection log):** **XBI bull — selected**: RVOL 1.47, expansion 1.02, score −0.03, proxy 153.48. No other proxy had a close outside its range.
+- **LABU profile** (32 sessions): median adverse 3.46% · stop_pct 5.19% · **stall 0.38%** · **min move 0.86%** (mfe_to_target 3.04, informational). LABU 9:30–10:00 low **$222.88**.
+- **Entry:** buy 3 LABU limit $242.00 (ask 241.96) → **filled 14:11:55Z @ $242.00** ($726.00, 36.7% of account; order `6ac8f62b-f802`). Slippage vs ask +$0.04. Stop distance $19.12 = 7.90%; 3% cap bound (budget $59.40 ÷ 19.12 = 3.1 sh → 3).
+- **Stop:** stop_market 3 sh @ **$222.88** gfd, order `6ac8f633-e166` — **confirmed**, unfilled. Max loss at the stop ≈ $57.36 (2.9% of account).
+- B2: candidate = run_high × (1 − 0.76%); moves only when ≥ 0.86% of fill ($2.08) above the current stop. Entries today **1 of 3**; consecutive losses 2 (throttle off). Pre-commit: resting stop $222.88, close by 12:30, no scheduled event before then known.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
