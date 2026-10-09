@@ -12,7 +12,7 @@ RANK=lambda x, t: x['score']
 come from the 5-minute history (from 8/18).
 
 Model (same as the earlier 5-minute replay where possible):
-- 12 proxies; leveraged leg = L x proxy move (bull) or -L x (inverse).
+- the proxies in LEV (eight since v3.121); leveraged leg = L x proxy move (bull) or -L x (inverse).
 - RVOL >= 1.0 vs 20-day same-time cumulative average (top-3 floor), measured at the last
   completed 5-minute boundary.
 - Breakout: two consecutive closes outside the opening range (5-min or 1-min closes).
@@ -27,12 +27,9 @@ Model (same as the earlier 5-minute replay where possible):
 - 12:30 close; 3% risk sizing; no stop ceiling; 0.10% round-trip cost (leveraged terms);
   2 fresh + 1 re-entry; losing leg excluded for the day.
 """
-import json, random, statistics as st
+import gzip, json, os, random, statistics as st
 from collections import defaultdict
-
-import os
 SP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-import gzip
 M1 = json.load(gzip.open(f"{SP}/proxies_1m.json.gz"))          # sym -> day -> [ (o,h,l,c,v,interp) x 390 ]
 F5 = json.load(gzip.open(f"{SP}/proxies_5m_v2.json.gz"))       # sym -> [[t,o,h,l,c,v,interp],...]
 LEV = {'QQQ': 3, 'SPY': 3, 'SOXX': 3, 'IWM': 3, 'XLF': 3, 'XLE': 2, 'TLT': 3, 'XBI': 3
@@ -219,7 +216,6 @@ def summ(lab, daily, trades):
 
 
 
-import random
 IDX={'SPY','QQQ','IWM'}
 def score(c,t): return c['score']
 def rs_ratio(c,t):

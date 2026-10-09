@@ -1,8 +1,7 @@
 """Exit lab: replay exit rules on the REAL 1-minute paths of the 58 live trades (entry fixed).
 Live rule (B2): every 5 min, run_high from completed 1-min bars since fill; cand = run_high*(1-2*stall);
 move only if live>fill, live>cand, cand-stop >= min_move% of fill. Stop is a resting stop-market."""
-import json, csv, glob, math, statistics as st, random
-import os, gzip
+import csv, gzip, json, math, os, statistics as st
 HERE=os.path.dirname(os.path.abspath(__file__)); DATA=os.path.join(HERE,"data")
 REPO=os.path.abspath(os.path.join(HERE,"..",".."))
 BARS={tuple(k.split("|")):v for k,v in json.load(gzip.open(os.path.join(DATA,"exit_lab_bars_1m.json.gz"),"rt")).items()}
@@ -39,7 +38,7 @@ med=st.median([t['expo'] for t in T if t['expo']])
 for t in T: t['expo']=t['expo'] or med
 print(f"{len(T)} trades; median exposure {med:.2f}x of account; profile sessions min {min(t['n'] for t in T)}")
 # ---- simulator
-def sim(t,K=2.0,tp=None,half=None,half_K=None,be=None,lock=None,end=179,mmf=1.0,latency=1,tight_after=None):
+def sim(t,K=2.0,tp=None,half=None,half_K=None,be=None,lock=None,end=179,mmf=1.0,latency=1):
     o,h,l,c=t['o'],t['h'],t['l'],t['c']; fill=t['fill']; stop=t['stop0']; rh=fill
     banked=None; pend=[]; peak=fill; Kc=K
     def finish(px):

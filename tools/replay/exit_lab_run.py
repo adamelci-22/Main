@@ -1,6 +1,5 @@
-import os
-exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'exit_lab.py')).read())
-import statistics as st, random
+import random, statistics as st
+from exit_lab import T, run
 V=[("BASELINE: current trail (2x stall)",dict(K=2))]
 V+=[(f"trail {k}x stall",dict(K=k)) for k in (1,1.5,3,4,6)]
 V+=[("no trail: initial stop, hold to 12:30",dict(K=None))]
