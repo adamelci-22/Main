@@ -28,8 +28,8 @@ SP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 import gzip
 M1 = json.load(gzip.open(f"{SP}/proxies_1m.json.gz"))          # sym -> day -> [ (o,h,l,c,v,interp) x 390 ]
 F5 = json.load(gzip.open(f"{SP}/proxies_5m_v2.json.gz"))       # sym -> [[t,o,h,l,c,v,interp],...]
-LEV = {'QQQ': 3, 'SPY': 3, 'SOXX': 3, 'IWM': 3, 'XLF': 3, 'XLE': 2, 'TLT': 3, 'XBI': 3,
-       'XOP': 2, 'XLRE': 3, 'EEM': 3, 'XLU': 3}
+LEV = {'QQQ': 3, 'SPY': 3, 'SOXX': 3, 'IWM': 3, 'XLF': 3, 'XLE': 2, 'TLT': 3, 'XBI': 3
+       }
 SYMS = sorted(LEV)
 COST, STALL = 0.10, 0.10
 
