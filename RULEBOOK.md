@@ -660,6 +660,17 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:25 checkpoint (fired 16:25:53Z, management only) — LABU stop RATCHETED $222.88 → $240.85.** run_high $242.70 (16:24 bar, completed 1-min bars since the fill); live 242.23 (bid/ask 241.71/242.60, quote 16:26) above the 242.00 fill and above the candidate; candidate = 242.70 × (1 − 0.76%) = **240.85**, $17.97 above the old stop (min move $2.08) → moved. Old stop `6ac8f633` cancelled (verified), new stop_market 3 sh @ **$240.85** gfd, order `6ac915a8-a0c4`, **confirmed**, unfilled. Locked-in worst case now −$3.45 (−0.47% of the position, −0.17% of the account). XBI 153.58.
 
+**12:30 close — Friday 2026-10-09, D3 end-of-day report.**
+- **Balance:** $1,985.56 (cash = buying power; flat, no open orders). Day **+$5.63, +0.284%** (opening $1,979.93). Week-to-date: Mon–Thu per git history; today broke a 2-loss streak.
+- **Trade (1 of 3 entries):** LABU 3 sh, bought 10:11:55 ET @ $242.00 (limit; ask 241.96, +$0.04), sold 12:30:36 @ $243.8832 at market (last print 243.93), fee $0.02 → **+$5.63 net, +0.775% position, r +0.10**. MAE −4.77% (LABU low 230.46 at 10:49), MFE +0.80%. Hold 138 min.
+- **Stop handling:** initial stop $222.88 (LABU's own 9:30–10:00 low, 7.90% below, 3% cap bound at 3 sh) never touched. One ratchet at 12:25 → $240.85 (run_high 242.70); cancelled and verified at 12:30, then market sell. Stop confirmed after each placement.
+- **Streak:** consecutive losses **2 → 0** (a win); throttle off. Entries 1 of 3; D1 early shutdown did not apply (position held until 12:30).
+- **Declined / not taken:** no second entry. After 10:05, XBI faded back inside its range 10:45–11:25 (LABU −4.8% at the low); SOXX (RVOL 1.09) never broke its 558.89–571.34 range. No other proxy cleared RVOL 1.0×.
+- **Selection log:** 1 row appended (LABU / XBI bull, no runner-up).
+- **Rulebook changes this week/today:** v3.121 — the Core Twelve became the Core Eight (XLU, XLRE, XOP, EEM and their legs removed), D1 templates no longer hard-code the proxy count. Replay tools tidied; `tools/live/gate.py` added (the scratchpad scripts were lost in an overnight container reset).
+- **Arming:** Monday 2026-10-12's chain (34 slots: 9:00, 9:30, 10:00–11:55, 12:00–12:25, 12:30, 8:00pm; NYSE open, Columbus Day) — see the arming line below once verified.
+- **Notes:** the 11:15 checkpoint fired ~6 min late (11:20 followed in the same minute); no effect, stops were resting.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
