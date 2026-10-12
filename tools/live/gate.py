@@ -58,11 +58,19 @@ def main():
         tr = [max(h - l, abs(h - pc), abs(l - pc)) for (h, l, _), (_, _, pc) in zip(dd[1:], dd)]
         atr = st.mean(tr[-14:])
         exp = (max(b[1] for b in t) - min(b[2] for b in t)) / atr
-        rows.append((s, rvol, orh, orl, t[-1][3], run * side, exp, (1 - exp) * rvol))
+        # volume test: first bar of the current run outside the range vs avg of the 3 bars before it
+        vt = ''
+        if run:
+            i = 6 + len(post) - run                      # index (in t) of the run's first bar
+            prev = [b[4] for b in t[max(0, i - 3):i]]
+            vt = 'pass' if t[i][4] > sum(prev) / len(prev) else 'FAIL'
+            vt += f" ({t[i][4]:,} vs {sum(prev)/len(prev):,.0f})"
+        rows.append((s, rvol, orh, orl, t[-1][3], run * side, exp, (1 - exp) * rvol, vt, [round(c, 3) for c in post]))
     print(f"{today}, {k} completed 5-min bars")
     print(f"{'sym':5}{'RVOL':>6}{'ORH':>9}{'ORL':>9}{'last':>9}{'closes out':>11}{'expan':>7}{'score':>7}")
-    for s, rv, h, l, c, r, e, sc in sorted(rows, key=lambda x: -x[1]):
-        print(f"{s:5}{rv:6.2f}{h:9.2f}{l:9.2f}{c:9.2f}{r:+11d}{e:7.2f}{sc:+7.2f}")
+    for s, rv, h, l, c, r, e, sc, vt, post in sorted(rows, key=lambda x: -x[1]):
+        print(f"{s:5}{rv:6.2f}{h:9.2f}{l:9.2f}{c:9.2f}{r:+11d}{e:7.2f}{sc:+7.2f}  {vt}")
+        if post: print(f"      closes since 10:00: {post}")
 
 
 if __name__ == '__main__':
