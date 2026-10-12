@@ -634,6 +634,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Stop:** stop_market 36 sh @ **$35.74** gfd, order `6accf8dc-d4c2`, **confirmed**, unfilled. Max loss at the stop ≈ $56.5 (2.85% of the account).
 - B2: candidate = run_high × (1 − 0.72%); moves only when ≥ 0.68% of fill ($0.254) above the current stop and live > fill. Entries today **2 of 3**; consecutive losses 1 (throttle off, starts at 3). Pre-commit: resting stop $35.74, close by 12:30.
 
+**11:15 checkpoint (scheduled 15:15, fired 15:16:40Z) — SOXS hold, stop $35.74.** Stop confirmed and unfilled. run_high $37.50 (15:13 bar); live 37.235 (bid/ask 37.23/37.25) below the 37.31 fill → no ratchet. SOXX 544.76, below ORL 546.02.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
