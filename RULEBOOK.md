@@ -642,6 +642,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:25 checkpoint (scheduled 15:25, fired 15:25:35Z) — SOXS hold, stop $37.23.** Stop confirmed and unfilled. run_high still $37.50; live 37.38 (bid/ask 37.37/37.38) above the 37.31 fill; candidate 37.23 equals the current stop → no move. SOXX 544.045, below ORL 546.02.
 
+**11:30 checkpoint (scheduled 15:30, fired 15:31:08Z) — SOXS hold, stop $37.23.** Stop confirmed and unfilled. run_high still $37.50; live 37.365 (bid/ask 37.37/37.39) above the 37.31 fill; candidate 37.23 equals the stop → no move. SOXX 544.08, below ORL 546.02.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
