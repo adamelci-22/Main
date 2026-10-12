@@ -602,6 +602,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - B2: candidate = run_high × (1 − 0.32%); moves only when ≥ 0.32% of fill ($0.108) above the current stop and live > fill. Entries today **1 of 3**; consecutive losses 0 (throttle off). Pre-commit: resting stop $33.16, close by 12:30.
 - **Note:** three checkpoints (10:05, 10:10, 10:15) never reached this session, so the QQQ break that had been valid since 10:10 was not acted on until 10:22. Entry went in 12 minutes after the break was first confirmable; price moved little (QQQ 746.76 → 746.13).
 
+**10:10 slot (scheduled 14:10, fired 14:24:29Z, 14 min late; now a management read) — SQQQ stop RATCHETED $33.16 → $33.56.** run_high $33.675 (14:23 bar, the completed 1-min bar after the 14:22:45 fill); live 33.68 (bid/ask 33.67/33.69, 14:24:36) above the 33.66 fill and above the candidate; candidate = 33.675 × (1 − 0.32%) = **33.56** (floor to tick), $0.40 above the old stop (min move $0.108) → moved. Old stop `6acced3e` cancelled (verified), new stop_market 58 sh @ **$33.56** gfd, order `6accedb4-6203`, **confirmed**, unfilled. Worst case now −$5.80 (−0.30% of the account, −0.30% of the position). QQQ 745.745 (below ORL 747.10).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
