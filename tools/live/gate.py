@@ -5,8 +5,9 @@
 
 HIST*.json = saved get_equity_historicals output (5minute, regular); later files override
 earlier ones bar by bar. Together they must cover the last two sessions plus today. History before that comes from tools/replay/data.
-K = number of COMPLETED 5-min bars today (default: all bars in the file whose
-volume is final = every bar but the last, which is assumed in progress).
+K = number of COMPLETED 5-min bars today (6 opening-range bars + one per 5-min bar since
+10:00). Leave it OUT: the default is every bar but the last (assumed in progress) and cannot
+lag; a hand-typed K did on 2026-10-12 (see RULEBOOK E5).
 Prints RVOL, opening range, closes outside it, expansion and selection_score.
 """
 import gzip, json, os, statistics as st, sys
