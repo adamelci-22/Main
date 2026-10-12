@@ -585,93 +585,12 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-**Friday 2026-10-09, 9:00 research.** Thursday's session (LABD +$11.84, LABD re-entry −$0.93, DRV −$12.94; day −$2.03, −0.10%) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Thursday's E5); not restated here. Rule change since Thursday: **v3.121 — the Core Twelve became the Core Eight** (XLU, XLRE, XOP, EEM and their legs removed; C4).
+**Monday 2026-10-12, 9:30 observation (the 9:00 research slot never reached this session — run late, at 9:31, and flagged).** Friday's session (LABU +$5.63, +0.28%; one entry, closed at 12:30) is in `archive/trades.csv`, `archive/selection_log.csv` and git history (Friday's E5); not restated here. No rule changes since v3.121 (the Core Eight). **Missed checkpoint:** the 9:00 AM ET research trigger (`trig_01CDyGVVELEMibp3yM6a6yhD`, 13:00Z) produced no notification here (the session saw nothing between 13:04Z and the 9:30 slot at 13:31:23Z); no orders were affected, nothing was due at 9:00. Research below was done at 13:31Z.
 
-- **State (A3):** flat · no open orders or positions · total_value = cash = buying power **$1,979.93** · pending deposits $0.
-- **A1:** consecutive losses **2** (LABD re-entry, DRV) → throttle off (0.5% starts at 3), full 3% budget ≈ **$59.40**. Entries today 0 of 3. No lockouts.
-- **Headlines:** none checked beyond price action; proceeding on the tape.
-- **Pre-market, eight proxies (last extended-hours print vs Thursday close, ~9:00 ET; XBI's last print was 7:48 ET, quote 149.65/150.01):** SOXX 572.50 (+1.64%) · QQQ 753.36 (+0.77%) · SPY 776.65 (+0.35%) · IWM 278.36 (+0.28%) · XBI 149.65 (+0.24%) · XLF 54.27 (+0.08%) · TLT 77.73 (−0.18%) · XLE 65.04 (−0.31%). Risk-on gap, led by semis; energy and Treasuries slightly red.
-- **Thin legs to watch:** ERX 111.08/113.78 and LABU 223.62/226.40 show wide pre-market spreads (re-check at entry per C9); ERY 8.43/8.52 likewise.
-
-**Friday 2026-10-09, 9:30 observation** (read-only). Flat. First prints vs Thursday close, ~9:31 ET: SOXX 569.47 (+1.10%) · QQQ 751.81 (+0.57%) · IWM 278.67 (+0.40%) · XBI 149.87 (+0.39%) · SPY 776.36 (+0.31%) · XLF 54.28 (+0.09%) · TLT 77.71 (−0.21%) · XLE 65.07 (−0.26%). Gap-up holding but semis faded from +1.64% pre-market; opening range still builds until 10:00.
-
-**Friday 2026-10-09, 10:00 checkpoint — no trade (range just completed, no closes outside yet).** Opening range from the 9:30–9:55 bars. RVOL: XBI 1.41 · SOXX 1.13 · XLF 0.86 · QQQ 0.83 · XLE 0.80 · IWM 0.71 · TLT 0.55 · SPY 0.53 → only XBI and SOXX clear 1.0×, so the top-3 floor adds XLF. Ranges: XBI 149.03–152.53 (last 152.51, 0.02 under its high) · SOXX 558.89–571.34 (last 561.61) · XLF 54.21–54.54 (54.45). No post-range 5-min close exists yet, so no break can be confirmed; watch XBI bull at 10:05–10:10. Scores if they break: XLF +0.44, SOXX +0.25, XBI +0.29 (expansion 0.49 / 0.78 / 0.80). Gate numbers now come from `tools/live/gate.py` (committed; the container's scratchpad scripts were lost in a reset).
-
-**10:05 checkpoint — no trade (one close outside).** Bars through the 10:00 bar. **XBI bull**: 10:00 close 152.885 > ORH 152.53 (first close outside; triggering bar volume 170,964 vs prior-3 avg 100,852 → pass); needs the 10:05 close to confirm at 10:10. RVOL 1.47, expansion 1.02 (already past its 14-day ATR), score −0.03. Others inside their ranges: SOXX 1.09 (561.94) · XLF 0.81 · QQQ 0.80 · IWM 0.76 · XLE 0.75 · TLT 0.52 · SPY 0.52.
-
-**10:10 checkpoint (fired 14:11:09Z) — LABU ENTERED (entry 1 of 3).** XBI bull confirmed: closes 10:00 152.885 and 10:05 153.59 above ORH 152.53; triggering bar (10:00) volume 170,964 vs prior-3 avg 100,852 → pass; RVOL 1.47. SPY filter (v3.104) is reverted, not applied. Only XBI had cleared steps 1–2, so no runner-up (selection log: none). XBI at review 153.48, still above ORH.
-- **Candidates (top three for the selection log):** **XBI bull — selected**: RVOL 1.47, expansion 1.02, score −0.03, proxy 153.48. No other proxy had a close outside its range.
-- **LABU profile** (32 sessions): median adverse 3.46% · stop_pct 5.19% · **stall 0.38%** · **min move 0.86%** (mfe_to_target 3.04, informational). LABU 9:30–10:00 low **$222.88**.
-- **Entry:** buy 3 LABU limit $242.00 (ask 241.96) → **filled 14:11:55Z @ $242.00** ($726.00, 36.7% of account; order `6ac8f62b-f802`). Slippage vs ask +$0.04. Stop distance $19.12 = 7.90%; 3% cap bound (budget $59.40 ÷ 19.12 = 3.1 sh → 3).
-- **Stop:** stop_market 3 sh @ **$222.88** gfd, order `6ac8f633-e166` — **confirmed**, unfilled. Max loss at the stop ≈ $57.36 (2.9% of account).
-- B2: candidate = run_high × (1 − 0.76%); moves only when ≥ 0.86% of fill ($2.08) above the current stop. Entries today **1 of 3**; consecutive losses 2 (throttle off). Pre-commit: resting stop $222.88, close by 12:30, no scheduled event before then known.
-
-**10:15 checkpoint (fired 14:17:04Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high $242.40 (14:12 bar); live 240.115 is below the 242.00 fill → no ratchet. XBI 153.13 (above ORH 152.53).
-
-**10:20 checkpoint (fired 14:22:03Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 238.805 below the 242.00 fill → no ratchet. XBI 152.96 (above ORH 152.53).
-
-**10:25 checkpoint (fired 14:26:56Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 239.80 below the 242.00 fill → no ratchet. XBI 153.07 (above ORH 152.53).
-
-**10:30 checkpoint (fired 14:30:13Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 240.01 below the 242.00 fill → no ratchet. XBI 153.04 (above ORH 152.53).
-
-**10:35 checkpoint (fired 14:36:00Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 239.445 below the 242.00 fill → no ratchet. XBI 153.10 (above ORH 152.53).
-
-**10:40 checkpoint (fired 14:40:51Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 237.94 below the 242.00 fill (−1.7%) → no ratchet. XBI 152.685 (above ORH 152.53, 0.15 to spare).
-
-**10:45 checkpoint (fired 14:45:36Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 233.75 (−3.4% vs the 242.00 fill, $10.87 above the stop) → no ratchet. XBI 151.76 has fallen back inside its range (ORH 152.53); B3 lists the only live exits (the resting stop, the 12:30 close), so no discretionary exit.
-
-**10:50 checkpoint (fired 14:50:51Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 231.36 (−4.4% vs the 242.00 fill, $8.48 above the stop) → no ratchet. XBI 151.445, back inside its range (ORH 152.53, low 149.03).
-
-**10:55 checkpoint (fired 14:55:48Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 233.995 (−3.3% vs the 242.00 fill, $11.12 above the stop) → no ratchet. XBI 152.04, inside its range (ORH 152.53).
-
-**11:00 checkpoint (fired 15:00:49Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 235.13 (−2.8% vs the 242.00 fill, $12.25 above the stop) → no ratchet. XBI 151.87, inside its range (ORH 152.53). Entries today 1 of 3; the volume test no longer applies to new entries from 11:00 (v3.117), but a position is open so no entry check.
-
-**11:05 checkpoint (fired 15:06:22Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 234.77 (−3.0% vs the 242.00 fill, $11.89 above the stop) → no ratchet. XBI 151.91, inside its range.
-
-**11:10 checkpoint (fired 15:11:07Z) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 235.33 (−2.8% vs the 242.00 fill, $12.45 above the stop) → no ratchet. XBI 152.14, inside its range (ORH 152.53).
-
-**11:15 checkpoint (scheduled 15:15, fired 15:20:59Z — ~6 min late) — LABU hold, stop $222.88.** Stop `6ac8f633` confirmed and unfilled. run_high still $242.40; live 236.00 (−2.5% vs the 242.00 fill, $13.12 above the stop) → no ratchet. XBI 152.29, inside its range (ORH 152.53).
-
-**11:20 checkpoint (fired 15:21:15Z, same minute as the late 11:15 read) — LABU hold, stop $222.88.** Stop confirmed and unfilled. Live 236.00, no new high (run_high $242.40) → no ratchet. XBI 152.28, inside its range.
-
-**11:25 checkpoint (fired 15:25:38Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 236.70 (−2.2% vs the 242.00 fill) → no ratchet. XBI 152.29, inside its range. Thin tape: LABU's last real print was 15:22.
-
-**11:30 checkpoint (fired 15:30:52Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; last print 236.70 (15:26), bid/ask 238.00/238.66 — below the 242.00 fill either way → no ratchet. XBI 152.80, back above its ORH 152.53.
-
-**11:35 checkpoint (fired 15:35:33Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 238.595 (−1.4% vs the 242.00 fill) → no ratchet. XBI 152.80, above its ORH 152.53.
-
-**11:40 checkpoint (fired 15:40:49Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 239.85 (−0.9% vs the 242.00 fill) → no ratchet. XBI 152.97, above its ORH 152.53.
-
-**11:45 checkpoint (fired 15:45:38Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 240.19 (−0.7% vs the 242.00 fill) → no ratchet. XBI 153.15, above its ORH 152.53.
-
-**11:50 checkpoint (fired 15:50:39Z) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high still $242.40; live 240.02 (−0.8% vs the 242.00 fill) → no ratchet. XBI 153.225, above its ORH 152.53.
-
-**11:55 checkpoint (fired 15:56:11Z, last entry-eligible slot) — LABU hold, stop $222.88; no ratchet.** Stop confirmed and unfilled. run_high $242.40; last print exactly 242.00 = the fill (bid 241.38 / ask 242.40) — B2 needs live strictly above the fill, so no move (candidate would have been 240.56). XBI 153.53, above its ORH 152.53. Position open → no new entry.
-
-**12:00 checkpoint (fired 16:00:28Z, management only) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high $242.40; live 241.04 (−0.4% vs the 242.00 fill) → no ratchet. XBI 153.275. Position open, so D1 early shutdown does not apply; 12:05–12:25 stay.
-
-**12:05 checkpoint (fired 16:06:02Z, management only) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high $242.40; live 240.67 (−0.6% vs the 242.00 fill) → no ratchet. XBI 153.39.
-
-**12:10 checkpoint (fired 16:11:09Z, management only) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high $242.40; live 240.765 (−0.5% vs the 242.00 fill) → no ratchet. XBI 153.385.
-
-**12:15 checkpoint (fired 16:16:48Z, management only) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high $242.40; live 241.66 (−0.1% vs the 242.00 fill) → no ratchet. XBI 153.53.
-
-**12:20 checkpoint (fired 16:20:36Z, management only) — LABU hold, stop $222.88.** Stop confirmed and unfilled. run_high $242.40; live 241.57 (−0.2% vs the 242.00 fill) → no ratchet. XBI 153.57.
-
-**12:25 checkpoint (fired 16:25:53Z, management only) — LABU stop RATCHETED $222.88 → $240.85.** run_high $242.70 (16:24 bar, completed 1-min bars since the fill); live 242.23 (bid/ask 241.71/242.60, quote 16:26) above the 242.00 fill and above the candidate; candidate = 242.70 × (1 − 0.76%) = **240.85**, $17.97 above the old stop (min move $2.08) → moved. Old stop `6ac8f633` cancelled (verified), new stop_market 3 sh @ **$240.85** gfd, order `6ac915a8-a0c4`, **confirmed**, unfilled. Locked-in worst case now −$3.45 (−0.47% of the position, −0.17% of the account). XBI 153.58.
-
-**12:30 close — Friday 2026-10-09, D3 end-of-day report.**
-- **Balance:** $1,985.56 (cash = buying power; flat, no open orders). Day **+$5.63, +0.284%** (opening $1,979.93). Week-to-date: Mon–Thu per git history; today broke a 2-loss streak.
-- **Trade (1 of 3 entries):** LABU 3 sh, bought 10:11:55 ET @ $242.00 (limit; ask 241.96, +$0.04), sold 12:30:36 @ $243.8832 at market (last print 243.93), fee $0.02 → **+$5.63 net, +0.775% position, r +0.10**. MAE −4.77% (LABU low 230.46 at 10:49), MFE +0.80%. Hold 138 min.
-- **Stop handling:** initial stop $222.88 (LABU's own 9:30–10:00 low, 7.90% below, 3% cap bound at 3 sh) never touched. One ratchet at 12:25 → $240.85 (run_high 242.70); cancelled and verified at 12:30, then market sell. Stop confirmed after each placement.
-- **Streak:** consecutive losses **2 → 0** (a win); throttle off. Entries 1 of 3; D1 early shutdown did not apply (position held until 12:30).
-- **Declined / not taken:** no second entry. After 10:05, XBI faded back inside its range 10:45–11:25 (LABU −4.8% at the low); SOXX (RVOL 1.09) never broke its 558.89–571.34 range. No other proxy cleared RVOL 1.0×.
-- **Selection log:** 1 row appended (LABU / XBI bull, no runner-up).
-- **Rulebook changes this week/today:** v3.121 — the Core Twelve became the Core Eight (XLU, XLRE, XOP, EEM and their legs removed), D1 templates no longer hard-code the proxy count. Replay tools tidied; `tools/live/gate.py` added (the scratchpad scripts were lost in an overnight container reset).
-- **Arming:** Monday 2026-10-12's chain (34 slots: 9:00, 9:30, 10:00–11:55, 12:00–12:25, 12:30, 8:00pm; NYSE open, Columbus Day) — see the arming line below once verified.
-- **Notes:** the 11:15 checkpoint fired ~6 min late (11:20 followed in the same minute); no effect, stops were resting.
-
-**Arming (Friday 12:30):** Monday 2026-10-12's chain armed — **34 of 34** verified via list_triggers (34 distinct run times, all enabled; created in three batches of ≤10/min). The Friday 8:00pm backup (verifies Monday) and the bimonthly reminder (next 2026-11-01) are the only other enabled triggers.
+- **State (A3):** flat · no open orders or positions · total_value = cash = buying power **$1,985.56** · pending deposits $0. Trade approvals off.
+- **A1:** consecutive losses **0** (Friday's LABU was a win) → throttle off, full 3% budget ≈ **$59.57**. Entries today 0 of 3. No lockouts.
+- **Headlines:** none checked; proceeding on price action.
+- **First prints vs Friday close, ~9:31 ET (eight proxies):** XLE 65.97 (+1.37%) · XLF 55.06 (+0.60%) · SPY 778.99 (+0.05%) · TLT 77.85 (−0.17%) · IWM 278.47 (−0.17%) · QQQ 748.32 (−0.39%) · XBI 152.96 (−0.53%) · SOXX 548.83 (−1.89%). Mixed tape: energy and financials up, semis the weak spot. The 30-minute opening range builds until 10:00; read-only, no decision.
 
 ## E6. Known issues — backlog, not yet fixed
 
