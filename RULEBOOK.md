@@ -610,6 +610,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:05 slot (scheduled 14:05, delivered 14:27:02Z, 22 min late) — superseded.** Position already open (SQQQ, entered 14:22:45Z); no new read needed — state as of 14:26:47Z: SQQQ 33.727, stop $33.56 confirmed, no ratchet due. The late slots (10:05, 10:10, 10:15, 10:25 delivered 14:24–14:27Z, out of order) are being flushed together; the scheduler is behind.
 
+**10:30 checkpoint (fired 14:31:34Z) — SQQQ hold, stop $33.56.** Stop confirmed and unfilled. run_high $33.75 (14:26 bar); live 33.635 is below the 33.66 fill (bid/ask 33.65/33.66) → no ratchet (candidate would be 33.64). Stop is $0.075 under the last print. QQQ 745.98, still below ORL 747.10.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
