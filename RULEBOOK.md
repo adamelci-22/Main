@@ -650,6 +650,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:45 checkpoint (fired 15:45:17Z) — flat, no entry possible** (same state as 11:40: both instruments excluded, allowance spent). Account $1,977.00.
 
+**11:50 checkpoint (fired 15:51:35Z) — flat, no entry possible** (unchanged). Account $1,977.00.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
