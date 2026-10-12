@@ -638,6 +638,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:05 slot (scheduled 15:05, delivered 15:17:06Z, 12 min late) — superseded.** SOXS already entered at 11:12 and read at 11:16; state as of 15:17:00Z: SOXS 37.235 (below the 37.31 fill), stop $35.74 confirmed, no ratchet due.
 
+**11:20 checkpoint (scheduled 15:20, fired 15:20:59Z) — SOXS stop RATCHETED $35.74 → $37.23.** run_high $37.50 (15:13 bar, completed 1-min bars since the 15:12:15 fill); live 37.395 (bid/ask 37.39/37.40, 15:21:06) above the 37.31 fill and above the candidate; candidate = 37.50 × (1 − 0.72%) = **37.23**, $1.49 above the old stop (min move $0.254) → moved. Old stop `6accf8dc` cancelled (verified), new stop_market 36 sh @ **$37.23** gfd, order `6accfaf3-463e`, **confirmed**, unfilled. Worst case now −$2.88 (−0.21% of the position, −0.15% of the account). SOXX 543.90, below ORL 546.02.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
