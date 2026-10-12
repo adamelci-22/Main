@@ -621,6 +621,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **T+10:** folded into the regular 5-minute grid (10:50 onward). Entries today 1 of 3; the next entry is a fresh instrument (2 distinct instruments allowed, one re-entry).
 - **Records:** trade appended to `archive/trades.csv`; the `selection_log.csv` row is appended at 12:30 (needs the 12:30 prices).
 
+**10:50 checkpoint (scheduled 14:50, fired 14:50:40Z) — flat, no entry.** Bars through 10:45. Step-1 group (top-3 floor): IWM 1.11 · SOXX 0.94 · QQQ 0.85. IWM bear (four closes below ORL 278.23, latest 277.965): triggering bar 10:15 volume 99,787 vs 124,163 → **FAIL**. SOXX bear (three closes below 546.02, latest 543.99): triggering bar volume 27,068 vs 52,103 → **FAIL**. QQQ bear excluded (SQQQ stopped at 10:46). XLE and XBI have one close below their ranges but RVOL 0.79/0.57 is outside the step-1 group; SPY run −6 at RVOL 0.47 likewise.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
