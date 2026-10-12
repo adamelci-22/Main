@@ -592,6 +592,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Headlines:** none checked; proceeding on price action.
 - **First prints vs Friday close, ~9:31 ET (eight proxies):** XLE 65.97 (+1.37%) · XLF 55.06 (+0.60%) · SPY 778.99 (+0.05%) · TLT 77.85 (−0.17%) · IWM 278.47 (−0.17%) · QQQ 748.32 (−0.39%) · XBI 152.96 (−0.53%) · SOXX 548.83 (−1.89%). Mixed tape: energy and financials up, semis the weak spot. The 30-minute opening range builds until 10:00; read-only, no decision.
 
+**10:00 checkpoint (fired 14:01:04Z, ~10:01 ET) — no trade (range just completed, no closes outside yet).** Opening range from the 9:30–9:55 bars. RVOL: IWM 1.36 · SOXX 0.92 · XLE 0.88 · XLF 0.80 · QQQ 0.77 · XBI 0.52 · TLT 0.50 · SPY 0.49 → only IWM clears 1.0×, so the top-3 floor adds SOXX and XLE. Ranges: IWM 278.23–279.14 (last 278.53) · SOXX 546.02–552.93 (548.21) · XLE 65.81–66.42 (66.24). No post-range 5-min close exists yet, so no break can be confirmed. Scores if they break: IWM +1.03, QQQ +0.52 (RVOL below floor), SOXX +0.49, XLE +0.45 (expansion 0.24 / 0.46 / 0.49).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
