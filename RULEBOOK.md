@@ -644,6 +644,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:30 checkpoint (scheduled 15:30, fired 15:31:08Z) — SOXS hold, stop $37.23.** Stop confirmed and unfilled. run_high still $37.50; live 37.365 (bid/ask 37.37/37.39) above the 37.31 fill; candidate 37.23 equals the stop → no move. SOXX 544.08, below ORL 546.02.
 
+**11:35 checkpoint (scheduled 15:35, fired 15:36:08Z) — SOXS STOPPED OUT; no re-entry possible (C12 T+0).** Stop `6accfaf3` **filled 11:34:58 ET @ $37.23** (36 sh, fee $0.03; exactly at the stop). **Net −$2.91** (−0.216% position, −0.147% account, r = −0.05); account **$1,977.00**. Consecutive losses **1 → 2**; throttle off (starts at 3). SOXS excluded for the rest of the day (v3.68). **Both entered instruments (SQQQ, SOXS) have lost and are excluded, and the allowance is 2 fresh + 1 re-entry of one of them (A1) — no entry is possible for the rest of the day.** I keep the grid through 12:00 per D1 (early shutdown applies at 12:00 while flat, deleting 12:05–12:25). Day so far −$8.56. `trades.csv` row appended; the `selection_log.csv` rows (SQQQ, SOXS) are appended at 12:30.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
