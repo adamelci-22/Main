@@ -9,7 +9,7 @@ To extend: fetch 1-minute bars (Robinhood caps ~5,000 bars per symbol per call �
 ## Exit lab (added 2026-10-08)
 
 - `exit_lab.py` / `exit_lab_run.py` — replays EXIT rules on the real 1-minute paths of the live trades in `archive/trades.csv` (entry fixed at the actual fill and initial stop), using each ticker's own stall/min-move profile (the same 31-session formulas as `tools/profile.py`). Baseline = the live B2 trail (2 x stall, checks every 5 min, 1-minute latency). Compares trail widths, breakeven stops, profit-locks, take-profits, half-off, and earlier closes. Run: `python3 tools/replay/exit_lab_run.py`.
-- `data/exit_lab_bars_1m.json.gz` — full-session 1-minute bars of the held tickers for each trade day (9/1-10/8); `data/exit_lab_daily.json.gz` — daily bars used for the profiles.
+- `data/exit_lab_bars_1m.json.gz` — full-session 1-minute bars of the held tickers for each trade day (9/1-10/12); `data/exit_lab_daily.json.gz` — daily bars used for the profiles.
 - Baseline vs reality: correlation 0.82 on 57 trades; the lab is a little optimistic (stops fill exactly at the stop, current rules applied to older trades), so compare rules to each other, not to live P&L. QBTX 9/8 is excluded (logged entry price does not match the market).
 - To extend with new trades: fetch that day's 1-minute bars (13:30Z-20:00Z) for the held ticker, add to the bars file as `"SYM|YYYY-MM-DD" -> [[ts,o,h,l,c,v,interpolated],...]`, and refresh the daily file.
 
