@@ -599,6 +599,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:00 checkpoint (fired 14:00:44Z, ~10:01 ET) — no trade (range just completed, no closes outside yet).** Flat, no orders or positions. Opening range from the six 9:30-9:55 bars (gate.py, all six complete). RVOL (step 1): XLF 2.03 · IWM 1.52 · SOXX 1.37 · XBI 1.17 · QQQ 1.07 · TLT 1.03 pass 1.0x; XLE 0.89 and SPY 0.68 below. Ranges (ORH/ORL) and last 9:55 close: SOXX 538.08/527.16 (535.91) · QQQ 743.97/738.84 (743.70) · IWM 278.70/276.52 (276.53) · XBI 150.84/148.28 (148.74) · XLF 55.65/54.95 (54.95) · TLT 78.57/78.28 (78.28). No proxy has a close after 10:00 yet, so none can have two closes outside; correct no-trade. Entries today 0 of 3.
 
+**10:05 checkpoint (fired 14:06:13Z) — no trade, flat.** Positions empty (verified). Only the 10:00 bar has completed since the range, so no proxy can have two consecutive closes outside it yet (earliest possible: the 10:10 slot). Entries today 0 of 3.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
