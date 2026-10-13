@@ -601,6 +601,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:05 checkpoint (fired 14:06:13Z) — no trade, flat.** Positions empty (verified). Only the 10:00 bar has completed since the range, so no proxy can have two consecutive closes outside it yet (earliest possible: the 10:10 slot). Entries today 0 of 3.
 
+**10:10 checkpoint (fired 14:11:20Z, ~10:12 ET) — FAZ ENTERED (entry 1 of 3).** Gate (gate.py, 8 bars 9:30-10:05): only **XLF** bearish — closes 54.675 and 54.719 below ORL 54.95; trigger bar (10:00) volume **812,964 vs 3-bar avg 381,076, pass**. IWM had two closes below its range (276.43/276.37 vs ORL 276.52) but its trigger bar failed the volume test (268,536 vs 308,656); SOXX one close above ORH only. One candidate, so no ranking.
+- **Candidates (top three for the selection log):** **XLF bear — selected**: RVOL 2.00, expansion 1.62, score -1.24, proxy 54.85 at review. No runner-up cleared steps 1-2 (IWM failed the volume test; SOXX single close).
+- **FAZ profile** (31 sessions): median adverse 1.26% · stop_pct 2.50% · **stall 0.27%** · **min move 0.32%**. Initial stop = FAZ own 9:30-10:00 low **$35.10** (4.2% below the ask). Sizing: 3% of $1,977 = $59.31 ÷ (36.64 - 35.10) = 38.5 → **38 shares** (risk cap bound; cash would afford 53).
+- **Entry:** buy 38 FAZ limit $36.66 (ask 36.64) → **filled 14:12:46Z @ $36.648** ($1,392.62, 70.4% of the account; order `6ace3c5e-4a75`). Slippage vs ask 0.008. Positions verified 38 sh.
+- **Stop:** stop_market sell 38 @ **$35.10** gfd, `6ace3c67-a7c8`, **confirmed**. Proxy re-check at review: XLF 54.85 below ORL 54.95 ✓.
+- **Pre-commit (B3):** resting stop $35.10, 12:30 close; no scheduled event before 12:30 known.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
