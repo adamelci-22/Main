@@ -17,7 +17,7 @@ T=[]
 for x in csv.DictReader(open(os.path.join(REPO,'archive','trades.csv'))):
     if x['date_closed']<'2026-09-01': continue
     sym,date=x['instrument'],x['date_closed']
-    if (sym,date)==('QBTX','2026-09-08'): continue
+    if (sym,date)==('QBTX','2026-09-08') or (sym,date) not in BARS: continue
     raw=BARS[(sym,date)]
     o=[0]*180;h=[0]*180;l=[0]*180;c=[0]*180;seen=[False]*180
     for ts,bo,bh,bl,bc,bv,ip in raw:
