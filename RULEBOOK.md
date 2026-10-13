@@ -628,9 +628,11 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:00 checkpoint (fired 15:00:49Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.245 (bid/ask 36.24/36.25), below the 36.648 fill, so no ratchet. XLF 55.053, flat on its prior close. Position open, so no new entries (E2: one position). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
 
-**11:10 checkpoint (fired 15:11:26Z; the 11:05 slot never reached this session, superseded by this read) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.25); live 36.16 (bid/ask 36.16/36.17), below the 36.648 fill, so no ratchet. XLF 55.095. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
+**11:10 checkpoint (fired 15:11:26Z; the 11:05 slot was delivered 12 minutes late, at 15:17:03Z, and superseded by the 11:10 and 11:15 reads) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.25); live 36.16 (bid/ask 36.16/36.17), below the 36.648 fill, so no ratchet. XLF 55.095. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
 
 **11:15 checkpoint (fired 15:16:31Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 35.99 (bid/ask 35.98/35.99), -1.8% vs the fill, 2.5% above the stop; no ratchet. XLF 55.18 (up 0.24% on the day). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
+
+**11:05 checkpoint (scheduled 15:05, delivered late at 15:17:03Z) — superseded.** Corrects the 11:10 note: this slot was not lost, only late. State at 15:17: FAZ 35.99 (bid/ask 35.98/35.99), stop `6ace3c67` $35.10 confirmed, unfilled, same as the 11:15 read taken one minute earlier. No action.
 
 ## E6. Known issues — backlog, not yet fixed
 
