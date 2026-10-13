@@ -654,6 +654,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:05 checkpoint (fired 16:06:37Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.375); live 36.405 (bid/ask 36.40/36.41), still below the 36.648 fill (0.7% under), so no ratchet. XLF 54.975, back near its range low (ORL 54.95). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
 
+**12:15 checkpoint (fired 16:16:32Z; the 12:10 slot has not been delivered, covered by this read) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.48); live 36.385 (bid/ask 36.38/36.39), still below the 36.648 fill, so no ratchet. XLF 54.975. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
