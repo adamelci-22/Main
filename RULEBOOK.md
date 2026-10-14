@@ -630,6 +630,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:55 checkpoint (fired 14:55:25Z) — SPXU hold, stop $33.60 unchanged.** Stop `6acf96e9` confirmed, unfilled. run_high $33.72 (14:53 bar); live 33.68 (bid/ask 33.68/33.69), above the 33.5899 fill. Candidate = 33.72 x 0.9972 = 33.6256 → $33.62, but the move from the current stop (0.02) is under the minimum 0.20% of fill (0.067), so no ratchet. SPY 772.08, still below its ORL. Pre-commit: resting stop $33.60, next ratchet when the candidate clears 33.67, 12:30 close. Entries 2 of 3.
 
+**11:00 checkpoint (fired 15:01:05Z) — SPXU hold, stop $33.60 unchanged.** Stop `6acf96e9` confirmed, unfilled. run_high $33.72 (no new high; recent lows 33.62); live 33.67 (bid/ask 33.67/33.68), 0.2% above the stop. Candidate $33.62, only 0.02 above the stop (< min move 0.067), so no ratchet. SPY 772.20, below its ORL. Pre-commit: resting stop $33.60, 12:30 close. Entries 2 of 3.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
