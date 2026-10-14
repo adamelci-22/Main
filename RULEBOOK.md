@@ -619,6 +619,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:40 checkpoint (fired 14:40:40Z) — flat, no entry.** Gate (K=14 through the 10:35 bar): **SPY, QQQ and IWM** each have one close below their range (SPY 772.24 vs ORL 773.21, QQQ 735.70 vs 735.90, IWM 273.03 vs 273.08) — a new run needs two consecutive closes, so none qualifies yet; **TLT bull** (eight closes above) excluded because TMF lost at 10:18; XLF/XBI/SOXX/XLE inside. No candidate; correct no-trade. Account $1,967.50, 4 consecutive losses (throttle on; one more = lockout). Entries 1 of 3.
 
+**10:45 checkpoint (fired 14:46:14Z, ~10:47 ET) — SPXU ENTERED (entry 2 of 3, fresh instrument, throttle ON; ONE MORE LOSS = 5 = LOCKOUT).** Gate (K=15 bars through the 10:40 bar): only **SPY** bearish — closes 772.24 and 772.54 below ORL 773.21; trigger bar (10:35) volume **196,913 vs 3-bar avg 185,973, pass**; RVOL 1.17; v3.119 momentum pass (latest 772.54 below the close two bars back 773.43). **TLT bull** excluded (TMF lost); **XLE** (RVOL 0.89) is outside step 1 because seven proxies clear 1.0x; IWM, QQQ back inside. One candidate, no ranking.
+- **Candidates (top three for the selection log):** **SPY bear — selected**: RVOL 1.17, expansion 0.67, score +0.38, proxy 772.83 at review. No runner-up cleared steps 1-2.
+- **SPXU profile** (31 sessions): median adverse 0.81% · stop_pct 2.50% · **stall 0.14%** · **min move 0.20%**. Initial stop = SPXU's own 9:30-10:00 low **$33.1507**, placed at **$33.15** (tick, 1.3% below the ask). Sizing with the 0.5% throttle: $9.84 ÷ (33.60 - 33.1507) = 21.9 → **21 shares** (cash would afford 58).
+- **Entry:** buy 21 SPXU limit $33.62 (ask 33.60) → **filled 14:47:00Z @ $33.5899** ($705.39, 35.9% of the account; order `6acf95e4-954e`). Slippage vs ask -0.01. Positions verified 21 sh.
+- **Stop:** stop_market sell 21 @ **$33.15** gfd, `6acf95f0-0163`, **confirmed**. Proxy re-check at review: SPY 772.83 below ORL 773.21 ✓.
+- **Pre-commit (B3):** resting stop $33.15, 12:30 close; no scheduled event known before 12:30. **The B2 ratchet with a 0.14% stall band gives a very tight trail (2 x 0.14% = 0.28% under run_high): after the TMF experience, expect it to sit within a few cents of the market once in profit.**
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
