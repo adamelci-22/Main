@@ -649,6 +649,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Stop:** stop_market sell 58 @ **$33.15** gfd, `6acfa06e-bf54`, **confirmed**. Proxy re-check: SPY 771.74 below ORL 773.21 ✓.
 - **Pre-commit (B3):** resting stop $33.15, 12:30 close; no scheduled event known. **Day is now 3 of 3 entries; nothing further can be entered today.**
 
+**11:35 checkpoint (fired 15:35:30Z) — SPXU (re-entry) stop RATCHETED $33.15 → $33.67.** run_high $33.77 (15:34 bar, completed 1-min bars since the 15:31:47 fill); live 33.75 (bid/ask 33.75/33.76) above the 33.7383 fill; candidate = 33.77 x 0.9972 = 33.675 → floored to $33.67; move 0.52 ≥ min move 0.067. Old stop `6acfa06e` cancelled and verified `cancelled`; new stop_market sell 58 @ $33.67 gfd `6acfa177-8156` **confirmed** (58 sh held). The stop is 0.24% under the market and 0.07 under the fill: a stop-out at 33.67 would lose about $4 (58 x 0.07), a small loss. SPY 771.50, below ORL. No further entries today (3 of 3). Pre-commit: resting stop $33.67, 12:30 close.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
