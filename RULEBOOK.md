@@ -585,84 +585,14 @@ Never commit capital or write policy on a mechanism not seen to succeed.
 
 A slot, not a fixture. When the driver stops mattering, replace it entirely — its triggers were specific to it. **Stale context asserted confidently is worse than none.**
 
-**Tuesday 2026-10-13, 9:00 research (fired 13:00:29Z, on time).** Monday's session is closed and logged (two stop-outs, SQQQ -$5.65 and SOXS -$2.91, net -$8.56).
+**Wednesday 2026-10-14, 9:00 research (scheduled 13:00, delivered 13:25:40Z = ~9:26 ET, 25 minutes late; research run off the late slot, 9:30 follows immediately).** Tuesday is closed and logged (one trade, FAZ -$8.69).
 
-- **State (A3):** flat · no open orders or positions · total_value = cash = buying power **$1,977.00** · pending deposits $0. Trade approvals off. Floor (50% of deposits) not in play.
-- **A1:** consecutive losses **2** (SQQQ, SOXS) → throttle off (3-4 would cut risk to 0.5%), full 3% budget ≈ **$59.31**. Entries today 0 of 3. No lockouts; Monday's instrument exclusions expired with the day.
-- **Headlines:** none found. A web search returned nothing dated 10/13; proceeding on price action, no event driver assumed.
-- **Pre-market vs Monday close (bid/ask mid, ~9:01 ET, eight proxies):** **SOXX 532.80 (-2.2%)** · **QQQ 740.46 (-0.75%)** · SPY 777.48 (-0.08%) · IWM 278.02 (+0.04%) · XBI 151.26 (-0.09%) · XLF 55.42 (+0.67%) · XLE 66.41 (+0.60%) · TLT 78.52 (+0.60%). Tech/semis are gapping down (SOXS pre-market 39.76 vs 37.19 close, SQQQ 34.41 vs 33.63) while financials, energy and bonds are bid. A gap-down open can print a first-range breakout either way; the 9:30-10:00 range decides.
-- **Earnings:** none checked beyond the above; nothing known touching the eight themes.
+- **State (A3):** flat · no open orders or positions · total_value = cash = buying power **$1,968.31** · pending deposits $0. Trade approvals off.
+- **A1:** consecutive losses **3** (SQQQ 10/12, SOXS 10/12, FAZ 10/13) → **risk throttle ON: 0.5% budget ≈ $9.84** for every entry until a win resets it (E1); lockout at 5. Entries today 0 of 3. No lockouts. Note the throttle shrinks size sharply: a stop 4% below the ask lets 0.5% risk buy only about 12% of the account.
+- **Headlines:** none found (web search returned nothing dated 10/14); proceeding on price action.
+- **Pre-market vs Tuesday close (bid/ask mid, ~9:26 ET, eight proxies):** **SOXX 532.37 (-2.12%)** · **IWM 273.39 (-1.20%)** · **XLF 54.26 (-1.03%)** · TLT 77.73 (-0.82%) · QQQ 738.23 (-0.72%) · XBI 145.95 (-0.58%) · SPY 775.13 (-0.37%) · XLE 67.66 (+0.69%). Broad pre-market selling led by semis, small caps and financials; energy bid. Tuesday's lesson stands: an early break that the market reclaims (XLF 10/13) is what the stop and the volume test are for.
 - **RVOL:** observational only until live volume accrues; C1 runs from 10:00. Profiles are built just-in-time for the chosen leg (B1).
-- **Arming:** Tuesday's chain verified complete at Monday's 8pm backup (34 of 34). The 12:30 slot arms Wednesday.
-
-**9:30 observation (fired 13:31:03Z, ~9:31 ET) — read-only, no decision.** Flat, no orders or positions (verified). First prints vs Monday close: **SOXX 529.98 (-2.72%)** · QQQ 739.76 (-0.84%) · **XBI 149.48 (-1.27%)** · IWM 277.36 (-0.19%) · SPY 777.51 (-0.08%) · XLF 55.46 (+0.74%) · XLE 66.36 (+0.52%) · TLT 78.51 (+0.59%). Semis and tech opened lower, biotech lower, financials/energy/bonds firm. The 30-minute range completes at 10:00; C1 runs then.
-
-**10:00 checkpoint (fired 14:00:44Z, ~10:01 ET) — no trade (range just completed, no closes outside yet).** Flat, no orders or positions. Opening range from the six 9:30-9:55 bars (gate.py, all six complete). RVOL (step 1): XLF 2.03 · IWM 1.52 · SOXX 1.37 · XBI 1.17 · QQQ 1.07 · TLT 1.03 pass 1.0x; XLE 0.89 and SPY 0.68 below. Ranges (ORH/ORL) and last 9:55 close: SOXX 538.08/527.16 (535.91) · QQQ 743.97/738.84 (743.70) · IWM 278.70/276.52 (276.53) · XBI 150.84/148.28 (148.74) · XLF 55.65/54.95 (54.95) · TLT 78.57/78.28 (78.28). No proxy has a close after 10:00 yet, so none can have two closes outside; correct no-trade. Entries today 0 of 3.
-
-**10:05 checkpoint (fired 14:06:13Z) — no trade, flat.** Positions empty (verified). Only the 10:00 bar has completed since the range, so no proxy can have two consecutive closes outside it yet (earliest possible: the 10:10 slot). Entries today 0 of 3.
-
-**10:10 checkpoint (fired 14:11:20Z, ~10:12 ET) — FAZ ENTERED (entry 1 of 3).** Gate (gate.py, 8 bars 9:30-10:05): only **XLF** bearish — closes 54.675 and 54.719 below ORL 54.95; trigger bar (10:00) volume **812,964 vs 3-bar avg 381,076, pass**. IWM had two closes below its range (276.43/276.37 vs ORL 276.52) but its trigger bar failed the volume test (268,536 vs 308,656); SOXX one close above ORH only. One candidate, so no ranking.
-- **Candidates (top three for the selection log):** **XLF bear — selected**: RVOL 2.00, expansion 1.62, score -1.24, proxy 54.85 at review. No runner-up cleared steps 1-2 (IWM failed the volume test; SOXX single close).
-- **FAZ profile** (31 sessions): median adverse 1.26% · stop_pct 2.50% · **stall 0.27%** · **min move 0.32%**. Initial stop = FAZ own 9:30-10:00 low **$35.10** (4.2% below the ask). Sizing: 3% of $1,977 = $59.31 ÷ (36.64 - 35.10) = 38.5 → **38 shares** (risk cap bound; cash would afford 53).
-- **Entry:** buy 38 FAZ limit $36.66 (ask 36.64) → **filled 14:12:46Z @ $36.648** ($1,392.62, 70.4% of the account; order `6ace3c5e-4a75`). Slippage vs ask 0.008. Positions verified 38 sh.
-- **Stop:** stop_market sell 38 @ **$35.10** gfd, `6ace3c67-a7c8`, **confirmed**. Proxy re-check at review: XLF 54.85 below ORL 54.95 ✓.
-- **Pre-commit (B3):** resting stop $35.10, 12:30 close; no scheduled event before 12:30 known.
-
-**10:15 checkpoint (scheduled 14:15, fired 14:20:19Z, delivered 5 min late) — FAZ hold, stop $35.10 unchanged.** Positions verified (38 FAZ, all held for the resting stop); stop `6ace3c67` still confirmed, unfilled. run_high since the 14:12:46 fill = $36.65 (completed 1-min bars); live 36.52 (bid/ask 36.52/36.53) is **below the 36.648 fill**, so B2's in-profit gate holds the ratchet. XLF (proxy) 54.915, still below its ORL 54.95 only marginally; no B3 exit. Entries 1 of 3.
-
-**10:20 checkpoint (fired 14:21:27Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. Live 36.46 (bid/ask 36.46/36.47), below the 36.648 fill, so no ratchet (B2 in-profit gate). Direct read one minute after the 10:15 slot; nothing new. Entries 1 of 3.
-
-**10:25 checkpoint (fired 14:25:23Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. 1-min bars since the fill: run_high $36.65, low 36.415; live 36.37 (bid/ask 36.36/36.38), below the 36.648 fill, so no ratchet. XLF 54.98, back just above its ORL 54.95 (inside the range); B3 has no exit on that, only the stop and the 12:30 close. Pre-commit: resting stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**10:30 checkpoint (fired 14:30:47Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (unchanged); 1-min lows to 36.24; live 36.29 (bid/ask 36.31/36.32), below the 36.648 fill, so no ratchet. XLF 55.015, back inside its range (ORL 54.95). Pre-commit: resting stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**10:35 checkpoint (fired 14:35:47Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; recent 1-min high 36.48); live 36.355 (bid/ask 36.35/36.36), below the 36.648 fill, so no ratchet. XLF 55.00, inside its range. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**10:40 checkpoint (fired 14:40:49Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.41 (bid/ask 36.40/36.41), below the 36.648 fill, so no ratchet. XLF 54.965 (ORL 54.95), still inside by a hair. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**10:45 checkpoint (fired 14:46:22Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.33 (bid/ask 36.30/36.31), below the 36.648 fill, so no ratchet. XLF 55.02, inside its range. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**10:50 checkpoint (fired 14:50:42Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.24 (bid/ask 36.23/36.25), below the 36.648 fill, so no ratchet. XLF 55.055, back at its prior close and above the range low. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**10:55 checkpoint (fired 14:55:27Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); FAZ drifting lower, 1-min low 36.065, live 36.115 (bid/ask 36.11/36.12), -1.5% vs the fill and 2.9% above the stop; no ratchet (below fill). XLF 55.115, back above its prior close (the entry break has failed, but B3 has no exit for that, only the stop and 12:30). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:00 checkpoint (fired 15:00:49Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.245 (bid/ask 36.24/36.25), below the 36.648 fill, so no ratchet. XLF 55.053, flat on its prior close. Position open, so no new entries (E2: one position). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:10 checkpoint (fired 15:11:26Z; the 11:05 slot was delivered 12 minutes late, at 15:17:03Z, and superseded by the 11:10 and 11:15 reads) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.25); live 36.16 (bid/ask 36.16/36.17), below the 36.648 fill, so no ratchet. XLF 55.095. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:15 checkpoint (fired 15:16:31Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 35.99 (bid/ask 35.98/35.99), -1.8% vs the fill, 2.5% above the stop; no ratchet. XLF 55.18 (up 0.24% on the day). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:05 checkpoint (scheduled 15:05, delivered late at 15:17:03Z) — superseded.** Corrects the 11:10 note: this slot was not lost, only late. State at 15:17: FAZ 35.99 (bid/ask 35.98/35.99), stop `6ace3c67` $35.10 confirmed, unfilled, same as the 11:15 read taken one minute earlier. No action.
-
-**11:20 checkpoint (fired 15:20:40Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.02 (bid/ask 35.98/35.99), below the 36.648 fill, so no ratchet. XLF 55.19. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:25 checkpoint (fired 15:25:56Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.13 (bid/ask 36.12/36.13), below the 36.648 fill, so no ratchet. XLF 55.11. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:30 checkpoint (fired 15:30:19Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.035 (bid/ask 36.03/36.04), below the 36.648 fill, so no ratchet. XLF 55.165. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:35 checkpoint (fired 15:35:33Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 35.95 (bid/ask 35.93/35.94), -1.9% vs the fill, 2.4% above the stop; no ratchet. XLF 55.205. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:40 checkpoint (fired 15:40:40Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.005 (bid/ask 36.00/36.01), below the 36.648 fill, so no ratchet. XLF 55.175. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:45 checkpoint (fired 15:46:37Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.165 (bid/ask 36.18/36.19), still below the 36.648 fill, so no ratchet. XLF 55.085. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:50 checkpoint (fired 15:51:13Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.195 (bid/ask 36.19/36.20), still below the 36.648 fill, so no ratchet. XLF 55.08. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**11:55 checkpoint (fired 15:55:37Z, last entry-eligible slot) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.255 (bid/ask 36.25/36.26), still below the 36.648 fill, so no ratchet. XLF 55.047. Position open, so no new entry (E2). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**12:00 checkpoint (fired 16:00:08Z, management only) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled (position open, so no D1 early shutdown; 12:05-12:25 stay). run_high $36.65 (no new high; window high 36.30); live 36.285 (bid/ask 36.28/36.29), still below the 36.648 fill, so no ratchet. XLF 55.03. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**12:05 checkpoint (fired 16:06:37Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.375); live 36.405 (bid/ask 36.40/36.41), still below the 36.648 fill (0.7% under), so no ratchet. XLF 54.975, back near its range low (ORL 54.95). Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**12:15 checkpoint (fired 16:16:32Z; the 12:10 slot was delivered late at 16:20:37Z, below) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.48); live 36.385 (bid/ask 36.38/36.39), still below the 36.648 fill, so no ratchet. XLF 54.975. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**12:10 checkpoint (scheduled 16:10, delivered 16:20:37Z, 10 min late; read also covers the 12:20 slot) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high; window high 36.40); live 36.40 (bid/ask 36.40/36.41), still below the 36.648 fill, so no ratchet. XLF 54.965. Pre-commit: stop $35.10, 12:30 close, no scheduled event. Entries 1 of 3.
-
-**12:20 checkpoint (fired 16:21:14Z) — FAZ hold, stop $35.10 unchanged.** Same state as the 12:10 read taken 40 seconds earlier: live 36.395 (bid/ask 36.39/36.40), below the 36.648 fill, no ratchet; stop `6ace3c67` confirmed. Entries 1 of 3.
-
-**12:25 checkpoint (fired 16:25:29Z) — FAZ hold, stop $35.10 unchanged.** Stop `6ace3c67` confirmed, unfilled. run_high $36.65 (no new high); live 36.385 (bid/ask 36.38/36.39), below the 36.648 fill, so no ratchet. XLF 54.98. Next: 12:30 close, then arming Wednesday. Entries 1 of 3.
-
-**12:30 checkpoint (fired 16:30:54Z) — FAZ CLOSED; Tuesday 10/13 DONE.** Final ratchet n/a (live 36.43 below the 36.648 fill). Stop `6ace3c67` cancelled and verified `cancelled`, then market sell 38 FAZ → **filled 16:31:20Z @ $36.4201** (fee $0.03; order `6ace5cd8-6ebd`), positions empty, account **$1,968.31** all cash. **Day: 1 entry of 3, closed at the 12:30 close — FAZ -$8.69 (-0.624% position, -0.440% account, r -0.15); MAE -2.01%, MFE +0.005%.** The break (XLF bear) failed: XLF reclaimed its range by 10:40 and rose to 55.205, so FAZ never traded above its fill after the first minute and the stop never ratcheted. Declined/missed: IWM bear (two closes below range, failed the volume test); no other proxy broke. **A1 state for Wednesday: consecutive losses 3 (SQQQ, SOXS, FAZ) → the 0.5% risk throttle is ON (E1), no lockout (5).** Scheduler: slots delivered 5-12 min late between 10:15 and 12:25 (11:05 and 12:10 most delayed); stops rest at the broker so nothing was unprotected. trades.csv and selection_log rows appended (rulebook hash da9328d). **Wednesday 2026-10-14 chain armed: 34 of 34 triggers created (all CREATED, 9:00 to 12:30 plus the 8pm backup, which verifies Thursday 10/15).**
+- **Arming:** Wednesday's chain verified complete at Tuesday's 8pm backup (34 of 34). The 12:30 slot arms Thursday.
 
 ## E6. Known issues — backlog, not yet fixed
 
