@@ -594,6 +594,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **RVOL:** observational only until live volume accrues; C1 runs from 10:00. Profiles are built just-in-time for the chosen leg (B1).
 - **Arming:** Wednesday's chain verified complete at Tuesday's 8pm backup (34 of 34). The 12:30 slot arms Thursday.
 
+**9:30 observation (fired 13:30:55Z, ~9:31 ET, on time) — read-only, no decision.** Flat (verified at 9:26). First prints vs Tuesday close: **SOXX 533.51 (-1.91%)** · **XLF 54.23 (-1.08%)** · **IWM 274.05 (-0.96%)** · TLT 77.78 (-0.76%) · QQQ 738.45 (-0.69%) · XBI 145.40 (-0.95%) · SPY 774.85 (-0.41%) · XLE 67.65 (+0.67%). Broad weakness continues into the open; the 30-minute range completes at 10:00 and C1 runs then.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
