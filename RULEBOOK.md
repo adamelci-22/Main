@@ -598,6 +598,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:00 checkpoint (fired 14:00:43Z, ~10:01 ET) — no trade (range just completed, no closes outside yet).** Flat (no orders placed since Tuesday's close; account $1,968.31). The 30-minute range completed at 10:00 and no 5-minute bar has closed after it yet, so no proxy can have two consecutive closes outside; correct no-trade. Entries today 0 of 3; throttle on (0.5%).
 
+**10:10 checkpoint (fired 14:11:09Z, ~10:12 ET) — TMF ENTERED (entry 1 of 3, throttle ON).** Gate (gate.py, 8 bars 9:30-10:05, last bar 14:05 complete): only **TLT** bullish — closes 78.085 and 78.125 above ORH 78.02; trigger bar (10:00) volume **518,114 vs 3-bar avg 271,182, pass**; RVOL 1.10. XLF closes 54.085/54.075 stayed inside (ORL 54.07); IWM closes 272.91/273.245 inside; SPY one close below ORL (fails); SOXX/QQQ/XBI/XLE inside. One candidate, no ranking.
+- **Candidates (top three for the selection log):** **TLT bull — selected**: RVOL 1.10, expansion 0.51, score +0.54, proxy 78.15 at review. No runner-up cleared steps 1-2.
+- **TMF profile** (31 sessions): median adverse 1.15% · stop_pct 2.50% · **stall 0.11%** · **min move 0.29%**. Initial stop = TMF's own 9:30-10:00 low **$25.755**, placed at **$25.75** (tick). Sizing with the 0.5% throttle: $9.84 ÷ (26.18 - 25.755) = 23.2 → **23 shares** (cash would afford 75).
+- **Entry:** buy 23 TMF limit $26.19 (ask 26.18) → **filled 14:12:24Z @ $26.1767** ($602.07, 30.6% of the account; order `6acf8dc8-68df`). Slippage vs ask -0.003. Positions verified 23 sh.
+- **Stop:** stop_market sell 23 @ **$25.75** gfd, `6acf8dd5-189e`, **confirmed**. Proxy re-check at review: TLT 78.15 above ORH 78.02 ✓.
+- **Pre-commit (B3):** resting stop $25.75, 12:30 close; no scheduled event known before 12:30.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
