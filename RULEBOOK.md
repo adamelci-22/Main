@@ -615,6 +615,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:30 checkpoint (fired 14:30:18Z) — flat, no entry (this is also the T+10 re-run from the 10:18:37 TMF exit).** Gate (K=12 bars through the 10:25 bar): **IWM** closed back inside its range (273.09 vs ORL 273.08) — its break ended; **SPY bear** still outside (five closes below ORL 773.21) but its run's trigger bar failed the volume test (204,951 vs 323,249) and the run continues, so it is skipped; **TLT bull** (six closes above ORH 78.02) is excluded because TMF lost today; XLF/QQQ/XBI/XLE/SOXX inside their ranges. No candidate; correct no-trade. Account $1,967.50, 4 consecutive losses (throttle on; one more = lockout). Entries 1 of 3.
 
+**10:35 checkpoint (fired 14:35:37Z) — flat, no entry.** Gate (K=13 through the 10:30 bar): every proxy is inside its range except **TLT bull** (seven closes above ORH 78.02), which is excluded for the day because its leg TMF lost at 10:18. SPY and IWM, the earlier bear candidates, are back inside. No candidate; correct no-trade. Account $1,967.50, 4 consecutive losses (throttle on; one more = lockout). Entries 1 of 3.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
