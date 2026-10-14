@@ -671,6 +671,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:25 checkpoint (fired 16:26:13Z, management only) — SPXU hold, stop $33.93 unchanged.** Live 34.02 (bid/ask 34.01/34.02); run_high 34.07 (16:24 bar); candidate 34.07 x 0.9972 = 33.975 → $33.97, only 0.04 above the stop (< 0.067) → no ratchet. Stop `6acfaaca-ac98` confirmed, 58 sh. SPY 769.48. Next: 12:30 close + Thursday arming.
 
+**12:30 checkpoint (fired 16:30:21Z, close + arming) — SPXU re-entry CLOSED at the 12:30 time-close, WIN +$15.23.** Final ratchet: none (run_high 34.07, candidate $33.97 only 0.04 over the $33.93 stop, under the 0.067 minimum). Stop `6acfaaca-ac98` cancelled and verified `cancelled`; position showed 58 sh; market sell 58 `6acfae2d-89de` **filled** 58 @ 34.0017 (fee 0.05, bid/ask 34.00/34.01 → ~0.03 slippage). Entry 58 @ 33.7383 (11:31:47 ET), hold 59 min. Net +15.23 incl. 0.05 fee = +0.778% position, +0.773% account, r = +0.45 (initial risk $34.12). MAE -0.025% (33.73), MFE +0.983% (high 34.07, 16:24). A WIN: consecutive-loss count stays 0, throttle OFF. Account **$1,984.60** all cash (1,969.37 pre-entry). Day: TMF -0.81, SPXU +1.87, SPXU +15.23 = +$16.29 net; 3 of 3 entries used. Reference 12:30 prints: SPY 769.61, TLT 78.42, TMF 26.425, SOXX 521.14, SPXU 34.03. Next: arming Thursday 10/15.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
