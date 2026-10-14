@@ -665,6 +665,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:10 checkpoint (fired 16:10:52Z, management only) — SPXU hold, stop $33.75 unchanged.** Live 33.875 (bid/ask 33.89/33.90); run_high 33.90; candidate $33.80 (0.05 above stop, < 0.067) → no ratchet. Stop `6acfa29e-839e` resting, 58 sh. SPY 770.40.
 
+**12:15 checkpoint (fired 16:15:50Z, management only) — SPXU stop RATCHETED $33.75 → $33.93.** SPXU jumped (SPY 769.39, down); run_high 34.03 (16:14 completed 1-min bar); live 34.025 (bid/ask 34.02/34.03), above the 33.7383 fill. Candidate = 34.03 x 0.9972 = 33.935 → floored to $33.93; move 0.18 ≥ min move 0.067. Old stop `6acfa29e` cancelled and verified `cancelled`; new stop_market sell 58 @ $33.93 gfd `6acfaaca-ac98` **confirmed** (58 sh held). A trigger at 33.93 locks in about +$11 gross on 58 sh (about +$11 after fee). Entries 3 of 3. Pre-commit: resting stop $33.93, 12:30 close.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
