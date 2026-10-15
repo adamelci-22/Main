@@ -643,6 +643,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 - **Stop:** stop_market sell 43 @ **$44.74** gfd, `6ad0f0c4-3306`, **confirmed**.
 - **T+10:** moot (the T+0 run entered; A1's one-position gate). **Pre-commit (B3):** resting stop $44.74, 12:30 close.
 
+**11:30 checkpoint (fired 15:30:24Z) — TMV stop RATCHETED $44.74 → $45.47.** run_high $45.62 (15:29 bar, completed 1-min bars since the 15:26:43 fill); live 45.60 (bid/ask 45.62/45.63), above the 45.4886 fill; candidate = 45.62 x (1 - 2 x 0.16%) = 45.474 → floored to the tick **$45.47**; move 0.73 ≥ min move 0.20% of fill (0.091). Old stop `6ad0f0c4` cancelled and verified `cancelled`; new stop_market sell 43 @ $45.47 gfd `6ad0f1a4-4e0f` **confirmed** (43 sh held). The stop now sits 0.02 below the fill (a trigger is about -$0.8 gross) and 0.13 under the market. TLT 80.01, below ORL 80.29. Entries 2 of 3. Pre-commit: resting stop $45.47, 12:30 close.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
