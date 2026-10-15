@@ -1,0 +1,35 @@
+FULL PERIOD pick config: signals 69, taken 51, days 133, trade-days 50, avg/day +0.104%, ret +14.3%, maxDD 3.7%
+avg R +0.17, avg acct% per trade +0.270, trades/day 0.38, avg room 1.19%
+winners 30 avg acct +1.06%  losers 21 avg acct -0.85%
+exit reasons: Counter({'trail': 29, 'stop': 17, 'eod': 5})  target(60%) hit: 34
+  L1 red from start            n=  8 acct%= -7.83 avgMFE=+0.10% avgMAE=-1.25% stops=7 hitHOD=1
+  L2 was up >= 1R then lost    n=  2 acct%= -1.07 avgMFE=+1.50% avgMAE=-1.90% stops=1 hitHOD=1
+  L3 small green then lost     n= 11 acct%= -9.00 avgMFE=+0.68% avgMAE=-1.33% stops=9 hitHOD=4
+  WIN                          n= 30 acct%=+31.69 avgMFE=+3.14% avgMAE=-0.67% stops=0 hitHOD=29
+by proxy:
+  IWM bear   n=  7 win= 43% acct%= -1.43
+  IWM bull   n=  4 win= 25% acct%= -0.35
+  QQQ bear   n=  3 win= 33% acct%= -0.55
+  QQQ bull   n=  8 win= 62% acct%= -0.83
+  SOXX bear  n= 15 win= 73% acct%=+13.14
+  SOXX bull  n= 14 win= 64% acct%= +3.80
+by entry hour:
+  10:00 n=  9 win= 44% acct%= -2.05
+  11:00 n= 25 win= 60% acct%=+10.66
+  12:00 n= 17 win= 65% acct%= +5.17
+by month:
+  2026-04 n=  3 acct%= -1.97
+  2026-05 n= 12 acct%= +2.21
+  2026-06 n= 13 acct%= +4.57
+  2026-07 n= 10 acct%= +6.81
+  2026-08 n=  5 acct%= +1.50
+  2026-09 n=  5 acct%= +0.70
+  2026-10 n=  3 acct%= -0.03
+pullback length: {}
+   {2: (49, 13.93), 3: (2, -0.14)}
+winners avg MFE +3.14% vs avg final +1.09%; losers avg final -0.87%
+market-entry signals 85 vs limit 69; market avg/sig +0.014%
+  room 0-0.5%: n=252 avg/sig=-0.069% avgR=-0.36
+  room 0.5-0.75%: n=71 avg/sig=-0.075% avgR=-0.12
+  room 0.75-1.0%: n=27 avg/sig=+0.105% avgR=+0.13
+  room 1.0-9%: n=33 avg/sig=+0.296% avgR=+0.10
