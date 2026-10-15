@@ -33,3 +33,5 @@ unrealistically clean fills; no partial fills or spread widening; costs default 
 
 - `results/final_system.txt` — the live system's backtest (`final_system.py`). `results/stress.txt` — its stress tests (`stress.py`). Both cited by RULEBOOK E3.
 - `results/research_results_former.txt` — every other experiment's output in one indexed file (lists, exits, pullback variants, the rejected 2-bar ORB, the retired ORB system). Scripts still print to stdout; redirect to regenerate.
+
+Research scripts no longer imported by `final_system.py` / `stress.py` were deleted (they remain in git history; their outputs are in `results/research_results_former.txt`). `build_data.py` is kept: it rebuilds `data/` from saved historicals dumps.

@@ -12,7 +12,7 @@
 **`former_systems/`** — retired rules and tools; nothing here is in force.
 - `RULEBOOK_v3.132_full.md` — the complete old rulebook, word for word.
 - `SHELVED_SELECTION_RULES.md` — the ORB gate / ranking rules shelved 2026-10-15, with the evidence.
-- `EXPERIMENTS.md`, `RULE_HISTORY.md` — old proposal log and a stale rule-change index.
-- `tools/` — old gate, profile and replay tools (see its README).
+
+Deleted as unused (recoverable from git history): the old gate/profile/replay tools, the old experiments log and rule-history file, and the research scripts no longer imported by the backtest.
 
 **Current system:** `/RULEBOOK.md` (rules), `tools/live/paper.py` (engine), `tools/backtest/` (evidence; see its README and `results/`).

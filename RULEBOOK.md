@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.0.3** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.0.4** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -283,7 +283,7 @@ Only the first qualifying setup per ticker per day counts.
 | `archive/live_trades.csv` | Real trades from 2026-10-16. Append-only. Columns: `date, system, proxy, ticker, entry_time, shares, entry_px, stop_px, target_px, exit_time, exit_px, exit_reason, pnl_usd, pnl_pct_position, acct_pct, model_pct, slippage_note, order_ids, notes` |
 | `archive/paper_trades.csv`, `archive/paper_state.json` | The model's own record (`paper.py --close`), for comparison |
 | `archive/paper_rvol_<day>.json` | The day's RVOL tie-break baseline |
-| `archive/trade_history/`, `archive/former_systems/` | Old-system trades, selection log, rulebook, shelved rules, experiments and tools. History only; nothing in them is in force. Map: `archive/README.md` |
+| `archive/trade_history/`, `archive/former_systems/` | Old-system trades, selection log, rulebook and shelved rules. History only; nothing in them is in force. Map: `archive/README.md` |
 | `tools/backtest/` | Research code. `final_system.py` = this system's backtest; `stress.py` = its stress tests; outputs in `results/` (`research_results_former.txt` holds every other experiment) |
 
 ## D3. Changing a rule
@@ -367,11 +367,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## Change log
 
+**v5.0.4 — 2026-10-15:** unused files deleted (old gate/profile/replay tools, old experiments and rule-history files, 13 research scripts the backtest no longer imports). No rule change; backtest rerun identical.
+
 **v5.0.3 — 2026-10-15:** file reorganisation, no rule change. `archive/` split into live records, `trade_history/` and `former_systems/` (map in `archive/README.md`); 29 backtest result files folded into `tools/backtest/results/`.
 
 **v5.0.2 — 2026-10-15:** `paper.py` no longer crashes when a leg's bars are missing from the dump (prints a blocked/refetch line instead) or when a dump holds no 5-minute bars. Backtest and stress results re-run identical. Friday's RVOL baseline pre-built (`archive/paper_rvol_2026-10-16.json`; 9:00 rebuilds it).
 
-**v5.0.1 — 2026-10-15:** cleanup, no rule change. READ MAP points the 13:30 row at B5.7; A3 says how to handle an unknown position; old-system tools moved to `archive/former_systems/tools/`.
+**v5.0.1 — 2026-10-15:** cleanup, no rule change. READ MAP points the 13:30 row at B5.7; A3 says how to handle an unknown position; old-system tools moved (later deleted as unused, v5.0.4).
 
 **v5.0 — 2026-10-15, governor instructions:**
 - **Real money starts Friday 2026-10-16** with the FADE + PULLBACK system.
