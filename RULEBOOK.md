@@ -617,6 +617,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:35 checkpoint (fired 14:35:35Z) — TNA hold, stop $53.06 unchanged.** Live 54.36 (bid/ask 54.35/54.36), -0.29% vs the 54.52 fill and recovering from a 54.04 low; run_high 54.615; live below the fill, so no ratchet. Stop `6ad0df31-dfb5` confirmed, 36 sh. IWM 273.06 above ORH 272.10. Entries 1 of 3.
 
+**10:40 checkpoint (fired 14:40:30Z) — TNA stop RATCHETED $53.06 → $54.47.** run_high $54.635 (14:39 bar, completed 1-min bars since the 14:11:56 fill); live 54.585 (bid/ask 54.57/54.59), above the 54.52 fill; candidate = 54.635 x (1 - 2 x 0.15%) = 54.471 → floored to the tick **$54.47**; move 1.41 ≥ min move 0.51% of fill (0.278). Old stop `6ad0df31` cancelled and verified `cancelled`; new stop_market sell 36 @ $54.47 gfd `6ad0e5ef-f3f6` **confirmed** (36 sh held). The stop now sits 0.05 below the fill (a trigger there is about -$1.8 gross, about -0.1% of the position) and 0.2% under the market. IWM 273.45 above ORH 272.10. Entries 1 of 3. Pre-commit: resting stop $54.47, 12:30 close.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
