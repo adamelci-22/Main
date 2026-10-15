@@ -1,0 +1,45 @@
+Failed-retest fade exits, 2026-04-07..2026-10-14. Current rule = half at 1R + breakeven, hold to 15:55.
+
+exit                                                 trd  win%   %/day    ret%    DD      H1      H2  leg avg
+no target, time exit only, out 12:30                  58    40  +0.224   +32.5   6.1  +0.290  +0.159   +0.487
+half + BE at 2R, out 15:55                            58    47  +0.211   +30.8   6.0  +0.286  +0.137   +0.446
+no target, time exit only, out 11:30                  58    41  +0.208   +30.3   5.1  +0.333  +0.085   +0.483
+half + BE at 3R, out 15:55                            58    38  +0.202   +28.9   6.9  +0.263  +0.141   +0.464
+all out at 3R, out 15:55                              58    38  +0.192   +27.4   6.5  +0.261  +0.125   +0.506
+half + BE at 2R, out 12:30                            58    47  +0.191   +27.4   5.4  +0.248  +0.135   +0.428
+no target, time exit only, out 15:55                  58    31  +0.190   +26.6   7.4  +0.229  +0.152   +0.365
+half + BE at 1.5R, out 15:55                          58    48  +0.189   +27.1   6.1  +0.273  +0.106   +0.389
+half + BE at opposite box edge, out 12:30             58    40  +0.187   +26.7   5.4  +0.226  +0.150   +0.403
+half + BE at 3R, out 12:30                            58    41  +0.183   +25.9   6.0  +0.246  +0.121   +0.444
+half + BE at 1.5R, out 12:30                          58    48  +0.183   +26.1   5.4  +0.237  +0.129   +0.396
+all out at 2R, out 15:55                              58    48  +0.182   +26.1   6.0  +0.268  +0.097   +0.426
+half + BE at opposite box edge, out 15:55             58    36  +0.182   +25.7   6.2  +0.207  +0.157   +0.351
+half + BE at 3R, out 11:30                            58    43  +0.178   +25.4   5.1  +0.288  +0.070   +0.451
+all out at opposite box edge, out 15:55               58    36  +0.167   +23.4   6.2  +0.177  +0.158   +0.319
+half + BE at 1.5R, out 11:30                          58    48  +0.164   +23.3   5.1  +0.269  +0.061   +0.390
+half + BE at 2R, out 11:30                            58    47  +0.162   +22.9   5.1  +0.269  +0.056   +0.396
+half + BE at opposite box edge, out 11:30             58    40  +0.159   +22.3   5.1  +0.257  +0.064   +0.390
+all out at opposite box edge, out 12:30               58    40  +0.158   +22.1   5.4  +0.192  +0.126   +0.331
+all out at 1.5R, out 15:55                            58    52  +0.154   +21.7   6.2  +0.225  +0.084   +0.338
+all out at 2R, out 12:30                              58    48  +0.152   +21.3   5.5  +0.217  +0.088   +0.362
+all out at 3R, out 12:30                              58    41  +0.149   +20.7   6.1  +0.218  +0.081   +0.412
+half + BE at 1R, out 12:30                            58    53  +0.149   +20.9   4.5  +0.182  +0.116   +0.327
+all out at 3R, out 11:30                              58    43  +0.147   +20.5   5.1  +0.243  +0.052   +0.415
+half + BE at 1R, out 15:55                            58    53  +0.144   +20.0   4.5  +0.189  +0.099   +0.314  <- current
+half + BE at 1R, out 11:30                            58    52  +0.135   +18.9   4.5  +0.224  +0.048   +0.316
+all out at 1.5R, out 12:30                            58    52  +0.134   +18.6   5.7  +0.179  +0.091   +0.298
+half + BE at box midpoint, out 12:30                  58    53  +0.123   +16.9   4.5  +0.108  +0.138   +0.210
+all out at opposite box edge, out 11:30               58    40  +0.122   +16.6   5.1  +0.203  +0.042   +0.318
+half + BE at box midpoint, out 15:55                  58    53  +0.115   +15.6   4.8  +0.107  +0.122   +0.185
+all out at 2R, out 11:30                              58    48  +0.113   +15.4   5.2  +0.208  +0.020   +0.304
+all out at 1.5R, out 11:30                            58    52  +0.110   +15.0   5.4  +0.192  +0.030   +0.280
+half + BE at box midpoint, out 11:30                  58    52  +0.109   +14.9   4.5  +0.166  +0.054   +0.210
+all out at 1R, out 15:55                              59    58  +0.097   +13.0   4.6  +0.092  +0.101   +0.194
+all out at 1R, out 12:30                              59    58  +0.090   +12.1   4.6  +0.079  +0.101   +0.164
+all out at box midpoint, out 15:55                    59    54  +0.085   +11.4   4.5  +0.029  +0.140   +0.096
+all out at box midpoint, out 12:30                    59    54  +0.085   +11.4   4.5  +0.029  +0.140   +0.083
+all out at 1R, out 11:30                              59    56  +0.068    +9.0   4.5  +0.096  +0.041   +0.128
+all out at box midpoint, out 11:30                    59    53  +0.068    +8.9   4.5  +0.057  +0.078   +0.060
+
+WALK-FORWARD: best exit on H1 = 'no target, time exit only, out 11:30' (+0.333) -> H2 +0.085   | current rule H1 +0.189 -> H2 +0.099
+Exits positive in both halves: 39 of 39
