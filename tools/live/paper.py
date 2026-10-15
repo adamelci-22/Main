@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Paper-trading engine for the fade + pullback systems (RULEBOOK C13, v3.127). No orders are ever placed by this tool.
+"""Paper-trading engine for the fade + pullback systems (RULEBOOK Part B, v4.0). No orders are ever placed by this tool.
 
 Usage at a checkpoint (after saving today's + the prior session's 5-minute bars with get_equity_historicals):
     python3 tools/live/paper.py --now 10:35 DUMP [DUMP ...]            # status: what the paper account holds / did today
