@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.131.**  
+**Policy version: 3.132.**  
 **ENTRIES PAUSED (v3.123, 2026-10-15): all selection rules are shelved (C1, C12 → `archive/SHELVED_SELECTION_RULES.md`). No new positions until replacement entry rules are adopted. Checkpoints while flat are one-line no-ops (no research, no gate, no pulls); the 12:30 and 8pm slots still verify flat, arm the next trading day and commit; Friday 12:30 still reports.** Bump on every rule/threshold change; record it in the commit.
 **PAPER MODE (v3.127, 2026-10-15, starts Monday 2026-10-19): real-money entries stay paused (v3.123, A1). Checkpoints run the two candidate systems — failed-retest FADE and inverse-list PULLBACK — on a $2,000 paper account per C13, using `tools/live/paper.py`. No order of any kind is placed for a paper trade. The grid runs 10:00–13:30 (D1); the 13:30 close is the primary arming slot. Read C13 first at every intraday checkpoint.**
 
@@ -400,7 +400,7 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 - **P&L:** leg return ≈ leverage × proxy return − 0.06%.
 
 ### System 2 — PULLBACK (inverse list), on each ticker's own chart
-- **List:** SOXS, SQQQ, TZA, TECS, BTCZ, LABD, UVXY.
+- **List (v3.132):** SOXS, LABD, TECS, UVXY, NVD. BTCZ, SQQQ and TZA were cut; NVD (2x short NVIDIA) was added under a fixed rule: liquid, at least 4 trades, positive in both halves.
 - **Entry rules:** the PULLBACK_SPEC.md entry rules — breakout on volume, EMA trend, a 2–5 bar dip into the EMA zone, and a trigger close above the prior high between 10:10 and 12:50. A limit buy at the trigger close fills only if the next bar trades down to it.
 - **Stop:** dip low − 0.05%. It must be at least 0.75% below the entry.
 - **Skip the setup** if:
@@ -422,8 +422,8 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 ### What each checkpoint does
 1. **Fetch the bars.** Pull 5-minute bars from the prior trading day's 9:30 to now, in three `get_equity_historicals` calls:
    - QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
-   - TNA TZA TECL TECS LABU LABD AMDL AMDD BTCZ UVXY
-   - IBIT (read-only: RVOL tie-break for BTCZ)
+   - TNA TZA TECL TECS LABU LABD AMDL AMDD UVXY NVD
+   - NVDA (read-only: RVOL tie-break for NVD)
 2. **Run** `python3 tools/live/paper.py --now HH:MM <dump files>`. It recomputes the whole day from completed bars, so nothing has to be carried between checkpoints.
 3. **Report** only what changed: a new paper entry, a ⅓ take-profit, a stop move, or an exit. A checkpoint where nothing changed is a one-line note (D3).
 
@@ -435,7 +435,7 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
   - 3 entries are used and the last one has closed.
 
 ### 9:00 and 13:30
-- **9:00:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI AMD IBIT, then run `paper.py --build-rvol --day <today> --now 09:00 <dump>`. This writes `archive/paper_rvol_<day>.json`. If it is missing, ties fall back to list order (noted in the output).
+- **9:00:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI AMD NVDA, then run `paper.py --build-rvol --day <today> --now 09:00 <dump>`. This writes `archive/paper_rvol_<day>.json`. If it is missing, ties fall back to list order (noted in the output).
 - **13:30:**
   - Run `paper.py --now 13:30 --close <dumps>`. This appends the day's paper trades to `archive/paper_trades.csv` and updates `archive/paper_state.json` (paper equity).
   - Commit and push.
@@ -708,6 +708,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.132** — **Paper PULLBACK list is now SOXS, LABD, TECS, UVXY, NVD** (C13). Direct governor instruction, 2026-10-15. BTCZ, SQQQ and TZA were cut. NVD was the only ticker of 39 inverse/fear candidates to pass the fixed rule (`tools/backtest/pb_replace.py`). Full-period backtest: pullback alone +0.171%/day (max drawdown 2.4%); with the 6-proxy fade +0.590%/day (max drawdown 3.8%).
 
 **v3.131** — **AMD (AMDL 2x / AMDD 1x) added to the paper FADE list; XLF not added** (C13). Direct governor instruction, 2026-10-15. Fade list: QQQ, SOXX, IWM, XLK, XBI, AMD. Full-period backtest (2026-03-03..10-14) with the pullback: `tools/backtest/full_period.py`. `tools/live/paper.py` now carries per-side leverage and still matches the backtest exactly (both periods).
 

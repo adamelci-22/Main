@@ -5,8 +5,9 @@ Code: `tools/backtest/pb_final.py`. Results: `tools/backtest/results_pb_final.tx
 
 ## List (inverse/fear tickers; long only, on each ticker's own chart)
 
-- **List A:** SOXS, SQQQ, TZA, TECS, BTCZ.
-- **List B (candidate):** List A plus LABD and UVXY. LABD and UVXY were chosen after looking at results, so treat B as provisional.
+- **Current list (v3.132):** SOXS, LABD, TECS, UVXY, NVD. BTCZ, SQQQ and TZA were cut; NVD was added under a fixed rule (`pb_replace.py`).
+- **Earlier List A:** SOXS, SQQQ, TZA, TECS, BTCZ.
+- **Earlier List B:** List A plus LABD and UVXY.
 
 ## Entry
 

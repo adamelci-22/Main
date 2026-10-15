@@ -6,8 +6,8 @@ Usage at a checkpoint (after saving today's + the prior session's 5-minute bars 
     python3 tools/live/paper.py --now 13:30 --close DUMP [DUMP ...]    # 13:30 close: append today's trades to archive/paper_trades.csv
 Symbols needed in the dumps (three calls, max 10 symbols each):
     QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
-    TNA TZA TECL TECS LABU LABD AMDL AMDD BTCZ UVXY
-    IBIT   (read-only: RVOL tie-break for BTCZ pullbacks)
+    TNA TZA TECL TECS LABU LABD AMDL AMDD UVXY NVD
+    NVDA   (read-only: RVOL tie-break for NVD pullbacks)
 Range: from the prior trading day's 9:30 ET to now, interval 5minute.
 
 Everything is recomputed from the bars on every run (deterministic, no intraday state), exactly as tools/backtest computes it:
@@ -25,7 +25,7 @@ STATE = os.path.join(ROOT, 'archive', 'paper_state.json')
 
 FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3),
              'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
-PB_LIST = ['SOXS', 'SQQQ', 'TZA', 'TECS', 'BTCZ', 'LABD', 'UVXY']     # tie order for same-bar pullback triggers
+PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']     # tie order for same-bar pullback triggers
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
 MAX_ENTRIES = 3
 RISK = 0.03
@@ -187,7 +187,7 @@ def pb_manage(b, K, k, entry, stop, T):
 
 
 # ------------------------------------------------------------------ day simulation (one shared paper account)
-PB_PROXY = {'SOXS': 'SOXX', 'SQQQ': 'QQQ', 'TZA': 'IWM', 'TECS': 'XLK', 'BTCZ': 'IBIT'}
+PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA'}     # proxy RVOL used only to break same-bar ties
 
 
 def rvol(today, base, p, k):
@@ -252,7 +252,7 @@ def main():
     if a.build_rvol:
         prior = [d for d in days if d < day][-20:]
         base = {p: [st.mean(sum(b[4] for b in g[:k]) for d in prior for g in [grid(raw[p][d], 78)] if g) for k in range(79)]
-                for p in list(FADE_ROWS) + ['IBIT'] if p in raw and all(d in raw[p] for d in prior)}
+                for p in list(FADE_ROWS) + ['NVDA'] if p in raw and all(d in raw[p] for d in prior)}
         out = os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json'); json.dump({'day': day, 'sessions': prior, 'base': base}, open(out, 'w'))
         print(f"RVOL baseline for {day} from {len(prior)} sessions ({prior[0]}..{prior[-1]}), proxies {sorted(base)} -> {out}"); return
     prevday = max(d for d in days if d < day)
