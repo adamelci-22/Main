@@ -1,0 +1,76 @@
+List expansion study, 2026-04-07..2026-10-14 (133 days). H1 2026-04-07..2026-07-10, H2 2026-07-13..2026-10-14. Liquid = median $ per 5-min bar >= $250,000.
+
+== FADE: each proxy alone ==
+proxy legs             leg $/bar (bull/bear) trades  win% avg leg%  H1 avg  H2 avg both+ alone %/day
+QQQ   TQQQ/SQQQ       25,229,393/11,958,582      17    59   +0.518  +0.466  +0.592   yes      +0.066  (current)
+SOXX  SOXL/SOXS       30,758,971/12,141,811      20    50   +1.104  +1.465  +0.743   yes      +0.152  (current)
+IWM   TNA/TZA          1,212,696/2,334,622       16    56   +0.173  -0.270  +0.374            +0.021  (current)
+XLK   TECL/TECS          495,956/122,727         18    56   +0.831  +0.929  +0.490   yes      +0.096  (current)
+IBIT  BTCL/BTCZ                0/463,719         14    29   +0.052  -0.396  +0.649            +0.005  (current)
+SPY   UPRO/SPXU        1,151,568/1,039,973       15    33   +0.011  +0.040  -0.032            +0.001
+TLT   TMF/TMV            435,088/85,821          14    43   +0.193  -0.110  +0.496            +0.020
+XLF   FAS/FAZ            182,551/65,137          12    58   +0.298  +0.410  +0.072   yes      +0.027
+XLE   ERX/ERY             51,767/88,369          17    41   +0.097  -0.258  +0.245            +0.012
+XBI   LABU/LABD          256,370/422,925          8    62   +1.156  +0.475  +2.290   yes      +0.070
+XOP   GUSH/DRIP           76,009/218,086         16    25   -0.459  -0.676  -0.329            -0.055
+GDX   NUGT/DUST          287,560/147,343         18    22   -0.194  +0.423  -0.965            -0.026
+NVDA  NVDL/NVDQ        2,353,217/223,337         21    29   -0.157  +0.247  -0.460            -0.025
+TSLA  TSLL/TSLQ        4,419,757/672,379         11    45   +0.024  -0.726  +0.648            +0.002
+MSTR  MSTU/MSTZ        1,102,102/799,021         19    42   +1.007  +1.749  -0.015            +0.138
+AMD   AMDL/AMDD          977,416/152,979         16    44   +0.965  +1.904  +0.401   yes      +0.063
+UNG   BOIL/KOLD          392,287/229,768         15    33   -0.349  -0.422  -0.238            -0.039
+FXI   YINN/YANG          109,208/37,086          11    45   +0.115  +0.046  +0.154   yes      +0.010
+ETHA  ETHU/ETHD          368,434/40,336          15    40   -0.160  +0.657  -0.705            -0.018
+SLV   AGQ/ZSL            818,035/350,557         18    39   -0.197  -0.271  -0.106            -0.027
+VIXY  UVXY/SVIX          690,286/168,338         19    58   +0.692  +0.753  +0.625   yes      +0.099
+
+   walk-forward: new proxies chosen on H1 only (liquid legs, >=3 H1 trades, H1 avg > 0): ['SPY', 'XBI', 'MSTR']
+   FADE list current 5                      H1 +0.317%/day   H2 (unseen) +0.200%/day
+   FADE list current 5 + H1 picks           H1 +0.490%/day   H2 (unseen) +0.205%/day
+   FADE list current 5 + all liquid new     H1 +0.374%/day   H2 (unseen) +0.243%/day
+
+== PULLBACK: each ticker alone (PULLBACK_SPEC rules) ==
+ticker     $/5m bar trades  win%    avg%  H1 avg  H2 avg both+ alone %/day
+SOXS     12,141,811     12    67  +0.722  +0.822  +0.582   yes      +0.064  (current)
+SQQQ     11,958,582      1   100  +0.919  +0.919    +nan            +0.007  (current)
+TZA       2,334,622      4    25  -0.529  -0.989  +0.852            -0.016  (current)
+TECS        122,727      7    86  +0.888  +0.888    +nan            +0.046  (current)
+BTCZ        463,719      2    50  +0.160  +0.160    +nan            +0.002  (current)
+LABD        422,925     11    82  +0.658  +0.226  +0.819   yes      +0.054  (current)
+UVXY        690,286      8    62  +0.359  +0.106  +1.118   yes      +0.022  (current)
+SPXS      1,355,347      1   100  +0.619  +0.619    +nan            +0.005
+SPXU      1,039,973      0
+SDOW        451,608      0
+SRTY        174,717      2     0  -0.877  -0.891  -0.862            -0.013
+SARK          6,262      0
+VXX         562,581      3    67  +0.491  +0.814  -0.155            +0.011
+VIXY        142,147      3    67  +0.446  +0.811  -0.285            +0.010
+TSLZ        125,194      7    14  -0.708  -0.503  -0.981            -0.037
+TSDD        634,566      8    38  -0.175  -0.873  +0.986            -0.011
+TSLQ        672,379      5    40  -0.126  -0.439  +1.126            -0.005
+NVD       2,210,702      8    62  +0.232  +0.028  +0.572   yes      +0.014
+NVDQ        223,337     10    70  +0.473  +0.416  +0.557   yes      +0.035
+AMDD        152,979      3     0  -1.069  -1.084  -1.039            -0.024
+MSTZ        799,021     19    42  +0.010  +0.294  -0.606            +0.001
+JDST         36,256      3    33  -0.256  +0.184  -1.136            -0.006
+DUST        147,343      2   100  +0.545    +nan  +0.545            +0.008
+ZSL         350,557      5    80  +0.396  +0.778  -0.176            +0.015
+SCO         591,968      4    50  +0.118  +1.243  -0.257            +0.004
+HIBS          4,338      1   100  +1.567  +1.567    +nan            +0.012
+WEBS              0      1     0  -1.332  -1.332    +nan            -0.010
+QID       1,907,494      1   100  +0.785    +nan  +0.785            +0.006
+SDS         563,392      0
+TWM          36,221      0
+REW               0      0
+SBIT        127,391      7    71  +0.283  +0.185  +0.871   yes      +0.015
+ETHD         40,336      7    29  -0.326  -0.593  +0.031            -0.017
+FNGD         26,838      1     0  -1.122  -1.122    +nan            -0.008
+YANG         37,086      0
+DRIP        218,086      5    60  +0.097  +0.335  -0.857            +0.004
+ERY          88,369      1   100  +0.998  +0.998    +nan            +0.007
+FAZ          65,137      0
+
+   walk-forward: new tickers chosen on H1 only (liquid, >=2 H1 trades, H1 avg > 0): ['VXX', 'NVD', 'MSTZ', 'ZSL']
+   PULLBACK list current List B               H1 +0.118%/day   H2 (unseen) +0.166%/day
+   PULLBACK list List B + H1 picks            H1 +0.170%/day   H2 (unseen) +0.111%/day
+   PULLBACK list List B + all liquid new      H1 +0.162%/day   H2 (unseen) +0.122%/day
