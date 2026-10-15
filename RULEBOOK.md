@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.127.**  
+**Policy version: 3.128.**  
 **ENTRIES PAUSED (v3.123, 2026-10-15): all selection rules are shelved (C1, C12 → `archive/SHELVED_SELECTION_RULES.md`). No new positions until replacement entry rules are adopted. Checkpoints while flat are one-line no-ops (no research, no gate, no pulls); the 12:30 and 8pm slots still verify flat, arm the next trading day and commit; Friday 12:30 still reports.** Bump on every rule/threshold change; record it in the commit.
 **PAPER MODE (v3.127, 2026-10-15, starts Monday 2026-10-19): real-money entries stay paused (v3.123, A1). Checkpoints run the two candidate systems — failed-retest FADE and inverse-list PULLBACK — on a $2,000 paper account per C13, using `tools/live/paper.py`. No order of any kind is placed for a paper trade. The grid runs 10:00–13:30 (D1); the 13:30 close is the primary arming slot. Read C13 first at every intraday checkpoint.**
 
@@ -294,13 +294,15 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 **v3.126 — Bitcoin row trimmed to BTCL (long) and BTCZ (inverse), direct governor instruction, 2026-10-15.** BITX and SBIT removed and may not be bought; this supersedes v3.124's "more liquid ticker is the default" sentence — the row now has exactly one ticker per side. Flagged to the governor before adoption and confirmed: BTCL is thinly traded (~30 real five-minute bars a day, median bar volume a few hundred shares; -0.32%/trade on 2 qualifying replay trades), so marketable orders may fill materially worse than the backtest assumes — C8's spread check (read the real bid/ask, double it) applies with particular force here. Entries remain paused under v3.123.
 
+**v3.128 — Bitcoin long leg BTCL replaced by BITX, direct governor instruction, 2026-10-15.** BTCL has essentially no 5-minute volume (median $0 per bar in the Apr–Oct data), so it cannot be filled realistically; BITX (2x long bitcoin, ~$530k per 5-minute bar) takes its place. BTCL may not be bought. Backtest P&L is unchanged (the fade prices legs as leverage × proxy return, and both are 2x).
+
 | Theme | Long (leveraged) | Inverse (leveraged) | Proxy (C1's gate surface, v3.76 — never traded) |
 |---|---|---|---|
 | Tech large-caps | TQQQ (3x) | SQQQ (3x) | QQQ |
 | Semiconductors | SOXL (3x) | SOXS (3x) | SOXX |
 | Small-cap growth | TNA (3x) | TZA (3x) | IWM |
 | Technology (v3.124) | TECL (3x) | TECS (3x) | XLK |
-| Bitcoin (v3.124/v3.126) | BTCL (2x) | BTCZ (2x) | IBIT |
+| Bitcoin (v3.124/v3.126/v3.128) | BITX (2x) | BTCZ (2x) | IBIT |
 
 **Five rows, ten tickers (v3.126), nothing else, until the governor changes this list the same explicit way it was set.** **v3.76 — the Proxy column is the gate surface again, direct governor instruction, 2026-09-16.** C1's RVOL → ORB → ATR-expansion test runs on each row's proxy, never on the leveraged tickers directly; the proxy is never bought (it's the "core ETF holding," read-only). The proxy's own Opening Range Breakout **direction** — above its 30-min high, or below its 30-min low (v3.92) — decides whether the row's leveraged **long** or **inverse** ticker is the candidate actually entered. If more than one row clears all three C1 steps at the same checkpoint, C1 step 3's `selection_score` (v3.109, computed on the proxies) picks among them — a fixed field of five rows, never an open-ended scan result.
 
@@ -386,7 +388,7 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 **Purpose:** get forward evidence. The backtest (+0.389%/day, 2026-04-07 – 10-14) was tuned on the same seven months it was measured on. Run for 4–6 weeks (about 25–35 trades), then the governor decides whether to trade real money.
 
 ### System 1 — FADE (failed-retest fade), proxy-driven
-- **Rows:** QQQ→TQQQ/SQQQ, SOXX→SOXL/SOXS, IWM→TNA/TZA, XLK→TECL/TECS, IBIT→BTCL/BTCZ (leverage 3/3/3/3/2).
+- **Rows:** QQQ→TQQQ/SQQQ, SOXX→SOXL/SOXS, IWM→TNA/TZA, XLK→TECL/TECS, IBIT→BITX/BTCZ (leverage 3/3/3/3/2; BITX replaced BTCL in v3.128).
 - **Box:** the proxy's 9:30–10:00 high and low.
 - **Break:** a 5-minute bar *closes* outside the box by the 10:10 bar (the first break only).
 - **Retest:** within the next 12 bars, price touches the broken edge (within 0.10%). If that bar closes **back inside** the box, the breakout failed: **buy the opposite leg** at the next bar's open. An upside failure buys the inverse leg; a downside failure buys the bull leg. If the retest bar holds outside the box, there is no trade.
@@ -420,7 +422,7 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 ### What each checkpoint does
 1. **Fetch the bars.** Pull 5-minute bars from the prior trading day's 9:30 to now, in two `get_equity_historicals` calls:
    - QQQ SOXX IWM XLK IBIT TQQQ SQQQ SOXL SOXS TNA
-   - TZA TECL TECS BTCL BTCZ LABD UVXY
+   - TZA TECL TECS BITX BTCZ LABD UVXY
 2. **Run** `python3 tools/live/paper.py --now HH:MM <dump files>`. It recomputes the whole day from completed bars, so nothing has to be carried between checkpoints.
 3. **Report** only what changed: a new paper entry, a ⅓ take-profit, a stop move, or an exit. A checkpoint where nothing changed is a one-line note (D3).
 
@@ -705,6 +707,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.128** — **Bitcoin long leg BTCL → BITX** (C4, C13). Direct governor instruction, 2026-10-15. BTCL is effectively untradeable.
 
 **v3.127** — **Paper-trading mode: failed-retest FADE + inverse-list PULLBACK on a $2,000 paper account (C13), grid extended to 13:30, arming moved to 13:30.** Direct governor instruction, 2026-10-15. Real-money entries remain paused (v3.123). `tools/live/paper.py` reproduces the backtest exactly (133 days, 90 trades, equal final equity). Max 3 entries per day across both systems. The fade is checked every 5 minutes; while only a pullback OCO is resting, checkpoints run every 30 minutes. Starts Monday 2026-10-19.
 

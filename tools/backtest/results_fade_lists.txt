@@ -1,0 +1,28 @@
+Fade list variants, 2026-04-07..2026-10-14 (133 days). Pullback = List B. H1 Apr 7-Jul 10, H2 Jul 13-Oct 14.
+
+Per proxy (fade alone): QQQ 17tr avg +0.52%, SOXX 20tr avg +1.10%, IWM 16tr avg +0.17%, XLK 18tr avg +0.83%, IBIT 14tr avg +0.05%, XBI 8tr avg +1.16%, VIXY 19tr avg +0.69%
+
+A current (IWM, IBIT w/ BITX): ['QQQ', 'SOXX', 'IWM', 'XLK', 'IBIT']
+   fade alone                         trades  58 (F 58, PB 0) win  48% +0.258%/day ret  +38.9% DD  5.8%  H1 +0.317  H2 +0.200  Sharpe~2.8
+   fade + pullback (one position)     trades  90 (F 58, PB 32) win  56% +0.389%/day ret  +65.0% DD  3.9%  H1 +0.460  H2 +0.319  Sharpe~4.0
+   fade + pullback (two positions)    trades  95 (F 58, PB 37) win  56% +0.194%/day ret  +28.8% DD  2.4%  H1 +0.190  H2 +0.197  Sharpe~3.8
+
+B XBI instead of IWM: ['QQQ', 'SOXX', 'XBI', 'XLK', 'IBIT']
+   fade alone                         trades  53 (F 53, PB 0) win  47% +0.280%/day ret  +42.8% DD  4.0%  H1 +0.356  H2 +0.205  Sharpe~2.8
+   fade + pullback (one position)     trades  87 (F 53, PB 34) win  56% +0.428%/day ret  +73.6% DD  3.1%  H1 +0.499  H2 +0.358  Sharpe~4.2
+   fade + pullback (two positions)    trades  90 (F 53, PB 37) win  56% +0.204%/day ret  +30.5% DD  2.0%  H1 +0.210  H2 +0.198  Sharpe~3.8
+
+C XBI instead of IWM + VIXY: ['QQQ', 'SOXX', 'XBI', 'XLK', 'IBIT', 'VIXY']
+   fade alone                         trades  63 (F 63, PB 0) win  46% +0.301%/day ret  +46.8% DD  5.4%  H1 +0.320  H2 +0.283  Sharpe~3.0
+   fade + pullback (one position)     trades  93 (F 63, PB 30) win  55% +0.443%/day ret  +77.0% DD  5.1%  H1 +0.449  H2 +0.437  Sharpe~4.3
+   fade + pullback (two positions)    trades 100 (F 63, PB 37) win  55% +0.209%/day ret  +31.4% DD  2.6%  H1 +0.185  H2 +0.232  Sharpe~4.0
+
+D keep IWM, add XBI + VIXY: ['QQQ', 'SOXX', 'IWM', 'XLK', 'IBIT', 'XBI', 'VIXY']
+   fade alone                         trades  73 (F 73, PB 0) win  48% +0.335%/day ret  +53.4% DD  5.9%  H1 +0.323  H2 +0.346  Sharpe~3.3
+   fade + pullback (one position)     trades 101 (F 73, PB 28) win  54% +0.459%/day ret  +80.7% DD  5.9%  H1 +0.452  H2 +0.466  Sharpe~4.4
+   fade + pullback (two positions)    trades 110 (F 73, PB 37) win  55% +0.232%/day ret  +35.4% DD  3.0%  H1 +0.187  H2 +0.276  Sharpe~4.3
+
+E keep IWM, add XBI: ['QQQ', 'SOXX', 'IWM', 'XLK', 'IBIT', 'XBI']
+   fade alone                         trades  63 (F 63, PB 0) win  49% +0.314%/day ret  +49.3% DD  4.8%  H1 +0.359  H2 +0.269  Sharpe~3.2
+   fade + pullback (one position)     trades  95 (F 63, PB 32) win  56% +0.444%/day ret  +77.3% DD  3.9%  H1 +0.503  H2 +0.387  Sharpe~4.3
+   fade + pullback (two positions)    trades 100 (F 63, PB 37) win  56% +0.227%/day ret  +34.5% DD  2.4%  H1 +0.211  H2 +0.242  Sharpe~4.2
