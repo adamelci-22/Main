@@ -600,6 +600,13 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:05 checkpoint (fired 14:06:20Z, ~10:06 ET) — no trade.** Flat (account $1,984.60). Only one 5-minute bar (10:00-10:05) has closed after the 9:30-10:00 range, so no proxy can yet have the two consecutive closes outside it that C1 step 2 requires; the first possible qualification is the 10:10 checkpoint. Entries today 0 of 3; throttle off (3%).
 
+**10:10 checkpoint (fired 14:11:08Z, ~10:11 ET) — TNA ENTERED (entry 1 of 3, throttle OFF).** Gate (gate.py, K=8 bars 9:30-10:05, all complete): two proxies cleared steps 1-2, both bullish — **IWM** closes 272.38 and 273.31 above ORH 272.10, trigger-bar (10:00) volume **469,572 vs 3-bar avg 280,107, pass**, RVOL 1.64, expansion 0.64, **score +0.58**; **XBI** closes 150.235 and 150.18 above ORH 149.54, volume **395,653 vs 125,623, pass**, RVOL 1.59, expansion 0.83, score +0.27. TLT (RVOL 3.13), SOXX (2.71), QQQ (1.96), SPY, XLE inside their ranges; XLF RVOL 0.88 fails step 1.
+- **Candidates (top three for the selection log):** **IWM bull — selected** (RVOL 1.64, expansion 0.64, score +0.58, proxy 273.24 at review) · runner-up **XBI bull** (1.59, 0.83, +0.27, proxy 150.18 = 10:05 bar close) · third: none.
+- **TNA profile** (31 sessions, 9/1-10/14): median adverse 2.02% · stop_pct 3.04% · **stall 0.15%** · **min move 0.51%**. Initial stop = TNA's own 9:30-10:00 low **$53.06** (13:50 bar). Sizing 3% budget $59.54 ÷ (54.50 - 53.06) = 41.3, cash $1,984.60 ÷ 54.50 = 36.4 → **36 shares** (cash-limited).
+- **Entry:** buy 36 TNA limit $54.52 (ask 54.50 at review; first quote 54.47 moved up 3c) → **filled 14:11:56Z @ $54.52** ($1,962.72, 98.9% of cash; order `6ad0df29-897b`). Slippage vs ask +0.02. Positions verified 36 sh. IWM re-check at review 273.24 above ORH ✓.
+- **Stop:** stop_market sell 36 @ **$53.06** (2.68% below the fill) gfd, `6ad0df31-dfb5`, **confirmed**.
+- **Pre-commit (B3):** resting stop $53.06, 12:30 close; no scheduled event known before 12:30.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
