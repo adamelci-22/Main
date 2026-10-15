@@ -1,0 +1,40 @@
+Inverse-list pullback, sell all at the morning high + minimum target, 2026-04-07..2026-10-14.
+
+== List A: SOXS SQQQ TZA TECS BTCZ ==
+min target                  exit                       trd  win% avg win avg loss   %/day   ret%    DD      H1      H2
+none (current)              sell all, by 13:30          78    65   +0.71    -0.97  +0.074   +9.9   6.1  +0.065  +0.083
+none (current)              sell all, by 15:55          78    65   +0.75    -1.09  +0.065   +8.5   6.4  +0.043  +0.086
+none (current)              60/40 (current), by 13:30   66    53   +1.05    -0.80  +0.089  +12.0   6.5  +0.108  +0.071
+>= 0.5x stop distance       sell all, by 13:30          52    52   +1.12    -0.92  +0.053   +6.8   5.4  +0.056  +0.051
+>= 0.5x stop distance       sell all, by 15:55          52    52   +1.19    -1.05  +0.045   +5.7   5.4  +0.039  +0.051
+>= 0.5x stop distance       60/40 (current), by 13:30   49    47   +1.27    -0.89  +0.044   +5.6   6.3  +0.063  +0.025
+>= 0.75x stop distance      sell all, by 13:30          39    56   +1.18    -0.83  +0.088  +12.1   2.5  +0.065  +0.110
+>= 0.75x stop distance      sell all, by 15:55          39    56   +1.30    -0.98  +0.089  +12.2   3.6  +0.066  +0.111
+>= 0.75x stop distance      60/40 (current), by 13:30   38    53   +1.16    -0.79  +0.066   +9.0   2.8  +0.040  +0.094
+>= 1.0x stop distance       sell all, by 13:30          26    58   +1.14    -0.83  +0.059   +8.0   1.8  +0.036  +0.082
+>= 1.0x stop distance       sell all, by 15:55          26    50   +1.38    -0.97  +0.039   +5.1   3.0  +0.020  +0.059
+>= 1.0x stop distance       60/40 (current), by 13:30   26    54   +1.07    -0.77  +0.042   +5.7   1.7  +0.017  +0.068
+>= 1.25x stop distance      sell all, by 13:30          21    57   +1.18    -0.74  +0.057   +7.7   1.7  +0.043  +0.069
+>= 1.25x stop distance      sell all, by 15:55          21    52   +1.34    -1.01  +0.035   +4.6   2.6  +0.026  +0.044
+>= 1.25x stop distance      60/40 (current), by 13:30   21    57   +1.04    -0.74  +0.044   +5.9   1.8  +0.031  +0.057
+   WALK-FORWARD (sell all, 13:30): best minimum on H1 = 0.75 (H1 +0.065) -> H2 +0.110; no minimum H2 +0.083
+
+== List B: A + LABD + UVXY ==
+min target                  exit                       trd  win% avg win avg loss   %/day   ret%    DD      H1      H2
+none (current)              sell all, by 13:30         109    72   +0.67    -0.97  +0.165  +23.9   6.8  +0.138  +0.192
+none (current)              sell all, by 15:55         109    72   +0.71    -1.04  +0.173  +25.1   7.2  +0.117  +0.229
+none (current)              60/40 (current), by 13:30   85    56   +1.02    -0.72  +0.166  +23.9   7.1  +0.200  +0.132
+>= 0.5x stop distance       sell all, by 13:30          75    56   +1.04    -0.91  +0.104  +14.2   6.1  +0.073  +0.133
+>= 0.5x stop distance       sell all, by 15:55          75    56   +1.12    -0.98  +0.112  +15.3   6.6  +0.057  +0.167
+>= 0.5x stop distance       60/40 (current), by 13:30   65    52   +1.18    -0.88  +0.096  +12.9   6.3  +0.128  +0.063
+>= 0.75x stop distance      sell all, by 13:30          56    59   +1.17    -0.86  +0.141  +20.2   3.3  +0.097  +0.185
+>= 0.75x stop distance      sell all, by 15:55          56    59   +1.29    -0.93  +0.159  +23.0   4.2  +0.097  +0.220
+>= 0.75x stop distance      60/40 (current), by 13:30   52    56   +1.31    -0.82  +0.143  +20.4   3.2  +0.137  +0.148
+>= 1.0x stop distance       sell all, by 13:30          38    61   +1.16    -0.87  +0.101  +14.1   1.8  +0.078  +0.124
+>= 1.0x stop distance       sell all, by 15:55          38    55   +1.37    -0.92  +0.098  +13.6   3.3  +0.062  +0.134
+>= 1.0x stop distance       60/40 (current), by 13:30   35    57   +1.34    -0.82  +0.109  +15.3   1.8  +0.117  +0.101
+>= 1.25x stop distance      sell all, by 13:30          27    56   +1.20    -0.81  +0.062   +8.4   2.7  +0.036  +0.088
+>= 1.25x stop distance      sell all, by 15:55          27    52   +1.42    -0.94  +0.058   +7.7   4.2  +0.019  +0.095
+>= 1.25x stop distance      60/40 (current), by 13:30   26    54   +1.23    -0.81  +0.056   +7.5   2.7  +0.031  +0.081
+   WALK-FORWARD (sell all, 13:30): best minimum on H1 = None (H1 +0.138) -> H2 +0.192; no minimum H2 +0.192
+
