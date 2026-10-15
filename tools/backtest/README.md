@@ -1,6 +1,6 @@
 # Backtests
 
-**The live system (RULEBOOK v5.0) is tested by `final_system.py`** (FADE + PULLBACK, results in `results_final_system.txt`), with stress tests in `stress.py` (`results_stress.txt`). `tools/live/paper.py` reproduces it trade for trade. Specs: `PULLBACK_SPEC.md`; the FADE rules are RULEBOOK B2 (research in `retest.py`, `fade_*.py`). `TWO_BAR_SPEC.md` is a rejected candidate.
+**The live system (RULEBOOK v5.0) is tested by `final_system.py`** (FADE + PULLBACK, results in `results/final_system.txt`), with stress tests in `stress.py` (`results/stress.txt`). `tools/live/paper.py` reproduces it trade for trade. Specs: `PULLBACK_SPEC.md`; the FADE rules are RULEBOOK B2 (research in `retest.py`, `fade_*.py`). `TWO_BAR_SPEC.md` is a rejected candidate.
 
 Shared data: `data/bt_5m.json.gz` (real Robinhood 5-minute bars from 2026-03-02), loaded through `lab.get_data()`.
 
@@ -28,3 +28,8 @@ bar lows (gap -> open); ratchet uses completed 5-min bars; missing leg bars carr
 unrealistically clean fills; no partial fills or spread widening; costs default 0.03%/side.
 
 **Superseded:** the ORB-system universe decisions recorded here on 2026-10-15 were never applied; the ORB system was retired the same day (RULEBOOK E4).
+
+## Results files
+
+- `results/final_system.txt` — the live system's backtest (`final_system.py`). `results/stress.txt` — its stress tests (`stress.py`). Both cited by RULEBOOK E3.
+- `results/research_results_former.txt` — every other experiment's output in one indexed file (lists, exits, pullback variants, the rejected 2-bar ORB, the retired ORB system). Scripts still print to stdout; redirect to regenerate.

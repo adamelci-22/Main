@@ -1,10 +1,10 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.0.2** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.0.3** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
-**Retired rules:** everything before v4.0 is preserved word for word in `archive/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
+**Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
 
 Nothing carries between checkpoints. State lives in this file, `archive/live_trades.csv`, `archive/paper_trades.csv` (the model's own record) and the broker, never in memory. **The broker is the truth about positions and orders.**
 
@@ -53,7 +53,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 11 | **Halt** | Never send an order into a halted ticker (A4). | Broker response |
 | 12 | **Kill switch** | **If the governor says "stop", "halt" or "flatten":** cancel every open order, sell every position (marketable limit), and take no entries until the governor says to resume. This overrides everything else in this file. | — |
 
-**Losing-streak clearances:** none yet. The live record starts 2026-10-16. Old-system trades in `archive/trades.csv` don't count.
+**Losing-streak clearances:** none yet. The live record starts 2026-10-16. Old-system trades in `archive/trade_history/old_system_trades.csv` don't count.
 
 ## A2. Trigger hygiene
 
@@ -283,9 +283,8 @@ Only the first qualifying setup per ticker per day counts.
 | `archive/live_trades.csv` | Real trades from 2026-10-16. Append-only. Columns: `date, system, proxy, ticker, entry_time, shares, entry_px, stop_px, target_px, exit_time, exit_px, exit_reason, pnl_usd, pnl_pct_position, acct_pct, model_pct, slippage_note, order_ids, notes` |
 | `archive/paper_trades.csv`, `archive/paper_state.json` | The model's own record (`paper.py --close`), for comparison |
 | `archive/paper_rvol_<day>.json` | The day's RVOL tie-break baseline |
-| `archive/trades.csv` | Old-system real trades (history, closed 2026-10-15) |
-| `archive/` (other files), `archive/old_system_tools/` | Old-system rulebook, experiments, selection log and tools. History only; nothing in them is in force |
-| `tools/backtest/` | Research code. `final_system.py` = this system's backtest; `stress.py` = its stress tests |
+| `archive/trade_history/`, `archive/former_systems/` | Old-system trades, selection log, rulebook, shelved rules, experiments and tools. History only; nothing in them is in force. Map: `archive/README.md` |
+| `tools/backtest/` | Research code. `final_system.py` = this system's backtest; `stress.py` = its stress tests; outputs in `results/` (`research_results_former.txt` holds every other experiment) |
 
 ## D3. Changing a rule
 
@@ -301,7 +300,7 @@ Only the first qualifying setup per ticker per day counts.
 ## E1. Account mechanics
 
 - **Limited margin.** Buying power equals total value, and sale proceeds are usable immediately. No borrowing beyond the account's own cash.
-- **PDT restriction gone:** FINRA eliminated it effective 2026-06-04 (sourcing in `archive/RULEBOOK_v3.132_full.md`).
+- **PDT restriction gone:** FINRA eliminated it effective 2026-06-04 (sourcing in `archive/former_systems/RULEBOOK_v3.132_full.md`).
 - **No short selling.** Inverse ETFs are bought long.
 - **Floor:** 50% of deposited cash, where deposited = total value − all-time realized P&L − unrealized P&L. It does not rise with gains.
 
@@ -324,7 +323,7 @@ A broker capability is verified only by a successful call or an order response, 
 | PULLBACK alone | 52 | 67% | +0.160 | +28.1% | 1.9% |
 | Mar 3 – Apr 6 (never used for tuning) | 22 | 50% | +0.594 | +14.8% | 3.8% |
 
-- **Stress tests** (`results_stress.txt`): break-even at about 0.80% extra cost per trade. +0.43%/day with 0.20% extra cost.
+- **Stress tests** (`tools/backtest/results/stress.txt`): break-even at about 0.80% extra cost per trade. +0.43%/day with 0.20% extra cost.
 - **Concentration:** without the SOXX fade row, +0.40%/day. Without the 10 best days, +0.25%/day.
 - **Longest losing streak:** 4. The 5-loss lockout never fired.
 - **Lists and exits were chosen on the same months,** so the numbers are optimistic. Plan on +0.2–0.4%/day.
@@ -333,8 +332,8 @@ A broker capability is verified only by a successful call or an order response, 
 
 | Retired | Where |
 |---|---|
-| ORB breakout + RVOL/score ranking + ratchet (live 2026-09 – 10-15) | `archive/SHELVED_SELECTION_RULES.md`, `archive/RULEBOOK_v3.132_full.md` |
-| "2 fresh + 1 re-entry" allowance, per-instrument caps, RVOL-decay block, the 3-entry daily cap (v4.0 – 4.1), the 0.5% risk throttle, the 12:30 close, the selection log | `archive/RULEBOOK_v3.132_full.md`, git history |
+| ORB breakout + RVOL/score ranking + ratchet (live 2026-09 – 10-15) | `archive/former_systems/SHELVED_SELECTION_RULES.md`, `archive/former_systems/RULEBOOK_v3.132_full.md` |
+| "2 fresh + 1 re-entry" allowance, per-instrument caps, RVOL-decay block, the 3-entry daily cap (v4.0 – 4.1), the 0.5% risk throttle, the 12:30 close, the selection log | `archive/former_systems/RULEBOOK_v3.132_full.md`, git history |
 
 Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026-10-15).
 
@@ -368,9 +367,11 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## Change log
 
+**v5.0.3 — 2026-10-15:** file reorganisation, no rule change. `archive/` split into live records, `trade_history/` and `former_systems/` (map in `archive/README.md`); 29 backtest result files folded into `tools/backtest/results/`.
+
 **v5.0.2 — 2026-10-15:** `paper.py` no longer crashes when a leg's bars are missing from the dump (prints a blocked/refetch line instead) or when a dump holds no 5-minute bars. Backtest and stress results re-run identical. Friday's RVOL baseline pre-built (`archive/paper_rvol_2026-10-16.json`; 9:00 rebuilds it).
 
-**v5.0.1 — 2026-10-15:** cleanup, no rule change. READ MAP points the 13:30 row at B5.7; A3 says how to handle an unknown position; old-system tools moved to `archive/old_system_tools/`.
+**v5.0.1 — 2026-10-15:** cleanup, no rule change. READ MAP points the 13:30 row at B5.7; A3 says how to handle an unknown position; old-system tools moved to `archive/former_systems/tools/`.
 
 **v5.0 — 2026-10-15, governor instructions:**
 - **Real money starts Friday 2026-10-16** with the FADE + PULLBACK system.
@@ -385,4 +386,4 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 **v4.0 — 2026-10-15:** rulebook rewritten around the new system; all retired rules removed (full v3.132 archived).
 
-Earlier versions: `archive/RULEBOOK_v3.132_full.md` and git history.
+Earlier versions: `archive/former_systems/RULEBOOK_v3.132_full.md` and git history.

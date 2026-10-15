@@ -1,7 +1,7 @@
 # 2-Bar Compressed ORB (15-minute) — system specification
 
 Status: **rejected (no edge).** Kept as research history. Its finding — the 10:00 range break fades on these proxies — led to the FADE system now in RULEBOOK B2.
-Code: `tools/backtest/twobar.py`. Results: `tools/backtest/results_twobar.txt`.
+Code: `tools/backtest/twobar.py`. Results: `twobar.txt` section of `tools/backtest/results/research_results_former.txt`.
 
 ## Universe
 

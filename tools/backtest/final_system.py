@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Backtest of the full mixed system as it stands for paper trading (rulebook v3.132, C13).
-    python3 tools/backtest/final_system.py > tools/backtest/results_final_system.txt
+    python3 tools/backtest/final_system.py > tools/backtest/results/final_system.txt
 FADE: QQQ SOXX IWM XLK XBI AMD (failed-retest fade; 1/3 at 2R, 2-ATR chandelier, out 13:30).
 PULLBACK: SOXS LABD TECS UVXY NVD (PULLBACK_SPEC.md; 100% at morning high; out 13:30).
 $2,000, 3% risk capped at cash, one position at a time, max 3 entries/day, earliest trigger first, ties by proxy RVOL.

@@ -1,7 +1,7 @@
 # Pullback buy — candidate specification
 
 Status: **adopted — live from 2026-10-16 as RULEBOOK B3 (v5.0).** The rulebook governs where this file differs. The rules below are the governor's choices from 2026-10-15.
-Code: `tools/backtest/pb_final.py`. Results: `tools/backtest/results_pb_final.txt`.
+Code: `tools/backtest/pb_final.py`. Results: `pb_final.txt` section of `tools/backtest/results/research_results_former.txt`.
 
 ## List (inverse/fear tickers; long only, on each ticker's own chart)
 

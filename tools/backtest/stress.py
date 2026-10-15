@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Weakness and gap tests for the v4.0 paper system (FADE 6 + PULLBACK 5), 2026-03-03..10-14.
-    python3 tools/backtest/stress.py > tools/backtest/results_stress.txt
+    python3 tools/backtest/stress.py > tools/backtest/results/stress.txt
 """
 import math, os, random, statistics as st, sys, collections, datetime as dt
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
