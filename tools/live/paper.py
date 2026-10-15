@@ -260,8 +260,11 @@ def live_actions(today, taken, signals, K):
         any_ = True
         if sysn == 'FADE':
             bull, bear, lb, lbe = FADE_ROWS[sym]; side = t['side']; leg = bull if side > 0 else bear; lev = lb if side > 0 else lbe
-            pnow = today[sym][K - 1][3]; lnow = today[leg][K - 1][3] if leg in today else float('nan')
-            r = abs(pnow - t['stop']) / pnow
+            pnow = today[sym][K - 1][3]; r = abs(pnow - t['stop']) / pnow
+            if leg not in today:
+                print(f"    ENTER FADE blocked: {leg} has no bars in the dump (fetch list C1.2) - refetch and rerun before acting (A1.6 fresh data). "
+                      f"Proxy {sym} {pnow:.2f}, proxy stop {t['stop']:.2f}, R {r*100:.2f}% proxy = {lev*r*100:.2f}% on {leg}."); continue
+            lnow = today[leg][K - 1][3]
             ls = to_leg(lnow, pnow, t['stop'], side, lev)
             lt = lnow * (1 + lev * 2 * r)
             print(f"    ENTER FADE: buy {leg} now (marketable limit). Proxy {sym} {pnow:.2f}, proxy stop {t['stop']:.2f} (R {r*100:.2f}% proxy = {lev*r*100:.2f}% on {leg}).")
@@ -273,9 +276,12 @@ def live_actions(today, taken, signals, K):
         any_ = True
         if c['system'] == 'FADE':
             bull, bear, lb, lbe = FADE_ROWS[c['proxy']]; leg = c['ticker']; side = c['side']; lev = lb if side > 0 else lbe
-            pnow = today[c['proxy']][K - 1][3]; lnow = today[leg][K - 1][3]
+            pnow = today[c['proxy']][K - 1][3]; lnow = today[leg][K - 1][3] if leg in today else None
             hit = any('take profit' in e[1] for e in c['events'])
-            if not hit:
+            if lnow is None:
+                print(f"    MANAGE FADE {leg}: no {leg} bars in the dump - refetch; until then leave the resting orders alone and manage from the broker state (A4.5). "
+                      f"Model: 1/3 take-profit {'DONE' if hit else 'not yet'}, runner stop on the proxy {c['stop_now']:.2f}")
+            elif not hit:
                 print(f"    MANAGE FADE {leg}: 1/3 take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3)")
             else:
                 print(f"    MANAGE FADE {leg}: 1/3 take-profit DONE in the model; runner stop on the proxy {c['stop_now']:.2f} -> {leg} "
@@ -283,6 +289,11 @@ def live_actions(today, taken, signals, K):
         else:
             print(f"    MANAGE PULLBACK {c['ticker']}: OCO resting (target {c['target']:.2f} / stop {c['stop0']:.2f}); nothing to change")
     if not any_: print("    none")
+
+
+def px(v, nd=2):
+    """Format a leg price; None means the leg's bars were missing from the dump (the model's P&L is unaffected: it uses the proxy)."""
+    return f"{v:.{nd}f}" if v is not None else 'n/a (leg bars missing)'
 
 
 def state():
@@ -299,6 +310,7 @@ def main():
     a = ap.parse_args()
     raw = load([f for g in a.dumps for f in glob.glob(g)])
     days = sorted({d for s in raw.values() for d in s})
+    if not days: sys.exit('no 5-minute bars found in the dumps (expected get_equity_historicals output, interval 5minute, bounds regular)')
     day = a.day or days[-1]
     if a.build_rvol:
         prior = [d for d in days if d < day][-20:]
@@ -331,7 +343,7 @@ def main():
     if not taken and not signals: print("  no paper trades or live signals")
     for c in taken:
         head = f"  {c['system']:<4} {c['ticker']:<5}" + (f" (fade of {c['proxy']})" if c['system'] == 'FADE' else '') + \
-               f" entered {k2t(c['k'])} @ {c['leg_entry']:.2f}" + (f" [proxy {c['entry']:.2f}]" if c['system'] == 'FADE' else '') + \
+               f" entered {k2t(c['k'])} @ {px(c['leg_entry'])}" + (f" [proxy {c['entry']:.2f}]" if c['system'] == 'FADE' else '') + \
                f", stop {c['stop0']:.2f}{' (proxy)' if c['system'] == 'FADE' else ''}, target {c['target']:.2f}, notional ${c['notional']:,.0f}"
         print(head)
         for e in c['events']: print(f"       {e[0]} {e[1]} at {e[2]:.2f}" + (f" ({e[3]:.0%})" if len(e) > 3 else ''))
@@ -358,7 +370,7 @@ def main():
             e = eq0
             for c in taken:
                 e += c['usd']
-                w.writerow([day, c['system'], c['proxy'], c['ticker'], k2t(c['k']), f"{c['leg_entry']:.4f}", f"{c['stop0']:.4f}", f"{c['target']:.4f}",
+                w.writerow([day, c['system'], c['proxy'], c['ticker'], k2t(c['k']), px(c['leg_entry'], 4), f"{c['stop0']:.4f}", f"{c['target']:.4f}",
                             k2t(c['xbar']), c['why'], f"{c['pct']:.3f}", f"{c['notional']:.2f}", f"{c['usd']:.2f}", f"{e:.2f}"])
         S['equity'] = round(eq, 2); S['days_logged'].append(day); S['start'] = S['start'] or day
         S['loss_streak'] = taken[-1]['streak'] if taken else streak0

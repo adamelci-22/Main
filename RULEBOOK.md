@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.0.1** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.0.2** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -367,6 +367,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.0.2 — 2026-10-15:** `paper.py` no longer crashes when a leg's bars are missing from the dump (prints a blocked/refetch line instead) or when a dump holds no 5-minute bars. Backtest and stress results re-run identical. Friday's RVOL baseline pre-built (`archive/paper_rvol_2026-10-16.json`; 9:00 rebuilds it).
 
 **v5.0.1 — 2026-10-15:** cleanup, no rule change. READ MAP points the 13:30 row at B5.7; A3 says how to handle an unknown position; old-system tools moved to `archive/old_system_tools/`.
 
