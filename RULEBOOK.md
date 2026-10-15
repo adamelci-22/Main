@@ -598,6 +598,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:00 checkpoint (fired 14:00:18Z, ~10:00 ET) — no trade (range just completed, no closes outside yet).** Flat (no orders since Wednesday's close; account $1,984.60). The 30-minute range completed at 10:00 and no 5-minute bar has closed after it, so no proxy can have two consecutive closes outside; correct no-trade. Entries today 0 of 3; throttle off (3%).
 
+**10:05 checkpoint (fired 14:06:20Z, ~10:06 ET) — no trade.** Flat (account $1,984.60). Only one 5-minute bar (10:00-10:05) has closed after the 9:30-10:00 range, so no proxy can yet have the two consecutive closes outside it that C1 step 2 requires; the first possible qualification is the 10:10 checkpoint. Entries today 0 of 3; throttle off (3%).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
