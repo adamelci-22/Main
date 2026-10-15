@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.125.**  
+**Policy version: 3.126.**  
 **ENTRIES PAUSED (v3.123, 2026-10-15): all selection rules are shelved (C1, C12 → `archive/SHELVED_SELECTION_RULES.md`). No new positions until replacement entry rules are adopted. Checkpoints while flat are one-line no-ops (no research, no gate, no pulls); the 12:30 and 8pm slots still verify flat, arm the next trading day and commit; Friday 12:30 still reports.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
@@ -289,15 +289,17 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 **v3.125 — Broad market (SPY) and Treasury bonds (TLT) removed, direct governor instruction, 2026-10-15. The Core Seven becomes the Core Five: QQQ, SOXX, IWM, XLK, IBIT — the governor's current system.** Removed outright: SPY / UPRO, SPXU and TLT / TMF, TMV. None of the four tickers may be bought. Basis: in the 7-month first-pullback replay neither row produced a single setup with >= 0.75% stop room (their 3x legs move ~0.15-0.20% per 5-minute bar), and all their raw signals averaged negative. SPY may still be read as a market reference (it is not a traded row). Entries remain paused under v3.123.
 
+**v3.126 — Bitcoin row trimmed to BTCL (long) and BTCZ (inverse), direct governor instruction, 2026-10-15.** BITX and SBIT removed and may not be bought; this supersedes v3.124's "more liquid ticker is the default" sentence — the row now has exactly one ticker per side. Flagged to the governor before adoption and confirmed: BTCL is thinly traded (~30 real five-minute bars a day, median bar volume a few hundred shares; -0.32%/trade on 2 qualifying replay trades), so marketable orders may fill materially worse than the backtest assumes — C8's spread check (read the real bid/ask, double it) applies with particular force here. Entries remain paused under v3.123.
+
 | Theme | Long (leveraged) | Inverse (leveraged) | Proxy (C1's gate surface, v3.76 — never traded) |
 |---|---|---|---|
 | Tech large-caps | TQQQ (3x) | SQQQ (3x) | QQQ |
 | Semiconductors | SOXL (3x) | SOXS (3x) | SOXX |
 | Small-cap growth | TNA (3x) | TZA (3x) | IWM |
 | Technology (v3.124) | TECL (3x) | TECS (3x) | XLK |
-| Bitcoin (v3.124) | BITX (2x), BTCL (2x) | SBIT (2x), BTCZ (2x) | IBIT |
+| Bitcoin (v3.124/v3.126) | BTCL (2x) | BTCZ (2x) | IBIT |
 
-**Five rows, twelve tickers (v3.125), nothing else, until the governor changes this list the same explicit way it was set.** **v3.76 — the Proxy column is the gate surface again, direct governor instruction, 2026-09-16.** C1's RVOL → ORB → ATR-expansion test runs on each row's proxy, never on the leveraged tickers directly; the proxy is never bought (it's the "core ETF holding," read-only). The proxy's own Opening Range Breakout **direction** — above its 30-min high, or below its 30-min low (v3.92) — decides whether the row's leveraged **long** or **inverse** ticker is the candidate actually entered. If more than one row clears all three C1 steps at the same checkpoint, C1 step 3's `selection_score` (v3.109, computed on the proxies) picks among them — a fixed field of five rows, never an open-ended scan result.
+**Five rows, ten tickers (v3.126), nothing else, until the governor changes this list the same explicit way it was set.** **v3.76 — the Proxy column is the gate surface again, direct governor instruction, 2026-09-16.** C1's RVOL → ORB → ATR-expansion test runs on each row's proxy, never on the leveraged tickers directly; the proxy is never bought (it's the "core ETF holding," read-only). The proxy's own Opening Range Breakout **direction** — above its 30-min high, or below its 30-min low (v3.92) — decides whether the row's leveraged **long** or **inverse** ticker is the candidate actually entered. If more than one row clears all three C1 steps at the same checkpoint, C1 step 3's `selection_score` (v3.109, computed on the proxies) picks among them — a fixed field of five rows, never an open-ended scan result.
 
 **[Retired, v3.97] Retail & consumer row, noted plainly when it was live, not hidden: SZK was ProShares UltraShort Consumer Staples, not a retail-specific inverse, and was 2x against RETL's 3x** — a real mismatch, flagged to the governor 2026-09-16 and kept as-given per explicit instruction at the time. The row (XRT/RETL/SZK) itself was removed under v3.97; kept here for reference rather than deleted outright, same convention as every other retirement in this file.
 
@@ -425,10 +427,10 @@ Never delete either checkpoint (A2's rule, not restated here).
 **v3.71 — market-wide scanning removed entirely, direct governor instruction, 2026-09-16.** No `run_scan`, no individual-stock discovery, no 25-name watchlist, ever, until the governor explicitly reopens it. The tradeable universe is now fixed and closed: **the Core Ten (E3)** — ten macro/sector themes, each with its own named leveraged long and inverse ETF, nothing else. "These are all the positions you will ever enter" — direct quote, binding until changed the same explicit way.
 
 1. **Headlines** — macro, geopolitical, overnight. Same discipline as always, just read now for which of the C4 table's five themes (v3.125) it actually touches (Fed decision → Treasury Bonds and Broad Market rows; a chip-specific story → Semiconductors; etc.) rather than as raw material for a stock hunt.
-2. **Pre-market prices for the five proxies (v3.125)** (QQQ, SOXX, IWM, XLK, IBIT — C4; SPY may still be read as a market reference, never traded), the actual C1 gate surface (v3.76), plus the twelve leveraged tickers (TQQQ/SQQQ, SOXL/SOXS, TNA/TZA, TECL/TECS, BITX/BTCL/SBIT/BTCZ — E3/C4) for context on what's actually tradeable. This is the entire "watchlist build" step now — there is nothing else to scan for.
+2. **Pre-market prices for the five proxies (v3.125)** (QQQ, SOXX, IWM, XLK, IBIT — C4; SPY may still be read as a market reference, never traded), the actual C1 gate surface (v3.76), plus the ten leveraged tickers (TQQQ/SQQQ, SOXL/SOXS, TNA/TZA, TECL/TECS, BTCL/BTCZ — E3/C4) for context on what's actually tradeable. This is the entire "watchlist build" step now — there is nothing else to scan for.
 3. **Earnings reactions** from last night's after-close reporters, scoped to whether they move one of the five themes (v3.125), not individual names outside the list.
 4. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
-5. **Record pre-market volume and price context for all five proxies (v3.125)** — RVOL can't be computed until today's own volume accrues (C1 step 1 needs live intraday volume vs. the 20-day average, read on the proxy), so this is observational only, feeding the day's report, not a formal qualification; that happens live starting at 10:00 once the 9:30-10:00 opening range exists (C1). Profile the actual leveraged ticker just-in-time (B1) only once its row's proxy has picked a direction and it's actually being considered for entry, never all twelve pre-emptively; mark affordability second, never first.
+5. **Record pre-market volume and price context for all five proxies (v3.125)** — RVOL can't be computed until today's own volume accrues (C1 step 1 needs live intraday volume vs. the 20-day average, read on the proxy), so this is observational only, feeding the day's report, not a formal qualification; that happens live starting at 10:00 once the 9:30-10:00 opening range exists (C1). Profile the actual leveraged ticker just-in-time (B1) only once its row's proxy has picked a direction and it's actually being considered for entry, never all ten pre-emptively; mark affordability second, never first.
 6. **Refresh the live-context block (E5).** Commit and push.
 
 ## D3. Reporting
@@ -626,6 +628,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.126** — **Bitcoin row is now BTCL (long) / BTCZ (inverse) only; BITX and SBIT removed.** Direct governor instruction, 2026-10-15, confirmed after BTCL's thin liquidity was flagged. Full text: C4, above. Ten tickers total. Entries still paused (v3.123).
 
 **v3.125** — **SPY and TLT rows removed: the Core Five is now QQQ, SOXX, IWM, XLK, IBIT (twelve tickers).** Direct governor instruction, 2026-10-15. Full text: C4, above. Entries still paused (v3.123).
 
