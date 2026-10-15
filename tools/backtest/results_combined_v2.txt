@@ -1,0 +1,23 @@
+Combined fade + pullback (List B), 2026-04-07..2026-10-14 (133 days). H1 = Apr 7-Jul 10 (SPY +15%), H2 = Jul 13-Oct 14 (SPY +2%).
+Candidate setups: FADE 85, PB 45. Goal +0.400%/day.
+
+Days with a fade setup 56, with a pullback setup 34, both 14, either 76 of 133
+On shared days, the pullback triggered while a fade could still be open: 7 of 14
+
+Fade alone                           trades  58 (FADE 58, PB 0) win  48% +0.258%/day  ret  +38.9%  maxDD  5.8%  H1 +0.317  H2 +0.200  Sharpe~2.8
+Pullback alone (List B)              trades  37 (FADE 0, PB 37) win  68% +0.143%/day  ret  +20.7%  maxDD  2.2%  H1 +0.119  H2 +0.167  Sharpe~3.9
+
+COMBINED, one position at a time     trades  90 (FADE 58, PB 32) win  56% +0.389%/day  ret  +65.0%  maxDD  3.9%  H1 +0.460  H2 +0.319  Sharpe~4.0
+COMBINED, two positions (half cash)  trades  95 (FADE 58, PB 37) win  56% +0.194%/day  ret  +28.8%  maxDD  2.4%  H1 +0.190  H2 +0.197  Sharpe~3.8
+
+-- one position: detail
+   by month: 2026-04 -21$, 2026-05 +100$, 2026-06 +377$, 2026-07 +436$, 2026-08 +150$, 2026-09 +121$, 2026-10 +137$
+   by system/ticker: FADE SOXX- 9tr +341$, PB SOXS 10tr +185$, FADE SOXX+ 5tr +140$, PB LABD 7tr +130$, FADE XLK- 6tr +125$, FADE IBIT- 4tr +91$, FADE QQQ+ 4tr +91$, PB TECS 5tr +84$, FADE XLK+ 5tr +80$, PB UVXY 6tr +73$, FADE IWM- 3tr +24$, FADE IWM+ 10tr +14$, FADE QQQ- 5tr +8$, PB BTCZ 1tr -13$, PB TZA 3tr -21$, FADE IBIT+ 7tr -52$
+   trade days 76; winning days 42, losing days 34; best day +8.00%, worst day -3.05%; months positive 6 of 7
+   top 3 trades +499$ (2026-07-02 FADE XLK-, 2026-07-16 FADE SOXX-, 2026-06-04 FADE SOXX+); everything else +801$
+
+-- two positions: detail
+   by month: 2026-04 -11$, 2026-05 +33$, 2026-06 +119$, 2026-07 +258$, 2026-08 +64$, 2026-09 +46$, 2026-10 +67$
+   by system/ticker: FADE SOXX- 9tr +149$, PB SOXS 11tr +106$, PB LABD 9tr +81$, FADE QQQ+ 6tr +76$, FADE XLK- 4tr +59$, FADE XLK+ 3tr +56$, FADE IBIT- 4tr +36$, PB UVXY 8tr +34$, PB TECS 4tr +22$, FADE QQQ- 7tr +13$, FADE IWM- 3tr +9$, FADE IWM+ 10tr +8$, PB BTCZ 1tr -6$, FADE IBIT+ 6tr -17$, PB TZA 4tr -21$, FADE SOXX+ 6tr -27$
+   trade days 76; winning days 42, losing days 34; best day +5.02%, worst day -1.87%; months positive 6 of 7
+   top 3 trades +208$ (2026-07-02 FADE XLK-, 2026-07-16 FADE SOXX-, 2026-06-29 FADE XLK+); everything else +368$
