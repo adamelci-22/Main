@@ -609,6 +609,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **10:15 checkpoint (fired 14:16:50Z) — TNA hold, stop $53.06 unchanged.** Live 54.22 (bid/ask 54.22/54.24), below the 54.52 fill (-0.55%); run_high 54.615 (14:12 bar); ratchet requires live above the fill, so no move. Stop `6ad0df31-dfb5` confirmed, 36 sh. IWM 272.85, still above ORH 272.10. Entries 1 of 3.
 
+**10:20 checkpoint (fired 14:20:39Z) — TNA hold, stop $53.06 unchanged.** Live 54.38 (bid/ask 54.40/54.41), still under the 54.52 fill (-0.26%); run_high 54.615; live not above the fill, so no ratchet. Stop `6ad0df31-dfb5` confirmed, 36 sh. IWM 273.16 above ORH 272.10. Entries 1 of 3.
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
