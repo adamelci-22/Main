@@ -64,9 +64,10 @@ class Data:
                 out = [b if b else (first[0],) * 4 + (0,) for b in out]
                 self.bars[s][d] = out
         # proxy cumulative volume and daily H/L/C for ATR
-        self.cum = {p: {d: [sum(b[4] for b in self.bars[p][d][:k]) for k in range(79)] for d in self.days} for p in PROXIES}
+        EXTRA = [p for p in ('XLU', 'XLRE', 'XOP', 'EEM') if p in self.bars]
+        self.cum = {p: {d: [sum(b[4] for b in self.bars[p][d][:k]) for k in range(79)] for d in self.days if d in self.bars[p]} for p in PROXIES + EXTRA}
         self.dhlc = {p: {d: (max(b[1] for b in self.bars[p][d]), min(b[2] for b in self.bars[p][d]), self.bars[p][d][-1][3])
-                         for d in self.days} for p in PROXIES}
+                         for d in self.days if d in self.bars[p]} for p in PROXIES + EXTRA}
 
     def prior(self, d, n):
         i = self.days.index(d)
