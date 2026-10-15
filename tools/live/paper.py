@@ -4,9 +4,10 @@
 Usage at a checkpoint (after saving today's + the prior session's 5-minute bars with get_equity_historicals):
     python3 tools/live/paper.py --now 10:35 DUMP [DUMP ...]            # status: what the paper account holds / did today
     python3 tools/live/paper.py --now 13:30 --close DUMP [DUMP ...]    # 13:30 close: append today's trades to archive/paper_trades.csv
-Symbols needed in the dumps (two calls, max 10 symbols each):
-    QQQ SOXX IWM XLK XBI TQQQ SQQQ SOXL SOXS TNA
-    TZA TECL TECS BTCZ LABU LABD UVXY IBIT   (IBIT read-only: RVOL tie-break for BTCZ pullbacks)
+Symbols needed in the dumps (three calls, max 10 symbols each):
+    QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
+    TNA TZA TECL TECS LABU LABD AMDL AMDD BTCZ UVXY
+    IBIT   (read-only: RVOL tie-break for BTCZ pullbacks)
 Range: from the prior trading day's 9:30 ET to now, interval 5minute.
 
 Everything is recomputed from the bars on every run (deterministic, no intraday state), exactly as tools/backtest computes it:
@@ -22,7 +23,8 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.pat
 LOG = os.path.join(ROOT, 'archive', 'paper_trades.csv')
 STATE = os.path.join(ROOT, 'archive', 'paper_state.json')
 
-FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3), 'SOXX': ('SOXL', 'SOXS', 3), 'IWM': ('TNA', 'TZA', 3), 'XLK': ('TECL', 'TECS', 3), 'XBI': ('LABU', 'LABD', 3)}
+FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3),
+             'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
 PB_LIST = ['SOXS', 'SQQQ', 'TZA', 'TECS', 'BTCZ', 'LABD', 'UVXY']     # tie order for same-bar pullback triggers
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
 MAX_ENTRIES = 3
@@ -198,12 +200,12 @@ def simulate(today, prev, K, equity, base=None):
     """today/prev: {sym: [bars]}; base = {proxy: [avg cumulative volume through bar k]} for the RVOL tie-break.
     Returns (taken, skipped, signals, equity_after)."""
     cands, signals = [], []
-    for p, (bull, bear, lev) in FADE_ROWS.items():
+    for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
         if p not in today: continue
         t = fade(today[p], K)
         if not t: continue
         if t['status'] in ('watching', 'signal'): signals.append(('FADE', p, t)); continue
-        leg = bull if t['side'] > 0 else bear
+        leg = bull if t['side'] > 0 else bear; lev = lev_bull if t['side'] > 0 else lev_bear
         t.update(system='FADE', proxy=p, ticker=leg, lev=lev, order=0, leg_entry=today[leg][t['k']][0] if leg in today else None)
         cands.append(t)
     for i, leg in enumerate(PB_LIST):

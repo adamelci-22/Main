@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.130.**  
+**Policy version: 3.131.**  
 **ENTRIES PAUSED (v3.123, 2026-10-15): all selection rules are shelved (C1, C12 → `archive/SHELVED_SELECTION_RULES.md`). No new positions until replacement entry rules are adopted. Checkpoints while flat are one-line no-ops (no research, no gate, no pulls); the 12:30 and 8pm slots still verify flat, arm the next trading day and commit; Friday 12:30 still reports.** Bump on every rule/threshold change; record it in the commit.
 **PAPER MODE (v3.127, 2026-10-15, starts Monday 2026-10-19): real-money entries stay paused (v3.123, A1). Checkpoints run the two candidate systems — failed-retest FADE and inverse-list PULLBACK — on a $2,000 paper account per C13, using `tools/live/paper.py`. No order of any kind is placed for a paper trade. The grid runs 10:00–13:30 (D1); the 13:30 close is the primary arming slot. Read C13 first at every intraday checkpoint.**
 
@@ -388,7 +388,7 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 **Purpose:** get forward evidence. The backtest (+0.389%/day, 2026-04-07 – 10-14) was tuned on the same seven months it was measured on. Run for 4–6 weeks (about 25–35 trades), then the governor decides whether to trade real money.
 
 ### System 1 — FADE (failed-retest fade), proxy-driven
-- **Rows:** QQQ→TQQQ/SQQQ, SOXX→SOXL/SOXS, IWM→TNA/TZA, XLK→TECL/TECS, XBI→LABU/LABD (leverage 3/3/3/3/3; XBI added in v3.129; IBIT removed from the fade in v3.130).
+- **Rows:** QQQ→TQQQ/SQQQ, SOXX→SOXL/SOXS, IWM→TNA/TZA, XLK→TECL/TECS, XBI→LABU/LABD, AMD→AMDL/AMDD (leverage 3/3/3/3/3, AMD 2x bull / 1x inverse; XBI added v3.129; IBIT removed v3.130; AMD added v3.131 — AMDD is thin, ~$150k per 5-minute bar).
 - **Box:** the proxy's 9:30–10:00 high and low.
 - **Break:** a 5-minute bar *closes* outside the box by the 10:10 bar (the first break only).
 - **Retest:** within the next 12 bars, price touches the broken edge (within 0.10%). If that bar closes **back inside** the box, the breakout failed: **buy the opposite leg** at the next bar's open. An upside failure buys the inverse leg; a downside failure buys the bull leg. If the retest bar holds outside the box, there is no trade.
@@ -420,9 +420,10 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 5. **Everything is flat by 13:30.**
 
 ### What each checkpoint does
-1. **Fetch the bars.** Pull 5-minute bars from the prior trading day's 9:30 to now, in two `get_equity_historicals` calls:
-   - QQQ SOXX IWM XLK XBI TQQQ SQQQ SOXL SOXS TNA
-   - TZA TECL TECS BTCZ LABU LABD UVXY IBIT (IBIT read-only: RVOL tie-break for BTCZ)
+1. **Fetch the bars.** Pull 5-minute bars from the prior trading day's 9:30 to now, in three `get_equity_historicals` calls:
+   - QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
+   - TNA TZA TECL TECS LABU LABD AMDL AMDD BTCZ UVXY
+   - IBIT (read-only: RVOL tie-break for BTCZ)
 2. **Run** `python3 tools/live/paper.py --now HH:MM <dump files>`. It recomputes the whole day from completed bars, so nothing has to be carried between checkpoints.
 3. **Report** only what changed: a new paper entry, a ⅓ take-profit, a stop move, or an exit. A checkpoint where nothing changed is a one-line note (D3).
 
@@ -434,7 +435,7 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
   - 3 entries are used and the last one has closed.
 
 ### 9:00 and 13:30
-- **9:00:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI IBIT, then run `paper.py --build-rvol --day <today> --now 09:00 <dump>`. This writes `archive/paper_rvol_<day>.json`. If it is missing, ties fall back to list order (noted in the output).
+- **9:00:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI AMD IBIT, then run `paper.py --build-rvol --day <today> --now 09:00 <dump>`. This writes `archive/paper_rvol_<day>.json`. If it is missing, ties fall back to list order (noted in the output).
 - **13:30:**
   - Run `paper.py --now 13:30 --close <dumps>`. This appends the day's paper trades to `archive/paper_trades.csv` and updates `archive/paper_state.json` (paper equity).
   - Commit and push.
@@ -707,6 +708,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.131** — **AMD (AMDL 2x / AMDD 1x) added to the paper FADE list; XLF not added** (C13). Direct governor instruction, 2026-10-15. Fade list: QQQ, SOXX, IWM, XLK, XBI, AMD. Full-period backtest (2026-03-03..10-14) with the pullback: `tools/backtest/full_period.py`. `tools/live/paper.py` now carries per-side leverage and still matches the backtest exactly (both periods).
 
 **v3.130** — **IBIT removed from the paper FADE list** (C13). Direct governor instruction, 2026-10-15. Fade list: QQQ, SOXX, IWM, XLK, XBI. Backtest: fade alone +0.376%/day (was +0.314), fade + pullback +0.487%/day (was +0.444), better in both halves; IBIT fades lost money and blocked better setups. BTCZ stays on the PULLBACK list (its own chart).
 
