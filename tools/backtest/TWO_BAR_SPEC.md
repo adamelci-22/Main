@@ -1,6 +1,6 @@
 # 2-Bar Compressed ORB (15-minute) — system specification
 
-Status: **built and backtested, not adopted.** It is a candidate entry system for the v3.126 Core Five, kept on file for the governor to choose later. It is not in `RULEBOOK.md`, and live entries stay paused under v3.123.
+Status: **rejected (no edge).** Kept as research history. Its finding — the 10:00 range break fades on these proxies — led to the FADE system now in RULEBOOK B2.
 Code: `tools/backtest/twobar.py`. Results: `tools/backtest/results_twobar.txt`.
 
 ## Universe

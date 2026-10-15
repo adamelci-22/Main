@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Paper-trading engine for the fade + pullback systems (RULEBOOK Part B, v4.0). No orders are ever placed by this tool.
+"""Signal and model engine for the fade + pullback systems (RULEBOOK Part B, v5.0). No orders are ever placed by this tool;
+with --live it prints the real-order instructions that RULEBOOK B5 carries out.
 
 Usage at a checkpoint (after saving today's + the prior session's 5-minute bars with get_equity_historicals):
     python3 tools/live/paper.py --now 10:35 DUMP [DUMP ...]            # status: what the paper account holds / did today
+    python3 tools/live/paper.py --live --now 10:35 DUMP [DUMP ...]     # live checkpoint: status + LIVE ACTIONS (RULEBOOK C1)
     python3 tools/live/paper.py --now 13:30 --close DUMP [DUMP ...]    # 13:30 close: append today's trades to archive/paper_trades.csv
+    python3 tools/live/paper.py --build-rvol --day YYYY-MM-DD --now 09:00 DUMP   # 9:00: RVOL baseline (RULEBOOK C3)
 Symbols needed in the dumps (three calls, max 10 symbols each):
     QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
     TNA TZA TECL TECS LABU LABD AMDL AMDD UVXY NVD
@@ -292,7 +295,7 @@ def main():
     ap.add_argument('dumps', nargs='+'); ap.add_argument('--now', required=True, help='ET time of the checkpoint, HH:MM')
     ap.add_argument('--day', help='ET date (default: latest date in the dumps)'); ap.add_argument('--close', action='store_true')
     ap.add_argument('--live', action='store_true', help='also print the real-order instructions for this checkpoint (RULEBOOK B5)')
-    ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 5 proxies, prior 20 sessions)')
+    ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 6 FADE proxies + NVDA, prior 20 sessions)')
     a = ap.parse_args()
     raw = load([f for g in a.dumps for f in glob.glob(g)])
     days = sorted({d for s in raw.values() for d in s})

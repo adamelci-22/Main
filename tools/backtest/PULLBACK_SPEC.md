@@ -1,11 +1,11 @@
 # Pullback buy — candidate specification
 
-Status: **backtest candidate, not adopted.** Not in `RULEBOOK.md`; live entries stay paused under v3.123. The rules below are the governor's choices from 2026-10-15.
+Status: **adopted — live from 2026-10-16 as RULEBOOK B3 (v5.0).** The rulebook governs where this file differs. The rules below are the governor's choices from 2026-10-15.
 Code: `tools/backtest/pb_final.py`. Results: `tools/backtest/results_pb_final.txt`.
 
 ## List (inverse/fear tickers; long only, on each ticker's own chart)
 
-- **Current list (v3.132):** SOXS, LABD, TECS, UVXY, NVD. BTCZ, SQQQ and TZA were cut; NVD was added under a fixed rule (`pb_replace.py`).
+- **Current list (RULEBOOK B1):** SOXS, LABD, TECS, UVXY, NVD. BTCZ, SQQQ and TZA were cut; NVD was added under a fixed rule (`pb_replace.py`).
 - **Earlier List A:** SOXS, SQQQ, TZA, TECS, BTCZ.
 - **Earlier List B:** List A plus LABD and UVXY.
 

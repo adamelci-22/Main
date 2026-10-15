@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.0** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.0.1** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -25,7 +25,7 @@ Nothing carries between checkpoints. State lives in this file, `archive/live_tra
 | **9:00** research | A · C3 · D |
 | **9:30** | A1.8 (overnight check) only; otherwise a one-line no-op |
 | **10:00–13:25** (5-minute slots) | A · B · C1 · C2 |
-| **13:30** close | A · B5.6 · C4 · C5 · D |
+| **13:30** close | A · B5.7 · C4 · C5 · D |
 | **8:00pm** backup | A2 · D1 |
 
 Part E is reference only. Pull a section when a rule points to it. `grep` for `^# PART` to find each part's current line range; never hardcode line numbers.
@@ -67,7 +67,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 
 At 9:00 and 13:30, and before every order, read from the broker: positions, open orders (equity and advanced/OCO), total value and buying power. **When the broker and the model disagree, the broker wins:**
 - **The model shows a position the account doesn't have** (for example, a real stop filled earlier than the model's): do nothing, and never re-enter to match the model.
-- **The account has something the model doesn't:** report it immediately and manage it under B5.4–B5.6 until it's flat.
+- **The account has something the model doesn't:** report it immediately, make sure a stop protects it (B5.5), and sell it by 13:30 at the latest (B5.7).
 
 ## A4. Faults
 
@@ -284,6 +284,7 @@ Only the first qualifying setup per ticker per day counts.
 | `archive/paper_trades.csv`, `archive/paper_state.json` | The model's own record (`paper.py --close`), for comparison |
 | `archive/paper_rvol_<day>.json` | The day's RVOL tie-break baseline |
 | `archive/trades.csv` | Old-system real trades (history, closed 2026-10-15) |
+| `archive/` (other files), `archive/old_system_tools/` | Old-system rulebook, experiments, selection log and tools. History only; nothing in them is in force |
 | `tools/backtest/` | Research code. `final_system.py` = this system's backtest; `stress.py` = its stress tests |
 
 ## D3. Changing a rule
@@ -344,7 +345,7 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Live trading under v5.0 starts Friday 2026-10-16.**
 - **Losing streak:** 0 (new count from 10-16).
 - **Earnings:** AMD reports Tue 2026-11-03 after the close (skip the AMD fade row Wed 11-04). No NVIDIA report in the next 3 weeks.
-- **Friday's chain:** re-armed under v5.0 tonight (D1), 46 slots.
+- **Friday's chain:** re-armed under v5.0 tonight with the D1 templates; all 46 slots confirmed with `list_triggers` at 19:09 ET (13:30 = close + Friday report + arm Monday 10-19). Thursday's and Friday's 8:00pm backups use the v5.0 wording.
 - **Bimonthly reminder trigger:** `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 
 ## E6. Known issues
@@ -366,6 +367,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.0.1 — 2026-10-15:** cleanup, no rule change. READ MAP points the 13:30 row at B5.7; A3 says how to handle an unknown position; old-system tools moved to `archive/old_system_tools/`.
 
 **v5.0 — 2026-10-15, governor instructions:**
 - **Real money starts Friday 2026-10-16** with the FADE + PULLBACK system.
