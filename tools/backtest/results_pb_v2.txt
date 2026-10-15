@@ -1,0 +1,42 @@
+Pullback buy v2, v3.126 Core Five legs, 2026-04-07..2026-10-14 (133 days). Fade reference (1/3 at 2R + chandelier, 13:30): +0.258%/day, H2 +0.200.
+
+setups: 141 without proxy confirmation, 134 with it
+
+CURRENT EXIT (60% at morning high, rest on 20-EMA close, hold to 15:55), no proxy check: trades 94, +0.091%/day, ret +12.1%, DD 6.3%, H1 +0.112 H2 +0.069
+CURRENT EXIT (60% at morning high, rest on 20-EMA close, hold to 15:55), proxy confirms: trades 88, +0.106%/day, ret +14.4%, DD 5.3%, H1 +0.182 H2 +0.030
+
+== Grid: 312 combinations (top 20 by full period) ==
+exit / entry check                                             trd   %/day    ret%    DD      H1      H2
+all at 3R, runner be, by 13:30                                  94  +0.189   +26.4   5.9  +0.311  +0.071
+proxy-check all at 3R, runner be, by 15:55                      88  +0.184   +24.9  13.7  +0.507  -0.137
+all at 1.5R, runner be, by 13:30                               100  +0.177   +25.3   4.7  +0.276  +0.082
+proxy-check all at 3R, runner be, by 13:30                      88  +0.169   +23.0   7.3  +0.339  +0.001
+proxy-check all at 1.5R, runner be, by 13:30                    94  +0.167   +23.7   4.8  +0.296  +0.043
+all at 3R, runner be, by 15:55                                  94  +0.167   +21.9  10.3  +0.412  -0.076
+proxy-check all at 3R, runner be, by 14:30                      88  +0.165   +22.0  13.3  +0.461  -0.130
+33% at 3R, runner chand2, by 13:30                              93  +0.164   +22.6   5.8  +0.269  +0.065
+all at 3R, runner be, by 14:30                                  94  +0.164   +21.7  10.1  +0.402  -0.072
+33% at 1.5R, runner chand3, by 13:30                            93  +0.158   +21.9   6.4  +0.248  +0.069
+33% at morning high, runner ema20, by 13:30                     94  +0.157   +22.0   4.7  +0.239  +0.073
+50% at 3R, runner chand2, by 13:30                              93  +0.155   +21.3   5.8  +0.247  +0.066
+proxy-check all at 1.5R, runner be, by 15:55                    94  +0.155   +21.5   8.0  +0.346  -0.036
+50% at 1.5R, runner chand3, by 13:30                            93  +0.152   +21.1   5.9  +0.230  +0.075
+33% at 1.5R, runner chand2, by 13:30                            96  +0.149   +20.6   6.1  +0.245  +0.056
+33% at 3R, runner chand3, by 13:30                              93  +0.149   +20.4   5.8  +0.249  +0.053
+60% at 3R, runner chand2, by 13:30                              93  +0.149   +20.4   5.8  +0.233  +0.067
+33% at 1.5R, runner ema20, by 13:30                             93  +0.148   +20.4   6.1  +0.232  +0.065
+60% at 1.5R, runner chand3, by 13:30                            93  +0.147   +20.5   5.7  +0.218  +0.077
+50% at 1.5R, runner chand2, by 13:30                            96  +0.144   +19.9   5.7  +0.232  +0.058
+   positive in both halves: 119 of 312
+
+   Averages by each choice (%/day overall / H2):
+     proxy check False: +0.095/-0.010  True: +0.093/-0.062
+     target      hod: +0.102/+0.039  1.5: +0.102/-0.023  2: +0.064/-0.089  3: +0.109/-0.071
+     fraction    0.33: +0.097/-0.041  0.5: +0.091/-0.036  0.6: +0.088/-0.034  1.0: +0.121/-0.024
+     runner      ema20: +0.102/-0.033  be: +0.073/-0.040  chand2: +0.109/-0.041  chand3: +0.101/-0.029
+     sell-by     13:30: +0.122/+0.029  14:30: +0.088/-0.073  15:55: +0.074/-0.064
+
+   WALK-FORWARD: best on H1 = proxy-check all at 3R, runner be, by 15:55 (H1 +0.507) -> H2 -0.137
+   current exit: H1 +0.112 -> H2 +0.069
+
+   current exit, by ticker: SOXS 10tr +108$, TECS 8tr +102$, SOXL 12tr +84$, BTCZ 37tr +26$, TECL 6tr +9$, TNA 4tr -7$, BTCL 2tr -13$, SQQQ 3tr -14$, TZA 7tr -26$, TQQQ 5tr -27$
