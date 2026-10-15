@@ -661,6 +661,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **12:30 checkpoint (fired 16:30:12Z, close + arming).** Flat (positions verified empty); nothing to close. Account **$1,993.43** all cash. **Day: TNA +$9.67 (IWM bull, 10:11-11:24, two ratchets, stopped at 54.79), TMV -$0.84 (TLT bear, 11:26-11:34, one ratchet, stopped at 45.47) = +$8.83 net.** Entries 2 of 3 (the one re-entry unused: IWM failed v3.119 momentum at 11:35-11:55). Consecutive losses **1**, throttle OFF. D1 early shutdown at 12:00 deleted 12:05-12:25. selection_log rows appended for both entries (12:30 prints: IWM 273.02, TLT 80.025, TNA 54.33, TMV 45.59, XBI 149.65, SOXX 505.35). Arming of Friday 2026-10-16 follows below.
 
+**12:30 arming — Friday 2026-10-16 chain created.** Hygiene `list_triggers`: clean (only tonight's 8pm backup and the bimonthly reminder pre-existing). Created all 34 slots in four batches (10+10+10+4), every create returned CREATED: 9:00 research, 9:30 observation, 10:00-11:50 entry/management, 11:55 last entry-eligible slot, 12:00-12:25 management only, 12:30 close + arming (this one arms **Monday 2026-10-19** and always reports, D3), 8pm backup (run_once 2026-10-17T00:00:00Z, verifies Monday). Full list not re-paged after creation (the Thursday chain was paged at its 8pm check and passed).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
