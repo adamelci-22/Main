@@ -1,0 +1,85 @@
+PULLBACK ONLY, List B ['SOXS', 'SQQQ', 'TZA', 'TECS', 'BTCZ', 'LABD', 'UVXY'], 2026-03-03..2026-10-14 (157 days). $2,000, 3% risk capped at cash, one position, max 3/day.
+Rules: PULLBACK_SPEC.md (stop dip low - 0.05%, room >= 0.75%, target >= 0.75x stop, $0.10 OCO gap, 100% at morning high, out 13:30).
+
+setups 68, trades 53, win 62%, avg win +1.12% / avg loss -0.87%
++0.123%/day, return +20.9% ($2,000 -> $2,417), max DD 3.8%, H1 +0.065, H2 +0.180, Sharpe~3.1
+trade days 46 of 157 (about 1.7 trades a week)
+
+By month:
+   2026-03: 16 trades, 8 won,     +6$ (+0.3%)
+   2026-04:  5 trades, 3 won,     +7$ (+0.3%)
+   2026-05:  5 trades, 3 won,    +40$ (+2.0%)
+   2026-06:  9 trades, 5 won,    +47$ (+2.3%)
+   2026-07:  7 trades, 6 won,   +187$ (+8.9%)
+   2026-08:  4 trades, 4 won,   +114$ (+5.0%)
+   2026-09:  3 trades, 1 won,    -28$ (-1.2%)
+   2026-10:  4 trades, 3 won,    +44$ (+1.8%)
+
+By ticker:
+   SOXS  13 trades, win  69%, avg +0.79%, total  +214$  (H1 +68$ / 6, H2 +146$ / 7)
+   LABD  10 trades, win  80%, avg +0.57%, total  +128$  (H1 +10$ / 3, H2 +119$ / 7)
+   TECS   7 trades, win  71%, avg +0.47%, total   +64$  (H1 +64$ / 7, H2 +0$ / 0)
+   UVXY  12 trades, win  58%, avg +0.23%, total   +61$  (H1 +11$ / 10, H2 +50$ / 2)
+   BTCZ   3 trades, win  33%, avg +0.05%, total    +2$  (H1 +2$ / 3, H2 +0$ / 0)
+   SQQQ   1 trades, win   0%, avg -0.86%, total   -17$  (H1 -17$ / 1, H2 +0$ / 0)
+   TZA    7 trades, win  43%, avg -0.26%, total   -36$  (H1 -39$ / 5, H2 +3$ / 2)
+
+Exits: {'stop': 16, 'target': 27, '13:30': 10}
+Entry hour: 10:00 14tr +33$, 11:00 21tr +271$, 12:00 18tr +113$
+
+Untouched window (Mar 3 - Apr 6, never used for tuning): 16 trades, +6$
+
+All trades:
+   2026-03-03 TZA   in 10:55 @ 66.90  out 11:00 stop  -1.14%  -22.0$
+   2026-03-05 SQQQ  in 11:05 @ 70.37  out 12:00 stop  -0.86%  -16.9$
+   2026-03-06 BTCZ  in 10:45 @ 5.46  out 12:30 target  +1.61%  +31.5$
+   2026-03-12 TECS  in 10:20 @ 188.30  out 10:35 target  +1.02%  +19.2$
+   2026-03-13 TECS  in 11:20 @ 192.60  out 11:35 target  +0.74%  +14.2$
+   2026-03-13 UVXY  in 12:40 @ 51.18  out 12:50 stop  -0.80%  -15.9$
+   2026-03-17 UVXY  in 12:05 @ 45.63  out 12:15 stop  -0.86%  -17.2$
+   2026-03-18 SOXS  in 10:45 @ 383.40  out 10:50 stop  -0.87%  -16.7$
+   2026-03-18 UVXY  in 11:20 @ 49.59  out 13:25 13:30  +0.78%  +15.0$
+   2026-03-19 BTCZ  in 12:10 @ 5.29  out 12:40 stop  -0.85%  -16.8$
+   2026-03-20 TZA   in 12:30 @ 75.30  out 13:25 13:30  +0.63%  +12.2$
+   2026-03-25 TECS  in 11:40 @ 192.60  out 13:25 13:30  -0.56%  -10.8$
+   2026-03-27 LABD  in 11:10 @ 19.55  out 11:35 stop  -1.32%  -26.0$
+   2026-03-30 TZA   in 10:20 @ 75.85  out 10:35 target  +0.82%  +15.5$
+   2026-03-30 SOXS  in 11:10 @ 468.90  out 11:15 target  +1.35%  +25.2$
+   2026-03-30 UVXY  in 12:45 @ 59.73  out 13:10 target  +0.80%  +15.7$
+   2026-04-10 UVXY  in 12:35 @ 41.82  out 12:40 target  +0.82%  +16.1$
+   2026-04-16 UVXY  in 10:20 @ 39.54  out 10:45 stop  -0.80%  -16.1$
+   2026-04-20 UVXY  in 11:35 @ 39.41  out 12:00 stop  -0.93%  -18.3$
+   2026-04-23 LABD  in 12:05 @ 13.38  out 12:55 target  +1.00%  +19.8$
+   2026-04-27 SOXS  in 12:55 @ 143.95  out 13:25 13:30  +0.27%  +5.1$
+   2026-05-04 UVXY  in 12:30 @ 38.01  out 13:00 stop  -0.93%  -18.4$
+   2026-05-07 TECS  in 12:40 @ 96.10  out 13:15 target  +1.31%  +25.2$
+   2026-05-18 SOXS  in 11:10 @ 99.50  out 12:25 target  +1.97%  +39.2$
+   2026-05-19 TECS  in 10:50 @ 93.00  out 10:55 stop  -1.16%  -23.8$
+   2026-05-29 SOXS  in 12:20 @ 63.32  out 13:25 13:30  +0.87%  +17.7$
+   2026-06-02 BTCZ  in 12:55 @ 5.27  out 13:25 13:30  -0.61%  -12.4$
+   2026-06-03 TZA   in 10:20 @ 44.19  out 10:25 stop  -1.20%  -24.4$
+   2026-06-03 TECS  in 11:40 @ 61.10  out 13:25 13:30  +0.94%  +18.4$
+   2026-06-05 TZA   in 10:25 @ 44.70  out 10:50 stop  -0.99%  -19.8$
+   2026-06-08 LABD  in 12:30 @ 14.88  out 12:55 target  +0.80%  +16.1$
+   2026-06-09 UVXY  in 11:20 @ 30.05  out 11:25 target  +1.44%  +29.0$
+   2026-06-11 UVXY  in 11:30 @ 33.65  out 11:50 target  +1.03%  +21.1$
+   2026-06-16 TECS  in 10:50 @ 64.75  out 10:55 target  +1.03%  +21.4$
+   2026-06-16 SOXS  in 12:35 @ 43.80  out 13:25 13:30  -0.10%  -2.1$
+   2026-07-01 SOXS  in 11:25 @ 37.20  out 13:00 target  +1.84%  +38.3$
+   2026-07-02 SOXS  in 11:45 @ 43.40  out 12:00 target  +2.03%  +43.2$
+   2026-07-10 TZA   in 10:55 @ 40.10  out 13:25 13:30  -0.78%  -16.8$
+   2026-07-13 UVXY  in 12:20 @ 23.67  out 13:25 13:30  +1.24%  +26.8$
+   2026-07-16 LABD  in 11:05 @ 8.27  out 11:40 target  +0.93%  +20.2$
+   2026-07-24 LABD  in 10:30 @ 8.70  out 10:45 target  +1.34%  +29.6$
+   2026-07-29 SOXS  in 11:15 @ 69.56  out 11:50 target  +2.06%  +45.8$
+   2026-08-10 SOXS  in 12:30 @ 43.67  out 12:40 target  +1.22%  +27.7$
+   2026-08-20 TZA   in 11:10 @ 38.66  out 11:35 target  +0.85%  +19.4$
+   2026-08-20 LABD  in 12:05 @ 6.47  out 12:20 target  +1.50%  +35.0$
+   2026-08-21 SOXS  in 10:40 @ 47.65  out 10:55 target  +1.37%  +32.1$
+   2026-09-25 LABD  in 11:45 @ 7.47  out 12:00 stop  -0.96%  -23.0$
+   2026-09-28 SOXS  in 11:45 @ 35.51  out 11:50 stop  -0.86%  -20.2$
+   2026-09-29 LABD  in 11:05 @ 7.38  out 11:15 target  +0.64%  +15.0$
+   2026-10-01 UVXY  in 10:45 @ 17.68  out 11:00 target  +0.99%  +23.5$
+   2026-10-08 LABD  in 11:30 @ 8.65  out 11:35 target  +0.88%  +21.2$
+   2026-10-12 LABD  in 11:45 @ 7.71  out 12:15 target  +0.85%  +20.5$
+   2026-10-14 SOXS  in 12:55 @ 41.82  out 12:55 stop  -0.88%  -21.3$
