@@ -257,6 +257,16 @@ def main():
         print(f"RVOL baseline for {day} from {len(prior)} sessions ({prior[0]}..{prior[-1]}), proxies {sorted(base)} -> {out}"); return
     prevday = max(d for d in days if d < day)
     K = min(78, t2k(a.now))
+    # Guard: never use a bar Robinhood hasn't published yet. If the most recent bar is missing for most proxies,
+    # step back one bar (at most two) and say so; the next checkpoint will pick it up.
+    def published(k):
+        have = sum(1 for p in FADE_ROWS if p in raw and day in raw[p] and (570 + 5 * (k - 1)) in raw[p][day])
+        return have >= max(1, len(FADE_ROWS) - 1)
+    K0 = K
+    while K > 1 and K0 - K < 2 and not published(K): K -= 1
+    if K != K0:
+        print(f"  NOTE: the bar ending {k2t(K0)} is not published yet - using bars through {k2t(K)}")
+        if a.close: sys.exit('13:30 bar not published yet: wait a minute and run --close again')
     today = {s: g for s in raw if day in raw[s] for g in [grid(raw[s][day], K)] if g}
     prev = {s: g for s in raw if prevday in raw[s] for g in [grid(raw[s][prevday], 78)] if g}
     S = state(); eq0 = S['equity']

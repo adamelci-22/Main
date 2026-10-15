@@ -1,0 +1,80 @@
+STRESS TESTS, v4.0 system, 2026-03-03..2026-10-14 (157 days)
+
+   BASELINE                                           +0.576%/day           ret  +140.5%  DD  3.8%  H1 +0.553  H2 +0.598  trades 116
+
+1. COSTS AND SLIPPAGE (extra round-trip cost per trade, on top of what the backtest already charges)
+   +0.05% every trade                                 +0.539%/day  (-0.037) ret  +127.2%  DD  4.4%  H1 +0.510  H2 +0.568  trades 116
+   +0.10% every trade                                 +0.503%/day  (-0.073) ret  +114.6%  DD  4.9%  H1 +0.467  H2 +0.537  trades 116
+   +0.20% every trade                                 +0.429%/day  (-0.146) ret   +91.4%  DD  6.2%  H1 +0.382  H2 +0.476  trades 116
+   +0.30% every trade                                 +0.356%/day  (-0.220) ret   +70.7%  DD  7.7%  H1 +0.296  H2 +0.415  trades 116
+   +0.50% every trade                                 +0.210%/day  (-0.366) ret   +35.7%  DD 13.7%  H1 +0.125  H2 +0.293  trades 116
+   +0.30% only on thin tickers (TECS, AMDD, LABU)     +0.524%/day  (-0.052) ret  +121.9%  DD  5.5%  H1 +0.480  H2 +0.568  trades 116
+   +0.50% only on thin tickers                        +0.490%/day  (-0.086) ret  +110.2%  DD  7.0%  H1 +0.431  H2 +0.548  trades 116
+   stops slip: losing trades lose 0.25% more          +0.501%/day  (-0.075) ret  +113.6%  DD  5.9%  H1 +0.460  H2 +0.542  trades 116
+   stops slip: losing trades lose 0.50% more          +0.426%/day  (-0.149) ret   +89.7%  DD  8.4%  H1 +0.366  H2 +0.485  trades 116
+   -> break-even extra cost: about 0.80% per round trip
+
+2. LATE ENTRY (a missed/late checkpoint: the FADE buys one bar later)
+   FADE entry one bar (5 min) late                    +0.567%/day  (-0.009) ret  +137.1%  DD  4.7%  H1 +0.541  H2 +0.592  trades 110
+
+3. PARAMETER SENSITIVITY (one change at a time; a robust system degrades gently)
+   fade target 1.5R                                   +0.515%/day  (-0.060) ret  +119.6%  DD  3.8%  H1 +0.489  H2 +0.541  trades 116
+   fade target 2.5R                                   +0.538%/day  (-0.037) ret  +126.6%  DD  3.8%  H1 +0.472  H2 +0.604  trades 114
+   fade sells 1/4 at target                           +0.589%/day  (+0.013) ret  +145.0%  DD  3.8%  H1 +0.563  H2 +0.614  trades 116
+   fade sells 1/2 at target                           +0.550%/day  (-0.026) ret  +131.7%  DD  3.8%  H1 +0.532  H2 +0.568  trades 116
+   fade chandelier 1.5 ATR                            +0.490%/day  (-0.086) ret  +111.3%  DD  3.8%  H1 +0.429  H2 +0.550  trades 121
+   fade chandelier 3 ATR                              +0.559%/day  (-0.017) ret  +134.4%  DD  3.8%  H1 +0.523  H2 +0.594  trades 114
+   fade sell-by 13:00                                 +0.540%/day  (-0.036) ret  +127.7%  DD  3.8%  H1 +0.527  H2 +0.552  trades 116
+   fade sell-by 14:00                                 +0.571%/day  (-0.005) ret  +138.6%  DD  4.1%  H1 +0.547  H2 +0.595  trades 116
+   fade retest tolerance 0.05%                        +0.517%/day  (-0.059) ret  +119.3%  DD  5.1%  H1 +0.551  H2 +0.483  trades 122
+   fade retest tolerance 0.20%                        +0.546%/day  (-0.030) ret  +130.1%  DD  3.8%  H1 +0.589  H2 +0.504  trades 111
+   fade retest window 8 bars                          +0.576%/day  (+0.000) ret  +140.5%  DD  3.8%  H1 +0.553  H2 +0.598  trades 116
+   fade retest window 18 bars                         +0.576%/day  (+0.000) ret  +140.5%  DD  3.8%  H1 +0.553  H2 +0.598  trades 116
+   fade break allowed until 10:25                     +0.518%/day  (-0.058) ret  +119.2%  DD  7.1%  H1 +0.427  H2 +0.608  trades 143
+   pullback stop buffer 0%                            +0.560%/day  (-0.016) ret  +134.5%  DD  3.6%  H1 +0.551  H2 +0.568  trades 114
+   pullback stop buffer 0.10%                         +0.573%/day  (-0.002) ret  +139.5%  DD  4.2%  H1 +0.555  H2 +0.592  trades 117
+   pullback min room 0.5%                             +0.527%/day  (-0.049) ret  +122.8%  DD  4.4%  H1 +0.502  H2 +0.552  trades 140
+   pullback min room 1.0%                             +0.557%/day  (-0.019) ret  +133.6%  DD  4.3%  H1 +0.500  H2 +0.613  trades 96
+   pullback min target 0.5x                           +0.567%/day  (-0.009) ret  +137.0%  DD  4.9%  H1 +0.537  H2 +0.597  trades 123
+   pullback min target 1.0x                           +0.544%/day  (-0.032) ret  +128.8%  DD  4.4%  H1 +0.530  H2 +0.557  trades 107
+   pullback sell-by 13:00                             +0.540%/day  (-0.036) ret  +127.5%  DD  5.0%  H1 +0.486  H2 +0.593  trades 116
+   pullback sell-by 14:00                             +0.555%/day  (-0.021) ret  +132.7%  DD  5.7%  H1 +0.494  H2 +0.615  trades 116
+   max 2 entries/day                                  +0.576%/day  (+0.000) ret  +140.5%  DD  3.8%  H1 +0.553  H2 +0.598  trades 116
+   max 4 entries/day                                  +0.576%/day  (+0.000) ret  +140.5%  DD  3.8%  H1 +0.553  H2 +0.598  trades 116
+   two positions at once (half cash each)             +0.300%/day  (-0.276) ret   +58.9%  DD  1.9%  H1 +0.260  H2 +0.340  trades 126
+
+4. DEPENDENCE ON SINGLE NAMES / BIG DAYS
+   without the SOXX fade row                          +0.396%/day  (-0.180) ret   +83.3%  DD  3.8%  H1 +0.291  H2 +0.500  trades 111
+   without SOXS in the pullback                       +0.538%/day  (-0.038) ret  +126.8%  DD  5.2%  H1 +0.504  H2 +0.572  trades 108
+   without any semis (SOXX fade, SOXS pullback)       +0.358%/day  (-0.217) ret   +72.9%  DD  5.2%  H1 +0.243  H2 +0.473  trades 103
+   without the 5 best trading days                    +0.379%/day  (-0.196) ret   +78.4%  DD  3.8%  H1 +0.468  H2 +0.292  trades 111
+   without the 10 best trading days                   +0.247%/day  (-0.328) ret   +45.7%  DD  5.0%  H1 +0.373  H2 +0.123  trades 106
+
+5. MONTE CARLO (resample the 157 daily returns with replacement, 10,000 paths of 157 days)
+   return after 157 days: 5th pct +71%, median +139%, 95th +247%; paths losing money: 0.00%
+   max drawdown: median 5.5%, 95th pct 9.6%, worst 19.5%
+   if every day earned only HALF its backtest result: median +56%, 5th pct +31%
+   rolling 20-day (about a month) sums: worst -2.2%, best +32.7%, negative windows 2%
+
+6. REGIMES
+   Friday                         days  29  avg -0.049%/day  losing days 34%
+   Monday                         days  30  avg +0.602%/day  losing days 23%
+   SPY day: down < -0.5%          days  25  avg +0.645%/day  losing days 16%
+   SPY day: flat                  days 104  avg +0.542%/day  losing days 24%
+   SPY day: up > +0.5%            days  28  avg +0.640%/day  losing days 25%
+   SPY gap > 0.5% (either way)    days  50  avg +0.441%/day  losing days 24%
+   SPY gap small                  days 107  avg +0.639%/day  losing days 22%
+   Thursday                       days  32  avg +1.203%/day  losing days 16%
+   Tuesday                        days  33  avg +0.772%/day  losing days 21%
+   Wednesday                      days  33  avg +0.298%/day  losing days 21%
+
+7. SINGLE-TRADE RISK AND CAPACITY
+   worst trade -3.40% on the ticker (positions are capped at 100% of cash, so at most that % of the account); worst day -3.05%
+   position $2,000: median 0.1% of a 5-min bar's $ volume at entry, worst 2%
+   position $10,000: median 0.5% of a 5-min bar's $ volume at entry, worst 8%
+   position $50,000: median 2.4% of a 5-min bar's $ volume at entry, worst 42% (thin: AMDD, LABD, TECS)
+
+8. UNTOUCHED WINDOW (Mar 3 - Apr 6) under stress
+   as backtested              +0.594%/day ret +14.8% trades 22
+   +0.10% cost every trade    +0.502%/day ret +12.3% trades 22
+   +0.20% cost every trade    +0.410%/day ret +9.8% trades 22

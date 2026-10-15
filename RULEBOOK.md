@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`.
-**Policy version: 4.0** (2026-10-15 cleanup). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 4.1** (2026-10-15: cleanup + stress-test findings). Bump on every rule or threshold change and record it in the commit.
 **MODE: PAPER TRADING, from Monday 2026-10-19.** Real-money entries are paused. Checkpoints run two systems, FADE and PULLBACK (Part B), on a $2,000 paper account using `tools/live/paper.py`. **No real order of any kind is placed.**
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/SHELVED_SELECTION_RULES.md`. Those documents are history; nothing in them is in force.
@@ -144,7 +144,7 @@ These are the live-execution facts gathered so far. Turning them into real-order
    - QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
    - TNA TZA TECL TECS LABU LABD AMDL AMDD UVXY NVD
    - NVDA (read-only tie-break)
-2. **Run** `python3 tools/live/paper.py --now HH:MM <dump files>`. It uses completed bars only and recomputes the whole day from scratch.
+2. **Run** `python3 tools/live/paper.py --now HH:MM <dump files>`. It uses completed bars only and recomputes the whole day from scratch. If the newest bar isn't published yet, it steps back up to two bars and says so. `--close` refuses to run until the 13:30 bar is published: wait a minute and rerun.
 3. **Report only changes:** a new paper entry, the ⅓ take-profit, a stop move on the FADE runner, or an exit. If nothing changed, write one line.
 
 ## C2. Cadence and early shutdown
@@ -290,6 +290,14 @@ None of these are in force. If real money is approved, the governor decides whic
 - **Robinhood stop orders can fail silently** (relevant only for real money): cancelled with no fill, or rejected when the stop is at or above the market price. Verify every placed order's state (E2).
 - **Early-close and holiday sessions** aren't handled by `paper.py`. They're skipped (C2).
 - **Daylight saving ends 2026-11-01.** Trigger UTC times shift by one hour from Monday 11/02 (D1).
+- **Stress-test findings, 2026-10-15** (`tools/backtest/results_stress.txt`). Watch these during paper trading:
+  - **Semis carry the most.** Without the SOXX fade row, the system drops from +0.58 to +0.40%/day. Without any semis it drops to +0.36%/day.
+  - **A few big days matter.** Without the 10 best days it makes +0.25%/day. The second half falls to +0.12%/day.
+  - **Fridays were flat** (−0.05%/day over 29 Fridays). Probably noise; don't act on it without paper evidence.
+  - **Costs:** break-even is about 0.80% of extra cost per round trip. An extra 0.20% leaves +0.43%/day.
+  - **Size:** fine up to about $10k per position. At $50k, thin tickers (AMDD, LABD, TECS) would be up to about 40% of a 5-minute bar's volume.
+  - **The 3-entry cap never binds:** one position at a time plus the entry windows already limit trades.
+- **No real-money risk controls exist in v4.x.** A daily loss limit, a loss-streak throttle and similar must be decided before going live (E4).
 
 ---
 
