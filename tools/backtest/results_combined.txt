@@ -1,0 +1,25 @@
+Combined pullback + fade, v3.126 Core Five, 2026-04-07..2026-10-14 (133 days). Goal +0.400%/day.
+FADE exit: 1/3 at 2R (OCO) + 2-ATR chandelier, sell-by as shown. PB: hold to 15:55.
+
+== Each alone ==
+Pullback alone                                 trades  94 (PB 94, FADE 0) win  53% +0.110%/day ret  +14.8% DD  5.8% H1 +0.148 H2 +0.073 Sharpe~1.6
+Fade alone (sell by 13:30)                     trades  58 (PB 0, FADE 58) win  48% +0.258%/day ret  +38.9% DD  5.8% H1 +0.317 H2 +0.200 Sharpe~2.8
+
+== Combined, fade sell-by 13:30 ==
+one position at a time                         trades 134 (PB 76, FADE 58) win  48% +0.277%/day ret  +41.7% DD  5.4% H1 +0.412 H2 +0.144 Sharpe~2.5
+one position, pullback cuts an open fade       trades 152 (PB 94, FADE 58, 20 fades cut) win  51% +0.272%/day ret  +40.5% DD  7.4% H1 +0.382 H2 +0.163 Sharpe~2.4
+two positions (half cash each)                 trades 152 (PB 94, FADE 58) win  52% +0.180%/day ret  +26.2% DD  3.4% H1 +0.193 H2 +0.167 Sharpe~3.1
+
+== Same, other fade sell-by times (for comparison) ==
+one position, fade by 12:30                    trades 135 (PB 77, FADE 58) win  47% +0.237%/day ret  +34.5% DD  6.1% H1 +0.358 H2 +0.117 Sharpe~2.3
+pullback cuts fade, fade by 12:30              trades 152 (PB 94, FADE 58, 20 fades cut) win  51% +0.282%/day ret  +42.3% DD  7.4% H1 +0.382 H2 +0.183 Sharpe~2.5
+two positions, fade by 12:30                   trades 152 (PB 94, FADE 58) win  51% +0.157%/day ret  +22.5% DD  3.4% H1 +0.167 H2 +0.146 Sharpe~2.8
+one position, fade by 15:55                    trades 134 (PB 76, FADE 58) win  48% +0.287%/day ret  +43.5% DD  5.3% H1 +0.447 H2 +0.130 Sharpe~2.6
+pullback cuts fade, fade by 15:55              trades 152 (PB 94, FADE 58, 20 fades cut) win  51% +0.272%/day ret  +40.5% DD  7.4% H1 +0.382 H2 +0.163 Sharpe~2.4
+two positions, fade by 15:55                   trades 152 (PB 94, FADE 58) win  52% +0.184%/day ret  +27.0% DD  3.4% H1 +0.208 H2 +0.161 Sharpe~3.2
+
+== Detail: one position at a time, fade by 13:30 ==
+   by month: 2026-04 -96$, 2026-05 +19$, 2026-06 +454$, 2026-07 +336$, 2026-08 +28$, 2026-09 +74$, 2026-10 +19$
+   by system/proxy: FADE-IBIT 11tr +36$, FADE-IWM 13tr +31$, FADE-QQQ 9tr +92$, FADE-SOXX 14tr +451$, FADE-XLK 11tr +197$, PB-IBIT 32tr -102$, PB-IWM 7tr -55$, PB-QQQ 6tr -9$, PB-SOXX 18tr -20$, PB-XLK 13tr +213$
+   days traded 105 of 133; best day +8.00%, worst day -4.19%; losing days 50, winning days 55
+   pullback setups skipped because the account was busy or the day's 3 entries were used: 65 of 141
