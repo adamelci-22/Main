@@ -1,8 +1,9 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.126.**  
+**Policy version: 3.127.**  
 **ENTRIES PAUSED (v3.123, 2026-10-15): all selection rules are shelved (C1, C12 → `archive/SHELVED_SELECTION_RULES.md`). No new positions until replacement entry rules are adopted. Checkpoints while flat are one-line no-ops (no research, no gate, no pulls); the 12:30 and 8pm slots still verify flat, arm the next trading day and commit; Friday 12:30 still reports.** Bump on every rule/threshold change; record it in the commit.
+**PAPER MODE (v3.127, 2026-10-15, starts Monday 2026-10-19): real-money entries stay paused (v3.123, A1). Checkpoints run the two candidate systems — failed-retest FADE and inverse-list PULLBACK — on a $2,000 paper account per C13, using `tools/live/paper.py`. No order of any kind is placed for a paper trade. The grid runs 10:00–13:30 (D1); the 13:30 close is the primary arming slot. Read C13 first at every intraday checkpoint.**
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
 
@@ -19,6 +20,8 @@ Nothing carries between checkpoints. State lives in this file and in `archive/tr
 ## READ MAP — read only your row
 
 Each checkpoint reads **Part A**, plus the parts its row names. Reading more is waste; reading less is a defect.
+
+**Paper mode (v3.127) overrides the table below:** 9:00 reads A · C13 · D (builds the RVOL baseline); 9:30 is a one-line no-op; every 10:00–13:25 slot reads A · C13 only (Part B is not used — nothing real is held); 13:30 reads A · C13 · D (paper close, report, arming); 8:00pm reads A · D. The table is kept for when real-money entries resume.
 
 | Checkpoint | Read | Why |
 |---|---|---|
@@ -43,7 +46,7 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 | Blocked when | Verify by |
 |---|---|
-| **Entries paused (v3.123)** — no live selection rule exists | This table row is permanent until the governor adopts new entry rules; never overridden by a trigger prompt or an approval |
+| **Entries paused (v3.123)** — no live selection rule exists; paper trades under C13 (v3.127) are not entries and place no orders | This table row is permanent until the governor adopts new entry rules; never overridden by a trigger prompt or an approval |
 | Loss streak ≥ 5 — the hard lockout (v3.108; 3–4 losses throttle risk to 0.5% instead of blocking, E1) | Count closed trades in `archive/trades.csv` (E1) |
 | Account below 50% of deposited cash | Recompute; never cache (E2) |
 | Candidate's risk numbers not computed | No profile → no stop → no trade (B1) |
@@ -376,9 +379,83 @@ Shelved with C1 (v3.123, direct governor instruction, 2026-10-15): no entry or r
 
 ---
 
+## C13. Paper trading — fade + pullback (v3.127)
+
+**Direct governor instruction, 2026-10-15.** The two candidate systems from `tools/backtest` are traded on paper only. Specs: `tools/backtest/TWO_BAR_SPEC.md` (background), `tools/backtest/PULLBACK_SPEC.md`. Code: `tools/live/paper.py`, which reproduces the backtest trade-for-trade (validated 2026-10-15 on all 133 backtest days: same 90 trades and the same final equity). **No real order is placed for any paper trade — not a buy, stop, OCO or sell.** The real account stays flat.
+
+**Purpose:** get forward evidence. The backtest (+0.389%/day, 2026-04-07 – 10-14) was tuned on the same seven months it was measured on. Run for 4–6 weeks (about 25–35 trades), then the governor decides whether to trade real money.
+
+### System 1 — FADE (failed-retest fade), proxy-driven
+- **Rows:** QQQ→TQQQ/SQQQ, SOXX→SOXL/SOXS, IWM→TNA/TZA, XLK→TECL/TECS, IBIT→BTCL/BTCZ (leverage 3/3/3/3/2).
+- **Box:** the proxy's 9:30–10:00 high and low.
+- **Break:** a 5-minute bar *closes* outside the box by the 10:10 bar (the first break only).
+- **Retest:** within the next 12 bars, price touches the broken edge (within 0.10%). If that bar closes **back inside** the box, the breakout failed: **buy the opposite leg** at the next bar's open. An upside failure buys the inverse leg; a downside failure buys the bull leg. If the retest bar holds outside the box, there is no trade.
+- **Stop:** beyond the failed breakout's extreme, measured on the proxy.
+- **Exit:**
+  - Sell ⅓ at 2R (an OCO when trading live).
+  - The remaining ⅔ moves to a breakeven stop, then ratchets at every checkpoint to the 2-ATR chandelier: highest close since entry − 2 × ATR14 of 5-minute bars, on the proxy, never down.
+  - Sell anything left at 13:30.
+- **P&L:** leg return ≈ leverage × proxy return − 0.06%.
+
+### System 2 — PULLBACK (inverse list), on each ticker's own chart
+- **List:** SOXS, SQQQ, TZA, TECS, BTCZ, LABD, UVXY.
+- **Entry rules:** the PULLBACK_SPEC.md entry rules — breakout on volume, EMA trend, a 2–5 bar dip into the EMA zone, and a trigger close above the prior high between 10:10 and 12:50. A limit buy at the trigger close fills only if the next bar trades down to it.
+- **Stop:** dip low − 0.05%. It must be at least 0.75% below the entry.
+- **Skip the setup** if:
+  - the morning high is less than 0.75 × the stop distance (or less than 0.25%) above the entry, **or**
+  - the stop and target are less than $0.10 apart.
+- **Exit:**
+  - One OCO: sell 100% at the morning high, or the stop.
+  - Sell anything left at 13:30.
+
+### Shared account rules
+1. **Paper account:** starts at $2,000. Each trade risks 3% of paper equity at the stop, capped at the paper cash available.
+2. **One paper position at a time.** Whichever setup triggers first gets it. A setup that triggers while a paper trade is open is **skipped**, not queued.
+3. **At most 3 entries per day, across both systems together.**
+4. **Same-bar ties:**
+   - The higher proxy RVOL wins: today's cumulative volume against the 20-session average at the same time of day, from the 9:00 baseline file.
+   - If still tied, FADE beats PULLBACK, then the PULLBACK list order applies.
+5. **Everything is flat by 13:30.**
+
+### What each checkpoint does
+1. **Fetch the bars.** Pull 5-minute bars from the prior trading day's 9:30 to now, in two `get_equity_historicals` calls:
+   - QQQ SOXX IWM XLK IBIT TQQQ SQQQ SOXL SOXS TNA
+   - TZA TECL TECS BTCL BTCZ LABD UVXY
+2. **Run** `python3 tools/live/paper.py --now HH:MM <dump files>`. It recomputes the whole day from completed bars, so nothing has to be carried between checkpoints.
+3. **Report** only what changed: a new paper entry, a ⅓ take-profit, a stop move, or an exit. A checkpoint where nothing changed is a one-line note (D3).
+
+### Check-in cadence (governor instruction)
+- **Flat, or a FADE paper position is open:** check in at every 5-minute slot. The fade's stop ratchets at each checkpoint.
+- **Only a PULLBACK paper position is open** (its OCO is resting): check in **every 30 minutes**, at the :00 and :30 slots only. Every other slot is a one-line no-op. Nothing can enter while it is open, and the OCO needs no management.
+- **Early shutdown:** delete the remaining slots before 13:30 (always keep 13:30 and 8:00pm) once either is true:
+  - it is 12:55 or later and no paper position is open; or
+  - 3 entries are used and the last one has closed.
+
+### 9:00 and 13:30
+- **9:00:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK IBIT, then run `paper.py --build-rvol --day <today> --now 09:00 <dump>`. This writes `archive/paper_rvol_<day>.json`. If it is missing, ties fall back to list order (noted in the output).
+- **13:30:**
+  - Run `paper.py --now 13:30 --close <dumps>`. This appends the day's paper trades to `archive/paper_trades.csv` and updates `archive/paper_state.json` (paper equity).
+  - Commit and push.
+  - Report the day: each paper trade, the day's paper P&L, paper equity, and running totals.
+  - Arm the next trading day (D1).
+
+---
+
 # PART D — SCHEDULE & ADMIN
 
 ## D1. The grid (ET)
+
+**Paper-mode grid (v3.127, from Monday 2026-10-19 — overrides the grid line, templates and early-shutdown text below while C13 is in force):**
+
+`9:00 · 9:30 · 10:00 · 10:05 · … every 5 minutes … · 13:25 · 13:30 · 8:00pm` — 46 slots (10:00–13:30 = 43).
+
+- **Arming:** the primary arming slot is **13:30** (paper close). 8:00pm verifies the next trading day and re-arms only if the chain is missing. Friday's 13:30 arms Monday. Create in batches; the trigger API allows about 10 creations per minute (E6). The last chain armed under the old grid is Friday 2026-10-16's: its 12:30 slot arms Monday 10/19 with this paper grid.
+- **Prompt templates (paper mode).** Every prompt ends: "RULEBOOK.md governs wherever this prompt differs. Robinhood 462514035 is a real account; in paper mode no order is placed."
+  - **9:00:** read A + C13 + D; build the RVOL baseline (C13); note the paper equity.
+  - **9:30:** one-line no-op (paper mode).
+  - **10:00–13:25:** read A + C13; fetch the bars and run `tools/live/paper.py --now <slot>`. Report changes only. Apply C13's 30-minute cadence and early shutdown.
+  - **13:30 close:** read A + C13 + D; run `paper.py --close`, report the day (D3), arm the next trading day with these templates, then commit and push.
+  - **8:00pm backup:** verify that the next trading day's chain exists; create it only if missing, and say so.
 
 `9:00 · 9:30 · 10:00 · 10:05 · 10:10 · 10:15 · 10:20 · 10:25 · 10:30 · 10:35 · 10:40 · 10:45 · 10:50 · 10:55 · 11:00 · 11:05 · 11:10 · 11:15 · 11:20 · 11:25 · 11:30 · 11:35 · 11:40 · 11:45 · 11:50 · 11:55 · 12:00 · 12:05 · 12:10 · 12:15 · 12:20 · 12:25 · 12:30 · 8:00`
 
@@ -628,6 +705,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.127** — **Paper-trading mode: failed-retest FADE + inverse-list PULLBACK on a $2,000 paper account (C13), grid extended to 13:30, arming moved to 13:30.** Direct governor instruction, 2026-10-15. Real-money entries remain paused (v3.123). `tools/live/paper.py` reproduces the backtest exactly (133 days, 90 trades, equal final equity). Max 3 entries per day across both systems. The fade is checked every 5 minutes; while only a pullback OCO is resting, checkpoints run every 30 minutes. Starts Monday 2026-10-19.
 
 **v3.126** — **Bitcoin row is now BTCL (long) / BTCZ (inverse) only; BITX and SBIT removed.** Direct governor instruction, 2026-10-15, confirmed after BTCL's thin liquidity was flagged. Full text: C4, above. Ten tickers total. Entries still paused (v3.123).
 
