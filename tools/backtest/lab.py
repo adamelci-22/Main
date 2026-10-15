@@ -304,7 +304,8 @@ class Lab:
                 if self.thr_wins >= 2: self.thr_on = False; self.thr_wins = 0
         self.trades.append(dict(day=d, leg=pos['leg'], proxy=pos['proxy'], side=pos['side'], shares=pos['sh0'], pnl=round(pnl, 2),
                                 pct=round(pct, 3), acct_pct=round(pnl / pos['acct0'] * 100, 3), why=res['why'], entry_chk=pos['i0'],
-                                nth=pos['nth'], thr=pos['thr']))
+                                nth=pos['nth'], thr=pos['thr'], K0=pos['K0'], exit_bar=pos.get('exit_bar', pos['K0']),
+                                entry=pos['entry'], stop0=pos['stop0'], fill=pos.get('final_fill', pos['entry'])))
 
 
 def daily_pct(lab, start=2000.0):
