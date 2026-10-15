@@ -1,0 +1,57 @@
+2-Bar Compressed ORB (15-min bars), v3.126 Core Five, 2026-04-07..2026-10-14 (133 days). $2,000, 3% risk capped at cash, one position at a time, max 3/day.
+Reference: pullback buy on the same list, live-realistic = +0.108%/day (H1 +0.145, H2 +0.073).
+
+== As written vs. as it would execute on 5-minute checkpoints ==
+AS WRITTEN (instant break of box in Bar 3, Bar-2 stop, half at 1:1 + breakeven, hold to close)
+   entry=ideal      window=1 stop=bar2    exit=half1R_be out=15:55 tp=at-level
+   sig 419 leg avg -0.318% t -3.2 | taken 130 win  46% -0.339%/day ret  -37.4% DD 41.9% H1 -0.498 H2 -0.183
+LIVE-REALISTIC (same rules; entry/target at the next 5-min checkpoint)
+   entry=checkpoint window=1 stop=bar2    exit=half1R_be out=15:55 tp=next-chk
+   sig 419 leg avg -0.433% t -4.3 | taken 133 win  50% -0.149%/day ret  -19.3% DD 26.7% H1 -0.230 H2 -0.069
+
+   live-realistic by row/side:
+     IBIT bear  n= 13 win= 38% acct  +1.29%
+     IBIT bull  n= 21 win= 52% acct  +4.18%
+     IWM  bear  n= 27 win= 48% acct  -4.73%
+     IWM  bull  n= 14 win= 64% acct  +2.91%
+     QQQ  bear  n=  8 win= 38% acct  -1.90%
+     QQQ  bull  n= 10 win= 70% acct  +0.69%
+     SOXX bear  n= 10 win= 30% acct -10.17%
+     SOXX bull  n= 10 win= 60% acct  -2.14%
+     XLK  bear  n=  7 win= 71% acct  +0.62%
+     XLK  bull  n= 13 win= 31% acct -10.46%
+   exits: {'stop': 60, 'be_stop': 31, 'time': 42}
+
+== Full grid, live-realistic execution (checkpoint/close15 entries, target at next checkpoint) ==
+config                                                                             trd H1  H1 %/day trd H2  H2 %/day
+entry=close15    window=4 stop=trigger exit=R1        out=15:55 tp=next-chk            85    +0.182     82    -0.504
+entry=close15    window=4 stop=trigger exit=R1        out=12:30 tp=next-chk            85    +0.149     82    -0.489
+entry=close15    window=2 stop=trigger exit=R1        out=15:55 tp=next-chk            64    +0.104     69    -0.543
+entry=close15    window=4 stop=trigger exit=half1R_be out=12:30 tp=next-chk            75    +0.057     78    -0.476
+entry=close15    window=2 stop=trigger exit=R1        out=12:30 tp=next-chk            64    +0.051     69    -0.476
+entry=close15    window=2 stop=trigger exit=half1R_be out=12:30 tp=next-chk            63    +0.041     68    -0.467
+entry=close15    window=4 stop=trigger exit=R2        out=15:55 tp=next-chk            73    +0.009     78    -0.635
+entry=close15    window=2 stop=trigger exit=time      out=12:30 tp=next-chk            63    -0.011     68    -0.360
+entry=close15    window=2 stop=trigger exit=R2        out=15:55 tp=next-chk            63    -0.016     68    -0.679
+entry=close15    window=4 stop=trigger exit=half1R_be out=15:55 tp=next-chk            75    -0.031     78    -0.509
+entry=close15    window=4 stop=trigger exit=time      out=12:30 tp=next-chk            71    -0.037     77    -0.396
+entry=close15    window=2 stop=trigger exit=R2        out=12:30 tp=next-chk            63    -0.043     68    -0.483
+entry=close15    window=2 stop=trigger exit=half1R_be out=15:55 tp=next-chk            63    -0.043     68    -0.560
+entry=close15    window=1 stop=trigger exit=R1        out=15:55 tp=next-chk            43    -0.046     55    -0.444
+entry=close15    window=1 stop=trigger exit=R1        out=12:30 tp=next-chk            43    -0.047     55    -0.381
+   ... (192 configs; worst H1 -0.574%/day)
+   configs positive in H1: 7/192, in H2: 0/192, in both: 0/192
+
+WALK-FORWARD PICK (best H1, >= 20 trades): entry=close15    window=4 stop=trigger exit=R1        out=15:55 tp=next-chk
+   H1 (chosen here): 85 trades +0.182%/day  ->  H2 (unseen): 82 trades -0.504%/day
+   full period: sig 439 leg avg -0.178% t -2.1 | taken 167 win  46% -0.163%/day ret  -20.9% DD 35.3% H1 +0.182 H2 -0.504
+
+== Raw follow-through after the trigger (proxy, signed in breakout direction, no stop) ==
+   instant/checkpoint trigger in Bar 3      +30m      n=419 avg -0.048% (se 0.028)  in profit 47%
+   instant/checkpoint trigger in Bar 3      +60m      n=419 avg -0.110% (se 0.037)  in profit 47%
+   instant/checkpoint trigger in Bar 3      to 12:30  n=419 avg -0.104% (se 0.054)  in profit 43%
+   instant/checkpoint trigger in Bar 3      to close  n=419 avg -0.109% (se 0.056)  in profit 44%
+   15-min close outside the box (Bar 3)     +30m      n=225 avg -0.104% (se 0.035)  in profit 41%
+   15-min close outside the box (Bar 3)     +60m      n=225 avg -0.152% (se 0.047)  in profit 42%
+   15-min close outside the box (Bar 3)     to 12:30  n=225 avg -0.112% (se 0.075)  in profit 40%
+   15-min close outside the box (Bar 3)     to close  n=225 avg -0.224% (se 0.073)  in profit 40%
