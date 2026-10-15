@@ -1,0 +1,14 @@
+Fade runner management after half at 2R, 2026-04-07..2026-10-14. Account: $2,000, cash-capped, one position at a time.
+
+runner stop                                    %/day    ret%    DD      H1      H2  runner avg leg%
+breakeven, never moves (current)              +0.219   +32.1   6.0  +0.286  +0.153           +1.957
+lock +1R after target                         +0.209   +30.4   5.9  +0.301  +0.117           +1.973
+trail 0.5R below the high                     +0.191   +27.5   5.9  +0.275  +0.108           +1.947
+trail 1R below the high                       +0.198   +28.7   5.8  +0.279  +0.118           +1.924
+trail 2R below the high                       +0.218   +32.1   5.8  +0.273  +0.165           +1.985
+prior bar low                                 +0.195   +28.3   5.8  +0.274  +0.117           +1.922
+chandelier: high close - 2 ATR                +0.251   +37.7   5.8  +0.331  +0.171           +2.169
+close below 9 EMA                             +0.226   +33.5   5.8  +0.325  +0.129           +2.052
+close below 20 EMA                            +0.220   +32.4   6.1  +0.312  +0.130           +2.060
+
+Trades reaching 2R: 39 of 85 setups.
