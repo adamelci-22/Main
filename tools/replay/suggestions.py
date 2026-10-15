@@ -32,7 +32,7 @@ from collections import defaultdict
 SP = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 M1 = json.load(gzip.open(f"{SP}/proxies_1m.json.gz"))          # sym -> day -> [ (o,h,l,c,v,interp) x 390 ]
 F5 = json.load(gzip.open(f"{SP}/proxies_5m_v2.json.gz"))       # sym -> [[t,o,h,l,c,v,interp],...]
-LEV = {'QQQ': 3, 'SPY': 3, 'SOXX': 3, 'IWM': 3, 'TLT': 3
+LEV = {'QQQ': 3, 'SPY': 3, 'SOXX': 3, 'IWM': 3, 'TLT': 3, 'XLK': 3, 'IBIT': 2
        }
 SYMS = sorted(LEV)
 COST, STALL = 0.10, 0.10

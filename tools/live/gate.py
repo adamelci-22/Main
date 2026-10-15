@@ -14,7 +14,7 @@ import gzip, json, os, statistics as st, sys
 from collections import defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SYMS = ['QQQ', 'SPY', 'SOXX', 'IWM', 'TLT']
+SYMS = ['QQQ', 'SPY', 'SOXX', 'IWM', 'TLT', 'XLK', 'IBIT']
 
 
 def load(paths):

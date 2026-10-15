@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin** (converted from cash 2026-08-20), `agentic_allowed=true`.
-**Policy version: 3.123.**  
+**Policy version: 3.124.**  
 **ENTRIES PAUSED (v3.123, 2026-10-15): all selection rules are shelved (C1, C12 → `archive/SHELVED_SELECTION_RULES.md`). No new positions until replacement entry rules are adopted. Checkpoints while flat are one-line no-ops (no research, no gate, no pulls); the 12:30 and 8pm slots still verify flat, arm the next trading day and commit; Friday 12:30 still reports.** Bump on every rule/threshold change; record it in the commit.
 
 Nothing carries between checkpoints. State lives in this file and in `archive/trades.csv`, never in memory.
@@ -22,8 +22,8 @@ Each checkpoint reads **Part A**, plus the parts its row names. Reading more is 
 
 | Checkpoint | Read | Why |
 |---|---|---|
-| **9:00** research | A · C · D | Pre-market context only (headlines, proxy/ticker pre-market prices, buying power) — the Core Five universe (C4, v3.122) is already fixed, nothing to build or scan for (v3.78) |
-| **9:30** observation | A · C | Market-open pulse check on the five proxies (v3.92/v3.122, kept on the grid by direct governor instruction even after the 30-minute ORB moved entry to 10:00) — read-only, no decision, no B6 range-building role; the 30-minute range still can't complete until 10:00 |
+| **9:00** research | A · C · D | Pre-market context only (headlines, proxy/ticker pre-market prices, buying power) — the Core Seven universe (C4, v3.124) is already fixed, nothing to build or scan for (v3.78) |
+| **9:30** observation | A · C | Market-open pulse check on the seven proxies (v3.92/v3.124, kept on the grid by direct governor instruction even after the 30-minute ORB moved entry to 10:00) — read-only, no decision, no B6 range-building role; the 30-minute range still can't complete until 10:00 |
 | **10:00–11:55** entry/management ×24 (5-min cadence, v3.64/v3.92/v3.94) | A · B · C | 10:00 is the primary entry slot (v3.92 — moved from 9:45, so C1's Opening Range Breakout has its full 9:30–10:00 window; the 9:45/9:50/9:55 slots are removed from the grid, not just repurposed). **11:55 is the last entry-eligible slot (v3.94, direct governor instruction 2026-10-02)** — no new entries after 12:00, even though the grid itself keeps running through 12:30. Every slot from here is holding, or flat and open to a fresh opportunity, one uniform 5-minute cadence throughout |
 | **12:00–12:25** management only ×6 (5-min cadence, v3.94) | A · B | Exit-only — **no new entries from 12:00 onward (v3.94)**, same restriction the close slot always had, just starting 5 minutes earlier than the close itself now. Only a still-open position gets managed here; flat means a non-event. |
 | **12:30** close (double duty, v3.92) | A · B · B4 · D | Last management ratchet of the day, then — if still open — exit, report, and arm tomorrow (primary), direct market sell (v3.58). No new entries taken here (same as any close slot, and same as every slot back to 12:00, v3.94). Extended 30 minutes later, from 12:00 to 12:30, direct governor instruction 2026-10-02, to offset the later entry window opened by the 30-minute ORB. **Also appends one `archive/selection_log.csv` row per entry taken today (D3, v3.114).** |
@@ -267,7 +267,7 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 **Was "Major-move gate — what qualifies an individual stock."** Existed to screen a market-wide scan down to real movers before profiling. With the universe now fixed and closed to the Core Ten (D2/E3, direct governor instruction 2026-09-16 — no individual stocks, no scanning, ever, until reopened explicitly) there is nothing left to screen: every candidate is already named, already has both a long and inverse leg, and is judged purely by C1's proxy-based gate test. Number kept, not renumbered, so old trade notes and commits citing "C3" still resolve to this entry.
 
-## C4. Instrument selection — the Core Five only (v3.122)
+## C4. Instrument selection — the Core Seven only (v3.124)
 
 **v3.71 — instrument priority collapsed to a single closed list, direct governor instruction, 2026-09-16.** Individual stocks, commodities, and the v3.70 sector reopening are all superseded — the tradeable universe is now exactly **the Core Ten (E3)**: ten macro/sector themes, each with one named leveraged long ticker and one named leveraged inverse ticker, already the exact instrument to be traded (never a "plain" fallback beneath it — these tickers *are* the leveraged vehicles; there is no unleveraged version of TQQQ or SOXL to default down to). No wrapper search, no affordability-driven fallback to a plain instrument, no ranking a stock against a commodity against a sector — that whole prior apparatus (C3, old C4's four tracks) is retired along with the scanning it existed to sort.
 
@@ -285,6 +285,8 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 
 **v3.122 — Financials, Energy and Biotech removed, direct governor instruction, 2026-10-15. The Core Eight becomes the Core Five.** Removed outright, proxy and both leveraged legs: **Financials & banking** (XLF / FAS, FAZ), **Energy & oil** (XLE / ERX, ERY) and **Biotech / pharma** (XBI / LABU, LABD). None of the six tickers may be bought, and none of the three proxies is read, ranked or reported from the 2026-10-16 research slot onward. Older paragraphs and logs that name these rows are left as history. The C1 step 2b SPY-agreement filter (v3.104) applies to the remaining stock-market rows only.
 
+**v3.124 — Technology and Bitcoin added, direct governor instruction, 2026-10-15. The Core Five becomes the Core Seven.** **Technology:** proxy XLK; long TECL (3x), inverse TECS (3x). **Bitcoin:** proxy IBIT (spot-bitcoin ETF, regular hours only; bitcoin itself trades 24/7, so overnight gaps are larger than any other row); long BITX and BTCL (both 2x), inverse SBIT and BTCZ (both 2x). Bitcoin is the only row with two tickers per side; when its proxy picks a direction, the more liquid ticker on that side is the default candidate (BITX long, BTCZ inverse — BTCL and SBIT trade thinly, BTCL especially, ~30 five-minute bars a day). TECS is also thin (median 5-minute bar volume ~1,300 shares). Basis: the 7-month first-pullback replay on the matrix rows (`tools/backtest/matrix.py`) — Technology +0.071%/day (26 trades, but -0.042%/day in the second half), Bitcoin +0.010%/day (71 trades, positive in both halves). Entries remain paused under v3.123; this only sets the list new entry rules will draw from.
+
 | Theme | Long (leveraged) | Inverse (leveraged) | Proxy (C1's gate surface, v3.76 — never traded) |
 |---|---|---|---|
 | Tech large-caps | TQQQ (3x) | SQQQ (3x) | QQQ |
@@ -292,12 +294,14 @@ Check **every hour**, position-relevant only, same-day news only — yesterday's
 | Semiconductors | SOXL (3x) | SOXS (3x) | SOXX |
 | Small-cap growth | TNA (3x) | TZA (3x) | IWM |
 | Treasury bonds | TMF (3x) | TMV (3x) | TLT |
+| Technology (v3.124) | TECL (3x) | TECS (3x) | XLK |
+| Bitcoin (v3.124) | BITX (2x), BTCL (2x) | SBIT (2x), BTCZ (2x) | IBIT |
 
-**Five rows, ten tickers (v3.122), nothing else, until the governor changes this list the same explicit way it was set.** **v3.76 — the Proxy column is the gate surface again, direct governor instruction, 2026-09-16.** C1's RVOL → ORB → ATR-expansion test runs on each row's proxy, never on the leveraged tickers directly; the proxy is never bought (it's the "core ETF holding," read-only). The proxy's own Opening Range Breakout **direction** — above its 30-min high, or below its 30-min low (v3.92) — decides whether the row's leveraged **long** or **inverse** ticker is the candidate actually entered. If more than one row clears all three C1 steps at the same checkpoint, C1 step 3's `selection_score` (v3.109, computed on the proxies) picks among them — a fixed field of five rows, never an open-ended scan result.
+**Seven rows, sixteen tickers (v3.124), nothing else, until the governor changes this list the same explicit way it was set.** **v3.76 — the Proxy column is the gate surface again, direct governor instruction, 2026-09-16.** C1's RVOL → ORB → ATR-expansion test runs on each row's proxy, never on the leveraged tickers directly; the proxy is never bought (it's the "core ETF holding," read-only). The proxy's own Opening Range Breakout **direction** — above its 30-min high, or below its 30-min low (v3.92) — decides whether the row's leveraged **long** or **inverse** ticker is the candidate actually entered. If more than one row clears all three C1 steps at the same checkpoint, C1 step 3's `selection_score` (v3.109, computed on the proxies) picks among them — a fixed field of five rows, never an open-ended scan result.
 
 **[Retired, v3.97] Retail & consumer row, noted plainly when it was live, not hidden: SZK was ProShares UltraShort Consumer Staples, not a retail-specific inverse, and was 2x against RETL's 3x** — a real mismatch, flagged to the governor 2026-09-16 and kept as-given per explicit instruction at the time. The row (XRT/RETL/SZK) itself was removed under v3.97; kept here for reference rather than deleted outright, same convention as every other retirement in this file.
 
-1. **Run C1's three steps on the five proxies (v3.122)** — no leveraged-ticker-level pre-filter, every row's proxy gets the same test.
+1. **Run C1's three steps on the seven proxies (v3.124)** — no leveraged-ticker-level pre-filter, every row's proxy gets the same test.
 2. **Enter the candidate leg — that row's leveraged long or leveraged inverse ticker, chosen by C1 step 2's breakout direction — of the top-ranked proxy that clears all three steps.** Nothing else to prefer or fall back to; the proxy itself is never the traded instrument.
 
 ## C5. Signals
@@ -396,7 +400,7 @@ Never delete either checkpoint (A2's rule, not restated here).
 
 **Prompt templates for the chain (v3.115).** Arm each slot with the matching wording below (fill in time and date), so a checkpoint's prompt never cites retired rules. Every prompt ends: "RULEBOOK.md governs wherever this prompt differs. This is a real live trading account (Robinhood 462514035) acting on real capital."
 - **9:00 research:** read Part A + C + D; pre-market context only (headlines, proxy/ticker pre-market prices, buying power).
-- **9:30 observation:** read Part A + C; pulse check on the five C4 proxies; read-only, no decision.
+- **9:30 observation:** read Part A + C; pulse check on the seven C4 proxies; read-only, no decision.
 - **10:00–11:55 entry/management** (11:55 marked "last entry-eligible slot"): if holding, Part B management (B2 ratchet; B3 lists the only live exits); if flat, the Part C gate stack on the C4 proxies (whatever C4 currently lists) (C1: RVOL → volume-confirmed 30-min ORB → `selection_score`), subject to A1 (allowance, E1 throttle/lockout) and C8's 3% risk sizing; on any entry, record the top three candidates in E5 for the selection log; apply D1's early shutdown the moment it triggers.
 - **12:00–12:25 management only:** no entries; if holding, Part B management; if flat with no resting order, early shutdown — delete the remaining slots before 12:30.
 - **12:30 close:** final ratchet, market-sell anything open, log to `trades.csv`, append `selection_log.csv` rows, D3 report, arm the next trading day with these templates, commit and push.
@@ -420,11 +424,11 @@ Never delete either checkpoint (A2's rule, not restated here).
 
 **v3.71 — market-wide scanning removed entirely, direct governor instruction, 2026-09-16.** No `run_scan`, no individual-stock discovery, no 25-name watchlist, ever, until the governor explicitly reopens it. The tradeable universe is now fixed and closed: **the Core Ten (E3)** — ten macro/sector themes, each with its own named leveraged long and inverse ETF, nothing else. "These are all the positions you will ever enter" — direct quote, binding until changed the same explicit way.
 
-1. **Headlines** — macro, geopolitical, overnight. Same discipline as always, just read now for which of the C4 table's five themes (v3.122) it actually touches (Fed decision → Treasury Bonds and Broad Market rows; a chip-specific story → Semiconductors; etc.) rather than as raw material for a stock hunt.
-2. **Pre-market prices for the five proxies (v3.122)** (QQQ, SPY, SOXX, IWM, TLT — C4), the actual C1 gate surface (v3.76), plus the ten leveraged tickers (TQQQ/SQQQ, UPRO/SPXU, SOXL/SOXS, TNA/TZA, TMF/TMV — E3/C4) for context on what's actually tradeable. This is the entire "watchlist build" step now — there is nothing else to scan for.
-3. **Earnings reactions** from last night's after-close reporters, scoped to whether they move one of the five themes (v3.122), not individual names outside the list.
+1. **Headlines** — macro, geopolitical, overnight. Same discipline as always, just read now for which of the C4 table's seven themes (v3.124) it actually touches (Fed decision → Treasury Bonds and Broad Market rows; a chip-specific story → Semiconductors; etc.) rather than as raw material for a stock hunt.
+2. **Pre-market prices for the seven proxies (v3.124)** (QQQ, SPY, SOXX, IWM, TLT, XLK, IBIT — C4), the actual C1 gate surface (v3.76), plus the sixteen leveraged tickers (TQQQ/SQQQ, UPRO/SPXU, SOXL/SOXS, TNA/TZA, TMF/TMV, TECL/TECS, BITX/BTCL/SBIT/BTCZ — E3/C4) for context on what's actually tradeable. This is the entire "watchlist build" step now — there is nothing else to scan for.
+3. **Earnings reactions** from last night's after-close reporters, scoped to whether they move one of the seven themes (v3.124), not individual names outside the list.
 4. **Confirm settled buying power and unsettled funds.** Recompute deposited capital and the floor; report either if changed.
-5. **Record pre-market volume and price context for all five proxies (v3.122)** — RVOL can't be computed until today's own volume accrues (C1 step 1 needs live intraday volume vs. the 20-day average, read on the proxy), so this is observational only, feeding the day's report, not a formal qualification; that happens live starting at 10:00 once the 9:30-10:00 opening range exists (C1). Profile the actual leveraged ticker just-in-time (B1) only once its row's proxy has picked a direction and it's actually being considered for entry, never all ten pre-emptively; mark affordability second, never first.
+5. **Record pre-market volume and price context for all seven proxies (v3.124)** — RVOL can't be computed until today's own volume accrues (C1 step 1 needs live intraday volume vs. the 20-day average, read on the proxy), so this is observational only, feeding the day's report, not a formal qualification; that happens live starting at 10:00 once the 9:30-10:00 opening range exists (C1). Profile the actual leveraged ticker just-in-time (B1) only once its row's proxy has picked a direction and it's actually being considered for entry, never all sixteen pre-emptively; mark affordability second, never first.
 6. **Refresh the live-context block (E5).** Commit and push.
 
 ## D3. Reporting
@@ -509,7 +513,7 @@ A −25% drawdown from peak is a **flag**, not a brake: report it loudly, keep t
 - **One resting order per position** — a pending sell locks the shares, so a stop and a take-profit cannot coexist.
 - 24-hour tradability is optionality, never obligation.
 
-## E3. Vehicle map — see C4 for the live Core Five (v3.122); retired history below
+## E3. Vehicle map — see C4 for the live Core Seven (v3.124); retired history below
 
 **v3.96/v3.97 note: this section's own header and the v3.72 paragraph below it still say "Core Ten" — left as an accurate historical record of what was true on 2026-09-16, per this file's convention of not editing old version-tagged paragraphs. See C4 for the current, authoritative table (eight rows since v3.121).**
 
@@ -622,6 +626,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 ---
 
 ## Current state
+
+**v3.124** — **Technology and Bitcoin rows added: the Core Five becomes the Core Seven.** Direct governor instruction, 2026-10-15. Full text: C4, above. XLK / TECL / TECS and IBIT / BITX, BTCL / SBIT, BTCZ. Entries still paused (v3.123).
 
 **v3.123** — **All selection rules shelved; entries paused.** Direct governor instruction, 2026-10-15, after the replay showed no directional edge in the ORB and no value in the RVOL/expansion ranking. C1 and C12 moved verbatim to `archive/SHELVED_SELECTION_RULES.md`; stubs left in place. Universe (C4, Core Five), execution (C8) and position management (B) unchanged. The Friday 10/16 trigger chain stays armed and will run as no-op checkpoints.
 
