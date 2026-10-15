@@ -655,6 +655,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **11:50 checkpoint (fired 15:50:53Z) — no trade.** Flat (account $1,993.43). Gate (K=28): eligible field is TNA's IWM row only. **IWM bull** clears steps 1-2 (RVOL 1.74, 22 closes above ORH 272.10, score +0.13) but **fails v3.119 momentum**: last three closes 273.71, 273.57, 273.54 → close[-1] - close[-3] = -0.17 < 0. Entries today 2 of 3; consecutive losses 1. Last entry-eligible slot is 11:55.
 
+**11:55 checkpoint (fired 15:55:20Z, last entry-eligible slot) — no trade.** Flat (account $1,993.43). Gate (K=29): eligible field is TNA's IWM row only. **IWM bull** clears steps 1-2 (RVOL 1.72, 23 closes above ORH 272.10, score +0.12) but **fails v3.119 momentum**: last three closes 273.57, 273.54, 273.57 → close[-1] - close[-3] = 0.00, not > 0. No entry; the entry window closes after this slot. Entries today 2 of 3 (TNA win +9.67, TMV loss -0.84); consecutive losses 1. D1 early shutdown applies at the 12:00 checkpoint if still flat (delete 12:05-12:25, keep 12:30 and the 8pm backup).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
