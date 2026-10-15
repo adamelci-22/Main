@@ -596,6 +596,8 @@ A slot, not a fixture. When the driver stops mattering, replace it entirely — 
 
 **9:30 observation (fired 13:30:38Z, ~9:31 ET, on time) — read-only, no decision.** Flat (verified at 9:01). First prints vs Wednesday close: **SOXX 501.04 (-3.54%)** · **TLT 80.48 (+2.01%)** · **QQQ 718.05 (-1.50%)** · SPY 765.95 (-0.47%) · XLF 54.85 (+0.61%) · XBI 147.19 (+0.29%) · IWM 271.50 (+0.05%) · XLE 67.49 (-0.21%). The risk-off tone held into the open: semis and Nasdaq weak, long bonds bid. The 30-minute range completes at 10:00 and C1 runs then.
 
+**10:00 checkpoint (fired 14:00:18Z, ~10:00 ET) — no trade (range just completed, no closes outside yet).** Flat (no orders since Wednesday's close; account $1,984.60). The 30-minute range completed at 10:00 and no 5-minute bar has closed after it, so no proxy can have two consecutive closes outside; correct no-trade. Entries today 0 of 3; throttle off (3%).
+
 ## E6. Known issues — backlog, not yet fixed
 
 **Trigger creation is rate-limited — 2026-10-05.** The scheduler accepts about 10 `create_trigger` calls per minute; a burst of more returns "rate limit reached, try again in ~30 s". Arming a 34-slot chain takes ~4 batches. Nothing is lost on a refusal — retry the refused slots after the wait, then confirm all 34 with `list_triggers`.
