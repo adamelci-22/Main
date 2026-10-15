@@ -1,5 +1,6 @@
 {
  "equity": 2000.0,
  "start": null,
- "days_logged": []
+ "days_logged": [],
+ "loss_streak": 0
 }

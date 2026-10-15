@@ -27,7 +27,7 @@ FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM
              'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
 PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']     # tie order for same-bar pullback triggers
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
-MAX_ENTRIES = 3
+LOCKOUT_LOSSES = 5      # 5 losing trades in a row -> no new entries until the governor clears it (RULEBOOK A1)
 RISK = 0.03
 FADE_COST = 0.06        # % round trip on the leg
 PB_IN, PB_OUT = 0.0001, 0.0003
@@ -196,9 +196,10 @@ def rvol(today, base, p, k):
     return sum(b[4] for b in today[p][:k]) / base[p][k]
 
 
-def simulate(today, prev, K, equity, base=None):
+def simulate(today, prev, K, equity, base=None, streak=0):
     """today/prev: {sym: [bars]}; base = {proxy: [avg cumulative volume through bar k]} for the RVOL tie-break.
-    Returns (taken, skipped, signals, equity_after)."""
+    streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
+    Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
     cands, signals = [], []
     for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
         if p not in today: continue
@@ -218,8 +219,10 @@ def simulate(today, prev, K, equity, base=None):
     cands.sort(key=lambda c: (c['k'], -rvol(today, base, c['proxy'] if c['system'] == 'FADE' else PB_PROXY.get(c['ticker'], ''), c['k']), c['order']))
     taken, skipped, free, eq = [], [], 0, equity
     for c in cands:
-        if len(taken) >= MAX_ENTRIES or c['k'] < free:
-            skipped.append(c); continue
+        if streak >= LOCKOUT_LOSSES:
+            c['why_skipped'] = 'LOCKOUT (5 losses in a row)'; skipped.append(c); continue
+        if c['k'] < free:
+            c['why_skipped'] = 'account busy'; skipped.append(c); continue
         if c['system'] == 'FADE':
             leg_risk = c['lev'] * c['risk_pct']
             pct = (c['lev'] * c['gross'] / c['entry'] * 100 - FADE_COST) if c['status'] == 'closed' else None
@@ -227,23 +230,68 @@ def simulate(today, prev, K, equity, base=None):
             leg_risk = c['risk_pct']; pct = c['gross'] / c['entry'] * 100 if c['status'] == 'closed' else None
         notional = min(eq, eq * RISK / (leg_risk / 100))
         c.update(leg_risk=leg_risk, notional=notional, pct=pct, usd=notional * pct / 100 if pct is not None else None)
-        if pct is not None: eq += c['usd']
+        if pct is not None:
+            eq += c['usd']; streak = streak + 1 if c['usd'] < 0 else 0
+        c['streak'] = streak
         taken.append(c)
         free = (c['xbar'] + 1) if c['status'] == 'closed' else 10 ** 6
     # a signal is only actionable if the account would be free for it
-    signals = [s for s in signals if len(taken) < MAX_ENTRIES and s[2].get('k', K) >= free]
+    signals = [s for s in signals if streak < LOCKOUT_LOSSES and s[2].get('k', K) >= free]
     return taken, skipped, signals, eq
+
+
+def to_leg(leg_now, proxy_now, proxy_level, side, lev):
+    """Convert a proxy price level to the leveraged leg's price. side = +1 if the leg rises with the proxy, -1 if it rises when the proxy falls.
+    The leg moves about lev x the proxy's percentage move in the leg's favourable direction."""
+    move = side * (proxy_level / proxy_now - 1)        # proxy move to the level, in the leg's favourable direction
+    return leg_now * (1 + lev * move)
+
+
+def live_actions(today, taken, signals, K):
+    """Print the real-order instructions for this checkpoint (RULEBOOK B5). Prices are estimates from the last completed bar;
+    recompute stop/target from the actual fill with the same formula."""
+    print("  LIVE ACTIONS (only if the real account matches; A1 safety checks first):")
+    any_ = False
+    for sysn, sym, t in signals:
+        if t['status'] != 'signal': continue
+        any_ = True
+        if sysn == 'FADE':
+            bull, bear, lb, lbe = FADE_ROWS[sym]; side = t['side']; leg = bull if side > 0 else bear; lev = lb if side > 0 else lbe
+            pnow = today[sym][K - 1][3]; lnow = today[leg][K - 1][3] if leg in today else float('nan')
+            r = abs(pnow - t['stop']) / pnow
+            ls = to_leg(lnow, pnow, t['stop'], side, lev)
+            lt = lnow * (1 + lev * 2 * r)
+            print(f"    ENTER FADE: buy {leg} now (marketable limit). Proxy {sym} {pnow:.2f}, proxy stop {t['stop']:.2f} (R {r*100:.2f}% proxy = {lev*r*100:.2f}% on {leg}).")
+            print(f"      est. at {leg} {lnow:.2f}: stop {ls:.2f}, 2R target {lt:.2f}. From the fill F: stop = F x (1 - {lev*r:.5f}), target = F x (1 + {2*lev*r:.5f}).")
+        else:
+            print(f"    ENTER PULLBACK: limit buy {sym} at {t['limit']:.2f}, valid for the next bar only. Stop {t['stop']:.2f}, target {t['target']:.2f} (one OCO for 100% after the fill).")
+    for c in taken:
+        if c['status'] != 'open': continue
+        any_ = True
+        if c['system'] == 'FADE':
+            bull, bear, lb, lbe = FADE_ROWS[c['proxy']]; leg = c['ticker']; side = c['side']; lev = lb if side > 0 else lbe
+            pnow = today[c['proxy']][K - 1][3]; lnow = today[leg][K - 1][3]
+            hit = any('take profit' in e[1] for e in c['events'])
+            if not hit:
+                print(f"    MANAGE FADE {leg}: 1/3 take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3)")
+            else:
+                print(f"    MANAGE FADE {leg}: 1/3 take-profit DONE in the model; runner stop on the proxy {c['stop_now']:.2f} -> {leg} "
+                      f"{to_leg(lnow, pnow, c['stop_now'], side, lev):.2f}. Never below breakeven (the fill); raise only, and only if >= 0.10% higher (B5.4)")
+        else:
+            print(f"    MANAGE PULLBACK {c['ticker']}: OCO resting (target {c['target']:.2f} / stop {c['stop0']:.2f}); nothing to change")
+    if not any_: print("    none")
 
 
 def state():
     if os.path.exists(STATE): return json.load(open(STATE))
-    return {'equity': 2000.0, 'start': None, 'days_logged': []}
+    return {'equity': 2000.0, 'start': None, 'days_logged': [], 'loss_streak': 0}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('dumps', nargs='+'); ap.add_argument('--now', required=True, help='ET time of the checkpoint, HH:MM')
     ap.add_argument('--day', help='ET date (default: latest date in the dumps)'); ap.add_argument('--close', action='store_true')
+    ap.add_argument('--live', action='store_true', help='also print the real-order instructions for this checkpoint (RULEBOOK B5)')
     ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 5 proxies, prior 20 sessions)')
     a = ap.parse_args()
     raw = load([f for g in a.dumps for f in glob.glob(g)])
@@ -273,7 +321,9 @@ def main():
     bf = os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json')
     base = json.load(open(bf))['base'] if os.path.exists(bf) else None
     if not base: print("  (no RVOL baseline for today - same-bar ties fall back to list order; run --build-rvol at 9:00)")
-    taken, skipped, signals, eq = simulate(today, prev, K, eq0, base)
+    streak0 = S.get('loss_streak', 0)
+    if streak0 >= LOCKOUT_LOSSES: print(f"  LOCKOUT: {streak0} losing trades in a row - no new paper entries until the governor clears it")
+    taken, skipped, signals, eq = simulate(today, prev, K, eq0, base, streak0)
     print(f"PAPER {day} at {a.now} ET (bars through {k2t(K)}), paper equity at open ${eq0:,.2f}")
     if not taken and not signals: print("  no paper trades or live signals")
     for c in taken:
@@ -286,12 +336,14 @@ def main():
             print(f"       OPEN: " + (f"current stop {c['stop_now']:.2f} (proxy), remaining {c['rem']:.0%}" if c['system'] == 'FADE' else 'OCO resting (target / stop)'))
         else:
             print(f"       CLOSED {c['why']}: {c['pct']:+.2f}% on {c['ticker']} = ${c['usd']:+.2f}")
-    for s in skipped: print(f"  skipped (account busy or 3 entries used): {s['system']} {s['ticker']} at {k2t(s['k'])}")
+    for s in skipped: print(f"  skipped ({s.get('why_skipped', 'account busy')}): {s['system']} {s['ticker']} at {k2t(s['k'])}")
     for sysn, sym, t in signals: print(f"  SIGNAL {sysn} {sym}: {t['note']}")
+    if a.live: live_actions(today, taken, signals, K)
     open_ = [c for c in taken if c['status'] == 'open']
     cadence = '5 min (fade open: ratchet the stop)' if any(c['system'] == 'FADE' for c in open_) else \
-              ('30 min (pullback OCO resting)' if open_ else ('5 min (flat, scanning)' if K < 41 and len(taken) < MAX_ENTRIES else 'none needed until 13:30'))
-    print(f"  entries used {len(taken)}/{MAX_ENTRIES}; next check-in: {cadence}; paper equity now ${eq:,.2f}")
+              ('30 min (pullback OCO resting)' if open_ else ('5 min (flat, scanning)' if K < 41 and streak0 < LOCKOUT_LOSSES else 'none needed until 13:30'))
+    st_now = taken[-1]['streak'] if taken and taken[-1].get('pct') is not None else (taken[-2]['streak'] if len(taken) > 1 else streak0)
+    print(f"  entries today {len(taken)}; losing streak {st_now}/{LOCKOUT_LOSSES}; next check-in: {cadence}; paper equity now ${eq:,.2f}")
     if a.close:
         if K - 1 < SELL_BY: sys.exit('--close needs --now 13:30 or later')
         if day in S['days_logged']: print('  already logged'); return
@@ -306,6 +358,7 @@ def main():
                 w.writerow([day, c['system'], c['proxy'], c['ticker'], k2t(c['k']), f"{c['leg_entry']:.4f}", f"{c['stop0']:.4f}", f"{c['target']:.4f}",
                             k2t(c['xbar']), c['why'], f"{c['pct']:.3f}", f"{c['notional']:.2f}", f"{c['usd']:.2f}", f"{e:.2f}"])
         S['equity'] = round(eq, 2); S['days_logged'].append(day); S['start'] = S['start'] or day
+        S['loss_streak'] = taken[-1]['streak'] if taken else streak0
         json.dump(S, open(STATE, 'w'), indent=1)
         print(f"  logged {len(taken)} trade(s) to archive/paper_trades.csv; paper equity ${eq:,.2f}")
 
