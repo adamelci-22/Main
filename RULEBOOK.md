@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.0.4** (2026-10-15). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.1** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -129,7 +129,7 @@ Specs and evidence: `tools/backtest/PULLBACK_SPEC.md`, E3. `tools/live/paper.py`
    - the morning high is less than 0.75 × the stop distance above the entry; or
    - the morning high is less than 0.25% above the entry; or
    - the stop and the morning high are less than $0.10 apart.
-9. **Exit:** sell 100% at the morning high, or at the stop. **Sell anything left at 13:30.**
+9. **Exit:** sell 100% at the morning high, or at the stop. **Sell anything left at 13:30.** The take-profit limit is **the morning high rounded DOWN to the cent** (e.g. high 8.8687 → limit 8.86), so a retest of the high fills. The skip rules in step 8 use that rounded price. *(Effective Mon 2026-10-19; Fri 10-16's LABD order is at 8.87.)*
 
 Only the first qualifying setup per ticker per day counts.
 
@@ -161,7 +161,7 @@ Only the first qualifying setup per ticker per day counts.
 2. **Leg levels from the fill** (printed by `paper.py`):
    - `stop = F × (1 − lev × R%)`
    - `target = F × (1 + 2 × lev × R%)`
-   - R% is the proxy's percentage distance from entry to its stop. Round the stop down and the target up to the cent.
+   - R% is the proxy's percentage distance from entry to its stop. Round the stop down **and the target down** to the cent (target rounding: from Mon 2026-10-19; before that, up).
 3. **Protect, in the same checkpoint:**
    - **OCO** (sell, GTC) on **⅓ of the shares** (floor(N/3)): take-profit = target, stop = stop.
    - Plain **stop-market** (sell, GTC) on the other ⅔, at the stop.
@@ -318,13 +318,13 @@ A broker capability is verified only by a successful call or an order response, 
 
 | | Trades | Win % | %/day | Return | Max drawdown |
 |---|---|---|---|---|---|
-| Combined | 116 | 59% | +0.576 | +140.5% | 3.8% |
+| Combined | 115 | 59% | +0.570 | +138.2% | 4.1% |
 | FADE alone | 74 | 55% | +0.456 | +99.8% | 3.8% |
-| PULLBACK alone | 52 | 67% | +0.160 | +28.1% | 1.9% |
+| PULLBACK alone | 51 | 67% | +0.153 | +26.7% | 1.9% |
 | Mar 3 – Apr 6 (never used for tuning) | 22 | 50% | +0.594 | +14.8% | 3.8% |
 
-- **Stress tests** (`tools/backtest/results/stress.txt`): break-even at about 0.80% extra cost per trade. +0.43%/day with 0.20% extra cost.
-- **Concentration:** without the SOXX fade row, +0.40%/day. Without the 10 best days, +0.25%/day.
+- **Stress tests** (`tools/backtest/results/stress.txt`): break-even at about 0.80% extra cost per trade. +0.42%/day with 0.20% extra cost.
+- **Concentration:** without the SOXX fade row, +0.39%/day. Without the 10 best days, +0.24%/day.
 - **Longest losing streak:** 4. The 5-loss lockout never fired.
 - **Lists and exits were chosen on the same months,** so the numbers are optimistic. Plan on +0.2–0.4%/day.
 
@@ -370,6 +370,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.1 — 2026-10-16, governor instruction:** pullback (and FADE leg) take-profit limits are rounded **down** to the cent, effective Mon 10-19. Backtest re-run on the full period and both halves: +0.570%/day (was +0.576), +138.2% (was +140.5%), max drawdown 4.1% (was 3.8%); the untouched March window is unchanged (+0.594%); one marginal LABD setup now fails the $0.10-gap skip rule. `paper.py` floors the target from 2026-10-19 and replays the backtest exactly (115 trades, $4,764.36). Stress tests re-run (`results/stress.txt`).
 
 **v5.0.4 — 2026-10-15:** unused files deleted (old gate/profile/replay tools, old experiments and rule-history files, 13 research scripts the backtest no longer imports). No rule change; backtest rerun identical.
 

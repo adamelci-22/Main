@@ -30,6 +30,8 @@ FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM
              'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
 PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']     # tie order for same-bar pullback triggers
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
+FLOOR_TARGET = True     # pullback take-profit = morning high rounded down to the cent; main() turns it off for days before FLOOR_FROM
+FLOOR_FROM = '2026-10-19'   # RULEBOOK v5.1 effective date (2026-10-16's real LABD order was placed at the rounded-up 8.87)
 LOCKOUT_LOSSES = 5      # 5 losing trades in a row -> no new entries until the governor clears it (RULEBOOK A1)
 RISK = 0.03
 FADE_COST = 0.06        # % round trip on the leg
@@ -160,6 +162,7 @@ def pullback(b, prev, K):
             pre = j - n
             if not any(b[i][3] > bh and b[i][4] > 1.5 * st.mean(b[q][4] for q in range(max(0, i - 6), i)) for i in range(3, pre)): continue
             hod = max(b[i][1] for i in range(0, pre)); stop = low * (1 - 0.05 / 100); lim = b[j][3]
+            if FLOOR_TARGET: hod = math.floor(hod * 100 + 1e-9) / 100      # the real take-profit limit: morning high rounded DOWN to the cent (RULEBOOK B3.9)
             if j + 1 >= K:
                 if hod <= lim or lim <= stop or (lim - stop) / lim * 100 < 0.75: continue
                 if (hod - lim) < 0.75 * (lim - stop) or (hod - lim) / lim * 100 < 0.25 or hod - stop < 0.10: continue
@@ -333,6 +336,8 @@ def main():
     today = {s: g for s in raw if day in raw[s] for g in [grid(raw[s][day], K)] if g}
     prev = {s: g for s in raw if prevday in raw[s] for g in [grid(raw[s][prevday], 78)] if g}
     S = state(); eq0 = S['equity']
+    global FLOOR_TARGET
+    FLOOR_TARGET = day >= FLOOR_FROM
     bf = os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json')
     base = json.load(open(bf))['base'] if os.path.exists(bf) else None
     if not base: print("  (no RVOL baseline for today - same-bar ties fall back to list order; run --build-rvol at 9:00)")

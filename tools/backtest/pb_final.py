@@ -10,12 +10,13 @@ Rules (see PULLBACK_SPEC.md):
   Exit: one OCO - sell 100% at the morning high, or the stop.  Sell anything left at 13:30.
   Account: $2,000, 3% risk capped at cash, one position at a time, max 3 entries/day, earliest trigger first, ties -> higher RVOL.
 """
-import os, statistics as st, sys, collections
+import math, os, statistics as st, sys, collections
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import manual as m, pullback as P, pb_inverse as PI
 from lab import get_data
 
 BUFFER_PCT, MIN_ROOM, MIN_RR, SELL_BY = 0.05, 0.75, 0.75, 47      # 47 = sell at the 13:30 bar close
+FLOOR_TARGET = True      # RULEBOOK v5.1: take-profit = morning high rounded DOWN to the cent (was: the exact wick high)
 
 
 def scan(b, e9, e20, oco_gap):
@@ -32,6 +33,7 @@ def scan(b, e9, e20, oco_gap):
             pre = j - n
             if not any(b[i][3] > bh and b[i][4] > 1.5 * st.mean(b[q][4] for q in range(max(0, i - 6), i)) for i in range(3, pre)): continue
             hod = max(b[i][1] for i in range(0, pre)); stop = low * (1 - BUFFER_PCT / 100)
+            if FLOOR_TARGET: hod = math.floor(hod * 100 + 1e-9) / 100     # the real take-profit limit is the morning high rounded DOWN to the cent (RULEBOOK B3.9)
             lim = b[j][3]
             if b[j + 1][2] > lim: continue
             entry = min(b[j + 1][0], lim)
