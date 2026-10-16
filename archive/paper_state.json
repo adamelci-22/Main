@@ -1,6 +1,8 @@
 {
- "equity": 2000.0,
- "start": null,
- "days_logged": [],
+ "equity": 2018.25,
+ "start": "2026-10-16",
+ "days_logged": [
+  "2026-10-16"
+ ],
  "loss_streak": 0
 }
