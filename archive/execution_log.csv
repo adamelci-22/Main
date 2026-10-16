@@ -1,0 +1,2 @@
+date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spread_pct,ref_px,limit_px,fill_px,slippage_pct,shares,notes
+2026-10-16,LABD,PULLBACK,buy,entry,11:55,,,,,,8.79,8.79,8.7799,-0.12,226,backfilled: bid/ask and timestamps not captured

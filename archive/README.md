@@ -2,6 +2,7 @@
 
 **Live records (the scheduled checkpoints read and write these paths — do not move):**
 - `live_trades.csv` — real trades from 2026-10-16, append-only (RULEBOOK D2).
+- `execution_log.csv` — per-order spread, send/ack times, slippage (RULEBOOK B5.9), append-only.
 - `paper_trades.csv`, `paper_state.json` — the model's own record, written by `paper.py --close`.
 - `paper_rvol_<day>.json` — the day's RVOL tie-break baseline.
 
