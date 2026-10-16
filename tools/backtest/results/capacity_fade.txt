@@ -1,0 +1,19 @@
+FADE entries with leg bars: 74 of 74
+leg     trades  med 5-min $vol   acct at 5% of bar   acct at 1% of day
+TNA         13       1,544,339              77,217           1,411,709
+SOXS        10      23,195,204           1,159,760          11,115,713
+LABU         7         783,813              39,191             498,524
+AMDD         6         682,306              34,115             531,404
+SQQQ         6      18,941,280             947,064          15,551,281
+TECS         6         329,843              16,492             308,932
+SOXL         6      75,467,675           3,773,384          39,806,893
+TQQQ         5      57,892,454           2,894,623          24,700,722
+TECL         5         713,649              35,682             817,152
+LABD         4       1,149,764              57,488             682,088
+AMDL         4       1,502,869              75,143             953,954
+TZA          2      15,912,967             795,648           7,598,088
+
+All FADE trades, account size where position = 5% of entry-bar dollar volume:
+  10th percentile: $12,999
+  25th percentile: $39,191
+  50th percentile: $120,965

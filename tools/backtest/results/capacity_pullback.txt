@@ -1,0 +1,12 @@
+41 trades. Position size per $1 of equity = min(3%/stop%, 1x cash) [x2 if margin used]
+instrument trades  med 5-min $vol    med day $vol  acct size at 5% of bar   acct at 1% of day
+SOXS         11      12,601,876   1,138,154,514                 630,094          11,381,545
+UVXY          9       1,198,784     137,729,866                  59,939           1,377,299
+TECS          8         120,704      38,930,916                   6,035             389,309
+LABD          8         568,165      52,411,492                  28,408             524,115
+NVD           5       2,856,735     201,262,734                 142,837           2,012,627
+
+All trades: account size at which the position = 5% of the entry-bar dollar volume:
+  10th percentile trade: $6,371
+  25th percentile trade: $20,127
+  50th percentile trade: $59,939
