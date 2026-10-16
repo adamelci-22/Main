@@ -16,7 +16,18 @@ import manual as m, pullback as P, pb_inverse as PI
 from lab import get_data
 
 BUFFER_PCT, MIN_ROOM, MIN_RR, SELL_BY = 0.05, 0.75, 0.75, 47      # 47 = sell at the 13:30 bar close
-FLOOR_TARGET = True      # RULEBOOK v5.1: take-profit = morning high rounded DOWN to the cent (was: the exact wick high)
+TARGET_MODE = 'floor'    # 'floor' = RULEBOOK v5.1 (morning-high WICK rounded DOWN to the cent). Research variants: 'wick' (exact, pre-v5.1), 'body' (top of the body of the high bar), 'mid' (middle of the high bar), 'close' (highest close before the dip)
+
+
+def target_level(b, pre, hod):
+    fl = lambda x: math.floor(x * 100 + 1e-9) / 100
+    ih = max(range(pre), key=lambda i: b[i][1])
+    if TARGET_MODE == 'wick': return hod
+    if TARGET_MODE == 'floor': return fl(hod)
+    if TARGET_MODE == 'body': return fl(max(b[ih][0], b[ih][3]))
+    if TARGET_MODE == 'mid': return fl((b[ih][1] + b[ih][2]) / 2)
+    if TARGET_MODE == 'close': return fl(max(b[i][3] for i in range(pre)))
+    raise ValueError(TARGET_MODE)
 
 
 def scan(b, e9, e20, oco_gap):
@@ -33,7 +44,7 @@ def scan(b, e9, e20, oco_gap):
             pre = j - n
             if not any(b[i][3] > bh and b[i][4] > 1.5 * st.mean(b[q][4] for q in range(max(0, i - 6), i)) for i in range(3, pre)): continue
             hod = max(b[i][1] for i in range(0, pre)); stop = low * (1 - BUFFER_PCT / 100)
-            if FLOOR_TARGET: hod = math.floor(hod * 100 + 1e-9) / 100     # the real take-profit limit is the morning high rounded DOWN to the cent (RULEBOOK B3.9)
+            hod = target_level(b, pre, hod)
             lim = b[j][3]
             if b[j + 1][2] > lim: continue
             entry = min(b[j + 1][0], lim)

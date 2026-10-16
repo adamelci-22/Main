@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.1** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -66,7 +66,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 ## A3. State check
 
 At 9:00 and 13:30, and before every order, read from the broker: positions, open orders (equity and advanced/OCO), total value and buying power. **When the broker and the model disagree, the broker wins:**
-- **The model shows a position the account doesn't have** (for example, a real stop filled earlier than the model's): do nothing, and never re-enter to match the model.
+- **The model shows a position the account doesn't have:** never re-enter to match the model. If a real stop or target filled earlier than the model's, the account just waits for the model's next signal. **If the governor closed the real position by hand** (governor 2026-10-16), the real account is **free for new signals from that moment**: run `paper.py --live --real-free`, which lists new signals even while the model's own position is open. The broker check (A1.5) still guards every entry, and the model's open trade is simply not matched by a real one (log `model_pct` from the model at the close).
 - **The account has something the model doesn't:** report it immediately, make sure a stop protects it (B5.5), and sell it by 13:30 at the latest (B5.7).
 
 ## A4. Faults
@@ -370,6 +370,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2 — 2026-10-16, governor instruction:** after a manual close by the governor, the real account is free for new signals (`paper.py --live --real-free`; A3). Same day, research only (no rule change): `tools/backtest/pb_target_modes.py` tested placing the pullback take-profit lower on the high candle — body top, middle of the bar, highest close — and every variant trades less and earns less than the wick high (`results/pb_target_modes.txt`).
 
 **v5.1 — 2026-10-16, governor instruction:** pullback (and FADE leg) take-profit limits are rounded **down** to the cent, effective Mon 10-19. Backtest re-run on the full period and both halves: +0.570%/day (was +0.576), +138.2% (was +140.5%), max drawdown 4.1% (was 3.8%); the untouched March window is unchanged (+0.594%); one marginal LABD setup now fails the $0.10-gap skip rule. `paper.py` floors the target from 2026-10-19 and replays the backtest exactly (115 trades, $4,764.36). Stress tests re-run (`results/stress.txt`).
 

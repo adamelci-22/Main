@@ -1,0 +1,8 @@
+Pullback take-profit placement (combined FADE+PULLBACK account, 2026-03-03..10-14; PB rows = pullback trades only)
+
+mode    PB trades  PB win%  PB avgW  PB avgL | comb trades  win%   %/day   return  maxDD      H1      H2 |  March %/day
+wick           42      67%   +1.11%   -0.88% |         116   59%  +0.576  +140.5%   3.8%  +0.553  +0.598 |       +0.594
+floor          41      66%   +1.11%   -0.88% |         115   59%  +0.570  +138.2%   4.1%  +0.553  +0.586 |       +0.594
+body           25      68%   +0.98%   -0.79% |          99   59%  +0.522  +121.2%   3.8%  +0.527  +0.517 |       +0.640
+mid            14      64%   +1.04%   -0.78% |          88   57%  +0.491  +110.8%   5.2%  +0.491  +0.490 |       +0.472
+close          29      66%   +0.96%   -0.82% |         103   58%  +0.520  +120.5%   4.1%  +0.532  +0.508 |       +0.640

@@ -30,6 +30,7 @@ FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM
              'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
 PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']     # tie order for same-bar pullback triggers
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
+REAL_FREE = False       # --real-free: list LIVE signals even while the MODEL's own position is open (the governor closed the real one by hand; RULEBOOK A3/B4.2)
 FLOOR_TARGET = True     # pullback take-profit = morning high rounded down to the cent; main() turns it off for days before FLOOR_FROM
 FLOOR_FROM = '2026-10-19'   # RULEBOOK v5.1 effective date (2026-10-16's real LABD order was placed at the rounded-up 8.87)
 LOCKOUT_LOSSES = 5      # 5 losing trades in a row -> no new entries until the governor clears it (RULEBOOK A1)
@@ -242,7 +243,7 @@ def simulate(today, prev, K, equity, base=None, streak=0):
         taken.append(c)
         free = (c['xbar'] + 1) if c['status'] == 'closed' else 10 ** 6
     # a signal is only actionable if the account would be free for it
-    signals = [s for s in signals if streak < LOCKOUT_LOSSES and s[2].get('k', K) >= free]
+    signals = [s for s in signals if streak < LOCKOUT_LOSSES and (REAL_FREE or s[2].get('k', K) >= free)]
     return taken, skipped, signals, eq
 
 
@@ -276,6 +277,8 @@ def live_actions(today, taken, signals, K):
             print(f"    ENTER PULLBACK: limit buy {sym} at {t['limit']:.2f}, valid for the next bar only. Stop {t['stop']:.2f}, target {t['target']:.2f} (one OCO for 100% after the fill).")
     for c in taken:
         if c['status'] != 'open': continue
+        if REAL_FREE:
+            print(f"    (model position {c['system']} {c['ticker']} is open in the model only; the real account is flat - ignored under --real-free)"); continue
         any_ = True
         if c['system'] == 'FADE':
             bull, bear, lb, lbe = FADE_ROWS[c['proxy']]; leg = c['ticker']; side = c['side']; lev = lb if side > 0 else lbe
@@ -308,6 +311,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('dumps', nargs='+'); ap.add_argument('--now', required=True, help='ET time of the checkpoint, HH:MM')
     ap.add_argument('--day', help='ET date (default: latest date in the dumps)'); ap.add_argument('--close', action='store_true')
+    ap.add_argument('--real-free', action='store_true', help='the real account is flat although the model still holds a position (governor closed it by hand): list new signals anyway; the broker check (A1.5) still guards entries')
     ap.add_argument('--live', action='store_true', help='also print the real-order instructions for this checkpoint (RULEBOOK B5)')
     ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 6 FADE proxies + NVDA, prior 20 sessions)')
     a = ap.parse_args()
@@ -336,7 +340,8 @@ def main():
     today = {s: g for s in raw if day in raw[s] for g in [grid(raw[s][day], K)] if g}
     prev = {s: g for s in raw if prevday in raw[s] for g in [grid(raw[s][prevday], 78)] if g}
     S = state(); eq0 = S['equity']
-    global FLOOR_TARGET
+    global FLOOR_TARGET, REAL_FREE
+    REAL_FREE = a.real_free
     FLOOR_TARGET = day >= FLOOR_FROM
     bf = os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json')
     base = json.load(open(bf))['base'] if os.path.exists(bf) else None
@@ -359,7 +364,7 @@ def main():
     for s in skipped: print(f"  skipped ({s.get('why_skipped', 'account busy')}): {s['system']} {s['ticker']} at {k2t(s['k'])}")
     for sysn, sym, t in signals: print(f"  SIGNAL {sysn} {sym}: {t['note']}")
     if a.live: live_actions(today, taken, signals, K)
-    open_ = [c for c in taken if c['status'] == 'open']
+    open_ = [] if REAL_FREE else [c for c in taken if c['status'] == 'open']
     cadence = '5 min (fade open: ratchet the stop)' if any(c['system'] == 'FADE' for c in open_) else \
               ('30 min (pullback OCO resting)' if open_ else ('5 min (flat, scanning)' if K < 41 and streak0 < LOCKOUT_LOSSES else 'none needed until 13:30'))
     st_now = taken[-1]['streak'] if taken and taken[-1].get('pct') is not None else (taken[-2]['streak'] if len(taken) > 1 else streak0)
