@@ -346,7 +346,7 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Session (A1.10):** normal full day (not a holiday or early close).
 - **RVOL baseline:** built from 20 sessions (2026-09-18..10-15), `archive/paper_rvol_2026-10-16.json`.
 - **Chain:** 46 slots confirmed at 9:00 (45 remaining + this one). 13:30 = close + Friday report + arm Monday 10-19 (full 46 slots, UTC−4).
-- **OPEN POSITION (11:57 ET): PULLBACK LABD, 226 sh, fill $8.7799** (limit 8.79, model entry 8.79). Order IDs: buy `6ad2494f-6409-4b63-8e83-f852ee05904f`; OCO `6ad246c5-9dc1-4a14-9615-4a94f3d8f915` (GTC; take-profit limit 8.87 leg `6ad2477f-c309-4748-b8e8-f9059558065f`, stop 8.71 leg `6ad2477f-593d-455d-a06c-ce805886b23d`). Verified resting. Check in at :00/:30 only (C2); sell at 13:30 if still open. Log to `live_trades.csv` on exit.
+- **Real account flat since 12:11 ET** (total value $2,008.09; day P&L +$14.66 vs the 9:00 value). Trade 1, PULLBACK LABD 226 sh: bought 8.7799 (11:57), **sold by the governor at market 8.845 in the app (12:11)**, OCO cancelled by hand. Logged in `live_trades.csv` (win; streak 0). **The model still holds its own LABD** (target 8.8687 / stop 8.71), so `paper.py` prints no new signals until it closes (A3: don't re-enter to match the model; the account may not trade a signal the model skips).
 - **Blocked 11:05:** LABD pullback (limit 8.63) skipped under A1.6 (quote 0.7% off the last bar; the model also never filled).
 - **Bimonthly reminder trigger:** `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 - **Context:** bank earnings (MTB, RF, CFG, TFC, TRV, WBS, CMA) before the open; no macro release found in the earnings feed.
