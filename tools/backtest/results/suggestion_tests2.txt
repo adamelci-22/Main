@@ -1,0 +1,19 @@
+ROUND 2 vs backtest (2026-03-03..10-14, 157 days)
+
+                                              trd    win    %/day             return  maxDD      H1      H2
+BASELINE (live rules)                         115    59%   +0.570            +138.2%   4.1%  +0.553  +0.586
+
+1. PASSIVE PULLBACK ENTRY: limit = trigger close x (1 - offset); fills only if next bar trades down to it
+  offset 0.00% below close                    115    59%   +0.570 (+0.000)   +138.2%   4.1%  +0.553  +0.586   | pullback trades 41
+  offset 0.05% below close                    110    60%   +0.562 (-0.008)   +135.3%   6.1%  +0.546  +0.578   | pullback trades 36
+  offset 0.10% below close                    105    59%   +0.555 (-0.014)   +133.0%   5.0%  +0.544  +0.567   | pullback trades 31
+  offset 0.20% below close                     97    59%   +0.547 (-0.023)   +129.8%   4.8%  +0.525  +0.568   | pullback trades 23
+  offset 0.30% below close                     91    57%   +0.522 (-0.048)   +120.9%   5.0%  +0.492  +0.551   | pullback trades 17
+
+2. SPREAD/ATR BLOCKER: skip pullback if assumed spread > 0.15 x ATR14 at signal bar (spread assumed constant % of price)
+  assumed spread 0.05%: blocked 0/61 setups   115    59%   +0.570 (+0.000)   +138.2%   4.1%  +0.553  +0.586   | pullback trades 41
+  assumed spread 0.10%: blocked 14/61 setups  104    57%   +0.521 (-0.049)   +120.8%   4.9%  +0.488  +0.553   | pullback trades 30
+  assumed spread 0.20%: blocked 52/61 setups   81    58%   +0.522 (-0.048)   +121.4%   3.8%  +0.475  +0.568   | pullback trades 7
+  assumed spread 0.30%: blocked 59/61 setups   75    56%   +0.468 (-0.101)   +103.7%   3.8%  +0.435  +0.501   | pullback trades 1
+  assumed spread 0.50%: blocked 61/61 setups   74    55%   +0.456 (-0.113)    +99.8%   3.8%  +0.410  +0.501   | pullback trades 0
+   5-min ATR14 as % of price at pullback signals: median 0.89%, 10th pct 0.58% -> 0.15x = 0.133% median allowed spread
