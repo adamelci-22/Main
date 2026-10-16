@@ -339,13 +339,15 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
-**Thursday 2026-10-15, evening (rules change).**
-- **Real account:** flat, no open orders, **total value $1,993.43** (verified 19:00 ET via `get_portfolio` and `get_equity_positions`). The old-system day ended TNA +$9.67 and TMV −$0.84.
-- **Live trading under v5.0 starts Friday 2026-10-16.**
-- **Losing streak:** 0 (new count from 10-16).
-- **Earnings:** AMD reports Tue 2026-11-03 after the close (skip the AMD fade row Wed 11-04). No NVIDIA report in the next 3 weeks.
-- **Friday's chain:** re-armed under v5.0 tonight with the D1 templates; all 46 slots confirmed with `list_triggers` at 19:09 ET (13:30 = close + Friday report + arm Monday 10-19). Thursday's and Friday's 8:00pm backups use the v5.0 wording.
+**Friday 2026-10-16, 9:00 ET (first live day, v5.0.4).**
+- **Real account:** flat, no open orders (equity, advanced/OCO), **total value at 9:00: $1,993.43** — the daily loss limit (A1.2) trips at $1,933.64 or below.
+- **Losing streak:** 0 (`live_trades.csv` has no trades yet). Clearances: none.
+- **Earnings (A1.9):** none for AMD or NVIDIA today. AMD reports Tue 2026-11-03 after the close (skip the AMD fade row Wed 11-04). No NVIDIA report in the next 3 weeks.
+- **Session (A1.10):** normal full day (not a holiday or early close).
+- **RVOL baseline:** built from 20 sessions (2026-09-18..10-15), `archive/paper_rvol_2026-10-16.json`.
+- **Chain:** 46 slots confirmed at 9:00 (45 remaining + this one). 13:30 = close + Friday report + arm Monday 10-19 (full 46 slots, UTC−4).
 - **Bimonthly reminder trigger:** `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
+- **Context:** bank earnings (MTB, RF, CFG, TFC, TRV, WBS, CMA) before the open; no macro release found in the earnings feed.
 
 ## E6. Known issues
 
