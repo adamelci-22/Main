@@ -1,0 +1,52 @@
+TESTS OF OUTSIDE SUGGESTIONS vs the live system's backtest (2026-03-03..10-14, 157 days; same account rules)
+
+                                              trd    win    %/day             return  maxDD      H1      H2
+BASELINE (live rules, v5.1)                   115    59%   +0.570            +138.2%   4.1%  +0.553  +0.586
+
+A. FADE trail: rolling ATR14 (live) vs a fixed morning ATR   [suggestion 3: 'lunch compresses ATR, trail knocks you out']
+   premise check: ATR14 at 12:30 / ATR14 at 11:00, all proxies, all days: median 0.60x, mean 0.63x, share of days where it is lower: 97%
+  rolling ATR14 (live)                        115    59%   +0.570 (+0.000)   +138.2%   4.1%  +0.553  +0.586   | fade-only +0.456/day | March +0.594
+  morning-average ATR (10:00-11:00, frozen)   113    59%   +0.544 (-0.025)   +129.2%   4.1%  +0.511  +0.577   | fade-only +0.429/day | March +0.527
+  max(rolling, morning)  [never tighter]      113    59%   +0.544 (-0.025)   +129.2%   4.1%  +0.511  +0.577   | fade-only +0.429/day | March +0.527
+
+B. PULLBACK time decay   [advanced 1: 'if not at target after 20-30 min, go breakeven or cut']
+  no decay (live)  [matches baseline?]        115    59%   +0.570 (+0.000)   +138.2%   4.1%  +0.553  +0.586
+  after 4 bars (20 min): stop to breakeven    116    49%   +0.512 (-0.057)   +117.9%   4.1%  +0.457  +0.566   | pullback win 38%
+  after 6 bars (30 min): stop to breakeven    116    53%   +0.508 (-0.061)   +116.4%   4.2%  +0.449  +0.567   | pullback win 48%
+  after 9 bars (45 min): stop to breakeven    115    56%   +0.531 (-0.039)   +124.1%   4.4%  +0.498  +0.563   | pullback win 56%
+  after 4 bars (20 min): cut at next open     116    56%   +0.496 (-0.074)   +112.4%   4.1%  +0.455  +0.536   | pullback win 57%
+  after 6 bars (30 min): cut at next open     116    57%   +0.507 (-0.063)   +116.0%   4.1%  +0.444  +0.569   | pullback win 60%
+  after 9 bars (45 min): cut at next open     115    58%   +0.530 (-0.040)   +123.8%   4.5%  +0.486  +0.573   | pullback win 63%
+  after 4 bars (20 min): cut only if price below entry  115    57%   +0.559 (-0.010)   +134.5%   4.1%  +0.552  +0.566   | pullback win 59%
+  after 6 bars (30 min): cut only if price below entry  116    56%   +0.530 (-0.039)   +123.9%   4.1%  +0.469  +0.591   | pullback win 57%
+  after 9 bars (45 min): cut only if price below entry  115    58%   +0.552 (-0.018)   +131.5%   4.1%  +0.516  +0.586   | pullback win 63%
+   live pullback trades: 33 of 61 reach the target; winners take median 4 bars (20 min), 75th pct 8 bars; 12 of 33 winners needed more than 6 bars
+
+C. Daily circuit breakers on the account's real trade sequence   [advanced 2]
+   trading days 97; days with 2+ trades 18; days whose running return ever reached +4%: 10; days that ever touched -3%: 1
+   dynamic breaker (peak>=4% then stop at peak-2%): trades it would have blocked: 0 (their P&L $+0)
+   flat -3% breaker: trades it would have blocked: 0 (their P&L $+0)
+   best days, % of that day's starting equity: 2026-07-02 +8.0% (1 trade), 2026-03-05 +7.4% (1 trade), 2026-06-04 +6.6% (1 trade), 2026-07-16 +5.9% (1 trade), 2026-06-08 +5.7% (2 trades)
+
+D. Days after earnings (AMD reported after the close 2026-05-05 and 2026-08-04; NVDA 2026-05-20 and 2026-08-26)   [suggestion 4]
+   day after AMD earnings 2026-05-06: FADE SOXX+ -2.03% ($-48.5)
+   day after AMD earnings 2026-08-05: FADE XBI- +2.77% ($+111.7)
+   day after NVDA earnings 2026-05-21: FADE SOXX- +2.13% ($+53.1)
+   day after NVDA earnings 2026-08-27: FADE IWM+ +0.94% ($+43.2)
+   all-period SOXX fade + SOXS pullback: 27 trades, avg +1.70%; the 4 post-earnings days contain 2 of them
+
+E. Spread filter   [suggestion 2]
+   SOXS  median price $  52.11: 0.30% =  15.6 cents (one tick = 1 cent = 0.02% )
+   LABD  median price $   9.40: 0.30% =   2.8 cents (one tick = 1 cent = 0.11% )
+   TECS  median price $  71.51: 0.30% =  21.5 cents (one tick = 1 cent = 0.01% )
+   UVXY  median price $  26.13: 0.30% =   7.8 cents (one tick = 1 cent = 0.04% )
+   NVD   median price $   4.80: 0.30% =   1.4 cents (one tick = 1 cent = 0.21% )
+   TQQQ  median price $  71.72: 0.30% =  21.5 cents (one tick = 1 cent = 0.01% )
+   SOXL  median price $ 134.58: 0.30% =  40.4 cents (one tick = 1 cent = 0.01% )
+   TNA   median price $  64.63: 0.30% =  19.4 cents (one tick = 1 cent = 0.02% )
+   LABU  median price $ 217.94: 0.30% =  65.4 cents (one tick = 1 cent = 0.00% )
+   AMDD  median price $  30.73: 0.30% =   9.2 cents (one tick = 1 cent = 0.03% )
+   pullback trades taken on days when the ticker's proxy fell 1.5% or more: 15 of 41; their P&L $+312 vs $+533 for all pullbacks
+   cost test: +0.30% extra round-trip cost on EVERY pullback trade (fade unchanged): +0.491%/day (-0.078), return +110.7%
+   cost test: +0.50% extra round-trip cost on EVERY pullback trade (fade unchanged): +0.439%/day (-0.131), return +94.1%
+   (the backtest has no bid/ask data, so a spread-dependent rule itself cannot be tested; costs of +0.30% on every thin-ticker trade were tested in stress.txt: +0.518%/day)
