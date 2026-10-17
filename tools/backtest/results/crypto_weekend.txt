@@ -1,0 +1,25 @@
+Weekend days tested: 64 (2026-03-07..2026-10-11); BTC and ETH; start $2,500; 3% risk, spot long-only, 1 position at a time
+
+reference: average 09:30->13:30 buy-and-hold on a weekend day: BTC +0.107%, ETH +0.275%
+
+                                              trd    win avg/trade%/wkend day    return     DD      H1      H2
+-- round-trip cost 0.06% --
+FADE (long side only)                           3     0%   -0.110%   -0.005%     -0.3%   0.3%  -0.007  -0.003
+PULLBACK (long)                                 0     0%   +0.000%   +0.000%     +0.0%   0.0%  +0.000  +0.000
+FADE + PULLBACK                                 3     0%   -0.110%   -0.005%     -0.3%   0.3%  -0.007  -0.003
+FADE with shorts (not available on spot)       17    12%   -0.136%   -0.036%     -2.3%   2.5%  -0.019  -0.053
+-- round-trip cost 0.30% --
+FADE (long side only)                           3     0%   -0.350%   -0.016%     -1.0%   1.0%  -0.022  -0.011
+PULLBACK (long)                                 0     0%   +0.000%   +0.000%     +0.0%   0.0%  +0.000  +0.000
+FADE + PULLBACK                                 3     0%   -0.350%   -0.016%     -1.0%   1.0%  -0.022  -0.011
+-- round-trip cost 0.60% --
+FADE (long side only)                           3     0%   -0.650%   -0.030%     -1.9%   1.9%  -0.041  -0.020
+PULLBACK (long)                                 0     0%   +0.000%   +0.000%     +0.0%   0.0%  +0.000  +0.000
+FADE + PULLBACK                                 3     0%   -0.650%   -0.030%     -1.9%   1.9%  -0.041  -0.020
+-- round-trip cost 1.00% --
+FADE (long side only)                           3     0%   -1.050%   -0.049%     -3.1%   3.1%  -0.066  -0.032
+PULLBACK (long)                                 0     0%   +0.000%   +0.000%     +0.0%   0.0%  +0.000  +0.000
+FADE + PULLBACK                                 3     0%   -1.050%   -0.049%     -3.1%   3.1%  -0.066  -0.032
+
+Diagnostic (PULLBACK, cost 0.30%): the strict equity rules find 0 setups because crypto's weekend moves are too small for the 0.75% minimum stop room and the 0.25% minimum target.
+With those two rules removed (not a live rule): 25 setups, 21 trades, 24% win, avg -0.284%/trade, -0.093%/weekend day, -5.8% over the period. Removing the volume-surge rule as well: 23 trades, -0.097%/day.
