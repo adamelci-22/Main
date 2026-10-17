@@ -1,0 +1,67 @@
+Crypto systems, weekends only: 32 weekends (2026-03-07..2026-10-11), 64 Sat/Sun days, coins ['BTC', 'ETH', 'SOL', 'DOGE'], start $2,500, 1% risk per trade
+
+==================== LONG ONLY (what spot Robinhood allows) ====================
+1 Breakout & retest  - 634 raw signals
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          350    32%   +0.018%   +0.096%     +6.1%   3.3%  -0.015  +0.207
+  round-trip cost 0.1%          350    31%   -0.082%   -0.450%    -25.2%  25.2%  -0.532  -0.368
+  round-trip cost 0.4%          350    14%   -0.382%   -2.071%    -73.9%  73.9%  -2.068  -2.074
+  round-trip cost 0.8%          350     3%   -0.782%   -4.193%    -93.6%  93.6%  -4.081  -4.304
+  round-trip cost 1.2%          350     2%   -1.182%   -6.270%    -98.4%  98.4%  -6.054  -6.485
+2 VWAP trend  - 165 raw signals
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          147    44%   -0.013%   -0.029%     -1.9%   3.0%  +0.011  -0.070
+  round-trip cost 0.1%          147    37%   -0.113%   -0.259%    -15.3%  15.4%  -0.204  -0.313
+  round-trip cost 0.4%          147     2%   -0.413%   -0.944%    -45.6%  45.6%  -0.848  -1.040
+  round-trip cost 0.8%          147     1%   -0.813%   -1.851%    -69.9%  69.9%  -1.701  -2.001
+  round-trip cost 1.2%          147     0%   -1.213%   -2.750%    -83.4%  83.4%  -2.546  -2.953
+3 Range mean-reversion  - 110 raw signals
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%           70    44%   +0.048%   +0.052%     +3.4%   1.2%  +0.081  +0.023
+  round-trip cost 0.1%           70    41%   -0.052%   -0.057%     -3.6%   4.9%  -0.040  -0.074
+  round-trip cost 0.4%           70    16%   -0.352%   -0.384%    -21.9%  21.9%  -0.405  -0.364
+  round-trip cost 0.8%           70     0%   -0.752%   -0.818%    -41.1%  41.1%  -0.888  -0.748
+  round-trip cost 1.2%           70     0%   -1.152%   -1.250%    -55.6%  55.6%  -1.369  -1.131
+All three together
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          515    36%   +0.012%   +0.096%     +6.1%   4.0%  +0.061  +0.131
+  round-trip cost 0.1%          515    33%   -0.088%   -0.707%    -36.6%  36.6%  -0.699  -0.714
+  round-trip cost 0.4%          515    11%   -0.388%   -3.077%    -86.5%  86.5%  -2.946  -3.208
+  round-trip cost 0.8%          515     2%   -0.788%   -6.152%    -98.3%  98.3%  -5.867  -6.438
+  round-trip cost 1.2%          515     1%   -1.188%   -9.134%    -99.8%  99.8%  -8.705  -9.562
+
+==================== LONG + SHORT (reference only: futures/perps) ====================
+1 Breakout & retest  - 1189 raw signals
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          659    29%   +0.006%   +0.058%     +3.4%   6.6%  -0.095  +0.211
+  round-trip cost 0.1%          659    27%   -0.094%   -0.967%    -46.5%  46.5%  -1.129  -0.805
+  round-trip cost 0.4%          659    14%   -0.394%   -3.981%    -92.6%  92.6%  -4.170  -3.792
+  round-trip cost 0.8%          659     4%   -0.794%   -7.862%    -99.5%  99.5%  -8.086  -7.639
+  round-trip cost 1.2%          659     2%   -1.194%  -11.593%   -100.0% 100.0% -11.849 -11.336
+2 VWAP trend  - 285 raw signals
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          246    48%   +0.004%   +0.016%     +1.0%   2.8%  +0.067  -0.034
+  round-trip cost 0.1%          246    42%   -0.096%   -0.367%    -21.0%  21.0%  -0.292  -0.442
+  round-trip cost 0.4%          246     3%   -0.396%   -1.510%    -62.3%  62.3%  -1.362  -1.658
+  round-trip cost 0.8%          246     0%   -0.796%   -3.013%    -86.0%  86.0%  -2.771  -3.256
+  round-trip cost 1.2%          246     0%   -1.196%   -4.494%    -94.8%  94.8%  -4.160  -4.828
+3 Range mean-reversion  - 204 raw signals
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          136    38%   +0.017%   +0.037%     +2.3%   2.7%  +0.091  -0.018
+  round-trip cost 0.1%          136    32%   -0.083%   -0.175%    -10.7%  11.8%  -0.121  -0.230
+  round-trip cost 0.4%          136    14%   -0.383%   -0.809%    -40.7%  40.7%  -0.755  -0.863
+  round-trip cost 0.8%          136     0%   -0.783%   -1.648%    -65.7%  65.7%  -1.594  -1.702
+  round-trip cost 1.2%          136     0%   -1.183%   -2.480%    -80.2%  80.2%  -2.426  -2.534
+All three together
+                                trd    win avg/trade%/wkend day    return     DD      H1      H2
+  round-trip cost 0.0%          828    35%   +0.015%   +0.196%    +12.9%   4.3%  +0.147  +0.246
+  round-trip cost 0.1%          828    32%   -0.085%   -1.091%    -50.7%  50.7%  -1.149  -1.034
+  round-trip cost 0.4%          828    12%   -0.385%   -4.859%    -95.9%  95.9%  -4.940  -4.777
+  round-trip cost 0.8%          828     3%   -0.785%   -9.667%    -99.9%  99.9%  -9.778  -9.555
+  round-trip cost 1.2%          828     1%   -1.185%  -14.239%   -100.0% 100.0% -14.379 -14.099
+
+By coin, long only, cost 0.4%:
+  BTC                           209     6%   -0.402%   -1.305%    -56.9%  56.9%  -1.474  -1.135
+  ETH                           207     9%   -0.386%   -1.241%    -55.2%  55.2%  -1.217  -1.265
+  SOL                           237    19%   -0.307%   -1.130%    -51.9%  51.9%  -1.140  -1.119
+  DOGE                          234    21%   -0.374%   -1.356%    -58.4%  58.5%  -1.296  -1.417
