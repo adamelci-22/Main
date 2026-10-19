@@ -343,16 +343,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
-**Friday 2026-10-16, 13:30 close (first live day; v5.2).**
-- **Real account:** flat, no open orders, **total value $2,008.09** (day +$14.66, +0.74% from the 9:00 value $1,993.43). The daily loss limit never came close.
-- **Trade 1:** PULLBACK LABD 226 sh, bought $8.7799 at 11:57, **sold by the governor at market $8.845 at 12:11** (OCO cancelled by hand), net +$14.66. Held to the 8.87 target it would have filled at 12:25 for about +$20.36. The model's own LABD hit its target at 12:25 (+0.912% on the ticker, +$18.25 on its $2,000); model equity $2,018.25. Logged in `live_trades.csv`.
-- **Blocked entry:** 11:05 LABD pullback skipped under A1.6 (quote 0.7% off the last bar; the model never filled it either).
-- **Losing streak:** 0. Clearances: none. Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model +$18.25.
-- **Capabilities verified live:** GTC OCO accepted and resting on the pullback entry (E2 item 2 for OCOs). **Still unverified:** the ⅓ OCO + ⅔ stop together on one FADE position (E2 item 1).
-- **Rule changes today:** v5.1 take-profit limits rounded down to the cent (from Mon 10-19); v5.2 after a manual close by the governor the real account is free for new signals (`paper.py --live --real-free`, A3).
-- **Scheduler note:** several checkpoints reached the session 3–5 minutes after their slot; one scheduled-task delete (13:15) was refused by the permission check, so that slot ran as a no-op.
-- **Earnings:** AMD reports Tue 2026-11-03 after the close (skip the AMD fade row Wed 11-04). No NVIDIA report in the next 3 weeks.
-- **Monday 2026-10-19's chain:** armed at 13:36 ET (46 slots, v5.2 wording, UTC−4), confirmed with `list_triggers`. Friday's 8:00pm backup check re-verifies it. Monday's 13:30 arms Tuesday 10-20.
+**Monday 2026-10-19, 9:00 (v5.2.2).**
+- **Real account:** flat, no open orders (equity or OCO), **total value at 9:00: $2,508.09** (all cash, buying power $2,508.09). Friday's close was $2,008.09, so a **$500 deposit** arrived over the weekend. Deposited cash is now $2,493.43 (total − realized P&L $14.66), so the **floor is $1,246.72**. The daily loss limit (−3%) is measured from $2,508.09: a close at or below **$2,432.85** blocks entries.
+- **Controls at 9:00:** losing streak 0 (clearances: none); AMD reports Tue 2026-11-03 after the close, NVIDIA not in the window; normal full session (not a holiday or early close); no scheduled macro event noted before 13:30 beyond routine bank and industrial earnings (UAL, NFLX, GE and others report Tue).
+- **RVOL baseline:** built from 20 sessions (2026-09-21..10-16) for AMD, IWM, NVDA, QQQ, SOXX, XBI, XLK (`archive/paper_rvol_2026-10-19.json`).
+- **Running totals since 2026-10-16:** 1 real trade, 1 win, +$14.66 (model +$18.25). Today's take-profit limits are rounded **down** to the cent (v5.1, first day). Liquidity cap (B4.6) is dormant (account under $100,000). Execution log (B5.9) is live: log every order.
+- **Still unverified live:** the ⅓ OCO + ⅔ stop together on one FADE position (E2 item 1).
+- **Scheduler note:** checkpoints sometimes arrive 3–5 minutes late; Tuesday 2026-10-20 is armed by the 13:30 checkpoint today.
 - **Bimonthly reminder trigger:** `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 
 ## E6. Known issues
