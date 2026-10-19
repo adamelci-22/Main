@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.5** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.6** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -211,6 +211,7 @@ Only the first qualifying setup per ticker per day counts.
 3. **Run** `python3 tools/live/paper.py --live --now HH:MM <dump files>`.
 4. **Act on the `LIVE ACTIONS` lines** under A1 and B5. If the newest bar isn't published yet, `paper.py` steps back up to two bars and says so.
 5. **Report only changes:** an entry, a take-profit, a stop move, an exit, or a blocked entry and why. If nothing changed, write one line.
+6. **Heartbeat (v5.2.6).** Put one line in every checkpoint report: the ET time the trigger fired (`fire_et`) and the gap since the previous checkpoint's fire time, e.g. `fired 10:15:02 (+5:01)`. **Flag it at once** if the gap is more than 7 minutes, or if a slot between 10:00 and 12:55 has no earlier run today (a missed checkpoint). On a flag: say so in that report, run the missed slot's scan now (C1.3, with the late-entry limits of A1.6), and note it in the execution log. The heartbeat changes no order, signal or size.
 
 ## C2. Cadence and early shutdown
 
@@ -228,6 +229,7 @@ Only the first qualifying setup per ticker per day counts.
    - the losing streak from `live_trades.csv` (lockout status);
    - earnings for AMD and NVIDIA (A1.9);
    - whether today is an early-close day or a holiday (A1.10).
+   - **corporate actions (v5.2.6):** for the 14 traded funds (TQQQ SQQQ SOXL SOXS TNA TZA TECL TECS LABU LABD AMDL AMDD UVXY NVD) and the proxies, check for a split or reverse split, ticker change, halt or delisting notice, and compare each fund's current quote with yesterday's close. If a fund is more than **20%** off yesterday's close without the underlying index having moved anywhere near that, or any notice is found, **exclude that fund for the day** (no entries, and use the proxy-based exit if it is held), note it in E5 and the 9:00 report. If everything is clean, write one line.
 3. **RVOL baseline:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI AMD NVDA. Run `paper.py --build-rvol --day <today> --now 09:00 <dump>`.
 4. **One line of context:** any scheduled event before 13:30, such as CPI, FOMC or a major earnings report.
 5. Refresh E5, commit and push.
@@ -374,6 +376,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.6 — 2026-10-19, governor instruction:** two safeguards added, neither affects signals or sizing: (1) heartbeat line in every checkpoint report with a flag if the gap since the previous checkpoint is over 7 minutes or a slot is missing (C1.6); (2) 9:00 corporate-action check on the 14 traded funds and the proxies, with a 20%-off-yesterday exclusion rule (C3.2). They guard against rare failures and cannot be backtested.
 
 **v5.2.5 — 2026-10-19, governor instruction:** the dormant liquidity cap (B4.6) is **10%** of the signal-bar dollar volume (was 20%); still active only from $100,000 total value and off again below it. Reason: `tools/backtest/recheck_all.py` shows the best cap depends on the market-impact assumption; 10% has the smallest worst-case shortfall across impact assumptions (about 0.03%/day vs 0.08%/day for 20%). To be retuned from the logged slippage (B5.9).
 
