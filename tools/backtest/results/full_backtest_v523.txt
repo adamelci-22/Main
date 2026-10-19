@@ -1,0 +1,26 @@
+FULL BACKTEST, live system v5.2.3 (FADE + PULLBACK, one position at a time, 3% risk, late-entry rule on)
+
+=== A. every signal on time (the original backtest) ===
+  all: 115 trades (74 FADE, 41 PULLBACK), win 59%, +0.570%/day, return +138.2% ($2,000 -> $4,764), max DD 4.1%, halves +0.553 / +0.586, longest losing streak 4
+  FADE trades: win 55%, total $+2,231   PULLBACK trades: win 66%, total $+533
+  untouched March window: +0.594%/day (+14.8%, DD 3.8%)   tuning window: +0.565%/day (+107.6%, DD 4.1%)
+  months: 03 +13.2%, 04 +2.3%, 05 +10.1%, 06 +19.0%, 07 +33.0%, 08 +16.3%, 09 -2.7%, 10 +4.2%
+
+=== B. today's real lateness mix: 93% on time / 7% one bar late / 0% beyond 6 min ===
+  all: 114 trades (74 FADE, 40 PULLBACK), win 60%, +0.568%/day, return +137.6% ($2,000 -> $4,753), max DD 4.1%, halves +0.550 / +0.586, longest losing streak 4
+  FADE trades: win 57%, total $+2,237   PULLBACK trades: win 65%, total $+515
+  untouched March window: +0.607%/day (+15.1%, DD 3.6%)   tuning window: +0.561%/day (+106.4%, DD 4.1%)
+  months: 03 +13.6%, 04 +1.7%, 05 +10.1%, 06 +19.0%, 07 +33.0%, 08 +16.3%, 09 -2.7%, 10 +4.2%
+
+=== C. in-between mix: 80% / 17% / 3% beyond 6 min (skipped) ===
+  all: 115 trades (74 FADE, 41 PULLBACK), win 59%, +0.527%/day, return +123.1% ($2,000 -> $4,462), max DD 4.4%, halves +0.510 / +0.543, longest losing streak 5
+  FADE trades: win 55%, total $+1,918   PULLBACK trades: win 66%, total $+545
+  untouched March window: +0.599%/day (+14.9%, DD 3.6%)   tuning window: +0.514%/day (+94.2%, DD 4.4%)
+  months: 03 +13.4%, 04 +1.7%, 05 +10.1%, 06 +15.8%, 07 +33.0%, 08 +16.4%, 09 -2.7%, 10 +0.7%
+
+=== D. stress mix: 55% / 35% / 10% beyond 6 min (skipped) ===
+  all: 117 trades (75 FADE, 42 PULLBACK), win 57%, +0.442%/day, return +96.0% ($2,000 -> $3,919), max DD 4.4%, halves +0.321 / +0.561, longest losing streak 5
+  FADE trades: win 52%, total $+1,412   PULLBACK trades: win 67%, total $+507
+  untouched March window: +0.060%/day (+1.3%, DD 3.6%)   tuning window: +0.510%/day (+93.4%, DD 4.4%)
+  months: 03 +2.1%, 04 -0.4%, 05 +7.7%, 06 +16.1%, 07 +35.9%, 08 +15.9%, 09 -2.8%, 10 +0.7%
+
