@@ -1,0 +1,12 @@
+scenario ($2,500 start, 157 days)                                        %/day   return    DD
+Traceback (most recent call last):
+  File "/home/user/Main/tools/backtest/composite_live.py", line 34, in <module>
+    fc = L.fade_cands(D, days, 0, None, band=1.0, delays=delays)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Main/tools/backtest/late_entry_tests.py", line 54, in fade_cands
+    lt = late if delays is None else delays(p, d)
+                                     ^^^^^^^^^^^^
+  File "/home/user/Main/tools/backtest/composite_live.py", line 33, in delays
+    k = R.draw(p, d, shares, salt); return None if k >= 2 else k
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: draw() takes 3 positional arguments but 4 were given
