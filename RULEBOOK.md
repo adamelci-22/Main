@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.4** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.5** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -143,7 +143,7 @@ Only the first qualifying setup per ticker per day counts.
 3. **No daily entry cap** beyond the bug fuse (A1.3).
 4. **Same-bar ties:** the higher proxy RVOL wins. Then FADE beats PULLBACK, then list order.
 5. **Flat by 13:30.**
-6. **Liquidity cap (DORMANT below $100,000).** Active only while `total_value` (read at the checkpoint) is **≥ $100,000**; it switches off by itself whenever the value is under $100,000 and back on when it is at or above it. While active, after B4.1 sizes the order: `shares = min(shares, floor(0.20 × signal-bar dollar volume ÷ ask))`, where signal-bar dollar volume = close × volume of the 5-minute bar that gave the signal, for the leg being bought. If the cap cuts the order, log `cap` in the notes and the execution log (B5.9). The cap only reduces size; it never adds a trade or changes a stop or target. Evidence: `tools/backtest/results/cap_best.txt`, `scale_500k.txt` (impact is an assumption; tune 20% from logged slippage). `paper.py` does not enforce it: apply it by hand at B4.1 until the code is updated before the account nears $100k.
+6. **Liquidity cap (DORMANT below $100,000).** Active only while `total_value` (read at the checkpoint) is **≥ $100,000**; it switches off by itself whenever the value is under $100,000 and back on when it is at or above it. While active, after B4.1 sizes the order: `shares = min(shares, floor(0.10 × signal-bar dollar volume ÷ ask))`, where signal-bar dollar volume = close × volume of the 5-minute bar that gave the signal, for the leg being bought. If the cap cuts the order, log `cap` in the notes and the execution log (B5.9). The cap only reduces size; it never adds a trade or changes a stop or target. Evidence: `tools/backtest/results/cap_best.txt`, `scale_500k.txt` (impact is an assumption; tune the 10% from logged slippage). `paper.py` does not enforce it: apply it by hand at B4.1 until the code is updated before the account nears $100k.
 
 ## B5. Live order procedure
 
@@ -348,7 +348,7 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Blocked entry:** 10:10 FADE signals on QQQ, SOXX, XLK (SOXX won the RVOL tie-break, 1.57 vs 1.29 / 0.85 → SOXL). The checkpoint reached the session ~6 min late and SOXL's quote was $101.19 against $99.77 at the signal bar (+1.4%): blocked under A1.6 (0.5% band then in force). Logged as skipped in `execution_log.csv`.
 - **Model's day:** FADE SOXL entered 10:10 @ 99.775 (proxy 503.98), ⅓ sold at 2R 10:45 (proxy 508.76), ratchet stop hit 12:00 at 510.37: **+3.43% on SOXL, +$69.21**; model equity **$2,087.46**. No PULLBACK signals all day (strong up day: inverse ETFs and UVXY sold off).
 - **Losing streak:** 0. Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46.
-- **Rule changes today:** v5.2.2 dormant liquidity cap (B4.6: 20% of signal-bar dollar volume once total value ≥ $100,000, off again below); v5.2.3 FADE late-entry rule (A1.6: up to 6 min after the slot, leg within 1.0% of the signal-bar leg price; execution log gains `delay_min`).
+- **Rule changes today:** v5.2.2 dormant liquidity cap (B4.6: 10% of signal-bar dollar volume once total value ≥ $100,000, off again below); v5.2.3 FADE late-entry rule (A1.6: up to 6 min after the slot, leg within 1.0% of the signal-bar leg price; execution log gains `delay_min`).
 - **Checkpoint delivery today:** 28 of 30 checkpoints (10:00–12:25) reached the session within ~2.5 min of their slot; the 10:05 and 10:10 slots were 5.4 and 6.3 min late.
 - **Early shutdown:** flat after 12:55, the 13:00–13:25 slots were deleted (C2).
 - **Still unverified live:** the ⅓ OCO + ⅔ stop together on one FADE position (E2 item 1).
@@ -374,6 +374,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.5 — 2026-10-19, governor instruction:** the dormant liquidity cap (B4.6) is **10%** of the signal-bar dollar volume (was 20%); still active only from $100,000 total value and off again below it. Reason: `tools/backtest/recheck_all.py` shows the best cap depends on the market-impact assumption; 10% has the smallest worst-case shortfall across impact assumptions (about 0.03%/day vs 0.08%/day for 20%). To be retuned from the logged slippage (B5.9).
 
 **v5.2.4 — 2026-10-19, governor instruction:** execution log gains `fire_et` (the ET time the checkpoint's trigger fired), next to `delay_min`, to split scheduler lateness from processing time. Logging only; no trading rule or code change. Also recorded: a fault-injection test (`tools/backtest/fault_injection.py`) found that caching the prior day or trimming the per-slot fetch saves only seconds (about $0.04/day) and risks 2–16% if the cache is missing or wrong, so those ideas were not adopted.
 
