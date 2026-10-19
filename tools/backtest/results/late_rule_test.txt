@@ -1,0 +1,48 @@
+Check: FADE d=0 market reproduces the live backtest -> 114 fade candidates; account 115 trades +0.570%/day
+
+                                        trd  fade    win     %/day    return     DD  vs live
+-- order 0 bar(s) = 0 min late --
+  market fill at that bar open          115    74    59%   +0.570%   +138.2%   4.1%   +0.000
+  limit at model price (+0.00%)         115    74    59%   +0.570%   +138.2%   4.1%   +0.000
+-- order 1 bar(s) = 5 min late --
+  market fill at that bar open          118    76    57%   +0.527%   +122.9%   4.1%   -0.043
+  limit +0.30% (proxy)                  116    74    57%   +0.527%   +123.2%   4.1%   -0.042
+  limit +0.17% (~0.5% on a 3x leg)      116    73    58%   +0.542%   +128.3%   4.1%   -0.027
+  limit +0.10%                          110    66    57%   +0.489%   +110.2%   4.1%   -0.081
+  limit +0.05%                          109    65    58%   +0.490%   +110.7%   4.1%   -0.079
+  limit at model price (+0.00%)         106    60    58%   +0.466%   +103.2%   4.1%   -0.104
+-- order 2 bar(s) = 10 min late --
+  market fill at that bar open          119    78    55%   +0.461%   +101.8%   5.8%   -0.109
+  limit +0.30% (proxy)                  114    75    58%   +0.521%   +121.3%   5.8%   -0.049
+  limit +0.17% (~0.5% on a 3x leg)      108    66    59%   +0.437%    +94.8%   4.1%   -0.133
+  limit +0.10%                          105    63    57%   +0.416%    +88.5%   4.2%   -0.154
+  limit +0.05%                          100    55    57%   +0.340%    +67.9%   4.1%   -0.230
+  limit at model price (+0.00%)          96    51    57%   +0.330%    +65.3%   4.1%   -0.240
+-- order 3 bar(s) = 15 min late --
+  market fill at that bar open          112    73    56%   +0.431%    +93.2%   8.0%   -0.139
+  limit +0.30% (proxy)                  109    67    55%   +0.363%    +74.4%   6.2%   -0.207
+  limit +0.17% (~0.5% on a 3x leg)      100    57    55%   +0.305%    +59.6%   6.1%   -0.264
+  limit +0.10%                           98    54    56%   +0.303%    +59.1%   5.2%   -0.267
+  limit +0.05%                           93    48    57%   +0.308%    +60.2%   4.5%   -0.262
+  limit at model price (+0.00%)          93    47    57%   +0.334%    +66.9%   4.6%   -0.235
+
+How often does the proxy move away from the model price by the time of a late order? (all fade setups, proxy move in the adverse direction, %)
+  1 bar late: median +0.009%, 75th pct +0.148%, 90th pct +0.298% (positive = price already ran in the trade's favour direction); share beyond +0.17%: 23%
+  2 bar late: median +0.013%, 75th pct +0.215%, 90th pct +0.436% (positive = price already ran in the trade's favour direction); share beyond +0.17%: 28%
+                                                            trd  fade    win     %/day    return     DD vs on-time
+-- every FADE signal arrives exactly one bar (5-6 min) late --
+on time (live backtest)                                     115    74    59%   +0.570%   +138.2%   4.1%   +0.000
+  current band 0.5% on the leg                               94    51    62%   +0.473%   +106.0%   3.7%   -0.097
+  PROPOSED band 1.0% on the leg                             113    71    57%   +0.522%   +121.4%   3.9%   -0.047
+  band 1.5%                                                 118    76    56%   +0.507%   +116.3%   4.1%   -0.062
+  no band (always enter)                                    118    76    57%   +0.527%   +122.9%   4.1%   -0.043
+-- every FADE signal two bars (10-11 min) late: the proposal skips these (beyond 6 min) --
+  proposal: skip (no FADE trades at all)                     51     0    67%   +0.153%    +26.7%   1.9%   -0.417
+  for reference: enter anyway, no band                      119    78    55%   +0.461%   +101.8%   5.8%   -0.109
+-- realistic mix: 55% on time, 35% one bar late, 10% two or more bars late (assigned per setup by hash, same mix for every rule) --
+  current rule: band 0.5%, skip beyond 6 min                110    68    59%   +0.402%    +84.7%   4.4%   -0.167
+  PROPOSED: band 1.0%, skip beyond 6 min                    117    75    57%   +0.442%    +96.0%   4.4%   -0.128
+  no band, skip beyond 6 min                                118    76    57%   +0.432%    +93.1%   4.4%   -0.137
+  no band, enter even 10 min late                           119    77    55%   +0.418%    +88.7%   4.4%   -0.152
+-- how many setups does each band let through when one bar late? --
+  band 0.5: 70 of 114 setups, band 1.0: 102 of 114 setups, band 1.5: 111 of 114 setups, band none: 114 of 114 setups

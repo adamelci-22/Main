@@ -7,7 +7,7 @@ import statistics as st, math, collections
 import final_system as FS, mixed as MXD, manual as m, retest as RT, twobar as TB, expand_lists as EX, fade_addone as FA, fade_combo as FC, pb_final as PBF
 from lab import get_data
 
-def trade(D, d, p, late, a, R=2.0, frac=1 / 3, last=47):
+def trade(D, d, p, late, a, R=2.0, frac=1 / 3, last=47, band=None):
     raw = D.bars[p][d]; s = RT.setup(raw, FC.FADE)
     if not s: return None
     k, side, e_real, stop_real = s
@@ -20,6 +20,7 @@ def trade(D, d, p, late, a, R=2.0, frac=1 / 3, last=47):
     kk = k + late
     if kk >= last: return None
     o = b[kk][0]
+    if band is not None and abs(o / entry0 - 1) * 100 * TB.ROWS[p][2] > band: return None      # freshness band on the leg (two-sided, as A1.6 is written)
     if a is None: entry = o
     else:
         L = entry0 * (1 + a / 100)
@@ -43,14 +44,16 @@ def trade(D, d, p, late, a, R=2.0, frac=1 / 3, last=47):
     lev = TB.ROWS[p][2]
     return dict(day=d, proxy=p, side=side, k=kk, xbar=xbar, pct=lev * gross / real_entry * 100 - TB.LEGCOST, leg_risk=lev * r / real_entry * 100, hit=hit)
 
-def fade_cands(D, days, late, a):
+def fade_cands(D, days, late, a, band=None, delays=None):
     out = []
     for p in FS.FADE:
         row = FA.ROWS[p]; bull, lb, bear, lbe = row
         saved = TB.ROWS.get(p); TB.ROWS[p] = (bull, bear, lb)
         for d in days:
             if d not in D.bars.get(p, {}): continue
-            t = trade(D, d, p, late, a)
+            lt = late if delays is None else delays(p, d)
+            if lt is None: continue
+            t = trade(D, d, p, lt, a, band=band)
             if not t: continue
             if t['side'] < 0 and lbe != lb: t['pct'] = (t['pct'] + TB.LEGCOST) / lb * lbe - TB.LEGCOST; t['leg_risk'] = t['leg_risk'] / lb * lbe
             out.append(t)
