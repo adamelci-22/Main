@@ -1,0 +1,17 @@
+Replay with damaged data, $2,000 start, 2026-03-03..10-14 (the live-rule backtest is the first line)
+
+baseline (data complete)                                        115 trades (74 FADE, 41 PB)  final $4,764.36  (+138.2%)
+prior-day cache MISSING for SOXS only                           107 trades (74 FADE, 33 PB)  final $4,494.76  (+124.7%)
+prior-day cache MISSING for LABD only                           108 trades (74 FADE, 34 PB)  final $4,650.51  (+132.5%)
+prior-day cache MISSING for TECS only                           109 trades (74 FADE, 35 PB)  final $4,537.14  (+126.9%)
+prior-day cache MISSING for UVXY only                           106 trades (74 FADE, 32 PB)  final $4,685.97  (+134.3%)
+prior-day cache MISSING for NVD only                            111 trades (74 FADE, 37 PB)  final $4,801.21  (+140.1%)
+prior-day cache MISSING for all pullback symbols                 74 trades (74 FADE, 0 PB)  final $3,996.15  (+99.8%)
+prior-day cache from the WRONG session (two days back)          108 trades (74 FADE, 34 PB)  final $4,416.70  (+120.8%)
+prior-day cache TRUNCATED (last 40 of 78 bars)                  115 trades (74 FADE, 41 PB)  final $4,764.36  (+138.2%)
+FADE-only legs not fetched at all (model record)                115 trades (74 FADE, 41 PB)  final $4,764.36  (+138.2%)
+
+FADE-only legs: ['AMDD', 'AMDL', 'LABU', 'SOXL', 'SQQQ', 'TECL', 'TNA', 'TQQQ', 'TZA']
+
+Time value of the delay (from late_entry_tests): one bar (5 min) late costs -0.043%/day, two bars -0.109%/day
+  linear estimate: 0.00014%/day per second of delay; saving 10 s = 0.0014%/day = $0.036/day on $2,508
