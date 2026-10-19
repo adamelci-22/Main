@@ -1,0 +1,14 @@
+sessions in the backtest with fewer than 78 five-minute bars (early closes / data gaps): none
+
+FULL months only (Mar starts on the 3rd and Oct ends on the 14th are excluded). Backtest rules, on time, $2,000 start, compounding:
+
+month     days  month %  avg day %  median day %  days with a trade  winning days  losing days  best day  worst day
+2026-04     21    +2.3%    +0.111%       +0.000%          11 (52%)         6            5    +1.89%     -0.93%
+2026-05     20   +10.1%    +0.494%       +0.000%          13 (65%)         8            5    +5.47%     -2.03%
+2026-06     21   +19.0%    +0.859%       +0.143%          17 (81%)        11            6    +6.59%     -2.79%
+2026-07     22   +33.0%    +1.337%       +0.000%          13 (59%)        10            3    +8.00%     -3.05%
+2026-08     21   +16.3%    +0.728%       +0.047%          13 (62%)        11            2    +3.28%     -0.58%
+2026-09     21    -2.7%    -0.128%       +0.000%           7 (33%)         3            4    +1.33%     -2.12%
+
+All 126 days in the 6 full months (Apr-Sep): average day +0.574%, median day +0.000%, compounded +101.8%, average month +13.0%, median month +13.2%
+Whole backtest (157 days) for comparison: average day +0.570%
