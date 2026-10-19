@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.2** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.3** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -45,7 +45,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 3 | **Bug fuse** | **No more than 6 entries in a day.** A 7th is blocked and reported at once. This is not a strategy rule; it guards against a software error. | Count today's entry fills |
 | 4 | **Floor** | Never trade below **50% of deposited cash** (E1). | Recompute; never cache |
 | 5 | **One position** | No entry while any position or entry order is open. | `get_equity_positions`, `get_equity_orders` (open), `get_advanced_orders` |
-| 6 | **Fresh data** | `paper.py` must show bars through this slot (or say why not), and the order review's quote must agree with the last bar within 0.5%. Stale or contradictory data → no entry. | paper.py output, `review_equity_order` |
+| 6 | **Fresh data** | `paper.py` must show bars through this slot (or say why not). **PULLBACK:** the order review's quote must agree with the last bar within 0.5%. **FADE (v5.2.3):** the leg's quote must be within **1.0%** of the leg price at the signal bar (two-sided), and the order must be sent **no later than 6 minutes after the slot** (counted when the order is sent). A late FADE signal inside both limits is a valid entry: marketable limit (B5.1), stop and target re-set from the actual fill with the same R (B5.2), normal sizing. Later than 6 minutes, or outside 1.0% → no entry, logged as skipped. Stale or contradictory data → no entry. | paper.py output, `review_equity_order` |
 | 7 | **Spread** | Skip the entry if the leg's bid–ask spread is wider than **0.30% of its price**. | Order review quote |
 | 8 | **Overnight** | **Nothing is held overnight.** A position found at 9:00 or 9:30 is sold at the 9:30 checkpoint (marketable limit) and reported. | Positions |
 | 9 | **Earnings** | **Skip the AMD fade row on any session where AMD has reported since the prior close** (next: Tue 2026-11-03 after the close → skip Wed 11-04). Same for NVD on NVIDIA's report. | `get_earnings_calendar` at 9:00 |
@@ -193,7 +193,7 @@ Only the first qualifying setup per ticker per day counts.
 2. Sell the live share count (marketable limit) → verify filled.
 3. If it isn't filled within about a minute, re-price to the bid. If it's still unfilled, use a market order and report it.
 
-**B5.9 Execution log (data only — changes no entry, exit or filter).** For every real order placed (entry, OCO/stop, exit), append one row to `archive/execution_log.csv` at the time: `date, ticker, system, side, purpose, checkpoint_et, sent_et_sec, ack_et_sec, bid, ask, spread_pct, ref_px, limit_px, fill_px, slippage_pct, shares, notes`. `bid/ask` = the live quote just before sending; `ref_px` = the trigger close (PULLBACK) or the signal price; `slippage_pct` = (fill − ref) / ref for buys, (ref − fill) / ref for sells. Also log the bid/ask/spread for every PULLBACK or FADE signal that is **skipped** (blocked, not filled, or ignored) with `purpose=skipped`. Review after about 15 pullback fills, or when the account passes $5,000, whichever is first; look at UVXY and LABD slippage first.
+**B5.9 Execution log (data only — changes no entry, exit or filter).** For every real order placed (entry, OCO/stop, exit), append one row to `archive/execution_log.csv` at the time: `date, ticker, system, side, purpose, checkpoint_et, sent_et_sec, ack_et_sec, bid, ask, spread_pct, ref_px, limit_px, fill_px, slippage_pct, shares, notes, delay_min` (`delay_min` = minutes from the slot to when the order was sent). `bid/ask` = the live quote just before sending; `ref_px` = the trigger close (PULLBACK) or the signal price; `slippage_pct` = (fill − ref) / ref for buys, (ref − fill) / ref for sells. Also log the bid/ask/spread for every PULLBACK or FADE signal that is **skipped** (blocked, not filled, or ignored) with `purpose=skipped`. Review after about 15 pullback fills, or when the account passes $5,000, whichever is first; look at UVXY and LABD slippage first.
 
 **B5.8 Record** each closed trade in `archive/live_trades.csv` (D2), with the model's result for the same trade beside it.
 
@@ -371,6 +371,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.3 — 2026-10-19, governor instruction:** FADE late-entry rule (A1.6): a late FADE signal is still a valid entry up to 6 minutes after its slot (counted at order time) if the leg's quote is within **1.0%** of the signal-bar leg price (was 0.5%); later than that, skip. PULLBACK keeps 0.5% (its entry is already a limit order). Execution log gains `delay_min`. Evidence: `tools/backtest/late_entry_tests.py`, `late_rule_test.py`, `late_mix_test.py` (`results/`): with every signal one bar late, the 1.0% band earns +0.522%/day against +0.473% at 0.5% (on time: +0.570%); at today's real lateness mix both score +0.568%; at a stress mix (55/35/10 on time / 1 bar / 2+ bars) +0.442% against +0.402%. Drawdown unchanged.
 
 **v5.2.2 — 2026-10-16, governor instruction:** dormant liquidity cap added (B4.6): from $100,000 total value, each order is limited to 20% of the signal bar's dollar volume; off again below $100,000. No effect at today's size; no code change.
 
