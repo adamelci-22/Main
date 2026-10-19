@@ -1,12 +1,13 @@
 scenario ($2,500 start, 157 days)                                        %/day   return    DD
-Traceback (most recent call last):
-  File "/home/user/Main/tools/backtest/composite_live.py", line 34, in <module>
-    fc = L.fade_cands(D, days, 0, None, band=1.0, delays=delays)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/user/Main/tools/backtest/late_entry_tests.py", line 54, in fade_cands
-    lt = late if delays is None else delays(p, d)
-                                     ^^^^^^^^^^^^
-  File "/home/user/Main/tools/backtest/composite_live.py", line 33, in delays
-    k = R.draw(p, d, shares, salt); return None if k >= 2 else k
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^
-TypeError: draw() takes 3 positional arguments but 4 were given
+all on time, +0.00% extra cost, continuous $                            +0.570    +138%   4.1
+all on time, +0.00% extra cost, whole shares                            +0.553    +132%   4.0
+all on time, +0.10% extra cost, continuous $                            +0.497    +113%   4.9
+all on time, +0.10% extra cost, whole shares                            +0.479    +107%   5.0
+all on time, +0.20% extra cost, continuous $                            +0.424     +90%   6.2
+all on time, +0.20% extra cost, whole shares                            +0.408     +85%   6.4
+today's lateness mix, +0.00% extra cost, continuous $                   +0.554    +133%   4.1
+today's lateness mix, +0.00% extra cost, whole shares                   +0.538    +127%   4.1
+today's lateness mix, +0.10% extra cost, continuous $                   +0.482    +108%   4.9
+today's lateness mix, +0.10% extra cost, whole shares                   +0.466    +103%   5.0
+today's lateness mix, +0.20% extra cost, continuous $                   +0.409     +86%   6.3
+today's lateness mix, +0.20% extra cost, whole shares                   +0.394     +81%   6.3

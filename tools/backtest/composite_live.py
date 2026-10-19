@@ -5,7 +5,14 @@ with contextlib.redirect_stdout(io.StringIO()):
     import scale_500k as S
     import whole_share_drag as W
 L = R.L; D = S.D; days = S.days; p0 = S.p0
-import twobar as TB
+import twobar as TB, hashlib
+def draw(p, d, shares, salt):
+    u = int(hashlib.md5(f'{salt}{p}{d}'.encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+    a = 0.0
+    for k, sh in enumerate(shares):
+        a += sh
+        if u < a: return k
+    return len(shares)
 def acct(cs, start, whole, extra):
     by = collections.defaultdict(list)
     for c in cs: by[c['day']].append(c)
@@ -30,7 +37,7 @@ for shares, mixname in (((1.0, 0, 0), 'all on time'), ((0.93, 0.07, 0.0), "today
     vals = collections.defaultdict(list)
     for salt in range(10):
         def delays(p, d, salt=salt):
-            k = R.draw(p, d, shares, salt); return None if k >= 2 else k
+            k = draw(p, d, shares, salt); return None if k >= 2 else k
         fc = L.fade_cands(D, days, 0, None, band=1.0, delays=delays)
         for extra in (0.0, 0.10, 0.20):
             for whole in (False, True):
