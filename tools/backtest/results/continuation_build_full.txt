@@ -1,0 +1,23 @@
+SELECTION WINDOW: WHOLE tuning window (H1+H2)
+CONTINUATION BUILD  tuning 2026-04-07..2026-10-14 (133 days): H1 2026-04-07..2026-07-10, H2 2026-07-13..2026-10-14; untouched March 2026-03-03..2026-04-06
+Pool (9 liquid proxies): QQQ SOXX IWM IBIT XBI SPY TSLA MSTR SLV
+
+== STAGE 1: entry family x stop (exit: all out at 1R / stop / 13:30). Ranked by H1 avg leg %. ==
+   LATE     break by 10:30 stop mid    H1 n  45 avg +0.791% t +1.5 win  62% | H2 n  56 avg -0.050% t -0.2 win  50%
+   LATE     break by 10:30 stop swing  H1 n  45 avg +0.869% t +1.8 win  62% | H2 n  56 avg -0.115% t -0.5 win  48%
+   LATE     break by 10:30 stop edge   H1 n  45 avg +0.771% t +1.6 win  62% | H2 n  56 avg -0.152% t -0.7 win  48%
+   LATE     break by 10:15 stop mid    H1 n  34 avg +0.524% t +0.9 win  59% | H2 n  42 avg -0.027% t -0.1 win  52%
+   FLAG     break by 10:30 stop box    H1 n  86 avg +0.258% t +0.7 win  52% | H2 n  83 avg +0.127% t +0.5 win  55%
+   LATE     break by 10:15 stop swing  H1 n  34 avg +0.504% t +0.9 win  59% | H2 n  42 avg -0.067% t -0.2 win  50%
+   LATE     break by 10:30 stop box    H1 n  45 avg +0.354% t +1.0 win  62% | H2 n  56 avg -0.040% t -0.2 win  50%
+   LATE     break by 10:15 stop edge   H1 n  34 avg +0.438% t +0.8 win  59% | H2 n  42 avg -0.122% t -0.4 win  50%
+   FLAG     break by 10:30 stop mid    H1 n  86 avg +0.208% t +0.7 win  56% | H2 n  83 avg +0.029% t +0.1 win  53%
+   FLAG     break by 10:15 stop box    H1 n  68 avg -0.117% t -0.3 win  49% | H2 n  66 avg +0.227% t +0.7 win  59%
+   ORB      break by 10:30 stop swing  H1 n 356 avg +0.007% t +0.1 win  53% | H2 n 385 avg -0.057% t -1.0 win  50%
+   LATE     break by 10:15 stop box    H1 n  34 avg -0.042% t -0.1 win  59% | H2 n  42 avg -0.015% t -0.0 win  52%
+   HOLD     break by 10:30 stop box    H1 n 212 avg -0.349% t -1.7 win  47% | H2 n 265 avg -0.296% t -2.1 win  47%
+   RECLAIM  break by 10:15 stop box    H1 n 216 avg -0.341% t -1.7 win  46% | H2 n 240 avg -0.386% t -2.6 win  41%
+   HOLD     break by 10:15 stop box    H1 n 162 avg -0.448% t -2.0 win  44% | H2 n 203 avg -0.394% t -2.3 win  43%
+   -> carried forward (H1 avg > 0, >= 30 H1 signals): [('LATE', 12, 'mid'), ('LATE', 12, 'swing'), ('LATE', 12, 'edge'), ('LATE', 9, 'mid')]
+
+== STAGE 2: filters (single and pairs) on each carried entry. Ranked by H1 avg leg %, needs >= 25 H1 signals. ==

@@ -162,6 +162,8 @@ def main():
     tune = D.days[25:]; h = len(tune) // 2; H1, H2 = tune[:h], tune[h:]; MAR = D.days[1:25]
     liq = [p for p in FA.ROWS if p in D.bars and all(r in D.bars and EX.dollar_vol(D, r, tune) >= EX.LIQ for r in (FA.ROWS[p][0], FA.ROWS[p][2]))]
     cx = Ctx(D, liq); tried = 0
+    SEL = tune if 'all' in sys.argv[1:] else H1          # 'all' = choose on the whole Apr-Oct window instead of H1 only
+    print(f"SELECTION WINDOW: {'WHOLE tuning window (H1+H2)' if SEL is tune else 'H1 only'}")
     print(f"CONTINUATION BUILD  tuning {tune[0]}..{tune[-1]} ({len(tune)} days): H1 {H1[0]}..{H1[-1]}, H2 {H2[0]}..{H2[-1]}; untouched March {MAR[0]}..{MAR[-1]}")
     print(f"Pool ({len(liq)} liquid proxies): {' '.join(liq)}\n")
 
@@ -173,11 +175,11 @@ def main():
             for stop in ('mid', 'edge', 'swing', 'box'):
                 if stop == 'edge' and fam == 'ORB': continue
                 cfg = dict(fam=fam, brk=brk, stop=stop); tried += 1
-                T1 = trades(cx, H1, **cfg); n, a, t, w = sig_stats(T1)
+                T1 = trades(cx, SEL, **cfg); n, a, t, w = sig_stats(T1)
                 res.append((a, cfg, T1))
     res.sort(key=lambda r: -r[0])
     for a, cfg, T1 in res[:12] + res[-3:]:
-        print(f"   {cfg['fam']:<8} break by {'10:15' if cfg['brk'] == 9 else '10:30'} stop {cfg['stop']:<6} {line(T1, trades(cx, H2, **cfg))}")
+        print(f"   {cfg['fam']:<8} break by {'10:15' if cfg['brk'] == 9 else '10:30'} stop {cfg['stop']:<6} {line(trades(cx, H1, **cfg), trades(cx, H2, **cfg))}")
     top = [r[1] for r in res if r[0] > 0 and sig_stats(r[2])[0] >= 30][:4]
     print(f"   -> carried forward (H1 avg > 0, >= 30 H1 signals): {[(c['fam'], c['brk'], c['stop']) for c in top]}\n")
     if not top:
@@ -189,11 +191,11 @@ def main():
     res2 = []
     for cfg in top:
         for flt in [()] + [(f,) for f in FL] + [c for c in itertools.combinations(FL, 2) if not ('narrow' in c and 'wide' in c)]:
-            tried += 1; T1 = trades(cx, H1, flt=flt, **cfg); n, a, t, w = sig_stats(T1)
-            if n >= 25: res2.append((a, dict(cfg, flt=flt), T1))
+            tried += 1; T1 = trades(cx, SEL, flt=flt, **cfg); n, a, t, w = sig_stats(T1)
+            if n >= (50 if SEL is tune else 25): res2.append((a, dict(cfg, flt=flt), T1))
     res2.sort(key=lambda r: -r[0])
     for a, cfg, T1 in res2[:12]:
-        print(f"   {cfg['fam']:<8} {'10:15' if cfg['brk'] == 9 else '10:30'} {cfg['stop']:<6} filters {'+'.join(cfg['flt']) or 'none':<14} {line(T1, trades(cx, H2, **cfg))}")
+        print(f"   {cfg['fam']:<8} {'10:15' if cfg['brk'] == 9 else '10:30'} {cfg['stop']:<6} filters {'+'.join(cfg['flt']) or 'none':<14} {line(trades(cx, H1, **cfg), trades(cx, H2, **cfg))}")
     best2 = res2[0][1]
     print(f"   -> carried forward: {best2}\n")
 
@@ -204,12 +206,12 @@ def main():
         if (frac == 1.0 or R is None) and runner == 'chand2': continue
         if R is None and frac != 1.0: continue
         cfg = dict(best2, R=R, frac=frac, runner=runner, last=last); tried += 1
-        T1 = trades(cx, H1, **cfg); a1, _ = acct(D, H1, T1); res3.append((a1, cfg, T1))
+        T1 = trades(cx, SEL, **cfg); a1, _ = acct(D, SEL, T1); res3.append((a1, cfg, T1))
     res3.sort(key=lambda r: -r[0])
     for a1, cfg, T1 in res3[:10]:
-        T2 = trades(cx, H2, **cfg); a2, _ = acct(D, H2, T2)
+        Th1 = trades(cx, H1, **cfg); h1a, _ = acct(D, H1, Th1); T2 = trades(cx, H2, **cfg); a2, _ = acct(D, H2, T2); T1 = Th1
         ex = 'no target' if cfg['R'] is None else f"{cfg['R']}R sell {cfg['frac']:.2f} runner {cfg['runner']}"
-        print(f"   {ex:<34} out {TN[cfg['last']]}  H1 acct {a1:+.3f}%/day  H2 acct {a2:+.3f}%/day | {line(T1, T2)}")
+        print(f"   {ex:<34} out {TN[cfg['last']]}  SEL acct {a1:+.3f}  H1 acct {h1a:+.3f}%/day  H2 acct {a2:+.3f}%/day | {line(T1, T2)}")
     best3 = res3[0][1]
     print(f"   -> carried forward: {best3}\n")
 
@@ -218,8 +220,9 @@ def main():
     keep = []
     for p in liq:
         T1 = trades(cx, H1, pool=[p], **best3); T2 = trades(cx, H2, pool=[p], **best3); n1, a1, t1, w1 = sig_stats(T1); n2, a2, _, _ = sig_stats(T2)
+        ns, as_, _, _ = sig_stats(trades(cx, SEL, pool=[p], **best3))
         mark = ''
-        if n1 >= 3 and a1 > 0: keep.append(p); mark = '  keep'
+        if ns >= 3 and as_ > 0: keep.append(p); mark = '  keep'
         print(f"   {p:<5} H1 n {n1:3d} avg {a1:+.3f}%   H2 n {n2:3d} avg {a2:+.3f}%{mark}")
     tried += len(liq)
     print(f"   -> list: {keep}\n")
@@ -243,8 +246,8 @@ def main():
     for _ in range(200):
         best_null.append(max(st.mean([t['pct'] * (1 if rng.random() < .5 else -1) for t in T1]) for a, cfg, T1 in base))
     best_null.sort()
-    print(f"   luck check (stage 2, {len(base)} variants): with ZERO edge the best H1 avg would be ~{st.median(best_null):+.3f}% (95th pct {best_null[189]:+.3f}%); "
-          f"our best H1 avg was {res2[0][0]:+.3f}%")
+    print(f"   luck check (stage 2, {len(base)} variants): with ZERO edge the best selection-window avg would be ~{st.median(best_null):+.3f}% (95th pct {best_null[189]:+.3f}%); "
+          f"our best selection-window avg was {res2[0][0]:+.3f}%")
 
 
 if __name__ == '__main__': main()
