@@ -1,0 +1,25 @@
+Continuation + tight all-out TP, 2026-04-07..2026-10-14 (133 days), same engine and window as retest.py. Exit 13:30 (bar 48) unless noted.
+
+CONT hold    stop retest all out at 0.5R                       setups 184 leg avg -0.180% t -3.1 | taken 125 win  35% -0.107%/day ret  -13.5% DD 14.5% H1 -0.121 H2 -0.094
+CONT hold    stop retest all out at 0.75R                      setups 184 leg avg -0.225% t -3.8 | taken 124 win  32% -0.155%/day ret  -18.8% DD 19.8% H1 -0.179 H2 -0.131
+CONT hold    stop retest all out at 1.0R                       setups 184 leg avg -0.219% t -3.6 | taken 124 win  30% -0.147%/day ret  -18.0% DD 19.2% H1 -0.189 H2 -0.105
+CONT hold    stop retest all out at 1.5R                       setups 184 leg avg -0.264% t -4.2 | taken 122 win  28% -0.150%/day ret  -18.3% DD 20.4% H1 -0.181 H2 -0.119
+CONT hold    stop mid    all out at 0.5R                       setups 189 leg avg -0.360% t -3.0 | taken 102 win  55% -0.251%/day ret  -28.9% DD 31.0% H1 -0.280 H2 -0.222
+CONT hold    stop mid    all out at 0.75R                      setups 189 leg avg -0.378% t -2.9 | taken 101 win  51% -0.205%/day ret  -24.5% DD 27.9% H1 -0.175 H2 -0.235
+CONT hold    stop mid    all out at 1.0R                       setups 189 leg avg -0.428% t -3.1 | taken  99 win  46% -0.219%/day ret  -26.0% DD 29.0% H1 -0.207 H2 -0.230
+CONT hold    stop mid    all out at 1.5R                       setups 189 leg avg -0.481% t -3.2 | taken  98 win  38% -0.252%/day ret  -29.3% DD 34.0% H1 -0.163 H2 -0.339
+CONT reclaim stop retest all out at 0.5R                       setups 227 leg avg -0.155% t -2.6 | taken 153 win  40% -0.125%/day ret  -15.7% DD 18.6% H1 -0.075 H2 -0.174
+CONT reclaim stop retest all out at 0.75R                      setups 227 leg avg -0.176% t -2.8 | taken 152 win  35% -0.155%/day ret  -19.1% DD 24.2% H1 -0.108 H2 -0.201
+CONT reclaim stop retest all out at 1.0R                       setups 227 leg avg -0.190% t -3.0 | taken 152 win  32% -0.161%/day ret  -19.7% DD 24.8% H1 -0.122 H2 -0.199
+CONT reclaim stop retest all out at 1.5R                       setups 227 leg avg -0.230% t -3.3 | taken 150 win  30% -0.147%/day ret  -18.4% DD 24.0% H1 -0.123 H2 -0.170
+CONT reclaim stop mid    all out at 0.5R                       setups 233 leg avg -0.263% t -2.4 | taken 119 win  55% -0.314%/day ret  -34.8% DD 37.3% H1 -0.306 H2 -0.323
+CONT reclaim stop mid    all out at 0.75R                      setups 233 leg avg -0.306% t -2.5 | taken 118 win  49% -0.272%/day ret  -31.1% DD 34.3% H1 -0.242 H2 -0.300
+CONT reclaim stop mid    all out at 1.0R                       setups 233 leg avg -0.348% t -2.7 | taken 114 win  44% -0.320%/day ret  -35.5% DD 37.9% H1 -0.321 H2 -0.320
+CONT reclaim stop mid    all out at 1.5R                       setups 233 leg avg -0.458% t -3.4 | taken 112 win  35% -0.384%/day ret  -40.9% DD 42.9% H1 -0.344 H2 -0.424
+
+CONT hold retest-stop all out at 1R, time exit 15:55           setups 184 leg avg -0.221% t -3.6 | taken 124 win  30% -0.147%/day ret  -18.0% DD 19.2% H1 -0.189 H2 -0.105
+CONT hold+confirm retest-stop all out at 0.5R                  setups  92 leg avg -0.318% t -3.1 | taken  64 win  48% -0.138%/day ret  -17.0% DD 18.5% H1 -0.122 H2 -0.153
+
+FADE (failed retest), all out at 1R, 13:30                     setups  85 leg avg +0.185% t +1.1 | taken  59 win  58% +0.096%/day ret  +13.0% DD  4.6% H1 +0.092 H2 +0.101
+FADE (failed retest), all out at 0.5R, 13:30                   setups  85 leg avg +0.006% t +0.0 | taken  59 win  63% +0.031%/day ret   +3.9% DD  4.9% H1 +0.041 H2 +0.022
+FADE (failed retest), half 1R + BE, 13:30                      setups  85 leg avg +0.352% t +1.7 | taken  58 win  53% +0.156%/day ret  +21.9% DD  4.5% H1 +0.194 H2 +0.119
