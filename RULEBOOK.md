@@ -345,17 +345,15 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
-**Monday 2026-10-19, 13:30 close (v5.2.3).**
-- **Real account:** flat, no open orders (equity or OCO) verified at 13:30, **total value $2,508.09** (unchanged on the day: no real trade). 9:00 value $2,508.09; a $500 deposit arrived over the weekend (deposited cash now $2,493.43, floor $1,246.72).
-- **Blocked entry:** 10:10 FADE signals on QQQ, SOXX, XLK (SOXX won the RVOL tie-break, 1.57 vs 1.29 / 0.85 → SOXL). The checkpoint reached the session ~6 min late and SOXL's quote was $101.19 against $99.77 at the signal bar (+1.4%): blocked under A1.6 (0.5% band then in force). Logged as skipped in `execution_log.csv`.
-- **Model's day:** FADE SOXL entered 10:10 @ 99.775 (proxy 503.98), ⅓ sold at 2R 10:45 (proxy 508.76), ratchet stop hit 12:00 at 510.37: **+3.43% on SOXL, +$69.21**; model equity **$2,087.46**. No PULLBACK signals all day (strong up day: inverse ETFs and UVXY sold off).
-- **Losing streak:** 0. Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46.
-- **Rule changes today:** v5.2.2 dormant liquidity cap (B4.6: 20% of signal-bar dollar volume once total value ≥ $100,000, off again below; changed to 10% in v5.2.5); v5.2.3 FADE late-entry rule (A1.6: up to 6 min after the slot, leg within 1.0% of the signal-bar leg price; execution log gains `delay_min`).
-- **Checkpoint delivery today:** 28 of 30 checkpoints (10:00–12:25) reached the session within ~2.5 min of their slot; the 10:05 and 10:10 slots were 5.4 and 6.3 min late.
-- **Early shutdown:** flat after 12:55, the 13:00–13:25 slots were deleted (C2).
+**Tuesday 2026-10-20, 9:00 research (v5.2.6).**
+- **Real account:** flat, no open orders or positions at 9:00, **total value $2,508.09** (cash $2,508.09; deposited cash $2,493.43, floor $1,246.72). Daily loss limit (−3%) = $75.24, stop at $2,432.85.
+- **Controls:** losing streak 0 (1 real trade, a win). AMD reports Tue 2026-11-03 after the close (skip AMD fade row Wed 11-04); no NVIDIA report in the window. Normal full session, no holiday.
+- **Corporate actions (C3.2):** clean. All 14 funds and 7 proxies active; premarket moves in line with their underlyings (SOXL −4.3% vs SOXX −1.4%, TQQQ −1.4% vs QQQ −0.5%, SOXS +4.4%); no fund more than 20% off yesterday's close.
+- **RVOL baseline:** built from 20 sessions (2026-09-22..2026-10-19) -> `archive/paper_rvol_2026-10-20.json`.
+- **Context:** premarket tech/semis soft (SOXX −1.4%, QQQ −0.5%). Earnings: NFLX tonight; TSLA, META, IBM, TXN, LRCX tomorrow after the close; none scheduled before 13:30 today that moves the proxies directly.
+- **Model:** equity $2,087.46 (after Monday's SOXL +$69.21). Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46.
 - **Still unverified live:** the ⅓ OCO + ⅔ stop together on one FADE position (E2 item 1).
-- **Earnings:** AMD reports Tue 2026-11-03 after the close (skip the AMD fade row Wed 11-04). No NVIDIA report in the next 3 weeks.
-- **Tuesday 2026-10-20's chain:** armed by this checkpoint (see the report; the 8:00pm backup re-verifies it). Bimonthly reminder trigger `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
+- **Chain:** Tuesday's 46 slots verified complete at the Monday 8:00 PM backup. This checkpoint arms Wednesday 2026-10-21 at 13:30. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 
 ## E6. Known issues
 
