@@ -1,0 +1,43 @@
+PAYOUT IDEAS  ALL 2026-03-03..2026-10-14 (157 d) | choose on TUNE-H1 2026-04-07..2026-07-10 | judge on TUNE-H2 2026-07-13..2026-10-14 and MARCH 2026-03-03..2026-04-06
+
+   BASE (live rules)                                    +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% trades 115
+
+== 1. ACCOUNT STRUCTURE ==
+   signals the live rules skip (account busy / tie lost): 60; their average result +0.285% on the leg (taken trades average +0.826%)
+   two positions at once (one per system, each half the cash) +0.296%/day (H1 +0.329 H2 +0.255 Mar +0.323) ret   +58.0% DD  2.0% trades 125
+   risk per trade 2% (live 3%; size still capped at cash) +0.522%/day (H1 +0.562 H2 +0.457 Mar +0.594) ret  +121.9% DD  4.1% trades 115
+   risk per trade 4% (live 3%; size still capped at cash) +0.595%/day (H1 +0.705 H2 +0.487 Mar +0.594) ret  +147.4% DD  4.1% trades 115
+   risk per trade 5% (live 3%; size still capped at cash) +0.603%/day (H1 +0.724 H2 +0.487 Mar +0.594) ret  +150.2% DD  4.1% trades 115
+   tie-break: PULLBACK before FADE on the same bar      +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% trades 115
+   tie-break: FADE before PULLBACK on the same bar      +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% trades 115
+
+== 2. FADE FILTERS (chosen on TUNE-H1 only; PULLBACK unchanged) ==
+   FADE only if stop wider than median                  +0.499%/day (H1 +0.548 H2 +0.489 Mar +0.395) ret  +114.2% DD  5.7% trades  86
+   FADE only if weak break (< 0.09% past the edge)      +0.356%/day (H1 +0.517 H2 +0.209 Mar +0.326) ret   +72.4% DD  3.1% trades  92
+   FADE only if gap in the trade direction              +0.384%/day (H1 +0.507 H2 +0.300 Mar +0.280) ret   +79.5% DD  4.1% trades  81
+   FADE only if box narrower than usual                 +0.451%/day (H1 +0.492 H2 +0.427 Mar +0.402) ret   +99.3% DD  4.5% trades  89
+   FADE only if RVOL < 1.0 at entry                     +0.373%/day (H1 +0.425 H2 +0.345 Mar +0.307) ret   +76.7% DD  3.6% trades  91
+   FADE only if RVOL >= 1.0 at entry                    +0.348%/day (H1 +0.378 H2 +0.331 Mar +0.312) ret   +70.2% DD  6.0% trades  88
+   FADE only if box wider than usual                    +0.285%/day (H1 +0.362 H2 +0.194 Mar +0.325) ret   +54.4% DD  4.5% trades  88
+   FADE only if strong break                            +0.342%/day (H1 +0.297 H2 +0.385 Mar +0.342) ret   +68.3% DD  5.2% trades  86
+   FADE only if gap against the trade                   +0.315%/day (H1 +0.261 H2 +0.319 Mar +0.453) ret   +62.0% DD  3.7% trades  90
+   FADE only if RVOL >= 1.5 at entry                    +0.232%/day (H1 +0.242 H2 +0.182 Mar +0.344) ret   +42.8% DD  3.1% trades  60
+   FADE only if stop tighter than median (0.98% leg)    +0.226%/day (H1 +0.237 H2 +0.187 Mar +0.306) ret   +41.6% DD  3.8% trades  88
+   -> chosen on TUNE-H1: 'stop wider than median'. Out of sample: H2 +0.489 vs base +0.481; March +0.395 vs +0.594
+
+== 3. FADE STOP BUFFER beyond the failed breakout's extreme ==
+   stop 0.05% further away                              +0.513%/day (H1 +0.660 H2 +0.436 Mar +0.322) ret  +117.5% DD  6.1% trades 112
+   stop 0.10% further away                              +0.552%/day (H1 +0.707 H2 +0.485 Mar +0.309) ret  +131.0% DD  6.6% trades 112
+   stop 0.20% further away                              +0.539%/day (H1 +0.645 H2 +0.536 Mar +0.258) ret  +126.4% DD  7.9% trades 108
+
+== 4. PULLBACK FILTERS (FADE unchanged) ==
+   PULLBACK only if stop tighter than median (1.02%)    +0.486%/day (H1 +0.584 H2 +0.397 Mar +0.461) ret  +109.1% DD  5.5% trades  99
+   PULLBACK only if stop wider than median              +0.550%/day (H1 +0.591 H2 +0.497 Mar +0.585) ret  +131.1% DD  4.3% trades  95
+   PULLBACK only if proxy RVOL >= 1.0 (SOXS/TECS/NVD only; others kept) +0.518%/day (H1 +0.599 H2 +0.461 Mar +0.455) ret  +119.6% DD  7.0% trades 104
+   PULLBACK drop UVXY                                   +0.559%/day (H1 +0.643 H2 +0.462 Mar +0.597) ret  +134.3% DD  4.1% trades 106
+   PULLBACK drop LABD                                   +0.554%/day (H1 +0.640 H2 +0.449 Mar +0.609) ret  +132.5% DD  3.5% trades 108
+   PULLBACK drop NVD                                    +0.575%/day (H1 +0.677 H2 +0.467 Mar +0.594) ret  +140.1% DD  4.1% trades 111
+
+== 5. PULLBACK ENTRY: buy at the next bar's open (no limit) vs the live limit at the trigger close ==
+   PULLBACK setups: live limit 61, market entry 63
+   PULLBACK market entry at next open + 0.10%           +0.516%/day (H1 +0.564 H2 +0.427 Mar +0.636) ret  +119.1% DD  4.1% trades 120
