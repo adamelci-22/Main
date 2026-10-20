@@ -1,0 +1,9 @@
+Quarters, on time, $2,000 start, compounding. Q1 = Mar 3-31 only, Q4 = Oct 1-14 only (partial).
+
+quarter    days  trades(FADE/PB)  win%   quarter %   avg day %  winning/losing days   FADE $   PB $    equity end
+2026-Q1    21    21 (11/10)      48%     +13.2%    +0.615%      8/7              +208     +57   $2,265
+2026-Q2    62    49 (30/19)      59%     +34.1%    +0.488%      25/16              +550    +221   $3,036
+2026-Q3    64    35 (26/9)      69%     +50.6%    +0.657%      24/9             +1316    +220   $4,571
+2026-Q4    10    10 (7/3)      50%      +4.2%    +0.424%      4/4              +157     +36   $4,764
+
+Full quarters only (Q2+Q3, 126 days): average day +0.574%
