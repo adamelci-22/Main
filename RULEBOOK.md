@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.6** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.7** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -49,7 +49,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 7 | **Spread** | Skip the entry if the leg's bid–ask spread is wider than **0.30% of its price**. | Order review quote |
 | 8 | **Overnight** | **Nothing is held overnight.** A position found at 9:00 or 9:30 is sold at the 9:30 checkpoint (marketable limit) and reported. | Positions |
 | 9 | **Earnings** | **Skip the AMD fade row on any session where AMD has reported since the prior close** (next: Tue 2026-11-03 after the close → skip Wed 11-04). Same for NVD on NVIDIA's report. | `get_earnings_calendar` at 9:00 |
-| 10 | **Session** | Entries only between 10:00 and 12:55. No trading on early-close days (Nov 27, Dec 24) or market holidays. | Calendar |
+| 10 | **Session** | Entries only between 10:00 and 12:55. No trading on early-close days (Nov 27, Dec 24) or market holidays. | Calendar; `paper.py` blocks entries on the dates in its `NO_TRADE` list (through 2026-12-31; extend it for 2027 before then) |
 | 11 | **Halt** | Never send an order into a halted ticker (A4). | Broker response |
 | 12 | **Kill switch** | **If the governor says "stop", "halt" or "flatten":** cancel every open order, sell every position (marketable limit), and take no entries until the governor says to resume. This overrides everything else in this file. | — |
 
@@ -208,7 +208,7 @@ Only the first qualifying setup per ticker per day counts.
    - QQQ SOXX IWM XLK XBI AMD TQQQ SQQQ SOXL SOXS
    - TNA TZA TECL TECS LABU LABD AMDL AMDD UVXY NVD
    - NVDA (read-only tie-break)
-3. **Run** `python3 tools/live/paper.py --live --now HH:MM <dump files>`.
+3. **Run** `python3 tools/live/paper.py --live --now HH:MM <dump files>` (add `--skip AMD` on an A1.9 earnings day). **Never add `--real-free` routinely:** only after the governor closed a real position by hand (A3). A skipped or blocked entry leaves a ghost position that correctly blocks new entries until the model exits (tested: `results/recheck_all.txt` §2).
 4. **Act on the `LIVE ACTIONS` lines** under A1 and B5. If the newest bar isn't published yet, `paper.py` steps back up to two bars and says so.
 5. **Report only changes:** an entry, a take-profit, a stop move, an exit, or a blocked entry and why. If nothing changed, write one line.
 6. **Heartbeat (v5.2.6).** Put one line in every checkpoint report: the ET time the trigger fired (`fire_et`) and the gap since the previous checkpoint's fire time, e.g. `fired 10:15:02 (+5:01)`. **Flag it at once** if the gap is more than 7 minutes, or if a slot between 10:00 and 12:55 has no earlier run today (a missed checkpoint). On a flag: say so in that report, run the missed slot's scan now (C1.3, with the late-entry limits of A1.6), and note it in the execution log. The heartbeat changes no order, signal or size.
@@ -375,6 +375,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.7 — 2026-10-20, governor instruction (full audit):** tooling only; no signal, sizing or exit rule changed. `paper.py`: (1) ranks simultaneous live signals per B4.4 and prints one ENTER plus SKIP lines; (2) warns when any C1.2 symbol is missing (NVDA missing = NVD loses ties) and flags thin legs with no trade in the last bar; (3) blocks entries on `NO_TRADE` dates (A1.10); (4) `--skip` bars real entries on A1.9 earnings days; (5) prints the runner level for when the real ⅓ take-profit fills before the model's (B5.4); (6) states plainly when the model's open position is a ghost (A3). Re-verified against the backtest: 115/115 trades identical (`tools/backtest/verify_paper_equivalence.py`). Plateau check of the FADE entry settings (`results/fade_entry_plateau.txt`): stable across break-by 10:10/10:15 and retest windows 9–18 bars; the 0.10% touch tolerance is a sharp peak (0.05%/0.20% are 0.03–0.06%/day worse), one more reason to plan on less than the backtest.
 
 **v5.2.6 — 2026-10-19, governor instruction:** two safeguards added, neither affects signals or sizing: (1) heartbeat line in every checkpoint report with a flag if the gap since the previous checkpoint is over 7 minutes or a slot is missing (C1.6); (2) 9:00 corporate-action check on the 14 traded funds and the proxies, with a 20%-off-yesterday exclusion rule (C3.2). They guard against rare failures and cannot be backtested.
 

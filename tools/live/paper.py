@@ -37,6 +37,12 @@ LOCKOUT_LOSSES = 5      # 5 losing trades in a row -> no new entries until the g
 RISK = 0.03
 FADE_COST = 0.06        # % round trip on the leg
 PB_IN, PB_OUT = 0.0001, 0.0003
+# RULEBOOK A1.10: no entries on early-close days or market holidays (NYSE). Extend each year from nyse.com/markets/hours-calendars.
+NO_TRADE = {'2026-11-26': 'Thanksgiving (closed)', '2026-11-27': 'early close 13:00', '2026-12-24': 'early close 13:00', '2026-12-25': 'Christmas (closed)'}
+CALENDAR_THROUGH = '2026-12-31'
+EXPECTED = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD', 'TQQQ', 'SQQQ', 'SOXL', 'SOXS', 'TNA', 'TZA', 'TECL', 'TECS', 'LABU', 'LABD',
+            'AMDL', 'AMDD', 'UVXY', 'NVD', 'NVDA']      # the three C1.2 fetch groups
+SKIP = set()            # --skip: proxies/legs barred from REAL entries today (RULEBOOK A1.9 earnings); the model is unchanged
 
 
 def t2k(hhmm):
@@ -140,9 +146,10 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
     if not closed and K - 1 >= SELL_BY:
         px = b[SELL_BY][3]; gross += rem * (px - entry); events.append(('13:30', 'time exit', to_m(px), rem)); rem = 0
         closed = True; xbar = SELL_BY; why = 'time'
-    lev = None
+    # runner level the real account uses if ITS 1/3 take-profit filled before the model's (B5.4): breakeven, then the chandelier
+    chand = max(entry, hic - 2 * atr(b, end)) if end >= k else entry
     return dict(status='closed' if closed else 'open', side=side, k=k, xbar=xbar, why=why, entry=e_real, stop0=stop_real,
-                stop_now=to_m(stop), target=to_m(T), gross=gross, rem=rem, events=events, risk_pct=r / e_real * 100)
+                stop_now=to_m(stop), chand_if_done=to_m(chand), target=to_m(T), gross=gross, rem=rem, events=events, risk_pct=r / e_real * 100)
 
 
 # ------------------------------------------------------------------ PULLBACK
@@ -254,14 +261,34 @@ def to_leg(leg_now, proxy_now, proxy_level, side, lev):
     return leg_now * (1 + lev * move)
 
 
-def live_actions(today, taken, signals, K):
+def live_actions(today, taken, signals, K, base=None, day=None):
     """Print the real-order instructions for this checkpoint (RULEBOOK B5). Prices are estimates from the last completed bar;
     recompute stop/target from the actual fill with the same formula."""
     print("  LIVE ACTIONS (only if the real account matches; A1 safety checks first):")
     any_ = False
-    for sysn, sym, t in signals:
-        if t['status'] != 'signal': continue
+    live = [s for s in signals if s[2]['status'] == 'signal']
+    # B4.4: one position at a time -> rank simultaneous entries exactly like the model (earliest, higher proxy RVOL, FADE before PULLBACK, list order)
+    def key(s):
+        sysn, sym, t = s
+        prox = sym if sysn == 'FADE' else PB_PROXY.get(sym, '')
+        return (t['k'], -rvol(today, base, prox, t['k']), 0 if sysn == 'FADE' else 1 + PB_LIST.index(sym))
+    live.sort(key=key)
+    blocked = NO_TRADE.get(day) if day else None
+    if blocked:
+        print(f"    NO ENTRIES TODAY (A1.10): {day} is {blocked}. Manage any open position only.")
+    elif day and day > CALENDAR_THROUGH:
+        print(f"    WARNING: paper.py's holiday/early-close calendar ends {CALENDAR_THROUGH}: check the NYSE calendar by hand (A1.10) and extend NO_TRADE.")
+    first = True
+    for sysn, sym, t in live:
         any_ = True
+        legs = (FADE_ROWS[sym][0] if t['side'] > 0 else FADE_ROWS[sym][1]) if sysn == 'FADE' else sym
+        if blocked:
+            print(f"    (signal {sysn} {sym} -> {legs} not entered: A1.10 no-trade day)"); continue
+        if sym in SKIP or legs in SKIP:
+            print(f"    SKIP {sysn} {sym} -> {legs}: barred today by --skip (A1.9 earnings). Log it as skipped."); continue
+        if not first:
+            print(f"    SKIP {sysn} {sym} -> {legs}: lost the same-bar tie (B4.4) to the entry above - one position at a time."); continue
+        first = False
         if sysn == 'FADE':
             bull, bear, lb, lbe = FADE_ROWS[sym]; side = t['side']; leg = bull if side > 0 else bear; lev = lb if side > 0 else lbe
             pnow = today[sym][K - 1][3]; r = abs(pnow - t['stop']) / pnow
@@ -280,6 +307,8 @@ def live_actions(today, taken, signals, K):
         if REAL_FREE:
             print(f"    (model position {c['system']} {c['ticker']} is open in the model only; the real account is flat - ignored under --real-free)"); continue
         any_ = True
+        print(f"    [model holds {c['system']} {c['ticker']} since {k2t(c['k'])}. If the REAL account does NOT hold it (entry skipped/blocked), do nothing: "
+              f"it is a ghost position and no new entries come until the model exits (A3). Use --real-free ONLY if the governor closed it by hand.]")
         if c['system'] == 'FADE':
             bull, bear, lb, lbe = FADE_ROWS[c['proxy']]; leg = c['ticker']; side = c['side']; lev = lb if side > 0 else lbe
             pnow = today[c['proxy']][K - 1][3]; lnow = today[leg][K - 1][3] if leg in today else None
@@ -288,7 +317,9 @@ def live_actions(today, taken, signals, K):
                 print(f"    MANAGE FADE {leg}: no {leg} bars in the dump - refetch; until then leave the resting orders alone and manage from the broker state (A4.5). "
                       f"Model: 1/3 take-profit {'DONE' if hit else 'not yet'}, runner stop on the proxy {c['stop_now']:.2f}")
             elif not hit:
-                print(f"    MANAGE FADE {leg}: 1/3 take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3)")
+                print(f"    MANAGE FADE {leg}: 1/3 take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3). "
+                      f"If the REAL 1/3 already filled: runner stop = breakeven (the fill), raised to the chandelier {leg} "
+                      f"{to_leg(lnow, pnow, c['chand_if_done'], side, lev):.2f} if that is higher (B5.4)")
             else:
                 print(f"    MANAGE FADE {leg}: 1/3 take-profit DONE in the model; runner stop on the proxy {c['stop_now']:.2f} -> {leg} "
                       f"{to_leg(lnow, pnow, c['stop_now'], side, lev):.2f}. Never below breakeven (the fill); raise only, and only if >= 0.10% higher (B5.4)")
@@ -313,6 +344,7 @@ def main():
     ap.add_argument('--day', help='ET date (default: latest date in the dumps)'); ap.add_argument('--close', action='store_true')
     ap.add_argument('--real-free', action='store_true', help='the real account is flat although the model still holds a position (governor closed it by hand): list new signals anyway; the broker check (A1.5) still guards entries')
     ap.add_argument('--live', action='store_true', help='also print the real-order instructions for this checkpoint (RULEBOOK B5)')
+    ap.add_argument('--skip', default='', help='comma list of proxies/legs barred from real entries today (A1.9 earnings), e.g. --skip AMD')
     ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 6 FADE proxies + NVDA, prior 20 sessions)')
     a = ap.parse_args()
     raw = load([f for g in a.dumps for f in glob.glob(g)])
@@ -340,8 +372,16 @@ def main():
     today = {s: g for s in raw if day in raw[s] for g in [grid(raw[s][day], K)] if g}
     prev = {s: g for s in raw if prevday in raw[s] for g in [grid(raw[s][prevday], 78)] if g}
     S = state(); eq0 = S['equity']
-    global FLOOR_TARGET, REAL_FREE
+    global FLOOR_TARGET, REAL_FREE, SKIP
     REAL_FREE = a.real_free
+    SKIP = {x.strip().upper() for x in a.skip.split(',') if x.strip()}
+    missing = [s for s in EXPECTED if s not in today]
+    if missing:
+        print(f"  WARNING: no {day} bars for {' '.join(missing)} - fetch all three C1.2 groups"
+              + (" (NVDA missing: NVD loses every same-bar RVOL tie)" if 'NVDA' in missing else '') + ". A missing leg blocks its entry.")
+    stale = [s for s in EXPECTED if s in today and today[s][K - 1][4] == 0 and s in ('TECS', 'AMDD', 'LABU', 'LABD', 'UVXY', 'NVD', 'SOXS')]
+    if stale: print(f"  note: no trade printed in the last bar for {' '.join(stale)} (filled flat, as the backtest does) - confirm with a quote before any order on them")
+    if REAL_FREE: print("  --real-free is ON: use it ONLY when the governor closed the real position by hand (A3); a skipped/blocked entry keeps the ghost position.")
     FLOOR_TARGET = day >= FLOOR_FROM
     bf = os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json')
     base = json.load(open(bf))['base'] if os.path.exists(bf) else None
@@ -363,7 +403,7 @@ def main():
             print(f"       CLOSED {c['why']}: {c['pct']:+.2f}% on {c['ticker']} = ${c['usd']:+.2f}")
     for s in skipped: print(f"  skipped ({s.get('why_skipped', 'account busy')}): {s['system']} {s['ticker']} at {k2t(s['k'])}")
     for sysn, sym, t in signals: print(f"  SIGNAL {sysn} {sym}: {t['note']}")
-    if a.live: live_actions(today, taken, signals, K)
+    if a.live: live_actions(today, taken, signals, K, base, day)
     open_ = [] if REAL_FREE else [c for c in taken if c['status'] == 'open']
     cadence = '5 min (fade open: ratchet the stop)' if any(c['system'] == 'FADE' for c in open_) else \
               ('30 min (pullback OCO resting)' if open_ else ('5 min (flat, scanning)' if K < 41 and streak0 < LOCKOUT_LOSSES else 'none needed until 13:30'))
