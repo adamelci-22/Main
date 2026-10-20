@@ -21,3 +21,52 @@ Pool (9 liquid proxies): QQQ SOXX IWM IBIT XBI SPY TSLA MSTR SLV
    -> carried forward (H1 avg > 0, >= 30 H1 signals): [('LATE', 12, 'mid'), ('LATE', 12, 'swing'), ('LATE', 12, 'edge'), ('LATE', 9, 'mid')]
 
 == STAGE 2: filters (single and pairs) on each carried entry. Ranked by H1 avg leg %, needs >= 25 H1 signals. ==
+   LATE     10:30 swing  filters wide           H1 n  20 avg +1.753% t +2.8 win  75% | H2 n  31 avg +0.072% t +0.2 win  52%
+   LATE     10:30 swing  filters vwap+wide      H1 n  20 avg +1.753% t +2.8 win  75% | H2 n  30 avg -0.024% t -0.1 win  50%
+   LATE     10:30 mid    filters wide           H1 n  20 avg +1.448% t +2.3 win  75% | H2 n  31 avg +0.119% t +0.3 win  52%
+   LATE     10:30 edge   filters wide           H1 n  20 avg +1.600% t +2.6 win  75% | H2 n  31 avg -0.010% t -0.0 win  52%
+   LATE     10:30 edge   filters vwap+wide      H1 n  20 avg +1.600% t +2.6 win  75% | H2 n  30 avg -0.097% t -0.3 win  50%
+   LATE     10:30 mid    filters vwap+wide      H1 n  20 avg +1.448% t +2.3 win  75% | H2 n  30 avg -0.038% t -0.1 win  50%
+   LATE     10:30 mid    filters trend          H1 n  24 avg +1.347% t +1.5 win  67% | H2 n  32 avg -0.325% t -1.1 win  47%
+   LATE     10:30 mid    filters vwap+trend     H1 n  24 avg +1.347% t +1.5 win  67% | H2 n  32 avg -0.325% t -1.1 win  47%
+   LATE     10:30 mid    filters none           H1 n  45 avg +0.791% t +1.5 win  62% | H2 n  56 avg -0.050% t -0.2 win  50%
+   LATE     10:30 swing  filters none           H1 n  45 avg +0.869% t +1.8 win  62% | H2 n  56 avg -0.115% t -0.5 win  48%
+   LATE     10:30 swing  filters trend          H1 n  24 avg +1.301% t +1.7 win  67% | H2 n  32 avg -0.453% t -1.6 win  44%
+   LATE     10:30 swing  filters vwap+trend     H1 n  24 avg +1.301% t +1.7 win  67% | H2 n  32 avg -0.453% t -1.6 win  44%
+   -> carried forward: {'fam': 'LATE', 'brk': 12, 'stop': 'swing', 'flt': ('wide',)}
+
+== STAGE 3: exits on the chosen entry (target R x fraction sold x runner x sell-by). Ranked by H1 account %/day. ==
+   3.0R sell 1.00 runner be           out 13:30  SEL acct +0.144  H1 acct +0.174%/day  H2 acct +0.114%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.319% t +0.7 win  52%
+   3.0R sell 0.50 runner chand2       out 13:30  SEL acct +0.142  H1 acct +0.174%/day  H2 acct +0.110%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.289% t +0.7 win  52%
+   3.0R sell 0.33 runner chand2       out 13:30  SEL acct +0.139  H1 acct +0.174%/day  H2 acct +0.105%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.279% t +0.6 win  52%
+   1.0R sell 0.33 runner chand2       out 13:30  SEL acct +0.137  H1 acct +0.206%/day  H2 acct +0.069%/day | H1 n  20 avg +1.560% t +2.7 win  75% | H2 n  31 avg +0.187% t +0.5 win  52%
+   3.0R sell 0.50 runner be           out 13:30  SEL acct +0.136  H1 acct +0.174%/day  H2 acct +0.098%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.264% t +0.6 win  52%
+   3.0R sell 1.00 runner be           out 12:30  SEL acct +0.133  H1 acct +0.147%/day  H2 acct +0.120%/day | H1 n  20 avg +1.234% t +2.7 win  65% | H2 n  31 avg +0.536% t +1.2 win  52%
+   1.0R sell 0.50 runner chand2       out 13:30  SEL acct +0.133  H1 acct +0.211%/day  H2 acct +0.055%/day | H1 n  20 avg +1.608% t +2.7 win  75% | H2 n  31 avg +0.158% t +0.4 win  52%
+   2.0R sell 0.33 runner chand2       out 13:30  SEL acct +0.132  H1 acct +0.174%/day  H2 acct +0.090%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.247% t +0.6 win  52%
+   3.0R sell 0.33 runner be           out 13:30  SEL acct +0.131  H1 acct +0.174%/day  H2 acct +0.089%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.246% t +0.6 win  52%
+   2.0R sell 0.50 runner chand2       out 13:30  SEL acct +0.130  H1 acct +0.174%/day  H2 acct +0.087%/day | H1 n  20 avg +1.079% t +2.1 win  75% | H2 n  31 avg +0.241% t +0.6 win  52%
+   -> carried forward: {'fam': 'LATE', 'brk': 12, 'stop': 'swing', 'flt': ('wide',), 'R': 3.0, 'frac': 1.0, 'runner': 'be', 'last': 48}
+
+== STAGE 4: proxy list. Each proxy on H1 (chosen config); keep those with H1 avg > 0 and >= 3 signals. ==
+   QQQ   H1 n   3 avg +0.099%   H2 n   3 avg +0.391%  keep
+   SOXX  H1 n   3 avg +4.025%   H2 n   3 avg -1.986%  keep
+   IWM   H1 n   2 avg +0.000%   H2 n   2 avg +0.000%  keep
+   IBIT  H1 n   0 avg +0.000%   H2 n   4 avg +1.589%  keep
+   XBI   H1 n   2 avg +0.000%   H2 n   3 avg +1.474%
+   SPY   H1 n   2 avg +0.000%   H2 n   4 avg -0.476%
+   TSLA  H1 n   7 avg +1.694%   H2 n   4 avg -0.097%  keep
+   MSTR  H1 n   0 avg +0.000%   H2 n   5 avg -0.172%
+   SLV   H1 n   1 avg +0.000%   H2 n   3 avg +2.020%  keep
+   -> list: ['QQQ', 'SOXX', 'IWM', 'IBIT', 'TSLA', 'SLV']
+
+== STAGE 5: the final system, judged where it was NOT tuned ==
+   H1 (tuned here)      signals  16 avg leg +1.579% t +2.8 win  81% | account  11 trades +0.192%/day ret  +13.3% DD  0.5%
+   H2 (out of sample)   signals  19 avg leg +0.434% t +0.7 win  53% | account  17 trades +0.093%/day ret   +5.9% DD  4.8%
+   March (untouched)    signals   2 avg leg +0.000% t +0.0 win   0% | account   2 trades +0.075%/day ret   +1.8% DD  0.0%
+   ALL 157 days         signals  37 avg leg +0.955% t +2.3 win  68% | account  30 trades +0.132%/day ret  +22.2% DD  4.8%
+   same system on the FULL pool (no list selection), H2: signals 31 avg +0.319% t +0.7 acct +0.114%/day
+   cost stress (extra % per trade, all 157 days, account %/day): +0.1: +0.115  +0.2: +0.099  +0.4: +0.065  
+
+   variants tried across stages: about 263
+   luck check (stage 2, 32 variants): with ZERO edge the best selection-window avg would be ~+0.712% (95th pct +1.023%); our best selection-window avg was +0.731%
