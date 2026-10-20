@@ -161,6 +161,8 @@ def main():
     D = get_data(); m.rvol = PBF.rvol(D)
     tune = D.days[25:]; h = len(tune) // 2; H1, H2 = tune[:h], tune[h:]; MAR = D.days[1:25]
     liq = [p for p in FA.ROWS if p in D.bars and all(r in D.bars and EX.dollar_vol(D, r, tune) >= EX.LIQ for r in (FA.ROWS[p][0], FA.ROWS[p][2]))]
+    FIXED = 'fade' in sys.argv[1:]
+    if FIXED: liq = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD']   # the live FADE tickers, fixed (no list selection)
     cx = Ctx(D, liq); tried = 0
     SEL = tune if 'all' in sys.argv[1:] else H1          # 'all' = choose on the whole Apr-Oct window instead of H1 only
     print(f"SELECTION WINDOW: {'WHOLE tuning window (H1+H2)' if SEL is tune else 'H1 only'}")
@@ -225,7 +227,8 @@ def main():
         if ns >= 3 and as_ > 0: keep.append(p); mark = '  keep'
         print(f"   {p:<5} H1 n {n1:3d} avg {a1:+.3f}%   H2 n {n2:3d} avg {a2:+.3f}%{mark}")
     tried += len(liq)
-    print(f"   -> list: {keep}\n")
+    if FIXED: keep = list(liq)
+    print(f"   -> list: {keep}{'  (fixed to the FADE tickers)' if FIXED else ''}\n")
     final = dict(best3, pool=keep)
 
     # ---------------- STAGE 5: verdict
