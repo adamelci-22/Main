@@ -355,11 +355,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Routine for today:** fetch all three C1.2 groups every slot (incl. NVDA); `--real-free` only if the governor closes a position by hand; reports lead with FADE status and a one-line PULLBACK status (governor, 2026-10-20).
 - **Still unverified live:** the 1/3 OCO + 2/3 stop together on one FADE position (E2 item 1).
 - **Chain:** Wednesday's 46 slots verified complete at the Tuesday 8:00 PM backup. This checkpoint's 13:30 close arms Thursday 2026-10-22. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
+- **Wednesday close (13:30):** no signals in either system (no proxy broke its box; PULLBACK breakouts never met the trend test). Real account flat all day at **$2,508.09**, losing streak 0, no safety control fired. Early shutdown applied at 12:55 (13:00-13:25 slots deleted). Model unchanged at $2,087.46. Thursday 2026-10-22's 46 slots armed (UTC-4) and confirmed complete with `list_triggers` (two pages, no duplicates). Backtest context: 60 of 157 days had no trade, longest streak 6 days (2026-09-09..09-16), so two flat days in a row is ordinary.
 
 ## E6. Known issues
 
 - **Trigger creation is rate-limited.** About 10 `create_trigger` calls per minute. Wait about 30 seconds and retry, then confirm the chain with `list_triggers`.
 - **The scheduler can skip or delay a slot.** Resting protective orders cover an open position. Check for missed slots (A2).
+- **A slot can fire before the 5-minute bar it names has closed** (seen 2026-10-21, 22-140 s after the slot). The newest bar is then one short; harmless when flat, but with a position or a signal near trigger, refetch after the bar closes. The Robinhood tools also dropped and reconnected briefly several times that day; `ToolSearch` waits for them.
 - **The MCP connection can drop for hours.** GTC protective orders cover an open position. A missed 13:30 means flattening at the first checkpoint after reconnecting, and at 9:30 the next day at the latest (A1.8).
 - **Robinhood stop orders can fail silently:** cancelled with no fill, or rejected when the stop is at or above the market price. Always verify the state (B5.1, B5.5).
 - **Local git can desync from the remote.** If a push is rejected, fetch and merge; never force-push.
