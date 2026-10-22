@@ -1,0 +1,18 @@
+BAND STUDY 2026-03-03..2026-10-14 (157 d) | H1 2026-04-07..2026-07-10 | H2 2026-07-13..2026-10-14 | MARCH 2026-03-03..2026-04-06
+
+  on time (live backtest)                  +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret +138.2% DD 4.1% trades 115 (FADE 74)   vs on-time +0.000
+
+-- every FADE signal one bar (5-6 min) late --
+  band 0.5%                                +0.473%/day (H1 +0.540 H2 +0.398 Mar +0.495) ret +106.0% DD 3.7% trades  94 (FADE 51)   vs on-time -0.097
+  band 1.0%                                +0.522%/day (H1 +0.614 H2 +0.511 Mar +0.300) ret +121.4% DD 3.9% trades 113 (FADE 71)   vs on-time -0.047
+  band 1.5%                                +0.507%/day (H1 +0.645 H2 +0.465 Mar +0.247) ret +116.3% DD 4.1% trades 118 (FADE 76)   vs on-time -0.062
+  band 2.0%                                +0.527%/day (H1 +0.645 H2 +0.465 Mar +0.372) ret +122.9% DD 4.1% trades 118 (FADE 76)   vs on-time -0.043
+  band 3.0%                                +0.527%/day (H1 +0.645 H2 +0.465 Mar +0.372) ret +122.9% DD 4.1% trades 118 (FADE 76)   vs on-time -0.043
+  no band (always enter)                   +0.527%/day (H1 +0.645 H2 +0.465 Mar +0.372) ret +122.9% DD 4.1% trades 118 (FADE 76)   vs on-time -0.043
+
+-- mix 55% on time / 35% one bar late / 10% 2+ bars late (skipped) --
+  band 0.5%                                +0.402%/day (H1 +0.595 H2 +0.306 Mar +0.142) ret  +84.7% DD 4.4% trades 110 (FADE 68)   vs on-time -0.167
+  band 1.0%                                +0.442%/day (H1 +0.573 H2 +0.449 Mar +0.060) ret  +96.0% DD 4.4% trades 117 (FADE 75)   vs on-time -0.128
+  band 1.5%                                +0.442%/day (H1 +0.573 H2 +0.449 Mar +0.060) ret  +96.0% DD 4.4% trades 117 (FADE 75)   vs on-time -0.128
+  band 2.0%                                +0.432%/day (H1 +0.573 H2 +0.449 Mar -0.001) ret  +93.1% DD 4.4% trades 118 (FADE 76)   vs on-time -0.137
+  no band                                  +0.432%/day (H1 +0.573 H2 +0.449 Mar -0.001) ret  +93.1% DD 4.4% trades 118 (FADE 76)   vs on-time -0.137
