@@ -1,0 +1,38 @@
+HEALTHCARE STUDY  ALL 2026-03-03..2026-10-14 (157 d) | H1 2026-04-07..2026-07-10 | H2 2026-07-13..2026-10-14 | MARCH 2026-03-03..2026-04-06
+
+== 0. LIQUIDITY: share of 5-min bars 10:00-13:30 with a real trade, and median $ per bar (needs >= $250,000 to count as liquid) ==
+   XLV   real-bar coverage 100.0%   median $/bar    3,964,686
+   XBI   real-bar coverage 100.0%   median $/bar    3,432,477
+   XLK   real-bar coverage 100.0%   median $/bar    5,340,216
+   TECL  real-bar coverage  98.8%   median $/bar      495,311
+   TECS  real-bar coverage  95.2%   median $/bar      135,698
+   LABU  real-bar coverage  95.9%   median $/bar      269,040
+   LABD  real-bar coverage 100.0%   median $/bar      398,434
+   AMDL  real-bar coverage 100.0%   median $/bar      863,987
+   AMDD  real-bar coverage  96.1%   median $/bar      243,586
+   CURE  real-bar coverage  47.8%   median $/bar            0
+   RXD   real-bar coverage   7.4%   median $/bar            0
+
+   BASE (live system)                             +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115
+
+== 1. FADE with XLV as proxy, legs CURE (3x) / RXD (2x) ==
+   XLV fade trades: 9; win 44%; avg leg result -0.018%
+      H1     n  1  avg -0.789%  win 0%
+      H2     n  5  avg -0.258%  win 40%
+      MARCH  n  3  avg +0.638%  win 67%
+   with a real trade in the leg on BOTH the entry bar and the exit bar: 3 of 9 trades (33%)
+   FADE + XLV [as modelled (flat-carried bars fill)], no PB +0.437%/day (H1 +0.454 H2 +0.389 Mar +0.524) ret   +94.0% DD  4.0% n  79
+   FADE + XLV [as modelled (flat-carried bars fill)] + PB (full system) +0.551%/day (H1 +0.594 H2 +0.479 Mar +0.632) ret  +131.3% DD  4.2% n 120
+   FADE + XLV [FILL filter (real trades only)], no PB +0.430%/day (H1 +0.454 H2 +0.393 Mar +0.466) ret   +91.8% DD  4.0% n  76
+   FADE + XLV [FILL filter (real trades only)] + PB (full system) +0.543%/day (H1 +0.594 H2 +0.482 Mar +0.574) ret  +128.6% DD  4.2% n 117
+
+== 2. PULLBACK with CURE and/or RXD added (own chart, same rules) ==
+   RXD alone: 0 setups, avg +0.000%; with real fills on entry and exit bars: 0
+   PB + RXD [as modelled]                         +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115
+   PB + RXD [FILL filter]                         +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115
+   CURE alone: 0 setups, avg +0.000%; with real fills on entry and exit bars: 0
+   PB + CURE [as modelled]                        +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115
+   PB + CURE [FILL filter]                        +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115
+   CURE+RXD alone: 0 setups, avg +0.000%; with real fills on entry and exit bars: 0
+   PB + CURE+RXD [as modelled]                    +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115
+   PB + CURE+RXD [FILL filter]                    +0.570%/day (H1 +0.651 H2 +0.481 Mar +0.594) ret  +138.2% DD  4.1% n 115

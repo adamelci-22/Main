@@ -64,7 +64,7 @@ class Data:
                 out = [b if b else (first[0],) * 4 + (0,) for b in out]
                 self.bars[s][d] = out
         # proxy cumulative volume and daily H/L/C for ATR
-        EXTRA = [p for p in ('XLU', 'XLRE', 'XOP', 'EEM', 'XLK', 'GDX', 'EWY', 'IBIT', 'DRAM', 'NVDA', 'TSLA', 'MSTR', 'COIN', 'AMD', 'UNG', 'FXI', 'ETHA', 'VIXY', 'SLV') if p in self.bars]
+        EXTRA = [p for p in ('XLU', 'XLRE', 'XOP', 'EEM', 'XLK', 'XLV', 'GDX', 'EWY', 'IBIT', 'DRAM', 'NVDA', 'TSLA', 'MSTR', 'COIN', 'AMD', 'UNG', 'FXI', 'ETHA', 'VIXY', 'SLV') if p in self.bars]
         self.cum = {p: {d: [sum(b[4] for b in self.bars[p][d][:k]) for k in range(79)] for d in self.days if d in self.bars[p]} for p in PROXIES + EXTRA}
         self.dhlc = {p: {d: (max(b[1] for b in self.bars[p][d]), min(b[2] for b in self.bars[p][d]), self.bars[p][d][-1][3])
                          for d in self.days if d in self.bars[p]} for p in PROXIES + EXTRA}
