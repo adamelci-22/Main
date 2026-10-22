@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.7** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.8** (2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -272,7 +272,8 @@ Only the first qualifying setup per ticker per day counts.
 - **Primary arming at the 13:30 close.**
   - Friday arms Monday. Skip market holidays.
   - Create in batches; the trigger API allows about 10 creations per minute. Then confirm all 46 with `list_triggers`.
-- **Backup at 8:00pm:** check that the next trading day's chain exists. Create it only if it's missing, and say so.
+- **Slot backups (v5.2.8, governor instruction 2026-10-22).** Each primary slot from **10:00 to 11:30** (19 slots, the FADE and PULLBACK entry window) gets a one-shot backup trigger **2 minutes after it** (10:02, 10:07, ... 11:32), so one late or dropped delivery cannot leave a gap. The backup prompt first checks whether its primary already ran in this session; if so it answers with one line and stops. If not, it runs the primary's checkpoint, **state check first** (positions and open orders) so no order is ever placed twice, and flags the missed primary (C1.6). Arming a trading day is therefore **46 primaries + 19 backups = 65 triggers**; confirm all 65 with `list_triggers`. Template: "BACKUP checkpoint for the HH:MM AM ET slot, <day date> (fires about 2 minutes after the primary). ... First check whether the primary HH:MM slot was already processed in this session ... If it was, answer with one line and stop. If not, run it now exactly as the primary would ... state check first ... flag the missed primary slot (C1.6)."
+- **Backup at 8:00pm:** check that the next trading day's chain exists (46 primaries and the 19 backups). Create it only if it's missing, and say so.
 - **Time zone:** triggers take UTC. ET = UTC−4 until Sun 2026-11-01, and UTC−5 from Mon 2026-11-02. Use the offset in force on the day being armed.
 - **Prompt templates.** Each prompt names its slot and date, and ends: "RULEBOOK.md governs wherever this prompt differs. This is a real live trading account (Robinhood 462514035) acting on real capital."
   - **9:00:** "Live mode. Read A, C3, D. State check, record the 9:00 value, controls (streak, earnings, session), RVOL baseline, context."
@@ -354,7 +355,7 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Model:** equity $2,087.46 (excludes the $500 deposit). Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46. Yesterday (Wed 10-21): no signals either system, early shutdown at 12:55.
 - **Routine for today:** fetch all three C1.2 groups every slot (incl. NVDA); `--real-free` only if the governor closes a position by hand; reports lead with FADE status and a one-line PULLBACK status (governor, 2026-10-20). If a slot fires before its bar closes, the newest bar is one short (E6); refetch if a signal is near trigger.
 - **Still unverified live:** the 1/3 OCO + 2/3 stop together on one FADE position (E2 item 1).
-- **Chain:** Thursday's 46 slots verified complete at the Wednesday 8:00 PM backup. This day's 13:30 close arms Friday 2026-10-23. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
+- **Chain:** Thursday's 46 slots verified complete at the Wednesday 8:00 PM backup. Slot backups (D1, v5.2.8) armed by hand for the rest of today: 16 one-shots at 10:17, 10:22, ... 11:32 ET (2 minutes after the 10:15-11:30 primaries). The 10:05 primary arrived 7:27 late (14:12:27 UTC), after a manual 10:10 run had covered it; the 10:10 primary was likewise a duplicate. This day's 13:30 close arms Friday 2026-10-23. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 
 ## E6. Known issues
 
@@ -376,6 +377,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.8 — 2026-10-22, governor instruction:** scheduling only; no trading rule, sizing or exit changed (no backtest needed). Added slot backups (D1): a one-shot backup 2 minutes after each primary from 10:00 to 11:30, deduplicated by a state check. Reason: on 2026-10-22 the 10:05 slot arrived 7:27 late, after a manual run had already covered it. Armed by hand for the rest of 2026-10-22 (16 backups, 10:17-11:32); from Friday 2026-10-23 the 13:30 arming creates them with the primaries.
 
 **v5.2.7 — 2026-10-20, governor instruction (full audit):** tooling only; no signal, sizing or exit rule changed. `paper.py`: (1) ranks simultaneous live signals per B4.4 and prints one ENTER plus SKIP lines; (2) warns when any C1.2 symbol is missing (NVDA missing = NVD loses ties) and flags thin legs with no trade in the last bar; (3) blocks entries on `NO_TRADE` dates (A1.10); (4) `--skip` bars real entries on A1.9 earnings days; (5) prints the runner level for when the real ⅓ take-profit fills before the model's (B5.4); (6) states plainly when the model's open position is a ghost (A3). Re-verified against the backtest: 115/115 trades identical (`tools/backtest/verify_paper_equivalence.py`). Plateau check of the FADE entry settings (`results/fade_entry_plateau.txt`): stable across break-by 10:10/10:15 and retest windows 9–18 bars; the 0.10% touch tolerance is a sharp peak (0.05%/0.20% are 0.03–0.06%/day worse), one more reason to plan on less than the backtest.
 
