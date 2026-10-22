@@ -360,6 +360,14 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Still unverified live:** the 1/3 OCO + 2/3 stop together on one FADE position (E2 item 1).
 - **Chain:** Thursday's 46 slots verified complete at the Wednesday 8:00 PM backup. Slot backups (D1, v5.2.8) armed by hand for the rest of today: 16 one-shots at 10:17, 10:22, ... 11:32 ET (2 minutes after the 10:15-11:30 primaries). The 10:05 primary arrived 7:27 late (14:12:27 UTC), after a manual 10:10 run had covered it; the 10:10 primary was likewise a duplicate. This day's 13:30 close arms Friday 2026-10-23. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 
+**Thursday 2026-10-22, 13:30 close (v5.2.12).**
+- **Real account:** flat, no positions, no open orders at 13:30, total value **$2,508.09**, unchanged on the day. No real trade today. Losing streak 0/5.
+- **Day:** no real or model trades. FADE: no entries (AMD and XLK retests expired or held). PULLBACK: TECS (11:30) and NVD (11:25, 12:25) formed setups that failed the room-to-target and stop-distance filters (B3.8); nothing qualified. Early shutdown done at 12:55 (13:00-13:25 triggers deleted).
+- **Model:** equity $2,087.46 (no trades today). Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46.
+- **Changes today:** v5.2.9 FADE late band 1.5%; v5.2.10 no slot backups, one-shot slot waiters (`slot_clock.sh`); v5.2.11 delete the scheduled twin after a flat waiter checkpoint (`archive/chain_ids.json`); v5.2.12 success-rate tracking (`archive/waiter_log.csv`, `slot_report.py`), review set for Fri 2026-11-06 (`trig_018N3oepVLFhbBuPwtwcTWJ1`).
+- **Friday 2026-10-23 chain armed and verified:** 46 triggers (9:00, 9:30 with the waiter start, 10:00-13:25, 13:30, 8:00pm), ids of the 10:00-12:55 primaries in `archive/chain_ids.json`. Monday arms Fri 13:30 with UTC-4 (UTC-5 from Mon 2026-11-02).
+- **Scheduler lag (E6):** median 62 s, :05/:10/:15 slots worst; clock waiter wake measured 4-10 s.
+
 ## E6. Known issues
 
 - **Trigger creation is rate-limited.** About 10 `create_trigger` calls per minute. Wait about 30 seconds and retry, then confirm the chain with `list_triggers`.
