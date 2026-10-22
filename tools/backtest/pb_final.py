@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import manual as m, pullback as P, pb_inverse as PI
 from lab import get_data
 
-BUFFER_PCT, MIN_ROOM, MIN_RR, SELL_BY = 0.05, 0.75, 0.75, 47      # 47 = sell at the 13:30 bar close
+BUFFER_PCT, MIN_ROOM, MIN_RR, MIN_ROOM_PCT, SELL_BY = 0.05, 0.75, 0.75, 0.25, 47      # 47 = sell at the 13:30 bar close
 TARGET_MODE = 'floor'    # 'floor' = RULEBOOK v5.1 (morning-high WICK rounded DOWN to the cent). Research variants: 'wick' (exact, pre-v5.1), 'body' (top of the body of the high bar), 'mid' (middle of the high bar), 'close' (highest close before the dip)
 
 
@@ -49,7 +49,7 @@ def scan(b, e9, e20, oco_gap):
             if b[j + 1][2] > lim: continue
             entry = min(b[j + 1][0], lim)
             if hod <= entry or entry <= stop or (entry - stop) / entry * 100 < MIN_ROOM: continue
-            if (hod - entry) < MIN_RR * (entry - stop) or (hod - entry) / entry * 100 < 0.25: continue
+            if (hod - entry) < MIN_RR * (entry - stop) or (hod - entry) / entry * 100 < MIN_ROOM_PCT: continue
             if oco_gap and hod - stop < 0.10: continue
             return dict(k=j + 1, entry=entry, stop=stop, hod=hod, sig=j)
     return None
