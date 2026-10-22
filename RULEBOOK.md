@@ -345,17 +345,16 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
-**Wednesday 2026-10-21, 9:00 research (v5.2.7).**
+**Thursday 2026-10-22, 9:00 research (v5.2.7).**
 - **Real account:** flat, no positions, no open equity or OCO orders at 9:00, **total value $2,508.09** (cash $2,508.09; deposited cash $2,493.43, floor $1,246.72). Daily loss limit (-3%) = $75.24, stop at $2,432.85.
-- **Controls:** losing streak 0 (1 real trade, a win). AMD reports Tue 2026-11-03 after the close (skip AMD fade row Wed 11-04); no NVIDIA report in the window; normal full session. `paper.py` now blocks entries on its `NO_TRADE` dates (Nov 26/27, Dec 24/25).
-- **Corporate actions (C3.2):** clean. All 14 funds and 7 proxies active; premarket moves consistent with their underlyings (SOXL +5.3% vs SOXX +1.8%, TQQQ +1.8% vs QQQ +0.6%, AMDL +3.7% vs AMD +2.0%); none more than 20% off yesterday's close.
-- **RVOL baseline:** 20 sessions (2026-09-23..2026-10-20) -> `archive/paper_rvol_2026-10-21.json`.
-- **Context:** strong premarket for semis/tech (SOXX +1.8%, QQQ +0.6%); mid-cap earnings only, none before 13:30 that moves the proxies directly.
-- **Model:** equity $2,087.46 (excludes the $500 deposit). Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46. Yesterday: no signals either system.
-- **Routine for today:** fetch all three C1.2 groups every slot (incl. NVDA); `--real-free` only if the governor closes a position by hand; reports lead with FADE status and a one-line PULLBACK status (governor, 2026-10-20).
+- **Controls:** losing streak 0 (1 real trade, a win). AMD reports Tue 2026-11-03 after the close (skip AMD fade row Wed 11-04); no AMD or NVIDIA report today; normal full session (`paper.py` calendar ends 2026-12-31).
+- **Corporate actions (C3.2):** clean. All 14 funds and 7 proxies active; premarket moves match their underlyings at the stated leverage (SOXX -4.2% vs SOXL -12.5% and SOXS +12.7%; QQQ -1.6% vs TQQQ -4.9% and SQQQ +5.0%; XLK -2.2% vs TECL -5.9% and TECS +6.4%; AMD -4.7% vs AMDL -9.5% and AMDD +4.4%); none more than 20% off yesterday's close.
+- **RVOL baseline:** 20 sessions (2026-09-24..2026-10-21) -> `archive/paper_rvol_2026-10-22.json`.
+- **Context:** sharp risk-off premarket, semis hardest hit (SOXX -4.2%, AMD -4.7%, NVDA -2.4%, QQQ -1.6%, IWM -0.6%, XBI -0.5%). A web search did not confirm a cause for today; none is assumed. Earnings before 13:30 are large non-proxy names only (HON, UNP, PG, LMT, NSC, SPOT, CMCSA and similar); WDC reports after the close. Wide premarket spreads on thin legs (TECL, LABU, TECS), so expect the spread check (A1.6) to matter at the open.
+- **Model:** equity $2,087.46 (excludes the $500 deposit). Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46. Yesterday (Wed 10-21): no signals either system, early shutdown at 12:55.
+- **Routine for today:** fetch all three C1.2 groups every slot (incl. NVDA); `--real-free` only if the governor closes a position by hand; reports lead with FADE status and a one-line PULLBACK status (governor, 2026-10-20). If a slot fires before its bar closes, the newest bar is one short (E6); refetch if a signal is near trigger.
 - **Still unverified live:** the 1/3 OCO + 2/3 stop together on one FADE position (E2 item 1).
-- **Chain:** Wednesday's 46 slots verified complete at the Tuesday 8:00 PM backup. This checkpoint's 13:30 close arms Thursday 2026-10-22. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
-- **Wednesday close (13:30):** no signals in either system (no proxy broke its box; PULLBACK breakouts never met the trend test). Real account flat all day at **$2,508.09**, losing streak 0, no safety control fired. Early shutdown applied at 12:55 (13:00-13:25 slots deleted). Model unchanged at $2,087.46. Thursday 2026-10-22's 46 slots armed (UTC-4) and confirmed complete with `list_triggers` (two pages, no duplicates). Backtest context: 60 of 157 days had no trade, longest streak 6 days (2026-09-09..09-16), so two flat days in a row is ordinary.
+- **Chain:** Thursday's 46 slots verified complete at the Wednesday 8:00 PM backup. This day's 13:30 close arms Friday 2026-10-23. Bimonthly reminder `trig_01Dwv81fMNH5Rw141Uy3wLKP`, next 2026-11-01.
 
 ## E6. Known issues
 
