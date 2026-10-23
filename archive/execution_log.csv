@@ -1,3 +1,5 @@
 date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spread_pct,ref_px,limit_px,fill_px,slippage_pct,shares,notes,delay_min,fire_et
 2026-10-16,LABD,PULLBACK,buy,entry,11:55,,,,,,8.79,8.79,8.7799,-0.12,226,backfilled: bid/ask and timestamps not captured,,
 2026-10-19,SOXL,FADE,buy,skipped,10:10,,,101.18,101.21,0.03,99.77,,,,,"signal SOXX failed retest (RVOL 1.57 beat QQQ 1.29, XLK 0.85); blocked A1.6: quote 101.19 vs last bar 99.77 (+1.4%); checkpoint ran ~6 min late",6.3,10:16:17
+2026-10-23,UVXY,PULLBACK,buy,entry,12:55,12:55:52,12:55:52,19.03,19.04,0.05,19.09,19.09,19.0599,-0.16,131,limit buy GFD at trigger close 19.09; filled at 19.0599 within 0.15 s; order 6adb9198-ce15-4a01-85c1-8c1e8a37cdde; last entry slot (A1.10),0.87,12:55:06
+2026-10-23,UVXY,PULLBACK,sell,protect,12:55,12:56:16,12:56:16,19.04,19.05,0.05,19.86,19.86,,,131,"OCO GTC 131 sh: take-profit limit 19.86 + stop-market 18.85; advanced order 6adb8c5e-0c2f-4e0f-a7a5-f3db8a3a4654 (confirmed, resting); placed right after the fill instead of waiting for the next checkpoint",1.27,12:55:06
