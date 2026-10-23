@@ -1,0 +1,80 @@
+263,949 lists of 1..8 proxies from 20, searched in 43s
+
+######## PRICING: MODEL ########   LIVE six: full +0.570  H1 +0.553  H2 +0.586  March +0.594  tune +0.565
+
+  [ALL proxies] 263,949 lists; live six ranks 131
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX          full +0.612 H1 +0.665 H2 +0.559 March +0.794
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE          full +0.610 H1 +0.623 H2 +0.597 March +0.688
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE               full +0.606 H1 +0.599 H2 +0.613 March +0.741
+     n=8 SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX          full +0.606 H1 +0.729 H2 +0.484 March +0.791
+     n=8 QQQ, SOXX, IWM, XBI, AMD, XLF, KRE, GDX          full +0.606 H1 +0.694 H2 +0.518 March +0.821
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, GDX          full +0.605 H1 +0.694 H2 +0.517 March +0.724
+     n=8 SOXX, IWM, XLK, XBI, AMD, KRE, GDX, XLE          full +0.605 H1 +0.708 H2 +0.502 March +0.888
+     n=7 SOXX, IWM, XLK, XBI, AMD, KRE, GDX               full +0.602 H1 +0.705 H2 +0.500 March +0.791
+   beat the live six on full AND H1 AND H2 AND March: 8
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE          full +0.610 H1 +0.623 H2 +0.597 March +0.688
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE               full +0.606 H1 +0.599 H2 +0.613 March +0.741
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, TLT          full +0.598 H1 +0.592 H2 +0.604 March +0.683
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, KRE          full +0.593 H1 +0.582 H2 +0.604 March +0.723
+     n=6 QQQ, SOXX, IWM, XBI, AMD, KRE                    full +0.588 H1 +0.588 H2 +0.588 March +0.768
+     n=8 QQQ, SOXX, IWM, XLK, XBI, XLF, KRE, XLE          full +0.572 H1 +0.554 H2 +0.589 March +0.780
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY               full +0.572 H1 +0.554 H2 +0.589 March +0.635
+     n=6 QQQ, SOXX, XLK, XBI, AMD, KRE                    full +0.571 H1 +0.554 H2 +0.589 March +0.685
+   choose on tune  -> n=8 QQQ, SOXX, XLK, XBI, AMD, XLF, KRE, TLT        tune +0.602 -> March +0.574 (live +0.594)
+   choose on H1    -> n=8 SOXX, XLK, XBI, AMD, XLF, GDX, XLE, TLT        H1 +0.746 -> H2 +0.433 (live +0.586)
+   choose on H2    -> n=8 QQQ, SOXX, XLK, XBI, AMD, AAPL, KRE, TLT       H2 +0.626 -> H1 +0.483 (live +0.553)
+
+  [LIQUID legs only] 3,796 lists; live six ranks 7
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX          full +0.593 H1 +0.652 H2 +0.535 March +0.783
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, GDX               full +0.589 H1 +0.647 H2 +0.532 March +0.742
+     n=6 SOXX, IWM, XLK, XBI, AMD, GDX                    full +0.576 H1 +0.687 H2 +0.466 March +0.739
+     n=7 QQQ, SOXX, IWM, XBI, AMD, SPY, GDX               full +0.575 H1 +0.640 H2 +0.510 March +0.810
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY               full +0.572 H1 +0.554 H2 +0.589 March +0.635
+     n=6 QQQ, SOXX, IWM, XBI, AMD, GDX                    full +0.571 H1 +0.635 H2 +0.507 March +0.769
+     n=6 QQQ, SOXX, IWM, XLK, XBI, AMD                    full +0.570 H1 +0.553 H2 +0.586 March +0.594
+     n=7 SOXX, IWM, XLK, XBI, AMD, SPY, GDX               full +0.564 H1 +0.659 H2 +0.470 March +0.780
+   beat the live six on full AND H1 AND H2 AND March: 1
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY               full +0.572 H1 +0.554 H2 +0.589 March +0.635
+   choose on tune  -> n=6 QQQ, SOXX, IWM, XLK, XBI, AMD                  tune +0.565 -> March +0.594 (live +0.594)
+   choose on H1    -> n=6 SOXX, IWM, XLK, XBI, AMD, GDX                  H1 +0.687 -> H2 +0.466 (live +0.586)
+   choose on H2    -> n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, AMZN, SPY       H2 +0.595 -> H1 +0.360 (live +0.553)
+
+######## PRICING: REAL ########   LIVE six: full +0.582  H1 +0.591  H2 +0.572  March +0.666  tune +0.566
+
+  [ALL proxies] 263,949 lists; live six ranks 179
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX          full +0.619 H1 +0.688 H2 +0.550 March +0.869
+     n=7 SOXX, IWM, XBI, SPY, SMH, GDX, XLE               full +0.617 H1 +0.725 H2 +0.509 March +1.067
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, GDX          full +0.616 H1 +0.729 H2 +0.505 March +0.760
+     n=8 SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX          full +0.615 H1 +0.753 H2 +0.479 March +0.877
+     n=8 QQQ, SOXX, IWM, XBI, AMD, XLF, KRE, GDX          full +0.615 H1 +0.714 H2 +0.516 March +0.894
+     n=8 QQQ, SOXX, XBI, SPY, SMH, XLF, GDX, XLE          full +0.614 H1 +0.740 H2 +0.489 March +0.994
+     n=8 SOXX, IWM, XLK, XBI, AMD, KRE, GDX, XLE          full +0.612 H1 +0.734 H2 +0.492 March +0.963
+     n=6 SOXX, IWM, XBI, SMH, GDX, XLE                    full +0.612 H1 +0.719 H2 +0.506 March +0.965
+   beat the live six on full AND H1 AND H2 AND March: 4
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE          full +0.611 H1 +0.633 H2 +0.589 March +0.761
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE               full +0.601 H1 +0.599 H2 +0.603 March +0.761
+     n=7 QQQ, SOXX, XLK, XBI, AMD, XLF, KRE               full +0.587 H1 +0.602 H2 +0.572 March +0.706
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY               full +0.586 H1 +0.597 H2 +0.575 March +0.712
+   choose on tune  -> n=8 QQQ, SOXX, XLK, XBI, AMD, SMH, XLF, TLT        tune +0.605 -> March +0.516 (live +0.666)
+   choose on H1    -> n=8 SOXX, XLK, XBI, AMD, XLV, XLF, GDX, XLE        H1 +0.784 -> H2 +0.328 (live +0.572)
+   choose on H2    -> n=8 QQQ, SOXX, XLK, XBI, AMD, SMH, KRE, TLT        H2 +0.649 -> H1 +0.489 (live +0.591)
+
+  [LIQUID legs only] 3,796 lists; live six ranks 11
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX          full +0.605 H1 +0.689 H2 +0.522 March +0.827
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, GDX               full +0.600 H1 +0.683 H2 +0.519 March +0.781
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, GDX          full +0.598 H1 +0.646 H2 +0.550 March +0.647
+     n=8 QQQ, SOXX, IWM, XBI, AMD, SPY, SMH, GDX          full +0.593 H1 +0.655 H2 +0.531 March +0.773
+     n=7 QQQ, SOXX, IWM, XBI, AMD, SPY, GDX               full +0.587 H1 +0.675 H2 +0.501 March +0.851
+     n=6 SOXX, IWM, XLK, XBI, AMD, GDX                    full +0.586 H1 +0.725 H2 +0.448 March +0.788
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY               full +0.586 H1 +0.597 H2 +0.575 March +0.712
+     n=7 SOXX, IWM, XLK, XBI, AMD, SMH, GDX               full +0.583 H1 +0.688 H2 +0.480 March +0.654
+   beat the live six on full AND H1 AND H2 AND March: 1
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY               full +0.586 H1 +0.597 H2 +0.575 March +0.712
+   choose on tune  -> n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, GDX        tune +0.589 -> March +0.647 (live +0.666)
+   choose on H1    -> n=6 SOXX, IWM, XLK, XBI, AMD, GDX                  H1 +0.725 -> H2 +0.448 (live +0.572)
+   choose on H2    -> n=8 QQQ, IWM, XLK, XBI, AMD, AMZN, SPY, SMH        H2 +0.613 -> H1 +0.278 (live +0.591)
+
