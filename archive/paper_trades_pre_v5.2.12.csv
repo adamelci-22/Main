@@ -1,0 +1,4 @@
+day,system,proxy,ticker,entry_time,entry_px_leg,stop,target,exit_time,exit_reason,pct_leg,notional_usd,pnl_usd,equity_after
+2026-10-16,PB,-,LABD,11:55,8.7850,8.7106,8.8687,12:25,target,0.912,2000.00,18.25,2018.25
+2026-10-19,FADE,SOXX,SOXL,10:10,99.7750,501.5800,508.7650,12:00,ratchet stop,3.429,2018.25,69.21,2087.46
+2026-10-23,PB,-,UVXY,12:55,19.0850,18.8506,19.8600,13:25,time,0.824,2087.46,17.21,2104.67
