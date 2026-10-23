@@ -1,0 +1,45 @@
+Pool (12): ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD', 'NVDA', 'AAPL', 'AMZN', 'SPY', 'SMH', 'GDX']
+924 combinations of 6
+
+(scored in 7s)
+LIVE ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD']: full +0.570 H1 +0.553 H2 +0.586 March +0.594
+Live list ranks 3 of 924 on the full sample
+
+Top 15 on the full sample:
+   SOXX, IWM, XLK, XBI, AMD, GDX          full +0.576 H1 +0.687 H2 +0.466 March +0.739  
+   QQQ, SOXX, IWM, XBI, AMD, GDX          full +0.571 H1 +0.635 H2 +0.507 March +0.769  
+   QQQ, SOXX, IWM, XLK, XBI, AMD          full +0.570 H1 +0.553 H2 +0.586 March +0.594  both halves >= live
+   QQQ, SOXX, IWM, XBI, AMD, SPY          full +0.553 H1 +0.543 H2 +0.564 March +0.662  
+   QQQ, SOXX, IWM, XLK, XBI, GDX          full +0.547 H1 +0.604 H2 +0.491 March +0.830  
+   QQQ, SOXX, XLK, XBI, AMD, GDX          full +0.546 H1 +0.601 H2 +0.491 March +0.686  
+   SOXX, IWM, XLK, XBI, AMD, SPY          full +0.543 H1 +0.562 H2 +0.524 March +0.632  
+   QQQ, SOXX, XLK, XBI, AMD, SPY          full +0.540 H1 +0.520 H2 +0.559 March +0.579  
+   QQQ, SOXX, XBI, AMD, SPY, GDX          full +0.538 H1 +0.595 H2 +0.482 March +0.754  
+   SOXX, IWM, XLK, XBI, SPY, GDX          full +0.533 H1 +0.625 H2 +0.442 March +0.868  
+   QQQ, SOXX, IWM, XBI, SPY, GDX          full +0.530 H1 +0.646 H2 +0.415 March +1.055  
+   QQQ, SOXX, IWM, XBI, AMD, AAPL         full +0.519 H1 +0.486 H2 +0.551 March +0.621  
+   QQQ, SOXX, IWM, XLK, XBI, SPY          full +0.519 H1 +0.489 H2 +0.548 March +0.650  
+   QQQ, SOXX, IWM, XBI, SMH, GDX          full +0.515 H1 +0.584 H2 +0.447 March +0.871  
+   SOXX, IWM, XBI, AMD, SMH, GDX          full +0.513 H1 +0.596 H2 +0.431 March +0.586  
+
+Combinations at least as good as the live list on H1, H2 AND March: 1
+   QQQ, SOXX, IWM, XLK, XBI, AMD          full +0.570 H1 +0.553 H2 +0.586 March +0.594
+
+Out-of-sample checks (pick the best 6 on one window, judge on another):
+   best on tune = QQQ, SOXX, IWM, XLK, XBI, AMD          on tune +0.565 -> on Mar +0.594 (live +0.594; beats 78% of combos on Mar)
+   best on H1   = SOXX, IWM, XLK, XBI, AMD, GDX          on H1 +0.687 -> on H2 +0.466 (live +0.586; beats 90% of combos on H2)
+   best on H2   = QQQ, SOXX, IWM, XLK, XBI, AMD          on H2 +0.586 -> on H1 +0.553 (live +0.553; beats 95% of combos on H1)
+
+How often each proxy appears in the top 50 (full sample):
+   XBI    49/50   $vol 269k
+   SOXX   46/50   $vol 11,461k
+   AMD    33/50   $vol 244k
+   IWM    32/50   $vol 1,361k
+   GDX    31/50   $vol 160k
+   QQQ    30/50   $vol 13,305k
+   XLK    27/50   $vol 136k
+   SMH    21/50   $vol 11,461k
+   SPY    17/50   $vol 1,170k
+   AAPL   11/50   $vol 210k
+   NVDA    2/50   $vol 201k
+   AMZN    1/50   $vol 326k
