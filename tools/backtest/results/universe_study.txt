@@ -1,0 +1,50 @@
+BASE (live system): +0.570%/day H1 +0.553 H2 +0.586 ret +138.2% DD 4.1% trades 115 on 97 of 157 days; March window +0.594%/day, 22 trades
+
+== FADE: add one proxy (deltas vs base in brackets) ==
+SPY               +0.572 (+0.002) H1 +0.554 (+0.002) H2 +0.589 (+0.003) ret +139.0% DD 4.3% trades 124 tradedays 103 | alone: 17 trades | Mar +0.041 | $vol legs 1,262k/1,170k
+XLF               +0.591 (+0.022) H1 +0.612 (+0.060) H2 +0.571 (-0.016) ret +146.4% DD 4.4% trades 120 tradedays 100 | alone: 14 trades | Mar +0.024 | $vol legs 200k/70k
+XLE               +0.551 (-0.019) H1 +0.552 (-0.001) H2 +0.550 (-0.036) ret +131.3% DD 4.1% trades 126 tradedays 107 | alone: 19 trades | Mar +0.085 | $vol legs 62k/98k
+NVDA              +0.487 (-0.083) H1 +0.507 (-0.046) H2 +0.467 (-0.120) ret +109.1% DD 7.0% trades 129 tradedays 105 | alone: 26 trades | Mar -0.084 | $vol legs 2,338k/201k
+
+== PULLBACK: add one leveraged/inverse ticker ==
+SPXS              +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 2 setups win 100% +0.008%/day | Mar +0.000 | $vol 1,507k
+SPXU              +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 1 setups win 100% +0.004%/day | Mar +0.000 | $vol 1,170k
+SDOW              +0.565 (-0.005) H1 +0.542 (-0.010) H2 +0.586 (+0.000) ret +136.3% DD 4.6% trades 116 tradedays  97 | alone 1 setups win 0% -0.005%/day | Mar -0.033 | $vol 509k
+SRTY              +0.564 (-0.005) H1 +0.553 (+0.000) H2 +0.575 (-0.011) ret +136.1% DD 4.1% trades 118 tradedays  98 | alone 3 setups win 33% -0.006%/day | Mar +0.037 | $vol 187k THIN
+SARK              no qualifying setups
+VXX               +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 4 setups win 50% +0.002%/day | Mar +0.000 | $vol 648k
+VIXY              +0.577 (+0.007) H1 +0.567 (+0.014) H2 +0.586 (-0.000) ret +140.8% DD 4.1% trades 115 tradedays  97 | alone 6 setups win 67% +0.011%/day | Mar -0.009 | $vol 163k THIN
+TSLZ              +0.549 (-0.020) H1 +0.538 (-0.014) H2 +0.560 (-0.027) ret +130.6% DD 4.9% trades 120 tradedays  98 | alone 8 setups win 12% -0.041%/day | Mar +0.000 | $vol 144k THIN
+TSDD              +0.570 (+0.000) H1 +0.541 (-0.012) H2 +0.598 (+0.012) ret +138.2% DD 4.1% trades 119 tradedays  98 | alone 9 setups win 33% -0.018%/day | Mar +0.000 | $vol 760k
+TSLQ              +0.574 (+0.004) H1 +0.562 (+0.009) H2 +0.585 (-0.001) ret +139.7% DD 4.1% trades 118 tradedays  99 | alone 6 setups win 50% +0.001%/day | Mar +0.033 | $vol 732k
+NVD               +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 8 setups win 62% +0.011%/day | Mar +0.000 | $vol 2,408k
+NVDQ              +0.561 (-0.009) H1 +0.550 (-0.003) H2 +0.572 (-0.015) ret +134.9% DD 4.8% trades 119 tradedays 101 | alone 10 setups win 70% +0.029%/day | Mar +0.000 | $vol 201k THIN
+AMDD              +0.563 (-0.006) H1 +0.540 (-0.013) H2 +0.586 (+0.000) ret +135.8% DD 4.1% trades 116 tradedays  97 | alone 3 setups win 0% -0.020%/day | Mar +0.000 | $vol 244k THIN
+MSTZ              +0.522 (-0.048) H1 +0.504 (-0.048) H2 +0.539 (-0.048) ret +120.5% DD 5.1% trades 131 tradedays 105 | alone 23 setups win 39% -0.017%/day | Mar -0.159 | $vol 808k
+JDST              +0.556 (-0.014) H1 +0.524 (-0.028) H2 +0.586 (-0.000) ret +133.0% DD 4.9% trades 117 tradedays  98 | alone 4 setups win 25% -0.013%/day | Mar -0.051 | $vol 39k THIN
+DUST              +0.563 (-0.007) H1 +0.538 (-0.015) H2 +0.588 (+0.002) ret +135.8% DD 4.9% trades 117 tradedays  98 | alone 3 setups win 67% -0.000%/day | Mar -0.049 | $vol 160k THIN
+ZSL               +0.581 (+0.012) H1 +0.569 (+0.016) H2 +0.594 (+0.007) ret +142.6% DD 4.1% trades 118 tradedays  97 | alone 7 setups win 57% -0.001%/day | Mar +0.000 | $vol 408k
+SCO               +0.565 (-0.005) H1 +0.553 (+0.000) H2 +0.576 (-0.010) ret +136.4% DD 4.8% trades 118 tradedays  99 | alone 5 setups win 60% +0.011%/day | Mar +0.000 | $vol 704k
+HIBS              +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 2 setups win 50% +0.002%/day | Mar +0.000 | $vol 5k THIN
+WEBS              +0.555 (-0.014) H1 +0.524 (-0.028) H2 +0.586 (+0.000) ret +133.0% DD 4.7% trades 118 tradedays  97 | alone 3 setups win 33% -0.014%/day | Mar -0.037 | $vol 0k THIN
+QID               +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 1 setups win 100% +0.005%/day | Mar +0.000 | $vol 1,815k
+SDS               no qualifying setups
+TWM               no qualifying setups
+REW               no qualifying setups
+SBIT              +0.563 (-0.007) H1 +0.551 (-0.002) H2 +0.575 (-0.011) ret +135.8% DD 4.1% trades 119 tradedays  99 | alone 9 setups win 56% +0.001%/day | Mar -0.040 | $vol 151k THIN
+ETHD              +0.553 (-0.017) H1 +0.536 (-0.016) H2 +0.569 (-0.018) ret +131.8% DD 4.9% trades 122 tradedays 101 | alone 10 setups win 30% -0.024%/day | Mar -0.049 | $vol 47k THIN
+FNGD              +0.578 (+0.009) H1 +0.570 (+0.017) H2 +0.586 (+0.000) ret +141.4% DD 4.1% trades 116 tradedays  98 | alone 3 setups win 33% -0.000%/day | Mar +0.056 | $vol 30k THIN
+YANG              no qualifying setups
+DRIP              +0.572 (+0.003) H1 +0.569 (+0.017) H2 +0.575 (-0.011) ret +139.2% DD 4.8% trades 118 tradedays  98 | alone 5 setups win 60% +0.003%/day | Mar +0.000 | $vol 336k
+ERY               +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 1 setups win 100% +0.006%/day | Mar +0.000 | $vol 98k THIN
+FAZ               +0.559 (-0.010) H1 +0.532 (-0.021) H2 +0.586 (+0.000) ret +134.3% DD 4.8% trades 118 tradedays  97 | alone 4 setups win 0% -0.012%/day | Mar -0.068 | $vol 70k THIN
+
+Passing all screens (liquid, helps both halves, not worse in March window): ['ZSL']
+
+== Top 1 PULLBACK adds together: ['ZSL'] ==
+PB +top           +0.581 (+0.012) H1 +0.569 (+0.016) H2 +0.594 (+0.007) ret +142.6% DD 4.1% trades 118 tradedays  97 | Mar +0.000
+
+FADE proxies passing screens: ['SPY']
+
+== Combined universe (passing FADE adds + top PB adds) ==
+combined          +0.583 (+0.014) H1 +0.570 (+0.018) H2 +0.596 (+0.010) ret +143.4% DD 4.3% trades 127 tradedays 103 | Mar +0.041
