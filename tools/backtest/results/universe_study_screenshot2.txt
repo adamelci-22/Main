@@ -1,0 +1,8 @@
+BASE +0.570%/day H1 +0.553 H2 +0.586 ret +138.2% DD 4.1% trades 115; March +0.594
+
+BERZ days in data: 158
+BERZ no setups
+DUST              +0.563 (-0.007) H1 +0.538 (-0.015) H2 +0.588 (+0.002) ret +135.8% DD 4.9% trades 117 tradedays  98 | alone 3 setups win 67% avg -0.02% | Mar -0.049 | $vol 160k | day range 5.5%
+    2026-03-20 -1.154119043686145
+    2026-09-23 0.12987255734917919
+    2026-10-14 0.9607352433552003
