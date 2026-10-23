@@ -349,6 +349,16 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
+**Friday 2026-10-23, 9:00 research (v5.2.12).**
+- **Real account:** flat, no positions, no open or recent orders, **total value $2,508.09** (all cash, buying power $2,508.09). The daily loss limit (A1.2) is measured from it: a close at or below **$2,432.85** blocks entries.
+- **Controls:** losing streak 0/5. No AMD or NVIDIA earnings today (AMD reports Tue 2026-11-03 after the close: skip the AMD fade row Wed 11-04). Regular full session, no holiday.
+- **Corporate actions (C3.2):** clean. All 14 funds and 7 proxies active. Premarket moves match their underlyings at the stated leverage (TQQQ -0.8% vs QQQ -0.2%, SOXL +0.7% vs SOXX +0.2%, TNA -1.9% vs IWM -0.6%, LABU -2.6% vs XBI -0.8%); nothing near 20%.
+- **RVOL baseline:** 20 sessions (2026-09-25..2026-10-22) -> `archive/paper_rvol_2026-10-23.json`.
+- **Context:** futures slightly lower after Thursday's tech sell-off (S&P about -0.2%, Nasdaq 100 about -0.1%). AI-infrastructure financing worries, high oil, French bond turmoil; the Fed meets next week (Oct 28), hike bets have faded. No scheduled data release found before 13:30.
+- **Model:** equity $2,087.46. Running totals since 2026-10-16: 1 real trade, 1 win, +$14.66; model 2 trades, both wins, +$87.46.
+- **Today is the first day of the slot waiters (v5.2.10-12):** 9:30 starts batch 1 (10:00-11:25), the 11:25 waiter starts batch 2 (11:30-13:25); waiter fire times log to `archive/waiter_log.csv`; scheduled twins deleted after flat completions via `archive/chain_ids.json`.
+- **Still unverified live:** the 1/3 OCO + 2/3 stop together on one FADE position (E2 item 1); no test order was run (governor, 2026-10-22).
+
 **Thursday 2026-10-22, 9:00 research (v5.2.7).**
 - **Real account:** flat, no positions, no open equity or OCO orders at 9:00, **total value $2,508.09** (cash $2,508.09; deposited cash $2,493.43, floor $1,246.72). Daily loss limit (-3%) = $75.24, stop at $2,432.85.
 - **Controls:** losing streak 0 (1 real trade, a win). AMD reports Tue 2026-11-03 after the close (skip AMD fade row Wed 11-04); no AMD or NVIDIA report today; normal full session (`paper.py` calendar ends 2026-12-31).
