@@ -378,6 +378,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 - **Friday 2026-10-23 chain armed and verified:** 46 triggers (9:00, 9:30 with the waiter start, 10:00-13:25, 13:30, 8:00pm), ids of the 10:00-12:55 primaries in `archive/chain_ids.json`. Monday arms Fri 13:30 with UTC-4 (UTC-5 from Mon 2026-11-02).
 - **Scheduler lag (E6):** median 62 s, :05/:10/:15 slots worst; clock waiter wake measured 4-10 s.
 
+**Friday 2026-10-23, 13:30 close (v5.2.12).**
+- **Real account:** flat, no positions, no open orders at 13:30, total value **$2,535.56**. 9:00 value was $2,508.09. Losing streak 0/5. No safety control fired.
+- **Real trade:** UVXY PULLBACK, 131 sh, 19.0599 -> 19.2701, **+$27.47** (1.100% of position); model +$17.21 (0.824%). Entered at the last entry slot, closed by the 13:30 time exit.
+- **Model:** equity $2,104.67. Running totals since 2026-10-16: real 2 trades, both wins, +$42.13; model 3 trades, all wins, +$104.67.
+- **Waiters, first day:** all slots fired 4-10 s after the clock; a container restart at 11:46 ET killed 20 waiters, re-created at once (see E6). Log in `archive/waiter_log.csv`.
+- **Monday 2026-10-26 chain armed:** 46 triggers (9:00, 9:30 with the waiter start, 10:00-13:25, 13:30, 8:00pm), ids of the 10:00-13:25 primaries in `archive/chain_ids.json`. Verified by the Friday 8:00pm check.
+
 ## E6. Known issues
 
 - **Trigger creation is rate-limited.** About 10 `create_trigger` calls per minute. Wait about 30 seconds and retry, then confirm the chain with `list_triggers`.
