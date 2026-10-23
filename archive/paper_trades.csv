@@ -1,2 +1,2 @@
 day,system,proxy,ticker,entry_time,entry_px_leg,stop,target,exit_time,exit_reason,pct_leg,notional_usd,pnl_usd,equity_after
-2026-10-23,PB,-,UVXY,12:55,19.0850,18.8506,19.8600,13:25,time,0.824,2000.00,16.48,2016.48
+2026-10-23,PB,-,UVXY,12:55,19.0850,18.8506,19.8600,13:25,time,0.824,2500.00,20.60,2520.60

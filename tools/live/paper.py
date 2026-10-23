@@ -335,7 +335,7 @@ def px(v, nd=2):
 
 def state():
     if os.path.exists(STATE): return json.load(open(STATE))
-    return {'equity': 2000.0, 'start': None, 'days_logged': [], 'loss_streak': 0}
+    return {'equity': 2500.0, 'start': None, 'days_logged': [], 'loss_streak': 0}
 
 
 def main():
