@@ -1,0 +1,155 @@
+LIVE SYSTEM: +0.570%/day  H1 +0.553  H2 +0.586  DD 4.1%  trades 115
+Not testable (no such ETF on Robinhood / wrong ticker): GOOGL (GOOU absent; GOOD is Gladstone Commercial, a REIT), AVGO (AVGL/AVGD absent), NFLX bear (NFLD absent; NFLU tested on PULLBACK only), QCOM (QCL/QCD absent), XLV bear SICK absent (RXD -2x used instead).
+
+===== FADE (PULLBACK fixed at the live list) =====
+Pool (liquidity, trades alone over 157 days):
+   QQQ   LIVE $vol  13,305k  setups  20  win  55%  avg +0.42%
+   SOXX  LIVE $vol  11,461k  setups  21  win  52%  avg +1.40%
+   IWM   LIVE $vol   1,361k  setups  17  win  59%  avg +0.24%
+   XLK   LIVE $vol     136k  setups  25  win  52%  avg +0.54%
+   XBI   LIVE $vol     269k  setups  12  win  58%  avg +1.15%
+   AMD   LIVE $vol     244k  setups  19  win  37%  avg +0.71%
+   NVDA       $vol     201k  setups  26  win  35%  avg -0.15%
+   AAPL       $vol     210k  setups  13  win  46%  avg -0.06%
+   AMZN       $vol     326k  setups  16  win  31%  avg -0.27%
+   META       $vol      17k  setups  17  win  47%  avg +0.05%
+   MSFT       $vol      52k  setups  15  win  27%  avg -0.22%
+   SPY        $vol   1,170k  setups  17  win  35%  avg +0.07%
+   SMH        $vol  11,461k  setups  22  win  50%  avg +1.18%
+   XLV        $vol       0k  setups   9  win  44%  avg -0.02%
+   XLF        $vol      70k  setups  14  win  50%  avg +0.11%
+   KRE        $vol      70k  setups  21  win  38%  avg +0.05%
+   GDX        $vol     160k  setups  22  win  32%  avg +0.16%
+   XLE        $vol      62k  setups  19  win  42%  avg +0.15%
+   XOP        $vol      91k  setups  18  win  22%  avg -0.50%
+   TLT        $vol      86k  setups  17  win  41%  avg +0.14%
+Passing liquidity (>= $100k/bar) and with setups: ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD', 'NVDA', 'AAPL', 'AMZN', 'SPY', 'SMH', 'GDX']
+Dropped for liquidity or no setups: ['META', 'MSFT', 'XLV', 'XLF', 'KRE', 'XLE', 'XOP', 'TLT']
+
+Live list ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD']: full +0.570  H1 +0.553  H2 +0.586  March +0.594
+
+A. Greedy on the full sample (in-sample, optimistic):
+    1. +SOXX  +0.319%/day  (step +0.167)
+    2. +XBI   +0.397%/day  (step +0.077)
+    3. +AMD   +0.456%/day  (step +0.060)
+    4. +QQQ   +0.529%/day  (step +0.072)
+    5. +IWM   +0.551%/day  (step +0.023)
+    6. +GDX   +0.571%/day  (step +0.020)
+    7. +XLK   +0.589%/day  (step +0.018)
+    8. +SPY   +0.593%/day  (step +0.004)
+   -> max %/day: ['SOXX', 'XBI', 'AMD', 'QQQ', 'IWM', 'GDX', 'XLK', 'SPY']  full +0.593  H1 +0.652  H2 +0.535  March +0.783
+   -> every step >= 0.01: ['SOXX', 'XBI', 'AMD', 'QQQ', 'IWM', 'GDX', 'XLK']  full +0.589  H1 +0.647  H2 +0.532  March +0.742
+
+B. Walk-forward (choose on one half, judge on the other):
+   choose H1 -> judge H2: chose ['SOXX', 'GDX', 'XBI', 'IWM', 'XLK', 'AMD']
+      out-of-sample +0.466  vs live list on the same half +0.586
+   choose H2 -> judge H1: chose ['XBI', 'SMH', 'QQQ', 'AMD', 'XLK', 'IWM', 'SOXX', 'SPY', 'AMZN']
+      out-of-sample +0.303  vs live list on the same half +0.553
+
+===== PULLBACK (FADE fixed at the live list) =====
+Pool (liquidity, trades alone over 157 days):
+   SOXS  LIVE $vol  11,461k  setups  15  win  67%  avg +0.70%
+   LABD  LIVE $vol     398k  setups  11  win  73%  avg +0.45%
+   TECS  LIVE $vol     136k  setups  12  win  75%  avg +0.63%
+   UVXY  LIVE $vol     773k  setups  15  win  60%  avg +0.30%
+   NVD   LIVE $vol   2,408k  setups   8  win  62%  avg +0.21%
+   NVDU       $vol     153k  setups   6  win  50%  avg -0.19%
+   NVDD       $vol       8k  setups   0  win   0%  avg +0.00%
+   AAPU       $vol     210k  setups   2  win  50%  avg -0.15%
+   AAPD       $vol     571k  setups   0  win   0%  avg +0.00%
+   AMZU       $vol     326k  setups   5  win  40%  avg -0.30%
+   AMZD       $vol     612k  setups   0  win   0%  avg +0.00%
+   METU       $vol     471k  setups   6  win  17%  avg -0.63%
+   METD       $vol      17k  setups   0  win   0%  avg +0.00%
+   MSFU       $vol     628k  setups   5  win  80%  avg +0.58%
+   MSFD       $vol      52k  setups   0  win   0%  avg +0.00%
+   NFLU       $vol       6k  setups   3  win   0%  avg -0.87%
+   TQQQ       $vol  25,738k  setups   7  win  43%  avg -0.33%
+   SQQQ       $vol  13,305k  setups   2  win  50%  avg +0.02%
+   UPRO       $vol   1,262k  setups   0  win   0%  avg +0.00%
+   SPXU       $vol   1,170k  setups   1  win 100%  avg +0.62%
+   TNA        $vol   1,361k  setups   5  win  40%  avg -0.42%
+   TZA        $vol   4,199k  setups   8  win  50%  avg -0.12%
+   SOXL       $vol  28,534k  setups  17  win  47%  avg -0.18%
+   TECL       $vol     495k  setups   6  win  50%  avg -0.13%
+   LABU       $vol     269k  setups  11  win  27%  avg -0.48%
+   CURE       $vol       0k  setups   0  win   0%  avg +0.00%
+   RXD        $vol       0k  setups   0  win   0%  avg +0.00%
+   FAS        $vol     200k  setups   0  win   0%  avg +0.00%
+   FAZ        $vol      70k  setups   4  win   0%  avg -0.48%
+   NUGT       $vol     311k  setups  10  win  30%  avg -0.37%
+   DUST       $vol     160k  setups   3  win  67%  avg -0.02%
+   ERX        $vol      62k  setups   0  win   0%  avg +0.00%
+   ERY        $vol      98k  setups   1  win 100%  avg +0.95%
+   GUSH       $vol      91k  setups   2  win  50%  avg +0.18%
+   DRIP       $vol     336k  setups   5  win  60%  avg +0.10%
+   TMF        $vol     482k  setups   0  win   0%  avg +0.00%
+   TMV        $vol      86k  setups   0  win   0%  avg +0.00%
+Passing liquidity (>= $100k/bar) and with setups: ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD', 'NVDU', 'AAPU', 'AMZU', 'METU', 'MSFU', 'TQQQ', 'SQQQ', 'SPXU', 'TNA', 'TZA', 'SOXL', 'TECL', 'LABU', 'NUGT', 'DUST', 'DRIP']
+Dropped for liquidity or no setups: ['NVDD', 'AAPD', 'AMZD', 'METD', 'MSFD', 'NFLU', 'UPRO', 'CURE', 'RXD', 'FAS', 'FAZ', 'ERX', 'ERY', 'GUSH', 'TMF', 'TMV']
+
+Live list ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']: full +0.570  H1 +0.553  H2 +0.586  March +0.594
+
+A. Greedy on the full sample (in-sample, optimistic):
+    1. +SOXS  +0.515%/day  (step +0.059)
+    2. +TECS  +0.541%/day  (step +0.026)
+    3. +MSFU  +0.561%/day  (step +0.019)
+    4. +UVXY  +0.578%/day  (step +0.017)
+    5. +LABD  +0.588%/day  (step +0.010)
+    6. +DRIP  +0.590%/day  (step +0.003)
+    7. +NVDU  +0.592%/day  (step +0.001)
+   -> max %/day: ['SOXS', 'TECS', 'MSFU', 'UVXY', 'LABD', 'DRIP', 'NVDU']  full +0.592  H1 +0.580  H2 +0.603  March +0.521
+   -> every step >= 0.01: ['SOXS', 'TECS', 'MSFU', 'UVXY']  full +0.578  H1 +0.567  H2 +0.589  March +0.609
+
+B. Walk-forward (choose on one half, judge on the other):
+   choose H1 -> judge H2: chose ['TECS', 'SOXS', 'UVXY', 'LABD', 'DRIP', 'MSFU']
+      out-of-sample +0.579  vs live list on the same half +0.586
+   choose H2 -> judge H1: chose ['SOXS', 'MSFU', 'NVDU', 'TECL', 'UVXY', 'NVD', 'SOXL', 'DUST', 'TZA', 'LABD']
+      out-of-sample +0.347  vs live list on the same half +0.553
+
+===== Both best lists together (in-sample) =====
+   max %/day lists: FADE ['SOXX', 'XBI', 'AMD', 'QQQ', 'IWM', 'GDX', 'XLK', 'SPY'] | PB ['SOXS', 'TECS', 'MSFU', 'UVXY', 'LABD', 'DRIP', 'NVDU']
+      +0.612%/day  H1 +0.673  H2 +0.552  March +0.711  DD 6.5%  trades 137
+   every-step>=0.01 lists: FADE ['SOXX', 'XBI', 'AMD', 'QQQ', 'IWM', 'GDX', 'XLK'] | PB ['SOXS', 'TECS', 'MSFU', 'UVXY']
+      +0.598%/day  H1 +0.661  H2 +0.535  March +0.757  DD 3.8%  trades 118
+
+C. Choose on the tuning window (04-07..10-14), judge on the untouched March window (03-03..04-06):
+   FADE: chose ['SOXX', 'XLK', 'XBI', 'AMD', 'QQQ', 'IWM']
+      March +0.594  vs live list +0.594   (tuning window: chosen +0.565, live +0.565)
+   PULLBACK: chose ['SOXS', 'TECS', 'MSFU', 'UVXY', 'LABD', 'NVDU', 'DRIP', 'NUGT', 'DUST']
+      March +0.339  vs live list +0.594   (tuning window: chosen +0.612, live +0.565)
+
+D. Add-one / drop-one around the live lists (full sample; d = change in %/day, H1/H2 change):
+   FADE     drop QQQ   d -0.036  H1 -0.006  H2 -0.067  March -0.003
+   FADE     drop SOXX  d -0.180  H1 -0.261  H2 -0.100  March -0.215
+   FADE     drop IWM   d -0.031  H1 -0.034  H2 -0.027  March -0.056
+   FADE     drop XLK   d -0.018  H1 -0.012  H2 -0.025  March +0.027
+   FADE     drop XBI   d -0.097  H1 -0.043  H2 -0.151  March -0.245
+   FADE     drop AMD   d -0.053  H1 -0.065  H2 -0.041  March +0.016
+   FADE     add  NVDA  d -0.083  H1 -0.046  H2 -0.120  March -0.084
+   FADE     add  AAPL  d -0.034  H1 -0.058  H2 -0.010  March +0.000
+   FADE     add  AMZN  d -0.101  H1 -0.194  H2 -0.008  March +0.018
+   FADE     add  SPY   d +0.002  H1 +0.002  H2 +0.003  March +0.041
+   FADE     add  SMH   d -0.040  H1 -0.071  H2 -0.010  March -0.143
+   FADE     add  GDX   d +0.020  H1 +0.094  H2 -0.054  March +0.148
+   PULLBACK drop SOXS  d -0.038  H1 -0.049  H2 -0.026  March -0.072
+   PULLBACK drop LABD  d -0.016  H1 -0.019  H2 -0.013  March +0.016
+   PULLBACK drop TECS  d -0.031  H1 -0.063  H2 +0.000  March -0.044
+   PULLBACK drop UVXY  d -0.011  H1 -0.006  H2 -0.016  March +0.003
+   PULLBACK drop NVD   d +0.005  H1 +0.022  H2 -0.012  March +0.000
+   PULLBACK add  NVDU  d -0.004  H1 -0.033  H2 +0.024  March -0.072
+   PULLBACK add  AAPU  d -0.001  H1 -0.002  H2 +0.000  March +0.000
+   PULLBACK add  AMZU  d -0.044  H1 -0.013  H2 -0.075  March -0.037
+   PULLBACK add  METU  d -0.024  H1 +0.000  H2 -0.048  March +0.000
+   PULLBACK add  MSFU  d +0.013  H1 +0.011  H2 +0.015  March +0.000
+   PULLBACK add  TQQQ  d -0.017  H1 -0.036  H2 +0.002  March -0.043
+   PULLBACK add  SQQQ  d +0.000  H1 +0.000  H2 +0.000  March +0.000
+   PULLBACK add  SPXU  d +0.000  H1 +0.000  H2 +0.000  March +0.000
+   PULLBACK add  TNA   d -0.013  H1 -0.026  H2 +0.000  March -0.085
+   PULLBACK add  TZA   d -0.017  H1 -0.050  H2 +0.015  March +0.001
+   PULLBACK add  SOXL  d -0.042  H1 -0.094  H2 +0.009  March -0.153
+   PULLBACK add  TECL  d -0.002  H1 -0.025  H2 +0.021  March +0.000
+   PULLBACK add  LABU  d -0.043  H1 -0.029  H2 -0.057  March -0.001
+   PULLBACK add  NUGT  d -0.014  H1 -0.019  H2 -0.010  March -0.133
+   PULLBACK add  DUST  d -0.007  H1 -0.015  H2 +0.002  March -0.049
+   PULLBACK add  DRIP  d +0.003  H1 +0.017  H2 -0.011  March +0.000
