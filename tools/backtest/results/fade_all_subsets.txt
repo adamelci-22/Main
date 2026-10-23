@@ -1,0 +1,194 @@
+VERIFY live list: engine +0.5696%/day, fast sim +0.5696%/day, max daily diff 2.22e-14
+VERIFY ['SOXX', 'XBI']: engine +0.3968 fast +0.3968
+VERIFY ['KRE', 'GDX', 'NVDA', 'TLT']: engine +0.1654 fast +0.1654
+VERIFY all 20: engine +0.3120 fast +0.3120
+
+Real-leg check per proxy (FADE trades re-priced on the real leveraged ETF; model vs real, sum of trade %):
+   QQQ   TQQQ/SQQQ  trades 20  model   +8.5%  real   +8.7%  gap  +0.2  leg $vol 13,305k
+   SOXX  SOXL/SOXS  trades 21  model  +29.5%  real  +28.1%  gap  -1.4  leg $vol 11,461k
+   IWM   TNA/TZA   trades 17  model   +4.1%  real   +4.5%  gap  +0.4  leg $vol 1,361k
+   XLK   TECL/TECS  trades 25  model  +13.5%  real  +14.7%  gap  +1.2  leg $vol 136k
+   XBI   LABU/LABD  trades 12  model  +13.8%  real  +16.1%  gap  +2.3  leg $vol 269k
+   AMD   AMDL/AMDD  trades 19  model  +13.4%  real  +14.9%  gap  +1.4  leg $vol 244k
+   NVDA  NVDL/NVDQ  trades 26  model   -3.9%  real   -3.4%  gap  +0.5  leg $vol 201k
+   AAPL  AAPU/AAPD  trades 13  model   -0.7%  real   -1.0%  gap  -0.3  leg $vol 210k
+   AMZN  AMZU/AMZD  trades 16  model   -4.3%  real   -4.1%  gap  +0.2  leg $vol 326k
+   META  METU/METD  trades 17  model   +0.9%  real   +0.8%  gap  -0.1  leg $vol 17k
+   MSFT  MSFU/MSFD  trades 15  model   -3.3%  real   -3.8%  gap  -0.5  leg $vol 52k
+   SPY   UPRO/SPXU  trades 17  model   +1.2%  real   +1.4%  gap  +0.2  leg $vol 1,170k
+   SMH   SOXL/SOXS  trades 22  model  +26.0%  real  +31.3%  gap  +5.3  leg $vol 11,461k
+   XLV   CURE/RXD   trades  9  model   -0.2%  real   +2.5%  gap  +2.7  leg $vol 0k
+   XLF   FAS/FAZ   trades 14  model   +1.5%  real   +1.6%  gap  +0.0  leg $vol 70k
+   KRE   FAS/FAZ   trades 21  model   +1.1%  real   -2.1%  gap  -3.2  leg $vol 70k
+   GDX   NUGT/DUST  trades 22  model   +3.6%  real   +3.1%  gap  -0.4  leg $vol 160k
+   XLE   ERX/ERY   trades 19  model   +2.9%  real   +3.4%  gap  +0.5  leg $vol 62k
+   XOP   GUSH/DRIP  trades 18  model   -9.0%  real   -8.0%  gap  +1.0  leg $vol 91k
+   TLT   TMF/TMV   trades 17  model   +2.3%  real   +2.8%  gap  +0.5  leg $vol 86k
+
+Searching all 1,048,575 non-empty subsets of 20 proxies, 2 pricing modes, 4 processes...
+(done in 159s)
+
+######## PRICING: MODEL ########
+LIVE ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD']: full +0.570  H1 +0.553  H2 +0.586  March +0.594  tune +0.565
+
+  [ALL proxies] 1,048,575 subsets; live list ranks 456 on the full sample
+   top 10 full sample:
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX                 full +0.624 H1 +0.706 H2 +0.543 March +0.794
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX, TLT            full +0.618 H1 +0.703 H2 +0.534 March +0.736
+     n=11 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE, GDX, TLT       full +0.615 H1 +0.705 H2 +0.525 March +0.768
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE, GDX            full +0.613 H1 +0.692 H2 +0.534 March +0.776
+     n=11 QQQ, SOXX, XLK, XBI, AMD, SPY, XLF, KRE, GDX, XLE, TLT       full +0.612 H1 +0.718 H2 +0.508 March +0.809
+     n= 9 SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX, XLE                 full +0.612 H1 +0.732 H2 +0.494 March +0.888
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX                      full +0.612 H1 +0.665 H2 +0.559 March +0.794
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX, XLE            full +0.611 H1 +0.709 H2 +0.515 March +0.891
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, GDX, TLT            full +0.611 H1 +0.712 H2 +0.510 March +0.757
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE                      full +0.610 H1 +0.623 H2 +0.597 March +0.688
+   beat the live list on full AND H1 AND H2 AND March: 14
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE                      full +0.610 H1 +0.623 H2 +0.597 March +0.688
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE                           full +0.606 H1 +0.599 H2 +0.613 March +0.741
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, TLT                 full +0.602 H1 +0.616 H2 +0.588 March +0.630
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, TLT                      full +0.598 H1 +0.592 H2 +0.604 March +0.683
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE                 full +0.597 H1 +0.606 H2 +0.588 March +0.670
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, KRE                      full +0.593 H1 +0.582 H2 +0.604 March +0.723
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, KRE, TLT                 full +0.593 H1 +0.591 H2 +0.595 March +0.714
+     n= 9 QQQ, SOXX, XLK, XBI, AMD, SPY, XLF, KRE, TLT                 full +0.591 H1 +0.586 H2 +0.596 March +0.606
+     n= 6 QQQ, SOXX, IWM, XBI, AMD, KRE                                full +0.588 H1 +0.588 H2 +0.588 March +0.768
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, XLF, KRE                full +0.575 H1 +0.560 H2 +0.591 March +0.688
+   choose on tune  -> n= 8 QQQ, SOXX, XLK, XBI, AMD, XLF, KRE, TLT                 tune +0.602 -> March +0.574 (live +0.594)
+   choose on H1    -> n= 9 SOXX, XLK, XBI, AMD, XLV, XLF, GDX, XLE, TLT            H1 +0.757 -> H2 +0.390 (live +0.586)
+   choose on H2    -> n= 8 QQQ, SOXX, XLK, XBI, AMD, AAPL, KRE, TLT                H2 +0.626 -> H1 +0.483 (live +0.553)
+   best list of each size (full sample):
+     n= 1 +0.319 (H1 +0.397 H2 +0.243 Mar +0.381)  SOXX
+     n= 2 +0.397 (H1 +0.418 H2 +0.376 Mar +0.572)  SOXX, XBI
+     n= 3 +0.456 (H1 +0.450 H2 +0.463 Mar +0.525)  SOXX, XBI, AMD
+     n= 4 +0.529 (H1 +0.507 H2 +0.550 Mar +0.565)  QQQ, SOXX, XBI, AMD
+     n= 5 +0.561 (H1 +0.542 H2 +0.581 Mar +0.712)  QQQ, SOXX, XBI, AMD, KRE
+     n= 6 +0.588 (H1 +0.588 H2 +0.588 Mar +0.768)  QQQ, SOXX, IWM, XBI, AMD, KRE
+     n= 7 +0.606 (H1 +0.599 H2 +0.613 Mar +0.741)  QQQ, SOXX, IWM, XLK, XBI, AMD, KRE
+     n= 8 +0.612 (H1 +0.665 H2 +0.559 Mar +0.794)  QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX
+     n= 9 +0.624 (H1 +0.706 H2 +0.543 Mar +0.794)  QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX
+     n=10 +0.618 (H1 +0.703 H2 +0.534 Mar +0.736)  QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX, TLT
+     n=11 +0.615 (H1 +0.705 H2 +0.525 Mar +0.768)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE, GDX, TLT
+     n=12 +0.610 (H1 +0.708 H2 +0.513 Mar +0.865)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE, GDX, XLE, TLT
+     n=13 +0.594 (H1 +0.720 H2 +0.469 Mar +0.903)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLV, XLF, KRE, GDX, XLE, TLT
+     n=14 +0.566 (H1 +0.663 H2 +0.471 Mar +0.807)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLV, XLF, KRE, GDX, XLE, TLT
+     n=15 +0.534 (H1 +0.600 H2 +0.469 Mar +0.807)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, SPY, SMH, XLV, XLF, KRE, GDX, XLE, TLT
+     n=16 +0.496 (H1 +0.574 H2 +0.419 Mar +0.807)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, TLT
+     n=17 +0.457 (H1 +0.558 H2 +0.357 Mar +0.767)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=18 +0.408 (H1 +0.491 H2 +0.325 Mar +0.740)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, META, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=19 +0.364 (H1 +0.380 H2 +0.348 Mar +0.737)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, AMZN, META, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=20 +0.312 (H1 +0.365 H2 +0.260 Mar +0.724)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, AMZN, META, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+
+  [LIQUID legs only (>= $100k/bar)] 4,095 subsets; live list ranks 7 on the full sample
+   top 10 full sample:
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX                      full +0.593 H1 +0.652 H2 +0.535 March +0.783
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, GDX                           full +0.589 H1 +0.647 H2 +0.532 March +0.742
+     n= 6 SOXX, IWM, XLK, XBI, AMD, GDX                                full +0.576 H1 +0.687 H2 +0.466 March +0.739
+     n= 7 QQQ, SOXX, IWM, XBI, AMD, SPY, GDX                           full +0.575 H1 +0.640 H2 +0.510 March +0.810
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY                           full +0.572 H1 +0.554 H2 +0.589 March +0.635
+     n= 6 QQQ, SOXX, IWM, XBI, AMD, GDX                                full +0.571 H1 +0.635 H2 +0.507 March +0.769
+     n= 6 QQQ, SOXX, IWM, XLK, XBI, AMD                                full +0.570 H1 +0.553 H2 +0.586 March +0.594
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, GDX                 full +0.567 H1 +0.610 H2 +0.525 March +0.687
+     n= 7 SOXX, IWM, XLK, XBI, AMD, SPY, GDX                           full +0.564 H1 +0.659 H2 +0.470 March +0.780
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, SPY, GDX                full +0.557 H1 +0.594 H2 +0.521 March +0.783
+   beat the live list on full AND H1 AND H2 AND March: 1
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY                           full +0.572 H1 +0.554 H2 +0.589 March +0.635
+   choose on tune  -> n= 6 QQQ, SOXX, IWM, XLK, XBI, AMD                           tune +0.565 -> March +0.594 (live +0.594)
+   choose on H1    -> n= 6 SOXX, IWM, XLK, XBI, AMD, GDX                           H1 +0.687 -> H2 +0.466 (live +0.586)
+   choose on H2    -> n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, AMZN, SPY                H2 +0.595 -> H1 +0.360 (live +0.553)
+   best list of each size (full sample):
+     n= 1 +0.319 (H1 +0.397 H2 +0.243 Mar +0.381)  SOXX
+     n= 2 +0.397 (H1 +0.418 H2 +0.376 Mar +0.572)  SOXX, XBI
+     n= 3 +0.456 (H1 +0.450 H2 +0.463 Mar +0.525)  SOXX, XBI, AMD
+     n= 4 +0.529 (H1 +0.507 H2 +0.550 Mar +0.565)  QQQ, SOXX, XBI, AMD
+     n= 5 +0.551 (H1 +0.541 H2 +0.561 Mar +0.621)  QQQ, SOXX, IWM, XBI, AMD
+     n= 6 +0.576 (H1 +0.687 H2 +0.466 Mar +0.739)  SOXX, IWM, XLK, XBI, AMD, GDX
+     n= 7 +0.589 (H1 +0.647 H2 +0.532 Mar +0.742)  QQQ, SOXX, IWM, XLK, XBI, AMD, GDX
+     n= 8 +0.593 (H1 +0.652 H2 +0.535 Mar +0.783)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX
+     n= 9 +0.567 (H1 +0.610 H2 +0.525 Mar +0.687)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, GDX
+     n=10 +0.531 (H1 +0.551 H2 +0.511 Mar +0.687)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, SPY, SMH, GDX
+     n=11 +0.452 (H1 +0.519 H2 +0.386 Mar +0.603)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, SPY, SMH, GDX
+     n=12 +0.367 (H1 +0.340 H2 +0.394 Mar +0.584)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, AMZN, SPY, SMH, GDX
+
+######## PRICING: REAL ########
+LIVE ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'AMD']: full +0.582  H1 +0.591  H2 +0.572  March +0.666  tune +0.566
+
+  [ALL proxies] 1,048,575 subsets; live list ranks 626 on the full sample
+   top 10 full sample:
+     n=11 QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, XLF, GDX, XLE, TLT       full +0.635 H1 +0.758 H2 +0.514 March +0.805
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX                 full +0.632 H1 +0.728 H2 +0.536 March +0.869
+     n=11 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, GDX, TLT       full +0.628 H1 +0.729 H2 +0.529 March +0.718
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, GDX            full +0.627 H1 +0.715 H2 +0.540 March +0.727
+     n=10 QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, XLF, GDX, TLT            full +0.624 H1 +0.715 H2 +0.534 March +0.718
+     n=12 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, GDX, XLE, TLT  full +0.624 H1 +0.732 H2 +0.517 March +0.805
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, GDX, TLT            full +0.624 H1 +0.748 H2 +0.501 March +0.797
+     n= 9 QQQ, SOXX, IWM, XBI, SPY, SMH, XLF, GDX, XLE                 full +0.623 H1 +0.715 H2 +0.533 March +0.994
+     n=11 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, GDX, XLE       full +0.623 H1 +0.719 H2 +0.527 March +0.814
+     n=12 QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, XLF, KRE, GDX, XLE, TLT  full +0.623 H1 +0.700 H2 +0.546 March +0.796
+   beat the live list on full AND H1 AND H2 AND March: 16
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE                      full +0.611 H1 +0.633 H2 +0.589 March +0.761
+     n=10 QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, XLF, XLE, TLT            full +0.610 H1 +0.646 H2 +0.574 March +0.697
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, KRE, GDX                 full +0.606 H1 +0.631 H2 +0.581 March +0.735
+     n= 9 SOXX, IWM, XLK, XBI, SMH, XLF, KRE, GDX, XLE                 full +0.604 H1 +0.635 H2 +0.573 March +0.817
+     n=11 QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, XLF, KRE, XLE, TLT       full +0.603 H1 +0.601 H2 +0.606 March +0.688
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE                           full +0.601 H1 +0.599 H2 +0.603 March +0.761
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, KRE, GDX            full +0.599 H1 +0.618 H2 +0.580 March +0.718
+     n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE, TLT            full +0.596 H1 +0.612 H2 +0.580 March +0.680
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, XLF, KRE                 full +0.595 H1 +0.601 H2 +0.588 March +0.689
+     n=10 QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, KRE, GDX, TLT            full +0.590 H1 +0.601 H2 +0.579 March +0.709
+   choose on tune  -> n=10 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, XLF, GDX, TLT       tune +0.615 -> March +0.625 (live +0.666)
+   choose on H1    -> n= 9 SOXX, XLK, XBI, AMD, XLV, XLF, GDX, XLE, TLT            H1 +0.800 -> H2 +0.363 (live +0.572)
+   choose on H2    -> n=10 QQQ, IWM, XLK, XBI, AMZN, SPY, SMH, XLF, KRE, XLE       H2 +0.658 -> H1 +0.284 (live +0.591)
+   best list of each size (full sample):
+     n= 1 +0.310 (H1 +0.405 H2 +0.216 Mar +0.373)  SOXX
+     n= 2 +0.411 (H1 +0.392 H2 +0.430 Mar +0.583)  XBI, SMH
+     n= 3 +0.470 (H1 +0.483 H2 +0.456 Mar +0.597)  SOXX, XBI, AMD
+     n= 4 +0.542 (H1 +0.539 H2 +0.545 Mar +0.635)  QQQ, SOXX, XBI, AMD
+     n= 5 +0.599 (H1 +0.743 H2 +0.457 Mar +0.965)  SOXX, XBI, SMH, GDX, XLE
+     n= 6 +0.612 (H1 +0.719 H2 +0.506 Mar +0.965)  SOXX, IWM, XBI, SMH, GDX, XLE
+     n= 7 +0.617 (H1 +0.725 H2 +0.509 Mar +1.067)  SOXX, IWM, XBI, SPY, SMH, GDX, XLE
+     n= 8 +0.619 (H1 +0.688 H2 +0.550 Mar +0.869)  QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX
+     n= 9 +0.632 (H1 +0.728 H2 +0.536 Mar +0.869)  QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX
+     n=10 +0.627 (H1 +0.715 H2 +0.540 Mar +0.727)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, GDX
+     n=11 +0.635 (H1 +0.758 H2 +0.514 Mar +0.805)  QQQ, SOXX, XLK, XBI, AMD, SPY, SMH, XLF, GDX, XLE, TLT
+     n=12 +0.624 (H1 +0.732 H2 +0.517 Mar +0.805)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, GDX, XLE, TLT
+     n=13 +0.609 (H1 +0.675 H2 +0.544 Mar +0.796)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLF, KRE, GDX, XLE, TLT
+     n=14 +0.584 (H1 +0.693 H2 +0.476 Mar +0.856)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLV, XLF, KRE, GDX, XLE, TLT
+     n=15 +0.551 (H1 +0.684 H2 +0.419 Mar +0.811)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=16 +0.517 (H1 +0.618 H2 +0.418 Mar +0.811)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=17 +0.471 (H1 +0.584 H2 +0.359 Mar +0.811)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=18 +0.424 (H1 +0.573 H2 +0.277 Mar +0.816)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=19 +0.374 (H1 +0.393 H2 +0.354 Mar +0.773)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, AMZN, META, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+     n=20 +0.327 (H1 +0.383 H2 +0.272 Mar +0.778)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, AMZN, META, MSFT, SPY, SMH, XLV, XLF, KRE, GDX, XLE, XOP, TLT
+
+  [LIQUID legs only (>= $100k/bar)] 4,095 subsets; live list ranks 12 on the full sample
+   top 10 full sample:
+     n= 9 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, GDX                 full +0.611 H1 +0.669 H2 +0.553 March +0.748
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX                      full +0.605 H1 +0.689 H2 +0.522 March +0.827
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, GDX                           full +0.600 H1 +0.683 H2 +0.519 March +0.781
+     n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, GDX                      full +0.598 H1 +0.646 H2 +0.550 March +0.647
+     n= 8 QQQ, SOXX, IWM, XBI, AMD, SPY, SMH, GDX                      full +0.593 H1 +0.655 H2 +0.531 March +0.773
+     n= 7 QQQ, SOXX, IWM, XBI, AMD, SPY, GDX                           full +0.587 H1 +0.675 H2 +0.501 March +0.851
+     n= 6 SOXX, IWM, XLK, XBI, AMD, GDX                                full +0.586 H1 +0.725 H2 +0.448 March +0.788
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY                           full +0.586 H1 +0.597 H2 +0.575 March +0.712
+     n= 7 SOXX, IWM, XLK, XBI, AMD, SMH, GDX                           full +0.583 H1 +0.688 H2 +0.480 March +0.654
+     n= 6 QQQ, SOXX, IWM, XBI, AMD, GDX                                full +0.583 H1 +0.669 H2 +0.499 March +0.805
+   beat the live list on full AND H1 AND H2 AND March: 1
+     n= 7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY                           full +0.586 H1 +0.597 H2 +0.575 March +0.712
+   choose on tune  -> n= 8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, GDX                 tune +0.589 -> March +0.647 (live +0.666)
+   choose on H1    -> n= 6 SOXX, IWM, XLK, XBI, AMD, GDX                           H1 +0.725 -> H2 +0.448 (live +0.572)
+   choose on H2    -> n= 8 QQQ, IWM, XLK, XBI, AMD, AMZN, SPY, SMH                 H2 +0.613 -> H1 +0.278 (live +0.591)
+   best list of each size (full sample):
+     n= 1 +0.310 (H1 +0.405 H2 +0.216 Mar +0.373)  SOXX
+     n= 2 +0.411 (H1 +0.392 H2 +0.430 Mar +0.583)  XBI, SMH
+     n= 3 +0.470 (H1 +0.483 H2 +0.456 Mar +0.597)  SOXX, XBI, AMD
+     n= 4 +0.542 (H1 +0.539 H2 +0.545 Mar +0.635)  QQQ, SOXX, XBI, AMD
+     n= 5 +0.564 (H1 +0.577 H2 +0.552 Mar +0.690)  QQQ, SOXX, IWM, XBI, AMD
+     n= 6 +0.586 (H1 +0.725 H2 +0.448 Mar +0.788)  SOXX, IWM, XLK, XBI, AMD, GDX
+     n= 7 +0.600 (H1 +0.683 H2 +0.519 Mar +0.781)  QQQ, SOXX, IWM, XLK, XBI, AMD, GDX
+     n= 8 +0.605 (H1 +0.689 H2 +0.522 Mar +0.827)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX
+     n= 9 +0.611 (H1 +0.669 H2 +0.553 Mar +0.748)  QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH, GDX
+     n=10 +0.573 (H1 +0.608 H2 +0.538 Mar +0.748)  QQQ, SOXX, IWM, XLK, XBI, AMD, AAPL, SPY, SMH, GDX
+     n=11 +0.490 (H1 +0.575 H2 +0.405 Mar +0.691)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, SPY, SMH, GDX
+     n=12 +0.402 (H1 +0.390 H2 +0.413 Mar +0.673)  QQQ, SOXX, IWM, XLK, XBI, AMD, NVDA, AAPL, AMZN, SPY, SMH, GDX
+
