@@ -1,0 +1,11 @@
+BASE +0.570%/day H1 +0.553 H2 +0.586 ret +138.2% DD 4.1% trades 115; March +0.594
+
+SSG: day range 4.8%, empty bars 12%, $vol/bar 22k, price 29.6->11.8
+  SSG             +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 7 setups win 86% avg +1.05% | Mar +0.000
+
+SVIX: day range 2.8%, empty bars 0%, $vol/bar 203k, price 19.2->29.2
+  SVIX            +0.558 (-0.012) H1 +0.529 (-0.024) H2 +0.586 (+0.000) ret +133.8% DD 4.1% trades 116 tradedays  97 | alone 1 setups win 0% avg -0.82% | Mar +0.000
+
+HIBS: day range 4.8%, empty bars 34%, $vol/bar 5k, price 46.1->19.4
+  HIBS            +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 2 setups win 50% avg +0.14% | Mar +0.000
+
