@@ -1,0 +1,8 @@
+BASE +0.570%/day H1 +0.553 H2 +0.586 ret +138.2% DD 4.1% trades 115; March +0.594
+
+TQQQ              +0.553 (-0.017) H1 +0.516 (-0.036) H2 +0.589 (+0.002) ret +132.3% DD 4.1% trades 119 tradedays  98 | alone 7 setups win 43% avg -0.33% | Mar -0.043 | $vol 25738k
+SOXL              +0.527 (-0.042) H1 +0.459 (-0.094) H2 +0.595 (+0.009) ret +123.1% DD 5.5% trades 127 tradedays 104 | alone 17 setups win 47% avg -0.18% | Mar -0.153 | $vol 28534k
+UPRO no setups
+SQQQ              +0.570 (+0.000) H1 +0.553 (+0.000) H2 +0.586 (+0.000) ret +138.2% DD 4.1% trades 115 tradedays  97 | alone 2 setups win 50% avg +0.02% | Mar +0.000 | $vol 13305k
+all 4             +0.526 (-0.043) H1 +0.454 (-0.098) H2 +0.598 (+0.011) ret +122.8% DD 5.5% trades 129 tradedays 104 | alone 26 setups win 46% avg -0.20% | Mar -0.153 | $vol 25738k, 28534k, 1262k, 13305k
+bulls 3           +0.526 (-0.043) H1 +0.454 (-0.098) H2 +0.598 (+0.011) ret +122.8% DD 5.5% trades 129 tradedays 104 | alone 24 setups win 46% avg -0.22% | Mar -0.153 | $vol 25738k, 28534k, 1262k
