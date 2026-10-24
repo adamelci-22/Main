@@ -1,0 +1,13 @@
+UVXY: day range 4.4%, $vol 773k/bar, setups 15, win 60%, avg +0.30%, sum +4.5%, without best 2 +1.0%, median +0.80%
+UVIX: day range 5.7%, $vol 569k/bar, setups 18, win 39%, avg -0.12%, sum -2.2%, without best 2 -6.4%, median -0.83%
+
+live (UVXY)                 PB alone +0.158 H1 +0.162 H2 +0.154 Mar +0.139 win 69% trades 45 DD 1.9%
+live (UVXY)                 full     +0.548 H1 +0.562 H2 +0.535 Mar +0.613 win 61% trades 111 DD 3.1%
+swap UVXY -> UVIX           PB alone +0.133 H1 +0.148 H2 +0.118 Mar +0.236 win 61% trades 49 DD 3.2%
+swap UVXY -> UVIX           full     +0.520 H1 +0.558 H2 +0.481 Mar +0.697 win 58% trades 113 DD 3.2%
+both UVXY + UVIX            PB alone +0.127 H1 +0.125 H2 +0.128 Mar +0.139 win 60% trades 53 DD 2.7%
+both UVXY + UVIX            full     +0.517 H1 +0.537 H2 +0.497 Mar +0.613 win 58% trades 117 DD 3.1%
+neither (3 tickers)         PB alone +0.123 H1 +0.119 H2 +0.126 Mar +0.075 win 70% trades 33 DD 1.9%
+neither (3 tickers)         full     +0.536 H1 +0.553 H2 +0.519 Mar +0.648 win 62% trades 102 DD 3.4%
+
+UVXY setups 15, UVIX setups 18, same-day overlap 11
