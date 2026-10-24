@@ -1,0 +1,67 @@
+FADE fixed at ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF']. PULLBACK pool (10): ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD', 'TZA', 'DUST', 'DRIP', 'VIXY', 'SCO']
+
+ticker live setups  win%   avg%   sum% -best1 -best2 median  $vol/bar
+SOXS      *     15    67  +0.70  +10.5   +8.5   +6.5  +1.22   11,461k
+LABD      *     11    73  +0.45   +4.9   +3.4   +2.1  +0.81      398k
+TECS      *     12    75  +0.63   +7.5   +5.8   +4.3  +0.98      136k
+UVXY      *     15    60  +0.30   +4.5   +2.6   +1.0  +0.80      773k
+NVD       *      8    62  +0.21   +1.7   +0.3   -0.7  +0.64    2,408k
+TZA              8    50  -0.12   -1.0   -1.8   -2.7  -0.08    4,199k
+DUST             3    67  -0.02   -0.1   -1.0   -1.2  +0.13      160k
+DRIP             5    60  +0.10   +0.5   -0.4   -1.2  +0.51      336k
+VIXY             6    67  +0.29   +1.8   +0.6   -0.3  +0.64      163k
+SCO              5    60  +0.36   +1.8   +0.5   -0.8  +0.96      704k
+
+LIVE five ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']: full +0.544 H1 +0.541 H2 +0.546 March +0.613  (rank 17 of 1023)
+
+Top 10 lists on the full sample:
+   SOXS, LABD, TECS, NVD, VIXY                  full +0.553 H1 +0.579 H2 +0.527 March +0.648
+   SOXS, LABD, TECS, UVXY, NVD, VIXY            full +0.552 H1 +0.557 H2 +0.546 March +0.613
+   SOXS, LABD, TECS, NVD, DRIP, VIXY, SCO       full +0.551 H1 +0.585 H2 +0.517 March +0.648
+   SOXS, LABD, TECS, NVD, DRIP, VIXY            full +0.550 H1 +0.585 H2 +0.516 March +0.648
+   SOXS, LABD, TECS, UVXY, NVD, DRIP, VIXY, SCO full +0.549 H1 +0.563 H2 +0.536 March +0.613
+   SOXS, LABD, TECS, UVXY, NVD, DRIP, VIXY      full +0.549 H1 +0.563 H2 +0.536 March +0.613
+   SOXS, LABD, TECS, UVXY                       full +0.548 H1 +0.562 H2 +0.535 March +0.613
+   SOXS, LABD, TECS, NVD, VIXY, SCO             full +0.548 H1 +0.579 H2 +0.517 March +0.648
+   SOXS, LABD, TECS, UVXY, NVD, VIXY, SCO       full +0.547 H1 +0.557 H2 +0.537 March +0.613
+   SOXS, LABD, TECS, NVD, DUST, VIXY            full +0.546 H1 +0.564 H2 +0.529 March +0.600
+
+Beat the live five on full AND H1 AND H2 AND March: 1
+   SOXS, LABD, TECS, UVXY, NVD, VIXY            full +0.552 H1 +0.557 H2 +0.546 March +0.613
+
+Walk-forward (choose on one window, judge on another):
+   choose on tune: SOXS, LABD, TECS, UVXY, NVD, DUST, VIXY      tune +0.542 -> Mar +0.564  (live +0.613)
+   choose on H1  : SOXS, LABD, TECS, NVD, DRIP, VIXY            H1 +0.585 -> H2 +0.516  (live +0.546)
+   choose on H2  : SOXS, LABD, UVXY, NVD, TZA, DUST             H2 +0.563 -> H1 +0.446  (live +0.541)
+
+Best list of each size (full):
+   n= 1 +0.485 (H1 +0.465 H2 +0.506 Mar +0.598)  SOXS
+   n= 2 +0.517 (H1 +0.529 H2 +0.506 Mar +0.648)  SOXS, TECS
+   n= 3 +0.536 (H1 +0.553 H2 +0.519 Mar +0.648)  SOXS, LABD, TECS
+   n= 4 +0.548 (H1 +0.562 H2 +0.535 Mar +0.613)  SOXS, LABD, TECS, UVXY
+   n= 5 +0.553 (H1 +0.579 H2 +0.527 Mar +0.648)  SOXS, LABD, TECS, NVD, VIXY
+   n= 6 +0.552 (H1 +0.557 H2 +0.546 Mar +0.613)  SOXS, LABD, TECS, UVXY, NVD, VIXY
+   n= 7 +0.551 (H1 +0.585 H2 +0.517 Mar +0.648)  SOXS, LABD, TECS, NVD, DRIP, VIXY, SCO
+   n= 8 +0.549 (H1 +0.563 H2 +0.536 Mar +0.613)  SOXS, LABD, TECS, UVXY, NVD, DRIP, VIXY, SCO
+   n= 9 +0.543 (H1 +0.548 H2 +0.538 Mar +0.564)  SOXS, LABD, TECS, UVXY, NVD, DUST, DRIP, VIXY, SCO
+   n=10 +0.526 (H1 +0.498 H2 +0.553 Mar +0.566)  SOXS, LABD, TECS, UVXY, NVD, TZA, DUST, DRIP, VIXY, SCO
+
+Drop-one / add-one around the live five (change in %/day: full, H1, H2, March) and robustness:
+   drop SOXS  -0.045 -0.049 -0.042 -0.072
+   drop LABD  -0.018 -0.024 -0.013 +0.000
+   drop TECS  -0.031 -0.063 +0.000 -0.043
+   drop UVXY  -0.006 +0.004 -0.016 +0.035
+   drop NVD   +0.005 +0.022 -0.012 +0.000
+   add  TZA   -0.017 -0.050 +0.015 +0.001
+   add  DUST  -0.007 -0.015 +0.002 -0.049
+   add  DRIP  -0.002 +0.006 -0.011 +0.000
+   add  VIXY  +0.008 +0.016 +0.000 +0.000
+   add  SCO   -0.005 +0.000 -0.010 +0.000
+
+Live five, PULLBACK trades taken: 40, win 68%, account-% per trade median +0.81, sum +19.6, without best 2 +15.6, without best 5 +10.5
+By ticker (taken trades):
+   SOXS  12 trades win  75% total $+295  without best 1 $+216  without best 2 $+159
+   LABD   7 trades win  71% total $+102  without best 1 $+40  without best 2 $+1
+   TECS   8 trades win  75% total $+129  without best 1 $+83  without best 2 $+51
+   UVXY   8 trades win  50% total $+43  without best 1 $+0  without best 2 $-42
+   NVD    5 trades win  60% total $+16  without best 1 $-19  without best 2 $-37
