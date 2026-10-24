@@ -6,7 +6,7 @@ Impact model (ASSUMPTION, not measured): extra round-trip cost = 2 x 0.5 x 0.5% 
 import math, statistics as st, collections
 from suggestion_tests import *
 import mixed as MXD, manual as m, twobar as TB
-LEG = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3), 'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1)}
+LEG = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3), 'XBI': ('LABU', 'LABD', 3, 3), 'AMD': ('AMDL', 'AMDD', 2, 1), 'XLF': ('FAS', 'FAZ', 3, 3)}
 D = get_data(); m.rvol = PBF.rvol(D)
 days = [d for d in D.days[1:] if '2026-03-03' <= d <= '2026-10-14']
 f0, p0 = FS.cands(D, days)
