@@ -1,0 +1,155 @@
+ETF-only pool (14): ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'SPY', 'SMH', 'XLV', 'XLF', 'KRE', 'GDX', 'XLE', 'XOP', 'TLT']
+12,910 lists of 1..8
+
+######## FADE ALONE, REAL pricing ######## five core (QQQ SOXX IWM XLK XBI): full +0.406 H1 +0.391 H2 +0.421 March +0.598 tune +0.371
+  Core five + ONE more:
+     +GDX  full +0.432 H1 +0.496 H2 +0.368 March +0.759  leg $vol 160k
+     +KRE  full +0.418 H1 +0.384 H2 +0.452 March +0.618  leg $vol 70k
+     +XLF  full +0.417 H1 +0.409 H2 +0.425 March +0.509  leg $vol 70k
+     +SPY  full +0.410 H1 +0.396 H2 +0.423 March +0.644  leg $vol 1,170k <- beats core in H1, H2 and March
+     +XLE  full +0.407 H1 +0.380 H2 +0.434 March +0.636  leg $vol 62k
+     +TLT  full +0.406 H1 +0.389 H2 +0.423 March +0.597  leg $vol 86k
+     +SMH  full +0.393 H1 +0.334 H2 +0.452 March +0.464  leg $vol 11,461k
+     +XLV  full +0.386 H1 +0.409 H2 +0.364 March +0.657  leg $vol 0k
+     +XOP  full +0.337 H1 +0.347 H2 +0.327 March +0.544  leg $vol 91k
+  [ALL ETF proxies] best 6-proxy lists:
+     SOXX, IWM, XBI, SMH, GDX, XLE          full +0.472 H1 +0.554 H2 +0.391 March +0.870  win 51% trades 77 DD 6.6%
+     SOXX, IWM, XLK, XBI, GDX, XLE          full +0.458 H1 +0.537 H2 +0.380 March +0.853  win 50% trades 86 DD 6.6%
+     SOXX, XBI, SMH, GDX, XLE, TLT          full +0.449 H1 +0.580 H2 +0.319 March +0.869  win 48% trades 77 DD 6.6%
+     SOXX, XBI, SPY, SMH, GDX, XLE          full +0.448 H1 +0.586 H2 +0.313 March +0.971  win 48% trades 75 DD 6.6%
+     SOXX, XBI, SMH, XLF, GDX, XLE          full +0.448 H1 +0.575 H2 +0.322 March +0.782  win 51% trades 73 DD 6.6%
+  [ALL ETF proxies] best lists up to 8:
+     n=8 SOXX, IWM, XLK, XBI, XLF, KRE, GDX, XLE        full +0.501 H1 +0.568 H2 +0.436 March +0.874
+     n=8 SOXX, IWM, XLK, XBI, SMH, XLF, GDX, XLE        full +0.480 H1 +0.523 H2 +0.437 March +0.631
+     n=8 SOXX, IWM, XBI, SMH, XLF, KRE, GDX, XLE        full +0.480 H1 +0.524 H2 +0.436 March +0.849
+  choose best 6 on tune  -> SOXX, IWM, XBI, SMH, GDX, XLE          tune +0.400 -> March +0.870  (core five+SPY there +0.644, core five +0.598)
+  choose best 6 on H1    -> SOXX, XBI, XLV, XLF, GDX, XLE          H1 +0.613 -> H2 +0.187  (core five+SPY there +0.423, core five +0.421)
+  choose best 6 on H2    -> QQQ, IWM, XLK, XBI, SMH, XLE           H2 +0.511 -> H1 +0.237  (core five+SPY there +0.396, core five +0.391)
+  [LIQUID legs only] best 6-proxy lists:
+     QQQ, SOXX, IWM, XLK, XBI, GDX          full +0.432 H1 +0.496 H2 +0.368 March +0.759  win 51% trades 78 DD 6.7%
+     SOXX, IWM, XLK, XBI, SMH, GDX          full +0.425 H1 +0.497 H2 +0.353 March +0.632  win 49% trades 78 DD 6.7%
+     QQQ, SOXX, IWM, XBI, SMH, GDX          full +0.424 H1 +0.499 H2 +0.351 March +0.822  win 51% trades 74 DD 6.7%
+     SOXX, IWM, XBI, SPY, SMH, GDX          full +0.418 H1 +0.526 H2 +0.312 March +0.884  win 49% trades 77 DD 6.7%
+     SOXX, IWM, XLK, XBI, SPY, GDX          full +0.418 H1 +0.508 H2 +0.328 March +0.812  win 49% trades 84 DD 6.7%
+  [LIQUID legs only] best lists up to 8:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, SPY, SMH, GDX        full +0.442 H1 +0.483 H2 +0.402 March +0.726
+     n=7 QQQ, SOXX, IWM, XBI, SPY, SMH, GDX             full +0.437 H1 +0.522 H2 +0.354 March +0.923
+     n=7 QQQ, SOXX, IWM, XLK, XBI, SPY, GDX             full +0.436 H1 +0.502 H2 +0.371 March +0.805
+  choose best 6 on tune  -> SOXX, IWM, XLK, XBI, SMH, GDX          tune +0.387 -> March +0.632  (core five+SPY there +0.644, core five +0.598)
+  choose best 6 on H1    -> QQQ, SOXX, IWM, XBI, SPY, GDX          H1 +0.541 -> H2 +0.269  (core five+SPY there +0.423, core five +0.421)
+  choose best 6 on H2    -> QQQ, IWM, XLK, XBI, SPY, SMH           H2 +0.484 -> H1 +0.257  (core five+SPY there +0.396, core five +0.391)
+
+######## FADE ALONE, MODEL pricing ######## five core (QQQ SOXX IWM XLK XBI): full +0.400 H1 +0.355 H2 +0.445 March +0.533 tune +0.376
+  Core five + ONE more:
+     +KRE  full +0.429 H1 +0.386 H2 +0.472 March +0.606  leg $vol 70k <- beats core in H1, H2 and March
+     +GDX  full +0.427 H1 +0.464 H2 +0.391 March +0.730  leg $vol 160k
+     +XLF  full +0.419 H1 +0.391 H2 +0.446 March +0.483  leg $vol 70k
+     +XLE  full +0.407 H1 +0.354 H2 +0.460 March +0.618  leg $vol 62k
+     +SPY  full +0.402 H1 +0.356 H2 +0.448 March +0.575  leg $vol 1,170k <- beats core in H1, H2 and March
+     +TLT  full +0.399 H1 +0.351 H2 +0.446 March +0.535  leg $vol 86k
+     +XLV  full +0.381 H1 +0.366 H2 +0.396 March +0.571  leg $vol 0k
+     +SMH  full +0.360 H1 +0.284 H2 +0.435 March +0.390  leg $vol 11,461k
+     +XOP  full +0.323 H1 +0.298 H2 +0.347 March +0.485  leg $vol 91k
+  [ALL ETF proxies] best 6-proxy lists:
+     SOXX, IWM, XLK, XBI, GDX, XLE          full +0.454 H1 +0.502 H2 +0.408 March +0.824  win 52% trades 86 DD 5.0%
+     SOXX, IWM, XLK, XBI, KRE, GDX          full +0.443 H1 +0.504 H2 +0.382 March +0.711  win 52% trades 87 DD 4.9%
+     SOXX, XLK, XBI, GDX, XLE, TLT          full +0.436 H1 +0.509 H2 +0.364 March +0.770  win 49% trades 83 DD 5.0%
+     SOXX, IWM, XLK, XBI, XLF, GDX          full +0.435 H1 +0.522 H2 +0.349 March +0.641  win 54% trades 82 DD 4.9%
+     QQQ, SOXX, IWM, XLK, XBI, KRE          full +0.429 H1 +0.386 H2 +0.472 March +0.606  win 56% trades 80 DD 4.5%
+  [ALL ETF proxies] best lists up to 8:
+     n=8 SOXX, IWM, XLK, XBI, XLF, KRE, GDX, XLE        full +0.494 H1 +0.545 H2 +0.444 March +0.808
+     n=7 SOXX, IWM, XLK, XBI, KRE, GDX, XLE             full +0.471 H1 +0.507 H2 +0.436 March +0.808
+     n=8 SOXX, IWM, XLK, XBI, XLF, GDX, XLE, TLT        full +0.471 H1 +0.526 H2 +0.416 March +0.739
+  choose best 6 on tune  -> QQQ, SOXX, IWM, XLK, XBI, XLF          tune +0.407 -> March +0.483  (core five+SPY there +0.575, core five +0.533)
+  choose best 6 on H1    -> SOXX, XBI, XLF, KRE, GDX, XLE          H1 +0.576 -> H2 +0.245  (core five+SPY there +0.448, core five +0.445)
+  choose best 6 on H2    -> SOXX, IWM, XLK, XBI, KRE, XLE          H2 +0.483 -> H1 +0.362  (core five+SPY there +0.356, core five +0.355)
+  [LIQUID legs only] best 6-proxy lists:
+     QQQ, SOXX, IWM, XLK, XBI, GDX          full +0.427 H1 +0.464 H2 +0.391 March +0.730  win 54% trades 78 DD 4.9%
+     SOXX, IWM, XLK, XBI, SPY, GDX          full +0.411 H1 +0.471 H2 +0.353 March +0.769  win 51% trades 84 DD 4.9%
+     QQQ, SOXX, IWM, XLK, XBI, SPY          full +0.402 H1 +0.356 H2 +0.448 March +0.575  win 54% trades 76 DD 4.5%
+     QQQ, SOXX, IWM, XBI, SPY, GDX          full +0.397 H1 +0.507 H2 +0.289 March +0.960  win 54% trades 78 DD 4.9%
+     SOXX, IWM, XLK, XBI, SMH, GDX          full +0.390 H1 +0.442 H2 +0.338 March +0.585  win 51% trades 78 DD 4.9%
+  [LIQUID legs only] best lists up to 8:
+     n=7 QQQ, SOXX, IWM, XLK, XBI, SPY, GDX             full +0.431 H1 +0.469 H2 +0.394 March +0.772
+     n=6 QQQ, SOXX, IWM, XLK, XBI, GDX                  full +0.427 H1 +0.464 H2 +0.391 March +0.730
+     n=5 SOXX, IWM, XLK, XBI, GDX                       full +0.423 H1 +0.499 H2 +0.348 March +0.728
+  choose best 6 on tune  -> QQQ, SOXX, IWM, XLK, XBI, GDX          tune +0.373 -> March +0.730  (core five+SPY there +0.575, core five +0.533)
+  choose best 6 on H1    -> QQQ, SOXX, IWM, XBI, SPY, GDX          H1 +0.507 -> H2 +0.289  (core five+SPY there +0.448, core five +0.445)
+  choose best 6 on H2    -> QQQ, IWM, XLK, XBI, SPY, SMH           H2 +0.448 -> H1 +0.210  (core five+SPY there +0.356, core five +0.355)
+
+######## FULL SYSTEM (with live PULLBACK), REAL pricing ######## five core (QQQ SOXX IWM XLK XBI): full +0.522 H1 +0.523 H2 +0.521 March +0.673 tune +0.495
+  Core five + ONE more:
+     +GDX  full +0.551 H1 +0.636 H2 +0.468 March +0.859  leg $vol 160k
+     +XLF  full +0.542 H1 +0.558 H2 +0.525 March +0.639  leg $vol 70k
+     +KRE  full +0.538 H1 +0.525 H2 +0.552 March +0.748  leg $vol 70k <- beats core in H1, H2 and March
+     +SPY  full +0.526 H1 +0.528 H2 +0.524 March +0.719  leg $vol 1,170k <- beats core in H1, H2 and March
+     +TLT  full +0.525 H1 +0.536 H2 +0.513 March +0.672  leg $vol 86k
+     +XLE  full +0.523 H1 +0.512 H2 +0.534 March +0.712  leg $vol 62k
+     +SMH  full +0.509 H1 +0.466 H2 +0.552 March +0.539  leg $vol 11,461k
+     +XLV  full +0.503 H1 +0.541 H2 +0.464 March +0.733  leg $vol 0k
+     +XOP  full +0.453 H1 +0.479 H2 +0.427 March +0.619  leg $vol 91k
+  [ALL ETF proxies] best 6-proxy lists:
+     SOXX, IWM, XBI, SMH, GDX, XLE          full +0.612 H1 +0.719 H2 +0.506 March +0.965  win 57% trades 121 DD 5.8%
+     SOXX, XBI, SPY, SMH, GDX, XLE          full +0.603 H1 +0.750 H2 +0.457 March +1.067  win 56% trades 121 DD 5.8%
+     SOXX, XBI, SMH, GDX, XLE, TLT          full +0.599 H1 +0.759 H2 +0.442 March +0.964  win 56% trades 120 DD 5.8%
+     SOXX, XBI, SMH, KRE, GDX, XLE          full +0.592 H1 +0.689 H2 +0.497 March +0.926  win 56% trades 124 DD 5.8%
+     SOXX, XBI, SMH, XLF, GDX, XLE          full +0.592 H1 +0.718 H2 +0.467 March +0.854  win 57% trades 121 DD 5.8%
+  [ALL ETF proxies] best lists up to 8:
+     n=7 SOXX, IWM, XBI, SPY, SMH, GDX, XLE             full +0.617 H1 +0.725 H2 +0.509 March +1.067
+     n=8 QQQ, SOXX, XBI, SPY, SMH, XLF, GDX, XLE        full +0.614 H1 +0.740 H2 +0.489 March +0.994
+     n=6 SOXX, IWM, XBI, SMH, GDX, XLE                  full +0.612 H1 +0.719 H2 +0.506 March +0.965
+  choose best 6 on tune  -> SOXX, IWM, XBI, SMH, GDX, XLE          tune +0.548 -> March +0.965  (core five+SPY there +0.719, core five +0.673)
+  choose best 6 on H1    -> SOXX, XBI, SMH, XLV, GDX, XLE          H1 +0.762 -> H2 +0.381  (core five+SPY there +0.524, core five +0.521)
+  choose best 6 on H2    -> QQQ, IWM, XLK, XBI, SMH, XLE           H2 +0.611 -> H1 +0.357  (core five+SPY there +0.528, core five +0.523)
+  [LIQUID legs only] best 6-proxy lists:
+     SOXX, IWM, XBI, SPY, SMH, GDX          full +0.557 H1 +0.689 H2 +0.427 March +0.980  win 56% trades 121 DD 5.1%
+     QQQ, SOXX, IWM, XBI, SMH, GDX          full +0.556 H1 +0.637 H2 +0.477 March +0.917  win 57% trades 117 DD 5.1%
+     QQQ, SOXX, IWM, XLK, XBI, GDX          full +0.551 H1 +0.636 H2 +0.468 March +0.859  win 57% trades 118 DD 5.1%
+     SOXX, IWM, XLK, XBI, SMH, GDX          full +0.546 H1 +0.651 H2 +0.443 March +0.732  win 55% trades 118 DD 5.1%
+     QQQ, SOXX, XBI, SPY, SMH, GDX          full +0.544 H1 +0.645 H2 +0.444 March +1.018  win 56% trades 116 DD 5.1%
+  [LIQUID legs only] best lists up to 8:
+     n=7 QQQ, SOXX, IWM, XBI, SPY, SMH, GDX             full +0.569 H1 +0.660 H2 +0.480 March +1.018
+     n=8 QQQ, SOXX, IWM, XLK, XBI, SPY, SMH, GDX        full +0.562 H1 +0.622 H2 +0.502 March +0.826
+     n=6 SOXX, IWM, XBI, SPY, SMH, GDX                  full +0.557 H1 +0.689 H2 +0.427 March +0.980
+  choose best 6 on tune  -> SOXX, IWM, XLK, XBI, SMH, GDX          tune +0.513 -> March +0.732  (core five+SPY there +0.719, core five +0.673)
+  choose best 6 on H1    -> SOXX, IWM, XBI, SPY, SMH, GDX          H1 +0.689 -> H2 +0.427  (core five+SPY there +0.524, core five +0.521)
+  choose best 6 on H2    -> QQQ, IWM, XLK, XBI, SPY, SMH           H2 +0.585 -> H1 +0.377  (core five+SPY there +0.528, core five +0.523)
+
+######## FULL SYSTEM (with live PULLBACK), MODEL pricing ######## five core (QQQ SOXX IWM XLK XBI): full +0.517 H1 +0.487 H2 +0.545 March +0.609 tune +0.500
+  Core five + ONE more:
+     +KRE  full +0.550 H1 +0.528 H2 +0.572 March +0.736  leg $vol 70k <- beats core in H1, H2 and March
+     +GDX  full +0.547 H1 +0.604 H2 +0.491 March +0.830  leg $vol 160k
+     +XLF  full +0.544 H1 +0.541 H2 +0.546 March +0.613  leg $vol 70k <- beats core in H1, H2 and March
+     +XLE  full +0.524 H1 +0.487 H2 +0.560 March +0.694  leg $vol 62k
+     +SPY  full +0.519 H1 +0.489 H2 +0.548 March +0.650  leg $vol 1,170k <- beats core in H1, H2 and March
+     +TLT  full +0.518 H1 +0.499 H2 +0.537 March +0.610  leg $vol 86k
+     +XLV  full +0.498 H1 +0.499 H2 +0.496 March +0.647  leg $vol 0k
+     +SMH  full +0.476 H1 +0.416 H2 +0.535 March +0.466  leg $vol 11,461k
+     +XOP  full +0.439 H1 +0.431 H2 +0.447 March +0.561  leg $vol 91k
+  [ALL ETF proxies] best 6-proxy lists:
+     SOXX, IWM, XLK, XBI, GDX, XLE          full +0.576 H1 +0.656 H2 +0.497 March +0.924  win 57% trades 126 DD 4.3%
+     SOXX, XLK, XBI, GDX, XLE, TLT          full +0.569 H1 +0.679 H2 +0.461 March +0.869  win 56% trades 122 DD 4.3%
+     SOXX, IWM, XLK, XBI, KRE, GDX          full +0.557 H1 +0.643 H2 +0.472 March +0.787  win 56% trades 126 DD 4.1%
+     SOXX, IWM, XBI, SMH, GDX, XLE          full +0.555 H1 +0.638 H2 +0.473 March +0.928  win 59% trades 121 DD 5.1%
+     SOXX, IWM, XBI, XLF, GDX, XLE          full +0.555 H1 +0.689 H2 +0.423 March +0.960  win 58% trades 125 DD 5.3%
+  [ALL ETF proxies] best lists up to 8:
+     n=8 SOXX, IWM, XLK, XBI, XLF, KRE, GDX, XLE        full +0.601 H1 +0.670 H2 +0.534 March +0.884
+     n=8 SOXX, XLK, XBI, XLF, KRE, GDX, XLE, TLT        full +0.588 H1 +0.677 H2 +0.500 March +0.770
+     n=7 SOXX, IWM, XLK, XBI, KRE, GDX, XLE             full +0.585 H1 +0.646 H2 +0.526 March +0.884
+  choose best 6 on tune  -> QQQ, SOXX, XLK, XBI, XLF, TLT          tune +0.534 -> March +0.559  (core five+SPY there +0.650, core five +0.609)
+  choose best 6 on H1    -> SOXX, XBI, XLF, GDX, XLE, TLT          H1 +0.714 -> H2 +0.354  (core five+SPY there +0.548, core five +0.545)
+  choose best 6 on H2    -> SOXX, IWM, XLK, XBI, KRE, XLE          H2 +0.573 -> H1 +0.501  (core five+SPY there +0.489, core five +0.487)
+  [LIQUID legs only] best 6-proxy lists:
+     QQQ, SOXX, IWM, XLK, XBI, GDX          full +0.547 H1 +0.604 H2 +0.491 March +0.830  win 58% trades 118 DD 3.4%
+     SOXX, IWM, XLK, XBI, SPY, GDX          full +0.533 H1 +0.625 H2 +0.442 March +0.868  win 56% trades 124 DD 3.5%
+     QQQ, SOXX, IWM, XBI, SPY, GDX          full +0.530 H1 +0.646 H2 +0.415 March +1.055  win 59% trades 121 DD 3.4%
+     QQQ, SOXX, IWM, XLK, XBI, SPY          full +0.519 H1 +0.489 H2 +0.548 March +0.650  win 58% trades 117 DD 3.5%
+     QQQ, SOXX, IWM, XBI, SMH, GDX          full +0.515 H1 +0.584 H2 +0.447 March +0.871  win 59% trades 117 DD 3.4%
+  [LIQUID legs only] best lists up to 8:
+     n=7 QQQ, SOXX, IWM, XLK, XBI, SPY, GDX             full +0.551 H1 +0.609 H2 +0.494 March +0.871
+     n=6 QQQ, SOXX, IWM, XLK, XBI, GDX                  full +0.547 H1 +0.604 H2 +0.491 March +0.830
+     n=5 SOXX, IWM, XLK, XBI, GDX                       full +0.545 H1 +0.653 H2 +0.438 March +0.827
+  choose best 6 on tune  -> QQQ, SOXX, IWM, XLK, XBI, GDX          tune +0.496 -> March +0.830  (core five+SPY there +0.650, core five +0.609)
+  choose best 6 on H1    -> QQQ, SOXX, IWM, XBI, SPY, GDX          H1 +0.646 -> H2 +0.415  (core five+SPY there +0.548, core five +0.545)
+  choose best 6 on H2    -> QQQ, IWM, XLK, XBI, SPY, SMH           H2 +0.548 -> H1 +0.331  (core five+SPY there +0.489, core five +0.487)
+
