@@ -1,0 +1,22 @@
+== MODEL pricing ==
+list               trades  win% FADE win%  avg win avg loss   %/day  maxDD  added-ticker trades (win%)
+live six              115    59        55    +2.05    -0.95  +0.570    4.1  
+live + SPY            124    57        53    +1.99    -0.87  +0.572    4.3  SPY: 12 (33%)
+live + KRE            124    60        56    +1.94    -0.86  +0.606    4.1  KRE: 16 (50%)
+live + XLF + KRE      129    59        55    +1.92    -0.85  +0.610    4.7  XLF: 9 (44%) KRE: 15 (47%)
+live + SPY + KRE      130    57        52    +1.94    -0.80  +0.593    4.1  SPY: 11 (27%) KRE: 14 (43%)
+live + GDX            125    57        52    +2.06    -0.90  +0.589    5.7  GDX: 14 (21%)
+live + SPY + GDX      133    56        51    +2.01    -0.85  +0.593    5.7  SPY: 11 (36%) GDX: 14 (21%)
+live + KRE + GDX      135    56        52    +1.98    -0.83  +0.612    5.7  KRE: 15 (47%) GDX: 13 (23%)
+
+== REAL pricing ==
+list               trades  win% FADE win%  avg win avg loss   %/day  maxDD  added-ticker trades (win%)
+live six              115    57        53    +2.16    -0.93  +0.582    4.5  
+live + SPY            124    56        51    +2.10    -0.86  +0.586    4.5  SPY: 12 (33%)
+live + KRE            124    56        51    +2.11    -0.89  +0.601    4.5  KRE: 16 (44%)
+live + XLF + KRE      129    57        52    +2.06    -0.87  +0.611    4.5  XLF: 9 (44%) KRE: 15 (47%)
+live + SPY + KRE      130    55        49    +2.07    -0.83  +0.585    4.5  SPY: 11 (27%) KRE: 14 (43%)
+live + GDX            125    54        49    +2.22    -0.89  +0.600    5.5  GDX: 14 (21%)
+live + SPY + GDX      133    53        48    +2.16    -0.84  +0.605    5.5  SPY: 11 (36%) GDX: 14 (21%)
+live + KRE + GDX      135    54        49    +2.14    -0.86  +0.619    5.5  KRE: 15 (47%) GDX: 13 (23%)
+
