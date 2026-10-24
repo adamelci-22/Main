@@ -1,0 +1,59 @@
+GLD proxy: ('UGL', 2, 'GLL', 2) legs $vol UGL 339k GLL 178k
+GLD alone (real): 21 signals, win 29%, sum -6.3%, without best 2 -7.1%, median -0.37%
+
+== SMH vs SOXX, FADE ALONE, REAL ==
+   QQQ IWM XLK XBI + SOXX     +0.406 H1 +0.391 H2 +0.421 Mar +0.598 | -best2 +0.307 | win 55% trades 67 DD 5.9%
+   QQQ IWM XLK XBI + SMH      +0.365 H1 +0.248 H2 +0.481 Mar +0.485 | -best2 +0.264 | win 52% trades 69 DD 4.8%
+   QQQ IWM XLK XBI + both     +0.393 H1 +0.334 H2 +0.452 Mar +0.464 | -best2 +0.295 | win 52% trades 71 DD 5.9%
+== 6th slot after QQQ SOXX IWM XLK XBI, FADE ALONE, REAL ==
+   none (five)                +0.406 H1 +0.391 H2 +0.421 Mar +0.598 | -best2 +0.307 | win 55% trades 67 DD 5.9%
+   +XLE                       +0.407 H1 +0.380 H2 +0.434 Mar +0.636 | -best2 +0.308 | win 51% trades 79 DD 5.8%
+   +XLF                       +0.417 H1 +0.409 H2 +0.425 Mar +0.509 | -best2 +0.319 | win 55% trades 75 DD 5.9%
+   +SPY                       +0.410 H1 +0.396 H2 +0.423 Mar +0.644 | -best2 +0.311 | win 53% trades 76 DD 5.9%
+   +GLD                       +0.364 H1 +0.319 H2 +0.408 Mar +0.562 | -best2 +0.265 | win 50% trades 78 DD 5.9%
+   +AMD                       +0.468 H1 +0.449 H2 +0.487 Mar +0.558 | -best2 +0.370 | win 53% trades 74 DD 5.1%
+
+== SMH vs SOXX, FADE ALONE, MODEL ==
+   QQQ IWM XLK XBI + SOXX     +0.400 H1 +0.355 H2 +0.445 Mar +0.533 | -best2 +0.302 | win 57% trades 67 DD 4.5%
+   QQQ IWM XLK XBI + SMH      +0.326 H1 +0.205 H2 +0.446 Mar +0.367 | -best2 +0.231 | win 54% trades 69 DD 5.8%
+   QQQ IWM XLK XBI + both     +0.360 H1 +0.284 H2 +0.435 Mar +0.390 | -best2 +0.262 | win 54% trades 71 DD 4.7%
+== 6th slot after QQQ SOXX IWM XLK XBI, FADE ALONE, MODEL ==
+   none (five)                +0.400 H1 +0.355 H2 +0.445 Mar +0.533 | -best2 +0.302 | win 57% trades 67 DD 4.5%
+   +XLE                       +0.407 H1 +0.354 H2 +0.460 Mar +0.618 | -best2 +0.309 | win 53% trades 79 DD 4.6%
+   +XLF                       +0.419 H1 +0.391 H2 +0.446 Mar +0.483 | -best2 +0.320 | win 57% trades 75 DD 4.5%
+   +SPY                       +0.402 H1 +0.356 H2 +0.448 Mar +0.575 | -best2 +0.304 | win 54% trades 76 DD 4.5%
+   +GLD                       +0.358 H1 +0.281 H2 +0.434 Mar +0.500 | -best2 +0.260 | win 50% trades 78 DD 6.3%
+   +AMD                       +0.456 H1 +0.410 H2 +0.501 Mar +0.486 | -best2 +0.358 | win 55% trades 74 DD 3.8%
+
+== SMH vs SOXX, FULL SYSTEM, REAL ==
+   QQQ IWM XLK XBI + SOXX     +0.522 H1 +0.523 H2 +0.521 Mar +0.673 | -best2 +0.423 | win 59% trades 108 DD 4.3%
+   QQQ IWM XLK XBI + SMH      +0.476 H1 +0.368 H2 +0.582 Mar +0.560 | -best2 +0.374 | win 57% trades 111 DD 4.0%
+   QQQ IWM XLK XBI + both     +0.509 H1 +0.466 H2 +0.552 Mar +0.539 | -best2 +0.411 | win 57% trades 112 DD 4.3%
+== 6th slot after QQQ SOXX IWM XLK XBI, FULL SYSTEM, REAL ==
+   none (five)                +0.522 H1 +0.523 H2 +0.521 Mar +0.673 | -best2 +0.423 | win 59% trades 108 DD 4.3%
+   +XLE                       +0.523 H1 +0.512 H2 +0.534 Mar +0.712 | -best2 +0.425 | win 56% trades 120 DD 4.9%
+   +XLF                       +0.542 H1 +0.558 H2 +0.525 Mar +0.639 | -best2 +0.443 | win 59% trades 115 DD 4.3%
+   +SPY                       +0.526 H1 +0.528 H2 +0.524 Mar +0.719 | -best2 +0.427 | win 57% trades 117 DD 4.3%
+   +GLD                       +0.492 H1 +0.476 H2 +0.508 Mar +0.637 | -best2 +0.394 | win 56% trades 119 DD 4.3%
+   +AMD                       +0.582 H1 +0.591 H2 +0.572 Mar +0.666 | -best2 +0.483 | win 57% trades 115 DD 4.5%
+
+== SMH vs SOXX, FULL SYSTEM, MODEL ==
+   QQQ IWM XLK XBI + SOXX     +0.517 H1 +0.487 H2 +0.545 Mar +0.609 | -best2 +0.418 | win 60% trades 108 DD 3.1%
+   QQQ IWM XLK XBI + SMH      +0.437 H1 +0.326 H2 +0.546 Mar +0.443 | -best2 +0.342 | win 58% trades 111 DD 4.0%
+   QQQ IWM XLK XBI + both     +0.476 H1 +0.416 H2 +0.535 Mar +0.466 | -best2 +0.378 | win 58% trades 112 DD 4.0%
+== 6th slot after QQQ SOXX IWM XLK XBI, FULL SYSTEM, MODEL ==
+   none (five)                +0.517 H1 +0.487 H2 +0.545 Mar +0.609 | -best2 +0.418 | win 60% trades 108 DD 3.1%
+   +XLE                       +0.524 H1 +0.487 H2 +0.560 Mar +0.694 | -best2 +0.426 | win 58% trades 120 DD 3.9%
+   +XLF                       +0.544 H1 +0.541 H2 +0.546 Mar +0.613 | -best2 +0.445 | win 61% trades 115 DD 4.4%
+   +SPY                       +0.519 H1 +0.489 H2 +0.548 Mar +0.650 | -best2 +0.420 | win 58% trades 117 DD 3.5%
+   +GLD                       +0.487 H1 +0.438 H2 +0.535 Mar +0.576 | -best2 +0.388 | win 56% trades 119 DD 3.9%
+   +AMD                       +0.570 H1 +0.553 H2 +0.586 Mar +0.594 | -best2 +0.471 | win 59% trades 115 DD 4.1%
+
+Per-proxy best-two-removed (real):  {'SOXX': (28.1, 10.9), 'SMH': (31.3, 11.8), 'XLE': (3.4, -1.5), 'XLF': (1.6, -1.3), 'SPY': (1.4, -1.4), 'GLD': (-6.3, -7.1)}
+
+Slot's OWN best two signals removed (fair test; real pricing, FADE alone):
+   +AMD  five +0.406 | with AMD +0.468 | with AMD minus its best 2 signals +0.438  (delta vs five +0.032)
+   +SPY  five +0.406 | with SPY +0.410 | with SPY minus its best 2 signals +0.399  (delta vs five -0.006)
+   +XLF  five +0.406 | with XLF +0.417 | with XLF minus its best 2 signals +0.398  (delta vs five -0.008)
+   +XLE  five +0.406 | with XLE +0.407 | with XLE minus its best 2 signals +0.376  (delta vs five -0.030)
+   +GDX  five +0.406 | with GDX +0.432 | with GDX minus its best 2 signals +0.404  (delta vs five -0.002)
