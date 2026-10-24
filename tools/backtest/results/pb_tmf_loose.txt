@@ -1,0 +1,21 @@
+TMF: median day range 1.63%, median 5-min $vol 627k
+TMV: median day range 1.67%, median 5-min $vol 113k
+
+variant                                               TMF  TMV | live4 setups | PB-alone live4+TMF+TMV: %/day  H1  H2  March  win% trades | vs live4 same filters
+LIVE rules                                              0    0 |           53 |   +0.158 +0.162 +0.154 +0.139    69     45 | live4 alone: +0.158 (H1 +0.162 H2 +0.154 Mar +0.139, 45 trades, win 69%)
+stop floor 0.40%                                        6    3 |           98 |   +0.062 +0.061 +0.063 +0.188    46     91 | live4 alone: +0.066 (H1 +0.071 H2 +0.061 Mar +0.188, 83 trades, win 47%)
+      TMF: 6 setups, win 33%, avg -0.10%, sum -0.6%, without best 1 -1.2%
+      TMV: 3 setups, win 33%, avg -0.20%, sum -0.6%, without best 1 -1.0%
+stop 0.40, room 0.15                                    6    3 |           98 |   +0.062 +0.061 +0.063 +0.188    46     91 | live4 alone: +0.066 (H1 +0.071 H2 +0.061 Mar +0.188, 83 trades, win 47%)
+      TMF: 6 setups, win 33%, avg -0.10%, sum -0.6%, without best 1 -1.2%
+      TMV: 3 setups, win 33%, avg -0.20%, sum -0.6%, without best 1 -1.0%
+stop 0.40, room 0.15, R/R 0.5                           8    3 |          119 |   +0.086 +0.075 +0.096 +0.127    51    109 | live4 alone: +0.075 (H1 +0.050 H2 +0.100 Mar +0.127, 100 trades, win 52%)
+      TMF: 8 setups, win 38%, avg -0.08%, sum -0.7%, without best 1 -1.3%
+      TMV: 3 setups, win 33%, avg -0.20%, sum -0.6%, without best 1 -1.0%
+volume 1.0x                                             0    0 |           71 |   +0.157 +0.180 +0.134 +0.228    64     58 | live4 alone: +0.157 (H1 +0.180 H2 +0.134 Mar +0.228, 58 trades, win 64%)
+ALL loose: stop 0.40 room 0.15 R/R 0.5 vol 1.0x         8    3 |          144 |   +0.076 +0.153 +0.000 +0.215    50    122 | live4 alone: +0.065 (H1 +0.127 H2 +0.004 Mar +0.215, 113 trades, win 50%)
+      TMF: 8 setups, win 38%, avg -0.08%, sum -0.7%, without best 1 -1.3%
+      TMV: 3 setups, win 33%, avg -0.20%, sum -0.6%, without best 1 -1.0%
+EXTREME: stop 0.25 room 0.10 R/R 0.3 vol 0.8x          35   29 |          172 |   -0.003 +0.010 -0.017 -0.037    48    174 | live4 alone: +0.033 (H1 +0.100 H2 -0.033 Mar +0.083, 130 trades, win 51%)
+      TMF: 35 setups, win 43%, avg -0.09%, sum -3.1%, without best 1 -3.7%
+      TMV: 29 setups, win 45%, avg -0.07%, sum -2.1%, without best 1 -2.6%
