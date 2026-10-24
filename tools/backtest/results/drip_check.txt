@@ -1,0 +1,11 @@
+PULLBACK: SOXS LABD TECS UVXY
+   PULLBACK alone                   trades  45  WIN  69% (PULLBACK trades 45, win 69%)  +0.158%/day  H1 +0.162 H2 +0.154 March +0.139  DD 1.9%  ret +27.7%
+   Full system (FADE v5.2.13 + this) trades 111  WIN  61% (PULLBACK trades 36, win 69%)  +0.548%/day  H1 +0.562 H2 +0.535 March +0.613  DD 3.1%  ret +130.9%
+PULLBACK: + DRIP
+   PULLBACK alone                   trades  50  WIN  68% (PULLBACK trades 50, win 68%)  +0.161%/day  H1 +0.179 H2 +0.143 March +0.139  DD 2.7%  ret +28.3%
+   Full system (FADE v5.2.13 + this) trades 115  WIN  61% (PULLBACK trades 40, win 68%)  +0.546%/day  H1 +0.568 H2 +0.524 March +0.613  DD 3.2%  ret +129.9%
+(old, with NVD)
+   PULLBACK alone                   trades  51  WIN  67% (PULLBACK trades 51, win 67%)  +0.153%/day  H1 +0.151 H2 +0.155 March +0.139  DD 1.9%  ret +26.7%
+   Full system (FADE v5.2.13 + this) trades 115  WIN  61% (PULLBACK trades 40, win 68%)  +0.544%/day  H1 +0.541 H2 +0.546 March +0.613  DD 4.4%  ret +129.1%
+
+DRIP's own setups: 5 win 60% sum +0.48% [('2026-05-06', 0.51), ('2026-05-20', 0.9), ('2026-06-09', 0.78), ('2026-06-11', -0.85), ('2026-09-16', -0.86)]

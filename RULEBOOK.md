@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.13** (2026-10-24; AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.14** (2026-10-24; NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -48,7 +48,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 6 | **Fresh data** | `paper.py` must show bars through this slot (or say why not). **PULLBACK:** the order review's quote must agree with the last bar within 0.5%. **FADE (v5.2.3, band widened v5.2.9):** the leg's quote must be within **1.5%** of the leg price at the signal bar (two-sided), and the order must be sent **no later than 6 minutes after the slot** (counted when the order is sent). A late FADE signal inside both limits is a valid entry: marketable limit (B5.1), stop and target re-set from the actual fill with the same R (B5.2), normal sizing. Later than 6 minutes, or outside 1.5% → no entry, logged as skipped. Stale or contradictory data → no entry. | paper.py output, `review_equity_order` |
 | 7 | **Spread** | Skip the entry if the leg's bid–ask spread is wider than **0.30% of its price**. | Order review quote |
 | 8 | **Overnight** | **Nothing is held overnight.** A position found at 9:00 or 9:30 is sold at the 9:30 checkpoint (marketable limit) and reported. | Positions |
-| 9 | **Earnings** | **Skip NVD on any session where NVIDIA has reported since the prior close.** (v5.2.13: the AMD fade row is gone, so AMD's report no longer matters.) | `get_earnings_calendar` at 9:00 |
+| 9 | **Earnings** | **No single stocks are traded any more (v5.2.13 AMD out, v5.2.14 NVD out), so no earnings skip applies.** If a single-stock ticker is ever added back, skip it on any session where its company reported since the prior close. | `get_earnings_calendar` at 9:00 |
 | 10 | **Session** | Entries only between 10:00 and 12:55. No trading on early-close days (Nov 27, Dec 24) or market holidays. | Calendar; `paper.py` blocks entries on the dates in its `NO_TRADE` list (through 2026-12-31; extend it for 2027 before then) |
 | 11 | **Halt** | Never send an order into a halted ticker (A4). | Broker response |
 | 12 | **Kill switch** | **If the governor says "stop", "halt" or "flatten":** cancel every open order, sell every position (marketable limit), and take no entries until the governor says to resume. This overrides everything else in this file. | — |
@@ -99,7 +99,7 @@ Specs and evidence: `tools/backtest/PULLBACK_SPEC.md`, E3. `tools/live/paper.py`
 | XBI | LABU | LABD | 3 / 3 |
 | XLF | FAS | FAZ | 3 / 3 |
 
-**PULLBACK** reads each ticker's own chart and buys only: **SOXS, LABD, TECS, UVXY, NVD.**
+**PULLBACK** reads each ticker's own chart and buys only: **SOXS, LABD, TECS, UVXY.**
 
 **Thin tickers: TECS, FAZ, LABU** (about $70–270k traded per 5-minute bar; FAZ is the thinnest). The spread check (A1.7) applies with extra force to these.
 
@@ -204,11 +204,10 @@ Only the first qualifying setup per ticker per day counts.
 ## C1. Each 10:00–13:25 slot
 
 1. **State check** (A3).
-2. **Fetch** 5-minute bars from the prior trading day's 9:30 to now, in three `get_equity_historicals` calls:
+2. **Fetch** 5-minute bars from the prior trading day's 9:30 to now, in two `get_equity_historicals` calls (v5.2.14):
    - QQQ SOXX IWM XLK XBI XLF TQQQ SQQQ SOXL SOXS
-   - TNA TZA TECL TECS LABU LABD FAS FAZ UVXY NVD
-   - NVDA (read-only tie-break)
-3. **Run** `python3 tools/live/paper.py --live --now HH:MM <dump files>` (add `--skip NVD` on an A1.9 earnings day). **Never add `--real-free` routinely:** only after the governor closed a real position by hand (A3). A skipped or blocked entry leaves a ghost position that correctly blocks new entries until the model exits (tested: `results/recheck_all.txt` §2).
+   - TNA TZA TECL TECS LABU LABD FAS FAZ UVXY
+3. **Run** `python3 tools/live/paper.py --live --now HH:MM <dump files>` (`--skip TICKER` bars a ticker from real entries for the day, e.g. after a corporate-action flag in C3). **Never add `--real-free` routinely:** only after the governor closed a real position by hand (A3). A skipped or blocked entry leaves a ghost position that correctly blocks new entries until the model exits (tested: `results/recheck_all.txt` §2).
 4. **Act on the `LIVE ACTIONS` lines** under A1 and B5. If the newest bar isn't published yet, `paper.py` steps back up to two bars and says so.
 5. **Report only changes:** an entry, a take-profit, a stop move, an exit, or a blocked entry and why. If nothing changed, write one line.
 6. **Heartbeat (v5.2.6).** Put one line in every checkpoint report: the ET time the trigger fired (`fire_et`) and the gap since the previous checkpoint's fire time, e.g. `fired 10:15:02 (+5:01)`. **Flag it at once** if the gap is more than 7 minutes, or if a slot between 10:00 and 12:55 has no earlier run today (a missed checkpoint). On a flag: say so in that report, run the missed slot's scan now (C1.3, with the late-entry limits of A1.6), and note it in the execution log. The heartbeat changes no order, signal or size.
@@ -227,10 +226,9 @@ Only the first qualifying setup per ticker per day counts.
 1. **State check** (A3). Record **total value at 9:00** in E5; the daily loss limit (A1.2) is measured from it. Any position found → sell it at 9:30 (A1.8).
 2. **Controls:**
    - the losing streak from `live_trades.csv` (lockout status);
-   - earnings for NVIDIA (A1.9);
    - whether today is an early-close day or a holiday (A1.10).
-   - **corporate actions (v5.2.6):** for the 14 traded funds (TQQQ SQQQ SOXL SOXS TNA TZA TECL TECS LABU LABD FAS FAZ UVXY NVD) and the proxies, check for a split or reverse split, ticker change, halt or delisting notice, and compare each fund's current quote with yesterday's close. If a fund is more than **20%** off yesterday's close without the underlying index having moved anywhere near that, or any notice is found, **exclude that fund for the day** (no entries, and use the proxy-based exit if it is held), note it in E5 and the 9:00 report. If everything is clean, write one line.
-3. **RVOL baseline:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI XLF NVDA. Run `paper.py --build-rvol --day <today> --now 09:00 <dump>`.
+   - **corporate actions (v5.2.6):** for the 13 traded funds (TQQQ SQQQ SOXL SOXS TNA TZA TECL TECS LABU LABD FAS FAZ UVXY) and the proxies, check for a split or reverse split, ticker change, halt or delisting notice, and compare each fund's current quote with yesterday's close. If a fund is more than **20%** off yesterday's close without the underlying index having moved anywhere near that, or any notice is found, **exclude that fund for the day** (no entries, and use the proxy-based exit if it is held), note it in E5 and the 9:00 report. If everything is clean, write one line.
+3. **RVOL baseline:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI XLF. Run `paper.py --build-rvol --day <today> --now 09:00 <dump>`.
 4. **One line of context:** any scheduled event before 13:30, such as CPI, FOMC or a major earnings report.
 5. Refresh E5, commit and push.
 
@@ -328,11 +326,13 @@ A broker capability is verified only by a successful call or an order response, 
 
 | | Trades | Win % | %/day | Return | Max drawdown |
 |---|---|---|---|---|---|
-| Combined | 115 | 61% | +0.544 | +129.1% | 4.4% |
+| Combined | 111 | 61% | +0.548 | +130.9% | 3.1% |
 | FADE alone | 75 | 57% | +0.419 | +88.8% | 4.5% |
-| PULLBACK alone | 51 | 67% | +0.153 | +26.7% | 1.9% |
+| PULLBACK alone | 45 | 69% | +0.158 | +27.7% | 1.9% |
 | Mar 3 – Apr 6 (never used for tuning) | 20 | 55% | +0.613 | +15.3% | 2.8% |
-| Halves of the 157 days | | | +0.541 / +0.546 | | |
+| Halves of the 157 days | | | +0.562 / +0.535 | | |
+
+(v5.2.14 lists: FADE QQQ SOXX IWM XLK XBI XLF; PULLBACK SOXS LABD TECS UVXY. v5.2.13 with NVD: combined +0.544, PULLBACK alone +0.153 (67% wins), drawdown 4.4%. Why NVD went: single stock; 5 trades taken, +$16, negative without its best trade; dropping it raised PULLBACK alone from +0.153 to +0.158 with March unchanged. See `results/pb_alone_search.txt` (all 33.5M PULLBACK lists from the governor's table) and `results/drip_check.txt`.)
 
 (v5.2.13 list: XLF replaces AMD. The v5.2.12 list with AMD scored +0.570%/day, 115 trades, 59% wins, +138.2%, drawdown 4.1%, halves +0.553 / +0.586, March window +0.594; it is kept in `tools/backtest/results/final_system.txt`. Why AMD went: single stock, 198% bull run over the window, 9 of its 10 shorts lost; without its own best two signals it was negative on the leg; 12 of its 19 signals shared a day with the other five. See `results/amd_check.txt`, `results/fade_etf_only.txt`, `results/xle_vs_xlf.txt`.)
 
@@ -412,6 +412,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.14 — 2026-10-24, governor instruction:** PULLBACK list change. **NVD is removed**; PULLBACK buys SOXS, LABD, TECS, UVXY. With no single stock left, the earnings skip (A1.9) no longer applies and NVDA is no longer fetched (two C1.2 calls instead of three). Evidence (D3): an exhaustive search of every PULLBACK list from the live five and the governor's 22-row table (33.5M lists, PULLBACK alone) found larger lists only by curve fitting (chosen on April–October they lost in March; chosen on the second half they lost in the first); among liquid, non-single-stock lists SOXS LABD TECS UVXY is the best 4 and beats the old five: PULLBACK alone +0.158%/day (halves +0.162 / +0.154, March +0.139, 69% wins, drawdown 1.9%) vs +0.153 (halves +0.151 / +0.155, March +0.139, 67%). Combined with the v5.2.13 FADE list: +0.548%/day (halves +0.562 / +0.535, March +0.613, drawdown 3.1%) vs +0.544 (drawdown 4.4%). DRIP was offered as a fifth and left out: +0.003%/day alone, weaker second half, drawdown 2.7%. `paper.py` replays the backtest trade for trade (111 = 111). Live from the Mon 2026-10-26 9:00 checkpoint.
 
 **v5.2.13 — 2026-10-24, governor instruction:** FADE list change. **AMD (AMDL/AMDD) is removed and XLF (FAS/FAZ, 3 / 3) is added**; FADE now trades QQQ, SOXX, IWM, XLK, XBI, XLF. The earnings skip (A1.9) now covers NVD only. Reasons: a single stock is not a reliable fade proxy to the governor; AMD's backtest edge came from its 198% run (9 of 10 shorts lost; negative on the leg without its best two signals) and the replacement test showed no candidate beats an empty slot by more than noise, XLF being the most distinct from the other five (6 of 14 signals shared a day), steadiest (50% wins on its own trades) and adequately tracked (FAS/FAZ vs XLF correlation 1.00). Backtest on both halves and the untouched March window (D3): combined +0.544%/day (halves +0.541 / +0.546, March +0.613, drawdown 4.4%); FADE alone +0.419%/day (halves +0.391 / +0.446); v5.2.12 list was +0.570 (halves +0.553 / +0.586, March +0.594). The cost is about 0.03%/day of backtest return, most of it AMD's two best trades. `paper.py` replays the backtest trade for trade (115 = 115, same final equity). Thin leg: FAZ (about $70k per 5-minute bar), covered by the A1.7 spread check. Live from the Mon 2026-10-26 9:00 checkpoint; the RVOL baseline at 9:00 must include XLF.
 

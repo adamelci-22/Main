@@ -1,0 +1,46 @@
+FULL MIXED SYSTEM (paper setup v3.132)
+
+Combined: 2026-03-03..2026-10-14 (157 trading days)
+   trades 111 (3.5/week), win 61%, avg win +1.94% / avg loss -0.95% (on the ticker)
+   +0.548%/day, return +130.9% ($2,000 -> $4,618), max drawdown 3.1%, Sharpe~5.1, halves +0.562 / +0.535
+Fade alone: 2026-03-03..2026-10-14 (157 trading days)
+   trades 75 (2.4/week), win 57%, avg win +2.38% / avg loss -0.99% (on the ticker)
+   +0.419%/day, return +88.8% ($2,000 -> $3,776), max drawdown 4.5%, Sharpe~4.1, halves +0.391 / +0.446
+Pullback alone: 2026-03-03..2026-10-14 (157 trading days)
+   trades 45 (1.4/week), win 69%, avg win +1.19% / avg loss -0.87% (on the ticker)
+   +0.158%/day, return +27.7% ($2,000 -> $2,554), max drawdown 1.9%, Sharpe~4.2, halves +0.162 / +0.154
+Untouched window (never used for tuning): 2026-03-03..2026-04-06 (24 trading days)
+   trades 20 (4.2/week), win 55%, avg win +2.05% / avg loss -0.87% (on the ticker)
+   +0.613%/day, return +15.3% ($2,000 -> $2,306), max drawdown 2.8%, Sharpe~5.0, halves +0.985 / +0.241
+Tuning window: 2026-04-07..2026-10-14 (133 trading days)
+   trades 91 (3.4/week), win 63%, avg win +1.92% / avg loss -0.97% (on the ticker)
+   +0.537%/day, return +100.3% ($2,000 -> $4,005), max drawdown 3.1%, Sharpe~5.2, halves +0.643 / +0.432
+
+Month by month (combined):
+   2026-03: 19 trades, 10 won,    +275$ (+13.8%), equity end $2,275
+   2026-04: 13 trades,  9 won,    +112$ ( +4.9%), equity end $2,387
+   2026-05: 15 trades,  8 won,    +117$ ( +4.9%), equity end $2,504
+   2026-06: 20 trades, 13 won,    +558$ (+22.3%), equity end $3,062
+   2026-07: 14 trades,  8 won,    +763$ (+24.9%), equity end $3,825
+   2026-08: 13 trades, 11 won,    +600$ (+15.7%), equity end $4,426
+   2026-09:  7 trades,  4 won,      +5$ ( +0.1%), equity end $4,431
+   2026-10: 10 trades,  5 won,    +187$ ( +4.2%), equity end $4,618
+
+By system and ticker:
+   FADE SOXX  16 trades, win  62%, avg +2.28%, total   +939$
+   FADE XBI    9 trades, win  78%, avg +1.85%, total   +528$
+   PB   SOXS  12 trades, win  75%, avg +0.88%, total   +296$
+   FADE XLK   13 trades, win  46%, avg +0.64%, total   +215$
+   FADE IWM   16 trades, win  56%, avg +0.21%, total   +145$
+   PB   TECS   8 trades, win  75%, avg +0.63%, total   +130$
+   FADE QQQ    9 trades, win  56%, avg +0.41%, total   +128$
+   PB   LABD   7 trades, win  71%, avg +0.41%, total   +102$
+   PB   UVXY   9 trades, win  56%, avg +0.22%, total    +74$
+   FADE XLF   12 trades, win  50%, avg +0.16%, total    +61$
+   fade by side: bull leg 42 trades +881$, inverse leg 33 trades +1134$
+
+Days: traded 95 of 157; winning 62, losing 33; best +8.00%, worst -3.05%; longest losing streak 3 trades
+Weeks: 33, positive 26, negative 6, worst week -2.58%, best week +12.15%
+Profit concentration: top 5 trades +992$, top 10 +1678$ of +2618$ total
+Without the top 5 trades the return would be about +81% (non-compounded)
+Entries by half hour: 10:00 74, 10:30 7, 11:00 6, 11:30 9, 12:00 5, 12:30 10

@@ -2,7 +2,7 @@
 """Backtest of the full mixed system as it stands for paper trading (rulebook v3.132, C13).
     python3 tools/backtest/final_system.py > tools/backtest/results/final_system.txt
 FADE: QQQ SOXX IWM XLK XBI XLF (v5.2.13; AMD out; failed-retest fade; 1/3 at 2R, 2-ATR chandelier, out 13:30).
-PULLBACK: SOXS LABD TECS UVXY NVD (PULLBACK_SPEC.md; 100% at morning high; out 13:30).
+PULLBACK: SOXS LABD TECS UVXY (v5.2.14; NVD out; PULLBACK_SPEC.md; 100% at morning high; out 13:30).
 $2,000, 3% risk capped at cash, one position at a time, max 3 entries/day, earliest trigger first, ties by proxy RVOL.
 Identical to tools/live/paper.py (verified). Period 2026-03-03..10-14; 03-03..04-06 was never used to choose any rule or list.
 """
@@ -12,7 +12,7 @@ import manual as m, pb_final as PBF, pb_inverse as PI, mixed as MXD, expand_list
 from lab import get_data
 
 FADE = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF']
-PB = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']
+PB = ['SOXS', 'LABD', 'TECS', 'UVXY']
 PI.PROXY.update({'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA', 'LABD': 'LABD', 'UVXY': 'UVXY'})
 
 

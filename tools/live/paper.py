@@ -7,10 +7,9 @@ Usage at a checkpoint (after saving today's + the prior session's 5-minute bars 
     python3 tools/live/paper.py --live --now 10:35 DUMP [DUMP ...]     # live checkpoint: status + LIVE ACTIONS (RULEBOOK C1)
     python3 tools/live/paper.py --now 13:30 --close DUMP [DUMP ...]    # 13:30 close: append today's trades to archive/paper_trades.csv
     python3 tools/live/paper.py --build-rvol --day YYYY-MM-DD --now 09:00 DUMP   # 9:00: RVOL baseline (RULEBOOK C3)
-Symbols needed in the dumps (three calls, max 10 symbols each):
+Symbols needed in the dumps (two calls, max 10 symbols each; v5.2.14):
     QQQ SOXX IWM XLK XBI XLF TQQQ SQQQ SOXL SOXS
-    TNA TZA TECL TECS LABU LABD FAS FAZ UVXY NVD
-    NVDA   (read-only: RVOL tie-break for NVD pullbacks)
+    TNA TZA TECL TECS LABU LABD FAS FAZ UVXY
 Range: from the prior trading day's 9:30 ET to now, interval 5minute.
 
 Everything is recomputed from the bars on every run (deterministic, no intraday state), exactly as tools/backtest computes it:
@@ -28,7 +27,7 @@ STATE = os.path.join(ROOT, 'archive', 'paper_state.json')
 
 FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3),
              'XBI': ('LABU', 'LABD', 3, 3), 'XLF': ('FAS', 'FAZ', 3, 3)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
-PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']     # tie order for same-bar pullback triggers
+PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY']     # tie order for same-bar pullback triggers
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
 REAL_FREE = False       # --real-free: list LIVE signals even while the MODEL's own position is open (the governor closed the real one by hand; RULEBOOK A3/B4.2)
 FLOOR_TARGET = True     # pullback take-profit = morning high rounded down to the cent; main() turns it off for days before FLOOR_FROM
@@ -41,7 +40,7 @@ PB_IN, PB_OUT = 0.0001, 0.0003
 NO_TRADE = {'2026-11-26': 'Thanksgiving (closed)', '2026-11-27': 'early close 13:00', '2026-12-24': 'early close 13:00', '2026-12-25': 'Christmas (closed)'}
 CALENDAR_THROUGH = '2026-12-31'
 EXPECTED = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF', 'TQQQ', 'SQQQ', 'SOXL', 'SOXS', 'TNA', 'TZA', 'TECL', 'TECS', 'LABU', 'LABD',
-            'FAS', 'FAZ', 'UVXY', 'NVD', 'NVDA']      # the three C1.2 fetch groups
+            'FAS', 'FAZ', 'UVXY']      # the two C1.2 fetch groups
 SKIP = set()            # --skip: proxies/legs barred from REAL entries today (RULEBOOK A1.9 earnings); the model is unchanged
 
 
@@ -201,7 +200,7 @@ def pb_manage(b, K, k, entry, stop, T):
 
 
 # ------------------------------------------------------------------ day simulation (one shared paper account)
-PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA'}     # proxy RVOL used only to break same-bar ties
+PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK'}     # proxy RVOL used only to break same-bar ties
 
 
 def rvol(today, base, p, k):
@@ -344,8 +343,8 @@ def main():
     ap.add_argument('--day', help='ET date (default: latest date in the dumps)'); ap.add_argument('--close', action='store_true')
     ap.add_argument('--real-free', action='store_true', help='the real account is flat although the model still holds a position (governor closed it by hand): list new signals anyway; the broker check (A1.5) still guards entries')
     ap.add_argument('--live', action='store_true', help='also print the real-order instructions for this checkpoint (RULEBOOK B5)')
-    ap.add_argument('--skip', default='', help='comma list of proxies/legs barred from real entries today (A1.9 earnings), e.g. --skip NVD')
-    ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 6 FADE proxies + NVDA, prior 20 sessions)')
+    ap.add_argument('--skip', default='', help='comma list of proxies/legs barred from real entries today (A1.9 earnings), e.g. --skip XBI')
+    ap.add_argument('--build-rvol', action='store_true', help='9:00: build the 20-session RVOL baseline for --day from the dumps (5-min bars of the 6 FADE proxies, prior 20 sessions)')
     a = ap.parse_args()
     raw = load([f for g in a.dumps for f in glob.glob(g)])
     days = sorted({d for s in raw.values() for d in s})
@@ -354,7 +353,7 @@ def main():
     if a.build_rvol:
         prior = [d for d in days if d < day][-20:]
         base = {p: [st.mean(sum(b[4] for b in g[:k]) for d in prior for g in [grid(raw[p][d], 78)] if g) for k in range(79)]
-                for p in list(FADE_ROWS) + ['NVDA'] if p in raw and all(d in raw[p] for d in prior)}
+                for p in list(FADE_ROWS) if p in raw and all(d in raw[p] for d in prior)}
         out = os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json'); json.dump({'day': day, 'sessions': prior, 'base': base}, open(out, 'w'))
         print(f"RVOL baseline for {day} from {len(prior)} sessions ({prior[0]}..{prior[-1]}), proxies {sorted(base)} -> {out}"); return
     prevday = max(d for d in days if d < day)
@@ -377,9 +376,9 @@ def main():
     SKIP = {x.strip().upper() for x in a.skip.split(',') if x.strip()}
     missing = [s for s in EXPECTED if s not in today]
     if missing:
-        print(f"  WARNING: no {day} bars for {' '.join(missing)} - fetch all three C1.2 groups"
-              + (" (NVDA missing: NVD loses every same-bar RVOL tie)" if 'NVDA' in missing else '') + ". A missing leg blocks its entry.")
-    stale = [s for s in EXPECTED if s in today and today[s][K - 1][4] == 0 and s in ('TECS', 'FAZ', 'LABU', 'LABD', 'UVXY', 'NVD', 'SOXS')]
+        print(f"  WARNING: no {day} bars for {' '.join(missing)} - fetch both C1.2 groups"
+              + ". A missing leg blocks its entry.")
+    stale = [s for s in EXPECTED if s in today and today[s][K - 1][4] == 0 and s in ('TECS', 'FAZ', 'LABU', 'LABD', 'UVXY', 'SOXS')]
     if stale: print(f"  note: no trade printed in the last bar for {' '.join(stale)} (filled flat, as the backtest does) - confirm with a quote before any order on them")
     if REAL_FREE: print("  --real-free is ON: use it ONLY when the governor closed the real position by hand (A3); a skipped/blocked entry keeps the ghost position.")
     FLOOR_TARGET = day >= FLOOR_FROM
