@@ -1,0 +1,150 @@
+FADE ALONE. 263,949 lists of 1..8 proxies from 20, 35s
+
+######## PRICING: MODEL ########   LIVE six: full +0.456  H1 +0.410  H2 +0.501  March +0.486  tune +0.451
+
+  [ALL proxies] 263,949 lists; live six ranks 73
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX        full +0.502 H1 +0.531 H2 +0.474 March +0.686  win 52% trades 96 DD 4.1%
+     n=8 SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX        full +0.501 H1 +0.594 H2 +0.410 March +0.683  win 51% trades 100 DD 4.1%
+     n=8 SOXX, IWM, XLK, XBI, XLF, KRE, GDX, XLE        full +0.494 H1 +0.545 H2 +0.444 March +0.808  win 52% trades 102 DD 5.0%
+     n=8 SOXX, IWM, XLK, XBI, AMD, KRE, GDX, XLE        full +0.493 H1 +0.559 H2 +0.428 March +0.780  win 49% trades 104 DD 5.0%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE        full +0.492 H1 +0.472 H2 +0.512 March +0.525  win 55% trades 91 DD 4.0%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, GDX        full +0.491 H1 +0.551 H2 +0.432 March +0.616  win 53% trades 90 DD 4.1%
+     n=7 SOXX, IWM, XLK, XBI, AMD, KRE, GDX             full +0.490 H1 +0.556 H2 +0.425 March +0.683  win 51% trades 95 DD 4.1%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE             full +0.488 H1 +0.448 H2 +0.528 March +0.578  win 56% trades 86 DD 3.8%
+   beat the live six on full AND H1 AND H2 AND March: 5
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE        full +0.492 H1 +0.472 H2 +0.512 March +0.525  win 55% trades 91 DD 4.0%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE             full +0.488 H1 +0.448 H2 +0.528 March +0.578  win 56% trades 86 DD 3.8%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, TLT        full +0.478 H1 +0.427 H2 +0.529 March +0.520  win 55% trades 95 DD 3.8%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, KRE        full +0.476 H1 +0.431 H2 +0.519 March +0.560  win 52% trades 92 DD 3.8%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY             full +0.458 H1 +0.412 H2 +0.504 March +0.527  win 53% trades 83 DD 3.8%
+   choose on tune  -> n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE        tune +0.486 -> March +0.525 (live +0.486)
+   choose on H1    -> n=8 SOXX, XLK, XBI, AMD, XLF, KRE, GDX, XLE        H1 +0.607 -> H2 +0.327 (live +0.501)
+   choose on H2    -> n=8 QQQ, SOXX, XLK, XBI, AMD, AAPL, KRE, TLT       H2 +0.534 -> H1 +0.320 (live +0.410)
+
+  [LIQUID legs only] 3,796 lists; live six ranks 5
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX        full +0.479 H1 +0.509 H2 +0.450 March +0.675  win 51% trades 92 DD 4.1%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, GDX             full +0.476 H1 +0.504 H2 +0.448 March +0.633  win 52% trades 84 DD 4.1%
+     n=6 SOXX, IWM, XLK, XBI, AMD, GDX                  full +0.460 H1 +0.530 H2 +0.391 March +0.631  win 51% trades 83 DD 4.4%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY             full +0.458 H1 +0.412 H2 +0.504 March +0.527  win 53% trades 83 DD 3.8%
+     n=6 QQQ, SOXX, IWM, XLK, XBI, AMD                  full +0.456 H1 +0.410 H2 +0.501 March +0.486  win 55% trades 74 DD 3.8%
+     n=7 SOXX, IWM, XLK, XBI, AMD, SPY, GDX             full +0.449 H1 +0.502 H2 +0.396 March +0.672  win 49% trades 92 DD 4.4%
+     n=7 QQQ, SOXX, IWM, XBI, AMD, SPY, GDX             full +0.448 H1 +0.498 H2 +0.399 March +0.702  win 52% trades 86 DD 4.1%
+     n=6 QQQ, SOXX, IWM, XBI, AMD, GDX                  full +0.445 H1 +0.493 H2 +0.397 March +0.661  win 54% trades 78 DD 4.1%
+   beat the live six on full AND H1 AND H2 AND March: 1
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY             full +0.458 H1 +0.412 H2 +0.504 March +0.527  win 53% trades 83 DD 3.8%
+   choose on tune  -> n=6 QQQ, SOXX, IWM, XLK, XBI, AMD                  tune +0.451 -> March +0.486 (live +0.486)
+   choose on H1    -> n=6 SOXX, IWM, XLK, XBI, AMD, GDX                  H1 +0.530 -> H2 +0.391 (live +0.501)
+   choose on H2    -> n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, AMZN, SPY       H2 +0.510 -> H1 +0.229 (live +0.410)
+
+  Win rates, FADE alone (model):
+   list                   trades tradedays  win%  avg win avg loss    PF   %/day  maxDD worst streak  added tickers (trades, win%)
+   live six                   74        73    55    +2.67    -0.98  3.39  +0.456    3.8            5  
+   live + SPY                 83        80    53    +2.53    -0.87  3.27  +0.458    3.8            6  SPY 12 (33%)
+   live + KRE                 86        84    56    +2.40    -0.86  3.50  +0.488    3.8            4  KRE 16 (50%)
+   live + XLF + KRE           91        89    55    +2.35    -0.85  3.38  +0.492    4.0            5  XLF 9 (44%) KRE 15 (47%)
+   live + GDX                 84        83    52    +2.64    -0.90  3.22  +0.476    4.1            5  GDX 14 (21%)
+   live + SPY + GDX           92        90    51    +2.52    -0.84  3.15  +0.479    4.1            6  SPY 11 (36%) GDX 14 (21%)
+   live + KRE + GDX           96        94    52    +2.44    -0.81  3.25  +0.502    4.1            5  KRE 15 (47%) GDX 13 (23%)
+   live + SMH                 78        76    53    +2.68    -0.98  3.04  +0.416    4.8            6  SMH 11 (55%)
+   live + TLT                 84        83    55    +2.37    -0.85  3.39  +0.455    3.8            6  TLT 14 (50%)
+
+  Each proxy on its own, FADE alone (model): trades, win%, avg%, sum%
+   QQQ  *  20 trades  win  55%  avg +0.42%  sum   +8.5%  leg $vol 13,305k
+   SOXX *  21 trades  win  52%  avg +1.40%  sum  +29.5%  leg $vol 11,461k
+   IWM  *  17 trades  win  59%  avg +0.24%  sum   +4.1%  leg $vol 1,361k
+   XLK  *  25 trades  win  52%  avg +0.54%  sum  +13.5%  leg $vol 136k
+   XBI  *  12 trades  win  58%  avg +1.15%  sum  +13.8%  leg $vol 269k
+   AMD  *  19 trades  win  37%  avg +0.71%  sum  +13.4%  leg $vol 244k
+   NVDA    26 trades  win  35%  avg -0.15%  sum   -3.9%  leg $vol 201k
+   AAPL    13 trades  win  46%  avg -0.06%  sum   -0.7%  leg $vol 210k
+   AMZN    16 trades  win  31%  avg -0.27%  sum   -4.3%  leg $vol 326k
+   META    17 trades  win  47%  avg +0.05%  sum   +0.9%  leg $vol 17k
+   MSFT    15 trades  win  27%  avg -0.22%  sum   -3.3%  leg $vol 52k
+   SPY     17 trades  win  35%  avg +0.07%  sum   +1.2%  leg $vol 1,170k
+   SMH     22 trades  win  50%  avg +1.18%  sum  +26.0%  leg $vol 11,461k
+   XLV      9 trades  win  44%  avg -0.02%  sum   -0.2%  leg $vol 0k
+   XLF     14 trades  win  50%  avg +0.11%  sum   +1.5%  leg $vol 70k
+   KRE     21 trades  win  38%  avg +0.05%  sum   +1.1%  leg $vol 70k
+   GDX     22 trades  win  32%  avg +0.16%  sum   +3.6%  leg $vol 160k
+   XLE     19 trades  win  42%  avg +0.15%  sum   +2.9%  leg $vol 62k
+   XOP     18 trades  win  22%  avg -0.50%  sum   -9.0%  leg $vol 91k
+   TLT     17 trades  win  41%  avg +0.14%  sum   +2.3%  leg $vol 86k
+
+######## PRICING: REAL ########   LIVE six: full +0.468  H1 +0.449  H2 +0.487  March +0.558  tune +0.452
+
+  [ALL proxies] 263,949 lists; live six ranks 68
+   top 8 full sample:
+     n=8 SOXX, IWM, XLK, XBI, AMD, XLF, KRE, GDX        full +0.511 H1 +0.619 H2 +0.404 March +0.768  win 49% trades 100 DD 6.0%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, KRE, GDX        full +0.509 H1 +0.554 H2 +0.465 March +0.761  win 49% trades 96 DD 6.0%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, GDX        full +0.503 H1 +0.586 H2 +0.421 March +0.652  win 50% trades 90 DD 6.0%
+     n=8 SOXX, IWM, XLK, XBI, XLF, KRE, GDX, XLE        full +0.501 H1 +0.568 H2 +0.436 March +0.874  win 52% trades 102 DD 6.6%
+     n=8 SOXX, IWM, XLK, XBI, AMD, KRE, GDX, XLE        full +0.501 H1 +0.585 H2 +0.418 March +0.855  win 48% trades 104 DD 6.6%
+     n=7 SOXX, IWM, XLK, XBI, AMD, KRE, GDX             full +0.499 H1 +0.581 H2 +0.418 March +0.768  win 48% trades 95 DD 6.0%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE        full +0.493 H1 +0.482 H2 +0.504 March +0.598  win 52% trades 91 DD 5.1%
+     n=8 QQQ, SOXX, IWM, XBI, AMD, XLF, KRE, GDX        full +0.492 H1 +0.580 H2 +0.406 March +0.785  win 51% trades 95 DD 6.0%
+   beat the live six on full AND H1 AND H2 AND March: 3
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, XLF, KRE        full +0.493 H1 +0.482 H2 +0.504 March +0.598  win 52% trades 91 DD 5.1%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY             full +0.472 H1 +0.455 H2 +0.490 March +0.604  win 51% trades 83 DD 5.1%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, TLT        full +0.471 H1 +0.450 H2 +0.492 March +0.595  win 50% trades 92 DD 5.1%
+   choose on tune  -> n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, XLF        tune +0.480 -> March +0.355 (live +0.558)
+   choose on H1    -> n=8 SOXX, XLK, XBI, AMD, XLV, XLF, GDX, XLE        H1 +0.642 -> H2 +0.224 (live +0.487)
+   choose on H2    -> n=8 QQQ, SOXX, XLK, XBI, AMD, SMH, KRE, TLT        H2 +0.557 -> H1 +0.323 (live +0.449)
+
+  [LIQUID legs only] 3,796 lists; live six ranks 6
+   top 8 full sample:
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, GDX        full +0.491 H1 +0.546 H2 +0.437 March +0.719  win 48% trades 92 DD 6.0%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, GDX             full +0.487 H1 +0.540 H2 +0.434 March +0.673  win 49% trades 84 DD 6.0%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, GDX        full +0.484 H1 +0.504 H2 +0.465 March +0.539  win 47% trades 87 DD 6.0%
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY             full +0.472 H1 +0.455 H2 +0.490 March +0.604  win 51% trades 83 DD 5.1%
+     n=6 SOXX, IWM, XLK, XBI, AMD, GDX                  full +0.470 H1 +0.567 H2 +0.374 March +0.680  win 47% trades 83 DD 6.0%
+     n=6 QQQ, SOXX, IWM, XLK, XBI, AMD                  full +0.468 H1 +0.449 H2 +0.487 March +0.558  win 53% trades 74 DD 5.1%
+     n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY, SMH        full +0.468 H1 +0.414 H2 +0.521 March +0.526  win 49% trades 86 DD 5.1%
+     n=7 SOXX, IWM, XLK, XBI, AMD, SMH, GDX             full +0.468 H1 +0.531 H2 +0.405 March +0.546  win 45% trades 86 DD 6.0%
+   beat the live six on full AND H1 AND H2 AND March: 1
+     n=7 QQQ, SOXX, IWM, XLK, XBI, AMD, SPY             full +0.472 H1 +0.455 H2 +0.490 March +0.604  win 51% trades 83 DD 5.1%
+   choose on tune  -> n=8 QQQ, SOXX, IWM, XLK, XBI, AMD, SMH, GDX        tune +0.475 -> March +0.539 (live +0.558)
+   choose on H1    -> n=6 SOXX, IWM, XLK, XBI, AMD, GDX                  H1 +0.567 -> H2 +0.374 (live +0.487)
+   choose on H2    -> n=8 QQQ, IWM, XLK, XBI, AMD, AMZN, SPY, SMH        H2 +0.528 -> H1 +0.150 (live +0.449)
+
+  Win rates, FADE alone (real):
+   list                   trades tradedays  win%  avg win avg loss    PF   %/day  maxDD worst streak  added tickers (trades, win%)
+   live six                   74        73    53    +2.88    -0.95  3.39  +0.468    5.1            4  
+   live + SPY                 83        80    51    +2.73    -0.85  3.30  +0.472    5.1            5  SPY 12 (33%)
+   live + KRE                 86        84    51    +2.71    -0.90  3.17  +0.483    5.1            5  KRE 16 (44%)
+   live + XLF + KRE           91        89    52    +2.59    -0.87  3.17  +0.493    5.1            5  XLF 9 (44%) KRE 15 (47%)
+   live + GDX                 84        83    49    +2.94    -0.89  3.14  +0.487    6.0            5  GDX 14 (21%)
+   live + SPY + GDX           92        90    48    +2.79    -0.83  3.07  +0.491    6.0            6  SPY 11 (36%) GDX 14 (21%)
+   live + KRE + GDX           96        94    49    +2.72    -0.86  3.04  +0.509    6.0            5  KRE 15 (47%) GDX 13 (23%)
+   live + SMH                 78        76    50    +3.07    -0.97  3.17  +0.456    5.1            5  SMH 11 (55%)
+   live + TLT                 84        83    52    +2.54    -0.81  3.44  +0.468    5.1            5  TLT 14 (50%)
+
+  Each proxy on its own, FADE alone (real): trades, win%, avg%, sum%
+   QQQ  *  20 trades  win  55%  avg +0.43%  sum   +8.7%  leg $vol 13,305k
+   SOXX *  21 trades  win  52%  avg +1.34%  sum  +28.1%  leg $vol 11,461k
+   IWM  *  17 trades  win  53%  avg +0.26%  sum   +4.5%  leg $vol 1,361k
+   XLK  *  25 trades  win  52%  avg +0.59%  sum  +14.7%  leg $vol 136k
+   XBI  *  12 trades  win  58%  avg +1.34%  sum  +16.1%  leg $vol 269k
+   AMD  *  19 trades  win  32%  avg +0.78%  sum  +14.9%  leg $vol 244k
+   NVDA    26 trades  win  31%  avg -0.13%  sum   -3.4%  leg $vol 201k
+   AAPL    13 trades  win  46%  avg -0.08%  sum   -1.0%  leg $vol 210k
+   AMZN    16 trades  win  31%  avg -0.26%  sum   -4.1%  leg $vol 326k
+   META    17 trades  win  41%  avg +0.05%  sum   +0.8%  leg $vol 17k
+   MSFT    15 trades  win  33%  avg -0.26%  sum   -3.8%  leg $vol 52k
+   SPY     17 trades  win  35%  avg +0.08%  sum   +1.4%  leg $vol 1,170k
+   SMH     22 trades  win  50%  avg +1.42%  sum  +31.3%  leg $vol 11,461k
+   XLV      9 trades  win  33%  avg +0.28%  sum   +2.5%  leg $vol 0k
+   XLF     14 trades  win  50%  avg +0.11%  sum   +1.6%  leg $vol 70k
+   KRE     21 trades  win  43%  avg -0.10%  sum   -2.1%  leg $vol 70k
+   GDX     22 trades  win  32%  avg +0.14%  sum   +3.1%  leg $vol 160k
+   XLE     19 trades  win  42%  avg +0.18%  sum   +3.4%  leg $vol 62k
+   XOP     18 trades  win  22%  avg -0.44%  sum   -8.0%  leg $vol 91k
+   TLT     17 trades  win  41%  avg +0.17%  sum   +2.8%  leg $vol 86k
+
+
+Swap check, FADE alone: SMH in place of SOXX (same SOXL/SOXS legs)
+  model live six       %/day +0.456 H1 +0.410 H2 +0.501 March +0.486 win 55% trades 74 DD 3.8%
+  model SMH for SOXX   %/day +0.371 H1 +0.261 H2 +0.480 March +0.319 win 53% trades 76 DD 4.8%
+  real  live six       %/day +0.468 H1 +0.449 H2 +0.487 March +0.558 win 53% trades 74 DD 5.1%
+  real  SMH for SOXX   %/day +0.413 H1 +0.306 H2 +0.519 March +0.445 win 50% trades 76 DD 4.8%
