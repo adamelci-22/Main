@@ -37,8 +37,12 @@ RISK = 0.03
 FADE_COST = 0.06        # % round trip on the leg
 PB_IN, PB_OUT = 0.0001, 0.0003
 # RULEBOOK A1.10: no entries on early-close days or market holidays (NYSE). Extend each year from nyse.com/markets/hours-calendars.
-NO_TRADE = {'2026-11-26': 'Thanksgiving (closed)', '2026-11-27': 'early close 13:00', '2026-12-24': 'early close 13:00', '2026-12-25': 'Christmas (closed)'}
-CALENDAR_THROUGH = '2026-12-31'
+NO_TRADE = {'2026-11-26': 'Thanksgiving (closed)', '2026-11-27': 'early close 13:00', '2026-12-24': 'early close 13:00', '2026-12-25': 'Christmas (closed)',
+            # 2027 (NYSE hours-calendars page, checked 2026-10-24; the page shows only Fri 2027-11-26 as an early close, re-check it in December 2026)
+            '2027-01-01': "New Year's Day (closed)", '2027-01-18': 'MLK Day (closed)', '2027-02-15': "Washington's Birthday (closed)", '2027-03-26': 'Good Friday (closed)',
+            '2027-05-31': 'Memorial Day (closed)', '2027-06-18': 'Juneteenth observed (closed)', '2027-07-05': 'Independence Day observed (closed)',
+            '2027-09-06': 'Labor Day (closed)', '2027-11-25': 'Thanksgiving (closed)', '2027-11-26': 'early close 13:00', '2027-12-24': 'Christmas observed (closed)'}
+CALENDAR_THROUGH = '2027-12-31'
 EXPECTED = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF', 'TQQQ', 'SQQQ', 'SOXL', 'SOXS', 'TNA', 'TZA', 'TECL', 'TECS', 'LABU', 'LABD',
             'FAS', 'FAZ', 'UVXY']      # the two C1.2 fetch groups
 SKIP = set()            # --skip: proxies/legs barred from REAL entries today (RULEBOOK A1.9 earnings); the model is unchanged
