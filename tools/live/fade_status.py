@@ -4,7 +4,7 @@ import paper as P
 raw=P.load(sys.argv[1:]); day=max(d for s in raw.values() for d in s)
 K=(max(m for s in raw.values() if day in s for m in s[day])-570)//5+1
 print('last bar starts', P.k2t(K-1))
-for p in ['QQQ','SOXX','IWM','XLK','XBI','AMD']:
+for p in ['QQQ','SOXX','IWM','XLK','XBI','XLF']:
     b=P.grid(raw[p][day],K); hi=max(x[1] for x in b[:6]); lo=min(x[2] for x in b[:6])
     brk=None
     for i in range(6,min(K,9)):      # 10:00,10:05,10:10 bars

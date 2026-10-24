@@ -1,6 +1,6 @@
-backtest account, max_entries=3: 115 trades, +0.5696%/day, ret +138.22%
-backtest account, max_entries=99: 115 trades, +0.5696%/day, ret +138.22%
+backtest account, max_entries=3: 115 trades, +0.5435%/day, ret +129.12%
+backtest account, max_entries=99: 115 trades, +0.5435%/day, ret +129.12%
 
-paper.py replay: 115 trades, final equity $4,764.36 (+138.22%)   backtest: 115 trades, $4,764.36
+paper.py replay: 115 trades, final equity $4,582.47 (+129.12%)   backtest: 115 trades, $4,582.47
 trades in paper.py only: 0; in backtest only: 0
 days with >3 paper entries: []
