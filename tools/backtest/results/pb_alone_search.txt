@@ -30,3 +30,142 @@ DRIP                    5    60  +0.10   +0.5   -1.2   +0.51      336k
 VERIFY live list: engine +0.1528%/day, fast scorer +0.1528%/day
 
 Searching all 33,554,431 subsets of 25 tickers (streaming: only the leaders are kept)...
+(done in 1127s)
+
+LIVE ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVD']: full +0.153 H1 +0.151 H2 +0.155 March +0.139 tune +0.155  (trades 51, win 67%, sum acct% +24.0, without best 2 +19.9, DD 1.9%)
+
+======== [ALL tickers] 33,554,431 lists; live list ranks 5,109 ========
+  Top 10 full sample:
+    n=11 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, ERY, DRIP full +0.189 H1 +0.165 H2 +0.213 March +0.015  trades 69 win 70% -best2 +25.6 DD 2.7%
+    n=12 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, DUST, ERY, DRIP full +0.188 H1 +0.150 H2 +0.227 March -0.034  trades 72 win 69% -best2 +25.6 DD 3.3%
+    n=10 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, TECL, ERY, DRIP full +0.187 H1 +0.186 H2 +0.188 March +0.088  trades 65 win 69% -best2 +25.4 DD 2.7%
+    n=10 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, ERY, DRIP full +0.187 H1 +0.182 H2 +0.192 March +0.066  trades 64 win 70% -best2 +25.3 DD 2.7%
+    n=11 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, TECL, DUST, ERY, DRIP full +0.187 H1 +0.171 H2 +0.202 March +0.040  trades 68 win 69% -best2 +25.3 DD 2.6%
+    n=11 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, DUST, ERY, DRIP full +0.186 H1 +0.167 H2 +0.205 March +0.017  trades 67 win 70% -best2 +25.2 DD 3.3%
+    n=10 SOXS, LABD, TECS, UVXY, NVD, NVDU, MSFU, TECL, ERY, DRIP full +0.186 H1 +0.166 H2 +0.205 March +0.015  trades 68 win 69% -best2 +25.1 DD 2.7%
+    n= 9 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY, DRIP       full +0.185 H1 +0.204 H2 +0.167 March +0.139  trades 60 win 70% -best2 +25.0 DD 2.7%
+    n=12 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, ERY, GUSH, DRIP full +0.185 H1 +0.157 H2 +0.213 March +0.015  trades 70 win 69% -best2 +25.0 DD 2.7%
+    n=11 SOXS, LABD, TECS, UVXY, NVD, NVDU, MSFU, TECL, DUST, ERY, DRIP full +0.185 H1 +0.151 H2 +0.219 March -0.034  trades 71 win 69% -best2 +25.0 DD 3.3%
+  Beat the live list on full AND H1 AND H2 AND March: 36
+    n= 9 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY, DRIP       full +0.185 H1 +0.204 H2 +0.167 March +0.139  trades 60 win 70% -best2 +25.0 DD 2.7%
+    n= 8 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY             full +0.182 H1 +0.186 H2 +0.178 March +0.139  trades 55 win 71% -best2 +24.5 DD 1.9%
+    n= 8 SOXS, LABD, TECS, UVXY, NVD, MSFU, ERY, DRIP             full +0.182 H1 +0.205 H2 +0.159 March +0.139  trades 59 win 69% -best2 +24.5 DD 2.7%
+    n=10 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY, GUSH, DRIP full +0.182 H1 +0.196 H2 +0.167 March +0.139  trades 61 win 69% -best2 +24.4 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, NVD, MSFU, ERY                   full +0.179 H1 +0.188 H2 +0.170 March +0.139  trades 54 win 70% -best2 +24.0 DD 1.9%
+    n= 9 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY, GUSH       full +0.179 H1 +0.179 H2 +0.178 March +0.139  trades 56 win 70% -best2 +24.0 DD 1.9%
+    n= 9 SOXS, LABD, TECS, UVXY, NVD, MSFU, ERY, GUSH, DRIP       full +0.178 H1 +0.198 H2 +0.159 March +0.139  trades 60 win 68% -best2 +23.9 DD 2.7%
+    n= 8 SOXS, LABD, TECS, UVXY, NVD, MSFU, ERY, GUSH             full +0.175 H1 +0.181 H2 +0.170 March +0.139  trades 55 win 69% -best2 +23.5 DD 1.9%
+    n= 6 SOXS, LABD, TECS, UVXY, MSFU, DRIP                       full +0.174 H1 +0.190 H2 +0.158 March +0.139  trades 53 win 70% -best2 +23.2 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, MSFU, ERY, DRIP                  full +0.173 H1 +0.189 H2 +0.158 March +0.139  trades 53 win 70% -best2 +23.1 DD 2.7%
+  Walk-forward (choose the best list on one window, judge on another):
+    choose on tune  -> n=15 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SOXL, TECL, FAZ, DUST, ERY, DRIP tune +0.247 -> March -0.229  (live +0.139)
+    choose on H1    -> n= 8 SOXS, LABD, TECS, UVXY, NVD, MSFU, ERY, DRIP         H1 +0.205 -> H2 +0.159  (live +0.155)
+    choose on H2    -> n=15 SOXS, LABD, UVXY, NVD, NVDU, AAPU, MSFU, TNA, TZA, SOXL, TECL, FAZ, DUST, ERY, GUSH H2 +0.292 -> H1 -0.082  (live +0.151)
+  Best list of each size (full sample):
+    n= 1 +0.067 (H1 +0.049 H2 +0.085 Mar +0.080)  SOXS
+    n= 2 +0.103 (H1 +0.093 H2 +0.113 Mar +0.150)  SOXS, UVXY
+    n= 3 +0.128 (H1 +0.144 H2 +0.113 Mar +0.155)  SOXS, TECS, UVXY
+    n= 4 +0.158 (H1 +0.162 H2 +0.154 Mar +0.139)  SOXS, LABD, TECS, UVXY
+    n= 5 +0.171 (H1 +0.173 H2 +0.169 Mar +0.139)  SOXS, LABD, TECS, UVXY, MSFU
+    n= 6 +0.174 (H1 +0.190 H2 +0.158 Mar +0.139)  SOXS, LABD, TECS, UVXY, MSFU, DRIP
+    n= 7 +0.179 (H1 +0.188 H2 +0.170 Mar +0.139)  SOXS, LABD, TECS, UVXY, NVD, MSFU, ERY
+    n= 8 +0.182 (H1 +0.186 H2 +0.178 Mar +0.139)  SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY
+    n= 9 +0.185 (H1 +0.204 H2 +0.167 Mar +0.139)  SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, ERY, DRIP
+    n=10 +0.187 (H1 +0.186 H2 +0.188 Mar +0.088)  SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, TECL, ERY, DRIP
+    n=11 +0.189 (H1 +0.165 H2 +0.213 Mar +0.015)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, ERY, DRIP
+    n=12 +0.188 (H1 +0.150 H2 +0.227 Mar -0.034)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, DUST, ERY, DRIP
+    n=13 +0.185 (H1 +0.142 H2 +0.227 Mar -0.034)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, DUST, ERY, GUSH, DRIP
+    n=14 +0.181 (H1 +0.095 H2 +0.266 Mar -0.187)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SOXL, TECL, DUST, ERY, DRIP
+    n=15 +0.177 (H1 +0.087 H2 +0.266 Mar -0.187)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SOXL, TECL, DUST, ERY, GUSH, DRIP
+    n=16 +0.171 (H1 +0.075 H2 +0.266 Mar -0.228)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SPXU, SOXL, TECL, DUST, ERY, GUSH, DRIP
+    n=17 +0.164 (H1 +0.061 H2 +0.266 Mar -0.270)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SPXU, SOXL, TECL, FAZ, DUST, ERY, GUSH, DRIP
+    n=18 +0.155 (H1 +0.043 H2 +0.266 Mar -0.331)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SQQQ, SPXU, SOXL, TECL, FAZ, DUST, ERY, GUSH, DRIP
+    n=19 +0.138 (H1 +0.043 H2 +0.233 Mar -0.331)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, NFLU, TQQQ, SQQQ, SPXU, SOXL, TECL, FAZ, DUST, ERY, GUSH, DRIP
+    n=20 +0.121 (H1 +0.045 H2 +0.196 Mar -0.393)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, NFLU, TQQQ, SQQQ, SPXU, SOXL, TECL, FAZ, NUGT, DUST, ERY, GUSH, DRIP
+    n=21 +0.103 (H1 +0.031 H2 +0.174 Mar -0.439)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, MSFU, NFLU, TQQQ, SQQQ, SPXU, SOXL, TECL, FAZ, NUGT, DUST, ERY, GUSH, DRIP
+    n=22 +0.079 (H1 -0.033 H2 +0.189 Mar -0.485)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, MSFU, NFLU, TQQQ, SQQQ, SPXU, TZA, SOXL, TECL, FAZ, NUGT, DUST, ERY, GUSH, DRIP
+    n=23 +0.054 (H1 -0.033 H2 +0.139 Mar -0.485)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, METU, MSFU, NFLU, TQQQ, SQQQ, SPXU, TZA, SOXL, TECL, FAZ, NUGT, DUST, ERY, GUSH, DRIP
+    n=24 +0.018 (H1 -0.105 H2 +0.139 Mar -0.518)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, METU, MSFU, NFLU, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, FAZ, NUGT, DUST, ERY, GUSH, DRIP
+    n=25 -0.021 (H1 -0.120 H2 +0.076 Mar -0.558)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, METU, MSFU, NFLU, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, LABU, FAZ, NUGT, DUST, ERY, GUSH, DRIP
+
+======== [LIQUID (>= $100k/bar)] 2,097,151 lists; live list ranks 488 ========
+  Top 10 full sample:
+    n= 7 SOXS, LABD, TECS, UVXY, NVDU, MSFU, DRIP                 full +0.175 H1 +0.168 H2 +0.182 March +0.066  trades 57 win 70% -best2 +23.5 DD 2.7%
+    n= 8 SOXS, LABD, TECS, UVXY, NVDU, MSFU, DUST, DRIP           full +0.175 H1 +0.153 H2 +0.196 March +0.017  trades 60 win 70% -best2 +23.4 DD 3.3%
+    n= 6 SOXS, LABD, TECS, UVXY, MSFU, DRIP                       full +0.174 H1 +0.190 H2 +0.158 March +0.139  trades 53 win 70% -best2 +23.2 DD 2.7%
+    n= 9 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, DRIP      full +0.174 H1 +0.156 H2 +0.192 March +0.066  trades 64 win 69% -best2 +23.2 DD 2.7%
+    n= 8 SOXS, LABD, TECS, UVXY, NVDU, AAPU, MSFU, DRIP           full +0.174 H1 +0.157 H2 +0.190 March +0.066  trades 59 win 69% -best2 +23.2 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, MSFU, DUST, DRIP                 full +0.173 H1 +0.175 H2 +0.172 March +0.090  trades 56 win 70% -best2 +23.1 DD 2.6%
+    n=10 SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, DUST, DRIP full +0.173 H1 +0.141 H2 +0.205 March +0.017  trades 67 win 69% -best2 +23.1 DD 3.3%
+    n= 9 SOXS, LABD, TECS, UVXY, NVDU, AAPU, MSFU, DUST, DRIP     full +0.173 H1 +0.142 H2 +0.204 March +0.017  trades 62 win 69% -best2 +23.1 DD 3.3%
+    n= 8 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, DRIP            full +0.172 H1 +0.177 H2 +0.167 March +0.139  trades 60 win 68% -best2 +22.9 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, AAPU, MSFU, DRIP                 full +0.172 H1 +0.178 H2 +0.166 March +0.139  trades 55 win 69% -best2 +22.9 DD 2.7%
+  Beat the live list on full AND H1 AND H2 AND March: 8
+    n= 6 SOXS, LABD, TECS, UVXY, MSFU, DRIP                       full +0.174 H1 +0.190 H2 +0.158 March +0.139  trades 53 win 70% -best2 +23.2 DD 2.7%
+    n= 8 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU, DRIP            full +0.172 H1 +0.177 H2 +0.167 March +0.139  trades 60 win 68% -best2 +22.9 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, AAPU, MSFU, DRIP                 full +0.172 H1 +0.178 H2 +0.166 March +0.139  trades 55 win 69% -best2 +22.9 DD 2.7%
+    n= 5 SOXS, LABD, TECS, UVXY, MSFU                             full +0.171 H1 +0.173 H2 +0.169 March +0.139  trades 48 win 71% -best2 +22.7 DD 1.9%
+    n= 7 SOXS, LABD, TECS, UVXY, NVD, MSFU, DRIP                  full +0.169 H1 +0.179 H2 +0.159 March +0.139  trades 59 win 68% -best2 +22.4 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, NVD, AAPU, MSFU                  full +0.169 H1 +0.160 H2 +0.178 March +0.139  trades 55 win 69% -best2 +22.5 DD 1.9%
+    n= 6 SOXS, LABD, TECS, UVXY, AAPU, MSFU                       full +0.169 H1 +0.161 H2 +0.177 March +0.139  trades 50 win 70% -best2 +22.4 DD 2.3%
+    n= 6 SOXS, LABD, TECS, UVXY, NVD, MSFU                        full +0.166 H1 +0.161 H2 +0.170 March +0.139  trades 54 win 69% -best2 +21.9 DD 1.9%
+  Walk-forward (choose the best list on one window, judge on another):
+    choose on tune  -> n=12 SOXS, LABD, TECS, UVXY, NVDU, MSFU, TQQQ, TNA, SOXL, TECL, DUST, DRIP tune +0.226 -> March -0.187  (live +0.139)
+    choose on H1    -> n= 6 SOXS, LABD, TECS, UVXY, MSFU, DRIP                   H1 +0.190 -> H2 +0.158  (live +0.155)
+    choose on H2    -> n=12 SOXS, LABD, UVXY, NVD, NVDU, AAPU, MSFU, TNA, TZA, SOXL, TECL, DUST H2 +0.292 -> H1 -0.061  (live +0.151)
+  Best list of each size (full sample):
+    n= 1 +0.067 (H1 +0.049 H2 +0.085 Mar +0.080)  SOXS
+    n= 2 +0.103 (H1 +0.093 H2 +0.113 Mar +0.150)  SOXS, UVXY
+    n= 3 +0.128 (H1 +0.144 H2 +0.113 Mar +0.155)  SOXS, TECS, UVXY
+    n= 4 +0.158 (H1 +0.162 H2 +0.154 Mar +0.139)  SOXS, LABD, TECS, UVXY
+    n= 5 +0.171 (H1 +0.173 H2 +0.169 Mar +0.139)  SOXS, LABD, TECS, UVXY, MSFU
+    n= 6 +0.174 (H1 +0.190 H2 +0.158 Mar +0.139)  SOXS, LABD, TECS, UVXY, MSFU, DRIP
+    n= 7 +0.175 (H1 +0.168 H2 +0.182 Mar +0.066)  SOXS, LABD, TECS, UVXY, NVDU, MSFU, DRIP
+    n= 8 +0.175 (H1 +0.153 H2 +0.196 Mar +0.017)  SOXS, LABD, TECS, UVXY, NVDU, MSFU, DUST, DRIP
+    n= 9 +0.174 (H1 +0.156 H2 +0.192 Mar +0.066)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, DRIP
+    n=10 +0.173 (H1 +0.141 H2 +0.205 Mar +0.017)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, DUST, DRIP
+    n=11 +0.168 (H1 +0.109 H2 +0.227 Mar -0.034)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TECL, DUST, DRIP
+    n=12 +0.163 (H1 +0.068 H2 +0.256 Mar -0.187)  SOXS, LABD, TECS, UVXY, NVDU, MSFU, TQQQ, TNA, SOXL, TECL, DUST, DRIP
+    n=13 +0.162 (H1 +0.070 H2 +0.252 Mar -0.138)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, TNA, SOXL, TECL, DRIP
+    n=14 +0.161 (H1 +0.055 H2 +0.266 Mar -0.187)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, TNA, SOXL, TECL, DUST, DRIP
+    n=15 +0.155 (H1 +0.042 H2 +0.266 Mar -0.228)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SPXU, TNA, SOXL, TECL, DUST, DRIP
+    n=16 +0.145 (H1 +0.023 H2 +0.266 Mar -0.289)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, MSFU, TQQQ, SQQQ, SPXU, TNA, SOXL, TECL, DUST, DRIP
+    n=17 +0.122 (H1 -0.001 H2 +0.243 Mar -0.368)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, MSFU, TQQQ, SQQQ, SPXU, TNA, SOXL, TECL, DUST, DRIP
+    n=18 +0.098 (H1 -0.065 H2 +0.258 Mar -0.414)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, MSFU, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, DUST, DRIP
+    n=19 +0.073 (H1 -0.065 H2 +0.209 Mar -0.414)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, METU, MSFU, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, DUST, DRIP
+    n=20 +0.045 (H1 -0.084 H2 +0.172 Mar -0.476)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, METU, MSFU, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, NUGT, DUST, DRIP
+    n=21 +0.003 (H1 -0.100 H2 +0.105 Mar -0.516)  SOXS, LABD, TECS, UVXY, NVD, NVDU, AAPU, AMZU, METU, MSFU, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, LABU, NUGT, DUST, DRIP
+
+======== [LIQUID + NO single stocks] 32,767 lists; live list ranks 9 ========
+  Top 10 full sample:
+    n= 5 SOXS, LABD, TECS, UVXY, DRIP                             full +0.161 H1 +0.179 H2 +0.143 March +0.139  trades 50 win 68% -best2 +21.2 DD 2.7%
+    n= 6 SOXS, LABD, TECS, UVXY, DUST, DRIP                       full +0.160 H1 +0.164 H2 +0.156 March +0.090  trades 53 win 68% -best2 +21.1 DD 2.6%
+    n= 4 SOXS, LABD, TECS, UVXY                                   full +0.158 H1 +0.162 H2 +0.154 March +0.139  trades 45 win 69% -best2 +20.7 DD 1.9%
+    n= 5 SOXS, LABD, TECS, UVXY, DUST                             full +0.157 H1 +0.147 H2 +0.167 March +0.090  trades 48 win 69% -best2 +20.6 DD 2.6%
+    n= 6 SOXS, LABD, TECS, UVXY, TECL, DRIP                       full +0.156 H1 +0.147 H2 +0.164 March +0.088  trades 56 win 66% -best2 +20.4 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, TECL, DUST, DRIP                 full +0.155 H1 +0.132 H2 +0.178 March +0.040  trades 59 win 66% -best2 +20.3 DD 2.6%
+    n= 6 SOXS, LABD, TECS, UVXY, SPXU, DRIP                       full +0.154 H1 +0.166 H2 +0.143 March +0.097  trades 50 win 68% -best2 +20.2 DD 2.7%
+    n= 7 SOXS, LABD, TECS, UVXY, SPXU, DUST, DRIP                 full +0.154 H1 +0.151 H2 +0.156 March +0.049  trades 53 win 68% -best2 +20.1 DD 2.6%
+    n= 5 SOXS, LABD, TECS, UVXY, TECL                             full +0.152 H1 +0.130 H2 +0.175 March +0.088  trades 51 win 67% -best2 +19.9 DD 1.9%
+    n= 6 SOXS, LABD, TECS, UVXY, TECL, DUST                       full +0.152 H1 +0.115 H2 +0.188 March +0.040  trades 54 win 67% -best2 +19.8 DD 2.6%
+  Beat the live list on full AND H1 AND H2 AND March: 0
+  Walk-forward (choose the best list on one window, judge on another):
+    choose on tune  -> n=10 SOXS, LABD, TECS, UVXY, TQQQ, TNA, SOXL, TECL, DUST, DRIP tune +0.196 -> March -0.114  (live +0.139)
+    choose on H1    -> n= 5 SOXS, LABD, TECS, UVXY, DRIP                         H1 +0.179 -> H2 +0.143  (live +0.155)
+    choose on H2    -> n= 8 SOXS, LABD, UVXY, TNA, TZA, SOXL, TECL, DUST         H2 +0.243 -> H1 -0.042  (live +0.151)
+  Best list of each size (full sample):
+    n= 1 +0.067 (H1 +0.049 H2 +0.085 Mar +0.080)  SOXS
+    n= 2 +0.103 (H1 +0.093 H2 +0.113 Mar +0.150)  SOXS, UVXY
+    n= 3 +0.128 (H1 +0.144 H2 +0.113 Mar +0.155)  SOXS, TECS, UVXY
+    n= 4 +0.158 (H1 +0.162 H2 +0.154 Mar +0.139)  SOXS, LABD, TECS, UVXY
+    n= 5 +0.161 (H1 +0.179 H2 +0.143 Mar +0.139)  SOXS, LABD, TECS, UVXY, DRIP
+    n= 6 +0.160 (H1 +0.164 H2 +0.156 Mar +0.090)  SOXS, LABD, TECS, UVXY, DUST, DRIP
+    n= 7 +0.155 (H1 +0.132 H2 +0.178 Mar +0.040)  SOXS, LABD, TECS, UVXY, TECL, DUST, DRIP
+    n= 8 +0.149 (H1 +0.120 H2 +0.178 Mar -0.002)  SOXS, LABD, TECS, UVXY, SPXU, TECL, DUST, DRIP
+    n= 9 +0.149 (H1 +0.094 H2 +0.203 Mar -0.065)  SOXS, LABD, TECS, UVXY, TQQQ, TNA, SOXL, TECL, DRIP
+    n=10 +0.148 (H1 +0.079 H2 +0.217 Mar -0.114)  SOXS, LABD, TECS, UVXY, TQQQ, TNA, SOXL, TECL, DUST, DRIP
+    n=11 +0.142 (H1 +0.067 H2 +0.217 Mar -0.155)  SOXS, LABD, TECS, UVXY, TQQQ, SPXU, TNA, SOXL, TECL, DUST, DRIP
+    n=12 +0.133 (H1 +0.048 H2 +0.217 Mar -0.216)  SOXS, LABD, TECS, UVXY, TQQQ, SQQQ, SPXU, TNA, SOXL, TECL, DUST, DRIP
+    n=13 +0.108 (H1 -0.017 H2 +0.232 Mar -0.262)  SOXS, LABD, TECS, UVXY, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, DUST, DRIP
+    n=14 +0.081 (H1 -0.036 H2 +0.196 Mar -0.324)  SOXS, LABD, TECS, UVXY, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, NUGT, DUST, DRIP
+    n=15 +0.033 (H1 -0.052 H2 +0.117 Mar -0.364)  SOXS, LABD, TECS, UVXY, TQQQ, SQQQ, SPXU, TNA, TZA, SOXL, TECL, LABU, NUGT, DUST, DRIP
