@@ -1,0 +1,19 @@
+TLT FADE signals (real TMF/TMV prices): 17, win 41%, sum +2.8%, without best 2 -1.9%, median -0.13%
+legs TMF $482k  TMV $86k per 5-min bar; opening box median 0.23% (vs QQQ 0.62%, SOXX 1.60%)
+
+== FADE ALONE, REAL ==
+   live six                   +0.417 H1 +0.409 H2 +0.425 Mar +0.509 | win 55% trades 75 DD 5.9%
+   live six + TLT (TMF/TMV)   +0.417 H1 +0.407 H2 +0.427 Mar +0.507 | win 54% trades 85 DD 5.9% | TLT's own: 14 trades, win 50%, minus its best 2 signals +0.407
+
+== FADE ALONE, MODEL ==
+   live six                   +0.419 H1 +0.391 H2 +0.446 Mar +0.483 | win 57% trades 75 DD 4.5%
+   live six + TLT (TMF/TMV)   +0.417 H1 +0.388 H2 +0.447 Mar +0.484 | win 56% trades 85 DD 4.5% | TLT's own: 14 trades, win 50%, minus its best 2 signals +0.408
+
+== FULL SYSTEM, REAL ==
+   live six                   +0.547 H1 +0.580 H2 +0.513 Mar +0.639 | win 59% trades 111 DD 4.3%
+   live six + TLT (TMF/TMV)   +0.549 H1 +0.593 H2 +0.506 Mar +0.638 | win 59% trades 119 DD 4.3% | TLT's own: 14 trades, win 50%, minus its best 2 signals +0.539
+
+== FULL SYSTEM, MODEL ==
+   live six                   +0.548 H1 +0.562 H2 +0.535 Mar +0.613 | win 61% trades 111 DD 3.1%
+   live six + TLT (TMF/TMV)   +0.550 H1 +0.574 H2 +0.526 Mar +0.614 | win 61% trades 119 DD 3.2% | TLT's own: 14 trades, win 50%, minus its best 2 signals +0.540
+
