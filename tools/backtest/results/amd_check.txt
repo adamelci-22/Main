@@ -1,0 +1,35 @@
+AMD price 2026-03-03 191.46 -> 2026-10-14 570.74 (+198%)
+AMD monthly move: 2026-03 +6%  2026-04 +71%  2026-05 +47%  2026-06 +16%  2026-07 -15%  2026-08 +2%  2026-09 +33%  2026-10 -7%
+
+AMD FADE trades (real prices), all 19 signals:
+   2026-03-09 SHORT (AMDD)  trade  -0.74%   AMD that day +7.3%
+   2026-03-18 SHORT (AMDD)  trade  -0.73%   AMD that day +1.6%
+   2026-03-25 SHORT (AMDD)  trade  -0.48%   AMD that day +4.2%
+   2026-04-23 SHORT (AMDD)  trade  -1.15%   AMD that day +1.1%
+   2026-05-08 SHORT (AMDD)  trade  -0.76%   AMD that day +8.8%
+   2026-05-13 LONG (AMDL)   trade  +5.51%   AMD that day -2.6%
+   2026-05-18 LONG (AMDL)   trade  -1.82%   AMD that day -2.1%
+   2026-06-23 SHORT (AMDD)  trade  -0.76%   AMD that day +2.2%
+   2026-06-29 LONG (AMDL)   trade +10.88%   AMD that day +3.1%
+   2026-07-14 LONG (AMDL)   trade  -1.22%   AMD that day -3.6%
+   2026-07-21 LONG (AMDL)   trade  +0.69%   AMD that day +3.7%
+   2026-07-28 LONG (AMDL)   trade  +5.75%   AMD that day -2.6%
+   2026-08-10 SHORT (AMDD)  trade  +0.77%   AMD that day -1.7%
+   2026-08-18 LONG (AMDL)   trade  -1.13%   AMD that day -0.6%
+   2026-08-19 LONG (AMDL)   trade  -0.67%   AMD that day -4.0%
+   2026-08-24 LONG (AMDL)   trade  +2.58%   AMD that day -2.4%
+   2026-09-21 SHORT (AMDD)  trade  -0.46%   AMD that day +5.4%
+   2026-09-22 SHORT (AMDD)  trade  -0.09%   AMD that day +2.8%
+   2026-09-28 LONG (AMDL)   trade  -1.31%   AMD that day -2.7%
+   LONG: 10 trades, win 50%, sum +19.3%
+   SHORT: 9 trades, win 11%, sum -4.4%
+   sum all +14.9%; best 2 trades +10.9% +5.7%; sum without best 2 -1.8%
+
+FADE alone, with and without AMD (real prices | model):
+   live six       real +0.468 (H1 +0.449 H2 +0.487 Mar +0.558) win 53% DD 5.1% | model +0.456 (H1 +0.410 H2 +0.501 Mar +0.486)
+   drop AMD (5)   real +0.406 (H1 +0.391 H2 +0.421 Mar +0.598) win 55% DD 5.9% | model +0.400 (H1 +0.355 H2 +0.445 Mar +0.533)
+   AMD -> SPY     real +0.410 (H1 +0.396 H2 +0.423 Mar +0.644) win 53% DD 5.9% | model +0.402 (H1 +0.356 H2 +0.448 Mar +0.575)
+   AMD -> KRE     real +0.418 (H1 +0.384 H2 +0.452 Mar +0.618) win 52% DD 5.9% | model +0.429 (H1 +0.386 H2 +0.472 Mar +0.606)
+   AMD -> GDX     real +0.432 (H1 +0.496 H2 +0.368 Mar +0.759) win 51% DD 6.7% | model +0.427 (H1 +0.464 H2 +0.391 Mar +0.730)
+   AMD -> TLT     real +0.406 (H1 +0.389 H2 +0.423 Mar +0.597) win 55% DD 5.9% | model +0.399 (H1 +0.351 H2 +0.446 Mar +0.535)
+   AMD -> NVDA    real +0.324 (H1 +0.342 H2 +0.305 Mar +0.539) win 46% DD 5.9% | model +0.317 (H1 +0.309 H2 +0.325 Mar +0.448)
