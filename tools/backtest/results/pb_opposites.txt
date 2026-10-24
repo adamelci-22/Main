@@ -1,0 +1,52 @@
+ticker setups  win%   avg%   sum%  -best2  $vol/bar
+TQQQ        7    43  -0.33   -2.3    -3.9   25,738k
+UPRO        0
+TNA         5    40  -0.42   -2.1    -3.0    1,361k
+SOXL       17    47  -0.18   -3.0    -5.5   28,534k
+TECL        6    50  -0.13   -0.8    -2.5      495k
+LABU       11    27  -0.48   -5.3    -8.3      269k
+NUGT       10    30  -0.37   -3.7    -6.1      311k
+ERX         0
+FAS         0
+GUSH        2    50  +0.18   +0.4    +0.0       91k
+TMF         0
+CURE        0
+NVDU        6    50  -0.19   -1.1    -3.1      153k
+AAPU        2    50  -0.15   -0.3    +0.0      210k
+AMZU        5    40  -0.30   -1.5    -3.2      326k
+METU        6    17  -0.63   -3.8    -3.9      471k
+MSFU        5    80  +0.58   +2.9    +0.7      628k
+NFLU        3     0  -0.87   -2.6    -1.0        6k
+SVIX        1     0  -0.82   -0.8    +0.0      203k
+
+LIVE four
+   PB alone: +0.158 H1 +0.162 H2 +0.154 Mar +0.139 win 69% trades 45 DD 1.9%
+   full system: +0.548 H1 +0.562 H2 +0.535 Mar +0.613 win 61% trades 111 DD 3.1%
+
++ the four opposites (SOXL TECL LABU SVIX)
+   PB alone: +0.083 H1 +0.030 H2 +0.135 Mar -0.105 win 56% trades 75 DD 6.7%
+   full system: +0.451 H1 +0.394 H2 +0.507 Mar +0.419 win 55% trades 134 DD 8.0%
+
++ SOXL only
+   PB alone: +0.133 H1 +0.073 H2 +0.193 Mar -0.014 win 62% trades 61 DD 4.7%
+   full system: +0.506 H1 +0.469 H2 +0.544 Mar +0.460 win 59% trades 123 DD 4.6%
+
++ TECL only
+   PB alone: +0.152 H1 +0.130 H2 +0.175 Mar +0.088 win 67% trades 51 DD 1.9%
+   full system: +0.547 H1 +0.538 H2 +0.555 Mar +0.613 win 61% trades 115 DD 3.4%
+
++ LABU only
+   PB alone: +0.124 H1 +0.160 H2 +0.089 Mar +0.139 win 61% trades 56 DD 2.8%
+   full system: +0.505 H1 +0.534 H2 +0.477 Mar +0.612 win 58% trades 119 DD 3.9%
+
++ SVIX only
+   PB alone: +0.146 H1 +0.138 H2 +0.154 Mar +0.139 win 67% trades 46 DD 1.9%
+   full system: +0.537 H1 +0.539 H2 +0.535 Mar +0.613 win 61% trades 112 DD 4.0%
+
++ ALL bull-side ETFs (index/sector)
+   PB alone: +0.052 H1 +0.004 H2 +0.099 Mar -0.167 win 53% trades 85 DD 7.6%
+   full system: +0.446 H1 +0.407 H2 +0.485 Mar +0.413 win 54% trades 140 DD 7.4%
+
++ ALL bulls incl. single stocks
+   PB alone: +0.003 H1 -0.053 H2 +0.058 Mar -0.319 win 49% trades 104 DD 10.3%
+   full system: +0.344 H1 +0.349 H2 +0.339 Mar +0.261 win 51% trades 154 DD 8.1%
