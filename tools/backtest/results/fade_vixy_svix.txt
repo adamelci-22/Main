@@ -1,0 +1,28 @@
+VIXY FADE row: ('UVXY', 1.5, 'SVIX', 1)
+legs UVXY $773k  SVIX $203k per 5-min bar
+
+VIXY FADE signals (REAL): 24, win 50%, sum +6.0%, without best 2 +0.8%, median +0.24%
+   buy UVXY (failed downside break): 16 trades, win 44%, sum -0.7%
+   buy SVIX (failed upside break): 8 trades, win 62%, sum +6.7%
+  == FADE ALONE, REAL ==
+     live six                       +0.417 H1 +0.409 H2 +0.425 Mar +0.509 | win 55% trades 75 DD 5.9%
+     live six + VIXY (UVXY/SVIX)    +0.381 H1 +0.303 H2 +0.457 Mar +0.215 | win 50% trades 86 DD 10.0% | VIXY's own taken: 17, win 35%, minus its best 2: +0.362
+  == FULL SYSTEM (PULLBACK = SOXS LABD TECS UVXY), REAL ==
+     live six                       +0.547 H1 +0.580 H2 +0.513 Mar +0.639 | win 59% trades 111 DD 4.3%
+     live six + VIXY (UVXY/SVIX)    +0.516 H1 +0.485 H2 +0.547 Mar +0.419 | win 56% trades 117 DD 7.5% | VIXY's own taken: 16, win 38%, minus its best 2: +0.498
+
+VIXY FADE signals (MODEL): 24, win 50%, sum +6.0%, without best 2 +0.5%, median +0.19%
+   buy UVXY (failed downside break): 16 trades, win 44%, sum -0.9%
+   buy SVIX (failed upside break): 8 trades, win 62%, sum +6.9%
+  == FADE ALONE, MODEL ==
+     live six                       +0.419 H1 +0.391 H2 +0.446 Mar +0.483 | win 57% trades 75 DD 4.5%
+     live six + VIXY (UVXY/SVIX)    +0.383 H1 +0.285 H2 +0.480 Mar +0.185 | win 52% trades 86 DD 10.3% | VIXY's own taken: 17, win 35%, minus its best 2: +0.364
+  == FULL SYSTEM (PULLBACK = SOXS LABD TECS UVXY), MODEL ==
+     live six                       +0.548 H1 +0.562 H2 +0.535 Mar +0.613 | win 61% trades 111 DD 3.1%
+     live six + VIXY (UVXY/SVIX)    +0.519 H1 +0.468 H2 +0.569 Mar +0.391 | win 58% trades 117 DD 7.8% | VIXY's own taken: 16, win 38%, minus its best 2: +0.500
+
+SVIX on PULLBACK: 1 setup(s): [('2026-05-18', -0.82)]
+  live four PB alone +0.158 H1 +0.162 H2 +0.154 Mar +0.139 win 69% trades 45 DD 1.9%
+  live four full     +0.548 H1 +0.562 H2 +0.535 Mar +0.613 win 61% trades 111 DD 3.1%
+  + SVIX    PB alone +0.146 H1 +0.138 H2 +0.154 Mar +0.139 win 67% trades 46 DD 1.9%
+  + SVIX    full     +0.537 H1 +0.539 H2 +0.535 Mar +0.613 win 61% trades 112 DD 4.0%
