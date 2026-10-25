@@ -20,3 +20,13 @@
     2.0    2.0R            1/3 |     48%   -0.228  -0.102 |     61%   +0.530  +0.253 |    55%
     2.0    2.0R            all |     48%   -0.182  -0.065 |     61%   +0.390  +0.162 |    54%
     2.0    3.0R            all |     42%   -0.169  -0.063 |     50%   +0.354  +0.084 |    47%
+
+== Account level: %/day at 3% risk (live sizing, cash cap, one position, 6 entries a day, A1 gates, no extra cost), FADE with PULLBACK unchanged ==
+ stop x  target  sold  risk | A  2021-11..2026-02            | B  2026-03..10                
+    1.0    2.0R   1/3    3% | -0.074%/day ret     -58% DD   63% | +0.397%/day ret     +82% DD    6%
+    1.5    1.0R   all    3% | -0.048%/day ret     -43% DD   58% | +0.184%/day ret     +32% DD    9%
+    1.5    2.0R   1/3    3% | -0.059%/day ret     -51% DD   61% | +0.443%/day ret     +96% DD    8%
+    2.0    1.0R   all    3% | -0.041%/day ret     -39% DD   50% | +0.188%/day ret     +33% DD   11%
+    2.0    2.0R   1/3    3% | -0.044%/day ret     -42% DD   58% | +0.440%/day ret     +95% DD   10%
+    2.0    2.0R   1/3    6% | -0.054%/day ret     -49% DD   65% | +0.457%/day ret     +99% DD   11%
+    1.0    2.0R   1/3    6% | -0.078%/day ret     -60% DD   64% | +0.422%/day ret     +89% DD    6%
