@@ -1,0 +1,15 @@
+607 PULLBACK signals, 2021-11-02..2026-10-23
+
+== F1 underlying move open -> entry (positive = underlying fell); TRAIN tercile cuts +0.72, +1.44 ==
+   low  (< +0.72)  TRAIN -0.006% win  47% n= 95 | VALID +0.144% win  53% n= 70 | TEST +0.164% win  59% n= 22
+   mid             TRAIN -0.104% win  44% n= 98 | VALID -0.202% win  41% n= 92 | TEST +0.050% win  52% n= 25
+   high (>= +1.44) TRAIN +0.066% win  52% n= 97 | VALID +0.282% win  57% n= 65 | TEST +0.245% win  62% n= 16
+
+== F2 underlying vs its 20-day mean (positive = downtrend); TRAIN tercile cuts -1.33, +2.95 ==
+   low  (< -1.33)  TRAIN -0.151% win  42% n= 96 | VALID +0.178% win  57% n= 84 | TEST -0.102% win  48% n= 27
+   mid             TRAIN +0.010% win  51% n= 97 | VALID -0.229% win  38% n= 87 | TEST +0.121% win  52% n= 23
+   high (>= +2.95) TRAIN +0.094% win  51% n= 97 | VALID +0.263% win  55% n= 56 | TEST +0.672% win  85% n= 13
+
+== Both: underlying down at least 0.5% on the day and in a downtrend ==
+   TRAIN -0.034% win  47% n=133 | VALID -0.044% win  46% n= 93 | TEST +0.283% win  61% n= 23
+   others:  TRAIN +0.001% win  48% n=157 | VALID +0.103% win  51% n=134 | TEST +0.057% win  55% n= 40

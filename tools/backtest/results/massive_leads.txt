@@ -1,0 +1,43 @@
+== H1 last 30 min follows the day so far ==
+   2021    +5.6 bp t +2.41 pos  56% n=240
+   2022    +4.6 bp t +3.69 pos  54% n=1494
+   2023    -1.1 bp t -1.38 pos  48% n=1464
+   2024    -1.2 bp t -1.48 pos  49% n=1494
+   2025    -2.8 bp t -3.08 pos  48% n=1482
+   2026    -1.5 bp t -1.49 pos  50% n=1224
+   ALL     -0.1 bp t -0.34 pos  50% n=7398
+
+== H2 first 30 min direction, held 10:00 -> 15:55 ==
+   2021   -13.0 bp t -1.51 pos  43% n=240
+   2022    +3.9 bp t +0.90 pos  53% n=1494
+   2023    +2.6 bp t +0.97 pos  51% n=1464
+   2024    +1.1 bp t +0.42 pos  50% n=1494
+   2025    +7.5 bp t +2.21 pos  52% n=1482
+   2026    -3.9 bp t -1.30 pos  49% n=1224
+   ALL     +2.0 bp t +1.35 pos  51% n=7398
+
+== H3 9:30-13:30 direction, held 13:30 -> 16:00 ==
+   2021    -2.4 bp t -0.40 pos  51% n=240
+   2022    +8.4 bp t +3.08 pos  57% n=1494
+   2023    +0.5 bp t +0.32 pos  50% n=1464
+   2024    -1.1 bp t -0.70 pos  49% n=1494
+   2025    +4.5 bp t +2.68 pos  51% n=1482
+   2026    -3.2 bp t -1.92 pos  48% n=1224
+   ALL     +1.9 bp t +2.20 pos  51% n=7398
+
+== H4 H1 on days that moved more than 1% ==
+   2021   +13.9 bp t +3.33 pos  66% n=91
+   2022    +5.3 bp t +3.10 pos  54% n=841
+   2023    -2.4 bp t -1.68 pos  45% n=517
+   2024    -3.0 bp t -1.49 pos  48% n=427
+   2025    -2.8 bp t -1.41 pos  49% n=488
+   2026    -3.5 bp t -1.68 pos  48% n=428
+   ALL     +0.1 bp t +0.17 pos  50% n=2792
+
+== H1 by proxy, all years ==
+   QQQ    +0.5 bp t +0.57 pos  50% n=1233
+   SOXX   -1.5 bp t -1.08 pos  49% n=1233
+   IWM    -1.2 bp t -1.46 pos  49% n=1233
+   XLK    -0.7 bp t -0.66 pos  49% n=1233
+   XBI    +1.8 bp t +1.51 pos  52% n=1233
+   XLF    +0.2 bp t +0.27 pos  49% n=1233

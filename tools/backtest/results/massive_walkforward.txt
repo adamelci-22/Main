@@ -1,0 +1,33 @@
+== FADE: re-pick proxies each quarter from the trailing 252 days (keep avg > 0, at least 12 trades) ==
+year                  all trades             walk-forward pick
+2023  n= 161 avg -0.024% win  40%   n=  49 avg -0.076% win  33%
+2024  n= 181 avg -0.269% win  33%   n=  74 avg -0.219% win  32%
+2025  n= 201 avg -0.258% win  35%   n=   8 avg -1.099% win  38%
+2026  n= 143 avg +0.341% win  44%   n=  26 avg +0.557% win  42%
+ALL            n=686 avg -0.081%             n=157 avg -0.091%
+
+== FADE: keep only the best 2 proxies of the trailing 252 days ==
+year                  all trades             walk-forward pick
+2023  n= 161 avg -0.024% win  40%   n=  38 avg -0.448% win  24%
+2024  n= 181 avg -0.269% win  33%   n=  61 avg -0.266% win  30%
+2025  n= 201 avg -0.258% win  35%   n=   8 avg -1.099% win  38%
+2026  n= 143 avg +0.341% win  44%   n=  18 avg -0.117% win  22%
+ALL            n=686 avg -0.081%             n=125 avg -0.353%
+
+== PULLBACK: re-pick funds each quarter from the trailing 252 days (keep avg > 0, at least 8 trades), 18 candidate funds ==
+year                  all trades             walk-forward pick
+2023  n= 142 avg -0.232% win  40%   n=  47 avg -0.323% win  36%
+2024  n= 116 avg +0.234% win  59%   n=  40 avg +0.048% win  55%
+2025  n= 192 avg -0.138% win  41%   n=  90 avg -0.342% win  36%
+2026  n= 131 avg +0.181% win  58%   n=  42 avg -0.186% win  40%
+ALL            n=581 avg -0.015%             n=219 avg -0.237%
+
+== PULLBACK: the four live funds only (no re-picking) ==
+year                  all trades             walk-forward pick
+2022  n=  10 avg -0.097% win  50%   n=  10 avg -0.097% win  50%
+2023  n=  64 avg -0.348% win  34%   n=  64 avg -0.348% win  34%
+2024  n=  69 avg +0.241% win  62%   n=  69 avg +0.241% win  62%
+2025  n=  78 avg -0.259% win  36%   n=  78 avg -0.259% win  36%
+2026  n=  63 avg +0.267% win  62%   n=  63 avg +0.267% win  62%
+ALL            n=284 avg -0.035%             n=284 avg -0.035%
+
