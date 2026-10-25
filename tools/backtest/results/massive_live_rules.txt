@@ -1,0 +1,49 @@
+== ALL 2021-11-02..2026-10-23 ==
+S0 signal model only (3 entries/day, no gates, continuous $) 1233 days  trades  896  win  41%  -0.009%/day  ret    -18.8%  DD  63.5%  end $    1,625
+S1 + live rules, whole shares, cost +0.00%     1233 days  trades  649  win  40%  -0.052%/day  ret    -50.2%  DD  53.2%  end $      996  halted 2025-05-15
+      rule counters: {'A1.2 day-loss stops': 13, 'A1.4 floor hit': 1, 'floor days': 207}
+S2 + live rules, whole shares, cost +0.10%     1233 days  trades  327  win  38%  -0.054%/day  ret    -50.4%  DD  53.2%  end $      992  halted 2023-07-06
+      rule counters: {'A1.2 day-loss stops': 6, 'A1.4 floor hit': 1, 'floor days': 481}
+S3 + live rules, whole shares, cost +0.30%     1233 days  trades  185  win  35%  -0.055%/day  ret    -50.4%  DD  52.7%  end $      992  halted 2022-09-27
+   S2 FADE only                                1233 days  trades  387  win  35%  -0.053%/day  ret    -50.3%  DD  53.4%  end $      995  halted 2024-12-17
+   S2 PULLBACK only                            1233 days  trades  327  win  47%  -0.035%/day  ret    -36.5%  DD  43.4%  end $    1,270
+
+== OUT OF SAMPLE ..2026-02-27 ==
+S0 signal model only (3 entries/day, no gates, continuous $) 1068 days  trades  781  win  39%  -0.076%/day  ret    -58.9%  DD  63.5%  end $      823
+S1 + live rules, whole shares, cost +0.00%     1068 days  trades  649  win  40%  -0.060%/day  ret    -50.2%  DD  53.2%  end $      996  halted 2025-05-15
+      rule counters: {'A1.2 day-loss stops': 13, 'A1.4 floor hit': 1, 'floor days': 105}
+S2 + live rules, whole shares, cost +0.10%     1068 days  trades  327  win  38%  -0.062%/day  ret    -50.4%  DD  53.2%  end $      992  halted 2023-07-06
+      rule counters: {'A1.2 day-loss stops': 6, 'A1.4 floor hit': 1, 'floor days': 379}
+S3 + live rules, whole shares, cost +0.30%     1068 days  trades  185  win  35%  -0.063%/day  ret    -50.4%  DD  52.7%  end $      992  halted 2022-09-27
+   S2 FADE only                                1068 days  trades  387  win  35%  -0.061%/day  ret    -50.3%  DD  53.4%  end $      995  halted 2024-12-17
+   S2 PULLBACK only                            1068 days  trades  283  win  46%  -0.044%/day  ret    -38.9%  DD  43.4%  end $    1,222
+
+== RULES WINDOW 2026-03-03..10-14 ==
+S0 signal model only (3 entries/day, no gates, continuous $)  157 days  trades  110  win  54%  +0.457%/day  ret    +99.6%  DD   5.9%  end $    3,993
+S1 + live rules, whole shares, cost +0.00%      157 days  trades  110  win  54%  +0.445%/day  ret    +96.2%  DD   5.8%  end $    3,923
+      rule counters: {'A1.2 day-loss stops': 1}
+S2 + live rules, whole shares, cost +0.10%      157 days  trades  110  win  54%  +0.382%/day  ret    +77.8%  DD   6.5%  end $    3,555
+      rule counters: {'A1.2 day-loss stops': 2}
+S3 + live rules, whole shares, cost +0.30%      157 days  trades  110  win  47%  +0.242%/day  ret    +43.0%  DD  13.9%  end $    2,860
+   S2 FADE only                                 157 days  trades   80  win  51%  +0.344%/day  ret    +68.2%  DD   5.7%  end $    3,364
+   S2 PULLBACK only                             157 days  trades   40  win  60%  +0.043%/day  ret     +6.7%  DD   7.3%  end $    2,134
+
+== By calendar year, S2 (live rules, +0.10%), each year restarted at $2,000 ==
+2021 COMBINED                                    40 days  trades   38  win  34%  -0.207%/day  ret     -8.3%  DD  13.5%  end $    1,834
+2022 COMBINED                                   249 days  trades  199  win  38%  -0.130%/day  ret    -29.5%  DD  30.1%  end $    1,410
+2023 COMBINED                                   244 days  trades  158  win  39%  -0.140%/day  ret    -29.8%  DD  30.4%  end $    1,404
+2024 COMBINED                                   249 days  trades  181  win  39%  -0.126%/day  ret    -27.8%  DD  29.6%  end $    1,443
+2025 COMBINED                                   247 days  trades  177  win  33%  -0.208%/day  ret    -41.1%  DD  48.2%  end $    1,177
+2026 COMBINED                                   204 days  trades  141  win  52%  +0.288%/day  ret    +75.0%  DD   7.3%  end $    3,501
+
+== Raw edge per trade, no sizing, no compounding (signal model, before extra cost): average % on the leg and win rate ==
+   2021-11..2023-12  FADE    406 signals  win  37%  avg -0.103%  median -0.569%  avg win +1.63%  avg loss -1.13%
+   2021-11..2023-12  PB      176 signals  win  44%  avg -0.090%  median -0.800%  avg win +1.17%  avg loss -1.07%
+   2024              FADE    181 signals  win  33%  avg -0.271%  median -0.509%  avg win +1.09%  avg loss -0.95%
+   2024              PB       69 signals  win  62%  avg +0.241%  median +0.721%  avg win +1.05%  avg loss -1.09%
+   2025              FADE    201 signals  win  34%  avg -0.280%  median -0.464%  avg win +1.22%  avg loss -1.06%
+   2025              PB       78 signals  win  36%  avg -0.259%  median -0.848%  avg win +1.26%  avg loss -1.11%
+   2026-01..02       FADE     24 signals  win  33%  avg -0.334%  median -0.723%  avg win +1.26%  avg loss -1.13%
+   2026-01..02       PB       15 signals  win  80%  avg +0.672%  median +0.805%  avg win +1.10%  avg loss -1.05%
+   2026-03..10       FADE    115 signals  win  50%  avg +0.592%  median -0.224%  avg win +2.26%  avg loss -1.05%
+   2026-03..10       PB       44 signals  win  59%  avg +0.204%  median +0.778%  avg win +1.08%  avg loss -1.07%

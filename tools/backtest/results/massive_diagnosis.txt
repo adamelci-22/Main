@@ -1,0 +1,74 @@
+Massive bars, 1233 days 2021-11-02..2026-10-23
+
+== 1. Market regime by year (mean over the six live proxies) ==
+year   days  range %  |gap| % box 9:30-10 % QQQ ret % FADE setups/day
+2021     40     2.05     0.58          1.01       3.4            0.80
+2022    249     2.73     0.86          1.29     -33.3            0.86
+2023    244     1.74     0.56          0.88      53.2            0.66
+2024    249     1.69     0.63          0.84      26.0            0.73
+2025    247     1.86     0.69          0.88      19.4            0.81
+2026    204     1.98     0.85          1.11      13.6            0.70
+
+== 2. FADE decomposition by year (six live proxies, leg % per trade, signal model) ==
+year      n  win%  2R hit%  stop%  time%  avg win avg loss     avg
+2021     32    41       31     56     16    +1.21    -0.86  -0.023
+2022    213    35       32     63      6    +2.06    -1.32  -0.145
+2023    161    40       32     57     13    +1.21    -0.91  -0.064
+2024    181    33       23     62     15    +1.09    -0.95  -0.271
+2025    201    34       27     63     13    +1.22    -1.06  -0.280
+2026    143    48       40     51     19    +2.14    -1.09  +0.445
+
+== 3. Direction-only test: proxy move in the fade's direction, entry bar open -> 13:30 close (bp, no stops, targets or costs) ==
+year      n  mean bp  median bp up-share %   (the same trades, opposite direction = the negative of mean)
+2021     32    +17.4      +11.7         53
+2022    213    -12.6      -12.5         46
+2023    161     -1.9       -7.6         44
+2024    181    -22.0      -17.5         39
+2025    201    -10.0       -0.7         50
+2026    143    +14.9      +12.5         55
+
+== 4. FADE by volatility regime (proxy's trailing 20-day mean range / its own median over the sample) ==
+  calm  (<0.85)        all: n=218 win  35% avg -0.124% | A: n=197 win  34% avg -0.163% | B: n= 20 win  45% avg +0.168%
+  normal(0.85-1.15)    all: n=354 win  40% avg -0.060% | A: n=304 win  39% avg -0.135% | B: n= 47 win  47% avg +0.381%
+  wild  (>1.15)        all: n=344 win  36% avg -0.110% | A: n=296 win  33% avg -0.286% | B: n= 48 win  54% avg +0.974%
+  mean regime ratio 2021: 1.22
+  mean regime ratio 2022: 1.48
+  mean regime ratio 2023: 0.97
+  mean regime ratio 2024: 0.90
+  mean regime ratio 2025: 1.03
+  mean regime ratio 2026: 1.04
+
+== 5. Stock choice, FADE: live proxies vs proxies that were not selected (leg % per trade, signal model) ==
+proxy       A  (before 2026-03)                   B  (2026-03..10)                      
+QQQ   live  n=159 win  33% avg -0.253%            n= 20 win  50% avg +0.277%            
+SOXX  live  n=158 win  41% avg -0.178%            n= 23 win  52% avg +1.327%            
+IWM   live  n=138 win  38% avg -0.092%            n= 20 win  45% avg +0.228%            
+XLK   live  n=137 win  26% avg -0.378%            n= 27 win  48% avg +0.456%            
+XBI   live  n=114 win  38% avg -0.006%            n= 12 win  58% avg +1.144%            
+XLF   live  n=106 win  37% avg -0.205%            n= 13 win  46% avg +0.104%            
+SPY   alt   n=156 win  29% avg -0.153%            n= 15 win  33% avg -0.049%            
+TLT   alt   n=153 win  41% avg -0.029%            n= 18 win  33% avg +0.003%            
+KRE   alt   n= 99 win  27% avg -0.299%            n= 21 win  43% avg +0.247%            
+GLD   alt   n=147 win  39% avg -0.027%            n= 23 win  30% avg -0.211%            
+VIXY  alt   n=159 win  31% avg -0.149%            n= 24 win  46% avg +0.022%            
+
+== 6. Stock choice, PULLBACK: live funds vs other funds (own chart, same rules, % per trade) ==
+fund        A  (before 2026-03)                   B  (2026-03..10)                      
+SOXS  live  n=102 win  51% avg +0.080%            n= 15 win  53% avg +0.082%            
+LABD  live  n= 86 win  48% avg -0.000%            n=  4 win  75% avg +0.423%            
+TECS  live  n= 69 win  45% avg -0.045%            n= 12 win  75% avg +0.558%            
+UVXY  live  n= 81 win  44% avg -0.176%            n= 13 win  46% avg -0.051%            
+SPXU  alt   n= 18 win  44% avg -0.103%            n=0                                   
+SDS   alt   n=  4 win  25% avg -0.214%            n=0                                   
+QID   alt   n= 15 win  47% avg +0.082%            n=  1 win 100% avg +0.938%            
+SRTY  alt   n= 47 win  51% avg +0.138%            n=  4 win  50% avg -0.041%            
+SDOW  alt   n= 12 win  67% avg +0.311%            n=0                                   
+ERY   alt   n= 21 win  38% avg -0.282%            n=  1 win 100% avg +0.818%            
+DRIP  alt   n= 51 win  41% avg -0.197%            n=  5 win  60% avg +0.423%            
+DUST  alt   n= 44 win  36% avg -0.206%            n=  2 win  50% avg -0.258%            
+TMV   alt   n=  7 win  86% avg +0.545%            n=0                                   
+UVIX  alt   n=102 win  43% avg -0.149%            n= 17 win  41% avg -0.098%            
+SVIX  alt   n= 18 win  44% avg +0.037%            n=0                                   
+TZA   alt   n= 49 win  59% avg +0.208%            n=  6 win  33% avg -0.375%            
+SQQQ  alt   n= 39 win  59% avg +0.218%            n=  3 win  67% avg +0.223%            
+FAZ   alt   n= 18 win  50% avg +0.246%            n=  5 win  60% avg +0.127%            

@@ -1,0 +1,37 @@
+WHY IS ONLY 2026-03..10 POSITIVE? STOCK CHOICE OR SYSTEM (Massive bars, live rules v5.2.15, nothing re-tuned)
+Sources: massive_live_rules.txt (live account rules), massive_diagnosis.txt (regime, decomposition, selection tests)
+
+RULES APPLIED
+   Applied: B2/B3 signals, stops, 2R target, chandelier, 13:30 flat, one position, RVOL tie-break, 3% risk sizing (B4.1) with whole shares at the price paid on the day,
+            A1.1 five-loss lockout (cleared next day), A1.2 3% daily loss stop, A1.3 six entries a day, A1.4 50% floor, 0.06% model leg cost plus 0%, 0.10% or 0.30% extra per round trip.
+   Not applied (no quotes or order state in the data): A1.6 late-entry band, A1.7 spread skip, B4.6 liquidity cap (dormant below $100,000), OCO rejection fallbacks, A1.5/A1.8-A1.12 (operational).
+   Result with the rules on: 2026-03..10 stays positive (+96% at 0% extra cost, +78% at 0.10%, +43% at 0.30%). Every earlier calendar year stays negative
+   (each year restarted at $2,000, +0.10% cost): 2021 -8%, 2022 -30%, 2023 -30%, 2024 -28%, 2025 -41%, 2026 +75%. The 5-year run hits the 50% floor and halts.
+   The live rules do not create the loss. They trim it slightly and do not turn any earlier year positive.
+
+FINDINGS
+   1. The six FADE proxies all lose before 2026-03 and all win after it. Average leg % per trade, before / after:
+      QQQ -0.25 / +0.28, SOXX -0.18 / +1.33, IWM -0.09 / +0.23, XLK -0.38 / +0.46, XBI -0.01 / +1.14, XLF -0.21 / +0.10.
+      No live proxy earns money in 52 months. This is a system result, not one bad ticker.
+   2. The direction of the trade has no edge outside 2026. After a failed retest the proxy moved in the fade's direction by (bp, entry to 13:30):
+      2021 +17, 2022 -13, 2023 -2, 2024 -22, 2025 -10, 2026 +15. This test has no stops, targets or costs. The signal itself carries no information in 2022-2025.
+   3. The exits are not the cause. Stops hit 56-63% of trades in every year before 2026 and 51% in 2026. The 2R target is reached on 23-32% of trades before 2026 and 40% in 2026.
+      Average win +1.1% to +1.2% in 2023-2025, +2.1% in 2026. Average loss -0.9% to -1.3% every year.
+   4. Volatility does not explain 2026. Regime ratio (trailing range against the sample median): 2022 1.48, 2026 1.04. Daily range 2026 1.98% against 1.86% in 2025.
+      In wild periods FADE lost -0.29% per trade before 2026 and earned +0.97% after. Opening gap and opening box were larger in 2026 (0.85% and 1.11% against 0.63-0.69% and 0.84-0.88% in 2024-2025). 2022 was similar (0.86%, 1.29%) and lost.
+   5. The list was chosen on the 2026 data and it shows. Five proxies the list did not pick: SPY -0.15 / -0.05, TLT -0.03 / 0.00, KRE -0.30 / +0.25, GLD -0.03 / -0.21, VIXY -0.15 / +0.02.
+      The six live proxies average +0.58% per trade in 2026. The five others average 0.00%. Choosing SOXX and XBI (+1.33, +1.14) picked the two best of the 2026 window.
+   6. PULLBACK is the same pattern with less size. The live funds before 2026-03: SOXS +0.08, LABD 0.00, TECS -0.05, UVXY -0.18 per trade. After: +0.08, +0.42, +0.56, -0.05.
+      Funds the list left out earned more before 2026-03: SDOW +0.31, TZA +0.21, SQQQ +0.22, FAZ +0.25, SRTY +0.14. They have 0-6 trades in 2026 (little room in a window where inverse funds rarely set up).
+      PULLBACK has no edge on UVXY at any time (-0.18 before, -0.05 after).
+
+VERDICT
+   System failure first, stock choice second.
+   - System: the FADE signal has no directional edge from 2022 to 2025 on any of the six proxies. The 2026 window is the only period where failed breakouts reversed far enough to pay.
+     That is a market condition the system cannot detect in advance. It is not volatility, so no volatility filter fixes it.
+   - Stock choice: the list was fitted to the 2026 window. It adds to the 2026 result (live proxies +0.58% per trade against 0.00% for five alternates) and gives none of it back before 2026.
+   - Neither cause changes the live expectation. The results since 2026-03 cannot be separated from a favourable stretch. 157 days is about 7 months of one regime.
+
+LIMITS
+   FADE legs are modelled as leverage times the proxy (as in final_system.py), not the real leg prices. The Massive TQQQ, SOXL and other leg bars exist and a check of the model against them is still open.
+   Costs beyond 0.06% are assumptions. Late entries, quotes and fills are not in the data.
