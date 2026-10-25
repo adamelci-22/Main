@@ -1,0 +1,89 @@
+FADE diagnostics on db_5m.json.gz: 800 days 2023-03-28..2026-10-23; symbols QQQ SOXX IWM XLK XBI XLF SPY TLT GLD KRE VIXY
+Live rules unless stated. 'R' = proxy move / initial stop distance (1R loss = full stop). All raw proxy setups, before the one-at-a-time account.
+
+== DESIGN 2023-03..2025-06: 450 days, live six: 348 setups, account 234 trades win 34% -0.073%/day DD 34.7%
+== HOLDOUT 2025-07..2026-02: 164 days, live six: 127 setups, account 86 trades win 24% -0.116%/day DD 20.6%
+== RECENT 2026-03..10: 165 days, live six: 122 setups, account 86 trades win 45% +0.262%/day DD 7.5%
+
+#### OUT-OF-SAMPLE 2023-03..2026-02, live six, 475 setups ####
+  exit reason (stop = full loss before 2R; be = partial then breakeven; trail = chandelier; time = 13:30)
+     be                     n   21  win 100%  avg R +0.662  avg leg +0.217%  sum R   +13.9  reach1R 100%  reach2R 100%
+     stop                   n  300  win   0%  avg R -1.003  avg leg -0.899%  sum R  -300.9  reach1R  20%  reach2R   2%
+     time                   n   69  win  64%  avg R +0.707  avg leg +0.296%  sum R   +48.8  reach1R  62%  reach2R  14%
+     trail                  n   85  win 100%  avg R +2.080  avg leg +1.515%  sum R  +176.8  reach1R 100%  reach2R 100%
+  side
+     buy bear leg (fade up-break) n  231  win  28%  avg R -0.183  avg leg -0.383%  sum R   -42.2  reach1R  43%  reach2R  26%
+     buy bull leg (fade down-break) n  244  win  35%  avg R -0.079  avg leg -0.112%  sum R   -19.2  reach1R  44%  reach2R  25%
+  proxy
+     IWM                    n   78  win  33%  avg R +0.001  avg leg -0.154%  sum R    +0.0  reach1R  41%  reach2R  27%
+     QQQ                    n   89  win  33%  avg R -0.160  avg leg -0.233%  sum R   -14.3  reach1R  46%  reach2R  24%
+     SOXX                   n   92  win  34%  avg R -0.182  avg leg -0.316%  sum R   -16.7  reach1R  45%  reach2R  25%
+     XBI                    n   71  win  31%  avg R -0.085  avg leg -0.239%  sum R    -6.1  reach1R  54%  reach2R  30%
+     XLF                    n   64  win  33%  avg R -0.117  avg leg -0.184%  sum R    -7.5  reach1R  42%  reach2R  23%
+     XLK                    n   81  win  26%  avg R -0.209  avg leg -0.311%  sum R   -16.9  reach1R  36%  reach2R  25%
+  entry time
+     10:10                  n  237  win  28%  avg R -0.172  avg leg -0.280%  sum R   -40.7  reach1R  39%  reach2R  25%
+     10:15                  n  102  win  39%  avg R -0.091  avg leg -0.033%  sum R    -9.3  reach1R  50%  reach2R  27%
+     10:20                  n  111  win  33%  avg R -0.070  avg leg -0.119%  sum R    -7.8  reach1R  50%  reach2R  28%
+     10:25                  n   12  win  42%  avg R -0.097  avg leg -0.246%  sum R    -1.2  reach1R  42%  reach2R   8%
+     10:30                  n    3  win  67%  avg R +0.822  avg leg +1.452%  sum R    +2.5  reach1R  67%  reach2R  67%
+     10:35                  n    2  win   0%  avg R -0.403  avg leg -0.842%  sum R    -0.8  reach1R   0%  reach2R   0%
+     10:40                  n    4  win   0%  avg R -0.505  avg leg -6.371%  sum R    -2.0  reach1R  25%  reach2R   0%
+     10:45                  n    1  win   0%  avg R -0.468  avg leg -1.206%  sum R    -0.5  reach1R   0%  reach2R   0%
+     10:50                  n    2  win   0%  avg R -0.336  avg leg -1.546%  sum R    -0.7  reach1R   0%  reach2R   0%
+     10:55                  n    1  win   0%  avg R -1.000  avg leg -2.971%  sum R    -1.0  reach1R   0%  reach2R   0%
+  break bar close time
+     10:00                  n  257  win  30%  avg R -0.141  avg leg -0.242%  sum R   -36.1  reach1R  39%  reach2R  24%
+     10:05                  n  104  win  33%  avg R -0.185  avg leg -0.212%  sum R   -19.2  reach1R  48%  reach2R  27%
+     10:10                  n  114  win  33%  avg R -0.053  avg leg -0.277%  sum R    -6.1  reach1R  50%  reach2R  27%
+  bars from break to touch
+     1                      n  433  win  31%  avg R -0.145  avg leg -0.208%  sum R   -62.8  reach1R  44%  reach2R  27%
+     2                      n   19  win  53%  avg R +0.197  avg leg +0.287%  sum R    +3.7  reach1R  47%  reach2R  11%
+     3                      n    6  win  67%  avg R +0.623  avg leg +0.852%  sum R    +3.7  reach1R  67%  reach2R  50%
+     4                      n    7  win  43%  avg R -0.043  avg leg -0.163%  sum R    -0.3  reach1R  29%  reach2R  14%
+     5                      n    5  win   0%  avg R -0.552  avg leg -5.131%  sum R    -2.8  reach1R   0%  reach2R   0%
+     6                      n    2  win   0%  avg R -0.678  avg leg -1.835%  sum R    -1.4  reach1R  50%  reach2R   0%
+     9                      n    3  win   0%  avg R -0.557  avg leg -2.021%  sum R    -1.7  reach1R   0%  reach2R   0%
+  box width % (terciles)
+     high >=0.93            n  159  win  33%  avg R -0.121  avg leg -0.389%  sum R   -19.2  reach1R  47%  reach2R  26%
+     low <0.60              n  158  win  30%  avg R -0.167  avg leg -0.135%  sum R   -26.4  reach1R  39%  reach2R  23%
+     mid 0.60-0.93          n  158  win  32%  avg R -0.100  avg leg -0.207%  sum R   -15.8  reach1R  46%  reach2R  27%
+  stop distance % of proxy (terciles)
+     high >=0.34            n  159  win  33%  avg R -0.145  avg leg -0.493%  sum R   -23.1  reach1R  37%  reach2R  16%
+     low <0.18              n  158  win  29%  avg R -0.154  avg leg -0.105%  sum R   -24.4  reach1R  49%  reach2R  31%
+     mid 0.18-0.34          n  158  win  33%  avg R -0.088  avg leg -0.132%  sum R   -13.9  reach1R  45%  reach2R  29%
+  stop distance / box width (terciles)
+     high >=0.42            n  159  win  32%  avg R -0.092  avg leg -0.449%  sum R   -14.6  reach1R  33%  reach2R  16%
+     low <0.26              n  158  win  29%  avg R -0.181  avg leg -0.137%  sum R   -28.7  reach1R  51%  reach2R  32%
+     mid 0.26-0.42          n  158  win  34%  avg R -0.115  avg leg -0.145%  sum R   -18.1  reach1R  47%  reach2R  28%
+  touch depth into box, fraction of box (terciles)
+     high >=0.24            n  159  win  36%  avg R -0.019  avg leg -0.156%  sum R    -3.0  reach1R  39%  reach2R  25%
+     low <0.13              n  158  win  31%  avg R -0.103  avg leg -0.197%  sum R   -16.2  reach1R  49%  reach2R  28%
+     mid 0.13-0.24          n  158  win  27%  avg R -0.267  avg leg -0.379%  sum R   -42.2  reach1R  44%  reach2R  23%
+  gap (open vs prior close)
+     fade against gap       n  234  win  27%  avg R -0.236  avg leg -0.301%  sum R   -55.1  reach1R  42%  reach2R  23%
+     fade in gap direction  n  241  win  36%  avg R -0.026  avg leg -0.189%  sum R    -6.3  reach1R  45%  reach2R  28%
+  20-day trend
+     fade against 20d trend n  243  win  32%  avg R -0.091  avg leg -0.187%  sum R   -22.2  reach1R  41%  reach2R  27%
+     fade with 20d trend    n  232  win  31%  avg R -0.169  avg leg -0.303%  sum R   -39.2  reach1R  47%  reach2R  24%
+  weekday
+     Mon                    n   90  win  38%  avg R +0.040  avg leg -0.332%  sum R    +3.6  reach1R  48%  reach2R  27%
+     Tue                    n  105  win  25%  avg R -0.324  avg leg -0.363%  sum R   -34.0  reach1R  39%  reach2R  21%
+     Wed                    n   85  win  28%  avg R -0.171  avg leg -0.262%  sum R   -14.6  reach1R  41%  reach2R  24%
+     Thu                    n   82  win  38%  avg R +0.059  avg leg +0.014%  sum R    +4.8  reach1R  51%  reach2R  33%
+     Fri                    n  113  win  31%  avg R -0.188  avg leg -0.236%  sum R   -21.3  reach1R  42%  reach2R  25%
+  year
+     2023                   n   66  win  35%  avg R -0.045  avg leg -0.167%  sum R    -3.0  reach1R  53%  reach2R  29%
+     2024                   n  180  win  31%  avg R -0.162  avg leg -0.279%  sum R   -29.1  reach1R  39%  reach2R  24%
+     2025                   n  204  win  32%  avg R -0.101  avg leg -0.216%  sum R   -20.6  reach1R  45%  reach2R  26%
+     2026                   n   25  win  28%  avg R -0.348  avg leg -0.424%  sum R    -8.7  reach1R  44%  reach2R  16%
+
+  full-stop losers: 300 of 475; of those, reached +1R first 59, +1.5R 27; stopped on entry bar or next 120
+  time exits: 69, avg R +0.707, of which hit 2R first 10
+  avg MFE 1.44R, median 0.80R; avg MAE 1.16R
+
+#### each name alone, live rules (account, that name only) ####
+  DESIGN 2023-03..2025-06    QQQ -0.033(67)  SOXX -0.050(73)  IWM +0.000(52)  XLK -0.047(58)  XBI -0.012(53)  XLF -0.010(45)  SPY -0.021(68)  TLT -0.013(63)  GLD +0.004(55)  KRE -0.009(37)  VIXY -0.035(86)
+  HOLDOUT 2025-07..2026-02   QQQ -0.036(22)  SOXX -0.007(19)  IWM -0.037(26)  XLK -0.016(23)  XBI -0.027(18)  XLF -0.007(19)  SPY -0.028(28)  TLT +0.015(17)  GLD +0.022(24)  KRE -0.011(21)  VIXY -0.036(28)
+  RECENT 2026-03..10         QQQ +0.033(22)  SOXX +0.142(21)  IWM +0.000(18)  XLK +0.058(30)  XBI +0.061(17)  XLF +0.027(14)  SPY -0.008(18)  TLT +0.009(17)  GLD -0.031(25)  KRE +0.017(20)  VIXY +0.004(26)
+  OOS                        QQQ -0.034(89)  SOXX -0.039(92)  IWM -0.010(78)  XLK -0.039(81)  XBI -0.016(71)  XLF -0.009(64)  SPY -0.023(96)  TLT -0.005(80)  GLD +0.009(79)  KRE -0.010(58)  VIXY -0.035(114)

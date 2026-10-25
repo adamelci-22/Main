@@ -1,0 +1,33 @@
+Shortlist: changes that helped in every window one-at-a-time, and combinations. Six live proxies.
+                                   | DESIGN 23-03..25-06 (Mini)  | HOLDOUT 25-07..26-02 (Mini) | RECENT 26-03..10 (Mini)     | RH 26-03..10-14 (Robinhood)
+LIVE                               | -0.073 234t 34% DD34.7 | -0.116  86t 24% DD20.6 | +0.262  86t 45% DD 7.5 | +0.419  75t 57% DD 4.5   RH halves +0.391/+0.446  March +0.483
+stop 0.4% fixed                    | -0.056 227t 38% DD37.4 | -0.078  82t 37% DD15.2 | +0.236  84t 49% DD 8.8 | +0.323  75t 55% DD 6.2   RH halves +0.315/+0.331  March +0.408
+stop 0.5% fixed                    | -0.058 226t 38% DD32.0 | -0.026  82t 44% DD10.4 | +0.299  83t 54% DD11.0 | +0.356  75t 56% DD 7.9   RH halves +0.253/+0.458  March +0.383
+stop 0.6% fixed                    | -0.059 225t 40% DD31.7 | -0.081  82t 44% DD15.0 | +0.359  83t 58% DD12.8 | +0.458  75t 61% DD 9.1   RH halves +0.367/+0.547  March +0.358
+stop 0.7% fixed                    | -0.077 225t 40% DD36.6 | -0.073  82t 46% DD13.9 | +0.370  83t 58% DD14.7 | +0.462  74t 61% DD11.6   RH halves +0.358/+0.565  March +0.162
+stop 0.8% fixed                    | -0.085 224t 42% DD37.0 | -0.108  82t 46% DD18.6 | +0.369  83t 58% DD15.7 | +0.403  74t 59% DD13.9   RH halves +0.312/+0.493  March +0.190
+stop floor 0.3%                    | -0.071 230t 36% DD36.8 | -0.047  83t 34% DD11.7 | +0.266  84t 50% DD 9.2 | +0.442  75t 57% DD 6.5   RH halves +0.404/+0.479  March +0.480
+stop floor 0.4%                    | -0.073 227t 37% DD39.9 | -0.047  82t 38% DD11.7 | +0.288  84t 51% DD10.4 | +0.474  75t 61% DD 7.4   RH halves +0.453/+0.495  March +0.425
+stop floor 0.5%                    | -0.076 226t 38% DD35.2 | -0.036  82t 44% DD10.5 | +0.362  83t 57% DD11.8 | +0.450  75t 60% DD 8.5   RH halves +0.405/+0.494  March +0.392
+stop floor 0.6%                    | -0.074 225t 40% DD34.7 | -0.085  82t 44% DD15.6 | +0.389  83t 59% DD13.2 | +0.486  75t 63% DD 9.3   RH halves +0.464/+0.507  March +0.358
+stop x1.5 post-break               | -0.064 229t 37% DD37.8 | -0.054  83t 34% DD14.5 | +0.201  85t 46% DD14.7 | +0.348  75t 52% DD 8.7   RH halves +0.221/+0.474  March +0.221
+stop x2 post-break                 | -0.042 226t 41% DD30.9 | -0.084  83t 37% DD17.1 | +0.267  83t 53% DD14.3 | +0.454  75t 59% DD 9.2   RH halves +0.410/+0.497  March +0.211
+wait 3                             | -0.052 223t 35% DD26.9 | -0.116  86t 24% DD20.6 | +0.300  80t 46% DD 7.5 | +0.432  72t 58% DD 4.5   RH halves +0.427/+0.438  March +0.483
+stop floor 0.4% + wait 3           | -0.055 217t 38% DD32.9 | -0.047  82t 38% DD11.7 | +0.326  78t 53% DD10.4 | +0.487  72t 62% DD 7.4   RH halves +0.488/+0.486  March +0.425
+stop floor 0.5% + wait 3           | -0.058 216t 39% DD28.9 | -0.036  82t 44% DD10.5 | +0.400  77t 58% DD11.8 | +0.463  72t 61% DD 8.5   RH halves +0.440/+0.486  March +0.392
+stop floor 0.6% + wait 3           | -0.062 216t 40% DD30.1 | -0.085  82t 44% DD15.6 | +0.427  77t 61% DD13.2 | +0.499  72t 64% DD 9.3   RH halves +0.499/+0.499  March +0.358
+stop 0.6% fixed + wait 3           | -0.055 216t 40% DD27.8 | -0.081  82t 44% DD15.0 | +0.371  77t 60% DD12.8 | +0.452  72t 62% DD 9.1   RH halves +0.391/+0.512  March +0.358
+stop x2 post-break + wait 3        | -0.038 216t 41% DD28.3 | -0.084  83t 37% DD17.1 | +0.286  77t 55% DD14.3 | +0.464  72t 60% DD 9.2   RH halves +0.435/+0.493  March +0.211
+floor 0.5% + wait 3 + gap with     | +0.059 121t 48% DD 7.8 | +0.015  38t 53% DD 5.5 | +0.271  42t 64% DD 6.0 | +0.246  37t 59% DD11.1   RH halves +0.110/+0.380  March +0.094
+
+Same shortlist on all 11 names:
+LIVE                               | -0.067 351t 37% DD38.4 | -0.113 127t 28% DD22.1 | +0.205 128t 41% DD16.0 | +0.355 120t 46% DD10.3
+stop floor 0.5%                    | -0.065 334t 42% DD34.8 | -0.071 120t 41% DD13.6 | +0.325 120t 52% DD11.5 | +0.387 115t 50% DD11.7
+stop floor 0.5% + wait 3           | -0.065 321t 42% DD33.8 | -0.069 119t 41% DD13.6 | +0.349 113t 53% DD11.5 | +0.374 110t 49% DD11.7
+
+Stop-floor fine grid with touch-within-3-bars (columns as above; RH halves, untouched March, Robinhood exit mix):
+LIVE              | -0.073 234t 34% DD34.7 | -0.116  86t 24% DD20.6 | +0.262  86t 45% DD 7.5 | +0.419  75t 57% DD 4.5  RH H +0.391/+0.446 Mar +0.483  RH exits {'time': 17, 'stop': 31, 'trail': 21, 'be': 6} avg loss -0.98% acct, worst day -3.05%
+floor0.3+wait3    | -0.053 220t 37% DD29.2 | -0.047  83t 34% DD11.7 | +0.304  78t 51% DD 9.2 | +0.455  72t 58% DD 6.5  RH H +0.440/+0.470 Mar +0.480  RH exits {'time': 29, 'stop': 25, 'trail': 17, 'be': 1} avg loss -1.07% acct, worst day -3.05%
+floor0.35+wait3   | -0.079 220t 35% DD35.5 | -0.086  83t 33% DD16.7 | +0.329  78t 53% DD 9.8 | +0.455  72t 60% DD 6.9  RH H +0.465/+0.446 Mar +0.463  RH exits {'time': 32, 'stop': 24, 'trail': 15, 'be': 1} avg loss -1.16% acct, worst day -3.05%
+floor0.4+wait3    | -0.055 217t 38% DD32.9 | -0.047  82t 38% DD11.7 | +0.326  78t 53% DD10.4 | +0.487  72t 62% DD 7.4  RH H +0.488/+0.486 Mar +0.425  RH exits {'time': 36, 'stop': 21, 'trail': 14, 'be': 1} avg loss -1.22% acct, worst day -3.05%
+floor0.5+wait3    | -0.058 216t 39% DD28.9 | -0.036  82t 44% DD10.5 | +0.400  77t 58% DD11.8 | +0.463  72t 61% DD 8.5  RH H +0.440/+0.486 Mar +0.392  RH exits {'time': 41, 'stop': 21, 'trail': 10} avg loss -1.39% acct, worst day -3.05%
