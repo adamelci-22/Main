@@ -1,0 +1,95 @@
+931 real-leg FADE trades, 2021-11-02..2026-10-23
+
+== A. Intraday behaviour by quarter (six live proxies pooled) ==
+quarter   days  corr 1st30m vs 10:00-13:30  mean 10:00-13:30 ret bp  mean |1st30m| bp  trend-day share %
+2021Q4      40                      -0.050                     -9.7              53.2                 38
+2022Q1      62                      -0.071                    -16.1              65.3                 45
+2022Q2      62                      -0.012                    -26.1              75.0                 43
+2022Q3      63                       0.089                      4.0              65.8                 41
+2022Q4      62                       0.232                      0.4              62.3                 40
+2023Q1      62                      -0.026                      5.2              47.8                 38
+2023Q2      61                       0.012                      9.7              45.9                 37
+2023Q3      62                       0.120                     -2.7              44.1                 37
+2023Q4      59                       0.070                      1.3              41.6                 40
+2024Q1      61                       0.010                      9.4              41.3                 31
+2024Q2      63                      -0.058                     -3.3              37.0                 36
+2024Q3      63                       0.038                     -8.3              46.3                 32
+2024Q4      62                       0.056                      1.5              42.3                 37
+2025Q1      60                      -0.049                     -8.4              48.6                 39
+2025Q2      62                       0.267                     17.3              48.8                 31
+2025Q3      63                      -0.045                      4.4              37.5                 35
+2025Q4      62                       0.016                    -10.4              44.9                 36
+2026Q1      61                       0.049                     -4.8              62.3                 33
+2026Q2      62                      -0.136                     13.5              61.4                 29
+2026Q3      64                      -0.000                     -2.8              56.9                 30
+2026Q4      17                       0.170                     -8.9              49.1                 40
+
+   monthly FADE result (real legs, leg % per trade):
+   21-11:+0.15(15) 21-12:-0.08(17) 22-01:-0.04(24) 22-02:+1.84(14) 22-03:-0.53(18) 22-04:-0.52(16) 22-05:-0.26(12) 22-06:+0.39(24) 22-07:-0.76(14) 22-08:-0.83(27) 22-09:+0.48(20) 22-10:+0.08(18) 22-11:-0.71(16) 22-12:-0.36(10) 23-01:-0.11(12) 23-02:+0.73(15) 23-03:+0.17(18) 23-04:-0.59(11) 23-05:-0.27(9) 23-06:-0.02(12) 23-07:+0.12(12) 23-08:-0.24(19) 23-09:+0.40(15) 23-10:-0.05(10) 23-11:-0.39(20) 23-12:-0.23(8) 24-01:-0.39(17) 24-02:-0.31(17) 24-03:+0.74(7) 24-04:-0.12(11) 24-05:-0.06(12) 24-06:-0.20(12) 24-07:-0.17(19) 24-08:-0.60(23) 24-09:-0.19(10) 24-10:-0.34(25) 24-11:-0.10(10) 24-12:-0.51(18) 25-01:+0.79(24) 25-02:+0.08(18) 25-03:-1.03(13) 25-04:-2.57(16) 25-05:-0.65(17) 25-06:+0.27(17) 25-07:+0.25(19) 25-08:-0.19(9) 25-09:-0.21(9) 25-10:-0.14(18) 25-11:-0.56(22) 25-12:+0.13(19) 26-01:-0.46(10) 26-02:-0.37(14) 26-03:+0.40(21) 26-04:-0.03(14) 26-05:-0.15(13) 26-06:+1.06(21) 26-07:+1.49(16) 26-08:+0.36(17) 26-09:-0.05(5) 26-10:+0.07(12)
+
+== B. Failure types (real legs) ==
+type                                                            before 2026-03   2026-03..10
+stopped within 1 bar of entry (retest did not hold)                   24% -0.770      23% -0.814
+stopped later and stayed lower (real reversal failed)                 29% -1.270      18% -1.309
+stopped, but the leg closed above entry at 13:30 (shaken out)          8% -1.003      10% -0.945
+never hit stop or 2R; sold at 13:30 at a gain                          7% +1.150       7% +1.912
+never hit stop or 2R; sold at 13:30 at a loss                          3% -1.640       3% -1.039
+reached 2R (win; runner stopped or sold)                              29% +1.526      38% +2.368
+
+== C. Features known at entry (avg leg % per trade; n in brackets). Cut points are TRAIN terciles. ==
+  side of the leg bought
+     bull leg                TRAIN -0.157 (224) win  37%  VALID -0.104 (182) win  37%  TEST +0.457 ( 59) win  41%
+     inverse leg             TRAIN +0.046 (182) win  39%  VALID -0.408 (200) win  30%  TEST +0.510 ( 56) win  50%
+  break bar (6=10:00, 7=10:05, 8=10:10)
+     bar 6                   TRAIN -0.074 (221) win  39%  VALID -0.260 (206) win  33%  TEST +0.445 ( 63) win  44%
+     bar 7                   TRAIN -0.080 (101) win  40%  VALID -0.372 ( 83) win  28%  TEST +0.791 ( 30) win  53%
+     bar 8                   TRAIN -0.027 ( 84) win  31%  VALID -0.174 ( 93) win  41%  TEST +0.174 ( 22) win  36%
+  entry bar index (k)
+     low (<8.00)             TRAIN    n/a (  0) win   0%  VALID    n/a (  0) win   0%  TEST    n/a (  0) win   0%
+     mid (8.00..9.00)        TRAIN -0.029 (193) win  40%  VALID -0.305 (194) win  30%  TEST +0.443 ( 54) win  44%
+     high (>=9.00)           TRAIN -0.099 (213) win  35%  VALID -0.220 (188) win  37%  TEST +0.519 ( 61) win  46%
+  opening box width / 20-day average daily range
+     low (<0.39)             TRAIN -0.045 (135) win  39%  VALID -0.123 (129) win  36%  TEST +0.631 ( 31) win  58%
+     mid (0.39..0.51)        TRAIN -0.169 (135) win  37%  VALID -0.305 (100) win  27%  TEST +0.428 ( 30) win  40%
+     high (>=0.51)           TRAIN +0.017 (136) win  38%  VALID -0.354 (153) win  37%  TEST +0.429 ( 54) win  41%
+  gap in the direction of the breakout (% of prior close)
+     low (<-0.20)            TRAIN -0.161 (135) win  36%  VALID -0.294 (151) win  39%  TEST +0.477 ( 49) win  45%
+     mid (-0.20..0.44)       TRAIN -0.079 (135) win  39%  VALID -0.193 (141) win  33%  TEST +0.537 ( 29) win  48%
+     high (>=0.44)           TRAIN +0.042 (136) win  39%  VALID -0.322 ( 90) win  26%  TEST +0.450 ( 37) win  43%
+  fade direction aligned with the 10-day trend (%)
+     low (<-1.81)            TRAIN -0.049 (135) win  32%  VALID -0.451 ( 89) win  28%  TEST +1.145 ( 31) win  65%
+     mid (-1.81..1.47)       TRAIN -0.175 (135) win  38%  VALID +0.031 (191) win  40%  TEST +0.110 ( 53) win  36%
+     high (>=1.47)           TRAIN +0.026 (136) win  43%  VALID -0.651 (102) win  26%  TEST +0.459 ( 31) win  42%
+  stop distance / 20-day average daily range
+     low (<0.11)             TRAIN -0.025 (135) win  38%  VALID -0.155 (126) win  29%  TEST +0.264 ( 37) win  32%
+     mid (0.11..0.17)        TRAIN +0.224 (135) win  44%  VALID -0.185 (114) win  30%  TEST +0.957 ( 36) win  58%
+     high (>=0.17)           TRAIN -0.394 (136) win  32%  VALID -0.422 (142) win  41%  TEST +0.270 ( 42) win  45%
+  other proxies with the same-direction fade the same day
+     0 others                TRAIN +0.119 (168) win  42%  VALID -0.104 (193) win  36%  TEST +0.605 ( 60) win  42%
+     1 other                 TRAIN -0.155 (122) win  33%  VALID -0.281 ( 84) win  31%  TEST +0.211 ( 42) win  50%
+     2+ others               TRAIN -0.239 (116) win  37%  VALID -0.542 (105) win  32%  TEST +0.801 ( 13) win  46%
+  5-minute ATR / 20-day average daily range
+     low (<0.15)             TRAIN -0.178 (135) win  32%  VALID -0.122 (127) win  35%  TEST +0.523 ( 25) win  52%
+     mid (0.15..0.18)        TRAIN +0.296 (135) win  47%  VALID -0.228 ( 94) win  26%  TEST +0.112 ( 28) win  36%
+     high (>=0.18)           TRAIN -0.314 (136) win  34%  VALID -0.396 (161) win  38%  TEST +0.635 ( 62) win  47%
+
+== D. Walk-forward: the single best split above, chosen on TRAIN only ==
+   chosen on TRAIN: keep trades with rp_adr < 0.173
+   TRAIN: all trades -0.066 (n=406)   kept +0.100 (n=270, win 41%)
+   VALID: all trades -0.263 (n=382)   kept -0.169 (n=240, win 30%)
+   TEST: all trades +0.483 (n=115)   kept +0.606 (n=73, win 45%)
+
+== E. How unusual is the 2026-03..10 FADE result? ==
+   before 2026-03: n=812 mean -0.169% sd 1.60;  2026-03..10: n=115 mean +0.483% sd 2.16;  Welch t of the difference = 3.10
+   all 931 trades: mean -0.084%, t against zero = -1.51
+   157-day windows before 2026-03 (step 5 days, 183 windows): best mean +0.108%, 95th percentile +0.032%, share at or above +0.483%: 0.0%
+   2026-03..10 without 2026-06 and 2026-07: n=78 mean +0.123%;  those two months alone: n=37 mean +1.243%
+   direction-only drift of the proxy after the signal (bp): before -10.7 (t -3.09), 2026-03..10 +20.3 (t +2.23), all -6.7 (t -2.07)
+
+== F. Rolling-edge gate: take the next signal only if the previous N signals (taken or not) averaged above zero ==
+   FADE (real legs)   N=20  | TRAIN all -0.066 (406) gated -0.023 (158) | VALID all -0.263 (382) gated -0.098 (95) | TEST all +0.483 (115) gated +0.480 (81)
+   FADE (real legs)   N=40  | TRAIN all -0.066 (406) gated -0.168 (148) | VALID all -0.263 (382) gated -0.215 (89) | TEST all +0.483 (115) gated +0.489 (91)
+   FADE (real legs)   N=80  | TRAIN all -0.066 (406) gated -0.041 (114) | VALID all -0.263 (382) gated -0.295 (17) | TEST all +0.483 (115) gated +0.528 (70)
+   PULLBACK           N=20  | TRAIN all -0.090 (176) gated -0.040 (69) | VALID all -0.024 (147) gated +0.049 (73) | TEST all +0.204 (44) gated +0.108 (35)
+   PULLBACK           N=40  | TRAIN all -0.090 (176) gated -0.073 (74) | VALID all -0.024 (147) gated +0.128 (61) | TEST all +0.204 (44) gated +0.204 (44)
+   PULLBACK           N=80  | TRAIN all -0.090 (176) gated -0.044 (52) | VALID all -0.024 (147) gated -0.133 (72) | TEST all +0.204 (44) gated +0.213 (24)

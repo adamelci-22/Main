@@ -1,0 +1,50 @@
+Real-leg FADE: 931 trades; signal-model FADE: 931 trades; 2021-11-02..2026-10-23
+
+== 1. Real legs against the leverage model, same signals (leg % per trade) ==
+period                n model avg  real avg    diff model win real win   corr |diff|>1% share
+2021-11..2022       245    -0.129    -0.093  +0.036       36%      36%   0.94              3%
+2023                161    -0.064    -0.024  +0.040       40%      40%   0.92              5%
+2024                181    -0.271    -0.269  +0.002       33%      33%   1.00              1%
+2025                201    -0.280    -0.258  +0.022       34%      35%   0.98              3%
+2026-01..02          24    -0.334    -0.407  -0.073       33%      33%   0.98              0%
+2026-03..10         115    +0.592    +0.483  -0.108       50%      45%   0.95              5%
+
+== 2. Real-leg FADE by proxy, before / after 2026-03-03 (leg % per trade) ==
+   QQQ   A n=159 win  33% avg -0.220%   B n= 20 win  50% avg +0.278%
+   SOXX  A n=158 win  41% avg -0.156%   B n= 23 win  43% avg +0.759%
+   IWM   A n=138 win  38% avg -0.082%   B n= 20 win  40% avg +0.177%
+   XLK   A n=137 win  26% avg -0.378%   B n= 27 win  48% avg +0.477%
+   XBI   A n=114 win  39% avg +0.042%   B n= 12 win  50% avg +1.357%
+   XLF   A n=106 win  39% avg -0.178%   B n= 13 win  38% avg -0.011%
+
+== 3. Full system, live account rules (whole shares, 5-loss, 3% day, 6/day, 50% floor), cost +0.00% / +0.10% ==
+-- ALL 2021-11..2026-10
+signal model legs +0.00%                       1233 days  trades  649  win  40%  -0.052%/day  ret    -50.2%  DD  53.2%  end $      996  halted 2025-05-15
+signal model legs +0.10%                       1233 days  trades  327  win  38%  -0.054%/day  ret    -50.4%  DD  53.2%  end $      992  halted 2023-07-06
+REAL legs +0.00%                               1233 days  trades  647  win  39%  -0.051%/day  ret    -50.1%  DD  53.1%  end $      998  halted 2025-05-14
+REAL legs +0.10%                               1233 days  trades  308  win  37%  -0.054%/day  ret    -50.3%  DD  53.1%  end $      993  halted 2023-05-15
+REAL legs FADE only +0.00%                     1233 days  trades  614  win  37%  -0.001%/day  ret     -7.9%  DD  48.9%  end $    1,843
+-- BEFORE 2026-03-03
+signal model legs +0.00%                       1068 days  trades  649  win  40%  -0.060%/day  ret    -50.2%  DD  53.2%  end $      996  halted 2025-05-15
+signal model legs +0.10%                       1068 days  trades  327  win  38%  -0.062%/day  ret    -50.4%  DD  53.2%  end $      992  halted 2023-07-06
+REAL legs +0.00%                               1068 days  trades  647  win  39%  -0.059%/day  ret    -50.1%  DD  53.1%  end $      998  halted 2025-05-14
+REAL legs +0.10%                               1068 days  trades  308  win  37%  -0.062%/day  ret    -50.3%  DD  53.1%  end $      993  halted 2023-05-15
+REAL legs FADE only +0.00%                     1068 days  trades  532  win  36%  -0.049%/day  ret    -43.7%  DD  48.9%  end $    1,126
+-- RULES WINDOW 2026-03-03..10-14
+signal model legs +0.00%                        157 days  trades  110  win  54%  +0.445%/day  ret    +96.2%  DD   5.8%  end $    3,923
+signal model legs +0.10%                        157 days  trades  110  win  54%  +0.382%/day  ret    +77.8%  DD   6.5%  end $    3,555
+REAL legs +0.00%                                157 days  trades  110  win  50%  +0.387%/day  ret    +79.3%  DD   6.1%  end $    3,586
+REAL legs +0.10%                                157 days  trades  110  win  50%  +0.321%/day  ret    +61.8%  DD   7.0%  end $    3,237
+REAL legs FADE only +0.00%                      157 days  trades   80  win  46%  +0.340%/day  ret    +67.1%  DD   5.4%  end $    3,342
+
+== 4. By calendar year, REAL legs, live rules, +0.10%, each year restarted at $2,000 ==
+2021 FADE+PB                                     40 days  trades   37  win  38%  -0.132%/day  ret     -5.5%  DD  10.7%  end $    1,890
+2022 FADE+PB                                    249 days  trades  200  win  38%  -0.146%/day  ret    -32.3%  DD  35.0%  end $    1,355
+2023 FADE+PB                                    244 days  trades  157  win  38%  -0.139%/day  ret    -29.7%  DD  31.2%  end $    1,406
+2024 FADE+PB                                    249 days  trades  180  win  38%  -0.126%/day  ret    -27.9%  DD  29.6%  end $    1,443
+2025 FADE+PB                                    247 days  trades  177  win  34%  -0.194%/day  ret    -39.1%  DD  47.3%  end $    1,219
+2026 FADE+PB                                    204 days  trades  141  win  49%  +0.234%/day  ret    +57.0%  DD   8.5%  end $    3,140
+
+== 5. Exit mix, REAL legs ==
+   before 2026-03: n=812 stop 61%, runner_stop 25%, time 13%, runner_sold 1%, 2R filled 29%
+   2026-03..10: n=115 stop 52%, runner_stop 26%, time 18%, runner_sold 3%, 2R filled 38%

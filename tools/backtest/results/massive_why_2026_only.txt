@@ -35,3 +35,44 @@ VERDICT
 LIMITS
    FADE legs are modelled as leverage times the proxy (as in final_system.py), not the real leg prices. The Massive TQQQ, SOXL and other leg bars exist and a check of the model against them is still open.
    Costs beyond 0.06% are assumptions. Late entries, quotes and fills are not in the data.
+
+
+UPDATE 2: DATA ERROR CHECK, REAL LEGS, FAILURE TYPES, HOW UNUSUAL 2026 IS (massive_checks.txt section 4, massive_realleg.txt, massive_failures.txt)
+
+IS IT A DATA ERROR? No.
+   - Both vendors agree. Databento (2023-03..2026-10) and Massive (2021-11..2026-10) both lose before 2026-03 and win after it.
+   - On the shared 2026 dates Robinhood and Massive give the same FADE result (+0.419 and +0.406 %/day). The same code reproduces the Robinhood reference trade for trade.
+   - Every year of Massive data has the right first bar (9:30 ET = 13:30 UTC in summer, 14:30 UTC in winter), 78 bars on full days, no flat bars in the proxies, and a 5-minute day high and low that match the daily bar (0 to 3 mismatches a year).
+   - No unadjusted split, no intraday jump above 35%.
+
+REAL LEGS (RULEBOOK B5.2/B5.4 on the legs' own bars: stop-market and OCO judged on the leg, runner stop moved to breakeven then the converted chandelier)
+   - 931 trades. Real-leg result against the leverage model on the same signals: correlation 0.92 to 1.00 in every period, mean difference at most 0.11 points per trade.
+   - Before 2026-03 real legs are slightly better than the model (-0.169 against -0.186 average). In 2026-03..10 they are lower (+0.483 against +0.592).
+   - Full system, live rules, 2026-03..10: +79% on real legs (+96% on the model) at no extra cost, +62% at +0.10%. Every earlier year stays negative (-5%, -32%, -30%, -28%, -39%).
+   - The leverage model is not the cause of the gap.
+
+FAILURE TYPES (real legs, share of trades and average leg % per trade, before 2026-03 / 2026-03..10)
+   stopped within 1 bar of entry          24% -0.77 / 23% -0.81
+   stopped later and stayed lower         29% -1.27 / 18% -1.31
+   stopped, then the leg closed above entry (shaken out)   8% -1.00 / 10% -0.95
+   no stop and no 2R, sold 13:30 at a gain/loss   7% +1.15, 3% -1.64 / 7% +1.91, 3% -1.04
+   reached 2R                             29% +1.53 / 38% +2.37
+   - Losing trades look the same in both periods. What changed is the winners: more reach 2R (29% to 38%) and the runner earns more (+1.53 to +2.37).
+   - Fewer trades end as a late stop-out that stays lower (29% to 18%).
+
+WHAT IS DIFFERENT ABOUT 2026-03..10
+   - The market after the signal moved the fade's way. Proxy drift after the signal, entry to 13:30: before 2026-03 -10.7 bp (t -3.09), 2026-03..10 +20.3 bp (t +2.23), all five years -6.7 bp (t -2.07).
+   - Over all 931 trades the average is -0.084% per trade (t -1.51). There is no edge in the five years taken together.
+   - Welch t of 2026-03..10 against everything earlier: 3.10. Of 183 earlier 157-day windows, none reached +0.483% per trade. The best reached +0.108%.
+   - Two months carry it. 2026-06 and 2026-07: 37 trades, +1.243% per trade. The other 78 trades in the window: +0.123%.
+   - Intraday reversal did not appear. The correlation of the 9:30-10:00 return with the 10:00-13:30 return stayed between -0.14 and +0.27 in every quarter, with no pattern in 2026.
+   - Opening gap and opening box were larger in 2026 (see massive_diagnosis.txt), and so were SOXX's 5-minute ranges (31 bp against 22-24 bp). The tests below show size alone does not separate winners.
+
+CAN A FILTER FIX IT? Not on this evidence.
+   - Nine entry features (leg side, break bar, entry time, box width, gap, trend alignment, stop distance, breadth across proxies, ATR) were each split in terciles. None keeps the same sign across TRAIN (2021-11..2023), VALID (2024-2025) and TEST (2026-03..10).
+   - The best single filter chosen on TRAIN (stop distance under 0.173 of the average daily range) lifts TRAIN from -0.066 to +0.100 and leaves VALID at -0.169. It is fitted to TRAIN and does not hold.
+   - A rolling-edge gate (take the next signal only if the previous 20, 40 or 80 signals averaged above zero) does not help. FADE VALID stays at -0.10 to -0.30 gated. PULLBACK gated reaches +0.05 to +0.13 on VALID with N=20 and N=40 and -0.13 with N=80, so it is not stable either.
+
+CONCLUSION
+   The failed-retest fade has no positive expectancy over five years. It earned in one 7-month window, mostly in June and July 2026, which is outside anything seen in the 52 months before.
+   The list and the rules were chosen on that window. Nothing in the data separates a lasting change from a favourable stretch.

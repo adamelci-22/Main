@@ -36,3 +36,23 @@ VIXY  1250   1211   10            0       0            12  2024-11-07(4:1) 2023-
 XBI   1250   1240   10            0       0             0  2015-09-11(1:3)
 XLF   1250   1240   10            0       0             0  2016-09-19(1:1.139146)
 XLK   1250   1240   10            0       0             0  2025-12-05(1:2)
+
+4. Per-year consistency (QQQ, SOXX, XBI). First bar must be 9:30 ET = 13:30 UTC in summer, 14:30 UTC in winter.
+   QQQ 2021 days  43 full78  42 first bars {'14:30': 38, '13:30': 5} avg 5m range 15.6bp flat bars 0.00% median volume 431,615 H/L vs daily mismatches 0/42
+   QQQ 2022 days 251 full78 250 first bars {'13:30': 165, '14:30': 86} avg 5m range 25.1bp flat bars 0.00% median volume 608,421 H/L vs daily mismatches 1/250
+   QQQ 2023 days 250 full78 248 first bars {'13:30': 165, '14:30': 85} avg 5m range 15.0bp flat bars 0.00% median volume 477,999 H/L vs daily mismatches 1/248
+   QQQ 2024 days 252 full78 249 first bars {'13:30': 165, '14:30': 87} avg 5m range 13.4bp flat bars 0.00% median volume 320,346 H/L vs daily mismatches 0/249
+   QQQ 2025 days 250 full78 247 first bars {'13:30': 165, '14:30': 85} avg 5m range 15.5bp flat bars 0.00% median volume 421,339 H/L vs daily mismatches 3/247
+   QQQ 2026 days 204 full78 204 first bars {'13:30': 160, '14:30': 44} avg 5m range 14.6bp flat bars 0.00% median volume 411,170 H/L vs daily mismatches 0/204
+   SOXX 2021 days  43 full78  41 first bars {'14:30': 38, '13:30': 5} avg 5m range 19.7bp flat bars 0.09% median volume 19,299 H/L vs daily mismatches 0/41
+   SOXX 2022 days 251 full78 249 first bars {'13:30': 165, '14:30': 86} avg 5m range 29.2bp flat bars 0.02% median volume 30,873 H/L vs daily mismatches 0/249
+   SOXX 2023 days 250 full78 244 first bars {'13:30': 165, '14:30': 85} avg 5m range 18.5bp flat bars 0.11% median volume 21,300 H/L vs daily mismatches 0/244
+   SOXX 2024 days 252 full78 249 first bars {'13:30': 165, '14:30': 87} avg 5m range 22.2bp flat bars 0.01% median volume 25,904 H/L vs daily mismatches 0/249
+   SOXX 2025 days 250 full78 247 first bars {'13:30': 165, '14:30': 85} avg 5m range 23.9bp flat bars 0.00% median volume 45,794 H/L vs daily mismatches 0/247
+   SOXX 2026 days 204 full78 204 first bars {'13:30': 160, '14:30': 44} avg 5m range 31.2bp flat bars 0.00% median volume 63,033 H/L vs daily mismatches 0/204
+   XBI 2021 days  43 full78  42 first bars {'14:30': 38, '13:30': 5} avg 5m range 30.3bp flat bars 0.03% median volume 84,667 H/L vs daily mismatches 0/42
+   XBI 2022 days 251 full78 250 first bars {'13:30': 165, '14:30': 86} avg 5m range 38.3bp flat bars 0.01% median volume 112,637 H/L vs daily mismatches 0/250
+   XBI 2023 days 250 full78 248 first bars {'13:30': 165, '14:30': 85} avg 5m range 22.5bp flat bars 0.01% median volume 75,992 H/L vs daily mismatches 0/248
+   XBI 2024 days 252 full78 249 first bars {'13:30': 165, '14:30': 87} avg 5m range 21.0bp flat bars 0.01% median volume 80,865 H/L vs daily mismatches 0/249
+   XBI 2025 days 250 full78 247 first bars {'13:30': 165, '14:30': 85} avg 5m range 22.9bp flat bars 0.02% median volume 86,042 H/L vs daily mismatches 0/247
+   XBI 2026 days 204 full78 204 first bars {'13:30': 160, '14:30': 44} avg 5m range 23.5bp flat bars 0.00% median volume 73,934 H/L vs daily mismatches 0/204
