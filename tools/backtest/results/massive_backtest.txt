@@ -1,0 +1,76 @@
+Massive: regular hours, split-adjusted; 1233 trading days 2021-11-02..2026-10-23
+
+candidates: FADE 931, PULLBACK 386
+
+== ALL: 2021-11-02..2026-10-23 ==
+FADE alone (6 proxies)                       1233 days  trades 614 (2.5/wk)  win  38%  +0.005%/day  ret     -1.6%  DD 52.0%  Sharpe~0.1  H1 -0.013 H2 +0.023
+PULLBACK alone (SOXS LABD TECS UVXY)         1233 days  trades 327 (1.3/wk)  win  47%  -0.009%/day  ret    -12.1%  DD 28.7%  Sharpe~-0.2  H1 -0.043 H2 +0.026
+COMBINED                                     1233 days  trades 896 (3.6/wk)  win  41%  -0.009%/day  ret    -18.8%  DD 63.5%  Sharpe~-0.1  H1 -0.057 H2 +0.040
+
+== OUT OF SAMPLE (before the rules' data): 2021-11-02..2026-02-27 ==
+FADE alone (6 proxies)                       1068 days  trades 532 (2.5/wk)  win  36%  -0.054%/day  ret    -47.0%  DD 52.0%  Sharpe~-0.9  H1 -0.015 H2 -0.093
+PULLBACK alone (SOXS LABD TECS UVXY)         1068 days  trades 283 (1.3/wk)  win  46%  -0.018%/day  ret    -19.1%  DD 28.7%  Sharpe~-0.5  H1 -0.051 H2 +0.015
+COMBINED                                     1068 days  trades 781 (3.7/wk)  win  39%  -0.076%/day  ret    -58.9%  DD 63.5%  Sharpe~-1.0  H1 -0.067 H2 -0.085
+
+== RULES WINDOW 2026-03-03..10-14: 2026-03-03..2026-10-14 ==
+FADE alone (6 proxies)                        157 days  trades  80 (2.5/wk)  win  51%  +0.406%/day  ret    +85.1%  DD  5.1%  Sharpe~3.9  H1 +0.365 H2 +0.447
+PULLBACK alone (SOXS LABD TECS UVXY)          157 days  trades  40 (1.3/wk)  win  60%  +0.069%/day  ret    +11.1%  DD  6.4%  Sharpe~1.8  H1 +0.056 H2 +0.082
+COMBINED                                      157 days  trades 110 (3.5/wk)  win  54%  +0.457%/day  ret    +99.6%  DD  5.9%  Sharpe~4.1  H1 +0.416 H2 +0.497
+
+== UNTOUCHED 2026-03-03..04-06: 2026-03-03..2026-04-06 ==
+FADE alone (6 proxies)                         24 days  trades  14 (2.9/wk)  win  43%  +0.432%/day  ret    +10.4%  DD  4.8%  Sharpe~3.6  H1 +0.981 H2 -0.117
+PULLBACK alone (SOXS LABD TECS UVXY)           24 days  trades   8 (1.7/wk)  win  62%  +0.182%/day  ret     +4.4%  DD  1.5%  Sharpe~4.1  H1 +0.263 H2 +0.101
+COMBINED                                       24 days  trades  19 (4.0/wk)  win  47%  +0.558%/day  ret    +13.8%  DD  4.8%  Sharpe~4.5  H1 +1.041 H2 +0.075
+
+== SINCE LIVE 2026-10-16..: 2026-10-16..2026-10-23 ==
+FADE alone (6 proxies)                          6 days  trades   1 (0.8/wk)  win 100%  +0.568%/day  ret     +3.4%  DD  0.0%  Sharpe~7.1  H1 +1.137 H2 +0.000
+PULLBACK alone (SOXS LABD TECS UVXY)            6 days  trades   3 (2.5/wk)  win  33%  -0.219%/day  ret     -1.3%  DD  2.1%  Sharpe~-5.1  H1 -0.273 H2 -0.165
+COMBINED                                        6 days  trades   4 (3.3/wk)  win  50%  +0.350%/day  ret     +2.0%  DD  1.3%  Sharpe~3.6  H1 +0.864 H2 -0.165
+
+== By calendar year (combined and each system) ==
+2021 FADE                                      40 days  trades  22 (2.8/wk)  win  36%  -0.057%/day  ret     -2.6%  DD  9.3%  Sharpe~-0.7  H1 +0.242 H2 -0.356
+2021 PULLBACK                                  40 days  trades  17 (2.1/wk)  win  41%  -0.081%/day  ret     -3.3%  DD  5.8%  Sharpe~-1.8  H1 -0.172 H2 +0.011
+2021 COMBINED                                  40 days  trades  38 (4.8/wk)  win  39%  -0.115%/day  ret     -4.9%  DD 10.7%  Sharpe~-1.3  H1 +0.116 H2 -0.347
+2022 FADE                                     249 days  trades 129 (2.6/wk)  win  34%  -0.034%/day  ret    -10.2%  DD 13.1%  Sharpe~-0.4  H1 -0.004 H2 -0.064
+2022 PULLBACK                                 249 days  trades  80 (1.6/wk)  win  46%  -0.008%/day  ret     -2.5%  DD 10.0%  Sharpe~-0.2  H1 +0.040 H2 -0.056
+2022 COMBINED                                 249 days  trades 200 (4.0/wk)  win  38%  -0.050%/day  ret    -13.9%  DD 19.9%  Sharpe~-0.5  H1 +0.023 H2 -0.122
+2023 FADE                                     244 days  trades 107 (2.2/wk)  win  44%  +0.011%/day  ret     +1.8%  DD 10.6%  Sharpe~0.2  H1 +0.022 H2 +0.000
+2023 PULLBACK                                 244 days  trades  58 (1.2/wk)  win  33%  -0.091%/day  ret    -20.1%  DD 22.0%  Sharpe~-2.6  H1 -0.136 H2 -0.045
+2023 COMBINED                                 244 days  trades 159 (3.3/wk)  win  40%  -0.079%/day  ret    -18.6%  DD 21.7%  Sharpe~-1.2  H1 -0.130 H2 -0.028
+2024 FADE                                     249 days  trades 133 (2.7/wk)  win  34%  -0.089%/day  ret    -20.6%  DD 24.1%  Sharpe~-1.7  H1 -0.025 H2 -0.152
+2024 PULLBACK                                 249 days  trades  58 (1.2/wk)  win  60%  +0.050%/day  ret    +12.7%  DD  4.6%  Sharpe~1.5  H1 +0.033 H2 +0.066
+2024 COMBINED                                 249 days  trades 181 (3.6/wk)  win  40%  -0.055%/day  ret    -13.8%  DD 21.6%  Sharpe~-0.9  H1 +0.006 H2 -0.115
+2025 FADE                                     247 days  trades 124 (2.5/wk)  win  33%  -0.094%/day  ret    -21.6%  DD 31.8%  Sharpe~-1.7  H1 -0.076 H2 -0.113
+2025 PULLBACK                                 247 days  trades  59 (1.2/wk)  win  39%  -0.047%/day  ret    -11.5%  DD 15.1%  Sharpe~-1.2  H1 -0.052 H2 -0.043
+2025 COMBINED                                 247 days  trades 177 (3.6/wk)  win  34%  -0.139%/day  ret    -30.2%  DD 39.7%  Sharpe~-2.0  H1 -0.123 H2 -0.155
+2026 FADE                                     204 days  trades  99 (2.4/wk)  win  48%  +0.293%/day  ret    +77.4%  DD  7.9%  Sharpe~3.0  H1 +0.083 H2 +0.504
+2026 PULLBACK                                 204 days  trades  55 (1.3/wk)  win  60%  +0.079%/day  ret    +17.0%  DD  6.4%  Sharpe~2.0  H1 +0.061 H2 +0.097
+2026 COMBINED                                 204 days  trades 141 (3.5/wk)  win  52%  +0.360%/day  ret   +102.5%  DD  6.8%  Sharpe~3.5  H1 +0.136 H2 +0.584
+
+== By half-year (combined) ==
+2021 H2                                        40 days  trades  38 (4.8/wk)  win  39%  -0.115%/day  ret     -4.9%  DD 10.7%  Sharpe~-1.3  H1 +0.116 H2 -0.347
+2022 H1                                       124 days  trades 103 (4.2/wk)  win  38%  +0.023%/day  ret     +1.3%  DD 14.8%  Sharpe~0.2  H1 -0.095 H2 +0.141
+2022 H2                                       125 days  trades  97 (3.9/wk)  win  39%  -0.122%/day  ret    -15.1%  DD 19.9%  Sharpe~-1.5  H1 -0.134 H2 -0.110
+2023 H1                                       123 days  trades  89 (3.6/wk)  win  40%  -0.129%/day  ret    -15.2%  DD 18.5%  Sharpe~-1.9  H1 -0.090 H2 -0.166
+2023 H2                                       121 days  trades  70 (2.9/wk)  win  40%  -0.029%/day  ret     -3.9%  DD  8.5%  Sharpe~-0.5  H1 -0.029 H2 -0.028
+2024 H1                                       124 days  trades  86 (3.5/wk)  win  44%  +0.006%/day  ret     +0.3%  DD  9.5%  Sharpe~0.1  H1 +0.050 H2 -0.038
+2024 H2                                       125 days  trades  95 (3.8/wk)  win  37%  -0.115%/day  ret    -14.0%  DD 21.6%  Sharpe~-1.7  H1 -0.015 H2 -0.213
+2025 H1                                       122 days  trades  90 (3.7/wk)  win  40%  -0.124%/day  ret    -15.0%  DD 29.8%  Sharpe~-1.5  H1 +0.023 H2 -0.272
+2025 H2                                       125 days  trades  87 (3.5/wk)  win  29%  -0.154%/day  ret    -17.9%  DD 18.8%  Sharpe~-2.8  H1 -0.066 H2 -0.241
+2026 H1                                       123 days  trades  91 (3.7/wk)  win  52%  +0.285%/day  ret    +39.8%  DD  5.9%  Sharpe~2.8  H1 +0.242 H2 +0.328
+2026 H2                                        81 days  trades  50 (3.1/wk)  win  54%  +0.473%/day  ret    +44.8%  DD  6.8%  Sharpe~4.3  H1 +0.865 H2 +0.091
+
+== By system and ticker, whole period (combined account) ==
+   FADE SOXX  120 trades win  45% avg +0.27% total $+492  without best 2 $+306
+   FADE XBI    94 trades win  39% avg +0.23% total $+276  without best 2 $+70
+   PB   TECS   57 trades win  51% avg +0.08% total $+16  without best 2 $-31
+   PB   SOXS   88 trades win  48% avg +0.03% total $+14  without best 2 $-49
+   FADE IWM   112 trades win  35% avg -0.09% total $-124  without best 2 $-259
+   FADE QQQ   108 trades win  39% avg -0.07% total $-158  without best 2 $-260
+   FADE XLF    86 trades win  40% avg -0.09% total $-160  without best 2 $-249
+   PB   UVXY   66 trades win  44% avg -0.19% total $-178  without best 2 $-239
+   PB   LABD   71 trades win  44% avg -0.18% total $-203  without best 2 $-261
+   FADE XLK    94 trades win  29% avg -0.28% total $-348  without best 2 $-513
+
+== Month by month (combined, compounding from $2,000) ==
+  2021-11 +1.8%, 2021-12 -6.5%, 2022-01 -9.8%, 2022-02 +14.5%, 2022-03 -9.3%, 2022-04 +1.2%, 2022-05 -6.2%, 2022-06 +13.9%, 2022-07 -5.2%, 2022-08 -2.3%, 2022-09 -1.3%, 2022-10 -0.3%, 2022-11 -3.9%, 2022-12 -3.0%, 2023-01 -2.8%, 2023-02 +1.9%, 2023-03 -4.9%, 2023-04 -2.9%, 2023-05 -5.8%, 2023-06 -1.6%, 2023-07 -2.6%, 2023-08 +0.7%, 2023-09 +2.3%, 2023-10 +3.6%, 2023-11 -2.7%, 2023-12 -5.0%, 2024-01 -1.7%, 2024-02 -3.3%, 2024-03 +8.5%, 2024-04 -2.5%, 2024-05 +0.2%, 2024-06 -0.5%, 2024-07 +2.3%, 2024-08 +0.3%, 2024-09 -3.9%, 2024-10 -4.9%, 2024-11 -0.3%, 2024-12 -8.1%, 2025-01 +15.2%, 2025-02 -10.3%, 2025-03 -2.3%, 2025-04 -11.7%, 2025-05 -7.7%, 2025-06 +3.4%, 2025-07 -1.7%, 2025-08 -2.9%, 2025-09 -0.6%, 2025-10 +0.9%, 2025-11 -9.6%, 2025-12 -5.2%, 2026-01 -1.1%, 2026-02 +3.7%, 2026-03 +12.3%, 2026-04 +0.0%, 2026-05 -1.2%, 2026-06 +22.9%, 2026-07 +23.2%, 2026-08 +16.0%, 2026-09 -1.0%, 2026-10 +2.4%

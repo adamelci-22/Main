@@ -1,0 +1,53 @@
+MASSIVE 5-YEAR BACKTEST vs ROBINHOOD BACKTEST (live rules v5.2.15, nothing re-tuned, every signal on time, $2,000 start)
+Files: massive_feed_compare.txt (accuracy check), massive_checks.txt (data checks), massive_backtest.txt (5 years), massive_backtest_rh_check.txt (same code on Robinhood bars)
+
+1. ACCURACY CHECK (Robinhood bars vs Massive, 2026-03-02..10-15, matched by timestamp)
+   - Prices agree. Mean |close diff| 0.2-0.6 bp on the six proxies, 1-4 bp on the funds, 5 bp on LABU. Mean |high diff| 0.2-0.4 bp on proxies.
+   - Robinhood volume is 40-50% of the full tape (Massive/Robinhood 160-300%; proxies 230-280%, SOXS 198%, LABD 229%, TECS 197%, UVXY 208%).
+   - Robinhood bar highs sit below the tape on 12-41% of bars and lows sit above on 10-40%. The first-30-minute box matches (median ratio 100-103%).
+   - Robinhood morning high is lower than the tape's by 0.1-0.5 bp on proxies and by 1-8 bp on thin funds (LABU -8.4, ERY -6.4, DRIP -5.6, NUGT -5.4, TECS -4.8).
+   - Robinhood lacks 0-3% of bars Massive has (TECS 3.0%, LABU 2.8%, FAS 2.6%, FAZ 2.0%). It has no bars Massive lacks.
+   - Result: Robinhood prices are accurate. Robinhood volume is a 40-50% sample. RVOL ratios survive that. Raw volume thresholds do not.
+
+2. DATA CHECKS (Massive, 2021-11-01..2026-10-23)
+   - 37 tickers, 1,250 daily sessions each, about 97,150 regular-hours 5-minute bars each (SVIX, UVIX 1,147 sessions).
+   - No unadjusted split. No intraday jump above 35%. Overnight gaps above 45% only on 2024-08-05 (UVXY, UVIX, SVIX), the real volatility spike.
+   - Thin funds omit no-trade bars (ERY 824 full sessions of 1,250, TMV 955, FAS 989). The backtest carries the last close, as it does on Robinhood bars.
+   - Daily close differs from the last 5-minute close by more than 0.5% on UVXY (33 days), UVIX (81), SOXS (21), SOXL (18). Daily bars feed only the B1 profile.
+   - SOXX has a 1-for-3 split dated 2026-11-05 in Massive's list. It is not yet in the bars. SOXX is a FADE proxy.
+
+3. SAME WINDOW, TWO FEEDS (2026-03-03..10-14, 157 days)
+                      Robinhood bars                         Massive bars
+   FADE alone         75 trades, 57% win, +0.419%/day,       80 trades, 51% win, +0.406%/day,
+                      +88.8%, DD 4.5%                        +85.1%, DD 5.1%
+   PULLBACK alone     45 trades, 69% win, +0.158%/day,       40 trades, 60% win, +0.069%/day,
+                      +27.7%, DD 1.9%                        +11.1%, DD 6.4%
+   COMBINED           111 trades, 61% win, +0.548%/day,      110 trades, 54% win, +0.457%/day,
+                      +130.9%, DD 3.1%                       +99.6%, DD 5.9%
+   Untouched 03-03..04-06 combined: Robinhood +0.613%/day, Massive +0.558%/day.
+   - FADE carries over. PULLBACK loses more than half its edge on the full tape (+0.158 to +0.069, win 69% to 60%).
+   - The script reproduces the Robinhood reference exactly (111 trades, +130.9%) on the Robinhood bars.
+
+4. FIVE YEARS ON MASSIVE (2021-11-02..2026-10-23, 1,233 days)
+                      all 5 years                 before 2026-03-03 (out of sample, 1,068 days)
+   FADE alone         614 trades, 38% win,        532 trades, 36% win, -0.054%/day, -47.0%, DD 52.0%
+                      +0.005%/day, -1.6%, DD 52%
+   PULLBACK alone     327 trades, 47% win,        283 trades, 46% win, -0.018%/day, -19.1%, DD 28.7%
+                      -0.009%/day, -12.1%, DD 29%
+   COMBINED           896 trades, 41% win,        781 trades, 39% win, -0.076%/day, -58.9%, DD 63.5%
+                      -0.009%/day, -18.8%, DD 64%
+   By year, combined: 2021 -0.115, 2022 -0.050, 2023 -0.079, 2024 -0.055, 2025 -0.139, 2026 +0.360 (%/day).
+   By system: FADE positive only in 2023 (+0.011) and 2026 (+0.293). PULLBACK positive in 2024 (+0.050) and 2026 (+0.079).
+   By ticker (5 years, combined account): FADE SOXX +$492 and XBI +$276 are the only FADE rows above zero. XLK -$348, XLF -$160, QQQ -$158, IWM -$124.
+   PULLBACK: TECS +$16 and SOXS +$14 are flat. UVXY -$178, LABD -$203.
+   Profit by month: 2026-03 to 2026-08 produced +12.3%, 0.0%, -1.2%, +22.9%, +23.2%, +16.0%. Of the 52 months before 2026-03, 16 were positive and the best was +15.2%.
+
+5. COMPARISON TO THE DATABENTO RUN (db_oos.txt, EQUS.MINI, FADE + 3 funds)
+   - Same finding: the rules lose before 2026-03 and win from 2026-03. Databento out of sample: combined -0.093%/day, -46.2%. Massive: -0.076%/day, -58.9%.
+   - Massive adds 2021-11..2023-03 (-0.115 in 2021 and -0.050 in 2022) and UVXY. The extra period does not change the answer.
+
+6. READ
+   - Robinhood bars are accurate enough to trade on. The accuracy check does not explain the gap.
+   - The 5-year result does. The edge is present only in the 2026-03..10 window the rules were chosen on. It is absent in 51 earlier months on clean full-tape data.
+   - The rules window is 157 days. Its return (+99.6% on Massive) comes from three months (2026-06, -07, -08).
+   - Not tested here: the v5.2.3 late-entry rule, fills with spread and slippage, and any rule change. This run changes no rule.

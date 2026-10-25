@@ -1,0 +1,14 @@
+Robinhood bars (repo data): regular hours, split-adjusted; 157 trading days 2026-03-03..2026-10-14
+
+candidates: FADE 109, PULLBACK 53
+
+== RULES WINDOW 2026-03-03..10-14: 2026-03-03..2026-10-14 ==
+FADE alone (6 proxies)                        157 days  trades  75 (2.4/wk)  win  57%  +0.419%/day  ret    +88.8%  DD  4.5%  Sharpe~4.1  H1 +0.391 H2 +0.446
+PULLBACK alone (SOXS LABD TECS UVXY)          157 days  trades  45 (1.4/wk)  win  69%  +0.158%/day  ret    +27.7%  DD  1.9%  Sharpe~4.2  H1 +0.162 H2 +0.154
+COMBINED                                      157 days  trades 111 (3.5/wk)  win  61%  +0.548%/day  ret   +130.9%  DD  3.1%  Sharpe~5.1  H1 +0.562 H2 +0.535
+
+== UNTOUCHED 2026-03-03..04-06: 2026-03-03..2026-04-06 ==
+FADE alone (6 proxies)                         24 days  trades  12 (2.5/wk)  win  50%  +0.483%/day  ret    +11.8%  DD  3.7%  Sharpe~4.1  H1 +0.976 H2 -0.011
+PULLBACK alone (SOXS LABD TECS UVXY)           24 days  trades  12 (2.5/wk)  win  58%  +0.139%/day  ret     +3.3%  DD  1.9%  Sharpe~3.0  H1 +0.136 H2 +0.143
+COMBINED                                       24 days  trades  20 (4.2/wk)  win  55%  +0.613%/day  ret    +15.3%  DD  2.8%  Sharpe~5.0  H1 +0.985 H2 +0.241
+
