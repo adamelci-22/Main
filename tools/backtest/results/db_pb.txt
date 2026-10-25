@@ -1,0 +1,69 @@
+== Robinhood data 2026-03-03..10-14 (the original backtest), for reference ==
+PULLBACK live 4 (+UVXY)             157 days  trades  45 (1.4/wk)  win  69%  avg win +1.19% loss -0.87%  +0.158%/day  ret  +27.7%  DD  1.9%  H1 +0.162 H2 +0.154
+      SOXS   14 trades  win  71%  avg +0.83%  total $+259
+      TECS    8 trades  win  75%  avg +0.63%  total $+107
+      UVXY   13 trades  win  62%  avg +0.34%  total $+100
+      LABD   10 trades  win  70%  avg +0.37%  total $+89
+      exits (approx.): {'target': 26, 'stop': 14, '13:30': 5}
+PULLBACK SOXS LABD TECS only        157 days  trades  33 (1.1/wk)  win  70%  avg win +1.23% loss -0.90%  +0.123%/day  ret  +20.9%  DD  1.9%  H1 +0.119 H2 +0.126
+      SOXS   15 trades  win  67%  avg +0.70%  total $+229
+      TECS    8 trades  win  75%  avg +0.63%  total $+105
+      LABD   10 trades  win  70%  avg +0.37%  total $+85
+      exits (approx.): {'target': 20, 'stop': 10, '13:30': 3}
+
+== Databento EQUS.MINI, 799 days 2023-03-30..2026-10-23, PULLBACK SOXS LABD TECS (UVXY not in the data) ==
+ALL                                 799 days  trades 132 (0.8/wk)  win  46%  avg win +1.16% loss -1.00%  -0.001%/day  ret   -1.4%  DD 13.0%  H1 +0.014 H2 -0.015
+      TECS   32 trades  win  53%  avg +0.17%  total $+107
+      LABD   31 trades  win  48%  avg -0.00%  total $-3
+      SOXS   69 trades  win  42%  avg -0.09%  total $-133
+      exits (approx.): {'target': 51, 'stop': 69, '13:30': 12}
+OUT OF SAMPLE 2023-03..2026-02      634 days  trades  99 (0.8/wk)  win  47%  avg win +1.11% loss -1.01%  -0.001%/day  ret   -1.1%  DD 11.9%  H1 +0.005 H2 -0.007
+      LABD   24 trades  win  50%  avg +0.07%  total $+31
+      TECS   23 trades  win  52%  avg +0.07%  total $+31
+      SOXS   52 trades  win  44%  avg -0.07%  total $-84
+      exits (approx.): {'target': 39, 'stop': 50, '13:30': 10}
+Overlap 2026-03-03..10-14           157 days  trades  31 (1.0/wk)  win  45%  avg win +1.32% loss -0.97%  +0.013%/day  ret   +1.8%  DD  3.7%  H1 -0.022 H2 +0.048
+      TECS    9 trades  win  56%  avg +0.45%  total $+78
+      SOXS   15 trades  win  40%  avg -0.01%  total $-7
+      LABD    7 trades  win  43%  avg -0.26%  total $-34
+      exits (approx.): {'stop': 17, 'target': 12, '13:30': 2}
+
+  by year / half-year
+  2023 Apr-Dec                      120 days  trades  19 (0.8/wk)  win  53%  avg win +0.95% loss -0.84%  +0.016%/day  ret   +1.8%  DD  4.3%  H1 -0.048 H2 +0.079
+  2024 H1                           112 days  trades  11 (0.5/wk)  win  45%  avg win +1.09% loss -0.92%  -0.001%/day  ret   -0.1%  DD  3.7%  H1 +0.036 H2 -0.038
+  2024 H2                           117 days  trades  18 (0.8/wk)  win  50%  avg win +1.07% loss -1.18%  -0.009%/day  ret   -1.1%  DD  6.6%  H1 -0.073 H2 +0.055
+  2025 H1                           121 days  trades  23 (1.0/wk)  win  52%  avg win +1.32% loss -1.22%  +0.020%/day  ret   +2.2%  DD  7.3%  H1 +0.080 H2 -0.040
+  2025 H2                           125 days  trades  17 (0.7/wk)  win  29%  avg win +1.29% loss -0.97%  -0.042%/day  ret   -5.2%  DD  6.0%  H1 -0.091 H2 +0.007
+  2026 Jan-Feb                       39 days  trades  11 (1.4/wk)  win  55%  avg win +0.89% loss -0.76%  +0.040%/day  ret   +1.5%  DD  3.7%  H1 +0.097 H2 -0.015
+  2026 Mar-Oct                      165 days  trades  33 (1.0/wk)  win  42%  avg win +1.32% loss -0.98%  -0.000%/day  ret   -0.3%  DD  4.0%  H1 -0.021 H2 +0.020
+
+  each ticker alone (same rules), ALL / out of sample / 2026 Mar-Oct, %/day and trades
+      SOXS  -0.009 ( 75)   -0.005 ( 56)   -0.023 ( 19)  (live)
+      LABD  +0.003 ( 35)   +0.005 ( 27)   -0.003 (  8)  (live)
+      TECS  +0.005 ( 38)   +0.001 ( 29)   +0.024 (  9)  (live)
+      SQQQ  +0.009 ( 23)   +0.010 ( 20)   +0.005 (  3)
+      TZA   -0.004 ( 21)   -0.004 ( 18)   -0.006 (  3)
+      SPXU  +0.001 (  6)   +0.000 (  5)   +0.004 (  1)
+      SDS   +0.002 (  1)   +0.002 (  1)   +0.000 (  0)
+      QID   +0.004 (  8)   +0.004 (  7)   +0.006 (  1)
+      SRTY  +0.004 ( 19)   +0.007 ( 18)   -0.005 (  1)
+      SDOW  +0.003 (  8)   +0.003 (  7)   +0.002 (  1)
+      FAZ   +0.000 (  2)   +0.000 (  1)   -0.001 (  1)
+      ERY   -0.002 (  5)   -0.002 (  3)   -0.000 (  2)
+      DRIP  -0.001 ( 10)   +0.001 (  8)   -0.010 (  2)
+      DUST  -0.004 ( 12)   -0.002 (  9)   -0.011 (  3)
+      TMV   -0.001 (  3)   -0.001 (  3)   +0.000 (  0)
+      UVIX  +0.006 ( 77)   +0.005 ( 62)   +0.008 ( 15)
+      TQQQ  -0.002 (  9)   +0.002 (  4)   -0.017 (  5)
+      SOXL  -0.009 ( 59)   -0.007 ( 36)   -0.020 ( 23)
+      TECL  -0.009 (  8)   -0.003 (  4)   -0.032 (  4)
+      LABU  +0.013 ( 31)   +0.006 ( 24)   +0.038 (  7)
+      TNA   +0.001 ( 21)   +0.004 ( 17)   -0.013 (  4)
+      FAS   -0.000 (  4)   -0.000 (  4)   +0.000 (  0)
+      NUGT  -0.000 ( 18)   +0.004 ( 16)   -0.016 (  2)
+      TMF   +0.001 (  1)   +0.002 (  1)   +0.000 (  0)
+      SVIX  +0.002 ( 12)   +0.004 ( 11)   -0.006 (  1)
+      VIXY  -0.014 ( 31)   -0.019 ( 25)   +0.006 (  6)
+setups 2026-03-03..10-14: Robinhood 38, Databento 34, same day+ticker 19
+  on shared setups: RH avg +0.49% win 63% | DB avg +0.45% win 58%; same entry bar 14, same sign 18
+  only in RH: 19 avg +0.72%   only in DB: 15 avg -0.45%
