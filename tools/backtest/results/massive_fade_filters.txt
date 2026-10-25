@@ -1,0 +1,37 @@
+845 real-leg FADE trades (first 100 days dropped for the features): TRAIN 320, VALID 382, TEST 115.  All trades: TRAIN -0.131  VALID -0.263  TEST +0.483
+
+67 conditions, 19 single or pair filters positive in both TRAIN and VALID.
+
+filter (chosen on TRAIN+VALID)                                           TRAIN           VALID           TEST (once)
+breadth=0 AND vret<0.53                                           +0.176 ( 45)    +0.129 ( 53)    +0.639 ( 19) win  42%
+bj=8 AND openloc>=0.23                                            +0.120 ( 41)    +0.138 ( 60)    +0.354 ( 17) win  47%
+box>=0.51 AND volreg<0.99                                         +0.098 ( 81)    +0.180 ( 78)    -0.151 ( 24) win  33%
+vbrk<0.66 AND sweep<0.24                                          +0.071 ( 76)    +0.077 ( 77)    +0.853 ( 27) win  44%
+breadth=0 AND pdret>=0.63                                         +0.167 ( 48)    +0.065 ( 47)    +0.749 ( 14) win  36%
+atr>=0.15 AND vret<0.53                                           +0.152 ( 65)    +0.064 ( 68)    +0.255 ( 24) win  38%
+vbrk<0.66 AND pdext<0.14                                          +0.061 ( 75)    +0.095 ( 75)    +0.896 ( 26) win  46%
+trend<1.62 AND vret<0.53                                          +0.061 ( 69)    +0.065 ( 76)    +0.277 ( 23) win  43%
+atr<0.15 AND vbrk<0.66                                            +0.053 ( 45)    +0.056 ( 37)    +0.466 (  7) win  57%
+trend>=1.62 AND breadth=0                                         +0.046 ( 44)    +0.037 ( 39)    +0.719 ( 12) win  42%
+breadth=0 AND vbrk<0.66                                           +0.324 ( 48)    +0.033 ( 58)    +0.676 ( 24) win  46%
+vbrk<0.66 AND pdret>=-0.78                                        +0.096 ( 76)    +0.032 ( 77)    -0.001 ( 19) win  37%
+
+NULL (same search on 200 shuffles of the results): best weaker-period average found by chance: median +0.246, 90th percentile +0.338, max +0.517.  Real best: +0.129.  Share of shuffles that beat the real best: 95%
+Filters positive in both periods: real 19; shuffled results 82 on median (range 7 to 286).
+
+POST-HOC (named after the search, so treat as a hypothesis): the one filter that appears in five of the top twelve, vbrk<0.66: a weak-volume breakout is more likely to fail.
+   TRAIN                    kept +0.085% win 42% n=107   dropped -0.239% win 34% n=213
+   VALID                    kept -0.037% win 35% n=110   dropped -0.355% win 33% n=272
+   TEST                     kept +0.921% win 51% n= 37   dropped +0.275% win 42% n= 78
+   first 6 months of TEST   kept +1.083% win 56% n= 32   dropped +0.333% win 43% n= 70
+
+== Payout variants on the top filter (breadth=0 AND vret<0.53); kept 120 of 845 trades (14%) ==
+ stop x  target  sold |  TRAIN avg  win   E(R) |  VALID avg  win   E(R) |  TEST avg  win   E(R)
+    1.0    2.0R   1/3 |     +0.176  44% +0.115 |     +0.129  38% -0.108 |     +0.639  42% +0.335
+    1.0    3.0R   1/3 |     +0.117  33% +0.042 |     +0.261  34% +0.042 |     +0.567  42% +0.268
+    1.0    3.0R   all |     +0.146  33% +0.166 |     +0.310  34% +0.112 |     +0.318  42% +0.023
+    1.0    4.0R   all |     +0.129  31% +0.171 |     +0.200  32% +0.159 |     +0.416  42% +0.127
+    1.5    3.0R   1/3 |     +0.097  42% +0.061 |     +0.264  45% +0.115 |     +0.795  53% +0.425
+    1.5    2.0R   1/3 |     +0.193  53% +0.100 |     +0.111  51% -0.010 |     +0.843  53% +0.446
+    2.0    2.0R   1/3 |     +0.150  56% +0.034 |     -0.018  53% -0.102 |     +1.036  68% +0.497
+    2.0    3.0R   1/3 |     +0.082  44% +0.015 |     +0.132  47% -0.018 |     +0.944  63% +0.417
