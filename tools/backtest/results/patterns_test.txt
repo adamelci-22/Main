@@ -1,0 +1,128 @@
+Massive bars 2021-11-30..2026-10-23; discovery half to 2024-03-31, confirmation half from 2024-04-01.  'rep' = replicated: same sign and |t| >= 1 in the confirmation half
+
+============== 30-min box (LIVE) (916 setups, avg R +0.029)  ==============
+  feature                 category                        n   avg R     t |  half1 R     t |  half2 R     t  rep
+  weekday                 Fri                           184   -0.13  -1.1 |    +0.02  +0.1 |    -0.30  -2.4  
+                          Mon                           174   +0.13  +0.9 |    -0.06  -0.3 |    +0.26  +1.3  
+                          Thu                           169   +0.24  +1.5 |    +0.20  +0.8 |    +0.28  +1.3  
+                          Tue                           222   -0.08  -0.7 |    -0.13  -0.9 |    -0.02  -0.1  
+                          Wed                           167   +0.02  +0.2 |    +0.06  +0.4 |    -0.01  -0.1  
+  turn of month           mid-month                     655   -0.05  -0.8 |    -0.16  -1.9 |    +0.04  +0.4  
+                          turn (last 2 / first 3 days)  261   +0.23  +1.8 |    +0.39  +2.0 |    +0.06  +0.4  FAIL
+  options expiration      OpEx week (Mon-Thu)           151   -0.12  -1.1 |    -0.21  -1.4 |    -0.05  -0.4  
+                          other                         724   +0.09  +1.2 |    +0.07  +0.7 |    +0.10  +1.0  
+  month                   01                             87   +0.04  +0.2 |    -0.14  -0.7 |    +0.33  +1.1  
+                          02                             78   +0.29  +1.4 |    +0.47  +1.6 |    +0.04  +0.1  
+                          03                             77   -0.01  -0.0 |    -0.08  -0.4 |    +0.09  +0.2  
+                          04                             68   -0.19  -1.2 |    -0.33  -1.5 |    -0.10  -0.5  
+                          06                             86   +0.51  +1.8 |    +0.72  +1.4 |    +0.36  +1.1  
+                          07                             80   +0.06  +0.3 |    -0.27  -1.0 |    +0.22  +0.9  
+                          08                             95   +0.08  +0.4 |    -0.04  -0.2 |    +0.19  +0.7  
+                          10                             83   -0.10  -0.6 |    +0.14  +0.6 |    -0.23  -0.9  
+                          11                             68   -0.28  -1.7 |    -0.52  -2.8 |    -0.01  -0.0  FAIL
+                          12                             72   -0.23  -1.5 |    -0.28  -1.9 |    -0.18  -0.7  
+  holiday adjacency       normal                        836   +0.01  +0.1 |    +0.01  +0.1 |    +0.01  +0.1  
+  Fed decision            other                         864   +0.04  +0.7 |    +0.02  +0.2 |    +0.06  +0.7  
+  QQQ prior day           down >0.5%                    308   -0.15  -1.7 |    -0.10  -0.8 |    -0.21  -1.7  
+                          flat                          308   +0.14  +1.2 |    +0.00  +0.0 |    +0.23  +1.7  
+                          up >0.5%                      300   +0.10  +1.0 |    +0.13  +0.9 |    +0.07  +0.5  
+  QQQ prior 5 days        down >2%                      254   -0.09  -0.8 |    -0.01  -0.1 |    -0.18  -1.1  
+                          flat                          428   +0.04  +0.4 |    +0.06  +0.4 |    +0.02  +0.2  
+                          up >2%                        234   +0.14  +1.2 |    -0.04  -0.2 |    +0.35  +1.9  
+  volatility trend        falling                       652   +0.04  +0.5 |    -0.02  -0.2 |    +0.09  +0.9  
+                          rising (5d > 60d vol)         264   +0.00  +0.0 |    +0.09  +0.5 |    -0.05  -0.4  
+  gap vs fade direction   fading against the gap        483   +0.00  +0.0 |    +0.01  +0.1 |    -0.00  -0.0  
+                          fading with the gap           433   +0.06  +0.7 |    +0.01  +0.1 |    +0.10  +0.8  
+  gap size                big (>0.7%)                   349   +0.13  +1.3 |    +0.20  +1.3 |    +0.07  +0.5  
+                          medium                        316   -0.09  -1.0 |    -0.28  -2.6 |    +0.07  +0.6  FAIL
+                          small (<0.25%)                251   +0.03  +0.3 |    +0.08  +0.5 |    -0.02  -0.1  
+  opening volume          heavy (>1.3x)                 178   -0.09  -0.8 |    -0.10  -0.7 |    -0.08  -0.5  
+                          light (<0.8x)                 310   -0.01  -0.1 |    -0.03  -0.2 |    +0.01  +0.1  
+                          normal                        428   +0.11  +1.2 |    +0.08  +0.6 |    +0.13  +1.1  
+
+  categories tested 37; whole-sample |t|>=2: 0 (chance alone gives about 2); discovery-half |t|>=2: 3; of those replicated in the confirmation half: 0 (0%; pure chance would give about 16%)
+  agreement of category means between halves (Spearman, only features with >=4 categories):
+    weekday                  +0.50  (5 categories)
+    month                    +0.35  (10 categories)
+  WALK-FORWARD 'skip the worst category' rule: per feature pick the category with the lowest discovery-half avg R (n >= 60), skip it in the confirmation half; account %/day in the confirmation half:
+    no skipping: +0.018%/day, 329 trades
+    skip weekday=Tue                        (half-1 R -0.13, half-2 R -0.02): +0.010%/day  (-0.008)
+    skip turn of month=mid-month                  (half-1 R -0.16, half-2 R +0.04): +0.025%/day  (+0.006)
+    skip options expiration=OpEx week (Mon-Thu)        (half-1 R -0.21, half-2 R -0.05): +0.031%/day  (+0.012)
+    skip holiday adjacency=normal                     (half-1 R +0.01, half-2 R +0.01): +0.026%/day  (+0.007)
+    skip Fed decision=other                      (half-1 R +0.02, half-2 R +0.06): +0.002%/day  (-0.017)
+    skip QQQ prior day=down >0.5%                 (half-1 R -0.10, half-2 R -0.21): +0.047%/day  (+0.029)
+    skip QQQ prior 5 days=up >2%                     (half-1 R -0.04, half-2 R +0.35): -0.041%/day  (-0.059)
+    skip volatility trend=falling                    (half-1 R -0.02, half-2 R +0.09): -0.004%/day  (-0.023)
+    skip gap vs fade direction=fading against the gap     (half-1 R +0.01, half-2 R -0.00): +0.018%/day  (-0.001)
+    skip gap size=medium                     (half-1 R -0.28, half-2 R +0.07): +0.037%/day  (+0.018)
+    skip opening volume=heavy (>1.3x)              (half-1 R -0.10, half-2 R -0.08): +0.024%/day  (+0.006)
+    average change from such a rule: -0.003%/day; improved in 6 of 11
+
+============== 10-min box (1770 setups, avg R +0.158)  ==============
+  feature                 category                        n   avg R     t |  half1 R     t |  half2 R     t  rep
+  weekday                 Fri                           359   -0.01  -0.1 |    -0.11  -0.8 |    +0.09  +0.6  
+                          Mon                           333   +0.32  +2.8 |    +0.28  +1.9 |    +0.36  +2.1  
+                          Thu                           349   +0.10  +1.1 |    -0.10  -0.8 |    +0.27  +2.0  
+                          Tue                           367   +0.31  +2.6 |    +0.26  +1.7 |    +0.34  +1.9  
+                          Wed                           362   +0.07  +0.7 |    +0.17  +0.9 |    -0.01  -0.1  
+  turn of month           mid-month                    1329   +0.14  +2.6 |    +0.09  +1.2 |    +0.19  +2.3  
+                          turn (last 2 / first 3 days)  441   +0.20  +2.1 |    +0.10  +0.7 |    +0.28  +2.4  
+  options expiration      OpEx day                       87   +0.14  +0.6 |    -0.04  -0.1 |    +0.29  +0.9  
+                          OpEx week (Mon-Thu)           319   +0.07  +0.6 |    -0.14  -1.0 |    +0.23  +1.3  
+                          other                        1364   +0.18  +3.2 |    +0.15  +1.9 |    +0.20  +2.7  
+  month                   01                            151   +0.08  +0.6 |    +0.02  +0.1 |    +0.19  +0.9  
+                          02                            157   -0.10  -0.8 |    -0.17  -1.2 |    +0.04  +0.2  
+                          03                            160   +0.21  +1.6 |    +0.14  +0.9 |    +0.31  +1.4  
+                          04                            151   +0.15  +0.9 |    +0.18  +0.5 |    +0.13  +0.7  
+                          05                            145   +0.35  +2.0 |    -0.07  -0.4 |    +0.60  +2.5  
+                          06                            137   +0.48  +1.8 |    +0.54  +1.2 |    +0.43  +1.5  
+                          07                            123   +0.35  +1.7 |    +0.52  +1.2 |    +0.25  +1.2  
+                          08                            169   -0.14  -1.2 |    -0.49  -3.7 |    +0.05  +0.3  FAIL
+                          09                            134   +0.09  +0.7 |    +0.28  +1.2 |    -0.04  -0.2  
+                          10                            181   +0.30  +1.8 |    +0.43  +1.9 |    +0.23  +0.9  
+                          11                            112   +0.03  +0.2 |    -0.10  -0.6 |    +0.20  +0.7  
+                          12                            150   +0.14  +0.7 |    +0.15  +0.7 |    +0.12  +0.4  
+  holiday adjacency       day after a holiday            81   +0.38  +2.4 |    +0.39  +1.7 |    +0.37  +1.7  
+                          day before a holiday           70   -0.03  -0.1 |    -0.15  -0.6 |    +0.08  +0.3  
+                          normal                       1619   +0.16  +3.0 |    +0.09  +1.2 |    +0.21  +2.9  
+  Fed decision            day before                     61   +0.23  +0.8 |    +0.29  +0.7 |    +0.16  +0.5  
+                          decision day                   57   -0.09  -0.5 |    -0.19  -0.8 |    -0.01  -0.0  
+                          other                        1652   +0.16  +3.2 |    +0.10  +1.4 |    +0.22  +3.1  
+  QQQ prior day           down >0.5%                    528   +0.15  +1.9 |    -0.01  -0.1 |    +0.33  +2.8  
+                          flat                          576   +0.16  +1.9 |    +0.37  +2.2 |    +0.03  +0.3  FAIL
+                          up >0.5%                      666   +0.16  +1.9 |    -0.00  -0.0 |    +0.31  +2.3  
+  QQQ prior 5 days        down >2%                      428   +0.05  +0.5 |    -0.08  -0.7 |    +0.18  +1.2  
+                          flat                          860   +0.18  +2.7 |    +0.18  +1.8 |    +0.18  +2.0  
+                          up >2%                        482   +0.22  +2.1 |    +0.13  +0.9 |    +0.31  +2.0  
+  volatility trend        falling                      1231   +0.13  +2.1 |    +0.11  +1.3 |    +0.14  +1.7  
+                          rising (5d > 60d vol)         539   +0.23  +2.6 |    +0.05  +0.4 |    +0.36  +2.8  
+  gap vs fade direction   fading against the gap        906   +0.21  +2.9 |    +0.15  +1.5 |    +0.26  +2.5  
+                          fading with the gap           864   +0.11  +1.6 |    +0.04  +0.4 |    +0.16  +1.8  
+  gap size                big (>0.7%)                   661   +0.22  +2.5 |    +0.15  +1.2 |    +0.28  +2.3  
+                          medium                        609   +0.17  +2.4 |    +0.13  +1.3 |    +0.20  +2.1  
+                          small (<0.25%)                500   +0.06  +0.8 |    -0.03  -0.3 |    +0.14  +1.3  
+  opening volume          heavy (>1.3x)                 319   +0.12  +1.1 |    +0.00  +0.0 |    +0.20  +1.3  
+                          light (<0.8x)                 626   +0.10  +1.2 |    +0.02  +0.2 |    +0.15  +1.5  
+                          normal                        825   +0.22  +3.4 |    +0.18  +2.0 |    +0.26  +2.8  
+
+  categories tested 44; whole-sample |t|>=2: 16 (chance alone gives about 2); discovery-half |t|>=2: 2; of those replicated in the confirmation half: 0 (0%; pure chance would give about 16%)
+  agreement of category means between halves (Spearman, only features with >=4 categories):
+    weekday                  +0.70  (5 categories)
+    month                    +0.33  (12 categories)
+  WALK-FORWARD 'skip the worst category' rule: per feature pick the category with the lowest discovery-half avg R (n >= 60), skip it in the confirmation half; account %/day in the confirmation half:
+    no skipping: +0.098%/day, 575 trades
+    skip weekday=Fri                        (half-1 R -0.11, half-2 R +0.09): +0.113%/day  (+0.015)
+    skip turn of month=mid-month                  (half-1 R +0.09, half-2 R +0.19): +0.082%/day  (-0.016)
+    skip options expiration=OpEx week (Mon-Thu)        (half-1 R -0.14, half-2 R +0.23): +0.111%/day  (+0.013)
+    skip month=08                         (half-1 R -0.49, half-2 R +0.05): +0.093%/day  (-0.005)
+    skip holiday adjacency=normal                     (half-1 R +0.09, half-2 R +0.21): +0.019%/day  (-0.079)
+    skip Fed decision=other                      (half-1 R +0.10, half-2 R +0.22): +0.005%/day  (-0.093)
+    skip QQQ prior day=down >0.5%                 (half-1 R -0.01, half-2 R +0.33): +0.054%/day  (-0.044)
+    skip QQQ prior 5 days=down >2%                   (half-1 R -0.08, half-2 R +0.18): +0.099%/day  (+0.001)
+    skip volatility trend=rising (5d > 60d vol)      (half-1 R +0.05, half-2 R +0.36): -0.022%/day  (-0.120)
+    skip gap vs fade direction=fading with the gap        (half-1 R +0.04, half-2 R +0.16): +0.073%/day  (-0.024)
+    skip gap size=small (<0.25%)             (half-1 R -0.03, half-2 R +0.14): +0.104%/day  (+0.006)
+    skip opening volume=heavy (>1.3x)              (half-1 R +0.00, half-2 R +0.20): +0.119%/day  (+0.022)
+    average change from such a rule: -0.027%/day; improved in 5 of 12
+
