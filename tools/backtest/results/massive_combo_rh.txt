@@ -1,0 +1,35 @@
+Robinhood bars only, 157 days 2026-03-03..2026-10-14
+
+== Account 1 (continuous sizing, signal-model costs) ==
+  LIVE   (FADE 6, PB SOXS LABD TECS UVXY)             +0.548%/d  +131% DD 3.1% n=111 w 61% | +0.613%/d   +15% DD 2.8% n= 20 w 55% | +0.537%/d  +100% DD 3.1% n= 91 w 63%
+  NEW    (FADE 6+SPY, PB SOXS LABD TECS DRIP UVIX FAZ)+0.509%/d  +117% DD 4.0% n=129 w 55% | +0.670%/d   +17% DD 4.0% n= 23 w 52% | +0.479%/d   +86% DD 3.2% n=106 w 56%
+  FADE 6+SPY only change (PB live)                    +0.550%/d  +132% DD 3.4% n=120 w 59% | +0.654%/d   +16% DD 3.4% n= 22 w 55% | +0.532%/d   +99% DD 3.1% n= 98 w 60%
+  PB change only (FADE 6)                             +0.507%/d  +116% DD 4.0% n=120 w 57% | +0.629%/d   +16% DD 4.0% n= 21 w 52% | +0.484%/d   +87% DD 3.2% n= 99 w 58%
+                                                      FULL 2026-03-03..10-14                     | UNTOUCHED 03-03..04-06                     | TUNING 04-07..10-14                       
+
+== Account 2 (whole shares, A1 gates, +0.10% cost) ==
+  LIVE   (FADE 6, PB SOXS LABD TECS UVXY)             +0.465%/d  +103% DD 4.2% n=111 w 59% | +0.492%/d   +12% DD 4.2% n= 20 w 55% | +0.461%/d   +81% DD 3.1% n= 91 w 60%
+  NEW    (FADE 6+SPY, PB SOXS LABD TECS DRIP UVIX FAZ)+0.415%/d   +87% DD 4.3% n=129 w 53% | +0.535%/d   +13% DD 4.3% n= 23 w 52% | +0.385%/d   +64% DD 3.9% n=106 w 54%
+  FADE 6+SPY only change (PB live)                    +0.460%/d  +101% DD 4.4% n=120 w 58% | +0.521%/d   +13% DD 4.4% n= 22 w 55% | +0.449%/d   +78% DD 3.4% n= 98 w 58%
+  PB change only (FADE 6)                             +0.420%/d   +89% DD 4.3% n=120 w 55% | +0.502%/d   +12% DD 4.3% n= 21 w 52% | +0.394%/d   +66% DD 3.7% n= 99 w 56%
+                                                      FULL 2026-03-03..10-14                     | UNTOUCHED 03-03..04-06                     | TUNING 04-07..10-14                       
+
+== By system and ticker, account 1, full window: trades, win%, total $ (NEW | LIVE) ==
+   FADE SOXX  NEW 16 tr win  62% $  +920  LIVE 16 tr win  62% $  +939
+   FADE XBI   NEW  9 tr win  78% $  +518  LIVE  9 tr win  78% $  +528
+   FADE XLK   NEW 13 tr win  46% $  +212  LIVE 13 tr win  46% $  +215
+   FADE IWM   NEW 15 tr win  60% $  +145  LIVE 16 tr win  56% $  +145
+   FADE QQQ   NEW  7 tr win  57% $  +113  LIVE  9 tr win  56% $  +128
+   FADE XLF   NEW 12 tr win  50% $   +58  LIVE 12 tr win  50% $   +61
+   FADE SPY   NEW 12 tr win  33% $    +5  LIVE --
+   PB   SOXS  NEW 12 tr win  75% $  +294  LIVE 12 tr win  75% $  +296
+   PB   TECS  NEW  8 tr win  75% $  +128  LIVE  8 tr win  75% $  +130
+   PB   LABD  NEW  7 tr win  71% $   +97  LIVE  7 tr win  71% $  +102
+   PB   UVXY  NEW --                      LIVE  9 tr win  56% $   +74
+   PB   DRIP  NEW  4 tr win  50% $   -26  LIVE --
+   PB   FAZ   NEW  3 tr win   0% $   -37  LIVE --
+   PB   UVIX  NEW 11 tr win  27% $   -91  LIVE --
+
+== Month by month, account 1 (compounding from $2,000): NEW | LIVE ==
+   NEW  03 +15.3%, 04 +2.5%, 05 +5.0%, 06 +21.8%, 07 +22.3%, 08 +14.3%, 09 -1.6%, 10 +4.2%   end $4,336
+   LIVE 03 +13.8%, 04 +4.9%, 05 +4.9%, 06 +22.3%, 07 +24.9%, 08 +15.7%, 09 +0.1%, 10 +4.2%   end $4,618
