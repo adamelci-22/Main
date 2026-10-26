@@ -1,0 +1,116 @@
+Massive 5-minute bars 2021-10-28..2026-10-23. Live rules (FADE six proxies + PULLBACK SOXS LABD TECS UVXY, 3% risk). Only the FADE opening-box length differs.
+
+==================== COMBINED SYSTEM (FADE + PULLBACK) ====================
+== 2021 (Nov-Dec) ==
+  30-min box (LIVE)                            trades   40  win  38%  avg/day -0.125%  return     -5.5%  max DD  10.7%
+  10-min box                                   trades   50  win  42%  avg/day -0.136%  return     -6.0%  max DD   8.6%
+  15-min box                                   trades   43  win  47%  avg/day +0.011%  return     +0.0%  max DD   5.1%
+  10-min box, entries from 10:00 only *        trades   34  win  41%  avg/day -0.262%  return    -10.6%  max DD  12.0%
+  15-min box, entries from 10:00 only *        trades   38  win  50%  avg/day -0.031%  return     -1.6%  max DD   9.3%
+== 2022 ==
+  30-min box (LIVE)                            trades  200  win  38%  avg/day -0.050%  return    -13.9%  max DD  19.9%
+  10-min box                                   trades  271  win  36%  avg/day -0.198%  return    -41.9%  max DD  51.0%
+  15-min box                                   trades  261  win  39%  avg/day -0.031%  return    -11.8%  max DD  41.1%
+  10-min box, entries from 10:00 only *        trades  175  win  40%  avg/day -0.084%  return    -21.3%  max DD  38.1%
+  15-min box, entries from 10:00 only *        trades  213  win  41%  avg/day +0.006%  return     -2.2%  max DD  34.6%
+== 2023 ==
+  30-min box (LIVE)                            trades  159  win  40%  avg/day -0.079%  return    -18.6%  max DD  21.7%
+  10-min box                                   trades  243  win  37%  avg/day -0.050%  return    -13.9%  max DD  31.4%
+  15-min box                                   trades  222  win  34%  avg/day -0.163%  return    -34.0%  max DD  38.7%
+  10-min box, entries from 10:00 only *        trades  148  win  35%  avg/day -0.079%  return    -19.0%  max DD  26.0%
+  15-min box, entries from 10:00 only *        trades  174  win  34%  avg/day -0.129%  return    -28.1%  max DD  31.9%
+== 2024 ==
+  30-min box (LIVE)                            trades  181  win  40%  avg/day -0.055%  return    -13.8%  max DD  21.6%
+  10-min box                                   trades  251  win  46%  avg/day +0.285%  return    +96.5%  max DD  13.0%
+  15-min box                                   trades  250  win  42%  avg/day +0.075%  return    +17.5%  max DD  16.2%
+  10-min box, entries from 10:00 only *        trades  168  win  43%  avg/day +0.092%  return    +23.7%  max DD  10.4%
+  15-min box, entries from 10:00 only *        trades  206  win  42%  avg/day +0.017%  return     +2.6%  max DD  12.3%
+== 2025 ==
+  30-min box (LIVE)                            trades  177  win  34%  avg/day -0.139%  return    -30.2%  max DD  39.7%
+  10-min box                                   trades  272  win  38%  avg/day -0.091%  return    -22.2%  max DD  37.0%
+  15-min box                                   trades  232  win  38%  avg/day -0.064%  return    -16.6%  max DD  29.5%
+  10-min box, entries from 10:00 only *        trades  179  win  36%  avg/day -0.124%  return    -27.8%  max DD  31.9%
+  15-min box, entries from 10:00 only *        trades  190  win  36%  avg/day -0.140%  return    -30.2%  max DD  36.9%
+== 2026 to Oct 23 ==
+  30-min box (LIVE)                            trades  141  win  52%  avg/day +0.360%  return   +102.5%  max DD   6.8%
+  10-min box                                   trades  216  win  46%  avg/day +0.265%  return    +63.1%  max DD  13.8%
+  15-min box                                   trades  201  win  39%  avg/day +0.116%  return    +20.6%  max DD  20.4%
+  10-min box, entries from 10:00 only *        trades  138  win  43%  avg/day +0.108%  return    +21.7%  max DD  17.7%
+  15-min box, entries from 10:00 only *        trades  166  win  40%  avg/day -0.064%  return    -13.9%  max DD  22.7%
+== before 2026-03 ==
+  30-min box (LIVE)                            trades  783  win  39%  avg/day -0.077%  return    -59.1%  max DD  63.5%
+  10-min box                                   trades 1130  win  39%  avg/day -0.021%  return    -31.1%  max DD  56.6%
+  15-min box                                   trades 1051  win  39%  avg/day -0.035%  return    -40.0%  max DD  62.4%
+  10-min box, entries from 10:00 only *        trades  729  win  39%  avg/day -0.055%  return    -49.0%  max DD  55.2%
+  15-min box, entries from 10:00 only *        trades  856  win  39%  avg/day -0.061%  return    -52.5%  max DD  68.2%
+== since 2026-03 ==
+  30-min box (LIVE)                            trades  115  win  53%  avg/day +0.429%  return    +97.5%  max DD   6.8%
+  10-min box                                   trades  173  win  49%  avg/day +0.350%  return    +70.1%  max DD  13.8%
+  15-min box                                   trades  158  win  39%  avg/day +0.106%  return    +14.5%  max DD  20.4%
+  10-min box, entries from 10:00 only *        trades  113  win  43%  avg/day +0.131%  return    +21.4%  max DD  17.7%
+  15-min box, entries from 10:00 only *        trades  131  win  39%  avg/day -0.055%  return    -10.1%  max DD  22.7%
+== ALL 5 YEARS ==
+  30-min box (LIVE)                            trades  898  win  41%  avg/day -0.009%  return    -19.3%  max DD  63.5%
+  10-min box                                   trades 1303  win  40%  avg/day +0.029%  return    +17.2%  max DD  56.6%
+  15-min box                                   trades 1209  win  39%  avg/day -0.017%  return    -31.2%  max DD  62.4%
+  10-min box, entries from 10:00 only *        trades  842  win  39%  avg/day -0.030%  return    -38.1%  max DD  55.2%
+  15-min box, entries from 10:00 only *        trades  987  win  39%  avg/day -0.060%  return    -57.3%  max DD  71.6%
+  entry-time mix of FADE setups (share before 10:00): 30-min box (LIVE) 0%, 10-min box 58%, 15-min box 36%
+
+==================== FADE ONLY ====================
+== 2021 (Nov-Dec) ==
+  30-min box (LIVE)                            trades   24  win  33%  avg/day -0.070%  return     -3.2%  max DD   9.3%
+  10-min box                                   trades   36  win  44%  avg/day -0.028%  return     -1.5%  max DD   8.9%
+  15-min box                                   trades   30  win  50%  avg/day +0.089%  return     +3.5%  max DD   3.3%
+  10-min box, entries from 10:00 only *        trades   20  win  45%  avg/day -0.154%  return     -6.4%  max DD  10.2%
+  15-min box, entries from 10:00 only *        trades   22  win  59%  avg/day +0.069%  return     +2.7%  max DD   7.0%
+== 2022 ==
+  30-min box (LIVE)                            trades  129  win  34%  avg/day -0.034%  return    -10.2%  max DD  13.1%
+  10-min box                                   trades  208  win  34%  avg/day -0.171%  return    -37.6%  max DD  49.0%
+  15-min box                                   trades  197  win  39%  avg/day +0.012%  return     -1.6%  max DD  34.8%
+  10-min box, entries from 10:00 only *        trades  111  win  38%  avg/day -0.058%  return    -15.9%  max DD  31.1%
+  15-min box, entries from 10:00 only *        trades  149  win  41%  avg/day +0.043%  return     +7.4%  max DD  27.6%
+== 2023 ==
+  30-min box (LIVE)                            trades  107  win  44%  avg/day +0.011%  return     +1.8%  max DD  10.6%
+  10-min box                                   trades  207  win  38%  avg/day +0.027%  return     +4.1%  max DD  21.3%
+  15-min box                                   trades  179  win  35%  avg/day -0.094%  return    -21.7%  max DD  27.0%
+  10-min box, entries from 10:00 only *        trades  100  win  38%  avg/day +0.017%  return     +2.8%  max DD  17.7%
+  15-min box, entries from 10:00 only *        trades  126  win  36%  avg/day -0.044%  return    -11.2%  max DD  16.7%
+== 2024 ==
+  30-min box (LIVE)                            trades  133  win  34%  avg/day -0.089%  return    -20.6%  max DD  24.1%
+  10-min box                                   trades  216  win  42%  avg/day +0.222%  return    +68.2%  max DD  17.3%
+  15-min box                                   trades  206  win  37%  avg/day +0.017%  return     +1.9%  max DD  17.6%
+  10-min box, entries from 10:00 only *        trades  124  win  35%  avg/day +0.029%  return     +5.9%  max DD  12.7%
+  15-min box, entries from 10:00 only *        trades  157  win  34%  avg/day -0.052%  return    -13.3%  max DD  22.5%
+== 2025 ==
+  30-min box (LIVE)                            trades  124  win  33%  avg/day -0.094%  return    -21.6%  max DD  31.8%
+  10-min box                                   trades  228  win  36%  avg/day -0.082%  return    -19.9%  max DD  29.6%
+  15-min box                                   trades  188  win  37%  avg/day -0.051%  return    -13.6%  max DD  27.1%
+  10-min box, entries from 10:00 only *        trades  134  win  34%  avg/day -0.103%  return    -23.5%  max DD  27.4%
+  15-min box, entries from 10:00 only *        trades  145  win  34%  avg/day -0.123%  return    -27.0%  max DD  32.9%
+== 2026 to Oct 23 ==
+  30-min box (LIVE)                            trades   99  win  48%  avg/day +0.293%  return    +77.4%  max DD   7.9%
+  10-min box                                   trades  183  win  45%  avg/day +0.252%  return    +59.2%  max DD  15.1%
+  15-min box                                   trades  164  win  35%  avg/day +0.085%  return    +13.6%  max DD  24.1%
+  10-min box, entries from 10:00 only *        trades   98  win  40%  avg/day +0.091%  return    +17.8%  max DD  19.3%
+  15-min box, entries from 10:00 only *        trades  122  win  33%  avg/day -0.119%  return    -23.0%  max DD  27.5%
+== before 2026-03 ==
+  30-min box (LIVE)                            trades  534  win  36%  avg/day -0.055%  return    -47.3%  max DD  52.0%
+  10-min box                                   trades  931  win  38%  avg/day -0.008%  return    -19.6%  max DD  52.4%
+  15-min box                                   trades  837  win  37%  avg/day -0.021%  return    -28.9%  max DD  55.6%
+  10-min box, entries from 10:00 only *        trades  505  win  36%  avg/day -0.037%  return    -37.3%  max DD  43.3%
+  15-min box, entries from 10:00 only *        trades  625  win  37%  avg/day -0.048%  return    -44.6%  max DD  63.7%
+== since 2026-03 ==
+  30-min box (LIVE)                            trades   82  win  51%  avg/day +0.389%  return    +85.5%  max DD   5.6%
+  10-min box                                   trades  147  win  48%  avg/day +0.351%  return    +70.7%  max DD  14.7%
+  15-min box                                   trades  127  win  36%  avg/day +0.092%  return    +12.1%  max DD  24.1%
+  10-min box, entries from 10:00 only *        trades   82  win  41%  avg/day +0.137%  return    +22.9%  max DD  19.3%
+  15-min box, entries from 10:00 only *        trades   96  win  33%  avg/day -0.081%  return    -13.8%  max DD  27.3%
+== ALL 5 YEARS ==
+  30-min box (LIVE)                            trades  616  win  38%  avg/day +0.004%  return     -2.3%  max DD  52.0%
+  10-min box                                   trades 1078  win  39%  avg/day +0.040%  return    +37.2%  max DD  52.4%
+  15-min box                                   trades  964  win  37%  avg/day -0.006%  return    -20.3%  max DD  55.6%
+  10-min box, entries from 10:00 only *        trades  587  win  37%  avg/day -0.013%  return    -22.9%  max DD  43.3%
+  15-min box, entries from 10:00 only *        trades  721  win  36%  avg/day -0.053%  return    -52.3%  max DD  70.0%
+  entry-time mix of FADE setups (share before 10:00): 30-min box (LIVE) 0%, 10-min box 58%, 15-min box 36%
+
