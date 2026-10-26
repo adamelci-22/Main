@@ -1,0 +1,2 @@
+SOXX FADE trades re-run on a synthetic 3-for-1 split day (price/3, volume x3): 21 of 21 identical (entry bar, side, exit bar, exit reason, % gross, % risk)
+RVOL at bar 12 on 12 sample days: unsplit mean 0.98, split day with a pre-split baseline mean 2.94 (about 3x)
