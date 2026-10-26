@@ -1,0 +1,21 @@
+1. SIGNIFICANCE BEFORE 2026-03, setup-level vs clustered by day vs clustered by month (avg R per setup)
+   box              avg R  z (setups)  z (by day)  z (by month)   days
+   5 min           +0.126       +2.99       +2.57         +2.47    765
+   10 min          +0.188       +3.59       +2.95         +2.82    657
+   15 min          +0.063       +1.15       +0.98         +0.94    599
+   30 min (live)   -0.061       -1.21       -1.03         -1.00    499
+
+2. BREAK-EVEN COST: extra round-trip cost on the leg (model charges 0.06%) at which the account %/day reaches zero (before 2026-03, 10-minute box)
+   extra 0.000%: +0.031%/day, return +24.2%
+   extra 0.025%: +0.014%/day, return +4.6%
+   extra 0.050%: -0.002%/day, return -12.0%
+   extra 0.075%: -0.019%/day, return -25.9%
+   extra 0.100%: -0.035%/day, return -37.6%
+   extra 0.150%: -0.068%/day, return -55.8%
+   crosses zero at about 0.047% extra round-trip cost (the whole edge before 2026 is smaller than a typical half-spread on thin funds)
+
+3. MONTE CARLO on the 10-minute box trades actually taken (resample trades with replacement, 250 trades = about one year, 3000 runs)
+   risk 3.0%: median year +8%, 5th pct -30%, 95th +72%; P(losing year) 39%; median max drawdown 23%, 95th pct 40%, P(drawdown >15%) 87%
+   risk 1.0%: median year +9%, 5th pct -21%, 95th +51%; P(losing year) 33%; median max drawdown 16%, 95th pct 30%, P(drawdown >15%) 60%
+   risk 0.5%: median year +5%, 5th pct -14%, 95th +29%; P(losing year) 35%; median max drawdown 11%, 95th pct 20%, P(drawdown >15%) 18%
+   (resampling pre-2026 trades only, so it describes the no-edge-regime world; trade order shuffles do not test the edge, only the drawdown)
