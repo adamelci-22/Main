@@ -1,0 +1,42 @@
+462 combinations of 5 from 11 proxies. FADE only, signal-model legs.
+
+rank proxies                     B 2026-03..10 (selection window)                        A 2021-11..2026-02                                      
+1    SOXX IWM XLK XBI KRE        +0.430%/d ret    +92% DD  6.2% n= 81 win  52%           -0.051%/d ret    -45% DD 51.5% n=475 win  34%           
+2    SOXX XLK XBI XLF KRE        +0.411%/d ret    +86% DD  4.9% n= 74 win  53%           -0.057%/d ret    -49% DD 55.0% n=471 win  34%           
+3    QQQ SOXX XLK XBI KRE        +0.406%/d ret    +85% DD  6.0% n= 74 win  51%           -0.057%/d ret    -49% DD 54.4% n=472 win  34%           
+4    QQQ SOXX IWM XBI KRE        +0.404%/d ret    +85% DD  7.3% n= 77 win  53%           -0.035%/d ret    -35% DD 46.1% n=492 win  36%           
+5    SOXX IWM XLK XBI XLF        +0.393%/d ret    +81% DD  4.9% n= 76 win  51%           -0.044%/d ret    -40% DD 46.6% n=478 win  36%           
+6    QQQ SOXX XBI XLF KRE        +0.387%/d ret    +80% DD  6.0% n= 69 win  55%           -0.044%/d ret    -41% DD 49.0% n=482 win  35%           
+7    SOXX XLK XBI TLT KRE        +0.381%/d ret    +78% DD  7.1% n= 75 win  52%           -0.055%/d ret    -48% DD 54.8% n=520 win  35%           
+8    QQQ SOXX XLK XBI XLF        +0.381%/d ret    +78% DD  5.1% n= 67 win  52%           -0.048%/d ret    -43% DD 49.2% n=467 win  36%           
+9    QQQ SOXX IWM XLK XBI        +0.379%/d ret    +77% DD  5.5% n= 73 win  49%           -0.053%/d ret    -46% DD 50.6% n=480 win  35%           
+10   SOXX IWM XBI XLF KRE        +0.379%/d ret    +78% DD  5.8% n= 73 win  52%           -0.025%/d ret    -28% DD 41.6% n=477 win  37%           
+
+Five of the live six (drop one) and the live six:
+     SOXX IWM XLK XBI XLF        +0.393%/d ret    +81% DD  4.9% n= 76 win  51%           -0.044%/d ret    -40% DD 46.6% n=478 win  36%             rank 5
+     QQQ SOXX XLK XBI XLF        +0.381%/d ret    +78% DD  5.1% n= 67 win  52%           -0.048%/d ret    -43% DD 49.2% n=467 win  36%             rank 8
+     QQQ SOXX IWM XLK XBI        +0.379%/d ret    +77% DD  5.5% n= 73 win  49%           -0.053%/d ret    -46% DD 50.6% n=480 win  35%             rank 9
+     QQQ SOXX IWM XBI XLF        +0.369%/d ret    +75% DD  6.0% n= 70 win  54%           -0.037%/d ret    -36% DD 44.0% n=490 win  37%             rank 14
+     QQQ SOXX IWM XLK XLF        +0.303%/d ret    +58% DD  5.2% n= 74 win  49%           -0.062%/d ret    -51% DD 52.5% n=470 win  36%             rank 60
+     QQQ IWM XLK XBI XLF         +0.218%/d ret    +39% DD  4.8% n= 69 win  51%           -0.064%/d ret    -52% DD 55.3% n=461 win  34%             rank 153
+     live six                    +0.406%/d ret    +85% DD  5.1% n= 80 win  51%           -0.054%/d ret    -47% DD 52.0% n=532 win  36%           
+
+How often each proxy appears in the top 20 combinations: SOXX 20, XBI 20, XLK 14, KRE 11, IWM 9, XLF 9, QQQ 7, TLT 4, SPY 3, VIXY 2, GLD 1
+
+A, the 462 combinations: best +0.001%/d, median -0.043%/d, share above zero 0%. The chosen best-of-B combination in A: -0.051%/d.
+B, the 462 combinations: best +0.430%/d, median +0.173%/d, worst -0.028%/d.
+
+Half-window check: best on 2026-03..06 is SOXX XLK XBI XLF KRE (+0.388%/d). On 2026-07..10 it earns +0.436%/d; the median combination earns +0.263%/d; the live six earn +0.478%/d.
+Rank correlation of the 462 combinations, 03-06 against 07-10: +0.50; against A: +0.14
+Null (trade results shuffled across proxies inside B, best of 77 sampled combinations, 40 shuffles): best-combination median +0.330%/d, 90th percentile +0.392%/d. The real best is +0.430%/d.
+
+== Top combination SOXX IWM XLK XBI KRE with the live PULLBACK ==
+   B 2026-03..10       FADE only +0.430%/d ret    +92% DD  6.2% n= 81 win  52%
+                       FADE + PULLBACK +0.476%/d ret   +106% DD  6.9% n=109 win  54%
+   A 2021-11..2026-02  FADE only -0.051%/d ret    -45% DD 51.5% n=475 win  34%
+                       FADE + PULLBACK -0.067%/d ret    -55% DD 61.7% n=728 win  38%
+   all                 FADE only +0.011%/d ret     +5% DD 51.5% n=558 win  37%
+                       FADE + PULLBACK +0.002%/d ret     -8% DD 61.7% n=842 win  40%
+   live six for comparison:
+   B 2026-03..10       FADE + PULLBACK +0.457%/d ret   +100% DD  5.9% n=110 win  54%
+   A 2021-11..2026-02  FADE + PULLBACK -0.076%/d ret    -59% DD 63.5% n=781 win  39%
