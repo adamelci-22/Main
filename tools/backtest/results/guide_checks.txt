@@ -1,0 +1,96 @@
+Massive full-tape 5-minute bars 2021-10-27..2026-10-23; live FADE on the six proxies; 'before' = days up to 2026-02-27, 'since' = 2026-03-01 on (the window the rules were chosen on)
+
+================ STEP 1. WHY IT FAILED EARLIER YEARS ================
+1a. Regime table by quarter (QQQ move, QQQ 20-day vol, how often an opening-box break was still outside the box at 13:30, FADE result)
+  quarter    n  win%  avg R QQQ qtr % QQQ vol break-hold
+  2021-Q4   17    47  -0.10      +1.6    1.21        63%
+  2022-Q1   56    36  -0.02      -9.9    1.84        54%
+  2022-Q2   52    37  +0.30     -22.6    2.24        62%
+  2022-Q3   61    33  -0.12      -5.3    1.76        57%
+  2022-Q4   44    34  -0.24      -2.6    2.02        62%
+  2023-Q1   45    51  +0.35     +21.3    1.44        47%
+  2023-Q2   32    28  -0.19     +15.4    1.06        71%
+  2023-Q3   46    46  +0.34      -3.2    1.01        56%
+  2023-Q4   38    29  -0.33     +13.9    1.00        65%
+  2024-Q1   41    37  -0.11     +10.3    1.00        60%
+  2024-Q2   35    37  -0.08      +7.6    0.89        57%
+  2024-Q3   52    35  -0.14      +1.3    1.38        62%
+  2024-Q4   53    26  -0.37      +6.2    1.02        64%
+  2025-Q1   55    47  +0.20      -8.1    1.31        46%
+  2025-Q2   50    26  -0.33     +16.7    1.98        63%
+  2025-Q3   37    32  -0.14      +9.8    0.70        63%
+  2025-Q4   59    31  -0.14      +1.8    1.06        55%
+  2026-Q1   45    36  +0.11      -5.9    0.98        65%
+  2026-Q2   48    54  +0.60     +25.9    1.30        57%
+  2026-Q3   38    53  +0.77      +2.0    1.34        45%
+  2026-Q4   12    50  +0.71      -5.1    0.97        49%
+
+1b. Component ablation: take each rule component away or change it; avg R per setup and account %/day, before vs since 2026-03 (does the component help in both?)
+  variant                                        n bef avgR bef acct bef n since avgR since acct since
+  LIVE                                             797   -0.061   -0.060     119     +0.632     +0.389
+  no partial (hold all to chandelier/13:30)        797   -0.097   -0.069     119     +0.725     +0.452
+  partial 1/2                                      797   -0.043   -0.055     119     +0.586     +0.357
+  no breakeven after partial                       797   -0.064   -0.063     119     +0.631     +0.399
+  target 1R                                        797   -0.054   -0.052     119     +0.520     +0.282
+  target 3R                                        797   -0.081   -0.070     119     +0.612     +0.399
+  no chandelier                                    797   -0.035   -0.050     119     +0.530     +0.346
+  chandelier 3 ATR                                 797   -0.047   -0.049     119     +0.610     +0.373
+  time exit 12:00                                  797   -0.040   -0.039     119     +0.465     +0.274
+  time exit 15:55                                  797   -0.041   -0.042     119     +0.603     +0.378
+  touch tol 0.0%                                  1088   -0.034   -0.057     164     +0.538     +0.416
+  touch tol 0.3%                                   726   -0.059   -0.052     109     +0.707     +0.392
+  retest within 3 bars                             769   -0.059   -0.051     111     +0.719     +0.421
+  break window to 10:30                           1091   -0.049   -0.076     159     +0.448     +0.369
+  break window to 10:00                            430   -0.026   -0.040      67     +0.526     +0.246
+  box 15 min (3 bars)                              983   +0.063   -0.009     153     +0.284     +0.094
+  box 45 min (9 bars)                              628   +0.021   -0.004      79     +0.061     -0.016
+  stop floor 0.3%                                  797   -0.064   -0.066     119     +0.494     +0.404
+  stop floor 0.5%                                  797   -0.079   -0.069     119     +0.369     +0.408
+  only up-breaks (bear leg)                        384   -0.058   -0.019      57     +0.878     +0.225
+  only down-breaks (bull leg)                      413   -0.064   -0.040      62     +0.407     +0.168
+  fade only in gap direction                       373   -0.035   -0.038      57     +0.636     +0.208
+
+1c. Realistic costs: the model charges 0.06% round trip on the leg. Extra cost per round trip on the leg (spread and slippage on thin leveraged funds), account %/day:
+  extra 0.00%: before -0.060  since +0.389
+  extra 0.10%: before -0.109  since +0.340
+  extra 0.20%: before -0.158  since +0.291
+  extra 0.30%: before -0.208  since +0.241
+
+1d. Look-ahead audit of the simulator (code review, results in tools/backtest/fade_diag.py): entry is the OPEN of the bar after the retest bar closes; the stop uses only bars up to the retest bar;
+    the chandelier uses ATR through the current bar and applies from the next bar; stop and target in the same bar resolve to the STOP (conservative); relative volume uses the 20 prior sessions and bars before the entry bar.
+    It reproduces the live engine trade for trade (75 = 75 on Robinhood bars). The real leak is SELECTION: lists, 10:10 entry, 0.10% tolerance, box length, partial and chandelier were all chosen after looking at 2026-03..10.
+
+1e. Selection-bias test: 150 random parameter variants. If tuning on the recent window found a real edge, variants that did well since March 2026 should also have done well before.
+  106 variants. Spearman between 'avg R before' and 'avg R since 2026-03' across variants: +0.05
+  the 15 best variants since 2026-03 averaged +0.348 R since, and only -0.038 R before
+  the 15 best variants before 2026-03 averaged +0.058 R before, and +0.177 R since
+  variants positive both before and since: 24 of 106; negative before: 82
+
+1f. Synthetic random-walk null: same six proxies, same days, same 5-minute volatility and intraday shape, NO structure. How often does the live rule show a +0.4%/day window by luck?
+  REAL data: whole-period +0.001%/day; 157-day rolling windows: 1059, positive 29%, >= +0.2: 7%, best +0.432
+  SYNTHETIC (10 seeds): whole-period %/day: +0.036 -0.031 -0.053 -0.083 -0.098 +0.007 -0.012 +0.027 -0.023 -0.024
+    best 157-day window per seed: +0.28 +0.16 +0.10 +0.09 +0.07 +0.12 +0.18 +0.16 +0.16 +0.17   (real best +0.43)
+    share of 157-day windows >= +0.4%/day: mean 0.0%; >= +0.2: 0.5%; seeds with any +0.4 window: 0 of 10; trades per seed ~604
+
+================ STEP 2. ML CONTROLS (is the filter pipeline itself sound?) ================
+  real labels, logistic walk-forward OOS AUC: 0.477
+  NEGATIVE control (labels shuffled; honest answer is 0.5): 0.499 0.459 0.516 0.531 0.535 0.484 0.518 0.542
+  POSITIVE control (a weak planted signal added; pipeline should find it): 0.646 0.614 0.647 0.635
+
+================ STEP 3. EXPLICIT REGIMES, DECIDED BEFORE LOOKING (do they behave the same in design and holdout?) ================
+  regime                                                   DESIGN 2021-11..2024-06          HOLDOUT 2024-07..2026-02                     SINCE 2026-03
+  high vol                                          n 105 avgR +0.00 [-0.29,+0.32]    n 175 avgR -0.08 [-0.24,+0.09]    n  79 avgR +0.88 [+0.49,+1.29]
+  low vol                                           n 262 avgR +0.04 [-0.10,+0.19]    n 155 avgR -0.24 [-0.41,-0.07]    n  40 avgR +0.14 [-0.25,+0.53]
+  QQQ above 50d avg                                 n 253 avgR -0.03 [-0.16,+0.11]    n 236 avgR -0.10 [-0.24,+0.04]    n  74 avgR +0.69 [+0.34,+1.07]
+  QQQ below 50d avg                                 n 190 avgR +0.10 [-0.10,+0.31]    n  94 avgR -0.27 [-0.48,-0.06]    n  45 avgR +0.54 [+0.04,+1.08]
+  big gap (>0.5%)                                   n 226 avgR +0.06 [-0.13,+0.25]    n 158 avgR -0.18 [-0.34,-0.00]    n  75 avgR +0.72 [+0.35,+1.09]
+  small gap                                         n 241 avgR -0.05 [-0.19,+0.09]    n 172 avgR -0.13 [-0.28,+0.03]    n  44 avgR +0.49 [-0.00,+1.01]
+  up-break faded (bear leg)                         n 214 avgR +0.10 [-0.07,+0.28]    n 170 avgR -0.26 [-0.40,-0.09]    n  57 avgR +0.88 [+0.38,+1.38]
+  down-break faded (bull leg)                       n 253 avgR -0.08 [-0.22,+0.08]    n 160 avgR -0.04 [-0.22,+0.15]    n  62 avgR +0.41 [+0.06,+0.76]
+  (bracket = 90% bootstrap interval of the mean R; an interval that crosses zero means the data cannot tell it from no edge)
+
+================ STEP 4. SAMPLE SIZE AND FORWARD TEST ================
+  FADE setups on the six proxies: 916 in 59 months; before 2026-03: 797; since: 119
+  avg R all +0.029 [-0.054,+0.111]; before -0.061 [-0.143,+0.025]; since +0.632 [+0.340,+0.947]
+  forward record: model trades logged in archive/paper_trades.csv: 1
+  forward record: real trades logged in archive/live_trades.csv: 2
