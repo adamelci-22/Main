@@ -38,14 +38,18 @@ def leg_px(D, c):
     return b[c['k']][0] / fac
 
 
-def live_account(D, days, cands, extra_rt=0.0, gates=True, whole=True, max_entries=6, start=2000.0, risk=0.03):
+def live_account(D, days, cands, extra_rt=0.0, gates=True, whole=True, max_entries=6, start=2000.0, risk=0.03, dd_stop=None, dd_pause=20):
     by = collections.defaultdict(list)
     for c in cands: by[c['day']].append(c)
     eq = start; peak = start; mdd = 0.0; daily = {}; taken = []; streak = 0; halted = None
-    cnt = collections.Counter()
+    cnt = collections.Counter(); hwm = start; pause_left = 0
     for d in days:
         e0 = eq; cs = sorted(by.get(d, []), key=lambda c: c['k']); n = 0; free = 0
         if gates: streak = 0                                           # A1.1 cleared at the start of each day
+        if dd_stop and pause_left > 0:                                  # drawdown pause: no entries; on resume the high-water mark restarts at today's equity
+            pause_left -= 1; cnt['dd pause days'] += 1
+            if pause_left == 0: hwm = eq
+            daily[d] = 0.0; continue
         while cs and n < max_entries:
             if gates and halted: cnt['floor days'] += 1; break
             av = [c for c in cs if c['k'] >= free]
@@ -62,6 +66,8 @@ def live_account(D, days, cands, extra_rt=0.0, gates=True, whole=True, max_entri
             pnl = notional * (c['pct'] - extra_rt) / 100
             eq += pnl; taken.append(dict(c, usd=pnl)); free = c['xbar'] + 1; cs.remove(c); n += 1
             streak = streak + 1 if pnl < 0 else (0 if pnl > 0 else streak)
+            hwm = max(hwm, eq)
+            if dd_stop and eq <= hwm * (1 - dd_stop): cnt['dd stops'] += 1; pause_left = dd_pause; break
             if gates:
                 if streak >= 5: cnt['A1.1 lockout days'] += 1; break
                 if eq / e0 - 1 <= -0.03: cnt['A1.2 day-loss stops'] += 1; break

@@ -1,0 +1,14 @@
+rule                                        2021                  2022                  2023                  2024                  2025           2026-03..10             2026 full
+                           end $ / maxDD / stops end $ / maxDD / stops end $ / maxDD / stops end $ / maxDD / stops end $ / maxDD / stops end $ / maxDD / stops end $ / maxDD / stops
+none                            1,890 /  11% / 0      1,355 /  35% / 0      1,406 /  31% / 0      1,443 /  30% / 0      1,219 /  47% / 0      3,237 /   7% / 0      3,140 /   9% / 0
+10% below high, 20d             1,899 /  10% / 1      1,382 /  33% / 4      1,605 /  21% / 2      1,424 /  30% / 4      1,441 /  37% / 4      3,237 /   7% / 0      3,140 /   9% / 0
+15% below high, 20d             1,890 /  11% / 0      1,391 /  33% / 2      1,462 /  27% / 2      1,504 /  27% / 1      1,627 /  30% / 2      3,237 /   7% / 0      3,140 /   9% / 0
+15% below high, 40d             1,890 /  11% / 0      1,368 /  34% / 2      1,550 /  24% / 1      1,539 /  25% / 1      1,633 /  28% / 2      3,237 /   7% / 0      3,140 /   9% / 0
+20% below high, 20d             1,890 /  11% / 0      1,298 /  37% / 2      1,487 /  27% / 1      1,446 /  29% / 1      1,392 /  39% / 2      3,237 /   7% / 0      3,140 /   9% / 0
+
+All five years in one run (not restarted), same rules:
+   none                     end $    993  max DD   53%  trades  308  {'A1.2 day-loss stops': 6, 'A1.4 floor hit': 1, 'floor days': 499}  halted 2023-05-15
+   15% below high, 20d      end $    988  max DD   53%  trades  232  {'A1.2 day-loss stops': 3, 'dd stops': 5, 'dd pause days': 100, 'A1.4 floor hit': 1, 'floor days': 491}  halted 2023-06-05
+   15% below high, 40d      end $    998  max DD   53%  trades  285  {'A1.2 day-loss stops': 5, 'dd stops': 4, 'dd pause days': 160, 'A1.4 floor hit': 1, 'floor days': 408}  halted 2024-01-31
+   15% below high, hard stop (no resume) end $  1,798  max DD   15%  trades   42  {'A1.2 day-loss stops': 1, 'dd stops': 1, 'dd pause days': 1188}
+   10% below high, hard stop (no resume) end $  1,899  max DD   10%  trades   34  {'A1.2 day-loss stops': 1, 'dd stops': 1, 'dd pause days': 1196}
