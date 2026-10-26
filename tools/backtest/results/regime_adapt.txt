@@ -1,0 +1,96 @@
+Massive 5-minute bars 2021-10-27..2026-10-23, 1215 tradable days; symbols QQQ SOXX IWM XLK XBI XLF SPY TLT GLD KRE VIXY
+
+live FADE setups on the six proxies: 916, with full features 916
+
+=================== A. WHAT CHANGES YEAR BY YEAR (live FADE, six proxies, per setup) ===================
+  2021  n   17 win  47% avgR -0.101 reach1R  76% reach2R  41% stopped<=2bars  18% avgMAE 1.02R
+  2022  n  213 win  35% avgR -0.013 reach1R  51% reach2R  34% stopped<=2bars  28% avgMAE 1.08R
+  2023  n  161 win  40% avgR +0.081 reach1R  60% reach2R  32% stopped<=2bars  17% avgMAE 0.96R
+  2024  n  181 win  33% avgR -0.187 reach1R  41% reach2R  23% stopped<=2bars  28% avgMAE 1.01R
+  2025  n  201 win  34% avgR -0.098 reach1R  45% reach2R  27% stopped<=2bars  27% avgMAE 1.10R
+  2026  n  143 win  48% avgR +0.500 reach1R  60% reach2R  41% stopped<=2bars  20% avgMAE 0.94R
+
+  by exit reason and year (share of setups, avg R)
+  2021  stop  47% (-1.00R)  be  29% (+0.67R)  trail  12% (+1.54R)  time  12% (-0.06R)
+  2022  stop  63% (-1.00R)  be   8% (+0.65R)  trail  23% (+2.15R)  time   6% (+1.13R)
+  2023  stop  57% (-1.00R)  be   7% (+0.65R)  trail  23% (+1.95R)  time  13% (+1.14R)
+  2024  stop  62% (-1.00R)  be   6% (+0.67R)  trail  16% (+1.90R)  time  15% (+0.60R)
+  2025  stop  63% (-1.00R)  be   4% (+0.67R)  trail  19% (+1.91R)  time  13% (+0.96R)
+  2026  stop  51% (-1.00R)  be   6% (+0.67R)  trail  24% (+2.22R)  time  19% (+2.33R)
+
+  fade side: up-break (bear leg): avg R by year: 2021 -0.16(8)  2022 +0.03(92)  2023 +0.27(74)  2024 -0.17(95)  2025 -0.28(105)  2026 +0.77(67)
+
+  fade side: down-break (bull leg): avg R by year: 2021 -0.05(9)  2022 -0.05(121)  2023 -0.08(87)  2024 -0.21(86)  2025 +0.10(96)  2026 +0.27(76)
+
+  fade against the gap: avg R by year: 2021 +0.31(4)  2022 -0.03(130)  2023 +0.14(84)  2024 -0.32(89)  2025 -0.12(99)  2026 +0.44(77)
+
+  fade in gap direction: avg R by year: 2021 -0.23(13)  2022 +0.02(83)  2023 +0.02(77)  2024 -0.05(92)  2025 -0.07(102)  2026 +0.57(66)
+
+  entry at 10:10: avg R by year: 2021 +0.04(6)  2022 +0.26(93)  2023 +0.13(86)  2024 -0.19(86)  2025 -0.22(108)  2026 +0.44(68)
+
+  entry 10:15+: avg R by year: 2021 -0.18(11)  2022 -0.22(120)  2023 +0.02(75)  2024 -0.19(95)  2025 +0.04(93)  2026 +0.56(75)
+
+  stop dist < 0.2%: avg R by year: 2021 +0.01(4)  2022 +0.15(40)  2023 +0.21(60)  2024 -0.22(68)  2025 -0.19(88)  2026 +0.41(40)
+
+  stop dist >= 0.35%: avg R by year: 2021 -0.01(8)  2022 +0.05(114)  2023 -0.07(51)  2024 -0.40(50)  2025 +0.02(64)  2026 +0.47(56)
+
+  Month-level link between market behaviour and FADE avg R (Spearman; |rho| > 0.26 is significant at 5% with ~60 months):
+  variable                                     same month  next month  prior month
+  QQQ 20d realized vol (prior to the day, avg)      +0.08       -0.10        -0.01
+  intraday efficiency ratio (trendiness; high = trends)      -0.22       -0.14        -0.02
+  box-break hold rate (break still outside box at 13:30)      -0.47       -0.09        -0.21
+  break follow-through to 13:30 (% beyond edge)      -0.45       -0.12        -0.15
+  avg daily range % of the six proxies              +0.05       +0.02        +0.03
+
+  months: 59; FADE avg R positive in 26 of them. Monthly regime table (avg R, hold rate, follow-through, efficiency):
+   2024-11  n  10 avgR +0.09  hold  67%  follow +0.12%  eff 0.13  rv 1.11
+   2024-12  n  18 avgR -0.43  hold  67%  follow +0.18%  eff 0.14  rv 1.06
+   2025-01  n  24 avgR +0.63  hold  38%  follow -0.19%  eff 0.12  rv 1.30
+   2025-02  n  18 avgR +0.08  hold  49%  follow +0.07%  eff 0.15  rv 1.11
+   2025-03  n  13 avgR -0.43  hold  52%  follow +0.28%  eff 0.12  rv 1.50
+   2025-04  n  16 avgR -0.42  hold  75%  follow +0.71%  eff 0.14  rv 3.02
+   2025-05  n  17 avgR -0.62  hold  67%  follow +0.17%  eff 0.11  rv 1.93
+   2025-06  n  17 avgR +0.03  hold  47%  follow +0.00%  eff 0.11  rv 0.95
+   2025-07  n  19 avgR +0.14  hold  62%  follow +0.16%  eff 0.13  rv 0.61
+   2025-08  n   9 avgR -0.57  hold  73%  follow +0.34%  eff 0.14  rv 0.80
+   2025-09  n   9 avgR -0.31  hold  53%  follow +0.08%  eff 0.12  rv 0.68
+   2025-10  n  18 avgR -0.46  hold  67%  follow +0.35%  eff 0.14  rv 0.88
+   2025-11  n  22 avgR -0.05  hold  41%  follow -0.17%  eff 0.15  rv 1.22
+   2025-12  n  19 avgR +0.05  hold  56%  follow +0.09%  eff 0.15  rv 1.10
+   2026-01  n  10 avgR -0.36  hold  73%  follow +0.16%  eff 0.14  rv 0.82
+   2026-02  n  14 avgR -0.01  hold  64%  follow +0.21%  eff 0.15  rv 1.05
+   2026-03  n  21 avgR +0.41  hold  57%  follow -0.08%  eff 0.12  rv 1.05
+   2026-04  n  14 avgR +0.39  hold  59%  follow +0.21%  eff 0.13  rv 1.36
+   2026-05  n  13 avgR +0.30  hold  61%  follow +0.03%  eff 0.12  rv 0.98
+   2026-06  n  21 avgR +0.92  hold  50%  follow +0.03%  eff 0.13  rv 1.54
+   2026-07  n  16 avgR +0.89  hold  43%  follow -0.16%  eff 0.12  rv 1.68
+   2026-08  n  17 avgR +0.96  hold  44%  follow +0.02%  eff 0.12  rv 1.45
+   2026-09  n   5 avgR -0.22  hold  49%  follow +0.02%  eff 0.12  rv 0.87
+   2026-10  n  12 avgR +0.71  hold  49%  follow +0.11%  eff 0.14  rv 0.97
+
+=================== B. ADAPTIVE LAYERS, WALK-FORWARD (account %/day on the six proxies; decisions use only earlier data) ===================
+  FIXED live rule, 2023-01-03..2026-10-23 (944 days): 463 trades, +0.018%/day, return +12.4%, DD 48.0%
+  FIXED live rule, 2023-01-03..2026-02-27 (before the rules' own window): 381 trades, -0.061%/day, return -39.4%, DD 48.0%
+
+(1) TRAILING-PERFORMANCE SWITCH: trade day d only if the summed R of all setups on all names over the previous N days > X
+    switch N=20 X>0 (on 46% of days)             all OOS: 212 trades +0.051%/day ret   +56.5% DD  16.0% | before 2026-03: 145 trades +0.015%/day ret   +10.8% DD  14.5%
+    switch N=20 X>5 (on 32% of days)             all OOS: 148 trades +0.046%/day ret   +50.5% DD  13.0% | before 2026-03:  83 trades +0.010%/day ret    +7.5% DD  12.2%
+    switch N=40 X>0 (on 44% of days)             all OOS: 201 trades +0.055%/day ret   +63.2% DD  17.4% | before 2026-03: 135 trades -0.005%/day ret    -5.0% DD  17.1%
+    switch N=40 X>5 (on 32% of days)             all OOS: 146 trades +0.047%/day ret   +52.0% DD  14.1% | before 2026-03:  92 trades +0.001%/day ret    +0.2% DD  13.5%
+    switch N=60 X>0 (on 40% of days)             all OOS: 183 trades +0.037%/day ret   +38.6% DD  19.2% | before 2026-03: 121 trades -0.006%/day ret    -5.5% DD  17.5%
+    switch N=60 X>5 (on 32% of days)             all OOS: 142 trades +0.039%/day ret   +40.6% DD  13.9% | before 2026-03:  86 trades -0.004%/day ret    -4.2% DD  12.2%
+    switch N=90 X>0 (on 38% of days)             all OOS: 170 trades +0.032%/day ret   +31.4% DD  19.8% | before 2026-03: 118 trades -0.014%/day ret   -11.0% DD  19.8%
+    switch N=90 X>5 (on 33% of days)             all OOS: 147 trades +0.028%/day ret   +27.7% DD  19.3% | before 2026-03:  99 trades -0.014%/day ret   -10.9% DD  16.7%
+
+(2) MONTHLY RE-CHOICE OF PARAMETERS from a small grid, scored on the trailing 12 months (min 40 trades), applied to the next month
+    walk-forward parameter choice                all OOS: 415 trades +0.015%/day ret    +8.1% DD  39.7% | before 2026-03: 328 trades -0.039%/day ret   -28.5% DD  39.2%
+     choices: box3 18, side-1 12, last77 4, gap_with 4, brk12 3, floor.4+wait3 3, brk7 1, side+1 1
+    (reference) always 'live'                    all OOS: 463 trades +0.018%/day ret   +12.4% DD  48.0% | before 2026-03: 381 trades -0.061%/day ret   -39.4% DD  48.0%
+
+(3) MACHINE-LEARNING TRADE FILTER (pre-entry features -> P(win)); expanding window, retrained every month, trade only if P(win) is above the training base rate
+  logistic: OOS setups 686, AUC 0.477 (0.5 = no skill), Spearman(score, R) -0.151, keeps 53% of setups; avg R kept +0.007 vs skipped +0.089
+    logistic filter                              all OOS: 282 trades +0.012%/day ret    +8.2% DD  33.4% | before 2026-03: 235 trades -0.041%/day ret   -28.6% DD  33.4%
+     noise floor (random skipping of the same share): 5th pct -0.028, mean +0.001, 95th pct +0.030 %/day
+  boosting(depth2): OOS setups 686, AUC 0.453 (0.5 = no skill), Spearman(score, R) -0.127, keeps 59% of setups; avg R kept -0.081 vs skipped +0.224
+    boosting(depth2) filter                      all OOS: 298 trades -0.022%/day ret   -21.1% DD  48.0% | before 2026-03: 233 trades -0.077%/day ret   -45.7% DD  48.0%
+     noise floor (random skipping of the same share): 5th pct -0.024, mean +0.003, 95th pct +0.032 %/day
