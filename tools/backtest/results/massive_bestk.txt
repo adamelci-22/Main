@@ -1,0 +1,43 @@
+848 combinations of 4 to 10 from 10 tradable proxies (QQQ SOXX IWM XLK XBI XLF SPY TLT GLD VIXY). FADE only, signal-model legs.
+
+== Best combination for each size, ranked on B ==
+size proxies                                         B 2026-03..10                                           A 2021-11..2026-02            
+4    SOXX IWM XLK XBI                                +0.368%/d ret    +74% DD  5.2% n= 68 win  50%           -0.045%/d DD 47%
+5    SOXX IWM XLK XBI XLF                            +0.393%/d ret    +81% DD  4.9% n= 76 win  51%           -0.044%/d DD 47%
+6    QQQ SOXX IWM XLK XBI XLF                        +0.406%/d ret    +85% DD  5.1% n= 80 win  51%           -0.054%/d DD 52%
+7    QQQ SOXX IWM XLK XBI XLF SPY                    +0.413%/d ret    +87% DD  5.4% n= 88 win  50%           -0.063%/d DD 55%
+8    QQQ SOXX IWM XLK XBI XLF SPY TLT                +0.393%/d ret    +81% DD  5.6% n= 95 win  49%           -0.057%/d DD 54%
+9    QQQ SOXX IWM XLK XBI XLF SPY TLT GLD            +0.355%/d ret    +71% DD  6.2% n=104 win  45%           -0.059%/d DD 54%
+10   QQQ SOXX IWM XLK XBI XLF SPY TLT GLD VIXY       +0.307%/d ret    +58% DD 13.3% n=114 win  44%           -0.052%/d DD 55%
+
+== Top 10 overall on B ==
+1  QQQ SOXX IWM XLK XBI XLF SPY                    +0.413%/d ret    +87% DD  5.4% n= 88 win  50%           A -0.063%/d  halves +0.356 / +0.477
+2  QQQ SOXX IWM XLK XBI XLF                        +0.406%/d ret    +85% DD  5.1% n= 80 win  51%           A -0.054%/d  halves +0.343 / +0.478
+3  SOXX IWM XLK XBI XLF SPY                        +0.399%/d ret    +83% DD  5.3% n= 85 win  49%           A -0.056%/d  halves +0.364 / +0.439
+4  QQQ SOXX IWM XLK XBI XLF TLT                    +0.397%/d ret    +82% DD  5.4% n= 88 win  51%           A -0.050%/d  halves +0.363 / +0.434
+5  QQQ SOXX XLK XBI XLF TLT                        +0.396%/d ret    +82% DD  5.4% n= 76 win  53%           A -0.043%/d  halves +0.370 / +0.426
+6  SOXX IWM XLK XBI XLF                            +0.393%/d ret    +81% DD  4.9% n= 76 win  51%           A -0.044%/d  halves +0.352 / +0.440
+7  QQQ SOXX IWM XLK XBI XLF SPY TLT                +0.393%/d ret    +81% DD  5.6% n= 95 win  49%           A -0.057%/d  halves +0.358 / +0.433
+8  QQQ SOXX XLK XBI XLF SPY TLT                    +0.391%/d ret    +81% DD  5.6% n= 85 win  51%           A -0.046%/d  halves +0.358 / +0.429
+9  QQQ SOXX IWM XLK XBI SPY                        +0.385%/d ret    +79% DD  5.7% n= 81 win  48%           A -0.060%/d  halves +0.297 / +0.485
+10 QQQ SOXX XLK XBI XLF SPY                        +0.385%/d ret    +79% DD  5.4% n= 77 win  51%           A -0.051%/d  halves +0.355 / +0.418
+
+== Top 5 by the weaker of the two halves of B (rewards a combination that works in both) ==
+1  SOXX IWM XLK XBI XLF TLT                        +0.384%/d ret    +79% DD  5.1% n= 84 win  51%           A -0.041%/d  halves +0.372 / +0.396
+2  SOXX XLK XBI XLF TLT                            +0.376%/d ret    +77% DD  5.1% n= 70 win  53%           A -0.035%/d  halves +0.371 / +0.382
+3  QQQ SOXX XLK XBI XLF TLT                        +0.396%/d ret    +82% DD  5.4% n= 76 win  53%           A -0.043%/d  halves +0.370 / +0.426
+4  QQQ SOXX IWM XBI XLF                            +0.369%/d ret    +75% DD  6.0% n= 70 win  54%           A -0.037%/d  halves +0.370 / +0.367
+5  SOXX IWM XLK XBI XLF SPY TLT                    +0.380%/d ret    +78% DD  5.6% n= 92 win  49%           A -0.051%/d  halves +0.366 / +0.395
+
+Live six:  B +0.406%/d ret    +85% DD  5.1% n= 80 win  51%  A -0.054%/d DD 52%   rank 2 of 848
+All ten:   B +0.307%/d ret    +58% DD 13.3% n=114 win  44%  A -0.052%/d DD 55%
+
+A: best of the 848 combinations +0.007%/d, median -0.043%/d, share above zero 0%.  B: best +0.413%/d, median +0.181%/d, worst -0.031%/d.
+Choose on 2026-03..06: QQQ SOXX IWM XBI XLF SPY (+0.383%/d). On 2026-07..10: +0.366%/d. Median combination +0.288%/d. Live six +0.478%/d.
+Null (results shuffled across proxies inside B, best of 106 sampled combinations, 30 shuffles): best median +0.344%/d, 90th percentile +0.391%/d.  Real best +0.413%/d.
+
+== Top combination QQQ SOXX IWM XLK XBI XLF SPY with the live PULLBACK ==
+   B 2026-03..10       FADE only +0.413%/d ret    +87% DD  5.4% n= 88 win  50%
+                       FADE + PULLBACK +0.463%/d ret   +102% DD  6.2% n=118 win  53%
+   A 2021-11..2026-02  FADE only -0.063%/d ret    -51% DD 55.4% n=573 win  35%
+                       FADE + PULLBACK -0.083%/d ret    -62% DD 66.4% n=818 win  38%
