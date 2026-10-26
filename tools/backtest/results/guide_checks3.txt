@@ -1,0 +1,25 @@
+Worlds for the simulation: NO-EDGE = the 797 setups before 2026-03; EDGE = the 119 setups since 2026-03 (the period the rules were built on).
+
+std of R per trade 1.43; avg R null -0.061, edge +0.632
+trades needed to tell +0.20 R from zero at 5% error and 90% power: 439; to tell +0.10: 1754
+
+A. 40-TRADE REVIEW AT LIVE SIZE: how often would each proposed pause rule fire, in each world? (account-% per trade from the real account at the given risk; 4000 bootstrap runs)
+  risk 3% null: pause on drawdown >8% within 40 trades:  73%   pause if avg R of the 40 < 0:  56%   median max drawdown 10.7%
+  risk 3% edge: pause on drawdown >8% within 40 trades:  17%   pause if avg R of the 40 < 0:   1%   median max drawdown 5.3%
+  risk 1% null: pause on drawdown >8% within 40 trades:  52%   pause if avg R of the 40 < 0:  56%   median max drawdown 8.2%
+  risk 1% edge: pause on drawdown >8% within 40 trades:   2%   pause if avg R of the 40 < 0:   1%   median max drawdown 3.6%
+
+B. RESTART RULE 'any 15 simulated trades averaging > +0.20 R': how often does the NO-EDGE world satisfy it?
+  chance in  1 tries (one try per 15 trades): 22% (edge world: 81%)
+  chance in 10 tries (one try per 15 trades): 93% (edge world: 100%)
+  chance in 40 tries (one try per 15 trades): 100% (edge world: 100%)
+  paper equity making a new 20-day high is not a test either: a flat random series does it all the time.
+
+C. IS THE 15-MINUTE-BOX 'LEAD' REAL? z-score of each variant's average R before 2026-03 (23 variants were looked at, the best always looks good)
+  box15      avg R +0.063  n 983  z +1.15
+  box45      avg R +0.021  n 628  z +0.32
+  brk7       avg R -0.026  n 430  z -0.36
+  box4       avg R -0.021  n 919  z -0.42
+  gapwith    avg R -0.035  n 373  z -0.52
+  nochand    avg R -0.035  n 797  z -0.64
+  best z among 23 variants = +1.15. For 23 pure-noise variants the expected best z is about +1.9; a z of 2 or less is not evidence.
