@@ -1,0 +1,62 @@
+== FADE: 848 lists of 4 to 10. Columns: A = Massive before 2026, B-MS = Massive 2026 window, B-RH = Robinhood 2026 window (%/day) ==
+  -- ranked by weakest of A, B-MS, B-RH
+     4  XBI XLF TLT GLD                                       A +0.007  B-MS +0.096 (DD 4%, n=53)  B-RH +0.113 (DD 4%, n=53)
+     5  XBI XLF TLT GLD VIXY                                  A +0.001  B-MS +0.126 (DD 11%, n=70)  B-RH +0.137 (DD 9%, n=71)
+     5  SOXX IWM XBI GLD VIXY                                 A -0.000  B-MS +0.296 (DD 12%, n=84)  B-RH +0.319 (DD 8%, n=80)
+     4  SOXX IWM XBI VIXY                                     A -0.001  B-MS +0.314 (DD 10%, n=70)  B-RH +0.342 (DD 7%, n=67)
+     5  SOXX XBI XLF TLT VIXY                                 A -0.001  B-MS +0.298 (DD 10%, n=72)  B-RH +0.312 (DD 8%, n=72)
+  -- ranked by weakest of B-MS and B-RH (both 2026 feeds)
+     7  QQQ SOXX IWM XLK XBI XLF SPY                          A -0.063  B-MS +0.413 (DD 5%, n=88)  B-RH +0.421 (DD 5%, n=84)
+     6  QQQ SOXX IWM XLK XBI XLF                              A -0.054  B-MS +0.406 (DD 5%, n=80)  B-RH +0.419 (DD 4%, n=75)
+     6  SOXX IWM XLK XBI XLF SPY                              A -0.056  B-MS +0.399 (DD 5%, n=85)  B-RH +0.400 (DD 5%, n=82)
+     7  QQQ SOXX IWM XLK XBI XLF TLT                          A -0.050  B-MS +0.397 (DD 5%, n=88)  B-RH +0.417 (DD 4%, n=85)
+     6  QQQ SOXX XLK XBI XLF TLT                              A -0.043  B-MS +0.396 (DD 5%, n=76)  B-RH +0.402 (DD 4%, n=73)
+  -- ranked by average of B-MS and B-RH
+     7  QQQ SOXX IWM XLK XBI XLF SPY                          A -0.063  B-MS +0.413 (DD 5%, n=88)  B-RH +0.421 (DD 5%, n=84)
+     6  QQQ SOXX IWM XLK XBI XLF                              A -0.054  B-MS +0.406 (DD 5%, n=80)  B-RH +0.419 (DD 4%, n=75)
+     7  QQQ SOXX IWM XLK XBI XLF TLT                          A -0.050  B-MS +0.397 (DD 5%, n=88)  B-RH +0.417 (DD 4%, n=85)
+     8  QQQ SOXX IWM XLK XBI XLF SPY TLT                      A -0.057  B-MS +0.393 (DD 6%, n=95)  B-RH +0.418 (DD 5%, n=93)
+     6  SOXX IWM XLK XBI XLF SPY                              A -0.056  B-MS +0.399 (DD 5%, n=85)  B-RH +0.400 (DD 5%, n=82)
+  -- live list (QQQ SOXX IWM XLK XBI XLF): A -0.054  B-MS +0.406  B-RH +0.419;  rank by weakest-of-both-2026 2 of 848, by weakest of all three 647
+  -- lists positive in all three: 2; positive in both 2026 feeds: 813 of 848
+
+== PB: 7722 lists of 4 to 10. Columns: A = Massive before 2026, B-MS = Massive 2026 window, B-RH = Robinhood 2026 window (%/day) ==
+  -- ranked by weakest of A, B-MS, B-RH
+     5  SOXS DRIP SQQQ NUGT FAZ                               A +0.024  B-MS +0.027 (DD 5%, n=34)  B-RH +0.030 (DD 5%, n=34)
+     5  SOXS SRTY DRIP SQQQ FAZ                               A +0.024  B-MS +0.024 (DD 5%, n=31)  B-RH +0.047 (DD 4%, n=28)
+     8  SOXS LABD DRIP TZA SQQQ NUGT FAZ ERY                  A +0.023  B-MS +0.026 (DD 6%, n=42)  B-RH +0.046 (DD 7%, n=50)
+     7  SOXS LABD DRIP TZA SQQQ NUGT FAZ                      A +0.023  B-MS +0.026 (DD 6%, n=42)  B-RH +0.040 (DD 7%, n=49)
+     9  SOXS LABD SRTY DRIP TZA SQQQ NUGT FAZ ERY             A +0.022  B-MS +0.026 (DD 6%, n=44)  B-RH +0.035 (DD 7%, n=52)
+  -- ranked by weakest of B-MS and B-RH (both 2026 feeds)
+     6  SOXS LABD TECS DRIP UVIX FAZ                          A -0.013  B-MS +0.098 (DD 4%, n=50)  B-RH +0.123 (DD 4%, n=58)
+     7  SOXS LABD TECS DRIP UVIX FAZ ERY                      A -0.013  B-MS +0.098 (DD 4%, n=50)  B-RH +0.120 (DD 4%, n=58)
+     7  SOXS LABD TECS DRIP UVIX NUGT FAZ                     A -0.009  B-MS +0.095 (DD 5%, n=56)  B-RH +0.096 (DD 6%, n=66)
+     7  SOXS LABD TECS DRIP DUST UVIX FAZ                     A -0.022  B-MS +0.093 (DD 4%, n=51)  B-RH +0.123 (DD 3%, n=61)
+     8  SOXS LABD TECS DRIP DUST UVIX FAZ ERY                 A -0.023  B-MS +0.093 (DD 4%, n=51)  B-RH +0.119 (DD 3%, n=61)
+  -- ranked by average of B-MS and B-RH
+     5  SOXS LABD TECS UVXY DRIP                              A -0.021  B-MS +0.083 (DD 6%, n=45)  B-RH +0.161 (DD 3%, n=50)
+     6  SOXS LABD TECS UVXY DRIP ERY                          A -0.023  B-MS +0.083 (DD 6%, n=45)  B-RH +0.160 (DD 3%, n=50)
+     6  SOXS LABD TECS UVXY DRIP FAZ                          A -0.015  B-MS +0.092 (DD 6%, n=49)  B-RH +0.149 (DD 3%, n=54)
+     7  SOXS LABD TECS UVXY DRIP FAZ ERY                      A -0.016  B-MS +0.092 (DD 6%, n=49)  B-RH +0.148 (DD 3%, n=54)
+     6  SOXS LABD TECS UVXY DRIP DUST                         A -0.029  B-MS +0.078 (DD 6%, n=46)  B-RH +0.160 (DD 3%, n=53)
+  -- live list (SOXS LABD TECS UVXY): A -0.018  B-MS +0.069  B-RH +0.158;  rank by weakest-of-both-2026 265 of 7722, by weakest of all three 5331
+  -- lists positive in all three: 1428; positive in both 2026 feeds: 5612 of 7722
+
+== Joint FADE + PULLBACK, Robinhood bars ==
+  LIVE                                                       B +0.548%/d ret +131% DD 3% n=111
+      FADE QQQ SOXX IWM XLK XBI XLF | PB SOXS LABD TECS UVXY
+  best-of: weakest of A, B-MS, B-RH                          B +0.168%/d ret +29% DD 6% n=83
+      FADE XBI XLF TLT GLD | PB SOXS DRIP SQQQ NUGT FAZ
+  best-of: weakest of B-MS and B-RH (both 2026 feeds)        B +0.509%/d ret +117% DD 4% n=129
+      FADE QQQ SOXX IWM XLK XBI XLF SPY | PB SOXS LABD TECS DRIP UVIX FAZ
+  best-of: average of B-MS and B-RH                          B +0.548%/d ret +131% DD 4% n=124
+      FADE QQQ SOXX IWM XLK XBI XLF SPY | PB SOXS LABD TECS UVXY DRIP
+== Joint FADE + PULLBACK, Massive bars ==
+  LIVE                                                       B +0.457%/d ret +100% DD 6% n=110  A -0.076%/d ret -59% DD 64%
+      FADE QQQ SOXX IWM XLK XBI XLF | PB SOXS LABD TECS UVXY
+  best-of: weakest of A, B-MS, B-RH                          B +0.115%/d ret +19% DD 5% n=86  A +0.030%/d ret +32% DD 20%
+      FADE XBI XLF TLT GLD | PB SOXS DRIP SQQQ NUGT FAZ
+  best-of: weakest of B-MS and B-RH (both 2026 feeds)        B +0.470%/d ret +104% DD 5% n=126  A -0.073%/d ret -57% DD 62%
+      FADE QQQ SOXX IWM XLK XBI XLF SPY | PB SOXS LABD TECS DRIP UVIX FAZ
+  best-of: average of B-MS and B-RH                          B +0.482%/d ret +108% DD 5% n=122  A -0.085%/d ret -62% DD 68%
+      FADE QQQ SOXX IWM XLK XBI XLF SPY | PB SOXS LABD TECS UVXY DRIP
