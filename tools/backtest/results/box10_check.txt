@@ -1,0 +1,33 @@
+10-min box before 2026-03: n 1146 avg R +0.188 std 1.77 z +3.59  (about 8 box lengths were tried; a z above 3 is hard to get by luck)
+10-min box since 2026-03:  n 175 avg R +0.496 z +3.65
+
+entry times (10-minute box): 9:50 646, 9:55 372, 10:00 212, 10:05 35, 10:10 10, 10:15 15, 10:30 8
+share entering before 10:00: 77%; before 9:55: 49%
+
+by year (avg R per setup, account %/day):
+  2021  n   24  avgR -0.548  -0.232%/day  ret   -5.2%  (live 30-min: avgR -0.101)
+  2022  n  278  avgR +0.092  -0.061%/day  ret  -17.0%  (live 30-min: avgR -0.013)
+  2023  n  271  avgR +0.219  +0.055%/day  ret  +11.9%  (live 30-min: avgR +0.081)
+  2024  n  254  avgR +0.437  +0.216%/day  ret  +66.5%  (live 30-min: avgR -0.187)
+  2025  n  283  avgR +0.107  -0.049%/day  ret  -12.8%  (live 30-min: avgR -0.098)
+  2026  n  211  avgR +0.421  +0.225%/day  ret  +51.8%  (live 30-min: avgR +0.500)
+
+by proxy (avg R): QQQ +0.29  SOXX +0.28  IWM +0.10  XLK +0.30  XBI +0.26  XLF +0.12
+by entry time bucket (avg R, n): 9:50 +0.20 (646)  9:55 +0.34 (372)  10:00-10:10 +0.18 (257)  10:10+ +0.00 (46)
+
+entries from 10:00 only (what the live checkpoints could actually take):
+  setups 303, taken 248, avg R +0.153, +0.031%/day, ret +38.7%, DD 19.4%
+
+costs: extra round-trip cost on the leg, account %/day (early bars have wide spreads, the model charges 0.06%)
+  extra 0.0%: before +0.031  since +0.295
+  extra 0.1%: before -0.035  since +0.228
+  extra 0.2%: before -0.101  since +0.160
+  extra 0.3%: before -0.166  since +0.093
+
+neighbours: box 5, 10, 15, 20 min (avg R before 2026-03) -> is it a smooth hill or a single spike?
+  5 min          before +0.126 (n 1427, z +2.99)   since +0.076 (n 228)
+  10 min         before +0.188 (n 1146, z +3.59)   since +0.496 (n 175)
+  15 min         before +0.063 (n 983, z +1.15)   since +0.284 (n 153)
+  20 min         before -0.021 (n 919, z -0.42)   since -0.003 (n 158)
+  25 min         before -0.111 (n 848, z -2.34)   since +0.101 (n 143)
+  30 min (live)  before -0.061 (n 797, z -1.21)   since +0.632 (n 119)

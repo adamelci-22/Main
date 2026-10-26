@@ -1,0 +1,70 @@
+Massive 5-minute bars, 2021-11-30..2026-10-23, six live proxies, live exits (1/3 at 2R, 2-ATR chandelier, out 13:30), $2,000 account 3% risk. before = to 2026-02-27, since = 2026-03-01 on
+
+1. BOX LENGTH, same rules (the break window is the 3 bars after the box)
+ ALL
+  30 min box (LIVE)                            setups  916 taken  603 win  38%  avgR +0.029  +0.001%/day  ret    -5.8%  DD  51.2%
+  15 min box, breaks 9:45-10:00                setups 1136 taken  732 win  36%  avgR +0.093  +0.005%/day  ret    -6.3%  DD  46.7%
+  15 min box, breaks to 10:15 (same cut-off as live) setups 1548 taken  948 win  37%  avgR +0.054  -0.008%/day  ret   -22.1%  DD  55.6%
+  10 min box                                   setups 1321 taken  805 win  40%  avgR +0.229  +0.066%/day  ret   +94.4%  DD  36.4%
+  20 min box                                   setups 1077 taken  710 win  36%  avgR -0.019  -0.025%/day  ret   -32.8%  DD  61.1%
+  25 min box                                   setups  991 taken  662 win  34%  avgR -0.080  -0.065%/day  ret   -58.3%  DD  74.3%
+  35 min box                                   setups  823 taken  534 win  33%  avgR -0.020  -0.041%/day  ret   -42.0%  DD  55.8%
+  45 min box                                   setups  707 taken  480 win  32%  avgR +0.025  -0.005%/day  ret   -11.1%  DD  35.9%
+ BEFORE 2026-03
+  30 min box (LIVE)                            setups  797 taken  521 win  36%  avgR -0.061  -0.060%/day  ret   -49.2%  DD  51.2%
+  15 min box, breaks 9:45-10:00                setups  983 taken  634 win  36%  avgR +0.063  -0.009%/day  ret   -17.0%  DD  46.7%
+  15 min box, breaks to 10:15 (same cut-off as live) setups 1342 taken  821 win  37%  avgR +0.028  -0.024%/day  ret   -30.5%  DD  55.6%
+  10 min box                                   setups 1146 taken  693 win  39%  avgR +0.188  +0.031%/day  ret   +24.2%  DD  36.4%
+  20 min box                                   setups  919 taken  610 win  36%  avgR -0.021  -0.041%/day  ret   -39.6%  DD  59.6%
+  25 min box                                   setups  848 taken  569 win  32%  avgR -0.111  -0.102%/day  ret   -67.8%  DD  72.4%
+  35 min box                                   setups  715 taken  460 win  33%  avgR -0.048  -0.059%/day  ret   -48.3%  DD  51.7%
+  45 min box                                   setups  628 taken  428 win  32%  avgR +0.021  -0.004%/day  ret    -7.8%  DD  33.4%
+ SINCE 2026-03
+  30 min box (LIVE)                            setups  119 taken   82 win  51%  avgR +0.632  +0.389%/day  ret   +85.5%  DD   5.6%
+  15 min box, breaks 9:45-10:00                setups  153 taken   98 win  35%  avgR +0.284  +0.094%/day  ret   +12.8%  DD  23.4%
+  15 min box, breaks to 10:15 (same cut-off as live) setups  206 taken  127 win  36%  avgR +0.225  +0.092%/day  ret   +12.1%  DD  24.1%
+  10 min box                                   setups  175 taken  112 win  49%  avgR +0.496  +0.295%/day  ret   +56.5%  DD  13.1%
+  20 min box                                   setups  158 taken  100 win  36%  avgR -0.003  +0.076%/day  ret   +11.3%  DD  14.5%
+  25 min box                                   setups  143 taken   93 win  43%  avgR +0.101  +0.169%/day  ret   +29.5%  DD  15.3%
+  35 min box                                   setups  108 taken   74 win  36%  avgR +0.162  +0.075%/day  ret   +12.2%  DD  12.8%
+  45 min box                                   setups   79 taken   52 win  33%  avgR +0.061  -0.016%/day  ret    -3.5%  DD  10.3%
+
+2. WHEN DO THE 15-MINUTE ENTRIES HAPPEN? The live schedule starts at 10:00 and entries are allowed from 10:00 (A1.10)
+   entry times: 9:55 559, 10:00 287, 10:05 225, 10:10 21, 10:15 12, 10:20 5, 10:30 8, 10:35 7
+   49% of the 15-minute setups would enter BEFORE 10:00 (9:55 is the earliest), which the live checkpoints do not cover.
+  15 min box as-is (needs a 9:55 slot)         setups 1136 taken  732 win  36%  avgR +0.093  +0.005%/day  ret    -6.3%  DD  46.7%
+  15 min box, drop entries before 10:00        setups  577 taken  448 win  35%  avgR -0.012  -0.040%/day  ret   -41.9%  DD  60.2%
+  15 min box (to 10:15), drop entries before 10:00 setups  989 taken  711 win  36%  avgR -0.029  -0.058%/day  ret   -55.0%  DD  70.0%
+
+3. PAIRED DIFFERENCE, 15-minute minus 30-minute, per day on the account (monthly block bootstrap; is the gap bigger than the noise?)
+   ALL             mean difference +0.004%/day, 90% interval [-0.076, +0.083]
+   BEFORE 2026-03  mean difference +0.051%/day, 90% interval [-0.034, +0.134]
+   SINCE 2026-03   mean difference -0.295%/day, 90% interval [-0.509, -0.068]
+
+4. BY YEAR (account %/day and avg R per setup)
+   year                      30 min                    15 min
+   2021      -0.309%/d R -0.10 n  17    +0.024%/d R +0.15 n  17
+   2022      -0.034%/d R -0.01 n 213    +0.030%/d R +0.13 n 242
+   2023      +0.011%/d R +0.08 n 161    -0.095%/d R +0.04 n 220
+   2024      -0.089%/d R -0.19 n 181    +0.028%/d R +0.17 n 236
+   2025      -0.094%/d R -0.10 n 201    -0.023%/d R -0.07 n 230
+   2026      +0.293%/d R +0.50 n 143    +0.098%/d R +0.20 n 191
+
+5. BY PROXY, whole period (avg R per setup, 30 min vs 15 min)
+   QQQ   30 min -0.038 (n 177)   15 min +0.292 (n 226)
+   SOXX  30 min +0.172 (n 181)   15 min +0.034 (n 214)
+   IWM   30 min +0.049 (n 153)   15 min +0.268 (n 192)
+   XLK   30 min -0.160 (n 162)   15 min +0.226 (n 183)
+   XBI   30 min +0.121 (n 126)   15 min -0.148 (n 160)
+   XLF   30 min +0.044 (n 117)   15 min -0.231 (n 161)
+
+6. WHAT CHANGES MECHANICALLY (15 vs 30)
+   30 min box (LIVE)                  median box 0.89% of price, median stop 0.28%, stopped out 59%, reach 1R 51%, reach 2R 31%, setups/day 0.75
+   15 min box, breaks 9:45-10:00      median box 0.66% of price, median stop 0.29%, stopped out 60%, reach 1R 51%, reach 2R 29%, setups/day 0.93
+
+7. SAME TEST ON THE ROBINHOOD CACHE (the bars the live bot reads), 2026-03-03..10-14, the only window it covers
+   30 min box (LIVE)                                  setups 109 taken  75 +0.419%/day ret  +88.8% DD  4.5%
+   15 min box, breaks 9:45-10:00                      setups 148 taken  89 +0.034%/day ret   +2.3% DD 24.8%
+   15 min box, breaks to 10:15 (same cut-off as live) setups 203 taken 116 +0.074%/day ret   +8.4% DD 25.5%
+   20 min box                                         setups 152 taken  98 -0.006%/day ret   -2.7% DD 14.8%
+   25 min box                                         setups 139 taken  91 +0.126%/day ret  +19.3% DD 13.5%
