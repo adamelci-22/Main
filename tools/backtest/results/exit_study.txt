@@ -1,0 +1,47 @@
+LIVE rules, 916 setups, 1215 days
+avg R +0.029; win 37%
+
+PART 1 exit reasons: n, avg R, avg bars held (5-min), avg MFE R, avg MAE R
+  stop    n= 545 avgR=-1.00 held= 4.7 MFE=0.61 MAE=1.37
+  trail   n= 190 avgR=+2.03 held=20.8 MFE=3.99 MAE=0.42
+  time    n= 118 avgR=+1.23 held=37.3 MFE=2.11 MAE=0.57
+  be      n=  63 avgR=+0.66 held= 5.4 MFE=2.77 MAE=0.70
+
+stopped-out trades: 545 (59% of trades); stopped within 6 bars (30 min): 78%; of these, ever reached +1R first: 23%
+trades that hit 2R partial: 282; their avg MFE 3.81R, avg final R +1.88R -> giveback 1.93R
+MFE distribution of ALL trades (share reaching): >=0.5R 68% >=1R 51% >=1.5R 39% >=2R 31% >=3R 16% >=4R 9%
+final R of trades by time held: 0-3: -0.93(n302) 3-6: -0.67(n139) 6-12: -0.30(n127) 12-24: +0.88(n143) 24-99: +1.53(n205)
+
+PART 2 exit grid (change one thing). %/day  trades  win%  maxDD  | H1 discovery | H2 confirmation | whole
+LIVE                               | -0.018  274t 39% DD20.9 | +0.018  329t 37% DD43.9 | +0.001  603t 38% DD51.2
+target R=1.0                       | -0.007  275t 54% DD18.2 | -0.007  331t 48% DD42.5 | -0.007  606t 51% DD49.5
+target R=1.5                       | -0.017  274t 44% DD22.0 | +0.006  329t 40% DD42.8 | -0.005  603t 42% DD51.2
+target R=2.5                       | -0.037  274t 32% DD29.5 | +0.014  329t 33% DD45.3 | -0.010  603t 33% DD57.7
+target R=3.0                       | -0.030  274t 30% DD28.8 | +0.016  329t 32% DD46.2 | -0.006  603t 31% DD56.8
+partial frac=0.00                  | -0.029  274t 30% DD25.4 | +0.029  329t 30% DD46.0 | +0.002  603t 30% DD55.8
+partial frac=0.50                  | -0.012  274t 39% DD20.1 | +0.013  329t 37% DD42.9 | +0.001  603t 38% DD49.1
+partial frac=0.67                  | -0.006  274t 39% DD19.3 | +0.008  329t 37% DD41.8 | +0.001  603t 38% DD47.0
+partial frac=1.00                  | +0.008  276t 39% DD16.5 | +0.005  334t 38% DD38.2 | +0.006  610t 38% DD41.9
+no breakeven                       | -0.025  274t 34% DD23.2 | +0.022  329t 35% DD43.5 | +0.000  603t 34% DD52.3
+chandelier 0ATR                    | -0.014  274t 39% DD22.5 | +0.019  329t 37% DD39.8 | +0.003  603t 38% DD48.7
+chandelier 1.0ATR                  | -0.018  274t 39% DD22.9 | -0.003  329t 37% DD41.6 | -0.010  603t 38% DD49.5
+chandelier 1.5ATR                  | -0.021  274t 39% DD22.4 | +0.001  329t 37% DD42.3 | -0.010  603t 38% DD50.8
+chandelier 3.0ATR                  | -0.005  274t 39% DD17.9 | +0.020  329t 37% DD41.5 | +0.008  603t 38% DD47.4
+time exit 11:55                    | +0.000  274t 41% DD16.9 | +0.006  329t 38% DD37.4 | +0.003  603t 39% DD40.5
+time exit 12:25                    | -0.013  274t 41% DD17.3 | +0.012  329t 36% DD41.7 | +0.000  603t 38% DD47.9
+time exit 12:55                    | -0.014  274t 39% DD17.3 | +0.020  329t 38% DD41.8 | +0.004  603t 39% DD47.9
+time exit 14:25                    | -0.011  274t 39% DD19.6 | +0.022  329t 37% DD40.9 | +0.006  603t 38% DD46.4
+time exit 15:25                    | +0.001  274t 39% DD17.0 | +0.026  329t 37% DD41.8 | +0.014  603t 38% DD43.2
+stop wider +0.25R                  | -0.026  271t 39% DD25.5 | +0.016  327t 37% DD44.8 | -0.004  598t 38% DD54.8
+stop wider +0.5R                   | +0.026  269t 42% DD22.5 | +0.014  321t 39% DD45.6 | +0.020  590t 40% DD45.9
+stop floor 0.5ATR                  | -0.015  273t 38% DD20.6 | +0.019  328t 36% DD44.5 | +0.003  601t 37% DD51.2
+stop floor 1.0ATR                  | -0.025  270t 38% DD29.0 | +0.012  323t 37% DD47.3 | -0.005  593t 38% DD57.9
+R1.5 frac.5 chand1.5               | -0.016  274t 44% DD22.0 | -0.015  329t 41% DD41.8 | -0.015  603t 42% DD50.6
+R1.0 frac.5 chand1.5 last41        | -0.006  275t 55% DD17.2 | -0.021  331t 49% DD39.0 | -0.014  606t 52% DD45.6
+R3 frac.33 chand3                  | -0.027  274t 30% DD27.1 | +0.014  329t 32% DD45.5 | -0.005  603t 31% DD55.4
+
+PART 3 risk % per trade (live exits), whole sample, account-level: return%, maxDD%, 
+  risk 1%: total return +1.6%  max drawdown 38.6%
+  risk 2%: total return -2.1%  max drawdown 48.1%
+  risk 3%: total return -5.8%  max drawdown 51.2%
+  risk 5%: total return -5.2%  max drawdown 52.9%
