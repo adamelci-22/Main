@@ -1,0 +1,39 @@
+Pool (13): SOXS 119, LABD 90, TECS 81, UVXY 96, SRTY 51, DRIP 57, DUST 47, UVIX 120, TZA 55, SQQQ 42, NUGT 50, FAZ 23, ERY 22 signals.  7722 lists of 4 to 10. PULLBACK alone.
+
+== 1. Best list of each size, chosen on B ==
+4  SOXS TECS DRIP UVIX                                           B +0.077%/d ret    +13% DD  5.5% n= 42 win  57%   A -0.010%/d DD 28%
+5  SOXS LABD TECS DRIP UVIX                                      B +0.088%/d ret    +14% DD  4.3% n= 46 win  59%   A -0.021%/d DD 33%
+6  SOXS LABD TECS DRIP UVIX FAZ                                  B +0.098%/d ret    +16% DD  4.3% n= 50 win  60%   A -0.012%/d DD 32%
+7  SOXS LABD TECS DRIP UVIX FAZ ERY                              B +0.098%/d ret    +16% DD  4.3% n= 50 win  60%   A -0.013%/d DD 32%
+8  SOXS LABD TECS DRIP UVIX NUGT FAZ ERY                         B +0.095%/d ret    +16% DD  4.8% n= 56 win  57%   A -0.010%/d DD 28%
+9  SOXS LABD TECS SRTY DRIP DUST UVIX FAZ ERY                    B +0.093%/d ret    +15% DD  5.2% n= 53 win  58%   A -0.019%/d DD 34%
+10 SOXS LABD TECS SRTY DRIP DUST UVIX NUGT FAZ ERY               B +0.090%/d ret    +15% DD  5.6% n= 59 win  56%   A -0.016%/d DD 31%
+
+== 2. Best list of each size, chosen on A (before 2026), then shown on B ==
+4  SOXS SRTY SQQQ FAZ                                            A +0.030%/d ret    +36% DD  9.3% n=172 win  54%   B +0.010%/d DD 6% n=26
+5  SOXS SRTY SQQQ NUGT FAZ                                       A +0.034%/d ret    +42% DD 11.4% n=212 win  55%   B +0.008%/d DD 6% n=32
+6  SOXS SRTY TZA SQQQ NUGT FAZ                                   A +0.032%/d ret    +39% DD 10.3% n=229 win  55%   B -0.006%/d DD 8% n=36
+7  SOXS SRTY TZA SQQQ NUGT FAZ ERY                               A +0.031%/d ret    +37% DD 11.3% n=244 win  54%   B -0.001%/d DD 8% n=37
+8  SOXS SRTY DRIP TZA SQQQ NUGT FAZ ERY                          A +0.027%/d ret    +32% DD 11.9% n=277 win  53%   B +0.007%/d DD 7% n=41
+9  SOXS LABD SRTY DRIP TZA SQQQ NUGT FAZ ERY                     A +0.022%/d ret    +23% DD 14.9% n=342 win  51%   B +0.026%/d DD 6% n=44
+10 SOXS LABD SRTY DRIP DUST TZA SQQQ NUGT FAZ ERY                A +0.013%/d ret    +12% DD 17.5% n=376 win  50%   B +0.026%/d DD 6% n=44
+
+== 3. Top 8 by the weaker of A and B ==
+5  SOXS DRIP SQQQ NUGT FAZ                                       A +0.024%/d DD 13.0% n=225 win  53%   B +0.027%/d DD  4.6% n= 34 win  53%
+5  SOXS SRTY DRIP SQQQ FAZ                                       A +0.023%/d DD 10.1% n=215 win  52%   B +0.024%/d DD  5.4% n= 31 win  55%
+8  SOXS LABD DRIP TZA SQQQ NUGT FAZ ERY                          A +0.023%/d DD 16.2% n=329 win  52%   B +0.026%/d DD  5.5% n= 42 win  52%
+7  SOXS LABD DRIP TZA SQQQ NUGT FAZ                              A +0.023%/d DD 15.9% n=320 win  52%   B +0.026%/d DD  5.5% n= 42 win  52%
+9  SOXS LABD SRTY DRIP TZA SQQQ NUGT FAZ ERY                     A +0.022%/d DD 14.9% n=342 win  51%   B +0.026%/d DD  5.5% n= 44 win  52%
+6  SOXS SRTY DRIP SQQQ NUGT FAZ                                  A +0.028%/d DD 12.0% n=252 win  53%   B +0.021%/d DD  5.4% n= 37 win  51%
+7  SOXS SRTY DRIP SQQQ NUGT FAZ ERY                              A +0.026%/d DD 13.0% n=262 win  53%   B +0.021%/d DD  5.4% n= 37 win  51%
+6  SOXS TECS SRTY SQQQ NUGT FAZ                                  A +0.021%/d DD 11.6% n=242 win  51%   B +0.037%/d DD  6.0% n= 39 win  54%
+
+Live list (SOXS LABD TECS UVXY): B +0.069%/d ret    +11% DD  6.4% n= 40 win  60%   A -0.018%/d ret    -19% DD 28.7% n=283 win  46%   rank on B 307 of 7722, rank on A 6076
+A: best +0.034%/d, median -0.008%/d, share above zero 27%.   B: best +0.098%/d, median +0.021%/d, share above zero 81%.
+Lists positive in both A and B: 1694 of 7722.  Rank correlation of A and B over all lists: -0.21
+
+== 4. With the live FADE (six proxies), combined account ==
+   live list                 SOXS LABD TECS UVXY                                   B +0.457%/d ret   +100% DD  5.9% n=110 win  54%   A -0.076%/d DD 63%
+   best on B                 SOXS LABD TECS DRIP UVIX FAZ                          B +0.464%/d ret   +102% DD  5.2% n=118 win  53%   A -0.069%/d DD 61%
+   best on A                 SOXS SRTY SQQQ NUGT FAZ                               B +0.398%/d ret    +82% DD  6.1% n=104 win  50%   A -0.032%/d DD 45%
+   best on weaker of A and B SOXS DRIP SQQQ NUGT FAZ                               B +0.417%/d ret    +88% DD  6.1% n=106 win  51%   A -0.041%/d DD 47%
