@@ -355,6 +355,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
+**Monday 2026-10-26, 9:00 research (v5.2.16).**
+- **Real account:** flat, no positions, no open equity or OCO orders at 9:00, **total value $2,535.56** (cash $2,535.56, no pending deposit, unchanged from Friday's close; the $2,500 deposit has not landed). Daily loss limit (-3%) = $76.07, stop at $2,459.49. Floor 50% of deposited cash.
+- **Controls:** losing streak 0/5 (2 real trades, both wins). **A1.13 drawdown stop (new, v5.2.16): clear**, high $2,535.56, stop level $2,155.23 (`archive/hwm.json`, `hwm.py check 2535.56`). No A1.10 restriction; normal full session. No single stock is traded, so no earnings skip applies.
+- **Corporate actions (C3.2):** clean. All 13 funds and 6 proxies active; premarket moves match their underlyings at the stated leverage (QQQ +0.5% vs TQQQ +1.4% / SQQQ -1.4%; SOXX +1.3% vs SOXL +3.7% / SOXS -3.4%; XLK +0.6% vs TECL +1.7% / TECS -1.8%; IWM +0.1% vs TNA +0.3%; XBI +0.3% vs LABU +0.8% / LABD -1.1%; XLF flat vs FAS +0.3%; UVXY -2.6%); none near 20%. Wide premarket spreads on TECL, TECS, LABU (A1.7 will matter at the open).
+- **RVOL baseline:** 20 sessions (2026-09-28..2026-10-23) -> `archive/paper_rvol_2026-10-26.json`.
+- **Context:** first session on the v5.2.13/14 lists (XLF in, AMD and NVD out). Futures higher premarket (QQQ +0.5%, semis +1.3%). Before 13:30: VZ reported before the open; large reports after the close include CDNS, NUE, WELL, HIG (not proxies). The Fed meets Wed 10-28. No scheduled macro release found before 13:30.
+
 **Friday 2026-10-23, 9:00 research (v5.2.12).**
 - **Real account:** flat, no positions, no open or recent orders, **total value $2,508.09** (all cash, buying power $2,508.09). The daily loss limit (A1.2) is measured from it: a close at or below **$2,432.85** blocks entries.
 - **Controls:** losing streak 0/5. No AMD or NVIDIA earnings today (AMD reports Tue 2026-11-03 after the close: skip the AMD fade row Wed 11-04). Regular full session, no holiday.
