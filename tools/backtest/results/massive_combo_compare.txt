@@ -1,0 +1,35 @@
+== Account 1: signal-model costs, 3 entries a day ==
+system                      B 2026-03..10                       A 2021-11..2026-02                  
+LIVE (FADE 6 + PB live4)    +0.457%/d  +100% DD  6% n=110 w 54% -0.076%/d   -59% DD 63% n=781 w 39% 
+FADE+SPY, PB live4          +0.461%/d  +101% DD  6% n=118 w 53% -0.076%/d   -59% DD 63% n=818 w 38% 
+FADE 6, PB best-six-B       +0.464%/d  +102% DD  5% n=118 w 53% -0.069%/d   -56% DD 61% n=831 w 39% 
+FADE+SPY, PB best-six-B     +0.469%/d  +103% DD  5% n=126 w 52% -0.067%/d   -55% DD 60% n=866 w 39% 
+FADE+SPY, PB best-six-A     +0.388%/d   +79% DD  6% n=116 w 48% -0.031%/d   -33% DD 44% n=763 w 40% 
+FADE+SPY, PB best-six-AB    +0.421%/d   +89% DD  6% n=116 w 50% -0.038%/d   -38% DD 48% n=775 w 40% 
+
+== Account 1 by calendar year (each year restarted at $2,000) ==
+system                      2022                                2023                                2024                                2025                                
+LIVE (FADE 6 + PB live4)    -0.050%/d   -14% DD 20% n=200 w 38% -0.079%/d   -19% DD 22% n=159 w 40% -0.055%/d   -14% DD 22% n=181 w 40% -0.139%/d   -30% DD 40% n=177 w 34% 
+FADE+SPY, PB live4          -0.048%/d   -14% DD 22% n=207 w 38% -0.074%/d   -18% DD 23% n=166 w 40% -0.048%/d   -12% DD 21% n=187 w 40% -0.155%/d   -33% DD 42% n=191 w 32% 
+FADE 6, PB best-six-B       -0.071%/d   -19% DD 24% n=225 w 39% -0.062%/d   -15% DD 20% n=166 w 41% -0.044%/d   -11% DD 19% n=191 w 40% -0.112%/d   -25% DD 36% n=186 w 37% 
+FADE+SPY, PB best-six-B     -0.069%/d   -18% DD 24% n=232 w 39% -0.049%/d   -13% DD 22% n=172 w 41% -0.037%/d   -10% DD 18% n=197 w 40% -0.131%/d   -29% DD 38% n=199 w 34% 
+FADE+SPY, PB best-six-A     +0.007%/d    -1% DD 18% n=194 w 41% -0.002%/d    -2% DD 12% n=146 w 44% -0.056%/d   -14% DD 22% n=181 w 38% -0.104%/d   -24% DD 36% n=182 w 36% 
+FADE+SPY, PB best-six-AB    -0.009%/d    -5% DD 20% n=207 w 41% -0.004%/d    -2% DD 13% n=150 w 44% -0.060%/d   -15% DD 21% n=180 w 38% -0.094%/d   -22% DD 35% n=180 w 36% 
+
+== Account 2: A1 gates, +0.10% cost ==
+system                      B 2026-03..10               A 2021-11..2026-02          2022                        2023                        2024                        2025                        
+LIVE (FADE 6 + PB live4)    +0.387%/d   +79% DD  7%     -0.061%/d   -50% DD 53%     -0.132%/d   -30% DD 31%     -0.140%/d   -30% DD 30%     -0.127%/d   -28% DD 30%     -0.210%/d   -41% DD 49%     
+FADE+SPY, PB live4          +0.387%/d   +79% DD  7%     -0.062%/d   -50% DD 53%     -0.133%/d   -30% DD 31%     -0.138%/d   -30% DD 30%     -0.122%/d   -27% DD 29%     -0.232%/d   -45% DD 51%     
+FADE 6, PB best-six-B       +0.389%/d   +80% DD  6%     -0.062%/d   -51% DD 52%     -0.168%/d   -36% DD 37%     -0.126%/d   -27% DD 29%     -0.122%/d   -27% DD 29%     -0.189%/d   -38% DD 46%     
+FADE+SPY, PB best-six-B     +0.389%/d   +79% DD  6%     -0.062%/d   -50% DD 52%     -0.169%/d   -36% DD 37%     -0.116%/d   -26% DD 30%     -0.118%/d   -26% DD 28%     -0.212%/d   -42% DD 49%     
+FADE+SPY, PB best-six-A     +0.315%/d   +60% DD  9%     -0.060%/d   -50% DD 53%     -0.075%/d   -19% DD 24%     -0.058%/d   -14% DD 20%     -0.128%/d   -28% DD 31%     -0.177%/d   -36% DD 45%     
+FADE+SPY, PB best-six-AB    +0.348%/d   +69% DD  7%     -0.061%/d   -50% DD 53%     -0.096%/d   -23% DD 29%     -0.062%/d   -15% DD 22%     -0.132%/d   -29% DD 31%     -0.161%/d   -34% DD 43%     
+
+PULLBACK alone, same windows (account 1):
+   LIVE  SOXS LABD TECS UVXY                     +0.069%/d   +11% DD  6% n= 40 w 60% -0.018%/d   -19% DD 29% n=283 w 46% 
+   B     SOXS LABD TECS DRIP UVIX FAZ            +0.098%/d   +16% DD  4% n= 50 w 60% -0.012%/d   -15% DD 32% n=359 w 46% 
+   A     SOXS SRTY TZA SQQQ NUGT FAZ             -0.006%/d    -1% DD  8% n= 36 w 47% +0.032%/d   +39% DD 10% n=229 w 55% 
+   AB    SOXS SRTY DRIP SQQQ NUGT FAZ            +0.021%/d    +3% DD  5% n= 37 w 51% +0.028%/d   +33% DD 12% n=252 w 53% 
+FADE alone, same windows (account 1):
+   six                                           +0.406%/d   +85% DD  5% n= 80 w 51% -0.054%/d   -47% DD 52% n=532 w 36% 
+   six + SPY                                     +0.411%/d   +86% DD  5% n= 88 w 50% -0.055%/d   -48% DD 52% n=573 w 35% 
