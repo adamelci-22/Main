@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.15** (2026-10-24; DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.16** (2026-10-26; A1.13 hard drawdown stop at -15% from the all-time high, nothing else changed; v5.2.15 2026-10-24: DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -52,6 +52,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 10 | **Session** | Entries only between 10:00 and 12:55. No trading on early-close days (Nov 27, Dec 24) or market holidays. | Calendar; `paper.py` blocks entries on the dates in its `NO_TRADE` list (through 2026-12-31; extend it for 2027 before then) |
 | 11 | **Halt** | Never send an order into a halted ticker (A4). | Broker response |
 | 12 | **Kill switch** | **If the governor says "stop", "halt" or "flatten":** cancel every open order, sell every position (marketable limit), and take no entries until the governor says to resume. This overrides everything else in this file. | — |
+| 13 | **Drawdown stop (v5.2.16)** | **If total value is 15% or more below its all-time high → HARD STOP: cancel every open order, sell any position (marketable limit), take no entries, and stay stopped until the governor clears it** (`hwm.py clear`). The all-time high is the highest total value ever recorded at a checkpoint, kept in `archive/hwm.json` (starts at $2,535.56, the 2026-10-24 close). Deposits and withdrawals move the high by the same dollars (`hwm.py deposit`), so they never count as a drawdown or a new high. Measured at every state check on the live total value, including the mark of an open position, so it can fire mid-day. The system is otherwise unchanged. | `python3 tools/live/hwm.py check <total value>` at **every** state check (exit 2 = stopped). `paper.py --live` also blocks entries while `hwm.json` says halted |
 
 **Losing-streak clearances:** none yet. The live record starts 2026-10-16. Old-system trades in `archive/trade_history/old_system_trades.csv` don't count.
 
@@ -223,7 +224,7 @@ Only the first qualifying setup per ticker per day counts.
 
 ## C3. 9:00 research
 
-1. **State check** (A3). Record **total value at 9:00** in E5; the daily loss limit (A1.2) is measured from it. Any position found → sell it at 9:30 (A1.8).
+1. **State check** (A3). Run `python3 tools/live/hwm.py check <total value>` (A1.13). Record **total value at 9:00** in E5; the daily loss limit (A1.2) is measured from it. Any position found → sell it at 9:30 (A1.8).
 2. **Controls:**
    - the losing streak from `live_trades.csv` (lockout status);
    - whether today is an early-close day or a holiday (A1.10).
@@ -277,7 +278,7 @@ Only the first qualifying setup per ticker per day counts.
 - **Backup at 8:00pm:** check that the next trading day's chain exists (the 46 primaries). Create it only if it's missing, and say so.
 - **Time zone (v5.2.15):** triggers take UTC. **Never hard-code the offset.** Convert every ET time with `bash tools/live/et2utc.sh "YYYY-MM-DD HH:MM"` (ET = UTC−4 until Sun 2026-11-01, UTC−5 from Mon 2026-11-02, back to UTC−4 on Sun 2027-03-14). A one-shot check (`DST check`, Fri 2026-10-30 8:15 PM ET) verifies Monday 2026-11-02's chain times.
 - **Next trading day (v5.2.15):** the 13:30 arming picks the next trading day, skipping weekends and every date in `paper.py`'s `NO_TRADE`. In 2026: after Wed 11-25 arm Mon 11-30 (Thu 11-26 closed, Fri 11-27 early close); after Wed 12-23 arm Mon 12-28 (Thu 12-24 early close, Fri 12-25 closed). In 2027 the closures are listed in `NO_TRADE`.
-- **Deposits and withdrawals (v5.2.15):** nothing is held overnight, so at 9:00 compare total value with the previous 13:30 value. An unexplained change is a deposit or withdrawal: record it in E1 and E5, recompute the floor (A1.4 recomputes it from total value and P&L, so it moves by itself), and add the amount to the model equity in `archive/paper_state.json` so the model's dollars stay comparable (percentages are unaffected).
+- **Deposits and withdrawals (v5.2.15):** nothing is held overnight, so at 9:00 compare total value with the previous 13:30 value. An unexplained change is a deposit or withdrawal: record it in E1 and E5, run `python3 tools/live/hwm.py deposit <+/-amount>` so the A1.13 high moves with it, recompute the floor (A1.4 recomputes it from total value and P&L, so it moves by itself), and add the amount to the model equity in `archive/paper_state.json` so the model's dollars stay comparable (percentages are unaffected).
 - **Prompt templates.** Each prompt names its slot and date, and ends: "RULEBOOK.md governs wherever this prompt differs. This is a real live trading account (Robinhood 462514035) acting on real capital."
   - **9:00:** "Live mode. Read A, C3, D. State check, record the 9:00 value, controls (streak, earnings, session), RVOL baseline, context."
   - **9:30:** "Live mode. Overnight check (A1.8): sell anything held. Otherwise a one-line no-op."
@@ -415,6 +416,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.16 — 2026-10-26, governor instruction:** "run the system as is and lock in a hard stop from a 15% drawdown from ATH." New control **A1.13**: when total value is 15% or more below its all-time high, cancel orders, flatten, take no entries, and stay stopped until the governor clears it. No signal, list, sizing or exit rule changed, so the backtest numbers are unchanged (D3): over the 157-day backtest the combined system's deepest drawdown is 3.1% (FADE alone 4.5%), so the stop would never have fired and both halves and the March window are identical. It is a guard for a regime change (the Databento 2023-03..2026-02 run of the same FADE rules drew down 47%; see `tools/backtest/results/db_oos.txt`, `fade_diag.txt`). `tools/live/hwm.py` keeps `archive/hwm.json` (high starts at $2,535.56); `paper.py --live` blocks entries while it says halted. The loss streak (5), daily loss (3%), floor (50% of deposits) and kill switch are unchanged. Note the stop is on dollars at risk to the live account, so after a halt the governor decides whether to restart (clearing resets the high to the current value).
 
 **v5.2.15 — 2026-10-24, governor instruction:** operations only; no signal, sizing, exit or list rule changed (backtest unchanged, `paper.py` replay still equals the backtest, 111 = 111). (1) Daylight saving: `slot_clock.sh` reads America/New_York itself (offset argument ignored, mismatch warned); new `tools/live/et2utc.sh` converts ET to UTC for `create_trigger`; the arming prompts and D1 say never to hard-code the offset; a one-shot DST check on Fri 2026-10-30 8:15 PM ET verifies Monday 2026-11-02's chain. (2) `paper.py`'s `NO_TRADE` calendar extended through 2027-12-31 with the 2027 NYSE closures and the 2027-11-26 early close; D1 now arms the next trading day, skipping weekends and `NO_TRADE`. (3) Deposit check at 9:00 (total value against the previous 13:30 value) with the floor recomputed and the model equity adjusted. Waiter tested live: fired at due+6 s, and warned when given a wrong offset.
 

@@ -277,8 +277,17 @@ def live_actions(today, taken, signals, K, base=None, day=None):
         return (t['k'], -rvol(today, base, prox, t['k']), 0 if sysn == 'FADE' else 1 + PB_LIST.index(sym))
     live.sort(key=key)
     blocked = NO_TRADE.get(day) if day else None
-    if blocked:
+    try: halted = json.load(open(os.path.join(ROOT, 'archive', 'hwm.json'))).get('halted')
+    except Exception: halted = None
+    if halted:      # RULEBOOK A1.13: 15% drawdown stop from the all-time high; only the governor clears it (tools/live/hwm.py clear)
+        print("    DRAWDOWN STOP ACTIVE (A1.13): no real entries. Cancel open orders and sell any position now. The model keeps running for the record.")
+        blocked = blocked or 'drawdown stop (A1.13)'
+    elif halted is None:
+        print("    WARNING: archive/hwm.json missing or unreadable - run `python3 tools/live/hwm.py check <total value>` before any entry (A1.13).")
+    if blocked and not halted:
         print(f"    NO ENTRIES TODAY (A1.10): {day} is {blocked}. Manage any open position only.")
+    elif blocked:
+        pass
     elif day and day > CALENDAR_THROUGH:
         print(f"    WARNING: paper.py's holiday/early-close calendar ends {CALENDAR_THROUGH}: check the NYSE calendar by hand (A1.10) and extend NO_TRADE.")
     first = True
@@ -286,7 +295,7 @@ def live_actions(today, taken, signals, K, base=None, day=None):
         any_ = True
         legs = (FADE_ROWS[sym][0] if t['side'] > 0 else FADE_ROWS[sym][1]) if sysn == 'FADE' else sym
         if blocked:
-            print(f"    (signal {sysn} {sym} -> {legs} not entered: A1.10 no-trade day)"); continue
+            print(f"    (signal {sysn} {sym} -> {legs} not entered: {'A1.13 drawdown stop' if halted else 'A1.10 no-trade day'})"); continue
         if sym in SKIP or legs in SKIP:
             print(f"    SKIP {sysn} {sym} -> {legs}: barred today by --skip (A1.9 earnings). Log it as skipped."); continue
         if not first:
