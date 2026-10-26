@@ -1,0 +1,43 @@
+Massive 5-minute bars 2021-10-28..2026-10-23 (1235 days). FADE six proxies + PULLBACK SOXS LABD TECS UVXY. One continuous $2,000 account per column.
+
+== 2021 (Nov-Dec) ==
+  OLD  live: 30-min box, 3% risk                         trades   40  win  38%  avg/day -0.125%  return     -5.5%  max DD  10.7%  trading on  71% of days
+  NEW  1% risk + pause rules                             trades   36  win  39%  avg/day -0.127%  return     -5.4%  max DD   8.2%  trading on  64% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades   40  win  40%  avg/day -0.032%  return     -1.4%  max DD   3.5%  trading on  69% of days
+== 2022 ==
+  OLD  live: 30-min box, 3% risk                         trades  200  win  38%  avg/day -0.050%  return    -13.9%  max DD  19.9%  trading on  63% of days
+  NEW  1% risk + pause rules                             trades   61  win  39%  avg/day -0.024%  return     -6.2%  max DD  15.3%  trading on  19% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades   63  win  40%  avg/day +0.022%  return     +5.4%  max DD   3.7%  trading on  20% of days
+== 2023 ==
+  OLD  live: 30-min box, 3% risk                         trades  159  win  40%  avg/day -0.079%  return    -18.6%  max DD  21.7%  trading on  55% of days
+  NEW  1% risk + pause rules                             trades   77  win  39%  avg/day -0.044%  return    -10.4%  max DD  12.5%  trading on  25% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  116  win  40%  avg/day -0.013%  return     -3.4%  max DD   9.1%  trading on  41% of days
+== 2024 ==
+  OLD  live: 30-min box, 3% risk                         trades  181  win  40%  avg/day -0.055%  return    -13.8%  max DD  21.6%  trading on  62% of days
+  NEW  1% risk + pause rules                             trades   61  win  34%  avg/day -0.038%  return     -9.2%  max DD   9.9%  trading on  21% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  121  win  47%  avg/day +0.050%  return    +12.9%  max DD   3.4%  trading on  42% of days
+== 2025 ==
+  OLD  live: 30-min box, 3% risk                         trades  177  win  34%  avg/day -0.139%  return    -30.2%  max DD  39.7%  trading on  59% of days
+  NEW  1% risk + pause rules                             trades   21  win  33%  avg/day -0.014%  return     -3.6%  max DD   8.0%  trading on   6% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  130  win  38%  avg/day -0.015%  return     -3.9%  max DD  11.4%  trading on  45% of days
+== 2026 to Oct 23 ==
+  OLD  live: 30-min box, 3% risk                         trades  141  win  52%  avg/day +0.360%  return   +102.5%  max DD   6.8%  trading on  60% of days
+  NEW  1% risk + pause rules                             trades  114  win  53%  avg/day +0.247%  return    +63.2%  max DD   4.8%  trading on  50% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  118  win  51%  avg/day +0.091%  return    +20.0%  max DD   3.2%  trading on  48% of days
+== ALL 5 YEARS ==
+  OLD  live: 30-min box, 3% risk                         trades  898  win  41%  avg/day -0.009%  return    -19.3%  max DD  63.5%  trading on  60% of days
+  NEW  1% risk + pause rules                             trades  370  win  42%  avg/day +0.013%  return    +13.7%  max DD  32.8%  trading on  25% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  588  win  43%  avg/day +0.023%  return    +30.8%  max DD  14.1%  trading on  40% of days
+== before 2026-03 ==
+  OLD  live: 30-min box, 3% risk                         trades  783  win  39%  avg/day -0.077%  return    -59.1%  max DD  63.5%  trading on  60% of days
+  NEW  1% risk + pause rules                             trades  256  win  38%  avg/day -0.032%  return    -30.3%  max DD  32.8%  trading on  19% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  476  win  41%  avg/day +0.007%  return     +6.4%  max DD  13.6%  trading on  37% of days
+== since 2026-03 ==
+  OLD  live: 30-min box, 3% risk                         trades  115  win  53%  avg/day +0.429%  return    +97.5%  max DD   6.8%  trading on  62% of days
+  NEW  1% risk + pause rules                             trades  114  win  53%  avg/day +0.305%  return    +63.2%  max DD   4.8%  trading on  61% of days
+  NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   trades  112  win  53%  avg/day +0.128%  return    +23.0%  max DD   2.7%  trading on  56% of days
+
+pauses: NEW : 8 pauses, 722 of 1235 days paused; NEW+ +: 10 pauses, 531 of 1235 days paused
+final equity from $2,000: OLD  live: 30-min box, 3% risk                         $1,614
+final equity from $2,000: NEW  1% risk + pause rules                             $2,274
+final equity from $2,000: NEW+ 10-min box (from 9:50), 0.5% risk + pause rules   $2,616
