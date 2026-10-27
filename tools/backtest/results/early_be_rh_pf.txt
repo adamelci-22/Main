@@ -1,0 +1,8 @@
+Robinhood data 2026-03-03..2026-10-14 (157 days). Profit factor = $ won on green trades / $ lost on red trades (account-level, after costs).
+stop rule                            trades  green    PF   %/day avg green  avg red   total
+LIVE (BE only after 2R partial)          75    57%  3.09 +0.419%    +2.26%   -0.98%  +88.8%
+at +0.5R -> breakeven                    75    41%  3.21 +0.315%    +2.32%   -0.51%  +61.3%
+at +1R -> breakeven                      75    51%  3.09 +0.371%    +2.26%   -0.75%  +75.5%
+at +1R -> lock +0.1R                     76    58%  2.92 +0.334%    +1.81%   -0.85%  +66.2%
+at +1R -> stop to -0.5R                  75    55%  2.96 +0.384%    +2.22%   -0.91%  +79.2%
+at +1.5R -> breakeven                    75    55%  3.04 +0.398%    +2.27%   -0.90%  +82.8%
