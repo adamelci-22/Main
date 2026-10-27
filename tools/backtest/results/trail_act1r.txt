@@ -1,0 +1,40 @@
+DATA Robinhood cache 2026-03-03..2026-10-14 (157 days); halves split 2026-06-24
+rule                                         trades  green    PF   %/day      H1      H2  avg grn  avg red  maxDD   total
+LIVE (no early trail)                            75    57%  3.09 +0.419% +0.391% +0.446%   +2.26%   -0.98%   4.5%  +88.8%
+previous: trail on closes from the start, lock +0.75R     75    52%  3.19 +0.376% +0.310% +0.440%   +2.20%   -0.75%   4.0%  +76.9%
+-- stop frozen at -1R until the 5-min CLOSE reaches +1R; then 1R behind the best CLOSE, up only, capped at:
+   lock +0.25R                                   75    59%  2.91 +0.372% +0.326% +0.417%   +2.02%   -0.99%   4.9%  +75.7%
+   lock +0.50R                                   75    59%  2.91 +0.372% +0.335% +0.408%   +2.02%   -0.99%   4.8%  +75.7%
+   lock +0.75R                                   75    59%  2.94 +0.378% +0.344% +0.412%   +2.04%   -0.99%   4.8%  +77.5%
+   lock +1.00R                                   75    59%  2.84 +0.359% +0.316% +0.401%   +1.98%   -0.99%   4.8%  +72.3%
+   no cap                                        75    59%  2.47 +0.285% +0.241% +0.329%   +1.71%   -0.99%   4.8%  +54.4%
+-- stop frozen at -1R until the price (any tick / bar high) reaches +1R; then 1R behind the best CLOSE, up only, capped at:
+   lock +0.25R                                   75    55%  2.94 +0.361% +0.298% +0.423%   +2.09%   -0.86%   4.5%  +72.8%
+   lock +0.50R                                   75    55%  2.94 +0.360% +0.305% +0.414%   +2.09%   -0.86%   4.5%  +72.4%
+   lock +0.75R                                   75    55%  2.96 +0.365% +0.311% +0.418%   +2.11%   -0.86%   4.5%  +73.9%
+   lock +1.00R                                   75    55%  2.85 +0.344% +0.281% +0.407%   +2.03%   -0.86%   4.5%  +68.4%
+   no cap                                        75    55%  2.44 +0.268% +0.200% +0.335%   +1.74%   -0.86%   4.5%  +50.2%
+-- same, but trailing 1R behind the best HIGH (tick-level trail) after activation
+   lock +0.50R                                   76    62%  2.65 +0.287% +0.210% +0.363%   +1.54%   -0.94%   4.5%  +54.6%
+   no cap                                        76    62%  2.56 +0.272% +0.227% +0.316%   +1.49%   -0.94%   4.5%  +51.3%
+
+DATA Massive full tape 2021-11-30..2026-10-23 (1215 days); halves split 2024-04-01
+rule                                         trades  green    PF   %/day      H1      H2  avg grn  avg red  maxDD   total
+LIVE (no early trail)                           603    38%  1.00 +0.001% -0.018% +0.018%   +1.58%   -0.95%  51.2%   -5.8%
+previous: trail on closes from the start, lock +0.75R    606    35%  1.00 +0.001% -0.003% +0.005%   +1.32%   -0.72%  44.2%   -4.3%
+-- stop frozen at -1R until the 5-min CLOSE reaches +1R; then 1R behind the best CLOSE, up only, capped at:
+   lock +0.25R                                  603    41%  1.01 +0.002% -0.014% +0.017%   +1.31%   -0.92%  47.7%   -3.9%
+   lock +0.50R                                  603    41%  0.99 -0.002% -0.013% +0.008%   +1.29%   -0.92%  48.8%   -8.8%
+   lock +0.75R                                  603    41%  0.98 -0.004% -0.012% +0.003%   +1.28%   -0.92%  48.8%  -10.8%
+   lock +1.00R                                  603    41%  0.99 -0.002% -0.006% +0.002%   +1.29%   -0.92%  47.8%   -8.2%
+   no cap                                       604    42%  1.00 +0.001% +0.004% -0.001%   +1.30%   -0.92%  46.4%   -4.5%
+-- stop frozen at -1R until the price (any tick / bar high) reaches +1R; then 1R behind the best CLOSE, up only, capped at:
+   lock +0.25R                                  604    38%  1.00 -0.000% -0.008% +0.007%   +1.31%   -0.81%  47.7%   -6.3%
+   lock +0.50R                                  604    38%  0.99 -0.003% -0.005% -0.001%   +1.30%   -0.81%  47.7%   -9.0%
+   lock +0.75R                                  604    38%  0.98 -0.005% -0.004% -0.006%   +1.29%   -0.81%  47.4%  -11.3%
+   lock +1.00R                                  604    38%  0.99 -0.003% +0.002% -0.006%   +1.30%   -0.81%  46.2%   -8.6%
+   no cap                                       605    38%  1.00 +0.000% +0.012% -0.010%   +1.31%   -0.81%  45.1%   -5.4%
+-- same, but trailing 1R behind the best HIGH (tick-level trail) after activation
+   lock +0.50R                                  606    45%  0.98 -0.004% -0.006% -0.002%   +1.05%   -0.86%  46.3%  -10.1%
+   no cap                                       608    45%  1.00 -0.001% +0.007% -0.008%   +1.05%   -0.86%  42.6%   -5.8%
+
