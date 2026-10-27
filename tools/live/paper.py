@@ -213,13 +213,21 @@ def rvol(today, base, p, k):
     return sum(b[4] for b in today[p][:k]) / base[p][k]
 
 
-def simulate(today, prev, K, equity, base=None, streak=0):
+FADE_NO_FRIDAY_FROM = '2026-10-28'   # RULEBOOK v5.2.17 (A1.10): no FADE entries on Fridays from this date; PULLBACK still trades Fridays
+
+
+def fade_day_ok(day):
+    return not (day and day >= FADE_NO_FRIDAY_FROM and datetime.strptime(day, '%Y-%m-%d').weekday() == 4)
+
+
+def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     """today/prev: {sym: [bars]}; base = {proxy: [avg cumulative volume through bar k]} for the RVOL tie-break.
+    day (YYYY-MM-DD) switches off FADE on Fridays from FADE_NO_FRIDAY_FROM (v5.2.17); without it (backtest replays) FADE runs every day.
     streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
     Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
     cands, signals = [], []
     for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
-        if p not in today: continue
+        if p not in today or not fade_day_ok(day): continue
         t = fade(today[p], K)
         if not t: continue
         if t['status'] in ('watching', 'signal'): signals.append(('FADE', p, t)); continue
@@ -400,7 +408,8 @@ def main():
     if not base: print("  (no RVOL baseline for today - same-bar ties fall back to list order; run --build-rvol at 9:00)")
     streak0 = S.get('loss_streak', 0)
     if streak0 >= LOCKOUT_LOSSES: print(f"  LOCKOUT: {streak0} losing trades in a row - no new paper entries until the governor clears it")
-    taken, skipped, signals, eq = simulate(today, prev, K, eq0, base, streak0)
+    if not fade_day_ok(day): print("  FRIDAY: no FADE entries today (RULEBOOK v5.2.17, A1.10); PULLBACK only")
+    taken, skipped, signals, eq = simulate(today, prev, K, eq0, base, streak0, day)
     print(f"PAPER {day} at {a.now} ET (bars through {k2t(K)}), paper equity at open ${eq0:,.2f}")
     if not taken and not signals: print("  no paper trades or live signals")
     for c in taken:
