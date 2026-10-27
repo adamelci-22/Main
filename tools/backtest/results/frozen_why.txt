@@ -1,0 +1,21 @@
+DATA Robinhood 2026: 63 trades taken (live), FADE, no Fridays
+  green: live 39 (62%), frozen 40 (63%)
+  A never touched +1R (stop never moves)                                        21  (33%)
+  B touched +1R intrabar but no 5-min CLOSE at +1R (stop never moves)            4  (6%)
+  C closed at +1R, went on to 2R: green either way                              32  (51%)
+  D closed at +1R, green in both (13:30 exit / trail)                            4  (6%)
+  E FLIPPED red -> green by the frozen trail                                     1  (2%)
+  G closed at +1R but red in both (stopped near breakeven, costs make it red)    1  (2%)
+  frozen-trail red trades that had closed at +1R: avg -1.00R (cost 0.06% round trip on the leg ~ -0.05 to -0.1R)
+
+DATA Massive 5 years: 490 trades taken (live), FADE, no Fridays
+  green: live 195 (40%), frozen 211 (43%)
+  A never touched +1R (stop never moves)                                       228  (47%)
+  B touched +1R intrabar but no 5-min CLOSE at +1R (stop never moves)           37  (8%)
+  C closed at +1R, went on to 2R: green either way                             158  (32%)
+  D closed at +1R, green in both (13:30 exit / trail)                           27  (6%)
+  E FLIPPED red -> green by the frozen trail                                    19  (4%)
+  F FLIPPED green -> red/scratch by the frozen trail                             3  (1%)
+  G closed at +1R but red in both (stopped near breakeven, costs make it red)   18  (4%)
+  frozen-trail red trades that had closed at +1R: avg -0.25R (cost 0.06% round trip on the leg ~ -0.05 to -0.1R)
+
