@@ -1,0 +1,71 @@
+DATA Robinhood cache: 2026-03-03..2026-10-14, 157 days; halves split at 2026-06-24
+
+PART 1 - the 75 trades the account actually took, LIVE exits (1/3 at 2R, stop to breakeven, 2-ATR chandelier on closes, out 13:30)
+  share whose best price reached:  >=0.5R 81%  >=1R 64%  >=1.5R 56%  >=2R 49%  >=2.5R 35%  >=3R 29%  >=4R 19%  >=5R 15%
+  reached 2R: 36 (48%); never reached 2R: 39 (52%), their avg result -0.65R
+  never reached 2R but reached 1R first: 12 (16% of all trades); their avg result -0.23R
+  trades past 2R (36): runner peak avg 4.64R (median 3.41R); runner exit avg +3.08R (median +2.05R)
+     giveback per runner (peak - exit) avg 1.56R; runner kept 55% of its peak on average
+     runner exits: trail 27, time 9, target 0
+     runner exit buckets: -9..0.01R: 7  0.01..1R: 3  1..2R: 7  2..3R: 7  3..99R: 12
+     whole trade result for these: avg +2.72R
+  all trades avg +0.97R; win 57%
+
+PART 2 - exit regimes.  each cell: %/day (all days)  avgR  win%  maxDD   | first half | second half | whole
+LIVE  1/3@2R  BE  chand 2.0                    | +0.391 +0.98R 55% DD 4.2 | +0.446 +0.96R 60% DD 4.5 | +0.419 +0.97R 57% DD 4.5
+-- same 1/3@2R + BE, tighter runner ratchet
+1/3@2R  BE  chand 0.5                          | +0.301 +0.65R 55% DD 4.2 | +0.281 +0.62R 60% DD 4.5 | +0.291 +0.63R 57% DD 4.5
+1/3@2R  BE  chand 0.75                         | +0.265 +0.57R 55% DD 4.2 | +0.307 +0.67R 60% DD 4.5 | +0.286 +0.61R 57% DD 4.5
+1/3@2R  BE  chand 1.0                          | +0.260 +0.54R 55% DD 4.2 | +0.350 +0.71R 60% DD 4.5 | +0.305 +0.62R 57% DD 4.5
+1/3@2R  BE  chand 1.5                          | +0.248 +0.51R 55% DD 4.2 | +0.360 +0.69R 60% DD 4.5 | +0.305 +0.59R 57% DD 4.5
+1/3@2R  BE  chand 3.0                          | +0.368 +0.96R 55% DD 4.2 | +0.442 +0.96R 60% DD 4.5 | +0.405 +0.96R 57% DD 4.5
+1/3@2R  BE  lag 0.5R (closes)                  | +0.278 +0.57R 55% DD 4.2 | +0.282 +0.65R 60% DD 4.5 | +0.280 +0.61R 57% DD 4.5
+1/3@2R  BE  lag 0.75R (closes)                 | +0.273 +0.58R 55% DD 4.2 | +0.313 +0.72R 60% DD 4.5 | +0.293 +0.65R 57% DD 4.5
+1/3@2R  BE  lag 1.0R (closes)                  | +0.257 +0.58R 55% DD 4.2 | +0.369 +0.79R 60% DD 4.5 | +0.313 +0.67R 57% DD 4.5
+1/3@2R  BE  lag 1.5R (closes)                  | +0.234 +0.51R 55% DD 4.2 | +0.389 +0.78R 60% DD 4.5 | +0.312 +0.63R 57% DD 4.5
+1/3@2R  BE  lag 0.5R (highs)                   | +0.298 +0.59R 55% DD 4.2 | +0.292 +0.66R 60% DD 4.5 | +0.295 +0.62R 57% DD 4.5
+1/3@2R  BE  lag 1.0R (highs)                   | +0.270 +0.58R 55% DD 4.2 | +0.352 +0.81R 60% DD 4.5 | +0.312 +0.69R 57% DD 4.5
+1/3@2R  BE  lag 1.5R (highs)                   | +0.240 +0.57R 55% DD 4.2 | +0.351 +0.78R 60% DD 4.5 | +0.296 +0.67R 57% DD 4.5
+1/3@2R  BE  lock 33% of best close             | +0.225 +0.52R 55% DD 4.2 | +0.427 +0.79R 60% DD 4.5 | +0.326 +0.64R 57% DD 4.5
+1/3@2R  BE  lock 50% of best close             | +0.249 +0.57R 55% DD 4.2 | +0.382 +0.77R 60% DD 4.5 | +0.316 +0.66R 57% DD 4.5
+1/3@2R  BE  lock 66% of best close             | +0.250 +0.51R 55% DD 4.2 | +0.378 +0.81R 60% DD 4.5 | +0.315 +0.65R 57% DD 4.5
+1/3@2R  BE  lock 75% of best close             | +0.271 +0.55R 55% DD 4.2 | +0.322 +0.72R 60% DD 4.5 | +0.296 +0.63R 57% DD 4.5
+-- 1/3@2R with the runner stop to +1R (not breakeven)
+1/3@2R  stop+1R  chand 1.0                     | +0.266 +0.57R 55% DD 4.2 | +0.348 +0.75R 60% DD 4.5 | +0.307 +0.65R 57% DD 4.5
+1/3@2R  stop+1R  chand 2.0                     | +0.337 +0.88R 55% DD 4.2 | +0.402 +0.80R 60% DD 4.5 | +0.370 +0.84R 57% DD 4.5
+1/3@2R  stop+1R  lag 1.0                       | +0.255 +0.58R 55% DD 4.2 | +0.373 +0.80R 60% DD 4.5 | +0.314 +0.68R 57% DD 4.5
+1/3@2R  stop+1R  pct 0.5                       | +0.248 +0.57R 55% DD 4.2 | +0.391 +0.79R 60% DD 4.5 | +0.320 +0.67R 57% DD 4.5
+-- second tranche
+1/3@2R BE, 1/3@3R +1R, chand 1.0               | +0.271 +0.57R 55% DD 4.2 | +0.338 +0.73R 60% DD 4.5 | +0.305 +0.65R 57% DD 4.5
+1/3@2R BE, 1/3@3R +1R, chand 2.0               | +0.324 +0.75R 55% DD 4.2 | +0.390 +0.79R 60% DD 4.5 | +0.357 +0.77R 57% DD 4.5
+1/3@2R BE, 1/3@3R +1R, lag 1.0                 | +0.266 +0.57R 55% DD 4.2 | +0.358 +0.78R 60% DD 4.5 | +0.313 +0.67R 57% DD 4.5
+1/2@2R BE, rest chand 1.0                      | +0.268 +0.55R 55% DD 4.2 | +0.336 +0.70R 60% DD 4.5 | +0.303 +0.62R 57% DD 4.5
+1/2@2R BE, rest chand 2.0                      | +0.366 +0.88R 55% DD 4.2 | +0.408 +0.89R 60% DD 4.5 | +0.387 +0.88R 57% DD 4.5
+1/2@2R BE, rest lag 1.0                        | +0.266 +0.58R 55% DD 4.2 | +0.351 +0.76R 60% DD 4.5 | +0.309 +0.66R 57% DD 4.5
+-- single targets / no target
+all out at 2.0R                                | +0.317 +0.65R 57% DD 4.2 | +0.317 +0.67R 61% DD 4.5 | +0.317 +0.66R 59% DD 4.5
+all out at 2.5R                                | +0.228 +0.48R 48% DD 6.0 | +0.329 +0.71R 54% DD 4.5 | +0.279 +0.59R 51% DD 6.0
+all out at 3.0R                                | +0.221 +0.49R 45% DD 6.0 | +0.377 +0.76R 51% DD 4.5 | +0.299 +0.62R 48% DD 6.0
+all out at 4.0R                                | +0.281 +0.57R 42% DD 6.0 | +0.429 +0.83R 49% DD 4.5 | +0.355 +0.69R 45% DD 6.0
+no partial, after 2R: BE + chand 1.0           | +0.244 +0.51R 50% DD 4.3 | +0.378 +0.73R 57% DD 4.5 | +0.311 +0.62R 53% DD 4.5
+no partial, after 2R: BE + chand 2.0           | +0.440 +1.18R 48% DD 4.3 | +0.522 +1.10R 46% DD 4.5 | +0.481 +1.14R 47% DD 4.5
+no partial, after 2R: BE + lag 1.0             | +0.239 +0.58R 52% DD 4.2 | +0.407 +0.84R 60% DD 4.5 | +0.323 +0.70R 56% DD 4.5
+-- time exit with live exits
+LIVE exits, out at 12:55                       | +0.392 +0.99R 55% DD 4.2 | +0.395 +0.85R 60% DD 4.5 | +0.394 +0.93R 57% DD 4.5
+LIVE exits, out at 13:55                       | +0.389 +0.95R 52% DD 4.3 | +0.434 +0.89R 57% DD 4.5 | +0.412 +0.93R 55% DD 4.5
+LIVE exits, out at 14:55                       | +0.393 +0.93R 55% DD 4.2 | +0.423 +0.87R 60% DD 4.5 | +0.408 +0.91R 57% DD 4.5
+LIVE exits, out at 15:45                       | +0.408 +0.95R 55% DD 4.2 | +0.416 +0.87R 60% DD 4.5 | +0.412 +0.91R 57% DD 4.5
+
+RANKING by first half -> where it lands in the second half (whole sample in brackets)
+  no partial, after 2R: BE + chand 2.0           H1 +0.440  H2 +0.522  [+0.481]
+  LIVE exits, out at 15:45                       H1 +0.408  H2 +0.416  [+0.412]
+  LIVE exits, out at 14:55                       H1 +0.393  H2 +0.423  [+0.408]
+  LIVE exits, out at 12:55                       H1 +0.392  H2 +0.395  [+0.394]
+  LIVE  1/3@2R  BE  chand 2.0                    H1 +0.391  H2 +0.446  [+0.419]
+  LIVE exits, out at 13:55                       H1 +0.389  H2 +0.434  [+0.412]
+  1/3@2R  BE  chand 3.0                          H1 +0.368  H2 +0.442  [+0.405]
+  1/2@2R BE, rest chand 2.0                      H1 +0.366  H2 +0.408  [+0.387]
+  1/3@2R  stop+1R  chand 2.0                     H1 +0.337  H2 +0.402  [+0.370]
+  1/3@2R BE, 1/3@3R +1R, chand 2.0               H1 +0.324  H2 +0.390  [+0.357]
+  all out at 2.0R                                H1 +0.317  H2 +0.317  [+0.317]
+  1/3@2R  BE  chand 0.5                          H1 +0.301  H2 +0.281  [+0.291]
