@@ -134,7 +134,7 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
     entry, stop = to_m(e_real), to_m(stop_real)
     if entry <= stop or k >= SELL_BY: return None
     r = entry - stop; T = entry + R * r
-    gross = 0.0; rem = 1.0; hit = False; hic = entry; events = []
+    gross = 0.0; rem = 1.0; hit = False; hic = entry; events = []; bestc = 0.0
     end = min(SELL_BY, K - 1); closed = False; xbar = None; why = None
     for j in range(k, end + 1):
         o, h, l, c, v = b[j]
@@ -144,6 +144,10 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
         if not hit and h >= T:
             px = max(T, o); gross += frac * (px - entry); rem -= frac; hit = True; stop = max(stop, entry)
             events.append((k2t(j), 'take profit 1/3 at 2R', to_m(px), frac))
+        bestc = max(bestc, (c - entry) / r)
+        if FROZEN_ON and bestc >= 1.0:                        # v5.2.18: frozen 1R trail on closes, capped at +0.75R
+            ns = entry + min(0.75, bestc - 1.0) * r
+            if ns > stop: stop = ns; events.append((k2t(j), 'frozen-trail stop raised', to_m(ns), rem))
         hic = max(hic, c)
         if hit and j < SELL_BY: stop = max(stop, hic - 2 * atr(b, j))
     if not closed and K - 1 >= SELL_BY:
@@ -214,6 +218,8 @@ def rvol(today, base, p, k):
 
 
 FADE_NO_FRIDAY_FROM = '2026-10-28'   # RULEBOOK v5.2.17 (A1.10): no FADE entries on Fridays from this date; PULLBACK still trades Fridays
+FROZEN_FROM = '2026-10-28'   # RULEBOOK v5.2.18 (B2): before 2R the FADE stop is frozen at -1R until a 5-min close at +1R, then trails 1R behind the best close, capped at +0.75R
+FROZEN_ON = False            # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.18 exits
 
 
 def fade_day_ok(day):
@@ -336,6 +342,14 @@ def live_actions(today, taken, signals, K, base=None, day=None):
             if lnow is None:
                 print(f"    MANAGE FADE {leg}: no {leg} bars in the dump - refetch; until then leave the resting orders alone and manage from the broker state (A4.5). "
                       f"Model: 1/3 take-profit {'DONE' if hit else 'not yet'}, runner stop on the proxy {c['stop_now']:.2f}")
+            elif not hit and FROZEN_ON and abs(c['stop_now'] - c['stop0']) > 1e-9:
+                lock = side * (c['stop_now'] - c['entry']) / (side * (c['entry'] - c['stop0']))
+                print(f"    MANAGE FADE {leg}: FROZEN TRAIL (v5.2.18, B5.3): model stop raised to {lock:+.2f}R (proxy {c['stop_now']:.2f}). "
+                      f"Real stop on ALL shares = F x (1 {'+' if lock >= 0 else '-'} {abs(lock):.2f} x {lev:g} x {c['risk_pct']:.3f}%) = about {leg} {to_leg(lnow, pnow, c['stop_now'], side, lev):.2f} "
+                      f"(round down to the cent). Raise only, and only if >= 0.10% above the resting stop: cancel the OCO -> verify -> re-place the OCO "
+                      f"(same take-profit, new stop) -> verify; cancel the 2/3 stop -> verify -> place it at the new stop -> verify. "
+                      f"If the new stop is at or above the bid, sell everything (marketable limit). If the REAL 1/3 already filled: runner stop = the higher of this level, "
+                      f"breakeven and the chandelier {leg} {to_leg(lnow, pnow, c['chand_if_done'], side, lev):.2f} (B5.4)")
             elif not hit:
                 print(f"    MANAGE FADE {leg}: 1/3 take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3). "
                       f"If the REAL 1/3 already filled: runner stop = breakeven (the fill), raised to the chandelier {leg} "
