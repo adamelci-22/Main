@@ -1,0 +1,313 @@
+Universe (proxy: bull/bear leverage). Liquid = both legs trade tight; thin = wide spreads / little volume, results there are not tradeable as modelled.
+  QQQ   TQQQ/SQQQ 3x/3x liquid
+  SPY   SPXL/SPXS 3x/3x liquid
+  DIA   UDOW/SDOW 3x/3x liquid
+  IWM   TNA/TZA 3x/3x liquid
+  XLK   TECL/TECS 3x/3x liquid
+  XLF   FAS/FAZ 3x/3x liquid
+  SOXX  SOXL/SOXS 3x/3x liquid
+  XBI   LABU/LABD 3x/3x liquid
+  XLE   ERX/ERY 2x/2x liquid
+  XLRE  DRN/DRV 3x/3x liquid
+  TLT   TMF/TMV 3x/3x liquid
+  FXI   YINN/YANG 3x/3x liquid
+  XLB   UYM/SMN 2x/2x thin
+  XLV   CURE/RXD 3x/2x thin
+  XLU   UTSL/SDP 3x/2x thin
+  XLP   UGE/SZK 2x/2x thin
+  XLI   UXI/SIJ 2x/2x thin
+  XLY   UCC/SCC 2x/2x thin
+  MDY   UMDD/SMDD 3x/3x thin
+  IJR   SAA/SDD 2x/2x thin
+  EEM   EDC/EDZ 3x/3x thin
+  EFA   EFO/EFU 2x/2x thin
+  EWJ   EZJ/EWV 2x/2x thin
+
+Per-ETF FADE, 5 years, setups (no Fridays, v5.2.18 exits):
+  TLT   n  130 avg +0.162R  H1 +0.178R  H2 +0.144R  never+1R  57%  liquid
+  EEM   n  109 avg +0.141R  H1 +0.077R  H2 +0.202R  never+1R  52%  thin
+  IWM   n  125 avg +0.129R  H1 +0.106R  H2 +0.146R  never+1R  55%  liquid
+  XBI   n  104 avg +0.116R  H1 -0.077R  H2 +0.303R  never+1R  58%  liquid
+  EFA   n  116 avg +0.106R  H1 +0.096R  H2 +0.115R  never+1R  58%  thin
+  XLI   n  100 avg +0.106R  H1 +0.359R  H2 -0.019R  never+1R  56%  thin
+  XLF   n   88 avg +0.092R  H1 +0.021R  H2 +0.158R  never+1R  56%  liquid
+  XLV   n   78 avg +0.089R  H1 +0.256R  H2 -0.165R  never+1R  54%  thin
+  XLE   n  126 avg +0.084R  H1 +0.022R  H2 +0.140R  never+1R  59%  liquid
+  SOXX  n  147 avg +0.082R  H1 +0.043R  H2 +0.121R  never+1R  56%  liquid
+  MDY   n  122 avg +0.079R  H1 +0.066R  H2 +0.091R  never+1R  57%  thin
+  IJR   n  114 avg +0.060R  H1 +0.121R  H2 +0.001R  never+1R  58%  thin
+  XLP   n  112 avg +0.058R  H1 -0.063R  H2 +0.155R  never+1R  56%  thin
+  FXI   n   99 avg +0.035R  H1 -0.005R  H2 +0.069R  never+1R  59%  liquid
+  QQQ   n  140 avg +0.031R  H1 +0.007R  H2 +0.054R  never+1R  56%  liquid
+  XLU   n   92 avg -0.011R  H1 +0.030R  H2 -0.046R  never+1R  58%  thin
+  SPY   n  133 avg -0.027R  H1 +0.140R  H2 -0.156R  never+1R  60%  liquid
+  XLB   n   95 avg -0.046R  H1 +0.129R  H2 -0.184R  never+1R  56%  thin
+  XLY   n  116 avg -0.061R  H1 +0.036R  H2 -0.149R  never+1R  58%  thin
+  EWJ   n  124 avg -0.095R  H1 -0.081R  H2 -0.112R  never+1R  63%  thin
+  XLK   n  128 avg -0.124R  H1 -0.220R  H2 -0.061R  never+1R  66%  liquid
+  DIA   n  101 avg -0.142R  H1 -0.307R  H2 +0.014R  never+1R  61%  liquid
+  XLRE  n  104 avg -0.295R  H1 -0.072R  H2 -0.493R  never+1R  70%  liquid
+
+================ WINDOW = MONTH (60 windows; H1 < 2024-04-01 <= H2)
+PART 1 - WHERE: does a prior-window feature rank which ETFs FADE best next window? (Spearman IC across ETFs, averaged over windows)
+  IC > 0: high feature -> better FADE next window. |t| > 2 and same sign in both halves would be needed to take it seriously (16 features x 2 pools tested).
+  pool liquid 12:  feature                                 meanIC      t  %pos   H1 IC   H2 IC
+     prior return                                   +0.153  +1.31   61%  +0.247  +0.092
+     return minus SPY                               +0.153  +1.31   61%  +0.247  +0.092
+     |return| (big move either way)                 -0.053  -0.45   46%  -0.054  -0.052
+     daily volatility                               -0.011  -0.11   46%  -0.017  -0.007
+     choppiness (low |ret|/vol)                     +0.085  +0.78   61%  +0.079  +0.089
+     avg daily high-low %                           -0.030  -0.30   50%  -0.045  -0.020
+     avg |opening gap|                              +0.008  +0.08   57%  -0.047  +0.043
+     5-min return autocorrelation                   -0.079  -0.74   43%  +0.032  -0.151
+     % days 10:00 move reversed by close            -0.129  -1.62   25%  -0.019  -0.201
+     avg opening-box size                           +0.072  +0.76   54%  +0.053  +0.084
+     price vs 100-day average                       +0.175  +1.71   50%  +0.207  +0.155
+     volume change vs window before                 +0.073  +0.78   50%  -0.025  +0.136
+     FADE setups count                              +0.072  +0.73   56%  -0.041  +0.150
+  pool all 23:  feature                                 meanIC      t  %pos   H1 IC   H2 IC
+     prior return                                   +0.113  +1.68   64%  +0.090  +0.130
+     return minus SPY                               +0.113  +1.68   64%  +0.090  +0.130
+     |return| (big move either way)                 +0.091  +1.34   60%  +0.058  +0.115
+     daily volatility                               -0.016  -0.22   49%  +0.062  -0.073
+     choppiness (low |ret|/vol)                     -0.146  -2.40   40%  -0.077  -0.198  <-- consistent
+     avg daily high-low %                           -0.018  -0.26   49%  -0.006  -0.027
+     avg |opening gap|                              -0.016  -0.22   49%  +0.039  -0.057
+     5-min return autocorrelation                   +0.017  +0.24   45%  +0.006  +0.025
+     % days 10:00 move reversed by close            -0.049  -0.88   38%  -0.023  -0.068
+     avg opening-box size                           +0.009  +0.12   51%  -0.025  +0.033
+     price vs 100-day average                       +0.070  +0.98   57%  -0.038  +0.150
+     volume change vs window before                 +0.057  +0.89   55%  -0.009  +0.105
+     FADE setups count                              +0.008  +0.13   54%  -0.091  +0.084
+     FADE avg R (momentum)                          +0.051  +0.31   50%  -0.161  +0.192
+     FADE win rate                                  -0.069  -0.73   30%  -0.137  -0.023
+     % trades never closing at +1R                  +0.011  +0.12   50%  +0.025  +0.002
+PART 2 - WHEN: does the prior window's market predict next window's overall FADE result? (Spearman across windows)
+  target = next-window FADE avg R, live 6:  feature                             rho     H1     H2  (n windows 57)
+     SPY return                                     -0.02  +0.06  -0.17
+     SPY |return|                                   -0.07  -0.01  -0.12
+     SPY volatility                                 -0.03  -0.24  +0.24
+     SPY choppiness                                 +0.07  -0.23  +0.24
+     SPY daily range                                -0.07  -0.20  +0.18
+     SPY avg |gap|                                  +0.03  -0.29  +0.34
+     SPY 5-min autocorr                             -0.17  -0.13  -0.13
+     SPY % reversal days                            -0.01  -0.05  +0.03
+     SPY vs 100-day avg                             +0.14  +0.25  -0.12
+     VIXY change (fear rising)                      -0.06  -0.14  +0.05
+     cross-ETF return dispersion                    +0.12  -0.06  +0.30
+     prior FADE avg R (live 6)                      +0.16  -0.04  +0.25
+     (|rho| above ~0.27 is needed just to clear noise with 57 windows)
+  target = next-window FADE avg R, liquid 12:  feature                             rho     H1     H2  (n windows 58)
+     SPY return                                     +0.05  +0.19  -0.14
+     SPY |return|                                   +0.01  +0.11  -0.02
+     SPY volatility                                 -0.13  -0.25  +0.06
+     SPY choppiness                                 -0.05  -0.31  +0.10
+     SPY daily range                                -0.16  -0.21  -0.01
+     SPY avg |gap|                                  -0.14  -0.33  +0.04
+     SPY 5-min autocorr                             -0.32  -0.28  -0.35  <-- consistent
+     SPY % reversal days                            +0.09  +0.12  +0.06
+     SPY vs 100-day avg                             +0.16  +0.24  -0.07
+     VIXY change (fear rising)                      -0.28  -0.30  -0.28  <-- consistent
+     cross-ETF return dispersion                    +0.13  -0.00  +0.27
+     prior FADE avg R (live 6)                      +0.05  -0.12  +0.12
+     (|rho| above ~0.26 is needed just to clear noise with 58 windows)
+PART 3 - selection backtests (account, one position, 3% risk). Feature+direction picked by H1 result ONLY, then H2 is the honest test.
+  FIXED live 6                             H1 PF 0.96 -0.008%/d | H2 PF 1.18 +0.037%/d DD 31.7%
+  FIXED liquid 12                          H1 PF 0.93 -0.020%/d | H2 PF 1.17 +0.040%/d DD 29.9%
+  liquid 12 top 3 by low choppiness (low |ret|/vol)           H1 PF 1.27 +0.028%/d | H2 PF 0.93 -0.007%/d DD 22.2%
+  liquid 12 top 3 by high prior return                         H1 PF 1.17 +0.024%/d | H2 PF 1.30 +0.035%/d DD 14.5%
+  liquid 12 top 3 by high return minus SPY                     H1 PF 1.17 +0.024%/d | H2 PF 1.30 +0.035%/d DD 14.5%
+  liquid 12 top 6 by high avg opening-box size                 H1 PF 1.08 +0.018%/d | H2 PF 1.12 +0.026%/d DD 31.8%
+  liquid 12 top 6 by high prior return                         H1 PF 1.07 +0.013%/d | H2 PF 1.22 +0.037%/d DD 14.0%
+  liquid 12 top 6 by high return minus SPY                     H1 PF 1.07 +0.013%/d | H2 PF 1.22 +0.037%/d DD 14.0%
+  all 23 top 3 by low % days 10:00 move reversed by close  H1 PF 1.56 +0.049%/d | H2 PF 1.41 +0.029%/d DD 13.3%
+  all 23 top 3 by low choppiness (low |ret|/vol)           H1 PF 1.35 +0.025%/d | H2 PF 0.91 -0.008%/d DD 21.1%
+  all 23 top 3 by low FADE win rate                        H1 PF 1.18 +0.019%/d | H2 PF 1.12 +0.012%/d DD 23.8%
+  all 23 top 6 by low choppiness (low |ret|/vol)           H1 PF 1.26 +0.035%/d | H2 PF 1.02 +0.002%/d DD 25.6%
+  all 23 top 6 by low % days 10:00 move reversed by close  H1 PF 1.20 +0.030%/d | H2 PF 0.99 -0.002%/d DD 26.4%
+  all 23 top 6 by low avg |opening gap|                    H1 PF 1.19 +0.022%/d | H2 PF 0.80 -0.021%/d DD 20.8%
+
+================ WINDOW = QUARTER (21 windows; H1 < 2024-04-01 <= H2)
+PART 1 - WHERE: does a prior-window feature rank which ETFs FADE best next window? (Spearman IC across ETFs, averaged over windows)
+  IC > 0: high feature -> better FADE next window. |t| > 2 and same sign in both halves would be needed to take it seriously (16 features x 2 pools tested).
+  pool liquid 12:  feature                                 meanIC      t  %pos   H1 IC   H2 IC
+     prior return                                   +0.046  +0.47   53%  -0.056  +0.137
+     return minus SPY                               +0.046  +0.47   53%  -0.056  +0.137
+     |return| (big move either way)                 +0.158  +1.92   68%  +0.057  +0.248
+     daily volatility                               +0.082  +1.00   63%  +0.013  +0.145
+     choppiness (low |ret|/vol)                     -0.086  -1.08   42%  +0.014  -0.176
+     avg daily high-low %                           +0.107  +1.15   63%  +0.045  +0.163
+     avg |opening gap|                              +0.083  +1.03   68%  +0.058  +0.105
+     5-min return autocorrelation                   +0.116  +1.69   58%  +0.099  +0.131
+     % days 10:00 move reversed by close            -0.066  -0.91   42%  -0.209  +0.063
+     avg opening-box size                           +0.125  +1.39   74%  +0.059  +0.186
+     price vs 100-day average                       +0.016  +0.20   37%  -0.126  +0.145
+     volume change vs window before                 +0.063  +0.98   67%  +0.180  -0.030
+     FADE setups count                              -0.057  -0.79   42%  -0.057  -0.056
+     FADE avg R (momentum)                          -0.112  -2.46   21%  -0.064  -0.155  <-- consistent
+     FADE win rate                                  -0.088  -1.59   26%  -0.069  -0.105
+     % trades never closing at +1R                  +0.102  +1.68   63%  +0.065  +0.135
+  pool all 23:  feature                                 meanIC      t  %pos   H1 IC   H2 IC
+     prior return                                   +0.083  +1.56   60%  +0.016  +0.137
+     return minus SPY                               +0.083  +1.56   60%  +0.016  +0.137
+     |return| (big move either way)                 +0.017  +0.29   35%  -0.060  +0.080
+     daily volatility                               -0.022  -0.29   45%  -0.033  -0.014
+     choppiness (low |ret|/vol)                     -0.056  -0.83   55%  +0.078  -0.166
+     avg daily high-low %                           -0.039  -0.46   40%  -0.010  -0.063
+     avg |opening gap|                              -0.016  -0.23   50%  -0.053  +0.014
+     5-min return autocorrelation                   +0.063  +1.21   60%  +0.044  +0.078
+     % days 10:00 move reversed by close            -0.046  -0.77   50%  -0.153  +0.041
+     avg opening-box size                           -0.031  -0.39   45%  -0.002  -0.054
+     price vs 100-day average                       +0.016  +0.26   60%  -0.030  +0.054
+     volume change vs window before                 +0.052  +1.27   63%  +0.093  +0.022
+     FADE setups count                              +0.011  +0.18   60%  -0.009  +0.028
+     FADE avg R (momentum)                          -0.083  -1.97   37%  -0.056  -0.108
+     FADE win rate                                  -0.101  -2.87   26%  -0.091  -0.110  <-- consistent
+     % trades never closing at +1R                  +0.104  +2.42   74%  +0.082  +0.125  <-- consistent
+PART 2 - WHEN: does the prior window's market predict next window's overall FADE result? (Spearman across windows)
+  target = next-window FADE avg R, live 6:  feature                             rho     H1     H2  (n windows 20)
+     SPY return                                     +0.21  +0.57  -0.08
+     SPY |return|                                   +0.19  +0.60  -0.08
+     SPY volatility                                 -0.19  +0.08  -0.27
+     SPY choppiness                                 -0.14  -0.38  +0.00
+     SPY daily range                                -0.16  +0.08  -0.32
+     SPY avg |gap|                                  -0.20  -0.20  -0.23
+     SPY 5-min autocorr                             -0.20  -0.17  -0.32
+     SPY % reversal days                            +0.25  -0.02  +0.50
+     SPY vs 100-day avg                             +0.12  +0.30  -0.15
+     VIXY change (fear rising)                      -0.34  -0.53  -0.37
+     cross-ETF return dispersion                    +0.43  +0.33  +0.29
+     prior FADE avg R (live 6)                      -0.15  -0.93  +0.38
+     (|rho| above ~0.46 is needed just to clear noise with 20 windows)
+  target = next-window FADE avg R, liquid 12:  feature                             rho     H1     H2  (n windows 20)
+     SPY return                                     +0.19  +0.58  -0.01
+     SPY |return|                                   +0.07  +0.25  -0.07
+     SPY volatility                                 -0.09  -0.28  -0.05
+     SPY choppiness                                 -0.03  -0.27  +0.04
+     SPY daily range                                -0.08  -0.22  -0.06
+     SPY avg |gap|                                  -0.15  -0.53  +0.05
+     SPY 5-min autocorr                             -0.22  -0.22  -0.32
+     SPY % reversal days                            +0.20  +0.12  +0.33
+     SPY vs 100-day avg                             +0.09  +0.57  -0.32
+     VIXY change (fear rising)                      -0.34  -0.57  -0.36
+     cross-ETF return dispersion                    +0.39  +0.17  +0.49
+     prior FADE avg R (live 6)                      -0.18  -0.73  +0.20
+     (|rho| above ~0.46 is needed just to clear noise with 20 windows)
+PART 3 - selection backtests (account, one position, 3% risk). Feature+direction picked by H1 result ONLY, then H2 is the honest test.
+  FIXED live 6                             H1 PF 0.96 -0.008%/d | H2 PF 1.18 +0.037%/d DD 31.7%
+  FIXED liquid 12                          H1 PF 0.93 -0.020%/d | H2 PF 1.17 +0.040%/d DD 29.9%
+  liquid 12 top 3 by high 5-min return autocorrelation         H1 PF 1.03 +0.005%/d | H2 PF 1.09 +0.009%/d DD  8.9%
+  liquid 12 top 3 by high avg opening-box size                 H1 PF 1.02 +0.004%/d | H2 PF 1.15 +0.025%/d DD 24.3%
+  liquid 12 top 3 by high avg daily high-low %                 H1 PF 1.01 +0.002%/d | H2 PF 1.11 +0.018%/d DD 27.6%
+  liquid 12 top 6 by low FADE setups count                    H1 PF 1.14 +0.025%/d | H2 PF 1.13 +0.021%/d DD 23.4%
+  liquid 12 top 6 by high 5-min return autocorrelation         H1 PF 1.09 +0.017%/d | H2 PF 1.26 +0.038%/d DD 10.2%
+  liquid 12 top 6 by low % days 10:00 move reversed by close  H1 PF 1.09 +0.017%/d | H2 PF 1.01 +0.001%/d DD 31.9%
+  all 23 top 3 by high FADE avg R (momentum)                H1 PF 1.29 +0.024%/d | H2 PF 0.83 -0.017%/d DD 15.8%
+  all 23 top 3 by high % trades never closing at +1R        H1 PF 1.15 +0.013%/d | H2 PF 1.08 +0.006%/d DD  9.1%
+  all 23 top 3 by high 5-min return autocorrelation         H1 PF 1.12 +0.013%/d | H2 PF 0.86 -0.009%/d DD  6.9%
+  all 23 top 6 by low price vs 100-day average             H1 PF 1.26 +0.043%/d | H2 PF 0.89 -0.016%/d DD 23.2%
+  all 23 top 6 by high 5-min return autocorrelation         H1 PF 1.17 +0.026%/d | H2 PF 0.88 -0.014%/d DD 12.1%
+  all 23 top 6 by low volume change vs window before       H1 PF 1.16 +0.025%/d | H2 PF 0.90 -0.014%/d DD 22.1%
+
+================ WINDOW = HALF-YEAR (11 windows; H1 < 2024-04-01 <= H2)
+PART 1 - WHERE: does a prior-window feature rank which ETFs FADE best next window? (Spearman IC across ETFs, averaged over windows)
+  IC > 0: high feature -> better FADE next window. |t| > 2 and same sign in both halves would be needed to take it seriously (16 features x 2 pools tested).
+  pool liquid 12:  feature                                 meanIC      t  %pos   H1 IC   H2 IC
+     prior return                                   -0.034  -0.26   50%  -0.064  -0.004
+     return minus SPY                               -0.034  -0.26   50%  -0.064  -0.004
+     |return| (big move either way)                 +0.065  +0.48   60%  +0.117  +0.013
+     daily volatility                               +0.067  +0.93   60%  +0.028  +0.107
+     choppiness (low |ret|/vol)                     +0.014  +0.10   50%  -0.013  +0.040
+     avg daily high-low %                           +0.097  +1.45   60%  +0.042  +0.153
+     avg |opening gap|                              +0.086  +1.15   50%  +0.122  +0.050
+     5-min return autocorrelation                   +0.087  +1.16   60%  +0.004  +0.169
+     % days 10:00 move reversed by close            -0.100  -1.18   40%  -0.089  -0.110
+     avg opening-box size                           +0.092  +1.54   70%  +0.063  +0.121
+     price vs 100-day average                       -0.129  -0.85   40%  -0.232  -0.027
+     volume change vs window before                 -0.021  -0.19   44%  +0.059  -0.085
+     FADE setups count                              +0.081  +0.83   50%  +0.064  +0.097
+     FADE avg R (momentum)                          -0.108  -1.27   40%  -0.204  -0.012
+     FADE win rate                                  -0.140  -1.19   40%  -0.314  +0.033
+     % trades never closing at +1R                  +0.162  +1.42   50%  +0.254  +0.069
+  pool all 23:  feature                                 meanIC      t  %pos   H1 IC   H2 IC
+     prior return                                   +0.083  +1.20   70%  +0.090  +0.077
+     return minus SPY                               +0.083  +1.20   70%  +0.090  +0.077
+     |return| (big move either way)                 +0.030  +0.35   50%  -0.016  +0.076
+     daily volatility                               -0.001  -0.01   50%  -0.046  +0.045
+     choppiness (low |ret|/vol)                     +0.021  +0.26   60%  +0.088  -0.045
+     avg daily high-low %                           -0.027  -0.41   30%  -0.066  +0.013
+     avg |opening gap|                              +0.046  +0.90   60%  +0.020  +0.072
+     5-min return autocorrelation                   -0.008  -0.13   50%  -0.021  +0.005
+     % days 10:00 move reversed by close            -0.096  -1.73   30%  -0.114  -0.077
+     avg opening-box size                           -0.036  -0.74   30%  -0.049  -0.023
+     price vs 100-day average                       +0.051  +0.69   60%  +0.038  +0.065
+     volume change vs window before                 +0.010  +0.13   44%  +0.090  -0.054
+     FADE setups count                              +0.135  +1.59   70%  -0.045  +0.316
+     FADE avg R (momentum)                          -0.065  -1.05   40%  -0.052  -0.079
+     FADE win rate                                  -0.111  -1.65   20%  -0.111  -0.112
+     % trades never closing at +1R                  +0.100  +1.33   60%  +0.058  +0.142
+PART 2 - WHEN: does the prior window's market predict next window's overall FADE result? (Spearman across windows)
+  target = next-window FADE avg R, live 6:  feature                             rho     H1     H2  (n windows 10)
+     SPY return                                     +0.14  +0.50  -0.10
+     SPY |return|                                   -0.16  -0.50  -0.10
+     SPY volatility                                 -0.43  -0.70  -0.20
+     SPY choppiness                                 +0.09  +0.30  +0.10
+     SPY daily range                                -0.22  -0.70  +0.30
+     SPY avg |gap|                                  -0.21  -0.40  +0.00
+     SPY 5-min autocorr                             +0.36  +0.60  +0.30
+     SPY % reversal days                            -0.54  -1.00  -0.20
+     SPY vs 100-day avg                             +0.12  +0.70  -0.10
+     VIXY change (fear rising)                      -0.35  -0.70  -0.10
+     cross-ETF return dispersion                    +0.37  -0.20  +0.90
+     prior FADE avg R (live 6)                      -0.21  -0.20  +0.10
+     (|rho| above ~0.67 is needed just to clear noise with 10 windows)
+  target = next-window FADE avg R, liquid 12:  feature                             rho     H1     H2  (n windows 10)
+     SPY return                                     +0.44  +0.60  -0.10
+     SPY |return|                                   -0.10  -0.40  -0.10
+     SPY volatility                                 -0.58  -0.70  -0.20
+     SPY choppiness                                 -0.12  +0.20  +0.10
+     SPY daily range                                -0.47  -0.70  +0.30
+     SPY avg |gap|                                  -0.48  -0.60  +0.00
+     SPY 5-min autocorr                             +0.22  +0.10  +0.30
+     SPY % reversal days                            -0.34  -0.30  -0.20
+     SPY vs 100-day avg                             +0.38  +0.70  -0.10
+     VIXY change (fear rising)                      -0.36  -0.30  -0.10
+     cross-ETF return dispersion                    +0.10  -0.70  +0.90
+     prior FADE avg R (live 6)                      +0.27  +0.80  +0.10
+     (|rho| above ~0.67 is needed just to clear noise with 10 windows)
+PART 3 - selection backtests (account, one position, 3% risk). Feature+direction picked by H1 result ONLY, then H2 is the honest test.
+  FIXED live 6                             H1 PF 0.96 -0.008%/d | H2 PF 1.18 +0.037%/d DD 31.7%
+  FIXED liquid 12                          H1 PF 0.93 -0.020%/d | H2 PF 1.17 +0.040%/d DD 29.9%
+  liquid 12 top 3 by low price vs 100-day average             H1 PF 1.10 +0.014%/d | H2 PF 0.95 -0.004%/d DD  7.3%
+  liquid 12 top 3 by high avg daily high-low %                 H1 PF 1.02 +0.004%/d | H2 PF 1.27 +0.041%/d DD 24.0%
+  liquid 12 top 3 by high avg opening-box size                 H1 PF 1.02 +0.004%/d | H2 PF 1.17 +0.026%/d DD 23.9%
+  liquid 12 top 6 by low FADE avg R (momentum)                H1 PF 1.06 +0.013%/d | H2 PF 0.92 -0.013%/d DD 25.7%
+  liquid 12 top 6 by high avg |opening gap|                    H1 PF 1.06 +0.012%/d | H2 PF 1.07 +0.015%/d DD 34.3%
+  liquid 12 top 6 by low price vs 100-day average             H1 PF 1.02 +0.004%/d | H2 PF 0.88 -0.019%/d DD 22.4%
+  all 23 top 3 by low % days 10:00 move reversed by close  H1 PF 1.28 +0.025%/d | H2 PF 0.65 -0.036%/d DD 27.3%
+  all 23 top 3 by high avg daily high-low %                 H1 PF 1.07 +0.012%/d | H2 PF 1.27 +0.041%/d DD 24.0%
+  all 23 top 3 by high avg opening-box size                 H1 PF 1.07 +0.012%/d | H2 PF 1.17 +0.026%/d DD 23.9%
+  all 23 top 6 by low prior return                         H1 PF 1.12 +0.022%/d | H2 PF 0.90 -0.013%/d DD 18.4%
+  all 23 top 6 by low return minus SPY                     H1 PF 1.12 +0.022%/d | H2 PF 0.90 -0.013%/d DD 18.4%
+  all 23 top 6 by high avg daily high-low %                 H1 PF 1.08 +0.016%/d | H2 PF 1.21 +0.043%/d DD 25.1%
+
+================ PART 4 - monthly ON/OFF switch from market signals (thresholds = H1 medians: VIXY -7.6%, SPY autocorr -0.017)
+  always on                                            | live 6 H1 n222 PF 0.96 -0.008%/d DD16.3 | live 6 H2 n268 PF 1.18 +0.037%/d DD31.7 | liquid 12 H1 n349 PF 0.93 -0.020%/d DD29.4 | liquid 12 H2 n395 PF 1.17 +0.040%/d DD29.9  (months traded 58/58)
+  sit out month after VIXY rose (> 0%)                 | live 6 H1 n152 PF 1.00 -0.000%/d DD 9.4 | live 6 H2 n170 PF 1.40 +0.049%/d DD21.0 | liquid 12 H1 n237 PF 1.03 +0.005%/d DD19.2 | liquid 12 H2 n257 PF 1.34 +0.049%/d DD19.5  (months traded 39/58)
+  sit out month after VIXY rose more than H1 median    | live 6 H1 n112 PF 1.03 +0.003%/d DD 9.2 | live 6 H2 n103 PF 1.72 +0.052%/d DD10.1 | liquid 12 H1 n180 PF 1.08 +0.011%/d DD19.0 | liquid 12 H2 n153 PF 1.69 +0.055%/d DD13.3  (months traded 27/58)
+  sit out month after SPY 5-min autocorr > H1 median   | live 6 H1 n121 PF 1.04 +0.005%/d DD10.9 | live 6 H2 n204 PF 1.33 +0.051%/d DD19.9 | liquid 12 H1 n186 PF 1.09 +0.014%/d DD11.8 | liquid 12 H2 n300 PF 1.30 +0.054%/d DD17.4  (months traded 37/58)
+  trade only when both say go                          | live 6 H1 n 77 PF 1.03 +0.002%/d DD 8.9 | live 6 H2 n 92 PF 1.83 +0.055%/d DD 8.3 | liquid 12 H1 n119 PF 1.25 +0.022%/d DD11.7 | liquid 12 H2 n132 PF 1.88 +0.061%/d DD 9.9  (months traded 20/58)
+
+Recent months (live 6, setups avg R) and what the VIXY gate (> H1 median = sit out) would have said:
+  2025-11: prior-month VIXY   +3.0% -> sit out   FADE that month n 18 avg -0.122R
+  2025-12: prior-month VIXY   -2.7% -> sit out   FADE that month n 14 avg +0.436R
+  2026-01: prior-month VIXY  -17.4% -> TRADE   FADE that month n  7 avg +0.129R
+  2026-02: prior-month VIXY   +5.6% -> sit out   FADE that month n 13 avg -0.211R
+  2026-03: prior-month VIXY  +10.3% -> sit out   FADE that month n 13 avg +0.149R
+  2026-04: prior-month VIXY  +21.4% -> sit out   FADE that month n 14 avg +0.392R
+  2026-05: prior-month VIXY  -19.0% -> TRADE   FADE that month n 10 avg +0.439R
+  2026-06: prior-month VIXY  -15.2% -> TRADE   FADE that month n 18 avg +1.208R
+  2026-07: prior-month VIXY  -10.7% -> TRADE   FADE that month n 14 avg +1.178R
+  2026-08: prior-month VIXY   -4.6% -> sit out   FADE that month n 14 avg +0.839R
+  2026-09: prior-month VIXY  -14.6% -> TRADE   FADE that month n  4 avg +0.349R
+  2026-10: prior-month VIXY   -5.1% -> sit out   FADE that month n 11 avg +0.434R
