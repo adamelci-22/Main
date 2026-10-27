@@ -355,6 +355,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
+**Tuesday 2026-10-27, 13:30 close (v5.2.17).** Flat, no open orders, **$2,568.92** (+$33.36, +1.32% on the day). One real trade: FADE TNA (fade of IWM), 44 sh @ 56.8299 at 10:10; 14 sh take-profit @ 57.61 (10:53); 30 sh closed by the governor by hand @ 57.58 (11:07). Model: +1.89% (runner out on the chandelier 12:40). Losing streak 0/5; A1.13 clear (high $2,571.81). Entries stopped at 11:40 on the governor's word. Running total since 2026-10-16: 3 real trades, all green, +$75.49. **Wednesday 2026-10-28 chain armed (v5.2.17 wording): all 46 confirmed with list_triggers; ids in `archive/chain_ids.json`.** The 12:00-13:25 waiters of today were killed by the app at about 11:55 (account flat, day ended; no slot lost that mattered).
+
 **Tuesday 2026-10-27, v5.2.17 adopted (governor: "let's skip fridays").** No FADE entries on Fridays from Fri 2026-10-30 (A1.10); PULLBACK unchanged. `paper.py` enforces it.
 
 **Tuesday 2026-10-27, 11:40 (governor: "Let's end the day").** No new entries for the rest of the day (treated as a stop for today only, not a kill-switch for tomorrow). The real account is flat at $2,568.92 with no open orders; the model's TNA runner is a ghost (run slots with `--real-free`). Result so far: one real trade, FADE TNA, +$33.36 (see `live_trades.csv`). The remaining waiters, the 13:30 close and Wednesday's arming are left as they are until the governor says otherwise.
