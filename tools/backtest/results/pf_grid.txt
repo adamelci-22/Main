@@ -1,0 +1,62 @@
+220 systems = 20 entry-filter sets x 11 exits.  RH = Robinhood 2026-03..10 (157 days), 5y = Massive 2021-11..2026-10.
+
+CURRENT LIVE SYSTEM (FADE part)
+  no filter                      LIVE exits (1/3@2R, BE, chand 2)           | RH n 75 PF 3.09 (H1 2.65 H2 3.72) green  57% +0.419%/d DD 4.5 | 5y n603 PF 1.00 (H1 0.94 H2 1.06) +0.001%/d DD51.2
+
+TOP 15 BY ROBINHOOD PROFIT FACTOR (at least 35 trades, 12 in each half; 123 qualify)
+  no Fri, box>=0.5%              no partial; after 2R BE + chand 2          | RH n 58 PF 4.71 (H1 4.37 H2 5.15) green  53% +0.515%/d DD 4.1 | 5y n438 PF 1.13 (H1 0.92 H2 1.33) +0.027%/d DD43.3
+  no Fri, box>=0.7%              no partial; after 2R BE + chand 2          | RH n 46 PF 4.68 (H1 3.65 H2 6.54) green  54% +0.483%/d DD 4.7 | 5y n363 PF 1.17 (H1 0.92 H2 1.43) +0.033%/d DD37.7
+  no Fri                         no partial; after 2R BE + chand 2          | RH n 63 PF 4.66 (H1 4.14 H2 5.37) green  51% +0.515%/d DD 4.1 | 5y n490 PF 1.08 (H1 0.90 H2 1.26) +0.020%/d DD48.1
+  no Fri, box>=1.0%              no partial; after 2R BE + chand 2          | RH n 35 PF 4.65 (H1 3.42 H2 6.53) green  51% +0.399%/d DD 7.2 | 5y n236 PF 1.19 (H1 0.86 H2 1.57) +0.028%/d DD33.5
+  no Fri                         at +1R stop to BE (+live)                  | RH n 63 PF 4.24 (H1 3.58 H2 5.13) green  56% +0.408%/d DD 4.0 | 5y n493 PF 1.11 (H1 0.97 H2 1.23) +0.021%/d DD36.5
+  no Fri, box>=0.5%              LIVE exits (1/3@2R, BE, chand 2)           | RH n 58 PF 4.23 (H1 4.04 H2 4.49) green  60% +0.444%/d DD 4.0 | 5y n438 PF 1.12 (H1 0.97 H2 1.26) +0.026%/d DD37.2
+  no Fri                         LIVE exits (1/3@2R, BE, chand 2)           | RH n 63 PF 4.23 (H1 3.81 H2 4.83) green  62% +0.448%/d DD 4.0 | 5y n490 PF 1.08 (H1 0.95 H2 1.20) +0.019%/d DD42.5
+  no Fri                         1R trail on closes from start, cap +0.75R  | RH n 63 PF 4.20 (H1 3.30 H2 5.60) green  56% +0.400%/d DD 3.8 | 5y n493 PF 1.09 (H1 1.00 H2 1.17) +0.017%/d DD32.1
+  no Fri, box>=0.5%              1R trail on closes from start, cap +0.75R  | RH n 58 PF 4.18 (H1 3.53 H2 5.09) green  53% +0.395%/d DD 3.8 | 5y n441 PF 1.12 (H1 1.00 H2 1.23) +0.021%/d DD27.7
+  no Fri                         1R trail on closes from start, cap 0 (BE)  | RH n 63 PF 4.16 (H1 3.30 H2 5.52) green  52% +0.397%/d DD 3.8 | 5y n493 PF 1.13 (H1 1.03 H2 1.22) +0.025%/d DD31.7
+  no Fri                         chandelier 3 after 2R                      | RH n 63 PF 4.15 (H1 3.67 H2 4.82) green  62% +0.436%/d DD 4.0 | 5y n490 PF 1.13 (H1 1.04 H2 1.22) +0.030%/d DD36.4
+  no Fri                         frozen to +1R close, 1R trail cap +0.75R   | RH n 63 PF 4.15 (H1 3.67 H2 4.77) green  63% +0.418%/d DD 4.0 | 5y n490 PF 1.07 (H1 0.96 H2 1.18) +0.016%/d DD37.6
+  no Fri, box>=0.5%              at +1R stop to BE (+live)                  | RH n 58 PF 4.15 (H1 3.64 H2 4.75) green  52% +0.393%/d DD 4.0 | 5y n439 PF 1.14 (H1 0.99 H2 1.27) +0.024%/d DD32.3
+  no Fri, box>=0.7%              LIVE exits (1/3@2R, BE, chand 2)           | RH n 46 PF 4.14 (H1 3.31 H2 5.66) green  61% +0.409%/d DD 4.6 | 5y n363 PF 1.16 (H1 0.97 H2 1.35) +0.030%/d DD31.3
+  no Fri, box>=0.5%              frozen to +1R close, 1R trail cap +0.75R   | RH n 58 PF 4.14 (H1 3.92 H2 4.40) green  62% +0.413%/d DD 4.0 | 5y n438 PF 1.12 (H1 0.99 H2 1.25) +0.024%/d DD30.2
+
+TOP 15 BY THE WORSE OF THE TWO DATASETS' PROFIT FACTOR (robust ranking; same trade minimums)
+  no Fri, box>=1.0%              1R trail on closes from start, cap 0 (BE)  | RH n 35 PF 3.76 (H1 2.64 H2 5.52) green  51% +0.301%/d DD 5.9 | 5y n236 PF 1.29 (H1 1.09 H2 1.48) +0.033%/d DD16.9
+  no Fri, box>=1.0%              chandelier 3 after 2R                      | RH n 35 PF 3.98 (H1 2.93 H2 5.58) green  57% +0.323%/d DD 6.8 | 5y n236 PF 1.25 (H1 1.04 H2 1.48) +0.036%/d DD22.0
+  no Fri, box>=1.0%              at +1R stop to BE (+live)                  | RH n 35 PF 3.77 (H1 2.58 H2 5.65) green  54% +0.307%/d DD 6.3 | 5y n236 PF 1.24 (H1 0.99 H2 1.50) +0.030%/d DD20.9
+  no Fri, box>=0.8%              1R trail on closes from start, cap 0 (BE)  | RH n 41 PF 3.38 (H1 2.37 H2 5.52) green  49% +0.315%/d DD 5.0 | 5y n325 PF 1.23 (H1 1.07 H2 1.36) +0.032%/d DD16.4
+  no Fri, box>=1.0%              at +1R lock +0.1R (+live)                  | RH n 36 PF 3.38 (H1 1.94 H2 5.67) green  53% +0.265%/d DD 6.3 | 5y n236 PF 1.22 (H1 1.01 H2 1.44) +0.027%/d DD22.4
+  no Fri, box>=0.8%              chandelier 3 after 2R                      | RH n 41 PF 3.49 (H1 2.53 H2 5.58) green  56% +0.340%/d DD 7.3 | 5y n324 PF 1.22 (H1 1.09 H2 1.35) +0.039%/d DD20.7
+  no Fri, box>=1.0%              1R trail on closes from start, cap +0.75R  | RH n 35 PF 3.80 (H1 2.68 H2 5.55) green  51% +0.305%/d DD 5.7 | 5y n236 PF 1.21 (H1 1.07 H2 1.35) +0.024%/d DD18.6
+  no Fri, box>=0.7%              chandelier 3 after 2R                      | RH n 46 PF 4.06 (H1 3.20 H2 5.59) green  61% +0.398%/d DD 5.1 | 5y n363 PF 1.21 (H1 1.07 H2 1.35) +0.040%/d DD25.6
+  no Fri, box>=0.7%              at +1R lock +0.1R (+live)                  | RH n 47 PF 3.64 (H1 2.43 H2 5.67) green  57% +0.328%/d DD 4.6 | 5y n364 PF 1.20 (H1 1.02 H2 1.36) +0.032%/d DD26.6
+  no Fri, box>=0.8%              at +1R lock +0.1R (+live)                  | RH n 42 PF 3.16 (H1 1.94 H2 5.67) green  52% +0.283%/d DD 5.3 | 5y n325 PF 1.19 (H1 1.01 H2 1.36) +0.028%/d DD23.5
+  no Fri, box>=0.8%              1R trail on closes from start, cap +0.75R  | RH n 41 PF 3.41 (H1 2.40 H2 5.55) green  49% +0.319%/d DD 4.7 | 5y n325 PF 1.19 (H1 1.06 H2 1.31) +0.027%/d DD16.7
+  no Fri, box>=1.0%              no partial; after 2R BE + chand 2          | RH n 35 PF 4.65 (H1 3.42 H2 6.53) green  51% +0.399%/d DD 7.2 | 5y n236 PF 1.19 (H1 0.86 H2 1.57) +0.028%/d DD33.5
+  no Fri, box>=0.7%              1R trail on closes from start, cap 0 (BE)  | RH n 46 PF 3.84 (H1 2.87 H2 5.54) green  52% +0.360%/d DD 4.2 | 5y n365 PF 1.18 (H1 1.05 H2 1.31) +0.029%/d DD26.4
+  box>=1.0%                      1R trail on closes from start, cap 0 (BE)  | RH n 42 PF 2.81 (H1 1.93 H2 4.30) green  45% +0.267%/d DD 6.8 | 5y n293 PF 1.18 (H1 1.08 H2 1.28) +0.027%/d DD23.8
+  no Fri, box>=0.8%              at +1R stop to BE (+live)                  | RH n 41 PF 3.46 (H1 2.40 H2 5.65) green  51% +0.324%/d DD 5.3 | 5y n325 PF 1.18 (H1 0.98 H2 1.37) +0.027%/d DD23.1
+
+TOP 10 BY 5-YEAR PROFIT FACTOR (at least 150 trades over 5 years)
+  no Fri, box>=0.8%, bear leg only 1R trail on closes from start, cap 0 (BE)  | RH n 20 PF 6.76 (H1 11.09 H2 4.70) green  60% +0.230%/d DD 3.1 | 5y n157 PF 1.56 (H1 1.47 H2 1.63) +0.032%/d DD 9.3
+  no Fri, box>=0.8%, bear leg only at +1R lock +0.1R (+live)                  | RH n 21 PF 6.67 (H1 10.71 H2 5.22) green  67% +0.200%/d DD 3.1 | 5y n157 PF 1.55 (H1 1.39 H2 1.70) +0.032%/d DD14.1
+  no Fri, box>=0.8%, bear leg only at +1R stop to BE (+live)                  | RH n 20 PF 7.73 (H1 14.24 H2 5.22) green  65% +0.242%/d DD 3.1 | 5y n157 PF 1.54 (H1 1.31 H2 1.76) +0.032%/d DD13.2
+  no Fri, box>=0.8%, bear leg only chandelier 3 after 2R                      | RH n 20 PF 6.24 (H1 7.86 H2 5.16) green  70% +0.227%/d DD 3.1 | 5y n157 PF 1.50 (H1 1.48 H2 1.51) +0.038%/d DD12.2
+  no Fri, box>=0.8%, bear leg only 1R trail on closes from start, cap +0.75R  | RH n 20 PF 6.85 (H1 11.37 H2 4.70) green  60% +0.233%/d DD 3.1 | 5y n157 PF 1.49 (H1 1.48 H2 1.50) +0.028%/d DD 8.8
+  no Fri, box>=0.7%, bear leg only at +1R lock +0.1R (+live)                  | RH n 23 PF 6.95 (H1 11.77 H2 5.22) green  70% +0.210%/d DD 3.1 | 5y n178 PF 1.49 (H1 1.38 H2 1.59) +0.032%/d DD16.7
+  no Fri, box>=0.7%, bear leg only at +1R stop to BE (+live)                  | RH n 22 PF 8.01 (H1 15.22 H2 5.22) green  68% +0.252%/d DD 3.1 | 5y n178 PF 1.46 (H1 1.33 H2 1.58) +0.030%/d DD17.6
+  no Fri, box>=0.8%, bear leg only no partial; after 2R BE + chand 2          | RH n 20 PF 7.74 (H1 9.84 H2 6.34) green  70% +0.292%/d DD 3.1 | 5y n157 PF 1.43 (H1 1.25 H2 1.62) +0.034%/d DD16.3
+  no Fri, box>=0.7%, bear leg only chandelier 3 after 2R                      | RH n 22 PF 6.49 (H1 8.49 H2 5.16) green  73% +0.238%/d DD 3.1 | 5y n178 PF 1.43 (H1 1.46 H2 1.41) +0.037%/d DD17.6
+  no Fri, box>=0.7%, bear leg only 1R trail on closes from start, cap 0 (BE)  | RH n 22 PF 7.01 (H1 11.86 H2 4.70) green  64% +0.240%/d DD 3.1 | 5y n179 PF 1.43 (H1 1.39 H2 1.46) +0.028%/d DD17.4
+
+TOP 10 BY ROBINHOOD PROFIT FACTOR THAT ALSO MAKE MONEY IN ALL FOUR HALVES (RH H1/H2, 5y H1/H2) with >= 40 RH trades (45 qualify)
+  no Fri                         1R trail on closes from start, cap 0 (BE)  | RH n 63 PF 4.16 (H1 3.30 H2 5.52) green  52% +0.397%/d DD 3.8 | 5y n493 PF 1.13 (H1 1.03 H2 1.22) +0.025%/d DD31.7
+  no Fri                         chandelier 3 after 2R                      | RH n 63 PF 4.15 (H1 3.67 H2 4.82) green  62% +0.436%/d DD 4.0 | 5y n490 PF 1.13 (H1 1.04 H2 1.22) +0.030%/d DD36.4
+  no Fri, box>=0.5%              chandelier 3 after 2R                      | RH n 58 PF 4.13 (H1 3.87 H2 4.46) green  60% +0.430%/d DD 4.0 | 5y n438 PF 1.17 (H1 1.06 H2 1.27) +0.036%/d DD30.8
+  no Fri, box>=0.7%              chandelier 3 after 2R                      | RH n 46 PF 4.06 (H1 3.20 H2 5.59) green  61% +0.398%/d DD 5.1 | 5y n363 PF 1.21 (H1 1.07 H2 1.35) +0.040%/d DD25.6
+  no Fri, box>=0.5%              1R trail on closes from start, cap 0 (BE)  | RH n 58 PF 4.05 (H1 3.35 H2 5.06) green  48% +0.382%/d DD 3.8 | 5y n441 PF 1.15 (H1 1.02 H2 1.26) +0.025%/d DD30.5
+  no Fri, box>=0.5%              1/2@2R, rest chand 2                       | RH n 58 PF 3.98 (H1 3.85 H2 4.14) green  60% +0.409%/d DD 4.0 | 5y n438 PF 1.12 (H1 1.00 H2 1.23) +0.025%/d DD34.4
+  no Fri, box>=0.5%              at +1R lock +0.1R (+live)                  | RH n 59 PF 3.90 (H1 3.13 H2 4.79) green  59% +0.355%/d DD 4.0 | 5y n439 PF 1.16 (H1 1.01 H2 1.29) +0.027%/d DD30.2
+  no Fri, box>=0.7%              1R trail on closes from start, cap +0.75R  | RH n 46 PF 3.87 (H1 2.91 H2 5.56) green  52% +0.364%/d DD 4.2 | 5y n365 PF 1.15 (H1 1.03 H2 1.26) +0.023%/d DD22.8
+  no Fri, box>=0.7%              1R trail on closes from start, cap 0 (BE)  | RH n 46 PF 3.84 (H1 2.87 H2 5.54) green  52% +0.360%/d DD 4.2 | 5y n365 PF 1.18 (H1 1.05 H2 1.31) +0.029%/d DD26.4
+  no Fri, box>=0.7%              at +1R lock +0.1R (+live)                  | RH n 47 PF 3.64 (H1 2.43 H2 5.67) green  57% +0.328%/d DD 4.6 | 5y n364 PF 1.20 (H1 1.02 H2 1.36) +0.032%/d DD26.6
