@@ -355,6 +355,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
+**Tuesday 2026-10-27, 11:40 (governor: "Let's end the day").** No new entries for the rest of the day (treated as a stop for today only, not a kill-switch for tomorrow). The real account is flat at $2,568.92 with no open orders; the model's TNA runner is a ghost (run slots with `--real-free`). Result so far: one real trade, FADE TNA, +$33.36 (see `live_trades.csv`). The remaining waiters, the 13:30 close and Wednesday's arming are left as they are until the governor says otherwise.
+
 **Tuesday 2026-10-27, 9:00 research (v5.2.16).**
 - **Real account:** flat, no positions, no open equity or OCO orders, **total value $2,535.56** (cash $2,535.56, no pending deposit, unchanged from Monday's close; the $2,500 deposit has not landed). Daily loss limit (-3%) = $76.07, stop at $2,459.49.
 - **Controls:** losing streak 0/5. **A1.13 drawdown stop: clear**, value = the high $2,535.56, stop level $2,155.23 (`hwm.py check 2535.56`). No A1.10 restriction; normal full session.
