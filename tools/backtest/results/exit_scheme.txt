@@ -1,0 +1,21 @@
+                                             | H1 discovery 21-..24-03        | H2 confirmation 24-04..26-10   | whole 5y
+LIVE: 1/3 at 2R, BE, chandelier 2 ATR        | -0.018%/d R+0.01 39%w DD20.9 | +0.018%/d R+0.05 37%w DD43.9 | +0.001%/d R+0.03 38%w DD51.2
+YOURS: 1/3@1R BE, 1/3@2R stop 1R, last: fixed 1R | +0.001%/d R+0.03 54%w DD13.3 | -0.017%/d R+0.04 50%w DD37.7 | -0.008%/d R+0.04 51%w DD42.2
+  last 1/3 ratchet: chandelier 1.5 ATR       | +0.003%/d R+0.04 54%w DD13.8 | -0.024%/d R+0.03 50%w DD39.4 | -0.011%/d R+0.04 51%w DD44.6
+  last 1/3 ratchet: chandelier 2 ATR         | +0.003%/d R+0.04 54%w DD12.7 | -0.021%/d R+0.04 50%w DD39.2 | -0.010%/d R+0.04 51%w DD43.8
+  last 1/3 ratchet: chandelier 3 ATR         | +0.002%/d R+0.03 54%w DD13.4 | -0.022%/d R+0.04 50%w DD39.8 | -0.011%/d R+0.03 51%w DD44.2
+  last 1/3 ratchet: lag 1.0R behind best close | +0.012%/d R+0.05 54%w DD14.0 | -0.021%/d R+0.04 50%w DD38.3 | -0.005%/d R+0.05 52%w DD42.9
+  last 1/3 ratchet: lag 1.5R                 | +0.007%/d R+0.04 54%w DD14.1 | -0.019%/d R+0.04 50%w DD38.3 | -0.007%/d R+0.04 51%w DD43.1
+  last 1/3 ratchet: lag 2.0R                 | +0.006%/d R+0.04 54%w DD13.6 | -0.020%/d R+0.04 50%w DD39.3 | -0.008%/d R+0.04 51%w DD43.3
+  last 1/3 ratchet: step (floor R - 1)       | +0.008%/d R+0.04 54%w DD13.1 | -0.021%/d R+0.04 50%w DD39.1 | -0.008%/d R+0.04 51%w DD43.3
+-- other tranche layouts (last part uses chandelier 2 ATR)
+1/2@1R BE, rest chand 2                      | -0.003%/d R+0.02 55%w DD16.1 | -0.015%/d R+0.03 49%w DD41.3 | -0.009%/d R+0.02 51%w DD47.3
+1/3@1R BE, 2/3 chand 2                       | -0.007%/d R+0.01 54%w DD18.2 | -0.007%/d R+0.03 48%w DD42.5 | -0.007%/d R+0.02 51%w DD49.5
+1/3@1.5R BE, 2/3 chand 2                     | -0.017%/d R-0.00 44%w DD22.0 | +0.006%/d R+0.04 40%w DD42.8 | -0.005%/d R+0.02 42%w DD51.2
+1/3@2R BE, 1/3@3R stop 1R, last chand 2      | -0.019%/d R+0.02 39%w DD22.2 | +0.003%/d R+0.04 37%w DD42.8 | -0.007%/d R+0.03 38%w DD50.6
+1/3@1R stop -0.5R, 1/3@2R stop 1R, chand 2   | -0.001%/d R+0.03 41%w DD13.9 | -0.019%/d R+0.02 38%w DD39.3 | -0.011%/d R+0.03 39%w DD44.8
+1/3@1R stop -0.5R, rest chand 2              | -0.021%/d R-0.01 35%w DD20.0 | -0.002%/d R+0.02 34%w DD42.8 | -0.011%/d R+0.00 35%w DD51.1
+-- all-or-nothing reference
+all out at 1R (stop at original)             | +0.004%/d R+0.05 54%w DD15.0 | -0.037%/d R-0.00 50%w DD37.2 | -0.018%/d R+0.02 52%w DD43.1
+all out at 2R                                | +0.008%/d R+0.08 39%w DD16.5 | +0.005%/d R+0.05 38%w DD38.2 | +0.006%/d R+0.07 38%w DD41.9
+no target: BE not used, chand 2 only after 1R | -0.016%/d R-0.02 27%w DD22.3 | +0.010%/d R+0.05 26%w DD45.0 | -0.002%/d R+0.02 26%w DD53.7
