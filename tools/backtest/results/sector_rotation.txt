@@ -1,0 +1,89 @@
+Universe with BOTH leveraged bull and inverse funds (proxy: bull/bear, leverage). Data present: QQQ, SPY, DIA, IWM, XLK, XLF, SOXX, XBI, XLE, XLRE, TLT, XLB, XLV, XLU, XLP, XLI, XLY
+  QQQ   TQQQ/SQQQ 3x/3x liquid
+  SPY   SPXL/SPXS 3x/3x liquid
+  DIA   UDOW/SDOW 3x/3x liquid
+  IWM   TNA/TZA 3x/3x liquid
+  XLK   TECL/TECS 3x/3x liquid
+  XLF   FAS/FAZ 3x/3x liquid
+  SOXX  SOXL/SOXS 3x/3x liquid
+  XBI   LABU/LABD 3x/3x liquid
+  XLE   ERX/ERY 2x/2x liquid
+  XLRE  DRN/DRV 3x/3x liquid
+  TLT   TMF/TMV 3x/3x liquid
+  XLB   UYM/SMN 2x/2x THIN (wide spreads, few trades per hour)
+  XLV   CURE/RXD 3x/2x THIN (wide spreads, few trades per hour)
+  XLU   UTSL/SDP 3x/2x THIN (wide spreads, few trades per hour)
+  XLP   UGE/SZK 2x/2x THIN (wide spreads, few trades per hour)
+  XLI   UXI/SIJ 2x/2x THIN (wide spreads, few trades per hour)
+  XLY   UCC/SCC 2x/2x THIN (wide spreads, few trades per hour)
+  XLC (communication services): no leveraged inverse fund -> excluded
+
+Per-proxy FADE results, whole 5 years (setups, not account; no Fridays, v5.2.18 exits):
+  QQQ   setups  140  avg +0.031R  win  46%  H1 +0.007R  H2 +0.054R
+  SPY   setups  133  avg -0.027R  win  41%  H1 +0.140R  H2 -0.156R
+  DIA   setups  101  avg -0.142R  win  40%  H1 -0.307R  H2 +0.014R
+  IWM   setups  125  avg +0.129R  win  47%  H1 +0.106R  H2 +0.146R
+  XLK   setups  128  avg -0.124R  win  37%  H1 -0.220R  H2 -0.061R
+  XLF   setups   88  avg +0.092R  win  48%  H1 +0.021R  H2 +0.158R
+  SOXX  setups  147  avg +0.082R  win  47%  H1 +0.043R  H2 +0.121R
+  XBI   setups  104  avg +0.116R  win  43%  H1 -0.077R  H2 +0.303R
+  XLE   setups  126  avg +0.084R  win  44%  H1 +0.022R  H2 +0.140R
+  XLRE  setups  104  avg -0.295R  win  30%  H1 -0.072R  H2 -0.493R
+  TLT   setups  130  avg +0.162R  win  46%  H1 +0.178R  H2 +0.144R
+  XLB   setups   95  avg -0.046R  win  45%  H1 +0.129R  H2 -0.184R
+  XLV   setups   78  avg +0.089R  win  50%  H1 +0.256R  H2 -0.165R
+  XLU   setups   92  avg -0.011R  win  42%  H1 +0.030R  H2 -0.046R
+  XLP   setups  112  avg +0.058R  win  45%  H1 -0.063R  H2 +0.155R
+  XLI   setups  100  avg +0.106R  win  43%  H1 +0.359R  H2 -0.019R
+  XLY   setups  116  avg -0.061R  win  45%  H1 +0.036R  H2 -0.149R
+
+ACCOUNT RESULTS (5 years; one position at a time; years = %/day)
+  FIXED live 6 (QQQ SOXX IWM XLK XBI XLF)      n 490 PF 1.07 green  43% +0.016%/d (H1 -0.008 H2 +0.037) DD 37.6% total  +14.7% | 2022 -0.007 2023 -0.014 2024 -0.043 2025 -0.057 2026 +0.261
+  FIXED all 11 liquid pairs                    n 714 PF 1.06 green  42% +0.015%/d (H1 -0.013 H2 +0.040) DD 44.9% total  +13.2% | 2022 +0.045 2023 -0.087 2024 -0.017 2025 -0.066 2026 +0.251
+  FIXED all 17 (incl. thin 2x pairs)           n 867 PF 1.09 green  42% +0.024%/d (H1 +0.022 H2 +0.027) DD 41.5% total  +27.4% | 2022 +0.082 2023 -0.060 2024 -0.047 2025 -0.045 2026 +0.227
+  liquid 11: top 3 by best_ret                 n 315 PF 0.99 green  41% -0.002%/d (H1 -0.027 H2 +0.021) DD 36.3% total   -4.9% | 2022 -0.016 2023 -0.068 2024 -0.013 2025 -0.043 2026 +0.170
+  liquid 11: top 3 by worst_ret                n 321 PF 0.90 green  40% -0.013%/d (H1 -0.027 H2 -0.001) DD 29.4% total  -17.1% | 2022 -0.028 2023 -0.024 2024 -0.013 2025 -0.041 2026 +0.061
+  liquid 11: top 3 by chop                     n 303 PF 0.83 green  40% -0.019%/d (H1 -0.011 H2 -0.027) DD 24.9% total  -22.5% | 2022 -0.009 2023 +0.001 2024 -0.051 2025 +0.018 2026 -0.054
+  liquid 11: top 3 by trend                    n 299 PF 0.96 green  40% -0.005%/d (H1 -0.015 H2 +0.005) DD 33.9% total   -7.7% | 2022 +0.018 2023 -0.051 2024 -0.036 2025 -0.050 2026 +0.128
+  liquid 11: top 3 by best_fade                n 311 PF 0.73 green  36% -0.036%/d (H1 -0.019 H2 -0.052) DD 42.1% total  -37.1% | 2022 -0.036 2023 -0.011 2024 -0.053 2025 -0.062 2026 -0.006
+  liquid 11: top 3 by worst_fade               n 314 PF 0.96 green  44% -0.004%/d (H1 -0.030 H2 +0.019) DD 27.5% total   -7.1% | 2022 -0.017 2023 -0.037 2024 +0.001 2025 -0.032 2026 +0.089
+  liquid 11: top 6 by best_ret                 n 506 PF 1.08 green  42% +0.014%/d (H1 -0.014 H2 +0.040) DD 30.8% total  +14.5% | 2022 -0.022 2023 -0.028 2024 -0.013 2025 -0.040 2026 +0.222
+  liquid 11: top 6 by worst_ret                n 493 PF 0.81 green  40% -0.035%/d (H1 -0.030 H2 -0.039) DD 42.2% total  -36.3% | 2022 -0.023 2023 -0.034 2024 -0.037 2025 -0.057 2026 -0.010
+  liquid 11: top 6 by chop                     n 487 PF 1.01 green  40% +0.003%/d (H1 +0.008 H2 -0.002) DD 29.1% total   -0.5% | 2022 +0.034 2023 -0.013 2024 -0.034 2025 -0.031 2026 +0.080
+  liquid 11: top 6 by trend                    n 518 PF 0.92 green  41% -0.015%/d (H1 -0.046 H2 +0.013) DD 45.6% total  -19.4% | 2022 -0.027 2023 -0.077 2024 -0.011 2025 -0.071 2026 +0.149
+  liquid 11: top 6 by best_fade                n 527 PF 0.91 green  40% -0.018%/d (H1 -0.031 H2 -0.007) DD 47.9% total  -23.4% | 2022 -0.009 2023 -0.064 2024 -0.070 2025 -0.052 2026 +0.138
+  liquid 11: top 6 by worst_fade               n 502 PF 0.99 green  42% -0.002%/d (H1 -0.032 H2 +0.025) DD 34.1% total   -5.3% | 2022 -0.012 2023 -0.044 2024 -0.026 2025 -0.039 2026 +0.146
+  all 17: top 3 by best_ret                    n 312 PF 0.92 green  40% -0.010%/d (H1 -0.032 H2 +0.010) DD 36.2% total  -13.3% | 2022 -0.040 2023 -0.068 2024 -0.023 2025 -0.013 2026 +0.113
+  all 17: top 3 by worst_ret                   n 321 PF 0.94 green  41% -0.007%/d (H1 -0.014 H2 -0.001) DD 28.8% total   -9.9% | 2022 -0.027 2023 -0.015 2024 -0.005 2025 -0.053 2026 +0.079
+  all 17: top 3 by chop                        n 297 PF 0.70 green  37% -0.031%/d (H1 -0.022 H2 -0.039) DD 36.2% total  -32.2% | 2022 -0.049 2023 -0.011 2024 -0.047 2025 -0.018 2026 -0.034
+  all 17: top 3 by trend                       n 302 PF 1.13 green  43% +0.012%/d (H1 -0.005 H2 +0.027) DD 29.8% total  +13.0% | 2022 +0.034 2023 -0.056 2024 -0.029 2025 -0.030 2026 +0.165
+  all 17: top 3 by best_fade                   n 298 PF 0.95 green  39% -0.005%/d (H1 +0.008 H2 -0.017) DD 17.3% total   -8.0% | 2022 +0.003 2023 +0.007 2024 -0.012 2025 -0.013 2026 -0.016
+  all 17: top 3 by worst_fade                  n 308 PF 1.17 green  47% +0.015%/d (H1 -0.003 H2 +0.032) DD 12.3% total  +18.2% | 2022 -0.005 2023 +0.003 2024 -0.027 2025 +0.015 2026 +0.106
+  all 17: top 6 by best_ret                    n 504 PF 1.17 green  44% +0.026%/d (H1 +0.004 H2 +0.046) DD 30.7% total  +32.1% | 2022 +0.033 2023 -0.054 2024 -0.021 2025 -0.021 2026 +0.229
+  all 17: top 6 by worst_ret                   n 488 PF 0.90 green  38% -0.017%/d (H1 -0.007 H2 -0.025) DD 35.8% total  -20.7% | 2022 -0.004 2023 -0.023 2024 -0.040 2025 -0.075 2026 +0.071
+  all 17: top 6 by chop                        n 481 PF 0.88 green  38% -0.019%/d (H1 +0.008 H2 -0.043) DD 33.8% total  -22.8% | 2022 -0.005 2023 +0.008 2024 -0.056 2025 -0.030 2026 -0.014
+  all 17: top 6 by trend                       n 499 PF 0.99 green  41% -0.001%/d (H1 -0.026 H2 +0.021) DD 38.8% total   -4.5% | 2022 +0.009 2023 -0.084 2024 -0.024 2025 -0.042 2026 +0.160
+  all 17: top 6 by best_fade                   n 488 PF 1.00 green  39% +0.000%/d (H1 +0.015 H2 -0.013) DD 35.0% total   -3.6% | 2022 +0.002 2023 -0.000 2024 -0.057 2025 -0.058 2026 +0.137
+  all 17: top 6 by worst_fade                  n 488 PF 1.09 green  44% +0.012%/d (H1 +0.010 H2 +0.014) DD 21.4% total  +12.8% | 2022 +0.046 2023 -0.020 2024 -0.015 2025 -0.023 2026 +0.084
+
+Lists chosen by 'liquid 11: top 6 by best_fade' per quarter:
+  2022Q1: XLRE IWM SOXX QQQ XBI DIA
+  2022Q2: SPY DIA XLRE TLT XLK QQQ
+  2022Q3: XLE SOXX SPY XBI IWM XLF
+  2022Q4: TLT XBI IWM SOXX XLE XLK
+  2023Q1: XLF SOXX IWM XLRE TLT QQQ
+  2023Q2: SPY QQQ SOXX XBI XLK XLRE
+  2023Q3: QQQ XLE IWM TLT XLRE SPY
+  2023Q4: IWM TLT DIA XLE XLK XBI
+  2024Q1: TLT IWM SOXX XLRE XLE DIA
+  2024Q2: XLF TLT SOXX XLE XBI XLRE
+  2024Q3: QQQ XBI XLF XLE DIA XLK
+  2024Q4: IWM XLE XLRE XBI SOXX SPY
+  2025Q1: DIA TLT XLF SPY XLE IWM
+  2025Q2: XBI SOXX SPY QQQ XLE TLT
+  2025Q3: IWM TLT XLF XBI XLE XLRE
+  2025Q4: DIA SOXX XBI TLT XLE SPY
+  2026Q1: TLT IWM XLE SOXX XLF QQQ
+  2026Q2: XBI SPY XLE SOXX QQQ DIA
+  2026Q3: XLF SOXX QQQ XLK TLT XLE
+  2026Q4: XBI XLK SOXX QQQ IWM SPY
