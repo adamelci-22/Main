@@ -355,6 +355,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
+**Tuesday 2026-10-27, 9:00 research (v5.2.16).**
+- **Real account:** flat, no positions, no open equity or OCO orders, **total value $2,535.56** (cash $2,535.56, no pending deposit, unchanged from Monday's close; the $2,500 deposit has not landed). Daily loss limit (-3%) = $76.07, stop at $2,459.49.
+- **Controls:** losing streak 0/5. **A1.13 drawdown stop: clear**, value = the high $2,535.56, stop level $2,155.23 (`hwm.py check 2535.56`). No A1.10 restriction; normal full session.
+- **Corporate actions (C3.2):** clean. All 13 funds and 6 proxies active; premarket moves match their underlyings at the stated leverage (QQQ +0.4% vs TQQQ +1.3% / SQQQ -1.3%; SOXX +1.7% vs SOXL +5.1% / SOXS -4.9%; IWM +0.4% vs TNA +1.5%; XLK +0.7% vs TECL +2.3% / TECS -1.7%; XBI -0.2% vs LABU +0.8% / LABD +0.1%; XLF +0.5% vs FAS +1.2%; UVXY -1.2%); none near 20%. Wide premarket spreads on TECL, TECS, LABU, LABD (A1.7 will matter at the open).
+- **RVOL baseline:** 20 sessions (2026-09-29..2026-10-26) -> `archive/paper_rvol_2026-10-27.json`.
+- **Context:** large reports before the open include UPS, KO, PYPL, BA, SPGI, FCX, RCL, HCA; after the close V, STX, NXPI, TER, HOOD, ENPH (none are proxies). The Fed meets Wed 10-28. No scheduled macro release found before 13:30.
+
 **Monday 2026-10-26, 13:30 close (v5.2.16).**
 - **Real account:** flat all day, no positions, no open equity or OCO orders at 13:30, total value **$2,535.56** (unchanged; no trade, no deposit yet). Losing streak 0/5. No safety control fired. A1.13 drawdown stop clear (high $2,535.56, stop level $2,155.23).
 - **Signals:** none. FADE: XLF and IWM broke up but their retests held (no close back inside), the other four never broke in the window; PULLBACK: TECS volume breakout (10:05) failed the trend test, UVXY broke out at 12:45 but never dipped. Early shutdown at 12:55 (account flat). Model: 0 trades, equity $2,520.60.
