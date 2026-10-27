@@ -1,0 +1,32 @@
+DATA Robinhood cache 2026-03-03..2026-10-14; split 2026-06-24
+cell: %/day  | trades  win%  full losers (<= -0.9R)  avg loss R  avg win R  maxDD     for first half | second half | all
+LIVE (BE only after the 2R partial)      | +0.391  40t 55%w full-1R 42% L-0.98 W+2.58 DD 4.2 | +0.446  35t 60%w full-1R 40% L-1.00 W+2.26 DD 4.5 | +0.419  75t 57%w full-1R 41% L-0.99 W+2.43 DD 4.5
+at +0.5R -> stop to breakeven            | +0.326  40t 40%w full-1R 30% L-0.50 W+2.84 DD 4.3 | +0.305  35t 43%w full-1R 17% L-0.37 W+1.82 DD 4.1 | +0.315  75t 41%w full-1R 24% L-0.44 W+2.35 DD 4.3
+at +0.75R -> stop to breakeven           | +0.301  40t 40%w full-1R 32% L-0.55 W+2.84 DD 4.3 | +0.421  35t 54%w full-1R 29% L-0.63 W+2.20 DD 3.8 | +0.361  75t 47%w full-1R 31% L-0.59 W+2.50 DD 4.3
+at +1.0R -> stop to breakeven            | +0.326  40t 45%w full-1R 32% L-0.60 W+2.64 DD 4.3 | +0.415  35t 57%w full-1R 37% L-0.87 W+2.27 DD 4.5 | +0.371  75t 51%w full-1R 35% L-0.71 W+2.44 DD 4.5
+at +1.25R -> stop to breakeven           | +0.386  40t 52%w full-1R 38% L-0.82 W+2.61 DD 4.2 | +0.415  35t 57%w full-1R 37% L-0.87 W+2.27 DD 4.5 | +0.401  75t 55%w full-1R 37% L-0.84 W+2.44 DD 4.5
+at +1.5R -> stop to breakeven            | +0.386  40t 52%w full-1R 38% L-0.82 W+2.61 DD 4.2 | +0.409  35t 57%w full-1R 40% L-0.93 W+2.27 DD 4.5 | +0.398  75t 55%w full-1R 39% L-0.87 W+2.44 DD 4.5
+at +1.0R -> lock +0.1R                   | +0.248  41t 56%w full-1R 32% L-0.72 W+1.47 DD 4.2 | +0.419  35t 60%w full-1R 37% L-0.92 W+2.18 DD 4.5 | +0.334  76t 58%w full-1R 34% L-0.81 W+1.81 DD 4.5
+at +1.0R -> lock +0.25R                  | +0.248  41t 63%w full-1R 32% L-0.87 W+1.33 DD 4.2 | +0.424  35t 63%w full-1R 37% L-1.00 W+2.09 DD 4.5 | +0.336  76t 63%w full-1R 34% L-0.93 W+1.68 DD 4.5
+at +1.5R -> lock +0.25R                  | +0.261  41t 59%w full-1R 37% L-0.90 W+1.61 DD 4.2 | +0.415  35t 60%w full-1R 40% L-1.00 W+2.18 DD 4.5 | +0.338  76t 59%w full-1R 38% L-0.95 W+1.87 DD 4.5
+at +1.5R -> lock +0.5R                   | +0.239  41t 61%w full-1R 37% L-0.97 W+1.54 DD 4.2 | +0.354  35t 60%w full-1R 40% L-1.00 W+1.79 DD 4.5 | +0.297  76t 61%w full-1R 38% L-0.99 W+1.65 DD 4.5
+at +0.5R -> stop to -0.5R (halve the loss) | +0.313  40t 48%w full-1R 30% L-0.79 W+2.68 DD 4.2 | +0.437  35t 54%w full-1R 17% L-0.70 W+1.93 DD 4.2 | +0.375  75t 51%w full-1R 24% L-0.75 W+2.30 DD 4.2
+at +1.0R -> stop to -0.5R (halve the loss) | +0.319  40t 50%w full-1R 32% L-0.83 W+2.56 DD 4.2 | +0.449  35t 60%w full-1R 37% L-0.96 W+2.26 DD 4.5 | +0.384  75t 55%w full-1R 35% L-0.88 W+2.41 DD 4.5
+at +0.5R -> -0.5R, at +1R -> BE          | +0.321  40t 42%w full-1R 30% L-0.58 W+2.78 DD 4.3 | +0.403  35t 51%w full-1R 17% L-0.63 W+1.91 DD 4.2 | +0.362  75t 47%w full-1R 24% L-0.60 W+2.33 DD 4.3
+at +1R -> BE, at +1.5R -> +0.5R          | +0.225  41t 54%w full-1R 32% L-0.70 W+1.56 DD 4.3 | +0.360  35t 60%w full-1R 37% L-0.93 W+1.79 DD 4.5 | +0.293  76t 57%w full-1R 34% L-0.80 W+1.67 DD 4.5
+DATA Massive full tape 2021-11-30..2026-10-23; split 2024-04-01
+cell: %/day  | trades  win%  full losers (<= -0.9R)  avg loss R  avg win R  maxDD     for first half | second half | all
+LIVE (BE only after the 2R partial)      | -0.018 274t 39%w full-1R 59% L-0.97 W+1.77 DD20.9 | +0.018 329t 37%w full-1R 60% L-0.97 W+1.85 DD43.9 | +0.001 603t 38%w full-1R 60% L-0.97 W+1.81 DD51.2
+at +0.5R -> stop to breakeven            | -0.002 278t 22%w full-1R 29% L-0.42 W+1.72 DD17.1 | -0.029 335t 21%w full-1R 37% L-0.50 W+1.69 DD45.2 | -0.016 613t 22%w full-1R 33% L-0.46 W+1.70 DD50.6
+at +0.75R -> stop to breakeven           | -0.004 275t 27%w full-1R 39% L-0.55 W+1.78 DD15.3 | -0.000 332t 26%w full-1R 42% L-0.60 W+1.88 DD43.5 | -0.002 607t 27%w full-1R 41% L-0.58 W+1.84 DD47.4
+at +1.0R -> stop to breakeven            | -0.001 275t 30%w full-1R 45% L-0.65 W+1.78 DD17.2 | +0.008 331t 30%w full-1R 48% L-0.70 W+1.89 DD42.4 | +0.004 606t 30%w full-1R 47% L-0.68 W+1.84 DD47.6
+at +1.25R -> stop to breakeven           | -0.024 274t 33%w full-1R 53% L-0.80 W+1.81 DD25.0 | +0.018 329t 34%w full-1R 53% L-0.81 W+1.90 DD43.2 | -0.002 603t 33%w full-1R 53% L-0.81 W+1.86 DD52.8
+at +1.5R -> stop to breakeven            | -0.012 274t 35%w full-1R 55% L-0.85 W+1.78 DD20.6 | +0.019 329t 36%w full-1R 56% L-0.89 W+1.88 DD41.7 | +0.004 603t 35%w full-1R 56% L-0.87 W+1.83 DD48.4
+at +1.0R -> lock +0.1R                   | +0.005 275t 44%w full-1R 45% L-0.79 W+1.22 DD15.8 | +0.012 331t 40%w full-1R 48% L-0.81 W+1.43 DD41.1 | +0.009 606t 42%w full-1R 47% L-0.80 W+1.33 DD45.4
+at +1.0R -> lock +0.25R                  | -0.029 275t 51%w full-1R 45% L-0.92 W+0.89 DD26.2 | +0.019 331t 47%w full-1R 48% L-0.92 W+1.27 DD39.8 | -0.004 606t 49%w full-1R 47% L-0.92 W+1.09 DD51.0
+at +1.5R -> lock +0.25R                  | -0.026 274t 43%w full-1R 55% L-0.96 W+1.35 DD25.3 | +0.018 329t 40%w full-1R 56% L-0.95 W+1.67 DD40.4 | -0.003 603t 41%w full-1R 56% L-0.96 W+1.52 DD51.6
+at +1.5R -> lock +0.5R                   | -0.025 274t 43%w full-1R 55% L-0.96 W+1.33 DD25.5 | -0.002 329t 41%w full-1R 56% L-0.97 W+1.54 DD41.5 | -0.013 603t 42%w full-1R 56% L-0.97 W+1.44 DD52.6
+at +0.5R -> stop to -0.5R (halve the loss) | -0.035 275t 30%w full-1R 29% L-0.71 W+1.70 DD27.8 | +0.013 331t 32%w full-1R 37% L-0.77 W+1.79 DD39.8 | -0.010 606t 31%w full-1R 33% L-0.74 W+1.75 DD52.5
+at +1.0R -> stop to -0.5R (halve the loss) | -0.016 274t 35%w full-1R 45% L-0.85 W+1.68 DD19.6 | +0.016 329t 35%w full-1R 48% L-0.86 W+1.85 DD42.3 | +0.001 603t 35%w full-1R 47% L-0.86 W+1.77 DD49.4
+at +0.5R -> -0.5R, at +1R -> BE          | -0.023 276t 26%w full-1R 29% L-0.55 W+1.76 DD23.4 | +0.013 333t 28%w full-1R 37% L-0.63 W+1.82 DD38.9 | -0.005 609t 27%w full-1R 33% L-0.59 W+1.80 DD48.6
+at +1R -> BE, at +1.5R -> +0.5R          | -0.014 275t 36%w full-1R 45% L-0.71 W+1.32 DD20.8 | -0.005 331t 35%w full-1R 48% L-0.76 W+1.54 DD41.8 | -0.009 606t 36%w full-1R 47% L-0.74 W+1.44 DD49.3
