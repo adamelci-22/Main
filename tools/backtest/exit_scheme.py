@@ -10,8 +10,11 @@ import os, sys, collections
 from dataclasses import replace
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import fade_diag as F
-ds = F.DS(sys.argv[1], F.ALL); syms = [s for s in F.LIVE if s in ds.bars]; ctx = F.context(ds, syms); days = ds.days[21:]
-H1 = [d for d in days if d < '2024-04-01']; H2 = [d for d in days if d >= '2024-04-01']
+RH = sys.argv[1] == 'rh'
+ds = F.DS(None if RH else sys.argv[1], F.ALL); syms = [s for s in F.LIVE if s in ds.bars]; ctx = F.context(ds, syms); days = ds.days[1:] if RH else ds.days[21:]
+SPLIT = sorted(days)[len(days) // 2] if RH else '2024-04-01'
+H1 = [d for d in days if d < SPLIT]; H2 = [d for d in days if d >= SPLIT]
+print(f'data={"Robinhood cache" if RH else "Massive"} days {days[0]}..{days[-1]} ({len(days)}), split at {SPLIT}')
 SCH = {}
 _orig = F._manage
 

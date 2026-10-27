@@ -1,0 +1,22 @@
+data=Robinhood cache days 2026-03-03..2026-10-14 (157), split at 2026-06-24
+                                             | H1 discovery 21-..24-03        | H2 confirmation 24-04..26-10   | whole 5y
+LIVE: 1/3 at 2R, BE, chandelier 2 ATR        | +0.391%/d R+0.72 55%w DD 4.2 | +0.446%/d R+0.82 60%w DD 4.5 | +0.419%/d R+0.76 57%w DD 4.5
+YOURS: 1/3@1R BE, 1/3@2R stop 1R, last: fixed 1R | +0.238%/d R+0.49 68%w DD 4.2 | +0.265%/d R+0.53 63%w DD 4.5 | +0.251%/d R+0.51 65%w DD 4.5
+  last 1/3 ratchet: chandelier 1.5 ATR       | +0.187%/d R+0.36 68%w DD 4.2 | +0.246%/d R+0.52 63%w DD 4.5 | +0.216%/d R+0.42 65%w DD 4.5
+  last 1/3 ratchet: chandelier 2 ATR         | +0.228%/d R+0.47 68%w DD 4.2 | +0.271%/d R+0.55 63%w DD 4.5 | +0.249%/d R+0.50 65%w DD 4.5
+  last 1/3 ratchet: chandelier 3 ATR         | +0.233%/d R+0.49 68%w DD 4.2 | +0.265%/d R+0.52 63%w DD 4.5 | +0.249%/d R+0.50 65%w DD 4.5
+  last 1/3 ratchet: lag 1.0R behind best close | +0.195%/d R+0.37 68%w DD 4.2 | +0.252%/d R+0.52 63%w DD 4.5 | +0.224%/d R+0.44 65%w DD 4.5
+  last 1/3 ratchet: lag 1.5R                 | +0.199%/d R+0.38 68%w DD 4.2 | +0.248%/d R+0.52 63%w DD 4.5 | +0.224%/d R+0.44 65%w DD 4.5
+  last 1/3 ratchet: lag 2.0R                 | +0.199%/d R+0.39 68%w DD 4.2 | +0.266%/d R+0.53 63%w DD 4.5 | +0.233%/d R+0.45 65%w DD 4.5
+  last 1/3 ratchet: step (floor R - 1)       | +0.203%/d R+0.38 68%w DD 4.2 | +0.249%/d R+0.52 63%w DD 4.5 | +0.226%/d R+0.44 65%w DD 4.5
+-- other tranche layouts (last part uses chandelier 2 ATR)
+1/2@1R BE, rest chand 2                      | +0.237%/d R+0.45 68%w DD 4.2 | +0.303%/d R+0.61 63%w DD 4.5 | +0.270%/d R+0.52 65%w DD 4.5
+1/3@1R BE, 2/3 chand 2                       | +0.266%/d R+0.52 65%w DD 4.2 | +0.367%/d R+0.73 60%w DD 4.5 | +0.317%/d R+0.61 63%w DD 4.5
+1/3@1.5R BE, 2/3 chand 2                     | +0.329%/d R+0.62 60%w DD 4.2 | +0.397%/d R+0.72 60%w DD 4.5 | +0.364%/d R+0.66 60%w DD 4.5
+1/3@2R BE, 1/3@3R stop 1R, last chand 2      | +0.324%/d R+0.60 55%w DD 4.2 | +0.390%/d R+0.69 60%w DD 4.5 | +0.357%/d R+0.64 57%w DD 4.5
+1/3@1R stop -0.5R, 1/3@2R stop 1R, chand 2   | +0.233%/d R+0.48 55%w DD 4.2 | +0.269%/d R+0.53 60%w DD 4.5 | +0.251%/d R+0.50 57%w DD 4.5
+1/3@1R stop -0.5R, rest chand 2              | +0.269%/d R+0.51 50%w DD 4.2 | +0.387%/d R+0.72 51%w DD 4.5 | +0.328%/d R+0.60 51%w DD 4.5
+-- all-or-nothing reference
+all out at 1R (stop at original)             | +0.146%/d R+0.26 68%w DD 4.2 | +0.144%/d R+0.25 64%w DD 4.5 | +0.145%/d R+0.25 66%w DD 4.5
+all out at 2R                                | +0.317%/d R+0.57 57%w DD 4.2 | +0.317%/d R+0.58 61%w DD 4.5 | +0.317%/d R+0.57 59%w DD 4.5
+no target: BE not used, chand 2 only after 1R | +0.325%/d R+0.65 40%w DD 4.3 | +0.495%/d R+0.97 46%w DD 4.5 | +0.410%/d R+0.78 43%w DD 4.5
