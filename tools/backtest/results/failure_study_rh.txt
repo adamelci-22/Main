@@ -1,0 +1,96 @@
+DATA Robinhood cache: 2026-03-03..2026-10-14, 157 days; halves split at 2026-06-24
+
+A. WHAT WAS KNOWN AT ENTRY  (75 trades taken, live exits). Each group: reached-2R share / avg R  for first half | second half | all
+   overall: H1 48% +0.98R | H2 49% +0.96R | all 48% +0.97R
+ entry time
+   10:10-10:20                    n 39  49% +1.03R | n 33  52% +1.02R | n 72  50% +1.03R
+   10:25-10:45                    n  1   0% -1.00R | n  2   0% -0.00R | n  3   0% -0.34R
+ bars from break to retest
+   1 bar                          n 38  47% +1.00R | n 32  53% +1.01R | n 70  50% +1.01R
+   2-3 bars                       n  1 100% +2.21R | n  1   0% +1.24R | n  2  50% +1.72R
+   4+ bars                        n  1   0% -1.00R | n  2   0% -0.00R | n  3   0% -0.34R
+ retest depth into box
+   deep 30%+                      n  7  43% +0.63R | n  6  50% +1.49R | n 13  46% +1.03R
+   mid 10-30%                     n 22  45% +1.31R | n 22  45% +0.66R | n 44  45% +0.99R
+   shallow <10%                   n 11  55% +0.55R | n  7  57% +1.43R | n 18  56% +0.89R
+ box width % of price
+   high >=1.30                    n 15  53% +1.39R | n 10  60% +1.70R | n 25  56% +1.52R
+   low <0.71                      n 11  45% +0.46R | n 14  43% +0.11R | n 25  44% +0.26R
+   mid 0.71-1.30                  n 14  43% +0.95R | n 11  45% +1.37R | n 25  44% +1.14R
+ stop distance %
+   high >=0.37                    n 12  42% +0.64R | n 13  54% +1.58R | n 25  48% +1.13R
+   low <0.20                      n 11  45% +1.79R | n 14  57% +0.90R | n 25  52% +1.29R
+   mid 0.20-0.37                  n 17  53% +0.70R | n  8  25% +0.06R | n 25  44% +0.50R
+ break extension %
+   high >=0.21                    n 14  50% +0.60R | n 11  55% +1.43R | n 25  52% +0.96R
+   low <0.11                      n 11  45% +0.57R | n 14  50% +0.67R | n 25  48% +0.63R
+   mid 0.11-0.21                  n 15  47% +1.64R | n 10  40% +0.84R | n 25  44% +1.32R
+ opening RVOL
+   high >=1.22                    n 11  64% +0.85R | n 14  43% +0.80R | n 25  52% +0.82R
+   low <0.85                      n 15  67% +2.49R | n 10  60% +0.86R | n 25  64% +1.84R
+   mid 0.85-1.22                  n 14  14% -0.53R | n 11  45% +1.26R | n 25  28% +0.25R
+ trade vs opening gap
+   trade AGAINST gap              n 19  53% +0.99R | n 19  42% +0.68R | n 38  47% +0.83R
+   trade WITH gap                 n 21  43% +0.97R | n 16  56% +1.29R | n 37  49% +1.11R
+ trade vs 20-day trend
+   AGAINST trend                  n 13  62% +1.27R | n 15  47% +0.76R | n 28  54% +1.00R
+   WITH trend                     n 17  47% +0.44R | n 20  50% +1.11R | n 37  49% +0.80R
+   n/a                            n 10  30% +1.53R | n  0   0% +0.00R | n 10  30% +1.53R
+ leg bought
+   bear leg (fade an up-break)    n 20  60% +1.69R | n 13  46% +1.46R | n 33  55% +1.60R
+   bull leg (fade a down-break)   n 20  35% +0.27R | n 22  50% +0.66R | n 42  43% +0.48R
+ proxy
+   IWM                            n  6  50% +0.16R | n 10  40% +0.37R | n 16  44% +0.29R
+   QQQ                            n  4  25% +0.07R | n  5  60% +0.72R | n  9  44% +0.43R
+   SOXX                           n  9  78% +2.97R | n  7  43% +0.68R | n 16  62% +1.97R
+   XBI                            n  5  60% +0.75R | n  4  75% +2.06R | n  9  67% +1.33R
+   XLF                            n  8  38% +0.73R | n  4  50% +1.53R | n 12  42% +1.00R
+   XLK                            n  8  25% +0.20R | n  5  40% +1.43R | n 13  31% +0.67R
+ weekday
+   Fri                            n  6  17% -0.65R | n  6  33% +0.16R | n 12  25% -0.25R
+   Mon                            n  7  71% +1.84R | n  5  20% +1.09R | n 12  50% +1.52R
+   Thu                            n  9  44% +1.73R | n  8  75% +1.96R | n 17  59% +1.84R
+   Tue                            n  9  78% +1.10R | n 10  60% +0.98R | n 19  68% +1.04R
+   Wed                            n  9  22% +0.54R | n  6  33% +0.28R | n 15  27% +0.44R
+ how fast it moved after entry (NOT known at entry; this is what an early-exit rule could use)
+   after 1 bar(s) best >= 0.5R: n 28 reach2R  68% avg +1.87R  |  not yet: n 36 reach2R  47% avg +0.87R
+   after 1 bar(s) best >= 1.0R: n 10 reach2R  80% avg +2.42R  |  not yet: n 54 reach2R  52% avg +1.10R
+   after 2 bar(s) best >= 0.5R: n 37 reach2R  62% avg +1.83R  |  not yet: n 23 reach2R  52% avg +0.80R
+   after 2 bar(s) best >= 1.0R: n 17 reach2R  82% avg +2.86R  |  not yet: n 43 reach2R  49% avg +0.87R
+   after 3 bar(s) best >= 0.5R: n 41 reach2R  68% avg +2.01R  |  not yet: n 11 reach2R  55% avg +0.90R
+   after 3 bar(s) best >= 1.0R: n 24 reach2R  88% avg +2.91R  |  not yet: n 28 reach2R  46% avg +0.81R
+   after 6 bar(s) best >= 0.5R: n 40 reach2R  75% avg +2.27R  |  not yet: n  6 reach2R  33% avg +0.75R
+   after 6 bar(s) best >= 1.0R: n 32 reach2R  88% avg +2.63R  |  not yet: n 14 reach2R  29% avg +0.79R
+
+B. EARLY-EXIT RULES (live exits otherwise): cut at the close of bar N if the trade has not reached X R.   first half | second half | all
+   LIVE (no early exit)                               | +0.391%/d +0.98R 55%w DD 4.2 | +0.446%/d +0.96R 60%w DD 4.5 | +0.419%/d +0.97R 57%w DD 4.5
+   cut if not +0.25R after 1 bar(s) (5 min)           | +0.331%/d +0.88R 48%w DD 4.2 | +0.245%/d +0.54R 37%w DD 3.5 | +0.288%/d +0.73R 43%w DD 4.2
+   cut if not +0.5R after 1 bar(s) (5 min)            | +0.135%/d +0.58R 39%w DD 4.7 | +0.109%/d +0.37R 31%w DD 3.2 | +0.122%/d +0.49R 35%w DD 4.7
+   cut if not +1.0R after 1 bar(s) (5 min)            | +0.065%/d +0.39R 41%w DD 5.3 | -0.018%/d +0.01R 39%w DD 1.8 | +0.023%/d +0.22R 40%w DD 5.3
+   cut if not +0.25R after 2 bar(s) (10 min)          | +0.278%/d +0.84R 48%w DD 4.6 | +0.383%/d +0.82R 51%w DD 3.4 | +0.331%/d +0.83R 49%w DD 4.6
+   cut if not +0.5R after 2 bar(s) (10 min)           | +0.138%/d +0.70R 44%w DD 6.8 | +0.290%/d +0.65R 49%w DD 3.5 | +0.215%/d +0.68R 46%w DD 6.8
+   cut if not +1.0R after 2 bar(s) (10 min)           | +0.142%/d +0.67R 46%w DD 5.4 | +0.073%/d +0.25R 50%w DD 3.0 | +0.107%/d +0.48R 48%w DD 5.4
+   cut if not +0.25R after 3 bar(s) (15 min)          | +0.323%/d +0.94R 52%w DD 4.2 | +0.366%/d +0.82R 51%w DD 4.5 | +0.344%/d +0.88R 52%w DD 4.5
+   cut if not +0.5R after 3 bar(s) (15 min)           | +0.277%/d +0.89R 52%w DD 4.2 | +0.318%/d +0.72R 46%w DD 4.5 | +0.298%/d +0.81R 49%w DD 4.5
+   cut if not +1.0R after 3 bar(s) (15 min)           | +0.203%/d +0.78R 55%w DD 4.5 | +0.266%/d +0.70R 49%w DD 3.8 | +0.235%/d +0.74R 52%w DD 4.5
+   cut if not +0.25R after 4 bar(s) (20 min)          | +0.391%/d +0.98R 55%w DD 4.2 | +0.381%/d +0.84R 54%w DD 4.5 | +0.386%/d +0.91R 55%w DD 4.5
+   cut if not +0.5R after 4 bar(s) (20 min)           | +0.339%/d +0.94R 55%w DD 4.2 | +0.329%/d +0.73R 49%w DD 4.5 | +0.334%/d +0.84R 52%w DD 4.5
+   cut if not +1.0R after 4 bar(s) (20 min)           | +0.282%/d +0.88R 58%w DD 4.7 | +0.321%/d +0.76R 49%w DD 3.9 | +0.302%/d +0.82R 53%w DD 4.7
+   cut if not +0.25R after 6 bar(s) (30 min)          | +0.391%/d +0.98R 55%w DD 4.2 | +0.424%/d +0.90R 57%w DD 4.5 | +0.408%/d +0.95R 56%w DD 4.5
+   cut if not +0.5R after 6 bar(s) (30 min)           | +0.391%/d +0.98R 55%w DD 4.2 | +0.351%/d +0.80R 51%w DD 4.5 | +0.371%/d +0.90R 53%w DD 4.5
+   cut if not +1.0R after 6 bar(s) (30 min)           | +0.322%/d +0.92R 58%w DD 4.8 | +0.340%/d +0.79R 54%w DD 4.5 | +0.331%/d +0.86R 56%w DD 4.8
+   cut if not +0.25R after 9 bar(s) (45 min)          | +0.391%/d +0.98R 55%w DD 4.2 | +0.446%/d +0.96R 60%w DD 4.5 | +0.419%/d +0.97R 57%w DD 4.5
+   cut if not +0.5R after 9 bar(s) (45 min)           | +0.391%/d +0.98R 55%w DD 4.2 | +0.435%/d +0.94R 57%w DD 4.5 | +0.413%/d +0.96R 56%w DD 4.5
+   cut if not +1.0R after 9 bar(s) (45 min)           | +0.335%/d +0.92R 52%w DD 4.2 | +0.368%/d +0.82R 54%w DD 4.5 | +0.351%/d +0.87R 53%w DD 4.5
+
+C. TAKE-PROFIT LADDERS ('curtains'). Stop after each rung in brackets; remainder trails a 2-ATR chandelier.   first half | second half | all
+   LIVE  1/3@2R [BE]                                  | +0.391%/d +0.98R 55%w DD 4.2 | +0.446%/d +0.96R 60%w DD 4.5 | +0.419%/d +0.97R 57%w DD 4.5
+   1/4@2,3,4R [BE,1R,2R] + 1/4 trail                  | +0.288%/d +0.59R 55%w DD 4.2 | +0.399%/d +0.81R 60%w DD 4.5 | +0.344%/d +0.69R 57%w DD 4.5
+   1/4@2,3,4R [BE,BE,BE] + 1/4 trail                  | +0.336%/d +0.76R 55%w DD 4.2 | +0.404%/d +0.87R 60%w DD 4.5 | +0.370%/d +0.81R 57%w DD 4.5
+   1/3@2,3,4R [BE,1R,2R] (no runner)                  | +0.284%/d +0.59R 55%w DD 4.2 | +0.354%/d +0.76R 60%w DD 4.5 | +0.319%/d +0.67R 57%w DD 4.5
+   1/3@2R, 1/3@4R [BE,2R] + 1/3 trail                 | +0.312%/d +0.64R 55%w DD 4.2 | +0.417%/d +0.91R 60%w DD 4.5 | +0.365%/d +0.77R 57%w DD 4.5
+   1/5@2,3,4,5,6R [BE,1,2,3,4R]                       | +0.279%/d +0.61R 52%w DD 4.2 | +0.402%/d +0.81R 60%w DD 4.5 | +0.341%/d +0.70R 56%w DD 4.5
+   1/5@2,3,4,5R [BE,BE,BE,BE] + 1/5 trail             | +0.331%/d +0.74R 52%w DD 4.2 | +0.420%/d +0.89R 60%w DD 4.5 | +0.376%/d +0.81R 56%w DD 4.5
+   1/6@2,3,4,5,6R [BE..] + 1/6 trail                  | +0.332%/d +0.75R 52%w DD 4.2 | +0.435%/d +0.90R 60%w DD 4.5 | +0.384%/d +0.82R 56%w DD 4.5
+   1/4@1.5,2.5,3.5R [BE,1R,2R] + 1/4 trail            | +0.232%/d +0.55R 58%w DD 4.2 | +0.328%/d +0.70R 60%w DD 4.5 | +0.280%/d +0.62R 59%w DD 4.5
+   1/4@1,2,3R [BE,1R,2R] + 1/4 trail                  | +0.183%/d +0.42R 62%w DD 4.2 | +0.286%/d +0.66R 63%w DD 4.5 | +0.235%/d +0.53R 63%w DD 4.5

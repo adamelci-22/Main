@@ -1,0 +1,22 @@
+DATA Robinhood cache 2026-03-03..2026-10-14; split 2026-06-24.  cell: %/day  trades  win%  maxDD   | first half | second half | all
+LIVE                                 | +0.391   40t 55% DD 4.2 | +0.446   35t 60% DD 4.5 | +0.419   75t 57% DD 4.5
+box width >= 0.5%                    | +0.405   39t 56% DD 4.2 | +0.384   30t 50% DD 4.5 | +0.395   69t 54% DD 4.5
+box width >= 0.6%                    | +0.351   36t 53% DD 5.1 | +0.386   26t 50% DD 4.5 | +0.369   62t 52% DD 5.1
+box width >= 0.7%                    | +0.322   33t 52% DD 5.5 | +0.407   23t 57% DD 4.5 | +0.365   56t 54% DD 5.5
+box width >= 0.8%                    | +0.247   30t 43% DD 8.6 | +0.385   20t 60% DD 3.8 | +0.317   50t 50% DD 8.6
+box width >= 1.0%                    | +0.216   23t 43% DD 8.4 | +0.405   19t 63% DD 3.8 | +0.311   42t 52% DD 8.4
+bear leg only (fade up-breaks)       | +0.265   23t 65% DD 2.8 | +0.232   13t 62% DD 3.1 | +0.248   36t 64% DD 3.1
+bull leg only (fade down-breaks)     | +0.131   21t 43% DD 5.8 | +0.207   23t 57% DD 2.4 | +0.169   44t 50% DD 5.8
+no Fridays                           | +0.458   34t 62% DD 4.0 | +0.438   29t 62% DD 3.8 | +0.448   63t 62% DD 4.0
+box >= 0.7% + bear leg only          | +0.239   18t 67% DD 3.0 | +0.225   10t 60% DD 3.1 | +0.232   28t 64% DD 3.1
+DATA Massive full tape 2021-11-30..2026-10-23; split 2024-04-01.  cell: %/day  trades  win%  maxDD   | first half | second half | all
+LIVE                                 | -0.018  274t 39% DD20.9 | +0.018  329t 37% DD43.9 | +0.001  603t 38% DD51.2
+box width >= 0.5%                    | -0.016  255t 39% DD21.7 | +0.023  288t 36% DD39.9 | +0.004  543t 38% DD47.5
+box width >= 0.6%                    | -0.012  234t 38% DD20.3 | +0.021  264t 37% DD38.9 | +0.005  498t 38% DD45.1
+box width >= 0.7%                    | -0.011  214t 38% DD20.1 | +0.037  229t 39% DD33.2 | +0.015  443t 39% DD38.9
+box width >= 0.8%                    | -0.009  199t 38% DD16.3 | +0.042  199t 40% DD25.5 | +0.018  398t 39% DD29.9
+box width >= 1.0%                    | -0.012  151t 36% DD16.7 | +0.047  142t 39% DD24.5 | +0.019  293t 38% DD29.6
+bear leg only (fade up-breaks)       | +0.027  136t 43% DD13.5 | +0.003  189t 37% DD31.9 | +0.014  325t 39% DD37.4
+bull leg only (fade down-breaks)     | -0.043  151t 35% DD27.4 | +0.016  163t 38% DD23.0 | -0.012  314t 37% DD39.5
+no Fridays                           | -0.011  222t 40% DD18.8 | +0.046  268t 40% DD37.9 | +0.019  490t 40% DD42.5
+box >= 0.7% + bear leg only          | +0.030  102t 42% DD10.2 | +0.015  118t 39% DD25.3 | +0.022  220t 40% DD28.7
