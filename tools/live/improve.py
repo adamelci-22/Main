@@ -123,7 +123,9 @@ def stats(daily, trades, lo=0, hi=None):
     for x in r:
         eq *= 1 + x / 100; peak = max(peak, eq); dd = max(dd, (1 - eq / peak) * 100)
     w = sum(t[1] for t in tr if t[1] > 0); l = -sum(t[1] for t in tr if t[1] < 0)
-    return dict(mean_day=round(st.mean(r), 4) if r else 0.0, dd=round(dd, 2), trades=len(tr), pf=round(w / l, 2) if l else None, ret=round((eq - 1) * 100, 2))
+    sd = st.pstdev(r) if len(r) > 1 else 0.0
+    sharpe = round(st.mean(r) / sd * math.sqrt(252), 2) if sd else 0.0
+    return dict(mean_day=round(st.mean(r), 4) if r else 0.0, dd=round(dd, 2), trades=len(tr), pf=round(w / l, 2) if l else None, ret=round((eq - 1) * 100, 2), sharpe=sharpe)
 
 
 def evaluate(D, values):
@@ -131,7 +133,8 @@ def evaluate(D, values):
     return dict(full=stats(daily, trades), ins=stats(daily, trades, 0, cut), oos=stats(daily, trades, cut))
 
 
-def menu(D, base_values, space, risk_off=False):
+def menu(D, base_values, space, risk_off=False, goals=None):
+    goals = goals or {}
     base_values = {**paper.TUNABLE_DEFAULTS, **base_values}; base = evaluate(D, base_values); rows = []
     for var, sp in space.items():
         if sp.get('needs') == 'risk_off' and not risk_off: continue
@@ -152,14 +155,31 @@ def menu(D, base_values, space, risk_off=False):
             if d['full'] < GATE_MIN_GAIN: why.append(f"gain < {GATE_MIN_GAIN}%/day")
             if e['full']['dd'] > base['full']['dd'] + GATE_DD_SLACK: why.append('drawdown +%.1f pts' % (e['full']['dd'] - base['full']['dd']))
             if e['full']['trades'] < GATE_TRADE_KEEP * base['full']['trades']: why.append('trades cut by more than 25%')
+            if goals:
+                if e['full']['dd'] > goals['max_drawdown_pct']: why.append(f"drawdown above the {goals['max_drawdown_pct']}% goal limit")
+                if base['full']['sharpe'] >= goals['min_sharpe'] and e['full']['sharpe'] < goals['min_sharpe']: why.append(f"Sharpe falls below the {goals['min_sharpe']} floor")
+                e['full']['sharpe_gain'] = round(e['full']['sharpe'] - base['full']['sharpe'], 2)
             rows.append(dict(id=f"{var}{'+1' if sgn > 0 else '-1'}", variable=var, old=base_values[var], new=new, delta=d, stats=e, passes=not why, fails=why))
     return base, rows
 
 
 # ------------------------------------------------------------------ proposers
+def goal_progress():
+    """The paper model's own record against the goals: 30-day-equivalent return, drawdown, Sharpe (needs 2+ trading days)."""
+    g = tun().get('goals') or {}; d = {}
+    for x in model_trades(): d[x['day']] = d.get(x['day'], 0.0) + x['acct_pct']
+    r = [v for _, v in sorted(d.items())]
+    if len(r) < 2: return dict(days=len(r), note='fewer than 2 trading days')
+    eq = peak = 1.0; dd = 0.0
+    for x in r: eq *= 1 + x / 100; peak = max(peak, eq); dd = max(dd, (1 - eq / peak) * 100)
+    sd = st.pstdev(r); sh = st.mean(r) / sd * math.sqrt(252) if sd else 0.0
+    return dict(days=len(r), mean_pct_per_day=round(st.mean(r), 3), target_pct_per_day=g.get('target_daily_pct'), max_drawdown_pct=round(dd, 2), drawdown_limit_pct=g.get('max_drawdown_pct'),
+                sharpe=round(sh, 2), sharpe_floor=g.get('min_sharpe'), sharpe_goal=g.get('target_sharpe'))
+
+
 def context(t, base, rows):
     tr = model_trades()[-25:]
-    return dict(objective='0.4% per trading day average over a year; 15% drawdown hard stop; Sharpe 1.2 floor, 2.0 goal. Paper model that mirrors a LIVE account.',
+    return dict(objective=t.get('goals'), progress=goal_progress(), note='Paper model that mirrors a LIVE account.',
                 current_version=current(t), recent_model_trades=tr, baseline_walk_forward=base,
                 menu=[{k: r[k] for k in ('id', 'variable', 'old', 'new', 'delta', 'passes', 'fails')} | {'oos': r['stats']['oos'], 'ins': r['stats']['ins']} for r in rows])
 
@@ -183,7 +203,7 @@ def ask_api(text):
 def fallback_choice(rows):
     ok = [r for r in rows if r['passes']]
     if not ok: return dict(choice='hold', rationale='No one-step change passes the walk-forward gate.')
-    best = max(ok, key=lambda r: min(r['delta']['ins'], r['delta']['oos']))
+    best = max(ok, key=lambda r: (min(r['delta']['ins'], r['delta']['oos']), r['stats']['full'].get('sharpe_gain', 0)))
     return dict(choice=best['id'], rationale=f"Best worst-half gain among passing rows ({best['delta']['ins']:+.3f} in-sample, {best['delta']['oos']:+.3f} out-of-sample %/day).")
 
 
@@ -278,7 +298,7 @@ def cmd_tick(a):
 
 
 def propose(t, proposer, risk_off=False):
-    D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], risk_off)
+    D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], risk_off, t.get('goals'))
     json.dump(dict(base=base, rows=rows), open(os.path.join(IDIR, 'menu.json'), 'w'), indent=1)
     ctx = context(t, base, rows)
     if proposer == 'session':
@@ -288,7 +308,7 @@ def propose(t, proposer, risk_off=False):
 
 
 def cmd_menu(a):
-    t = tun(); D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], a.risk_off)
+    t = tun(); D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], a.risk_off, t.get('goals'))
     os.makedirs(IDIR, exist_ok=True); json.dump(dict(base=base, rows=rows), open(os.path.join(IDIR, 'menu.json'), 'w'), indent=1)
     b = base
     print(f"baseline v{current(t)['version']}: full {b['full']}\n  in-sample {b['ins']}\n  out-of-sample {b['oos']}")
@@ -355,6 +375,7 @@ def cmd_status(a):
     print(f"version in force (real account and paper model): v{c['version']} ({c['kind']}, from {c['effective_from']}) {c['values']}")
     if ch: print(f"challenger {ch['id']} ({ch['status']}, paper only, from {ch['start']}): {ch['variable']} {ch['old']} -> {ch['new']}; so far", verdict(ch, t['policy']))
     else: print('challenger: none')
+    print('goals vs paper model:', json.dumps(goal_progress()))
     print('pending:', json.dumps(pending()) if pending() else 'none')
     try: print('drawdown stop:', 'ACTIVE' if json.load(open(HWM)).get('halted') else 'clear')
     except Exception: pass

@@ -41,6 +41,13 @@ The two sizing rows are offered only with `improve.py menu --risk-off`, which th
 
 Not built on purpose: any automatic approval or promotion. This account trades real money and the rulebook says the governor decides.
 
+**Goals.** They live in `tools/live/tunables.json` under `goals`: 0.4% per trading day, 15% drawdown limit (matches A1.13), Sharpe floor 1.2, Sharpe goal 2.0. They are used in three places:
+- The menu gate rejects a candidate whose drawdown exceeds 15%, or whose Sharpe falls below 1.2 when the baseline is above it.
+- The proposer prompt carries the goals and the paper model's progress against them. The fallback proposer breaks ties by Sharpe gain.
+- `improve.py status` prints the progress line. Sharpe is not shown before 2 trading days and is not meaningful before about 30.
+
+The verdict still compares challenger and champion on the same days. It does not test the goals.
+
 ## 2. Files
 
 | File | Change |
@@ -60,7 +67,7 @@ Neutrality test: the patched `paper.simulate` was compared with v5.2.28 over 157
 
 ## 4. Evidence today (2026-10-28)
 
-`improve.py menu` on `bt_5m.json.gz` (2026-03-03 to 10-15, 114 trades): baseline +0.521%/day, profit factor 3.68, maximum drawdown 2.8%. First half +0.667%/day, second half +0.303%/day.
+`improve.py menu` on `bt_5m.json.gz` (2026-03-03 to 10-15, 114 trades): baseline +0.521%/day, profit factor 3.68, maximum drawdown 2.8%. First half +0.667%/day, second half +0.303%/day. Annualised Sharpe of the daily returns is 5.7, above the 2.0 goal. The backtest already clears every goal, so the live gap is the open question.
 
 No one-step change passes the gate on any of the twelve tunables, including the size cuts under `--risk-off` (drawdown falls 2.76% to 2.5% at best). The best raw rows are worth +0.001 to +0.008%/day, which is noise. The loop starts in `hold`. That is the correct result for parameters that sit at a local optimum.
 

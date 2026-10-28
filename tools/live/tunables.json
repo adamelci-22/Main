@@ -107,5 +107,12 @@
       }
     }
   ],
-  "challenger": null
+  "challenger": null,
+  "goals": {
+    "target_daily_pct": 0.4,
+    "max_drawdown_pct": 15.0,
+    "min_sharpe": 1.2,
+    "target_sharpe": 2.0,
+    "note": "Governor goals. Objective: 0.4% per trading day averaged over a year. The 15% limit matches A1.13. Used by the menu gate, the proposer prompt and status."
+  }
 }
