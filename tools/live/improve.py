@@ -1,25 +1,31 @@
 #!/usr/bin/env python3
-"""Self-improvement loop for the FADE and PULLBACK model (RULEBOOK D4, draft: see PROPOSED_SELF_IMPROVEMENT.md).
+"""Self-improvement loop for the FADE and PULLBACK model (RULEBOOK D4, v5.2.31: forward-shadow evidence).
 
-Champion / challenger. The REAL account and the paper model keep running the version in force (the champion). A proposed change becomes a
-CHALLENGER that is only simulated, every close, on the same saved bars as the champion. It reaches the live account only if the governor
-promotes it after a passing trial. Only the eleven tunables in tools/live/tunables.json can change. Entry safety (A1), the one-position rule, the
-ticker lists, the session hours and the structure of the exits are not tunable. Nothing here places an order.
+Champion / challenger. The REAL account and the paper model keep running the version in force (the champion). EVERY candidate is simulated beside it on each
+day's saved bars, forever and for free (no orders): the 12 numbers in tunables.json one step either way, plus the structural ideas in ideas.json
+(universe drops, entry cut-offs, minimum retest wait, choppy-trade exit, one-loss-ends-the-day). Evidence is only what happens AFTER the baseline date
+(policy.shadow_from), so it is out-of-sample by construction. A candidate is READY when, over its shadow days, it differed on enough days, its paired
+bootstrap lower bound (Bonferroni-adjusted for the number of candidates ever tracked) is above zero and it gained the promote margin. A candidate that is
+clearly harming (or still undecided after retire_days) is retired and written to the research ledger (tools/live/research_ledger.json).
+Only a numeric tunable can be promoted by this loop, and only by the governor; an idea that becomes READY is reported and needs a rulebook change (D3).
+Nothing here places an order.
 
 Commands (stdlib only; run from anywhere):
-    improve.py tick [DUMP ...]        13:30 close, AFTER `paper.py --close`: shadow-run the challenger, verdict, else a proposal if due
-    improve.py status                 version in force, challenger, pending proposal, last ledger events
-    improve.py menu [--risk-off]      counterfactual table: every one-step change, walk-forward, with the gate result (under a minute).
-                                      --risk-off adds position-size cuts (risk.pct and size.cap_pct, both % of the account, downward only); use it when the C5 drawdown measure is at ACT
-    improve.py prompt                 print the proposer prompt (the checkpoint session answers it, then runs `submit`)
-    improve.py submit CHOICE "why"    CHOICE = a menu id (e.g. fade.cut_r+1) or hold; writes the pending proposal
-    improve.py approve --note "..."   governor: start the shadow trial (--start D, default today). The live account is NOT changed
-    improve.py promote --effective D --note "..."   governor: after a PROMOTE verdict, put the challenger live from future trading day D
+    improve.py tick [DUMP ...]        13:30 close, AFTER `paper.py --close`: shadow-run every candidate on the day's bars, update the evidence, retire, report
+    improve.py evidence               the full evidence table (champion version in force)
+    improve.py status                 version in force, challenger, pending proposal, evidence summary, last ledger events
+    improve.py research [--verdict V] the research ledger: every study and every retired candidate with its numbers
+    improve.py research-add --id I --idea "..." --method "..." --result "..." --verdict V      append a study to the research ledger
+    improve.py prompt                 the proposer prompt (the checkpoint session answers it, then runs `submit`)
+    improve.py submit CHOICE "why"    CHOICE = a READY numeric candidate id (e.g. fade.cut_r-1) or hold; writes the pending proposal
+    improve.py approve --note "..."   governor: the pending proposal becomes the challenger (its evidence is already forward). The live account is NOT changed
+    improve.py promote --effective D --note "..."   governor: put the challenger live from future trading day D
     improve.py discard --note "..."   governor: drop the challenger. improve.py reject: drop a pending proposal
     improve.py rollback --effective D governor: restore the values the version in force replaced (after a promotion)
-Proposers for `tick --proposer`: session (default; the session reads `prompt`, answers with `submit`), api (ANTHROPIC_API_KEY), fallback (best row of the menu, no LLM).
+    improve.py menu [--risk-off]      informational: one-step table on the dataset (base file plus the appended live sessions), walk-forward gate. --risk-off adds size cuts
+    improve.py shadow-replay --from D --to D [--force]   test/backfill: shadow-run dataset sessions (use IMPROVE_DIR=<tmp> so the real ledger is untouched)
 """
-import argparse, csv, glob, json, math, os, statistics as st, sys, urllib.request
+import argparse, csv, glob, json, math, os, random, statistics as st, sys
 from datetime import date, datetime, timedelta
 from zoneinfo import ZoneInfo
 
@@ -27,13 +33,14 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.pat
 sys.path.insert(0, HERE)
 import paper
 
-TUN = os.path.join(HERE, 'tunables.json')
-IDIR = os.path.join(ROOT, 'archive', 'improve')
-LEDGER, PENDING, SHADOW = (os.path.join(IDIR, n) for n in ('ledger.jsonl', 'pending.json', 'shadow.csv'))
+TUN = os.path.join(HERE, 'tunables.json'); IDEAS = os.path.join(HERE, 'ideas.json'); RLEDGER = os.environ.get('IMPROVE_RLEDGER') or os.path.join(HERE, 'research_ledger.json')
+IDIR = os.environ.get('IMPROVE_DIR') or os.path.join(ROOT, 'archive', 'improve')
+LEDGER, PENDING, SHADOW = (os.path.join(IDIR, n) for n in ('ledger.jsonl', 'pending.json', 'shadow_all.csv'))
 PAPER_LOG = os.path.join(ROOT, 'archive', 'paper_trades.csv')
 HWM = os.path.join(ROOT, 'archive', 'hwm.json')
 ET = ZoneInfo('America/New_York')
-GATE_DD_SLACK, GATE_MIN_GAIN, GATE_TRADE_KEEP, SPLIT = 1.0, 0.01, 0.75, 0.6     # pts of drawdown, %/day, share of trades kept, in-sample share
+GATE_DD_SLACK, GATE_MIN_GAIN, GATE_TRADE_KEEP, SPLIT = 1.0, 0.01, 0.75, 0.6     # menu only: pts of drawdown, %/day, share of trades kept, in-sample share
+SHADOW_HDR = ['day', 'cver', 'id', 'champion_pct', 'candidate_pct', 'differs', 'champion_trades', 'candidate_trades']
 
 
 # ------------------------------------------------------------------ files
@@ -91,7 +98,7 @@ def model_trades():
     return out
 
 
-# ------------------------------------------------------------------ counterfactual engine (paper.simulate on the shared 5-minute dataset)
+# ------------------------------------------------------------------ counterfactual engine (menu only; paper.simulate on the dataset)
 def load_data():
     sys.path.insert(0, os.path.join(ROOT, 'tools', 'backtest'))
     import io, contextlib
@@ -166,7 +173,6 @@ def menu(D, base_values, space, risk_off=False, goals=None):
     return base, rows
 
 
-# ------------------------------------------------------------------ proposers
 def goal_progress():
     """The paper model's own record against the goals: 30-day-equivalent return, drawdown, Sharpe (needs 2+ trading days)."""
     g = tun().get('goals') or {}; d = {}
@@ -180,90 +186,6 @@ def goal_progress():
                 sharpe=round(sh, 2), sharpe_floor=g.get('min_sharpe'), sharpe_goal=g.get('target_sharpe'))
 
 
-def context(t, base, rows):
-    tr = model_trades()[-25:]
-    return dict(objective=t.get('goals'), progress=goal_progress(), note='Paper model that mirrors a LIVE account.',
-                current_version=current(t), recent_model_trades=tr, baseline_walk_forward=base,
-                menu=[{k: r[k] for k in ('id', 'variable', 'old', 'new', 'delta', 'passes', 'fails')} | {'oos': r['stats']['oos'], 'ins': r['stats']['ins']} for r in rows])
-
-
-def prompt_text(ctx):
-    return ("You propose at most ONE change to a live-money trading model. The governor approves or rejects it. Choose ONLY an id from the menu rows "
-            "where passes is true, or 'hold'. Prefer hold unless a row is clearly better in both in-sample and out-of-sample AND fits the recent trades. "
-            "Do not invent parameters. All sizing is a percentage of the account, never a dollar amount, and size is never raised. Reply with one JSON object: {\"choice\": \"<id or hold>\", \"rationale\": \"<two sentences max>\"}.\n\n" + json.dumps(ctx, indent=1))
-
-
-def ask_api(text):
-    key = os.environ.get('ANTHROPIC_API_KEY')
-    if not key: sys.exit('ANTHROPIC_API_KEY is not set')
-    body = json.dumps(dict(model=os.environ.get('IMPROVE_MODEL', 'claude-sonnet-5-5'), max_tokens=600, messages=[dict(role='user', content=text)])).encode()
-    req = urllib.request.Request('https://api.anthropic.com/v1/messages', body, {'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'})
-    out = json.load(urllib.request.urlopen(req, timeout=120))['content'][0]['text']
-    a, b = out.find('{'), out.rfind('}')
-    return json.loads(out[a:b + 1])
-
-
-def fallback_choice(rows):
-    ok = [r for r in rows if r['passes']]
-    if not ok: return dict(choice='hold', rationale='No one-step change passes the walk-forward gate.')
-    best = max(ok, key=lambda r: (min(r['delta']['ins'], r['delta']['oos']), r['stats']['full'].get('sharpe_gain', 0)))
-    return dict(choice=best['id'], rationale=f"Best worst-half gain among passing rows ({best['delta']['ins']:+.3f} in-sample, {best['delta']['oos']:+.3f} out-of-sample %/day).")
-
-
-def write_pending(t, base, rows, choice, why, source):
-    row = next((r for r in rows if r['id'] == choice), None)
-    if choice == 'hold' or row is None or not row['passes']:
-        ledger('hold', rationale=why, source=source); print(f"HOLD: {why}"); return
-    p = dict(id=f"p{len(ledger()) + 1}", created=datetime.now(ET).isoformat(timespec='seconds'), source=source, rationale=why, base_version=current(t)['version'],
-             variable=row['variable'], old=row['old'], new=row['new'], baseline=base, evidence=row)
-    json.dump(p, open(PENDING, 'w'), indent=1); ledger('proposal', **{k: p[k] for k in ('id', 'variable', 'old', 'new', 'source', 'rationale')})
-    print(f"PROPOSAL {p['id']}: {p['variable']} {p['old']} -> {p['new']} ({source}). Walk-forward %/day vs baseline: in-sample {row['delta']['ins']:+.3f}, "
-          f"out-of-sample {row['delta']['oos']:+.3f}, full {row['delta']['full']:+.3f}. Waiting for the governor: improve.py approve --effective <date> --note \"...\"")
-
-
-# ------------------------------------------------------------------ shadow run + verdict
-def shadow_day(dumps, values):
-    """What the version being judged against would have done on today's saved bars (same code path as paper.main). Returns (day, return %)."""
-    raw = paper.load([f for g in dumps for f in glob.glob(g)])
-    days = sorted({d for s in raw.values() for d in s})
-    day = days[-1]; prevday = max(d for d in days if d < day)
-    today_ = {s: g for s in raw if day in raw[s] for g in [paper.grid(raw[s][day], 48)] if g}
-    prev = {s: g for s in raw if prevday in raw[s] for g in [paper.grid(raw[s][prevday], 78)] if g}
-    paper.FLOOR_TARGET = day >= paper.FLOOR_FROM; saved = paper.OVERRIDE; paper.OVERRIDE = values
-    try:
-        taken, _, _, e2 = paper.simulate(today_, prev, 48, 1000.0, None, 0, day)
-    finally:
-        paper.OVERRIDE = saved
-    return day, (e2 / 1000.0 - 1) * 100
-
-
-def shadow_rows():
-    return list(csv.DictReader(open(SHADOW))) if os.path.exists(SHADOW) else []
-
-
-def record_shadow(ch, champion_values, dumps):
-    """Run BOTH versions on the same saved bars, so the comparison does not depend on account state or on what the live model did."""
-    day, old = shadow_day(dumps, champion_values)
-    _, new = shadow_day(dumps, ch['values'])
-    if day < ch['start'] or any(r['day'] == day and r['challenger'] == ch['id'] for r in shadow_rows()): return day
-    new_file = not os.path.exists(SHADOW); os.makedirs(IDIR, exist_ok=True)
-    with open(SHADOW, 'a', newline='') as f:
-        w = csv.writer(f)
-        if new_file: w.writerow(['day', 'challenger', 'champion_ret_pct', 'challenger_ret_pct'])
-        w.writerow([day, ch['id'], round(old, 4), round(new, 4)])
-    return day
-
-
-def verdict(ch, pol):
-    rows = [r for r in shadow_rows() if r['challenger'] == ch['id']]
-    n = len(rows); diff = sum(float(r['challenger_ret_pct']) - float(r['champion_ret_pct']) for r in rows)
-    differing = sum(1 for r in rows if abs(float(r['challenger_ret_pct']) - float(r['champion_ret_pct'])) > 1e-9)
-    if n >= 5 and diff <= pol['early_discard_pct']: res = 'discard'
-    elif n >= pol['min_trial_days'] and diff <= pol['discard_pct']: res = 'discard'
-    elif n >= pol['min_trial_days'] and diff >= pol['promote_pct']: res = 'promote'
-    elif n >= pol['max_trial_days']: res = 'discard'
-    else: res = 'continue'
-    return res, dict(challenger=ch['id'], days=n, days_that_differed=differing, challenger_minus_champion_pct_of_account=round(diff, 3))
 
 
 def future_trading_day(eff):
@@ -276,70 +198,148 @@ def append_version(t, kind, eff, vals, **kw):
     t['versions'].append(dict(version=n, kind=kind, effective_from=eff, values=vals, **kw)); return n
 
 
+# ------------------------------------------------------------------ candidates, shadow runs, evidence
+def policy(t):
+    return {'shadow_from': '0000-00-00', 'min_diff_days': 20, 'alpha': 0.10, 'harm_diff_days': 10, 'retire_days': 60, 'resamples': 5000, 'promote_pct': 0.5, **t['policy']}
+
+
+def ideas():
+    return json.load(open(IDEAS)) if os.path.exists(IDEAS) else []
+
+
+def champion_values(t):
+    return {**paper.TUNABLE_DEFAULTS, **current(t)['values']}
+
+
+def rledger():
+    return json.load(open(RLEDGER)) if os.path.exists(RLEDGER) else []
+
+
+def radd(**kw):
+    L = rledger(); L.append({'date': today().isoformat(), **kw}); json.dump(L, open(RLEDGER, 'w'), indent=1); open(RLEDGER, 'a').write('\n')
+
+
+def retired_ids(t):
+    cv = current(t)['version']
+    return {e['id'] for e in rledger() if e.get('kind') == 'shadow' and e.get('champion_version') == cv and e.get('verdict') in ('rejected', 'inconclusive')}
+
+
+def candidates(t, retired=()):
+    """Every one-step numeric change (not the size cuts, which stay manual: menu --risk-off) plus every idea, each as a full value set vs the champion."""
+    base = champion_values(t); out = []
+    for var, sp in t['space'].items():
+        if sp.get('needs') == 'risk_off': continue
+        for sgn in (-1, 1):
+            new = round(min(sp['hi'], max(sp['lo'], base[var] + sgn * sp['step'])), 4)
+            if new == base[var]: continue
+            v = dict(base); v[var] = new
+            out.append(dict(id=f"{var}{'+1' if sgn > 0 else '-1'}", kind='tunable', desc=f"{var} {base[var]:g} -> {new:g} ({sp['rule']})", values=v, promotable=True, variable=var, old=base[var], new=new))
+    for i in ideas():
+        v = dict(base); v.update(i['values'])
+        out.append(dict(id=i['id'], kind='idea', desc=i['desc'], values=v, promotable=False))
+    return [c for c in out if c['id'] not in retired]
+
+
+def day_inputs(dumps):
+    raw = paper.load([f for g in dumps for f in glob.glob(g)])
+    days = sorted({d for s in raw.values() for d in s}); day = days[-1]; prevday = max(d for d in days if d < day)
+    today_ = {s: g for s in raw if day in raw[s] for g in [paper.grid(raw[s][day], 48)] if g}
+    prev = {s: g for s in raw if prevday in raw[s] for g in [paper.grid(raw[s][prevday], 78)] if g}
+    return day, today_, prev
+
+
+def run_day(day, today_, prev, values):
+    """One day on a fresh $1,000 with a clean streak (same code path as paper.main). Returns (account return %, trade signature)."""
+    paper.FLOOR_TARGET = day >= paper.FLOOR_FROM; saved = paper.OVERRIDE; paper.OVERRIDE = values
+    try:
+        taken, _, _, e2 = paper.simulate(today_, prev, 48, 1000.0, None, 0, day)
+    finally:
+        paper.OVERRIDE = saved
+    return (e2 / 1000.0 - 1) * 100, [(c['system'], c['ticker'], c['k'], round(c.get('usd') or 0, 6), c.get('why')) for c in taken]
+
+
+def shadow_rows():
+    return list(csv.DictReader(open(SHADOW))) if os.path.exists(SHADOW) else []
+
+
+def record_all(t, day, today_, prev, force=False):
+    """Run the champion and every active candidate on this day's bars and append one row each (idempotent per day, version and id)."""
+    pol = policy(t)
+    if day < pol['shadow_from'] and not force: return 0
+    cv = current(t)['version']; have = {(r['day'], r['cver'], r['id']) for r in shadow_rows()}
+    cpct, csig = run_day(day, today_, prev, champion_values(t)); new = []
+    for c in candidates(t, retired_ids(t)):
+        if (day, str(cv), c['id']) in have: continue
+        p, s = run_day(day, today_, prev, c['values'])
+        new.append([day, cv, c['id'], round(cpct, 6), round(p, 6), int(s != csig), len(csig), len(s)])
+    if new:
+        fresh = not os.path.exists(SHADOW); os.makedirs(IDIR, exist_ok=True)
+        with open(SHADOW, 'a', newline='') as f:
+            w = csv.writer(f, lineterminator='\n')
+            if fresh: w.writerow(SHADOW_HDR)
+            w.writerows(new)
+    return len(new)
+
+
+def evidence(t):
+    """Paired evidence per active candidate against the champion in force, from forward shadow days only."""
+    pol = policy(t); cv = str(current(t)['version']); by = {}
+    for r in shadow_rows():
+        if r['cver'] == cv: by.setdefault(r['id'], []).append(r)
+    retired = retired_ids(t); m_ever = len(set(by) | retired); m = max(1, m_ever); meta = {c['id']: c for c in candidates(t)}; out = []
+    for cid, rows in by.items():
+        if cid in retired: continue
+        rows.sort(key=lambda r: r['day']); d = [float(r['candidate_pct']) - float(r['champion_pct']) for r in rows]; n = len(d)
+        rng = random.Random(f"{cid}:{n}:{cv}"); B = pol['resamples']
+        sums = sorted(sum(rng.choices(d, k=n)) for _ in range(B)) if n >= 5 else None
+        lo = sums[min(B - 1, int(pol['alpha'] / m * B))] if sums else None            # Bonferroni: the lower bound at alpha / (candidates ever tracked)
+        hi = sums[min(B - 1, int((1 - pol['alpha']) * B))] if sums else None
+        e = dict(id=cid, kind=meta[cid]['kind'] if cid in meta else '?', promotable=meta[cid]['promotable'] if cid in meta else False, desc=meta[cid]['desc'] if cid in meta else '',
+                 n_days=n, n_diff=sum(int(r['differs']) for r in rows), total=round(sum(d), 3), lo=None if lo is None else round(lo, 3), hi=None if hi is None else round(hi, 3), m=m)
+        if e['n_diff'] >= pol['min_diff_days'] and lo is not None and lo > 0 and e['total'] >= pol['promote_pct']: e['status'] = 'ready'
+        elif e['n_diff'] >= pol['harm_diff_days'] and hi is not None and hi < 0: e['status'] = 'harm'
+        elif n >= pol['retire_days']: e['status'] = 'stale'
+        else: e['status'] = 'collecting'
+        out.append(e)
+    return sorted(out, key=lambda e: (e['status'] != 'ready', -e['total'])), m_ever
+
+
+def evidence_line(e):
+    lo = 'n/a' if e['lo'] is None else f"{e['lo']:+.2f}"
+    return f"  {e['id']:<26}{e['status']:<11}{e['n_days']:>4}d {e['n_diff']:>3} differed  total {e['total']:+7.2f}% of account  lower bound {lo:>6}  {'' if e['promotable'] else '[idea: needs a rulebook change]'}"
+
+
+def retire(t, evs):
+    cv = current(t)['version']; done = []
+    for e in evs:
+        if e['status'] not in ('harm', 'stale'): continue
+        verdict = 'rejected' if e['status'] == 'harm' else 'inconclusive'
+        radd(kind='shadow', id=e['id'], champion_version=cv, idea=e['desc'], method='forward paper shadow on the saved bars of every close, paired against the champion',
+             result=f"{e['n_days']} days, {e['n_diff']} differed, total {e['total']:+.2f}% of the account, bootstrap 90% interval upper bound {e['hi']:+.2f}, tracked candidates {e['m']}", verdict=verdict)
+        ledger('retired', id=e['id'], verdict=verdict, total=e['total']); done.append(e)
+    return done
+
+
+# ------------------------------------------------------------------ proposer prompt
+def context(t, evs):
+    return dict(objective=t.get('goals'), progress=goal_progress(), note='Paper model that mirrors a LIVE account. Evidence is forward shadow only.', current_version=current(t),
+                recent_model_trades=model_trades()[-25:], ready=[e for e in evs if e['status'] == 'ready'], leaderboard=evs[:10])
+
+
+def prompt_text(ctx):
+    return ("You propose at most ONE change to a live-money trading model. The governor approves or rejects it. Choose ONLY the id of a READY candidate whose promotable is true "
+            "(a numeric tunable), or 'hold'. Prefer hold unless the evidence is clear and the change fits the recent trades. Ideas (promotable false) are reported to the governor, "
+            "never proposed here. Do not invent parameters. All sizing is a percentage of the account, never a dollar amount, and size is never raised. "
+            "Reply with one JSON object: {\"choice\": \"<id or hold>\", \"rationale\": \"<two sentences max>\"}.\n\n" + json.dumps(ctx, indent=1))
+
+
 # ------------------------------------------------------------------ commands
-def cmd_tick(a):
-    t = tun(); pol = t['policy']; ch = challenger(t)
-    if ch:
-        if ch['status'] == 'ready':
-            print(f"  challenger {ch['id']} passed its trial and waits for the governor: improve.py promote --effective <date> --note \"...\" (or discard)"); return
-        if a.dumps:
-            d = record_shadow(ch, version_values(t, ch['base_version']), a.dumps); print(f"  shadow run for {d} recorded (champion v{ch['base_version']} vs challenger {ch['id']}; neither places an order)")
-        else: print("  no dumps passed: shadow run skipped today (the verdict needs one per trading day)")
-        res, info = verdict(ch, pol); print(f"VERDICT {ch['id']}: {res.upper()} {info}")
-        if res == 'promote':
-            ch['status'] = 'ready'; ch['verdict'] = info; save_tun(t); ledger('verdict', result='promote', **info)
-            print(f"  PROMOTION RECOMMENDED. Tell the governor. The real account stays on v{ch['base_version']} until the governor runs promote.")
-        elif res == 'discard':
-            t['challenger'] = None; save_tun(t); ledger('discarded', reason='trial', **info); print("  Challenger discarded. The live account was never changed.")
-        return
-    if pending(): print("  proposal pending, waiting for the governor:", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')})); return
-    ev = [e for e in ledger() if e['event'] in ('approved', 'rejected', 'hold', 'promoted', 'discarded')]
-    since = ev[-1]['ts'][:10] if ev else '0000-00-00'
-    n = sum(1 for x in model_trades() if x['day'] > since)
-    if n < pol['cadence_trades'] and not a.force: print(f"  no proposal due: {n} of {pol['cadence_trades']} model trades since the last decision ({since})"); return
-    propose(t, a.proposer, a.risk_off)
-
-
-def propose(t, proposer, risk_off=False):
-    D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], risk_off, t.get('goals'))
-    json.dump(dict(base=base, rows=rows), open(os.path.join(IDIR, 'menu.json'), 'w'), indent=1)
-    ctx = context(t, base, rows)
-    if proposer == 'session':
-        print("PROPOSAL DUE. Read archive/improve/menu.json, answer this prompt, then run: improve.py submit <id|hold> \"rationale\"\n"); print(prompt_text(ctx)); return
-    c = ask_api(prompt_text(ctx)) if proposer == 'api' else fallback_choice(rows)
-    write_pending(t, base, rows, c['choice'], c['rationale'], proposer)
-
-
 def cmd_menu(a):
     t = tun(); D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], a.risk_off, t.get('goals'))
     os.makedirs(IDIR, exist_ok=True); json.dump(dict(base=base, rows=rows), open(os.path.join(IDIR, 'menu.json'), 'w'), indent=1)
     b = base
     print(f"baseline v{current(t)['version']}: full {b['full']}\n  in-sample {b['ins']}\n  out-of-sample {b['oos']}")
     for r in rows: print(f"  {r['id']:<24}{r['old']:>7} -> {r['new']:<7} d%/day ins {r['delta']['ins']:+.3f} oos {r['delta']['oos']:+.3f} full {r['delta']['full']:+.3f}  dd {r['stats']['full']['dd']:.1f}  trades {r['stats']['full']['trades']}  {'PASS' if r['passes'] else 'fail: ' + ', '.join(r['fails'])}")
-
-
-def cmd_prompt(a):
-    t = tun(); m = json.load(open(os.path.join(IDIR, 'menu.json')))
-    print(prompt_text(context(t, m['base'], m['rows'])))
-
-
-def cmd_submit(a):
-    t = tun(); m = json.load(open(os.path.join(IDIR, 'menu.json')))
-    if pending(): sys.exit('a proposal is already pending')
-    if a.choice != 'hold' and a.choice not in {r['id'] for r in m['rows']}: sys.exit(f"{a.choice} is not a menu id")
-    write_pending(t, m['base'], m['rows'], a.choice, a.why, 'session')
-
-
-def cmd_approve(a):
-    p = pending(); t = tun()
-    if not p: sys.exit('nothing pending')
-    if challenger(t): sys.exit('a challenger is already in trial: one at a time')
-    if p['base_version'] != current(t)['version']: sys.exit('the proposal is stale (the version in force changed): reject it and propose again')
-    if a.start < today().isoformat(): sys.exit('--start cannot be in the past')
-    vals = dict(current(t)['values']); vals[p['variable']] = p['new']
-    t['challenger'] = dict(id=p['id'], variable=p['variable'], old=p['old'], new=p['new'], values=vals, base_version=p['base_version'], start=a.start, status='running', note=a.note)
-    save_tun(t); os.remove(PENDING); ledger('approved', id=p['id'], start=a.start, note=a.note)
-    print(f"TRIAL STARTED: {p['variable']} {p['old']} -> {p['new']} as a paper-only challenger from {a.start}. The live account and the paper model stay on v{p['base_version']}.")
 
 
 def cmd_reject(a):
@@ -373,11 +373,96 @@ def cmd_rollback(a):
     print(f"ROLLBACK: v{n} restores v{c['base_version']} values from {a.effective}. Commit tools/live/tunables.json and archive/improve/.")
 
 
+def cmd_tick(a):
+    t = tun(); pol = policy(t); ch = challenger(t)
+    if a.dumps:
+        day, today_, prev = day_inputs(a.dumps); n = record_all(t, day, today_, prev, a.force)
+        print(f"  shadow: {day}, champion v{current(t)['version']} and {n} candidates recorded (no orders)" if n else f"  shadow: {day} already recorded or before {pol['shadow_from']}")
+    else: print("  no dumps passed: shadow run skipped today (every day missed is a day of evidence lost)")
+    evs, m = evidence(t); done = retire(t, evs)
+    cv = current(t)['version']; days = max([e['n_days'] for e in evs] or [0])
+    print(f"  evidence vs v{cv}: {len(evs)} candidates tracked ({m} ever), {days} forward shadow days, {sum(e['status'] == 'collecting' for e in evs)} collecting")
+    for e in evs[:5]: print(evidence_line(e))
+    for e in done: print(f"RETIRED {e['id']}: {e['status']} ({e['total']:+.2f}% of account over {e['n_days']} days); written to the research ledger")
+    ready = [e for e in evs if e['status'] == 'ready']
+    if ch: print(f"  challenger {ch['id']} approved and waiting for the governor: improve.py promote --effective <date> --note \"...\" (or discard)"); return
+    if pending(): print("  proposal pending, waiting for the governor:", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')})); return
+    for e in ready:
+        if e['promotable']: print(f"EVIDENCE READY: {e['id']} ({e['desc']}). Read the table above, answer `improve.py prompt`, then `improve.py submit <id|hold> \"why\"`, report to the governor and wait.")
+        else: print(f"IDEA READY (needs a rulebook change, D3): {e['id']} ({e['desc']}). Report it to the governor at once; the loop will not change a structural rule.")
+    if not ready: print("  no candidate is ready")
+
+
+def cmd_evidence(a):
+    t = tun(); evs, m = evidence(t); print(f"champion v{current(t)['version']}; {len(evs)} active candidates, {m} ever tracked; thresholds {json.dumps({k: policy(t)[k] for k in ('shadow_from', 'min_diff_days', 'alpha', 'harm_diff_days', 'retire_days', 'promote_pct')})}")
+    for e in evs: print(evidence_line(e))
+    if not evs: print("  no shadow rows yet (the first rows arrive at the first close on or after shadow_from)")
+
+
+def cmd_prompt(a):
+    t = tun(); evs, _ = evidence(t); print(prompt_text(context(t, evs)))
+
+
+def cmd_submit(a):
+    t = tun()
+    if pending(): sys.exit('a proposal is already pending')
+    evs, _ = evidence(t); row = next((e for e in evs if e['id'] == a.choice), None); meta = next((c for c in candidates(t) if c['id'] == a.choice), None)
+    if a.choice == 'hold' or row is None:
+        if a.choice != 'hold': sys.exit(f"{a.choice} is not an active candidate")
+        ledger('hold', rationale=a.why, source='session'); print(f"HOLD: {a.why}"); return
+    if row['status'] != 'ready': sys.exit(f"{a.choice} is not READY ({row['status']})")
+    if not meta['promotable']: sys.exit(f"{a.choice} is an idea: it needs a rulebook change (D3), the loop cannot propose it")
+    p = dict(id=f"p{len(ledger()) + 1}", created=datetime.now(ET).isoformat(timespec='seconds'), source='session', rationale=a.why, base_version=current(t)['version'],
+             variable=meta['variable'], old=meta['old'], new=meta['new'], values=meta['values'], evidence=row)
+    os.makedirs(IDIR, exist_ok=True); json.dump(p, open(PENDING, 'w'), indent=1); ledger('proposal', **{k: p[k] for k in ('id', 'variable', 'old', 'new', 'source', 'rationale')})
+    print(f"PROPOSAL {p['id']}: {p['variable']} {p['old']} -> {p['new']}. Forward shadow: {row['n_days']} days, {row['n_diff']} differed, total {row['total']:+.2f}% of account, lower bound {row['lo']:+.2f}. "
+          f"Waiting for the governor: improve.py approve --note \"...\"")
+
+
+def cmd_approve(a):
+    p = pending(); t = tun()
+    if not p: sys.exit('nothing pending')
+    if challenger(t): sys.exit('a challenger is already approved: one at a time')
+    if p['base_version'] != current(t)['version']: sys.exit('the proposal is stale (the version in force changed): reject it and propose again')
+    evs, _ = evidence(t); row = next((e for e in evs if e['id'] == p['evidence']['id']), None)
+    if not row or row['status'] != 'ready': sys.exit('the evidence no longer meets the gate: reject the proposal')
+    t['challenger'] = dict(id=p['evidence']['id'], variable=p['variable'], old=p['old'], new=p['new'], values=p['values'], base_version=p['base_version'], start=today().isoformat(), status='ready', note=a.note, evidence=row)
+    save_tun(t); os.remove(PENDING); ledger('approved', id=p['id'], note=a.note)
+    print(f"APPROVED: {p['variable']} {p['old']} -> {p['new']} is ready to promote (its evidence is forward shadow). The live account and the paper model stay on v{p['base_version']} until: improve.py promote --effective <future trading day> --note \"...\"")
+
+
+def cmd_research(a):
+    L = [e for e in rledger() if not a.verdict or e.get('verdict') == a.verdict]
+    print(f"research ledger: {len(L)} entries" + (f" with verdict {a.verdict}" if a.verdict else ""))
+    for e in L: print(f"  {e.get('date', '?')} {e['id']:<28}{e.get('verdict', '?'):<14}{e['idea'][:90]}\n      result: {e.get('result', '')[:200]}")
+
+
+def cmd_research_add(a):
+    if any(e['id'] == a.id for e in rledger()): sys.exit(f"{a.id} is already in the ledger")
+    radd(kind='study', id=a.id, idea=a.idea, method=a.method, result=a.result, verdict=a.verdict); print('added', a.id)
+
+
+def cmd_shadow_replay(a):
+    """Dev/backfill: shadow-run dataset sessions with the current rules (lock and cut on, no FADE on Fridays), as the menu does."""
+    t = tun(); D = load_data(); saved = (paper.LOCKCUT_FROM, paper.FADE_NO_FRIDAY_FROM)
+    paper.LOCKCUT_FROM, paper.FADE_NO_FRIDAY_FROM = '0000-00-00', '0000-00-00'; n = 0
+    try:
+        for i in range(1, len(D.days)):
+            d, pd = D.days[i], D.days[i - 1]
+            if not (a.frm <= d <= a.to): continue
+            tod = {s: D.bars[s][d][:48] for s in paper.EXPECTED if d in D.bars.get(s, {})}; prv = {s: D.bars[s][pd] for s in paper.EXPECTED if pd in D.bars.get(s, {})}
+            n += record_all(t, d, tod, prv, a.force)
+    finally:
+        paper.LOCKCUT_FROM, paper.FADE_NO_FRIDAY_FROM = saved
+    print(f"replayed {a.frm}..{a.to}: {n} rows -> {SHADOW}")
+
+
 def cmd_status(a):
     t = tun(); c = current(t); ch = challenger(t)
     print(f"version in force (real account and paper model): v{c['version']} ({c['kind']}, from {c['effective_from']}) {c['values']}")
-    if ch: print(f"challenger {ch['id']} ({ch['status']}, paper only, from {ch['start']}): {ch['variable']} {ch['old']} -> {ch['new']}; so far", verdict(ch, t['policy']))
-    else: print('challenger: none')
+    print(f"challenger {ch['id']} (approved, ready to promote, paper only): {ch['variable']} {ch['old']} -> {ch['new']}" if ch else 'challenger: none')
+    evs, m = evidence(t)
+    print(f"evidence: {len(evs)} candidates tracked ({m} ever), forward shadow days {max([e['n_days'] for e in evs] or [0])}, ready {sum(e['status'] == 'ready' for e in evs)}, retired this version {len(retired_ids(t))}; research ledger {len(rledger())} entries")
     print('goals vs paper model:', json.dumps(goal_progress()))
     print('pending:', json.dumps(pending()) if pending() else 'none')
     try: print('drawdown stop:', 'ACTIVE' if json.load(open(HWM)).get('halted') else 'clear')
@@ -387,11 +472,14 @@ def cmd_status(a):
 
 def main():
     ap = argparse.ArgumentParser(); sub = ap.add_subparsers(dest='cmd', required=True)
-    s = sub.add_parser('tick'); s.add_argument('dumps', nargs='*'); s.add_argument('--proposer', choices=['session', 'api', 'fallback'], default='session'); s.add_argument('--force', action='store_true'); s.add_argument('--risk-off', action='store_true'); s.set_defaults(f=cmd_tick)
+    s = sub.add_parser('tick'); s.add_argument('dumps', nargs='*'); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_tick)
     s = sub.add_parser('menu'); s.add_argument('--risk-off', action='store_true'); s.set_defaults(f=cmd_menu)
-    for n, f in (('prompt', cmd_prompt), ('status', cmd_status)): sub.add_parser(n).set_defaults(f=f)
+    for n, f in (('prompt', cmd_prompt), ('status', cmd_status), ('evidence', cmd_evidence)): sub.add_parser(n).set_defaults(f=f)
+    s = sub.add_parser('research'); s.add_argument('--verdict'); s.set_defaults(f=cmd_research)
+    s = sub.add_parser('research-add'); [s.add_argument('--' + k, required=True) for k in ('id', 'idea', 'method', 'result', 'verdict')]; s.set_defaults(f=cmd_research_add)
+    s = sub.add_parser('shadow-replay'); s.add_argument('--from', dest='frm', required=True); s.add_argument('--to', required=True); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_shadow_replay)
     s = sub.add_parser('submit'); s.add_argument('choice'); s.add_argument('why'); s.set_defaults(f=cmd_submit)
-    s = sub.add_parser('approve'); s.add_argument('--start', default=today().isoformat()); s.add_argument('--note', required=True); s.set_defaults(f=cmd_approve)
+    s = sub.add_parser('approve'); s.add_argument('--note', required=True); s.set_defaults(f=cmd_approve)
     s = sub.add_parser('promote'); s.add_argument('--effective', required=True); s.add_argument('--note', required=True); s.set_defaults(f=cmd_promote)
     s = sub.add_parser('discard'); s.add_argument('--note', required=True); s.set_defaults(f=cmd_discard)
     s = sub.add_parser('reject'); s.add_argument('--note', required=True); s.set_defaults(f=cmd_reject)

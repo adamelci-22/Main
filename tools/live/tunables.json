@@ -1,11 +1,12 @@
 {
   "policy": {
-    "cadence_trades": 5,
-    "min_trial_days": 15,
-    "max_trial_days": 30,
-    "promote_pct": 0.5,
-    "discard_pct": -0.5,
-    "early_discard_pct": -2.0
+    "shadow_from": "2026-10-29",
+    "min_diff_days": 20,
+    "alpha": 0.1,
+    "harm_diff_days": 10,
+    "retire_days": 60,
+    "resamples": 5000,
+    "promote_pct": 0.5
   },
   "space": {
     "fade.retest_tol_pct": {
@@ -114,5 +115,6 @@
     "min_sharpe": 1.2,
     "target_sharpe": 2.0,
     "note": "Governor goals. Objective: 0.4% per trading day averaged over a year. The 15% limit matches A1.13. Used by the menu gate, the proposer prompt and status."
-  }
+  },
+  "policy_note": "Evidence is forward shadow only (days on or after shadow_from). READY = at least min_diff_days days on which the candidate differed from the champion, the paired-bootstrap lower bound at alpha / (candidates ever tracked) above zero, and a total gain of promote_pct of the account. Retired as harm when the bootstrap upper bound at alpha is below zero after harm_diff_days differing days; retired as inconclusive after retire_days shadow days."
 }

@@ -122,6 +122,7 @@ def fade(b, K):
             if i >= K: return dict(status='watching', note=f'break {"up" if bside > 0 else "down"} at {k2t(j)}, waiting for a retest')
             o, h, l, cc, v = bb[i]
             if l <= E * (1 + RETEST_TOL / 100):
+                if i - j < X_MINWAIT: return None                 # idea switch: a retest sooner than this many bars after the break is skipped
                 if cc < E:
                     side = -bside
                     stop_real = to_m(max(bb[q][1] for q in range(j, i + 1)))
@@ -142,7 +143,7 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=None, frac=None):
     if entry <= stop or k >= SELL_BY: return None
     r = entry - stop; T = entry + R * r
     gross = 0.0; rem = 1.0; hit = False; hic = entry; events = []; bestc = 0.0
-    end = min(SELL_BY, K - 1); closed = False; xbar = None; why = None; cut = False
+    end = min(SELL_BY, K - 1); closed = False; xbar = None; why = None; cut = False; adv = 0; chop = False; ptp = False
     for j in range(k, end + 1):
         o, h, l, c, v = b[j]
         if cut:                                               # v5.2.19 early cut: sell everything at this bar's open
@@ -151,10 +152,16 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=None, frac=None):
         if l <= stop:
             px = min(stop, o); gross += rem * (px - entry); events.append((k2t(j), 'stop' if not hit else 'ratchet stop', to_m(px), rem)); rem = 0
             closed = True; xbar = j; why = 'stop' if not hit else 'ratchet stop'; break
+        if X_CHOP and chop and not ptp and h >= entry + X_CHOP[1] * r:      # idea switch: a choppy trade sells half at the lower target
+            px = max(entry + X_CHOP[1] * r, o); gross += 0.5 * (px - entry); rem -= 0.5; ptp = True; stop = max(stop, entry)
+            events.append((k2t(j), f'chop: take 1/2 at {X_CHOP[1]:g}R', to_m(px), 0.5))
         if not hit and h >= T:
             px = max(T, o); gross += frac * (px - entry); rem -= frac; hit = True; stop = max(stop, entry)
             events.append((k2t(j), f'take profit {frac_txt()} at {R:g}R', to_m(px), frac))
         bestc = max(bestc, (c - entry) / r)
+        if X_CHOP and j - k + 1 <= 6:
+            adv += c < entry
+            if j - k + 1 == 6 and adv >= X_CHOP[0]: chop = True
         if FROZEN_ON and bestc >= 1.0:                        # v5.2.18: frozen 1R trail on closes, capped at +0.75R
             ns = entry + min(0.75, bestc - 1.0) * r
             if ns > stop: stop = ns; events.append((k2t(j), 'frozen-trail stop raised', to_m(ns), rem))
@@ -249,6 +256,9 @@ PB_BUF, PB_MIN_STOP = 0.05, 0.75     # PULLBACK stop buffer below the dip low, %
 TUNABLE_FILE = os.path.join(HERE, 'tunables.json')
 TUNABLE_DEFAULTS = {'fade.retest_tol_pct': 0.10, 'fade.lock_trigger_r': 0.5, 'fade.lock_level_r': 0.15, 'fade.cut_r': -0.5, 'pb.vol_mult': 1.5,
                     'fade.target_r': 2.0, 'fade.take_frac': 1 / 3, 'fade.chandelier_atr': 2.0, 'pb.stop_buffer_pct': 0.05, 'pb.min_stop_pct': 0.75, 'risk.pct': 3.0, 'size.cap_pct': 100.0}
+# idea switches (RULEBOOK D4, shadow candidates only; every default is neutral = the version in force). Structural ideas are never promoted by the loop (D3 rule change).
+TUNABLE_DEFAULTS.update({'x.drop_fade': [], 'x.drop_pb': [], 'x.fade_last_bar': 99, 'x.pb_last_bar': 99, 'x.fade_min_wait': 1, 'x.chop': None, 'x.one_loss_day': False})
+X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS = (), (), 99, 99, 1, None, False
 OVERRIDE = None
 
 
@@ -263,6 +273,7 @@ def rest_txt():
 def apply_tunables(day=None):
     """Set the tunable globals for `day`: OVERRIDE if set, else the last version in tunables.json whose effective_from <= day, else the defaults."""
     global RETEST_TOL, PB_VOL, LOCK_TRIG, LOCK_LVL, CUT_R, TARGET_R, TAKE_FRAC, CHAND_ATR, PB_BUF, PB_MIN_STOP, RISK, SIZE_CAP
+    global X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS
     v = dict(TUNABLE_DEFAULTS)
     if OVERRIDE is not None: v.update(OVERRIDE)
     elif day:
@@ -276,6 +287,8 @@ def apply_tunables(day=None):
     LOCK_TRIG, LOCK_LVL, CUT_R = v['fade.lock_trigger_r'], v['fade.lock_level_r'], v['fade.cut_r']
     TARGET_R, TAKE_FRAC, CHAND_ATR = v['fade.target_r'], v['fade.take_frac'], v['fade.chandelier_atr']
     PB_BUF, PB_MIN_STOP, RISK = v['pb.stop_buffer_pct'], v['pb.min_stop_pct'], v['risk.pct'] / 100; SIZE_CAP = v['size.cap_pct'] / 100
+    X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST = tuple(v['x.drop_fade']), tuple(v['x.drop_pb']), v['x.fade_last_bar'], v['x.pb_last_bar']
+    X_MINWAIT, X_CHOP, X_ONELOSS = v['x.fade_min_wait'], v['x.chop'], bool(v['x.one_loss_day'])
     return v
 
 
@@ -293,23 +306,27 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM)
     cands, signals = [], []
     for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
-        if p not in today or not fade_day_ok(day): continue
+        if p not in today or not fade_day_ok(day) or p in X_DROP_FADE: continue
         t = fade(today[p], K)
         if not t: continue
+        if t.get('k') is not None and t['k'] > X_FADE_LAST: continue          # idea switch: no FADE entries after this bar
         if t['status'] in ('watching', 'signal'): signals.append(('FADE', p, t)); continue
         leg = bull if t['side'] > 0 else bear; lev = lev_bull if t['side'] > 0 else lev_bear
         t.update(system='FADE', proxy=p, ticker=leg, lev=lev, order=0, leg_entry=today[leg][t['k']][0] if leg in today else None)
         cands.append(t)
     for i, leg in enumerate(PB_LIST):
-        if leg not in today or leg not in prev: continue
+        if leg not in today or leg not in prev or leg in X_DROP_PB: continue
         t = pullback(today[leg], prev[leg], K)
         if not t: continue
+        if t.get('k', 0) > X_PB_LAST: continue                                 # idea switch: no PULLBACK entries after this bar
         if t['status'] == 'signal': signals.append(('PB', leg, t)); continue
         t.update(system='PB', proxy='-', ticker=leg, lev=1, order=1 + i, leg_entry=t['entry'])
         cands.append(t)
     cands.sort(key=lambda c: (c['k'], -rvol(today, base, c['proxy'] if c['system'] == 'FADE' else PB_PROXY.get(c['ticker'], ''), c['k']), c['order']))
     taken, skipped, free, eq = [], [], 0, equity
     for c in cands:
+        if X_ONELOSS and any(x['status'] == 'closed' and x['usd'] < 0 for x in taken):      # idea switch: one losing trade ends the day
+            c['why_skipped'] = 'one loss ends the day'; skipped.append(c); continue
         if streak >= LOCKOUT_LOSSES:
             c['why_skipped'] = 'LOCKOUT (5 losses in a row)'; skipped.append(c); continue
         if c['k'] < free:

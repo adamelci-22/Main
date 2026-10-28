@@ -1,6 +1,6 @@
 # PROPOSED: self-improvement loop, RULEBOOK D4 (draft, not in force)
 
-Status: ADOPTED in RULEBOOK v5.2.29 (governor instruction, 2026-10-28). The text below is the design record; RULEBOOK D4 and C4 step 5 are in force.
+Status: ADOPTED in RULEBOOK v5.2.29 and REBUILT in v5.2.31 (governor instructions, 2026-10-28). This file is the original design record; where it differs (one challenger run at a time after approval, the 5-trade cadence, the API proposer, the in-sample menu as the proposal source), RULEBOOK D4 and the `tools/live/improve.py` docstring are in force: every candidate is shadowed forward on every close.
 
 ## 1. What it does
 

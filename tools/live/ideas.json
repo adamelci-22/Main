@@ -1,0 +1,197 @@
+[
+ {
+  "id": "drop.fade.QQQ",
+  "desc": "drop the QQQ FADE proxy (universe can only shrink)",
+  "values": {
+   "x.drop_fade": [
+    "QQQ"
+   ]
+  }
+ },
+ {
+  "id": "drop.fade.SOXX",
+  "desc": "drop the SOXX FADE proxy (universe can only shrink)",
+  "values": {
+   "x.drop_fade": [
+    "SOXX"
+   ]
+  }
+ },
+ {
+  "id": "drop.fade.IWM",
+  "desc": "drop the IWM FADE proxy (universe can only shrink)",
+  "values": {
+   "x.drop_fade": [
+    "IWM"
+   ]
+  }
+ },
+ {
+  "id": "drop.fade.XLK",
+  "desc": "drop the XLK FADE proxy (universe can only shrink)",
+  "values": {
+   "x.drop_fade": [
+    "XLK"
+   ]
+  }
+ },
+ {
+  "id": "drop.fade.XBI",
+  "desc": "drop the XBI FADE proxy (universe can only shrink)",
+  "values": {
+   "x.drop_fade": [
+    "XBI"
+   ]
+  }
+ },
+ {
+  "id": "drop.fade.XLF",
+  "desc": "drop the XLF FADE proxy (universe can only shrink)",
+  "values": {
+   "x.drop_fade": [
+    "XLF"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.SOXS",
+  "desc": "drop SOXS from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "SOXS"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.LABD",
+  "desc": "drop LABD from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "LABD"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.TECS",
+  "desc": "drop TECS from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "TECS"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.UVXY",
+  "desc": "drop UVXY from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "UVXY"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.NVDQ",
+  "desc": "drop NVDQ from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "NVDQ"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.NVD",
+  "desc": "drop NVD from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "NVD"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.MSFU",
+  "desc": "drop MSFU from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "MSFU"
+   ]
+  }
+ },
+ {
+  "id": "drop.pb.SSG",
+  "desc": "drop SSG from the PULLBACK list (universe can only shrink)",
+  "values": {
+   "x.drop_pb": [
+    "SSG"
+   ]
+  }
+ },
+ {
+  "id": "fade.last_bar.18",
+  "desc": "no FADE entries after 11:00 ET",
+  "values": {
+   "x.fade_last_bar": 18
+  }
+ },
+ {
+  "id": "pb.last_bar.18",
+  "desc": "no PULLBACK entries after 11:00 ET",
+  "values": {
+   "x.pb_last_bar": 18
+  }
+ },
+ {
+  "id": "fade.last_bar.30",
+  "desc": "no FADE entries after 12:00 ET",
+  "values": {
+   "x.fade_last_bar": 30
+  }
+ },
+ {
+  "id": "pb.last_bar.30",
+  "desc": "no PULLBACK entries after 12:00 ET",
+  "values": {
+   "x.pb_last_bar": 30
+  }
+ },
+ {
+  "id": "fade.min_wait.2",
+  "desc": "skip a FADE retest that comes sooner than 2 bars after the break bar",
+  "values": {
+   "x.fade_min_wait": 2
+  }
+ },
+ {
+  "id": "fade.min_wait.3",
+  "desc": "skip a FADE retest that comes sooner than 3 bars after the break bar",
+  "values": {
+   "x.fade_min_wait": 3
+  }
+ },
+ {
+  "id": "fade.chop.2red.0.75R",
+  "desc": "FADE trade with 2+ closes below entry in its first 30 minutes sells half at +0.75R (early-tell study, results/early_tell_rh.txt)",
+  "values": {
+   "x.chop": [
+    2,
+    0.75
+   ]
+  }
+ },
+ {
+  "id": "fade.chop.2red.1R",
+  "desc": "FADE trade with 2+ closes below entry in its first 30 minutes sells half at +1R (early-tell study, results/early_tell_rh.txt)",
+  "values": {
+   "x.chop": [
+    2,
+    1.0
+   ]
+  }
+ },
+ {
+  "id": "risk.one_loss_ends_day",
+  "desc": "one losing trade ends the day (no further entries)",
+  "values": {
+   "x.one_loss_day": true
+  }
+ }
+]

@@ -1,0 +1,65 @@
+[
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.fade_lock_cut",
+  "idea": "FADE lock (a 5-minute close at +0.5R puts the stop at +0.15R) and early cut (close of the 3rd bar after entry at -0.5R or worse sells everything)",
+  "method": "Robinhood 5-minute cache 2026-03-03..10-14, FADE live 6, no Fridays, one account (tools/backtest/lock_cut_rh.py, results/lock_cut_rh.txt)",
+  "result": "v5.2.17 base PF 4.23 +97.9% maxDD 4.0% 38% losing trades; lock+cut without the frozen trail PF 4.81 (3.97/5.94) +89.3% maxDD 3.8% 32% losing trades. Fewer losers and a better PF for 8.6 points of total return; both halves held.",
+  "verdict": "adopted"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.fade_frozen_trail",
+  "idea": "FADE frozen 1R trail before 2R, capped at +0.75R (v5.2.18)",
+  "method": "Robinhood 5-minute cache 2026-03-03..10-14, FADE live 6, no Fridays, one account (tools/backtest/lock_cut_rh.py, results/lock_cut_rh.txt)",
+  "result": "Frozen trail alone PF 4.15 +89.0%; lock+cut with it PF 4.74 +87.1%, without it PF 4.81 +89.3%. It added nothing once the lock and cut were in; removed in v5.2.22 before it ever ran live.",
+  "verdict": "rejected"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.no_friday_fade",
+  "idea": "No FADE entries on Fridays (v5.2.17)",
+  "method": "results/friday_check.txt, Robinhood cache",
+  "result": "Adopted by the governor in v5.2.17 (A1.10); PULLBACK still trades Fridays. See results/friday_check.txt for the per-weekday numbers.",
+  "verdict": "adopted"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.pullback_8_fund_list",
+  "idea": "PULLBACK list widened from SOXS LABD TECS UVXY to also NVDQ NVD MSFU SSG (v5.2.21)",
+  "method": "Per-fund win rate, average trade and both-halves test on the Robinhood cache",
+  "result": "Backtest of the 8-fund list: 51 PULLBACK trades, PF 2.81. Added funds had win rate 60% or more, average trade above +0.1% and were positive in both halves. NVD earnings skip (A1.9) kept.",
+  "verdict": "adopted"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.early_profit_exits",
+  "idea": "Take profit earlier on FADE: full exit or partial at +0.5R to +1.5R, higher-low trail, reversal-bar exit, bigger locks (governor question after the 10-28 SOXS trade)",
+  "method": "tools/backtest/early_profit_rh.py, results/early_profit_rh.txt, same cache and base as above (PF 4.81, +89.3%)",
+  "result": "Every variant lost to the live rules: full exit at +1R PF 1.96 +21.5%, at +1.5R PF 2.80 +40.5%; sell 1/3 at +0.75R PF 3.57 +54.1%; higher-low trail from +1R PF 2.88 +42.7%; reversal-bar exit from +0.5R PF 4.04 +66.8%; lock +0.30R PF 4.10 +68.0%, +0.40R PF 3.35 +55.1%. The edge lives in the runners that reach 2R.",
+  "verdict": "rejected"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.choppy_trade_tell",
+  "idea": "Early tell for choppy FADE trades: 2 or more closes below entry in the first 30 minutes, then exit earlier (governor question)",
+  "method": "tools/backtest/early_tell_rh.py, results/early_tell_rh.txt, all 90 Robinhood setups for the tell, the 63 account trades for the exits",
+  "result": "The tell is real: 23 choppy trades averaged +0.14R and reached 2R 30% of the time, the other 67 averaged +1.24R and reached 2R 52%. But no exit treatment beat the base: best was sell half at +0.75R, PF 4.64 +83.9% against 4.81 +89.3%; a raised lock for them was a wash (at best PF 4.82). Now shadowed forward as ideas fade.chop.2red.*.",
+  "verdict": "rejected"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "study",
+  "id": "study.fade_stretch_filter_s1",
+  "idea": "FADE stretch filter S1 (skip setups by how far price stretched)",
+  "method": "tools/backtest/fade_predictors.py, results/fade_predictors.txt",
+  "result": "The one change that lifted the long-history profit factor, but it was not adopted live (the governor kept the current rules). Not yet an engine switch, so it is not shadowed. Next candidate to implement as an idea once the engine has the switch.",
+  "verdict": "inconclusive"
+ }
+]
