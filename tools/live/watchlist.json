@@ -1,0 +1,124 @@
+[
+ {
+  "id": "add.fade.SPY",
+  "type": "fade",
+  "added": "2026-10-28",
+  "why": "broad index proxy, deepest liquidity",
+  "screen": {
+   "SPY": {
+    "sessions": 159,
+    "median_bar_usd": 128312845,
+    "empty_bar_share": 0.002,
+    "median_range_pct": 0.075
+   },
+   "UPRO": {
+    "sessions": 159,
+    "median_bar_usd": 1247963,
+    "empty_bar_share": 0.002,
+    "median_range_pct": 0.188
+   },
+   "SPXU": {
+    "sessions": 159,
+    "median_bar_usd": 1179670,
+    "empty_bar_share": 0.0,
+    "median_range_pct": 0.205
+   }
+  },
+  "proxy": "SPY",
+  "bull": "UPRO",
+  "bear": "SPXU",
+  "lev_bull": 3.0,
+  "lev_bear": 3.0
+ },
+ {
+  "id": "add.fade.TLT",
+  "type": "fade",
+  "added": "2026-10-28",
+  "why": "rates proxy, uncorrelated with equity fades",
+  "screen": {
+   "TLT": {
+    "sessions": 159,
+    "median_bar_usd": 9570007,
+    "empty_bar_share": 0.002,
+    "median_range_pct": 0.052
+   },
+   "TMF": {
+    "sessions": 159,
+    "median_bar_usd": 469586,
+    "empty_bar_share": 0.002,
+    "median_range_pct": 0.138
+   },
+   "TMV": {
+    "sessions": 159,
+    "median_bar_usd": 91594,
+    "empty_bar_share": 0.023,
+    "median_range_pct": 0.111
+   }
+  },
+  "proxy": "TLT",
+  "bull": "TMF",
+  "bear": "TMV",
+  "lev_bull": 3.0,
+  "lev_bear": 3.0
+ },
+ {
+  "id": "add.pb.SQQQ",
+  "type": "pb",
+  "added": "2026-10-28",
+  "why": "inverse 3x pullback leg",
+  "screen": {
+   "SQQQ": {
+    "sessions": 168,
+    "median_bar_usd": 12401477,
+    "empty_bar_share": 0.0,
+    "median_range_pct": 0.345
+   }
+  },
+  "leg": "SQQQ"
+ },
+ {
+  "id": "add.pb.TZA",
+  "type": "pb",
+  "added": "2026-10-28",
+  "why": "inverse 3x pullback leg",
+  "screen": {
+   "TZA": {
+    "sessions": 168,
+    "median_bar_usd": 2920031,
+    "empty_bar_share": 0.0,
+    "median_range_pct": 0.403
+   }
+  },
+  "leg": "TZA"
+ },
+ {
+  "id": "add.pb.FAZ",
+  "type": "pb",
+  "added": "2026-10-28",
+  "why": "inverse 3x pullback leg",
+  "screen": {
+   "FAZ": {
+    "sessions": 168,
+    "median_bar_usd": 67868,
+    "empty_bar_share": 0.027,
+    "median_range_pct": 0.169
+   }
+  },
+  "leg": "FAZ"
+ },
+ {
+  "id": "add.pb.SPXU",
+  "type": "pb",
+  "added": "2026-10-28",
+  "why": "inverse 3x pullback leg",
+  "screen": {
+   "SPXU": {
+    "sessions": 159,
+    "median_bar_usd": 1179670,
+    "empty_bar_share": 0.0,
+    "median_range_pct": 0.205
+   }
+  },
+  "leg": "SPXU"
+ }
+]

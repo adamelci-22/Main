@@ -61,5 +61,59 @@
   "method": "tools/backtest/fade_predictors.py, results/fade_predictors.txt",
   "result": "The one change that lifted the long-history profit factor, but it was not adopted live (the governor kept the current rules). Not yet an engine switch, so it is not shadowed. Next candidate to implement as an idea once the engine has the switch.",
   "verdict": "inconclusive"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "watch",
+  "id": "add.fade.SPY",
+  "idea": "broad index proxy, deepest liquidity",
+  "method": "liquidity and data screen, then forward paper shadow on every close",
+  "result": "{\"SPY\": {\"sessions\": 159, \"median_bar_usd\": 128312845, \"empty_bar_share\": 0.002, \"median_range_pct\": 0.075}, \"UPRO\": {\"sessions\": 159, \"median_bar_usd\": 1247963, \"empty_bar_share\": 0.002, \"median_range_pct\": 0.188}, \"SPXU\": {\"sessions\": 159, \"median_bar_usd\": 1179670, \"empty_bar_share\": 0.0, \"median_range_pct\": 0.205}}",
+  "verdict": "shadowing"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "watch",
+  "id": "add.fade.TLT",
+  "idea": "rates proxy, uncorrelated with equity fades",
+  "method": "liquidity and data screen, then forward paper shadow on every close",
+  "result": "{\"TLT\": {\"sessions\": 159, \"median_bar_usd\": 9570007, \"empty_bar_share\": 0.002, \"median_range_pct\": 0.052}, \"TMF\": {\"sessions\": 159, \"median_bar_usd\": 469586, \"empty_bar_share\": 0.002, \"median_range_pct\": 0.138}, \"TMV\": {\"sessions\": 159, \"median_bar_usd\": 91594, \"empty_bar_share\": 0.023, \"median_range_pct\": 0.111}}",
+  "verdict": "shadowing"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "watch",
+  "id": "add.pb.SQQQ",
+  "idea": "inverse 3x pullback leg",
+  "method": "liquidity and data screen, then forward paper shadow on every close",
+  "result": "{\"SQQQ\": {\"sessions\": 168, \"median_bar_usd\": 12401477, \"empty_bar_share\": 0.0, \"median_range_pct\": 0.345}}",
+  "verdict": "shadowing"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "watch",
+  "id": "add.pb.TZA",
+  "idea": "inverse 3x pullback leg",
+  "method": "liquidity and data screen, then forward paper shadow on every close",
+  "result": "{\"TZA\": {\"sessions\": 168, \"median_bar_usd\": 2920031, \"empty_bar_share\": 0.0, \"median_range_pct\": 0.403}}",
+  "verdict": "shadowing"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "watch",
+  "id": "add.pb.FAZ",
+  "idea": "inverse 3x pullback leg",
+  "method": "liquidity and data screen, then forward paper shadow on every close",
+  "result": "{\"FAZ\": {\"sessions\": 168, \"median_bar_usd\": 67868, \"empty_bar_share\": 0.027, \"median_range_pct\": 0.169}}",
+  "verdict": "shadowing"
+ },
+ {
+  "date": "2026-10-28",
+  "kind": "watch",
+  "id": "add.pb.SPXU",
+  "idea": "inverse 3x pullback leg",
+  "method": "liquidity and data screen, then forward paper shadow on every close",
+  "result": "{\"SPXU\": {\"sessions\": 159, \"median_bar_usd\": 1179670, \"empty_bar_share\": 0.0, \"median_range_pct\": 0.205}}",
+  "verdict": "shadowing"
  }
 ]

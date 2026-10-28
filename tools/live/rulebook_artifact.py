@@ -7,7 +7,7 @@ Reporting only: it changes no order, rule or state."""
 import json, os, re, subprocess, sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 FILES = [('Live engine', 'tools/live/paper.py'), ('Health tracker', 'tools/live/health.py'), ('Drawdown stop', 'tools/live/hwm.py'),
-         ('Self-improvement loop', 'tools/live/improve.py'), ('Tunables (versions)', 'tools/live/tunables.json'), ('Candidate ideas', 'tools/live/ideas.json'), ('Research ledger', 'tools/live/research_ledger.json'), ('Slot waiter', 'tools/live/slot_clock.sh'), ('FADE status', 'tools/live/fade_status.py'), ('PULLBACK status', 'tools/live/pb_status.py'),
+         ('Self-improvement loop', 'tools/live/improve.py'), ('Tunables (versions)', 'tools/live/tunables.json'), ('Candidate ideas', 'tools/live/ideas.json'), ('Research ledger', 'tools/live/research_ledger.json'), ('Watchlist', 'tools/live/watchlist.json'), ('Slot waiter', 'tools/live/slot_clock.sh'), ('FADE status', 'tools/live/fade_status.py'), ('PULLBACK status', 'tools/live/pb_status.py'),
          ('Time zone helper', 'tools/live/et2utc.sh'), ('Dashboard data', 'tools/live/dash_data.py'), ('Waiter report', 'tools/live/slot_report.py'),
          ('Waiter lag', 'tools/live/slot_lag.py'), ('Rulebook page builder', 'tools/live/rulebook_artifact.py'),
          ('Dataset extender', 'tools/backtest/extend_live.py'), ('Backtest: final system', 'tools/backtest/final_system.py'), ('Backtest: FADE simulator', 'tools/backtest/fade_diag.py'),

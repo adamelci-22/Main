@@ -16,6 +16,8 @@ Commands (stdlib only; run from anywhere):
     improve.py status                 version in force, challenger, pending proposal, evidence summary, last ledger events
     improve.py research [--verdict V] the research ledger: every study and every retired candidate with its numbers
     improve.py research-add --id I --idea "..." --method "..." --result "..." --verdict V      append a study to the research ledger
+    improve.py screen [SYM ...]       liquidity and data coverage of dataset symbols (candidates for the watchlist)
+    improve.py watch-add --type fade|pb ...   put a ticker or FADE proxy on trial (shadow only); add-checklist ID prints the D3 steps to trade it
     improve.py prompt                 the proposer prompt (the checkpoint session answers it, then runs `submit`)
     improve.py submit CHOICE "why"    CHOICE = a READY numeric candidate id (e.g. fade.cut_r-1) or hold; writes the pending proposal
     improve.py approve --note "..."   governor: the pending proposal becomes the challenger (its evidence is already forward). The live account is NOT changed
@@ -33,7 +35,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.pat
 sys.path.insert(0, HERE)
 import paper
 
-TUN = os.path.join(HERE, 'tunables.json'); IDEAS = os.path.join(HERE, 'ideas.json'); RLEDGER = os.environ.get('IMPROVE_RLEDGER') or os.path.join(HERE, 'research_ledger.json')
+TUN = os.path.join(HERE, 'tunables.json'); IDEAS = os.path.join(HERE, 'ideas.json'); WATCH = os.path.join(HERE, 'watchlist.json'); RLEDGER = os.environ.get('IMPROVE_RLEDGER') or os.path.join(HERE, 'research_ledger.json')
 IDIR = os.environ.get('IMPROVE_DIR') or os.path.join(ROOT, 'archive', 'improve')
 LEDGER, PENDING, SHADOW = (os.path.join(IDIR, n) for n in ('ledger.jsonl', 'pending.json', 'shadow_all.csv'))
 PAPER_LOG = os.path.join(ROOT, 'archive', 'paper_trades.csv')
@@ -99,6 +101,10 @@ def model_trades():
 
 
 # ------------------------------------------------------------------ counterfactual engine (menu only; paper.simulate on the dataset)
+def WANT():
+    return set(paper.EXPECTED) | watch_symbols()
+
+
 def load_data():
     sys.path.insert(0, os.path.join(ROOT, 'tools', 'backtest'))
     import io, contextlib
@@ -116,8 +122,8 @@ def run_cf(D, values):
         eq, daily, trades = 2000.0, [], []
         for i in range(1, len(D.days)):
             d, pd = D.days[i], D.days[i - 1]
-            tod = {s: D.bars[s][d][:48] for s in paper.EXPECTED if d in D.bars.get(s, {})}
-            prv = {s: D.bars[s][pd] for s in paper.EXPECTED if pd in D.bars.get(s, {})}
+            tod = {s: D.bars[s][d][:48] for s in WANT() if d in D.bars.get(s, {})}
+            prv = {s: D.bars[s][pd] for s in WANT() if pd in D.bars.get(s, {})}
             taken, _, _, e2 = paper.simulate(tod, prv, 48, eq, None, 0, d)
             for c in taken:
                 if c['status'] == 'closed': trades.append((d, c['usd'], c['usd'] / eq * 100))
@@ -207,6 +213,16 @@ def ideas():
     return json.load(open(IDEAS)) if os.path.exists(IDEAS) else []
 
 
+def watchlist():
+    return json.load(open(WATCH)) if os.path.exists(WATCH) else []
+
+
+def watch_symbols():
+    out = set()
+    for w in watchlist(): out |= {w['proxy'], w['bull'], w['bear']} if w['type'] == 'fade' else {w['leg']}
+    return out
+
+
 def champion_values(t):
     return {**paper.TUNABLE_DEFAULTS, **current(t)['values']}
 
@@ -237,6 +253,11 @@ def candidates(t, retired=()):
     for i in ideas():
         v = dict(base); v.update(i['values'])
         out.append(dict(id=i['id'], kind='idea', desc=i['desc'], values=v, promotable=False))
+    for w in watchlist():                       # tickers and proxies on trial (shadow only; adding to the traded lists is a rulebook change, D3)
+        v = dict(base)
+        if w['type'] == 'fade': v['x.add_fade'] = [[w['proxy'], w['bull'], w['bear'], w['lev_bull'], w['lev_bear']]]; cid, desc = f"add.fade.{w['proxy']}", f"add the {w['proxy']} FADE proxy ({w['bull']}/{w['bear']}, {w['lev_bull']:g}x/{w['lev_bear']:g}x)"
+        else: v['x.add_pb'] = [w['leg']]; cid, desc = f"add.pb.{w['leg']}", f"add {w['leg']} to the PULLBACK list"
+        out.append(dict(id=cid, kind='idea', desc=desc, values=v, promotable=False))
     return [c for c in out if c['id'] not in retired]
 
 
@@ -389,6 +410,7 @@ def cmd_tick(a):
     if pending(): print("  proposal pending, waiting for the governor:", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')})); return
     for e in ready:
         if e['promotable']: print(f"EVIDENCE READY: {e['id']} ({e['desc']}). Read the table above, answer `improve.py prompt`, then `improve.py submit <id|hold> \"why\"`, report to the governor and wait.")
+        elif e['id'].startswith('add.'): print(f"TICKER READY: {e['id']} ({e['desc']}). Report it to the governor at once, then `improve.py add-checklist {e['id']}`; adding a ticker is a rulebook change (D3), only on the governor's instruction.")
         else: print(f"IDEA READY (needs a rulebook change, D3): {e['id']} ({e['desc']}). Report it to the governor at once; the loop will not change a structural rule.")
     if not ready: print("  no candidate is ready")
 
@@ -450,11 +472,65 @@ def cmd_shadow_replay(a):
         for i in range(1, len(D.days)):
             d, pd = D.days[i], D.days[i - 1]
             if not (a.frm <= d <= a.to): continue
-            tod = {s: D.bars[s][d][:48] for s in paper.EXPECTED if d in D.bars.get(s, {})}; prv = {s: D.bars[s][pd] for s in paper.EXPECTED if pd in D.bars.get(s, {})}
+            tod = {s: D.bars[s][d][:48] for s in WANT() if d in D.bars.get(s, {})}; prv = {s: D.bars[s][pd] for s in WANT() if pd in D.bars.get(s, {})}
             n += record_all(t, d, tod, prv, a.force)
     finally:
         paper.LOCKCUT_FROM, paper.FADE_NO_FRIDAY_FROM = saved
     print(f"replayed {a.frm}..{a.to}: {n} rows -> {SHADOW}")
+
+
+def sym_stats(D, sym):
+    """Liquidity and data coverage of a symbol from the dataset: sessions, median 5-minute bar dollar volume, share of empty bars, median bar range %."""
+    days = D.bars.get(sym, {})
+    if not days: return None
+    dv = [b[3] * b[4] for bars in days.values() for b in bars]; rg = [(b[1] - b[2]) / b[3] * 100 for bars in days.values() for b in bars if b[3] and b[4]]
+    return dict(sessions=len(days), median_bar_usd=round(st.median(dv)), empty_bar_share=round(sum(1 for x in dv if x == 0) / len(dv), 3), median_range_pct=round(st.median(rg), 3) if rg else None)
+
+
+def cmd_screen(a):
+    D = load_data(); traded = set(paper.EXPECTED); names = a.symbols or sorted(D.bars)
+    rows = [(s, sym_stats(D, s)) for s in names if s in D.bars and (a.symbols or s not in traded or a.traded)]
+    rows = sorted([r for r in rows if r[1]], key=lambda r: -r[1]['median_bar_usd'])
+    print(f"{'symbol':<7}{'sessions':>9}{'median $/bar':>14}{'empty bars':>12}{'bar range %':>13}   pass (>= {a.min_sessions} sessions and >= ${a.min_usd:,.0f} a bar)")
+    for s, x in rows[:a.top or None]:
+        ok = x['sessions'] >= a.min_sessions and x['median_bar_usd'] >= a.min_usd and x['empty_bar_share'] <= 0.10
+        print(f"{s:<7}{x['sessions']:>9}{x['median_bar_usd']:>14,}{x['empty_bar_share']:>12.1%}{x['median_range_pct']:>13.3f}   {'yes' if ok else 'no'}")
+
+
+def cmd_watch_add(a):
+    """Put a ticker or proxy on trial (shadow only; it never trades). A session may do this; putting it on the traded lists is a governor rulebook change (D3)."""
+    W = watchlist(); D = load_data(); syms = [a.proxy, a.bull, a.bear] if a.type == 'fade' else [a.leg]
+    if a.type == 'fade' and not all([a.proxy, a.bull, a.bear, a.lev_bull, a.lev_bear]): sys.exit('fade needs --proxy --bull --bear --lev-bull --lev-bear')
+    if a.type == 'pb' and not a.leg: sys.exit('pb needs --leg')
+    cid = f"add.fade.{a.proxy}" if a.type == 'fade' else f"add.pb.{a.leg}"
+    if any((f"add.fade.{w['proxy']}" if w['type'] == 'fade' else f"add.pb.{w['leg']}") == cid for w in W): sys.exit(f"{cid} is already on the watchlist")
+    if a.type == 'fade' and a.proxy in paper.FADE_ROWS or a.type == 'pb' and a.leg in paper.PB_LIST: sys.exit('already traded')
+    stt = {s: sym_stats(D, s) for s in syms}; bad = []
+    for s, x in stt.items():
+        if not x: bad.append(f"{s}: no bars in the dataset (fetch its history first)")
+        else:
+            if x['sessions'] < a.min_sessions: bad.append(f"{s}: only {x['sessions']} sessions")
+            if s != a.proxy and x['median_bar_usd'] < a.min_usd: bad.append(f"{s}: median bar ${x['median_bar_usd']:,} is below ${a.min_usd:,.0f}")
+            if x['empty_bar_share'] > 0.10: bad.append(f"{s}: {x['empty_bar_share']:.0%} of its bars are empty")
+    if bad and not a.force: sys.exit('screen failed: ' + '; '.join(bad))
+    e = dict(id=cid, type=a.type, added=today().isoformat(), why=a.why, screen=stt)
+    e.update(dict(proxy=a.proxy, bull=a.bull, bear=a.bear, lev_bull=a.lev_bull, lev_bear=a.lev_bear) if a.type == 'fade' else dict(leg=a.leg))
+    W.append(e); json.dump(W, open(WATCH, 'w'), indent=1); open(WATCH, 'a').write('\n')
+    radd(kind='watch', id=cid, idea=a.why or f"{cid} on trial", method='liquidity and data screen, then forward paper shadow on every close', result=json.dumps(stt), verdict='shadowing')
+    print(f"{cid} is on the watchlist (shadow only). Fetch its bars with the 13:30 research group; evidence starts at the next close.")
+
+
+def cmd_add_checklist(a):
+    w = next((w for w in watchlist() if (f"add.fade.{w['proxy']}" if w['type'] == 'fade' else f"add.pb.{w['leg']}") == a.id), None)
+    if not w: sys.exit(f"{a.id} is not on the watchlist")
+    sym = [w['proxy'], w['bull'], w['bear']] if w['type'] == 'fade' else [w['leg']]
+    print(f"Adding {a.id} to the traded lists is a rulebook change (D3). Only on the governor's instruction. Checklist:\n"
+          f"  1. get_equity_tradability and a live quote for {', '.join(sym)}: tradable, not restricted, spread well under 0.10% at 10:00.\n"
+          f"  2. A1.7 spread care and the thin-ticker list (B1) if its median bar is under $150k; A1.9 earnings skip if it is a single-stock fund (get_earnings_calendar).\n"
+          f"  3. paper.py: add {'the row to FADE_ROWS (proxy, bull, bear, leverages) and to EXPECTED' if w['type'] == 'fade' else 'the leg to PB_LIST and PB_PROXY (the RVOL proxy) and to EXPECTED'}; fetch_status scripts follow automatically.\n"
+          f"  4. RULEBOOK: B{'2' if w['type'] == 'fade' else '3'} list and B1, C1.2 fetch groups (at most 10 symbols per call; add a group if needed), A1.9 if relevant, version bump, change-log line.\n"
+          f"  5. Neutrality: paper.simulate with the new row switched on equals the shadow result; remove the id from watchlist.json and record the adoption in research_ledger.json.\n"
+          f"  6. Republish the rulebook artifact (D3 item 5). Real orders for the new ticker start on the next trading day after the commit.")
 
 
 def cmd_status(a):
@@ -476,6 +552,10 @@ def main():
     s = sub.add_parser('menu'); s.add_argument('--risk-off', action='store_true'); s.set_defaults(f=cmd_menu)
     for n, f in (('prompt', cmd_prompt), ('status', cmd_status), ('evidence', cmd_evidence)): sub.add_parser(n).set_defaults(f=f)
     s = sub.add_parser('research'); s.add_argument('--verdict'); s.set_defaults(f=cmd_research)
+    s = sub.add_parser('screen'); s.add_argument('symbols', nargs='*'); s.add_argument('--top', type=int, default=40); s.add_argument('--min-usd', type=float, default=50000); s.add_argument('--min-sessions', type=int, default=120); s.add_argument('--traded', action='store_true'); s.set_defaults(f=cmd_screen)
+    s = sub.add_parser('watch-add'); s.add_argument('--type', choices=['fade', 'pb'], required=True); s.add_argument('--proxy'); s.add_argument('--bull'); s.add_argument('--bear'); s.add_argument('--lev-bull', type=float); s.add_argument('--lev-bear', type=float); s.add_argument('--leg')
+    s.add_argument('--why', default=''); s.add_argument('--force', action='store_true'); s.add_argument('--min-usd', type=float, default=50000); s.add_argument('--min-sessions', type=int, default=100); s.set_defaults(f=cmd_watch_add)
+    s = sub.add_parser('add-checklist'); s.add_argument('id'); s.set_defaults(f=cmd_add_checklist)
     s = sub.add_parser('research-add'); [s.add_argument('--' + k, required=True) for k in ('id', 'idea', 'method', 'result', 'verdict')]; s.set_defaults(f=cmd_research_add)
     s = sub.add_parser('shadow-replay'); s.add_argument('--from', dest='frm', required=True); s.add_argument('--to', required=True); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_shadow_replay)
     s = sub.add_parser('submit'); s.add_argument('choice'); s.add_argument('why'); s.set_defaults(f=cmd_submit)
