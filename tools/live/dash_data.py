@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build the scorecard dashboard's live data from archive/live_trades.csv (governor request 2026-10-28).
-    python3 tools/live/dash_data.py OUT_DIR [YYYY-MM-DD]      # writes live_trades.json and periods_live.json into OUT_DIR
+    python3 tools/live/dash_data.py OUT_DIR [YYYY-MM-DD]      # writes live_trades.json, live_days.json and periods_live.json into OUT_DIR
 Every real trade since 2026-10-16 as a row (n, day, system, ticker, acct_pct, pos_pct, model_pct, reached_2R) plus the number of trading days elapsed.
 Reporting only: it changes no order, rule or state."""
 import csv, json, os, sys
@@ -20,6 +20,16 @@ for i, r in enumerate(rows, 1):
                        model_pct=float(r['model_pct']) if r.get('model_pct', '').strip() else None, pnl_usd=float(r['pnl_usd']),
                        reached_2R=(True if r2 == 'yes' else False if r2 == 'no' else None)))
 days = health.trading_days(health.LIVE_START, day)
+# one row per live trading day: the account % made that day by each system (0 on days without a trade)
+daily = []
+for i, d in enumerate(days, 1):
+    row = dict(d=i, day=d, combined=0.0, fade=0.0, pullback=0.0)
+    for t in trades:
+        if t['day'] == d:
+            row['combined'] = round(row['combined'] + t['acct_pct'], 4)
+            k = 'fade' if t['system'] == 'FADE' else 'pullback'; row[k] = round(row[k] + t['acct_pct'], 4)
+    daily.append(row)
+json.dump(daily, open(os.path.join(out, 'live_days.json'), 'w'))
 json.dump(trades, open(os.path.join(out, 'live_trades.json'), 'w'))
 json.dump([dict(source='live', days=len(days), start=health.LIVE_START, end=day)], open(os.path.join(out, 'periods_live.json'), 'w'))
 print(f"{len(trades)} live trades, {len(days)} trading days {health.LIVE_START}..{day} -> {out}")
