@@ -58,11 +58,12 @@ line = lambda name, now, h, w, a, st: print(f"  {name:<40}{now:>22}   {h:<10}{w:
 def system(name, rows, day, tdays, specific):
     """specific(rs) -> list of (label, value_text, healthy, warning, act, grade) for the system's own measures."""
     allr = [r for r in rows if r['system'] == name and r['date'] <= day]; rs = allr[-WINDOW:]; n = len(rs)
-    gaps = [float(r['pnl_pct_position']) - float(r['model_pct']) for r in rs if r.get('model_pct', '').strip() and r.get('pnl_pct_position', '').strip()]
+    gaps = [float(r['pnl_pct_position']) - float(r['model_pct']) for r in rs if r.get('model_pct', '').strip() and r.get('pnl_pct_position', '').strip()
+            and not r.get('exclude_from_gap', '').strip().lower().startswith('yes')]      # governor hand closes are not system execution
     gap = sum(gaps) / len(gaps) if gaps else None
     win = tdays[-FREQ_DAYS:]; got = sum(1 for r in allr if r['date'] in set(win)); exp = RATE[name] * len(win)
     freq = 100 * got / exp if exp else None
-    meas = specific(rs) + [('Execution gap, real - model, per trade', 'n/a' if gap is None else f'{gap:+.2f}%', '> -0.10%', '-0.10 to -0.25', '< -0.25%', grade(gap, -0.10, -0.25))]
+    meas = specific(rs) + [('Execution gap, real - model, per trade', ('n/a' if gap is None else f'{gap:+.2f}%') + f' (n={len(gaps)})', '> -0.10%', '-0.10 to -0.25', '< -0.25%', grade(gap, -0.10, -0.25))]
     if n < MIN_ACT: meas = [(a, b, c, d, e, g + ' (too few trades)' if g not in ('n/a',) else g) for a, b, c, d, e, g in meas]
     fg = grade(freq, 59.999, 30)
     fg = 'n/a' if freq is None else ('too early' if len(win) < FREQ_MIN_DAYS else fg.replace('ACT', 'CHECK TOOLING'))
