@@ -1,0 +1,181 @@
+<title>Trading Rulebook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a reference document. Left rail of contents, one reading column; Code tab swaps the column for a file viewer. */
+:root {
+  --bg: #f6f7f5; --panel: #ffffff; --fg: #1c2321; --muted: #5d6865; --line: #dfe4e1; --accent: #1d6b5f; --accent-bg: #e4f1ee; --chip: #f1ead7; --chip-fg: #6b5214;
+  --code-bg: #f1f4f2; --k: #8a3b8f; --s: #2a6f3b; --c: #7b8683; --n: #a4511b; --f: #1d5fa3;
+  --sans: 'Public Sans', system-ui, sans-serif; --serif: 'Newsreader', Georgia, serif; --mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #101614; --panel: #161e1c; --fg: #e3e9e6; --muted: #98a5a1; --line: #263230; --accent: #5fc3b0; --accent-bg: #19312c; --chip: #3a3117; --chip-fg: #e7cf86;
+  --code-bg: #0c1211; --k: #d49bd8; --s: #8fd19e; --c: #7d8a86; --n: #e6a36e; --f: #7fb8ee; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #101614; --panel: #161e1c; --fg: #e3e9e6; --muted: #98a5a1; --line: #263230; --accent: #5fc3b0; --accent-bg: #19312c; --chip: #3a3117; --chip-fg: #e7cf86;
+  --code-bg: #0c1211; --k: #d49bd8; --s: #8fd19e; --c: #7d8a86; --n: #e6a36e; --f: #7fb8ee; color-scheme: dark; }
+* { box-sizing: border-box; } [hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; padding-block: 0 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.wrap { max-width: 1180px; margin-inline: auto; }
+header { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; padding-block: 28px 16px; border-bottom: 1px solid var(--line); }
+h1 { font-family: var(--serif); font-weight: 600; font-size: 2rem; line-height: 1.1; margin: 0; }
+.sub { color: var(--muted); font-size: 13px; margin-top: 6px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--chip); color: var(--chip-fg); font-weight: 500; white-space: nowrap; }
+.chip.plain { background: var(--panel); color: var(--muted); border: 1px solid var(--line); font-weight: 400; }
+.tabs { display: flex; gap: 4px; padding-block: 14px; flex-wrap: wrap; align-items: center; }
+.tab { font: inherit; font-size: 14px; font-weight: 500; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--muted); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.tab:focus-visible, .rail a:focus-visible, .fbtn:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.find { margin-left: auto; font: inherit; font-size: 14px; padding: 7px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); width: min(260px, 100%); }
+.grid { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 32px; align-items: start; }
+.rail { position: sticky; top: 12px; max-height: calc(100vh - 24px); overflow: auto; font-size: 13px; padding-right: 8px; }
+.rail a { display: block; padding: 4px 8px; margin-left: -8px; border-radius: 6px; color: var(--muted); text-decoration: none; line-height: 1.35; }
+.rail a:hover { background: var(--accent-bg); color: var(--fg); }
+.rail a.l2 { padding-left: 20px; font-size: 12.5px; }
+.rail .h { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 14px 0 4px; }
+.mrail { display: none; }
+.doc { overflow-wrap: anywhere; min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 28px clamp(16px, 4vw, 44px); font-family: var(--serif); font-size: 17.5px; line-height: 1.6; }
+.doc h1, .doc h2, .doc h3, .doc h4 { font-family: var(--sans); line-height: 1.25; scroll-margin-top: 12px; text-wrap: balance; }
+.doc h1 { font-size: 1.5rem; margin: 0 0 12px; } .doc h2 { font-size: 1.3rem; margin: 2.2em 0 .5em; padding-top: 1.1em; border-top: 1px solid var(--line); }
+.doc h2:first-of-type { border-top: 0; padding-top: 0; } .doc h3 { font-size: 1.08rem; margin: 1.6em 0 .4em; } .doc h4 { font-size: 1rem; margin: 1.2em 0 .3em; }
+.doc p { margin: .7em 0; } .doc ul, .doc ol { padding-left: 1.4em; margin: .6em 0; } .doc li { margin: .25em 0; } .doc li > ul, .doc li > ol { margin: .2em 0; }
+.doc code { font-family: var(--mono); font-size: .8em; background: var(--code-bg); padding: .1em .35em; border-radius: 4px; overflow-wrap: anywhere; }
+.doc pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; overflow-x: auto; } .doc pre code { background: none; padding: 0; font-size: 13px; }
+.doc blockquote { margin: .8em 0; padding: .1em 1em; border-left: 3px solid var(--accent); color: var(--muted); }
+.doc hr { border: 0; border-top: 1px solid var(--line); margin: 2em 0; }
+.doc .tw { overflow-x: auto; margin: .8em 0; } .doc table { border-collapse: collapse; font-family: var(--sans); font-size: 13.5px; min-width: 100%; }
+.doc th, .doc td { border: 1px solid var(--line); padding: 6px 10px; text-align: left; vertical-align: top; } .doc th { background: var(--code-bg); font-weight: 600; }
+.doc mark { background: #ffe27a; color: #1c2321; border-radius: 2px; }
+.files { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 32px; align-items: start; }
+.flist { display: flex; flex-direction: column; gap: 2px; position: sticky; top: 12px; }
+.fbtn { font: inherit; font-size: 13px; text-align: left; padding: 7px 10px; border-radius: 8px; border: 0; background: transparent; color: var(--muted); cursor: pointer; display: flex; justify-content: space-between; gap: 8px; }
+.fbtn:hover { background: var(--accent-bg); color: var(--fg); } .fbtn[aria-current="true"] { background: var(--accent-bg); color: var(--fg); font-weight: 600; } .fbtn small { color: var(--muted); font-weight: 400; }
+.fpane { min-width: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.fhead { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.fhead b { font-family: var(--mono); font-weight: 500; overflow-wrap: anywhere; } .fhead span { color: var(--muted); }
+.copy { font: inherit; font-size: 12px; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); cursor: pointer; }
+.code { display: flex; overflow-x: auto; background: var(--code-bg); font-family: var(--mono); font-size: 12.5px; line-height: 1.55; }
+.code pre { margin: 0; padding: 12px 0; } .code .gut { padding-inline: 12px; text-align: right; color: var(--c); user-select: none; border-right: 1px solid var(--line); position: sticky; left: 0; background: var(--code-bg); }
+.code .src { padding-inline: 14px; flex: 1 0 auto; tab-size: 4; }
+.k { color: var(--k); } .s { color: var(--s); } .c { color: var(--c); font-style: italic; } .n { color: var(--n); } .f { color: var(--f); }
+.empty { color: var(--muted); padding: 24px; }
+footer { color: var(--muted); font-size: 12px; margin-top: 24px; }
+@media (max-width: 820px) {
+  .grid, .files { grid-template-columns: minmax(0, 1fr); gap: 16px; } .rail { display: none; } .flist { display: none; }
+  .mrail { display: block; } select { width: 100%; font: inherit; font-size: 14px; padding: 9px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); }
+  h1 { font-size: 1.6rem; } .find { margin-left: 0; width: 100%; } .doc { font-size: 16.5px; }
+}
+</style>
+<div class="wrap">
+  <header>
+    <div><h1>Trading Rulebook</h1><div class="sub">The rules the Agentic account trades by, with the code that runs them.</div></div>
+    <div class="chips" id="chips"></div>
+  </header>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-rules" aria-selected="true">Rulebook</button>
+    <button class="tab" role="tab" id="t-code" aria-selected="false">Code</button>
+    <input class="find" id="find" type="search" placeholder="Find in the rulebook" aria-label="Find in the rulebook">
+  </div>
+  <div id="rules" class="grid">
+    <nav class="rail" id="rail" aria-label="Contents"></nav>
+    <div>
+      <div class="mrail"><select id="jump" aria-label="Jump to a section"></select></div>
+      <article class="doc" id="doc"></article>
+    </div>
+  </div>
+  <div id="code" class="files" hidden>
+    <div class="flist" id="flist"></div>
+    <div>
+      <div class="mrail" style="margin-bottom:12px"><select id="fsel" aria-label="Choose a file"></select></div>
+      <div class="fpane"><div class="fhead"><div><b id="fpath"></b> <span id="fmeta"></span></div><button class="copy" id="copy">Copy file</button></div><div class="code" id="codebox"></div></div>
+    </div>
+  </div>
+  <footer id="foot"></footer>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script>
+(() => {
+  const D = /*@@DATA@@*/null;
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const slug = (s) => s.toLowerCase().replace(/<[^>]+>/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  // header
+  $('chips').innerHTML = `<span class="chip">Policy v${esc(D.version)}</span><span class="chip plain">Commit ${esc(D.commit)}</span><span class="chip plain">${esc(D.committed)}</span>`;
+  $('foot').textContent = `Built from RULEBOOK.md and ${D.files.length} code files in the repository, branch claude/agentic-portfolio-growth-08ppdw, commit ${D.commit}. Real account, real capital.`;
+  // rulebook
+  const html = window.marked ? marked.parse(D.rulebook, { gfm: true, breaks: false }) : '<pre>' + esc(D.rulebook) + '</pre>';
+  const doc = $('doc'); doc.innerHTML = html;
+  doc.querySelectorAll('table').forEach((t) => { const w = document.createElement('div'); w.className = 'tw'; t.replaceWith(w); w.append(t); });
+  const heads = [...doc.querySelectorAll('h1, h2, h3')].filter((h) => h.tagName !== 'H3' || h.textContent.length < 70);
+  const used = {}; const rail = $('rail'), jump = $('jump'); jump.innerHTML = '<option value="">Jump to a section</option>';
+  let lastPart = '';
+  heads.forEach((h) => {
+    let id = slug(h.textContent) || 'section'; used[id] = (used[id] || 0) + 1; if (used[id] > 1) id += '-' + used[id]; h.id = id;
+    if (h.tagName === 'H1') return;
+    const a = document.createElement('a'); a.href = '#' + id; a.textContent = h.textContent; a.className = h.tagName === 'H3' ? 'l2' : 'l1';
+    if (h.tagName === 'H3' && !/^[A-Z]\d/.test(h.textContent)) a.style.display = 'none';
+    rail.append(a);
+    if (h.tagName === 'H2') { const o = document.createElement('option'); o.value = id; o.textContent = h.textContent; jump.append(o); }
+    a.addEventListener('click', (e) => { e.preventDefault(); h.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
+  });
+  rail.querySelectorAll('a.l2').forEach((a) => { a.style.display = 'none'; });
+  jump.addEventListener('change', () => { const h = $(jump.value); if (h) h.scrollIntoView({ behavior: 'smooth', block: 'start' }); jump.value = ''; });
+  // find: highlight matches in the rulebook and scroll to the first
+  let marks = [];
+  const clearMarks = () => { marks.forEach((m) => { const p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize(); }); marks = []; };
+  $('find').addEventListener('input', (e) => {
+    clearMarks(); const q = e.target.value.trim().toLowerCase(); if (q.length < 3) return;
+    const walker = document.createTreeWalker(doc, NodeFilter.SHOW_TEXT); const hits = []; let n;
+    while ((n = walker.nextNode())) { if (n.nodeValue.toLowerCase().includes(q)) hits.push(n); if (hits.length > 200) break; }
+    hits.forEach((node) => {
+      const t = node.nodeValue, low = t.toLowerCase(); const frag = document.createDocumentFragment(); let i = 0, j;
+      while ((j = low.indexOf(q, i)) >= 0) { frag.append(t.slice(i, j)); const m = document.createElement('mark'); m.textContent = t.slice(j, j + q.length); frag.append(m); marks.push(m); i = j + q.length; }
+      frag.append(t.slice(i)); node.parentNode.replaceChild(frag, node);
+    });
+    if (marks[0]) marks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  // code viewer: a light highlighter for Python and shell
+  const PYK = new Set('and as assert break class continue def del elif else except finally for from global if import in is lambda not or pass raise return try while with yield None True False self'.split(' '));
+  function hl(src, lang) {
+    const out = []; const re = lang === 'sh'
+      ? /(#[^\n]*)|("(?:\\.|[^"\\])*"|'[^']*')|(\$\{?[A-Za-z_][A-Za-z0-9_]*\}?)|\b(if|then|else|fi|while|do|done|for|in|case|esac|echo|exit|local|function)\b|(\b\d+\b)/g
+      : /(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|[fFrRbB]{0,2}"(?:\\.|[^"\\\n])*"|[fFrRbB]{0,2}'(?:\\.|[^'\\\n])*')|\b([A-Za-z_][A-Za-z0-9_]*)\b(?=\s*\()|\b([A-Za-z_][A-Za-z0-9_]*)\b|(\b\d+(?:\.\d+)?\b)/g;
+    let last = 0, m;
+    while ((m = re.exec(src))) {
+      out.push(esc(src.slice(last, m.index))); last = m.index + m[0].length; const t = esc(m[0]);
+      if (lang === 'sh') { out.push(m[1] ? `<span class="c">${t}</span>` : m[2] ? `<span class="s">${t}</span>` : m[3] ? `<span class="f">${t}</span>` : m[4] ? `<span class="k">${t}</span>` : `<span class="n">${t}</span>`); }
+      else if (m[1]) out.push(`<span class="c">${t}</span>`); else if (m[2]) out.push(`<span class="s">${t}</span>`);
+      else if (m[3]) out.push(PYK.has(m[3]) ? `<span class="k">${t}</span>` : `<span class="f">${t}</span>`);
+      else if (m[4]) out.push(PYK.has(m[4]) ? `<span class="k">${t}</span>` : t); else out.push(`<span class="n">${t}</span>`);
+    }
+    out.push(esc(src.slice(last))); return out.join('');
+  }
+  const flist = $('flist'), fsel = $('fsel'); let cur = 0;
+  function show(i) {
+    cur = i; const f = D.files[i], n = f.text.split('\n').length - (f.text.endsWith('\n') ? 1 : 0);
+    $('fpath').textContent = f.path; $('fmeta').textContent = `${n} lines, ${(f.text.length / 1024).toFixed(1)} KB`;
+    $('codebox').innerHTML = `<pre class="gut">${Array.from({ length: n }, (_, k) => k + 1).join('\n')}</pre><pre class="src"><code>${hl(f.text, f.path.endsWith('.sh') ? 'sh' : 'py')}</code></pre>`;
+    flist.querySelectorAll('.fbtn').forEach((b, k) => b.setAttribute('aria-current', String(k === i))); fsel.value = String(i);
+  }
+  D.files.forEach((f, i) => {
+    const b = document.createElement('button'); b.className = 'fbtn'; b.type = 'button'; b.innerHTML = `<span>${esc(f.label)}</span><small>${f.text.split('\n').length}</small>`; b.addEventListener('click', () => show(i)); flist.append(b);
+    const o = document.createElement('option'); o.value = String(i); o.textContent = `${f.label} (${f.path})`; fsel.append(o);
+  });
+  fsel.addEventListener('change', () => show(Number(fsel.value)));
+  $('copy').addEventListener('click', async () => {
+    const b = $('copy'); try { await navigator.clipboard.writeText(D.files[cur].text); b.textContent = 'Copied'; } catch (e) {
+      const r = document.createRange(); r.selectNodeContents(document.querySelector('.src')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent = 'Selected, copy it';
+    } setTimeout(() => { b.textContent = 'Copy file'; }, 1800);
+  });
+  // tabs (hash: #code)
+  function tab(which) {
+    const code = which === 'code'; $('rules').hidden = code; $('code').hidden = !code; $('find').style.display = code ? 'none' : '';
+    $('t-rules').setAttribute('aria-selected', String(!code)); $('t-code').setAttribute('aria-selected', String(code));
+    try { history.replaceState(null, '', code ? '#code' : location.pathname + location.search); } catch (e) {}
+  }
+  $('t-rules').addEventListener('click', () => tab('rules')); $('t-code').addEventListener('click', () => tab('code'));
+  show(0); tab(location.hash === '#code' ? 'code' : 'rules');
+})();
+</script>
