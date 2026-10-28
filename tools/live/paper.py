@@ -121,7 +121,7 @@ def fade(b, K):
         for i in range(j + 1, min(j + 13, 76)):
             if i >= K: return dict(status='watching', note=f'break {"up" if bside > 0 else "down"} at {k2t(j)}, waiting for a retest')
             o, h, l, cc, v = bb[i]
-            if l <= E * (1 + 0.10 / 100):
+            if l <= E * (1 + RETEST_TOL / 100):
                 if cc < E:
                     side = -bside
                     stop_real = to_m(max(bb[q][1] for q in range(j, i + 1)))
@@ -189,7 +189,7 @@ def pullback(b, prev, K):
             low = min(b[i][2] for i in ps)
             if not (e20[j - 1] * 0.995 <= low <= e9[j - 1] * 1.001): continue
             pre = j - n
-            if not any(b[i][3] > bh and b[i][4] > 1.5 * st.mean(b[q][4] for q in range(max(0, i - 6), i)) for i in range(3, pre)): continue
+            if not any(b[i][3] > bh and b[i][4] > PB_VOL * st.mean(b[q][4] for q in range(max(0, i - 6), i)) for i in range(3, pre)): continue
             hod = max(b[i][1] for i in range(0, pre)); stop = low * (1 - 0.05 / 100); lim = b[j][3]
             if FLOOR_TARGET: hod = math.floor(hod * 100 + 1e-9) / 100      # the real take-profit limit: morning high rounded DOWN to the cent (RULEBOOK B3.9)
             if j + 1 >= K:
@@ -238,6 +238,30 @@ FROZEN_ON = False            # set per day by simulate(); backtest replays (no d
 LOCKCUT_FROM = '2026-10-28'  # RULEBOOK v5.2.19 (B2): a 5-min close at +0.5R puts the FADE stop at +0.15R; 15 min after entry a close at -0.5R or worse sells everything at the next checkpoint
 LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.19 exits
 LOCK_TRIG, LOCK_LVL, CUT_BARS, CUT_R = 0.5, 0.15, 3, -0.5
+RETEST_TOL, PB_VOL = 0.10, 1.5       # FADE retest tolerance in % (B2.3); PULLBACK breakout volume multiple (B3.2)
+
+# RULEBOOK D4 (draft): the five tunables the self-improvement loop may change. Defaults equal the constants above, so with no tunables.json
+# (or with only the baseline version in it) every result is identical to v5.2.28. improve.py counterfactual runs set OVERRIDE.
+TUNABLE_FILE = os.path.join(HERE, 'tunables.json')
+TUNABLE_DEFAULTS = {'fade.retest_tol_pct': 0.10, 'fade.lock_trigger_r': 0.5, 'fade.lock_level_r': 0.15, 'fade.cut_r': -0.5, 'pb.vol_mult': 1.5}
+OVERRIDE = None
+
+
+def apply_tunables(day=None):
+    """Set the tunable globals for `day`: OVERRIDE if set, else the last version in tunables.json whose effective_from <= day, else the defaults."""
+    global RETEST_TOL, PB_VOL, LOCK_TRIG, LOCK_LVL, CUT_R
+    v = dict(TUNABLE_DEFAULTS)
+    if OVERRIDE is not None: v.update(OVERRIDE)
+    elif day:
+        try:
+            vers = sorted(json.load(open(TUNABLE_FILE))['versions'], key=lambda x: x['effective_from'])
+            for x in vers:
+                if x['effective_from'] <= day: v.update(x['values'])
+        except FileNotFoundError: pass
+        except Exception as e: print(f"  WARNING: tunables.json unreadable ({e}); using the v5.2.28 defaults")
+    RETEST_TOL, PB_VOL = v['fade.retest_tol_pct'], v['pb.vol_mult']
+    LOCK_TRIG, LOCK_LVL, CUT_R = v['fade.lock_trigger_r'], v['fade.lock_level_r'], v['fade.cut_r']
+    return v
 
 
 def fade_day_ok(day):
@@ -250,6 +274,7 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
     Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
     global FROZEN_ON, LOCKCUT_ON
+    apply_tunables(day)
     FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM)
     cands, signals = [], []
     for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
