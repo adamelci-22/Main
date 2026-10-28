@@ -71,9 +71,24 @@ def system(name, rows, day, tdays, specific):
     line('measure', 'now', 'healthy', 'warning', 'ACT', 'status')
     for m in meas: line(*m)
     line(f'Trades, last {len(win)} trading days', f'{got} vs {exp:.1f} expected', '>= 60%', '30-60%', '< 30%', f"{fg}" + ('' if freq is None else f' ({freq:.0f}% of pace)'))
-    print(f"  since {LIVE_START} (information): {len(allr)} trades, PF {fmt_pf(pf(allr))}, wins {sum(float(r['pnl_usd']) > 0 for r in allr)}/{len(allr)}, "
-          f"real ${sum(float(r['pnl_usd']) for r in allr):+.2f}")
+    live_results(name, allr)
     return meas, fg, n, gap, freq, got, exp
+
+
+def live_results(name, allr):
+    """The real trades of one system since LIVE_START: totals, then every trade (v5.2.23, governor: 'the results of the tracked trades')."""
+    usd = [float(r['pnl_usd']) for r in allr]; pos = [float(r['pnl_pct_position']) for r in allr]; acct = [float(r['acct_pct']) for r in allr]
+    w = [u for u in usd if u > 0]; l = [u for u in usd if u <= 0]
+    print(f"  LIVE RESULTS since {LIVE_START}: {len(allr)} trades | {len(w)} wins, {len(l)} losses"
+          + (f" ({100 * len(w) / len(allr):.0f}% win rate)" if allr else '') + f" | PF {fmt_pf(pf(allr))} | total ${sum(usd):+.2f} ({sum(acct):+.2f}% of account)")
+    if not allr: return
+    aw = f"${sum(w) / len(w):+.2f}" if w else 'n/a'; al = f"${sum(l) / len(l):+.2f}" if l else 'n/a'
+    best = max(allr, key=lambda r: float(r['pnl_usd'])); worst = min(allr, key=lambda r: float(r['pnl_usd']))
+    print(f"    average trade ${sum(usd) / len(usd):+.2f} ({sum(pos) / len(pos):+.2f}% of position) | average win {aw} | average loss {al}"
+          f" | best {best['date']} {best['ticker']} ${float(best['pnl_usd']):+.2f} | worst {worst['date']} {worst['ticker']} ${float(worst['pnl_usd']):+.2f}")
+    for r in allr:
+        print(f"    {r['date']} {r['ticker']:<5} {r['entry_time']}->{r['exit_time']}  ${float(r['pnl_usd']):+7.2f}  {float(r['pnl_pct_position']):+.2f}% of position"
+              f"  (model {float(r['model_pct']):+.2f}%)" + ('  reached 2R' if r.get('reached_2R', '').strip().lower() == 'yes' else ''))
 
 
 def verdict(meas, fg, extra, act_text):
@@ -115,6 +130,10 @@ def main():
     pm, pfg, pn, pgap, pfreq, pgot, pexp = system('PULLBACK', rows, day, tdays, pb_specific)
     pacts, pv = verdict(pm, pfg, [], 'go back to the four funds (SOXS LABD TECS UVXY) or drop PULLBACK')
     print(f"  VERDICT: {pv}  (probation review at 30 live PULLBACK trades)")
+    both = [r for r in rows if r['date'] <= day and r['system'] in ('FADE', 'PULLBACK')]
+    bw = sum(float(r['pnl_usd']) > 0 for r in both)
+    print(f"\nBOTH SYSTEMS since {LIVE_START}: {len(both)} trades, {bw} wins / {len(both) - bw} losses, PF {fmt_pf(pf(both))}, "
+          f"total ${sum(float(r['pnl_usd']) for r in both):+.2f}; account ${total:,.2f}, drawdown {dd:.1f}% from the high")
 
     hdr = ['date', 'fade_trades', 'fade_pf', 'pct_reach_2R', 'drawdown_pct', 'total_value', 'hwm', 'pf_status', 'reach_2R_status', 'dd_status', 'act_count', 'verdict',
            'pb_trades', 'pb_pf', 'pb_win_pct', 'pb_avg_pct', 'pb_pf_status', 'pb_win_status', 'pb_avg_status', 'pb_act_count', 'pb_verdict',
