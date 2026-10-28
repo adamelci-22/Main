@@ -21,9 +21,9 @@ Champion and challenger. **The real account and the paper model keep trading the
 | `pb.stop_buffer_pct` | B3.7 stop below the dip low | 0.05% | 0.02 to 0.15 |
 | `pb.min_stop_pct` | B3.7 minimum stop distance | 0.75% | 0.5 to 1.0 |
 | `risk.pct` | B4.1 risk per trade | 3% | 1 to 3, downward only |
-| `size.cap_pct` | B4.1 share of buying power deployed | 100% | 50 to 100, downward only |
+| `size.cap_pct` | B4.1 largest position as a % of total account value | 100% | 50 to 100, downward only |
 
-The two sizing rows are offered only with `improve.py menu --risk-off`, which the session uses when the C5 drawdown measure is at ACT. They can only cut size. Raising size above today's level needs the governor to edit `hi` in `tunables.json`. A cut passes only if it lowers drawdown by 15% or more and keeps return per drawdown point within 10%. `size.cap_pct` is the lever that moves size, because buying power usually decides it. `risk.pct` alone moves it very little.
+The two sizing rows are offered only with `improve.py menu --risk-off`, which the session uses when the C5 drawdown measure is at ACT. They can only cut size. Raising size above today's level needs the governor to edit `hi` in `tunables.json`. A cut passes only if it lowers drawdown by 15% or more and keeps return per drawdown point within 10%. Both are percentages of the account. No tunable is ever a dollar amount, and `improve.py` refuses to load a tunable named for dollars. `size.cap_pct` adds a third term to B4.1: `floor(cap% x total value / ask)`. It binds only below 100%. It is the lever that moves size, because the 3% risk term rarely binds on 0.5 to 1.5% stops, so `risk.pct` alone moves size very little.
 
 **Still not tunable, and why:**
 - **One-position rule.** The model, A1.5, B4.4 and every B5 order step assume one position. Two positions needs a concurrent-position engine, a new buying-power split and new broker checks. That is a redesign, not a number.

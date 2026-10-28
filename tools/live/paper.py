@@ -241,7 +241,7 @@ LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no d
 LOCK_TRIG, LOCK_LVL, CUT_BARS, CUT_R = 0.5, 0.15, 3, -0.5
 RETEST_TOL, PB_VOL = 0.10, 1.5       # FADE retest tolerance in % (B2.3); PULLBACK breakout volume multiple (B3.2)
 TARGET_R, TAKE_FRAC, CHAND_ATR = 2.0, 1 / 3, 2.0   # FADE take-profit R, share sold there (B2.5), chandelier ATR multiple (B5.4)
-SIZE_CAP = 1.0                       # share of buying power the model may deploy (B4.1 min(buying_power / ask, ...)); 1.0 = all of it
+SIZE_CAP = 1.0                       # largest position as a share of total account value (a percentage, never dollars); 1.0 = the model's existing cap at 100% of equity
 PB_BUF, PB_MIN_STOP = 0.05, 0.75     # PULLBACK stop buffer below the dip low, % (B3.7); minimum stop distance, % (B3.7)
 
 # RULEBOOK D4 (draft): the five tunables the self-improvement loop may change. Defaults equal the constants above, so with no tunables.json
@@ -385,7 +385,7 @@ def live_actions(today, taken, signals, K, base=None, day=None):
             ls = to_leg(lnow, pnow, t['stop'], side, lev)
             lt = lnow * (1 + lev * TARGET_R * r)
             print(f"    ENTER FADE: buy {leg} now (marketable limit). Proxy {sym} {pnow:.2f}, proxy stop {t['stop']:.2f} (R {r*100:.2f}% proxy = {lev*r*100:.2f}% on {leg}).")
-            print(f"      size (B4.1): {RISK*100:g}% of the account at risk, at most {SIZE_CAP*100:g}% of buying power; take-profit share {frac_txt()} of the shares (floor), the rest {rest_txt()} on the stop-market.")
+            print(f"      size (B4.1): {RISK*100:g}% of the account at risk; position value at most {SIZE_CAP*100:g}% of total account value (extra B4.1 term, binds only below 100%); take-profit share {frac_txt()} of the shares (floor), the rest {rest_txt()} on the stop-market.")
             print(f"      est. at {leg} {lnow:.2f}: stop {ls:.2f}, {TARGET_R:g}R target {lt:.2f}. From the fill F: stop = F x (1 - {lev*r:.5f}), target = F x (1 + {TARGET_R*lev*r:.5f}).")
         else:
             print(f"    ENTER PULLBACK: limit buy {sym} at {t['limit']:.2f}, valid for the next bar only. Stop {t['stop']:.2f}, target {t['target']:.2f} (one OCO for 100% after the fill).")

@@ -74,7 +74,7 @@
       "step": 0.5,
       "down_only": true,
       "needs": "risk_off",
-      "rule": "B4.1 account risk per trade, %. Downward only, only with --risk-off. Raising it above 3.0 needs the governor to edit hi"
+      "rule": "B4.1 account risk per trade, as a % of total account value (never dollars). Downward only, only with --risk-off. Raising it above 3.0 needs the governor to edit hi"
     },
     "size.cap_pct": {
       "lo": 50.0,
@@ -82,7 +82,7 @@
       "step": 10.0,
       "down_only": true,
       "needs": "risk_off",
-      "rule": "B4.1 share of buying power deployed, %. Downward only, only with --risk-off. This is the lever that moves size, because buying power usually decides it"
+      "rule": "B4.1 largest position as a % of total account value (never dollars). Downward only, only with --risk-off. Adds a third term to B4.1: floor(cap% x total_value / ask). It binds only below 100"
     }
   },
   "versions": [

@@ -10,7 +10,7 @@ Commands (stdlib only; run from anywhere):
     improve.py tick [DUMP ...]        13:30 close, AFTER `paper.py --close`: shadow-run the challenger, verdict, else a proposal if due
     improve.py status                 version in force, challenger, pending proposal, last ledger events
     improve.py menu [--risk-off]      counterfactual table: every one-step change, walk-forward, with the gate result (under a minute).
-                                      --risk-off adds position-size cuts (risk.pct, downward only); use it when the C5 drawdown measure is at ACT
+                                      --risk-off adds position-size cuts (risk.pct and size.cap_pct, both % of the account, downward only); use it when the C5 drawdown measure is at ACT
     improve.py prompt                 print the proposer prompt (the checkpoint session answers it, then runs `submit`)
     improve.py submit CHOICE "why"    CHOICE = a menu id (e.g. fade.cut_r+1) or hold; writes the pending proposal
     improve.py approve --note "..."   governor: start the shadow trial (--start D, default today). The live account is NOT changed
@@ -38,7 +38,10 @@ GATE_DD_SLACK, GATE_MIN_GAIN, GATE_TRADE_KEEP, SPLIT = 1.0, 0.01, 0.75, 0.6     
 
 # ------------------------------------------------------------------ files
 def tun():
-    return json.load(open(TUN))
+    t = json.load(open(TUN))
+    bad = [k for k in t['space'] if any(w in k.lower() for w in ('usd', 'dollar', '$'))]
+    if bad: sys.exit(f"tunables must be percentages or ratios of the account, never dollar amounts: {bad}")
+    return t
 
 
 def save_tun(t):
@@ -187,7 +190,7 @@ def context(t, base, rows):
 def prompt_text(ctx):
     return ("You propose at most ONE change to a live-money trading model. The governor approves or rejects it. Choose ONLY an id from the menu rows "
             "where passes is true, or 'hold'. Prefer hold unless a row is clearly better in both in-sample and out-of-sample AND fits the recent trades. "
-            "Do not invent parameters. Reply with one JSON object: {\"choice\": \"<id or hold>\", \"rationale\": \"<two sentences max>\"}.\n\n" + json.dumps(ctx, indent=1))
+            "Do not invent parameters. All sizing is a percentage of the account, never a dollar amount, and size is never raised. Reply with one JSON object: {\"choice\": \"<id or hold>\", \"rationale\": \"<two sentences max>\"}.\n\n" + json.dumps(ctx, indent=1))
 
 
 def ask_api(text):
