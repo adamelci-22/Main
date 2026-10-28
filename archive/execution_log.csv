@@ -13,3 +13,5 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-10-28,SOXS,FADE,buy,entry (FADE SOXX failed retest 10:05),10:10,10:10:36,10:10:37,41.43,41.44,0.02,41.44,41.48,41.4399,-0.00,61,61 sh = floor(BP 2568.92/41.44); R 1.36% on SOXS,1,10:10:06
 2026-10-28,SOXS,FADE,sell,OCO 20 sh TP 42.56 / stop 40.87 GTC,10:10,10:11:04,10:11:04,,,,,42.56/40.87,,,20,first OCO attempt rejected: reused ref_id; resent ok,1,10:10:06
 2026-10-28,SOXS,FADE,sell,stop-market 41 sh 40.87 GTC,10:10,10:10:50,10:10:51,,,,,40.87,,,41,,1,10:10:06
+2026-10-28,SOXS,FADE,sell,"B5.3 STOP RAISE +0.15R: cancelled OCO 6ae1ffc8-6d35 (verified), new OCO 20 sh TP 42.56 / stop 41.52 GTC",10:55,10:55:37,10:55:37,,,,,42.56/41.52,,,20,lock = F x (1+0.15x0.01362) = 41.5246 rounded down,0,
+2026-10-28,SOXS,FADE,sell,"B5.3 STOP RAISE +0.15R: cancelled stop 6ae2026a (verified), new stop-market 41 sh 41.52 GTC",10:55,10:55:47,10:55:47,,,,,41.52,,,41,,0,
