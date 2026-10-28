@@ -562,45 +562,214 @@ def cmd_rollback(a):
     print(f"ROLLBACK: v{n} restores v{c['base_version']} values from {a.effective}. Commit tools/live/tunables.json and archive/improve/.")
 
 
+# ------------------------------------------------------------------ governor cycle (v5.2.36, governor instruction 2026-10-28)
+# Per system (FADE and PULLBACK are treated as completely separate systems):
+#   1. wait for 5 trades of the system, then look at the goals of the whole system (the real account since launch);
+#   2. goal met -> no change, wait for the next 5; goal not met -> the session picks ONE change for that system from its last 5 trades;
+#   3. paper trade the changed system in parallel with the live one for 10 trades of the system (no orders);
+#   4. better -> PUSH REQUEST to the governor; not different -> 5 more trades, still not different -> scrap and pick the next change;
+#      worse -> scrap and pick the next change. Continuous.
+CYCLE = os.path.join(IDIR, 'cycle.json'); TRIAL_LOG = os.path.join(IDIR, 'trial_log.csv')
+SYSN = {'fade': 'FADE', 'pb': 'PB'}; WAIT_TRADES, TRIAL_TRADES, EXTEND_TRADES = 5, 10, 5
+DIFF_PCT = 0.20                 # a trial result counts as different when the paired total differs by at least 0.20% of the account
+TRIAL_HDR = ['day', 'system', 'id', 'cver', 'live_pct', 'new_pct', 'live_trades', 'new_trades', 'differs']
+
+
+def cycle():
+    c = json.load(open(CYCLE)) if os.path.exists(CYCLE) else {}
+    for k in SYSN: c.setdefault(k, dict(state='waiting', since='2026-10-16'))
+    return c
+
+
+def save_cycle(c):
+    os.makedirs(IDIR, exist_ok=True); json.dump(c, open(CYCLE, 'w'), indent=1); open(CYCLE, 'a').write('\n')
+
+
+def isolate(values, sysk):
+    """The system on its own: the other system's tickers are switched off, so each system is judged as if it were the only one."""
+    v = dict(values)
+    if sysk == 'fade': v['x.drop_pb'] = list(paper.PB_LIST); v['x.add_pb'] = []
+    else: v['x.drop_fade'] = list(paper.FADE_ROWS); v['x.add_fade'] = []
+    return v
+
+
+def sys_of(c):
+    i = c['id']
+    if i.startswith(('risk.', 'size.', 'rollback.')): return None
+    if c['kind'] == 'tunable': return 'fade' if c['variable'].startswith('fade.') else 'pb' if c['variable'].startswith('pb.') else None
+    return 'fade' if i.startswith(('drop.fade.', 'fade.', 'add.fade.')) else 'pb' if i.startswith(('drop.pb.', 'pb.', 'add.pb.')) else None
+
+
+def scrapped(t, sysk):
+    cv = current(t)['version']
+    return {e['id'] for e in rledger() if e.get('kind') == 'trial' and e.get('system') == sysk and e.get('champion_version') == cv and e.get('verdict') in ('scrapped', 'declined')}
+
+
+def sys_candidates(t, sysk):
+    base = champion_values(t); out = []
+    for c in candidates(t, ()):
+        if sys_of(c) != sysk or c['id'] in scrapped(t, sysk): continue
+        c['changes'] = {k: v for k, v in c['values'].items() if base.get(k) != v}; out.append(c)
+    return out
+
+
+def sys_trades(sysk, since):
+    return [x for x in model_trades() if x['system'] == SYSN[sysk] and x['day'] >= since]
+
+
+def goal_check(t):
+    """The goals of the whole system, on the real account since launch (idle trading days count as 0)."""
+    g = t.get('goals') or {}; lv = live_daily(); r = [x for _, x in lv]
+    eq = peak = 1.0; dd = 0.0
+    for x in r: eq *= 1 + x / 100; peak = max(peak, eq); dd = max(dd, (1 - eq / peak) * 100)
+    mean = sum(r) / len(r) if r else 0.0
+    met = bool(r) and mean >= g.get('target_daily_pct', 0.4) and dd <= g.get('max_drawdown_pct', 15)
+    return dict(days=len(r), mean=round(mean, 3), target=g.get('target_daily_pct'), dd=round(dd, 2), dd_limit=g.get('max_drawdown_pct'), total=round((eq - 1) * 100, 2), met=met)
+
+
+def goal_text(gc):
+    return (f"goals (whole system, real account since launch, {gc['days']} trading days): {gc['mean']:+.3f}%/day vs target {gc['target']}%, "
+            f"drawdown {gc['dd']}% vs limit {gc['dd_limit']}%, total {gc['total']:+.2f}% -> {'MET' if gc['met'] else 'NOT MET'}")
+
+
+def trial_rows(sysk=None, tid=None):
+    if not os.path.exists(TRIAL_LOG): return []
+    return [r for r in csv.DictReader(open(TRIAL_LOG)) if (sysk is None or r['system'] == sysk) and (tid is None or r['id'] == tid)]
+
+
+def record_trials(t, c, day, today_, prev):
+    """Each close: the live system and the changed system, each on its own, on the day's real bars (no orders). Idempotent per day."""
+    have = {(r['day'], r['system'], r['id']) for r in trial_rows()}; new = []
+    for sysk, st_ in c.items():
+        if st_['state'] != 'trial' or day < st_['start'] or (day, sysk, st_['id']) in have: continue
+        base = champion_values(t); lp, ls = run_day(day, today_, prev, isolate(base, sysk)); np_, ns = run_day(day, today_, prev, isolate({**base, **st_['changes']}, sysk))
+        n_l = sum(1 for x in ls if x[3] or x[4]); n_n = sum(1 for x in ns if x[3] or x[4])
+        new.append([day, sysk, st_['id'], current(t)['version'], round(lp, 6), round(np_, 6), n_l, n_n, int(ls != ns)])
+    if new:
+        fresh = not os.path.exists(TRIAL_LOG); os.makedirs(IDIR, exist_ok=True)
+        with open(TRIAL_LOG, 'a', newline='') as f:
+            w = csv.writer(f, lineterminator='\n')
+            if fresh: w.writerow(TRIAL_HDR)
+            w.writerows(new)
+    return new
+
+
+def trial_score(st_, sysk):
+    rows = trial_rows(sysk, st_['id']); rows = [r for r in rows if r['day'] >= st_['start']]
+    live = sum(float(r['live_pct']) for r in rows); new = sum(float(r['new_pct']) for r in rows)
+    return dict(days=len(rows), trades=sum(int(r['live_trades']) for r in rows), new_trades=sum(int(r['new_trades']) for r in rows), diff_days=sum(int(r['differs']) for r in rows),
+                live=round(live, 3), new=round(new, 3), delta=round(new - live, 3))
+
+
+def scrap(c, sysk, t, verdict, sc):
+    st_ = c[sysk]
+    radd(kind='trial', system=sysk, id=st_['id'], champion_version=current(t)['version'], idea=st_['desc'], verdict=verdict, why=st_.get('why', ''),
+         method=f"parallel paper trial from {st_['start']}, {SYSN[sysk]} on its own, live version vs changed version on the same real bars",
+         result=f"{sc['trades']} live trades ({sc['new_trades']} changed), {sc['diff_days']} days differed, live {sc['live']:+.2f}% vs changed {sc['new']:+.2f}% of account (delta {sc['delta']:+.2f})")
+    ledger('trial_' + verdict, system=sysk, id=st_['id'], **sc); c[sysk] = dict(state='choose', since=st_.get('since', today().isoformat()), reason=f"{st_['id']} {verdict}")
+
+
+def advance(t, c):
+    """Move each system's cycle forward and return the report lines (the top lines go to the governor)."""
+    top, lines = [], []
+    for sysk, st_ in c.items():
+        name = 'FADE' if sysk == 'fade' else 'PULLBACK'
+        if st_['state'] == 'waiting':
+            n = len(sys_trades(sysk, st_['since']))
+            if n < WAIT_TRADES: lines.append(f"  {name}: waiting, {n} of {WAIT_TRADES} trades since {st_['since']}"); continue
+            gc = goal_check(t); lines.append(f"  {name}: {WAIT_TRADES} trades reached; {goal_text(gc)}")
+            if gc['met']:
+                c[sysk] = dict(state='waiting', since=next_trading_day(today()).isoformat()); ledger('goal_met', system=sysk, **gc)
+                lines.append(f"  {name}: goal met, no change; waiting for the next {WAIT_TRADES} trades"); continue
+            c[sysk] = dict(state='choose', since=st_['since'], reason='goal not met'); ledger('change_due', system=sysk, **gc)
+        if c[sysk]['state'] == 'choose':
+            top.append(f"CHANGE DUE ({name}): {c[sysk].get('reason', '')}. Pick one change from the last {WAIT_TRADES} {name} trades: "
+                       f"`improve.py review {sysk}`, then `improve.py trial {sysk} <id> \"why\"` (paper only; starts the next trading day)")
+        elif st_['state'] == 'trial':
+            sc = trial_score(st_, sysk); need = TRIAL_TRADES + (EXTEND_TRADES if st_.get('extended') else 0)
+            lines.append(f"  {name}: paper trial of {st_['id']} ({st_['desc']}) since {st_['start']}: {sc['trades']} of {need} trades, {sc['diff_days']} days differed, "
+                         f"live {sc['live']:+.2f}% vs changed {sc['new']:+.2f}% of account (delta {sc['delta']:+.2f})")
+            if sc['trades'] < need: continue
+            if sc['delta'] >= DIFF_PCT:
+                c[sysk] = dict(st_, state='push', result=sc); ledger('push_request', system=sysk, id=st_['id'], **sc)
+            elif sc['delta'] <= -DIFF_PCT:
+                scrap(c, sysk, t, 'scrapped', sc); top.append(f"SCRAPPED ({name}): {st_['id']} was worse ({sc['delta']:+.2f}% of account over {sc['trades']} trades); pick the next change")
+            elif not st_.get('extended'):
+                c[sysk] = dict(st_, extended=True); ledger('trial_extended', system=sysk, id=st_['id'], **sc)
+                lines.append(f"  {name}: not different after {sc['trades']} trades (delta {sc['delta']:+.2f}, threshold {DIFF_PCT}): {EXTEND_TRADES} more trades")
+            else:
+                scrap(c, sysk, t, 'scrapped', sc); top.append(f"SCRAPPED ({name}): {st_['id']} still not different after {sc['trades']} trades; pick the next change")
+        if c[sysk]['state'] == 'push':
+            s2 = c[sysk]; r = s2['result']
+            top.append(f"PUSH REQUEST ({name}): {s2['id']} ({s2['desc']}) beat the live version in the paper trial: {r['trades']} trades, changed {r['new']:+.2f}% vs live {r['live']:+.2f}% of account "
+                       f"(delta {r['delta']:+.2f}). Ask the governor: push it live (`improve.py push {sysk} --effective <next trading day> --note \"...\"`) or decline (`improve.py decline {sysk}`)")
+    return top, lines
+
+
 def cmd_tick(a):
-    t = tun(); pol = policy(t); ch = challenger(t)
+    t = tun(); c = cycle()
     if a.dumps:
-        day, today_, prev = day_inputs(a.dumps); n = record_all(t, day, today_, prev, a.force)
-        print(f"  shadow: {day}, champion v{current(t)['version']} and {n} candidates recorded (no orders)" if n else f"  shadow: {day} already recorded or before {pol['shadow_from']}")
-    else: print("  no dumps passed: shadow run skipped today (every day missed is a day of evidence lost)")
-    evs, m = evidence(t); done = retire(t, evs)
-    cv = current(t)['version']; days = max([e['n_days'] for e in evs] or [0])
-    print(f"  evidence vs v{cv}: {len(evs)} candidates tracked ({m} ever), {days} forward shadow days, {sum(e['status'] == 'collecting' for e in evs)} collecting")
-    for e in evs[:5]: print(evidence_line(e))
-    for e in evs:
-        if e['status'] == 'risk-blocked': print(f"  {e['id']} passed the evidence gate but is BLOCKED BY RISK: {'; '.join(e['risk_why'])} (stressed scenario, D4)")
-    try:                                                    # regime and health link (v5.2.33): reports only
+        day, today_, prev = day_inputs(a.dumps); new = record_trials(t, c, day, today_, prev)
+        print(f"  paper trials: {day}, {len(new)} system(s) recorded (no orders)" if new else f"  paper trials: none running or {day} already recorded")
+    else: print("  no dumps passed: paper trials not recorded today")
+    top, lines = advance(t, c); save_cycle(c)
+    for x in top: print(x)
+    for x in lines: print(x)
+    try:                                                    # information only (v5.2.33-35): edge, regime and stop risk; they file nothing
         D = load_data(); g = regime(D, champion_values(t)); print(regime_line(g))
-        hday, acts = health_acts()
         head, rows, rec = defensive(t, D); bp = head['b']
-        if g['state'] == 'HOSTILE' or acts or rec:
-            why = [x for x in ('regime HOSTILE (' + ', '.join(g['flags']) + ')' if g['state'] == 'HOSTILE' else '', 'health ACT on ' + str(hday) + ': ' + ', '.join(acts) if acts else '',
-                                f"stressed chance of the -15% stop {bp['p_stop']}% on the last {head['window']} sessions, above the {head['target']}% target" if bp and bp['p_stop'] > head['target'] else '') if x]
-            print(f"DEFENSIVE REVIEW: {'; '.join(why)}. Report to the governor at once; nothing changes until the governor decides.")
-            if rec: print(f"DEFENSIVE RECOMMENDATION: {rec['name']} (stop risk {bp['p_stop']}% -> {rec['rp']['p_stop']}%, whole dataset {head['mean']:+.3f} -> {rec['mean']:+.3f}%/day). "
-                          f"Propose it: improve.py defend {rec['num']['variable']} {rec['num']['new']:g} \"why\" (the governor then approves and promotes)")
-            print(defensive_text(head, rows, rec))
-        else: print(f"  stop risk OK: stressed chance of the -15% stop {bp['p_stop'] if bp else 'n/a'}% on the last {head['window']} sessions (target {head['target']}%)")
-        cur = current(t)
-        if cur.get('defensive') and g['edge'] == 'INTACT':
-            print(f"RESTORE POSSIBLE: v{cur['version']} is a defensive change and the edge is INTACT again; tell the governor (improve.py rollback --effective <next trading day> restores v{cur['base_version']})")
+        print(f"  stop risk: stressed chance of the -15% stop {bp['p_stop'] if bp else 'n/a'}% on the last {head['window']} sessions (information; risk.pct is shared by both systems)")
         if today().weekday() == 4: print("  live vs model attribution, this week:\n" + attribution_text(attribution((today() - timedelta(days=6)).isoformat())))
-    except Exception as x: print(f"  regime/health step failed: {x!r} (reports only; the shadow run above is unaffected)")
-    for e in done: print(f"RETIRED {e['id']}: {e['status']} ({e['total']:+.2f}% of account over {e['n_days']} days); written to the research ledger")
-    ready = [e for e in evs if e['status'] == 'ready']
-    if ch: print(f"  challenger {ch['id']} approved and waiting for the governor: improve.py promote --effective <date> --note \"...\" (or discard)"); return
-    if pending(): print("  proposal pending, waiting for the governor:", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')})); return
-    for e in ready:
-        if e['id'].startswith('rollback.'): print(f"ROLLBACK RECOMMENDED: {e['desc']}: the replaced version beat the promoted one on {e['n_diff']} differing days (total {e['total']:+.2f}% of account). Tell the governor at once: improve.py rollback --effective <next trading day>, only on the governor's instruction.")
-        elif e['promotable']: print(f"EVIDENCE READY: {e['id']} ({e['desc']}). Read the table above, answer `improve.py prompt`, then `improve.py submit <id|hold> \"why\"`, report to the governor and wait.")
-        elif e['id'].startswith('add.'): print(f"TICKER READY: {e['id']} ({e['desc']}). Report it to the governor at once, then `improve.py add-checklist {e['id']}`; adding a ticker is a rulebook change (D3), only on the governor's instruction.")
-        else: print(f"IDEA READY (needs a rulebook change, D3): {e['id']} ({e['desc']}). Report it to the governor at once; the loop will not change a structural rule.")
-    if not ready: print("  no candidate is ready")
+    except Exception as x: print(f"  regime step failed: {x!r} (information only)")
+    if pending(): print("  legacy proposal pending (outside the cycle):", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')}))
+
+
+def cmd_review(a):
+    """What the session reads before picking a change: the system's last 5 trades, the goals, and every change available for that system
+    with its effect, on its own, on the days of those trades and on the whole dataset (in-sample guide only; the paper trial decides)."""
+    t = tun(); c = cycle(); sysk = a.system; name = 'FADE' if sysk == 'fade' else 'PULLBACK'
+    last = [x for x in model_trades() if x['system'] == SYSN[sysk]][-WAIT_TRADES:]
+    print(f"{name} cycle: {c[sysk]['state']}; {goal_text(goal_check(t))}\nlast {len(last)} {name} trades (model record):")
+    for x in last: print(f"  {x['day']} {x['ticker']:<6}{x['reason']:<16}{x['pct_leg']:+.2f}% on the leg  {x['acct_pct']:+.2f}% of account")
+    D = load_data(); base = isolate(champion_values(t), sysk); bd = dict(run_cf(D, base)[0]); days = {x['day'] for x in last}
+    print(f"changes available for {name} (not yet scrapped under v{current(t)['version']}), effect on its own vs the live version:")
+    rows = []
+    for k in sys_candidates(t, sysk):
+        d = dict(run_cf(D, isolate({**champion_values(t), **k['changes']}, sysk))[0])
+        rows.append((sum(d[x] - bd[x] for x in d if x in days), sum(d[x] - bd[x] for x in d), sum(1 for x in d if abs(d[x] - bd[x]) > 1e-9), k))
+    for l5, al, nd, k in sorted(rows, key=lambda r: (-r[0], -r[1])):
+        print(f"  {k['id']:<26}last-5 days {l5:+6.2f}%  whole dataset {al:+7.2f}% ({nd} days differ)  {k['desc'][:80]}")
+
+
+def cmd_trial(a):
+    t = tun(); c = cycle(); sysk = a.system
+    if c[sysk]['state'] != 'choose': sys.exit(f"{sysk} is {c[sysk]['state']}: a change is picked only when the cycle says CHANGE DUE")
+    k = next((x for x in sys_candidates(t, sysk) if x['id'] == a.id), None)
+    if not k: sys.exit(f"{a.id} is not an available {sysk} change (see improve.py review {sysk})")
+    start = next_trading_day(today()).isoformat()
+    c[sysk] = dict(state='trial', id=k['id'], desc=k['desc'], changes=k['changes'], why=a.why, start=start, since=c[sysk].get('since'), base_version=current(t)['version'])
+    save_cycle(c); ledger('trial_start', system=sysk, id=k['id'], changes=k['changes'], why=a.why, start=start)
+    print(f"PAPER TRIAL ({sysk}): {k['id']} ({k['desc']}) runs in parallel with the live system from {start} for {TRIAL_TRADES} {SYSN[sysk]} trades. No orders.")
+
+
+def cmd_push(a):
+    """Governor only: put a trial winner live from a future trading day, then the system waits for its next 5 trades."""
+    t = tun(); c = cycle(); sysk = a.system; st_ = c[sysk]
+    if st_['state'] != 'push': sys.exit(f"{sysk} has no push request")
+    future_trading_day(a.effective)
+    vals = {**current(t)['values'], **st_['changes']}
+    n = append_version(t, 'change', a.effective, vals, base_version=current(t)['version'], proposal=f"trial.{sysk}.{st_['id']}", note=a.note)
+    save_tun(t); radd(kind='trial', system=sysk, id=st_['id'], champion_version=st_['base_version'], idea=st_['desc'], verdict='pushed', why=st_.get('why', ''),
+                      method='parallel paper trial', result=json.dumps(st_['result']))
+    ledger('pushed', system=sysk, id=st_['id'], version=n, effective_from=a.effective, note=a.note); c[sysk] = dict(state='waiting', since=a.effective); save_cycle(c)
+    print(f"PUSHED: v{n} ({st_['id']}) live from {a.effective}. Bump the RULEBOOK version, record it in the commit, commit tunables.json + archive/improve/.")
+
+
+def cmd_decline(a):
+    """Governor only: decline a push request; the change is scrapped and the next change is picked."""
+    t = tun(); c = cycle(); sysk = a.system
+    if c[sysk]['state'] != 'push': sys.exit(f"{sysk} has no push request")
+    sc = c[sysk]['result']; scrap(c, sysk, t, 'declined', sc); save_cycle(c); print(f"declined; {sysk} needs its next change (CHANGE DUE)")
 
 
 def cmd_evidence(a):
@@ -800,6 +969,10 @@ def cmd_status(a):
 
 def main():
     ap = argparse.ArgumentParser(); sub = ap.add_subparsers(dest='cmd', required=True)
+    s = sub.add_parser('review'); s.add_argument('system', choices=['fade', 'pb']); s.set_defaults(f=cmd_review)
+    s = sub.add_parser('trial'); s.add_argument('system', choices=['fade', 'pb']); s.add_argument('id'); s.add_argument('why'); s.set_defaults(f=cmd_trial)
+    s = sub.add_parser('push'); s.add_argument('system', choices=['fade', 'pb']); s.add_argument('--effective', required=True); s.add_argument('--note', required=True); s.set_defaults(f=cmd_push)
+    s = sub.add_parser('decline'); s.add_argument('system', choices=['fade', 'pb']); s.set_defaults(f=cmd_decline)
     s = sub.add_parser('tick'); s.add_argument('dumps', nargs='*'); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_tick)
     s = sub.add_parser('menu'); s.add_argument('--risk-off', action='store_true'); s.set_defaults(f=cmd_menu)
     for n, f in (('prompt', cmd_prompt), ('status', cmd_status), ('evidence', cmd_evidence)): sub.add_parser(n).set_defaults(f=f)
