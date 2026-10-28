@@ -6,7 +6,31 @@ Status: draft for the governor. Nothing here changes a trade until the governor 
 
 Champion and challenger. **The real account and the paper model keep trading the version in force. A proposed change only runs as a simulated paper challenger until it earns a promotion.**
 
-1. **Tunables.** Five numbers may change, nothing else: `fade.retest_tol_pct` (B2.3), `fade.lock_trigger_r`, `fade.lock_level_r`, `fade.cut_r` (B2.5), `pb.vol_mult` (B3.2). Bounds and a one-step size are in `tools/live/tunables.json`. A1 controls, sizing, ticker lists, hours and the 2R exit are not tunable.
+1. **Tunables.** Twelve numbers may change, nothing else. Bounds and a one-step size are in `tools/live/tunables.json`.
+
+| Tunable | Rule | Now | Range |
+|---|---|---|---|
+| `fade.retest_tol_pct` | B2.3 | 0.10% | 0.05 to 0.20 |
+| `fade.lock_trigger_r` | B2.5 | +0.5R | 0.3 to 0.8 |
+| `fade.lock_level_r` | B2.5 | +0.15R | 0.0 to 0.3 |
+| `fade.cut_r` | B2.5 | -0.5R | -0.8 to -0.3 |
+| `fade.target_r` | B2.5 take-profit | 2R | 1.5 to 3.0 |
+| `fade.take_frac` | B2.5/B5.2 share sold at the target | 1/3 | 0.25 to 0.5 |
+| `fade.chandelier_atr` | B5.4 runner trail | 2 ATR | 1.5 to 3.0 |
+| `pb.vol_mult` | B3.2 | 1.5 | 1.2 to 2.0 |
+| `pb.stop_buffer_pct` | B3.7 stop below the dip low | 0.05% | 0.02 to 0.15 |
+| `pb.min_stop_pct` | B3.7 minimum stop distance | 0.75% | 0.5 to 1.0 |
+| `risk.pct` | B4.1 risk per trade | 3% | 1 to 3, downward only |
+| `size.cap_pct` | B4.1 share of buying power deployed | 100% | 50 to 100, downward only |
+
+The two sizing rows are offered only with `improve.py menu --risk-off`, which the session uses when the C5 drawdown measure is at ACT. They can only cut size. Raising size above today's level needs the governor to edit `hi` in `tunables.json`. A cut passes only if it lowers drawdown by 15% or more and keeps return per drawdown point within 10%. `size.cap_pct` is the lever that moves size, because buying power usually decides it. `risk.pct` alone moves it very little.
+
+**Still not tunable, and why:**
+- **One-position rule.** The model, A1.5, B4.4 and every B5 order step assume one position. Two positions needs a concurrent-position engine, a new buying-power split and new broker checks. That is a redesign, not a number.
+- **Ticker lists and the proxy mapping.** The fetch groups (C1.2), earnings skips (A1.9), thin-ticker spread care and the waiters all key on the lists. Picking the best symbols from the dataset is also the easiest way to overfit. First candidate: a drop-one row, which can only shrink the list.
+- **Entry hours and flat-by-13:30.** The dataset ends at 13:55, so a later exit cannot be tested. An earlier exit changes the D1 waiters and the C4 close. First candidate: an earlier flat time after the schedule is parametrised.
+- **Stop location.** The stop stays beyond the failed breakout's extreme (FADE) and below the dip low (PULLBACK). Only the PULLBACK buffer and minimum distance are tunable.
+- **A1 safety controls, the order procedure (B5) and paper-only mode.**
 2. **Menu.** `improve.py menu` re-runs the current rules on the 158-session dataset with every one-step change. A row passes only if it beats the baseline in-sample (first 60%) and out-of-sample (last 40%), gains at least 0.01%/day, adds under 1 point of drawdown and keeps 75% of the trades.
 3. **Proposal.** At most one. Proposers: the checkpoint session (`session`, default), the Claude API (`api`) or the best passing row (`fallback`). A proposer picks only a passing menu id or `hold`. It cannot invent a value.
 4. **Trial.** `improve.py approve --note "..."` starts the challenger. Nothing live changes. Each close, `tick` runs the champion and the challenger on the same saved bars. Neither places an order.
@@ -23,14 +47,14 @@ Not built on purpose: any automatic approval or promotion. This account trades r
 |---|---|
 | `tools/live/improve.py` | new, stdlib only |
 | `tools/live/tunables.json` | new, version 1 = today's constants |
-| `tools/live/paper.py` | `RETEST_TOL` and `PB_VOL` replace two literals; `apply_tunables(day)` is called at the top of `simulate()` |
+| `tools/live/paper.py` | eleven hard-coded numbers become globals set by `apply_tunables(day)`, called at the top of `simulate()`. The `--live` text reads the live values (take-profit R, share sold, early-cut R) and gains one sizing line on FADE entries |
 | `archive/improve/` | created on first use: `ledger.jsonl`, `pending.json`, `shadow.csv`, `menu.json` |
 
-Neutrality test: the patched `paper.simulate` was compared with v5.2.28 over 157 backtest sessions, with and without the lock and cut (314 day-runs). Trades, exits and equity were identical in all 314.
+Neutrality test: the patched `paper.simulate` was compared with v5.2.28 over 157 backtest sessions, with and without the lock and cut (314 day-runs, 237 trades). Trades, exits and equity were identical in all of them. The `--live` text matched except for the new sizing line.
 
 ## 3. Rule text to add (new Part D4)
 
-**D4. Self-improvement loop (v5.2.29).** `tools/live/improve.py` may propose a change to the five tunables in `tools/live/tunables.json`. An approved proposal runs only as a paper challenger beside the version in force; the real account and the paper model do not change. The challenger is judged against the version in force on the same saved bars (C4 step 5). It goes live only when the governor runs `promote --effective <future trading day>` after a PROMOTE verdict, and the promotion is recorded in the commit with the governor's words. One challenger at a time. Nothing in A1 is tunable. `tunables.json`, `archive/improve/` and the version bump are committed together.
+**D4. Self-improvement loop (v5.2.29).** `tools/live/improve.py` may propose a change to the twelve tunables in `tools/live/tunables.json` (B2.3, B2.5, B3.2, B3.7, B4.1, B5.4). B2.5, B3.7, B4.1 and B5.2 read their numbers from the version in force; the values in those rules are the v1 defaults. An approved proposal runs only as a paper challenger beside the version in force; the real account and the paper model do not change. The challenger is judged against the version in force on the same saved bars (C4 step 5). It goes live only when the governor runs `promote --effective <future trading day>` after a PROMOTE verdict, and the promotion is recorded in the commit with the governor's words. One challenger at a time. Nothing in A1 is tunable. `tunables.json`, `archive/improve/` and the version bump are committed together.
 
 **C4 step 5 (new):** after `paper.py --close`, run `python3 tools/live/improve.py tick <the day's dump files>` and paste its output into the report. Friday summary includes `improve.py status`.
 
@@ -38,7 +62,7 @@ Neutrality test: the patched `paper.simulate` was compared with v5.2.28 over 157
 
 `improve.py menu` on `bt_5m.json.gz` (2026-03-03 to 10-15, 114 trades): baseline +0.521%/day, profit factor 3.68, maximum drawdown 2.8%. First half +0.667%/day, second half +0.303%/day.
 
-No one-step change passes the gate. The best raw rows are worth +0.001 to +0.003%/day, which is noise. The loop starts in `hold`. That is the correct result for parameters that already sit at a local optimum.
+No one-step change passes the gate on any of the twelve tunables, including the size cuts under `--risk-off` (drawdown falls 2.76% to 2.5% at best). The best raw rows are worth +0.001 to +0.008%/day, which is noise. The loop starts in `hold`. That is the correct result for parameters that sit at a local optimum.
 
 ## 5. Limits
 

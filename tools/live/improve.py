@@ -3,13 +3,14 @@
 
 Champion / challenger. The REAL account and the paper model keep running the version in force (the champion). A proposed change becomes a
 CHALLENGER that is only simulated, every close, on the same saved bars as the champion. It reaches the live account only if the governor
-promotes it after a passing trial. Only the five tunables in tools/live/tunables.json can change. Entry safety (A1), sizing (B4.1), the
-ticker lists and the session hours are not tunable. Nothing here places an order.
+promotes it after a passing trial. Only the eleven tunables in tools/live/tunables.json can change. Entry safety (A1), the one-position rule, the
+ticker lists, the session hours and the structure of the exits are not tunable. Nothing here places an order.
 
 Commands (stdlib only; run from anywhere):
     improve.py tick [DUMP ...]        13:30 close, AFTER `paper.py --close`: shadow-run the challenger, verdict, else a proposal if due
     improve.py status                 version in force, challenger, pending proposal, last ledger events
-    improve.py menu                   counterfactual table: every one-step change, walk-forward, with the gate result (under a minute)
+    improve.py menu [--risk-off]      counterfactual table: every one-step change, walk-forward, with the gate result (under a minute).
+                                      --risk-off adds position-size cuts (risk.pct, downward only); use it when the C5 drawdown measure is at ACT
     improve.py prompt                 print the proposer prompt (the checkpoint session answers it, then runs `submit`)
     improve.py submit CHOICE "why"    CHOICE = a menu id (e.g. fade.cut_r+1) or hold; writes the pending proposal
     improve.py approve --note "..."   governor: start the shadow trial (--start D, default today). The live account is NOT changed
@@ -130,15 +131,22 @@ def evaluate(D, values):
     return dict(full=stats(daily, trades), ins=stats(daily, trades, 0, cut), oos=stats(daily, trades, cut))
 
 
-def menu(D, base_values, space):
-    base = evaluate(D, base_values); rows = []
+def menu(D, base_values, space, risk_off=False):
+    base_values = {**paper.TUNABLE_DEFAULTS, **base_values}; base = evaluate(D, base_values); rows = []
     for var, sp in space.items():
+        if sp.get('needs') == 'risk_off' and not risk_off: continue
         for sgn in (-1, 1):
+            if sp.get('down_only') and sgn > 0: continue
             new = round(min(sp['hi'], max(sp['lo'], base_values[var] + sgn * sp['step'])), 4)
             if new == base_values[var]: continue
             v = dict(base_values); v[var] = new; e = evaluate(D, v)
             d = {k: round(e[k]['mean_day'] - base[k]['mean_day'], 4) for k in e}
             why = []
+            if sp.get('needs') == 'risk_off':      # a risk cut always lowers %/day, so it is judged on risk instead: drawdown down 15%+, return per drawdown point kept within 10%
+                b, c = base['full'], e['full']
+                if c['dd'] > 0.85 * b['dd']: why.append('drawdown not cut by 15%')
+                if c['dd'] and b['dd'] and c['ret'] / c['dd'] < 0.9 * b['ret'] / b['dd']: why.append('return per drawdown point down more than 10%')
+                rows.append(dict(id=f"{var}-1", variable=var, old=base_values[var], new=new, delta=d, stats=e, passes=not why, fails=why)); continue
             if d['ins'] < 0: why.append('worse in-sample')
             if d['oos'] < 0: why.append('worse out-of-sample')
             if d['full'] < GATE_MIN_GAIN: why.append(f"gain < {GATE_MIN_GAIN}%/day")
@@ -266,11 +274,11 @@ def cmd_tick(a):
     since = ev[-1]['ts'][:10] if ev else '0000-00-00'
     n = sum(1 for x in model_trades() if x['day'] > since)
     if n < pol['cadence_trades'] and not a.force: print(f"  no proposal due: {n} of {pol['cadence_trades']} model trades since the last decision ({since})"); return
-    propose(t, a.proposer)
+    propose(t, a.proposer, a.risk_off)
 
 
-def propose(t, proposer):
-    D = load_data(); base, rows = menu(D, current(t)['values'], t['space'])
+def propose(t, proposer, risk_off=False):
+    D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], risk_off)
     json.dump(dict(base=base, rows=rows), open(os.path.join(IDIR, 'menu.json'), 'w'), indent=1)
     ctx = context(t, base, rows)
     if proposer == 'session':
@@ -280,7 +288,7 @@ def propose(t, proposer):
 
 
 def cmd_menu(a):
-    t = tun(); D = load_data(); base, rows = menu(D, current(t)['values'], t['space'])
+    t = tun(); D = load_data(); base, rows = menu(D, current(t)['values'], t['space'], a.risk_off)
     os.makedirs(IDIR, exist_ok=True); json.dump(dict(base=base, rows=rows), open(os.path.join(IDIR, 'menu.json'), 'w'), indent=1)
     b = base
     print(f"baseline v{current(t)['version']}: full {b['full']}\n  in-sample {b['ins']}\n  out-of-sample {b['oos']}")
@@ -355,8 +363,9 @@ def cmd_status(a):
 
 def main():
     ap = argparse.ArgumentParser(); sub = ap.add_subparsers(dest='cmd', required=True)
-    s = sub.add_parser('tick'); s.add_argument('dumps', nargs='*'); s.add_argument('--proposer', choices=['session', 'api', 'fallback'], default='session'); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_tick)
-    for n, f in (('menu', cmd_menu), ('prompt', cmd_prompt), ('status', cmd_status)): sub.add_parser(n).set_defaults(f=f)
+    s = sub.add_parser('tick'); s.add_argument('dumps', nargs='*'); s.add_argument('--proposer', choices=['session', 'api', 'fallback'], default='session'); s.add_argument('--force', action='store_true'); s.add_argument('--risk-off', action='store_true'); s.set_defaults(f=cmd_tick)
+    s = sub.add_parser('menu'); s.add_argument('--risk-off', action='store_true'); s.set_defaults(f=cmd_menu)
+    for n, f in (('prompt', cmd_prompt), ('status', cmd_status)): sub.add_parser(n).set_defaults(f=f)
     s = sub.add_parser('submit'); s.add_argument('choice'); s.add_argument('why'); s.set_defaults(f=cmd_submit)
     s = sub.add_parser('approve'); s.add_argument('--start', default=today().isoformat()); s.add_argument('--note', required=True); s.set_defaults(f=cmd_approve)
     s = sub.add_parser('promote'); s.add_argument('--effective', required=True); s.add_argument('--note', required=True); s.set_defaults(f=cmd_promote)

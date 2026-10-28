@@ -134,7 +134,8 @@ def fade(b, K):
     return None
 
 
-def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
+def fade_manage(raw, K, k, side, e_real, stop_real, R=None, frac=None):
+    R = TARGET_R if R is None else R; frac = TAKE_FRAC if frac is None else frac
     b, p0 = (raw, None) if side > 0 else mirror(raw)
     to_m = (lambda x: x) if side > 0 else (lambda x, p0=p0: 2 * p0 - x)
     entry, stop = to_m(e_real), to_m(stop_real)
@@ -152,7 +153,7 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
             closed = True; xbar = j; why = 'stop' if not hit else 'ratchet stop'; break
         if not hit and h >= T:
             px = max(T, o); gross += frac * (px - entry); rem -= frac; hit = True; stop = max(stop, entry)
-            events.append((k2t(j), 'take profit 1/3 at 2R', to_m(px), frac))
+            events.append((k2t(j), f'take profit {frac_txt()} at {R:g}R', to_m(px), frac))
         bestc = max(bestc, (c - entry) / r)
         if FROZEN_ON and bestc >= 1.0:                        # v5.2.18: frozen 1R trail on closes, capped at +0.75R
             ns = entry + min(0.75, bestc - 1.0) * r
@@ -163,12 +164,12 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
         if LOCKCUT_ON and j - k + 1 == CUT_BARS and (c - entry) / r <= CUT_R and j < SELL_BY:   # v5.2.19 (C): 15 min after entry, close <= -0.5R
             cut = True
         hic = max(hic, c)
-        if hit and j < SELL_BY: stop = max(stop, hic - 2 * atr(b, j))
+        if hit and j < SELL_BY: stop = max(stop, hic - CHAND_ATR * atr(b, j))
     if not closed and K - 1 >= SELL_BY:
         px = b[SELL_BY][3]; gross += rem * (px - entry); events.append(('13:30', 'time exit', to_m(px), rem)); rem = 0
         closed = True; xbar = SELL_BY; why = 'time'
     # runner level the real account uses if ITS 1/3 take-profit filled before the model's (B5.4): breakeven, then the chandelier
-    chand = max(entry, hic - 2 * atr(b, end)) if end >= k else entry
+    chand = max(entry, hic - CHAND_ATR * atr(b, end)) if end >= k else entry
     return dict(status='closed' if closed else 'open', cut_now=cut and not closed, side=side, k=k, xbar=xbar, why=why, entry=e_real, stop0=stop_real,
                 stop_now=to_m(stop), chand_if_done=to_m(chand), target=to_m(T), gross=gross, rem=rem, events=events, risk_pct=r / e_real * 100)
 
@@ -190,16 +191,16 @@ def pullback(b, prev, K):
             if not (e20[j - 1] * 0.995 <= low <= e9[j - 1] * 1.001): continue
             pre = j - n
             if not any(b[i][3] > bh and b[i][4] > PB_VOL * st.mean(b[q][4] for q in range(max(0, i - 6), i)) for i in range(3, pre)): continue
-            hod = max(b[i][1] for i in range(0, pre)); stop = low * (1 - 0.05 / 100); lim = b[j][3]
+            hod = max(b[i][1] for i in range(0, pre)); stop = low * (1 - PB_BUF / 100); lim = b[j][3]
             if FLOOR_TARGET: hod = math.floor(hod * 100 + 1e-9) / 100      # the real take-profit limit: morning high rounded DOWN to the cent (RULEBOOK B3.9)
             if j + 1 >= K:
-                if hod <= lim or lim <= stop or (lim - stop) / lim * 100 < 0.75: continue
+                if hod <= lim or lim <= stop or (lim - stop) / lim * 100 < PB_MIN_STOP: continue
                 if (hod - lim) < 0.75 * (lim - stop) or (hod - lim) / lim * 100 < 0.25 or hod - stop < 0.10: continue
                 return dict(status='signal', k=j + 1, limit=lim, stop=stop, target=hod,
                             note=f'trigger at {k2t(j)}: limit buy {lim:.2f}, valid for the {k2t(j + 1)} bar only')
             if b[j + 1][2] > lim: continue
             entry = min(b[j + 1][0], lim)
-            if hod <= entry or entry <= stop or (entry - stop) / entry * 100 < 0.75: continue
+            if hod <= entry or entry <= stop or (entry - stop) / entry * 100 < PB_MIN_STOP: continue
             if (hod - entry) < 0.75 * (entry - stop) or (hod - entry) / entry * 100 < 0.25: continue
             if hod - stop < 0.10: continue
             return pb_manage(b, K, j + 1, entry, stop, hod)
@@ -239,17 +240,29 @@ LOCKCUT_FROM = '2026-10-28'  # RULEBOOK v5.2.19 (B2): a 5-min close at +0.5R put
 LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.19 exits
 LOCK_TRIG, LOCK_LVL, CUT_BARS, CUT_R = 0.5, 0.15, 3, -0.5
 RETEST_TOL, PB_VOL = 0.10, 1.5       # FADE retest tolerance in % (B2.3); PULLBACK breakout volume multiple (B3.2)
+TARGET_R, TAKE_FRAC, CHAND_ATR = 2.0, 1 / 3, 2.0   # FADE take-profit R, share sold there (B2.5), chandelier ATR multiple (B5.4)
+SIZE_CAP = 1.0                       # share of buying power the model may deploy (B4.1 min(buying_power / ask, ...)); 1.0 = all of it
+PB_BUF, PB_MIN_STOP = 0.05, 0.75     # PULLBACK stop buffer below the dip low, % (B3.7); minimum stop distance, % (B3.7)
 
 # RULEBOOK D4 (draft): the five tunables the self-improvement loop may change. Defaults equal the constants above, so with no tunables.json
 # (or with only the baseline version in it) every result is identical to v5.2.28. improve.py counterfactual runs set OVERRIDE.
 TUNABLE_FILE = os.path.join(HERE, 'tunables.json')
-TUNABLE_DEFAULTS = {'fade.retest_tol_pct': 0.10, 'fade.lock_trigger_r': 0.5, 'fade.lock_level_r': 0.15, 'fade.cut_r': -0.5, 'pb.vol_mult': 1.5}
+TUNABLE_DEFAULTS = {'fade.retest_tol_pct': 0.10, 'fade.lock_trigger_r': 0.5, 'fade.lock_level_r': 0.15, 'fade.cut_r': -0.5, 'pb.vol_mult': 1.5,
+                    'fade.target_r': 2.0, 'fade.take_frac': 1 / 3, 'fade.chandelier_atr': 2.0, 'pb.stop_buffer_pct': 0.05, 'pb.min_stop_pct': 0.75, 'risk.pct': 3.0, 'size.cap_pct': 100.0}
 OVERRIDE = None
+
+
+def frac_txt():
+    return '1/3' if abs(TAKE_FRAC - 1 / 3) < 1e-9 else f'{TAKE_FRAC:.0%}'
+
+
+def rest_txt():
+    return '2/3' if abs(TAKE_FRAC - 1 / 3) < 1e-9 else f'{1 - TAKE_FRAC:.0%}'
 
 
 def apply_tunables(day=None):
     """Set the tunable globals for `day`: OVERRIDE if set, else the last version in tunables.json whose effective_from <= day, else the defaults."""
-    global RETEST_TOL, PB_VOL, LOCK_TRIG, LOCK_LVL, CUT_R
+    global RETEST_TOL, PB_VOL, LOCK_TRIG, LOCK_LVL, CUT_R, TARGET_R, TAKE_FRAC, CHAND_ATR, PB_BUF, PB_MIN_STOP, RISK, SIZE_CAP
     v = dict(TUNABLE_DEFAULTS)
     if OVERRIDE is not None: v.update(OVERRIDE)
     elif day:
@@ -261,6 +274,8 @@ def apply_tunables(day=None):
         except Exception as e: print(f"  WARNING: tunables.json unreadable ({e}); using the v5.2.28 defaults")
     RETEST_TOL, PB_VOL = v['fade.retest_tol_pct'], v['pb.vol_mult']
     LOCK_TRIG, LOCK_LVL, CUT_R = v['fade.lock_trigger_r'], v['fade.lock_level_r'], v['fade.cut_r']
+    TARGET_R, TAKE_FRAC, CHAND_ATR = v['fade.target_r'], v['fade.take_frac'], v['fade.chandelier_atr']
+    PB_BUF, PB_MIN_STOP, RISK = v['pb.stop_buffer_pct'], v['pb.min_stop_pct'], v['risk.pct'] / 100; SIZE_CAP = v['size.cap_pct'] / 100
     return v
 
 
@@ -304,7 +319,7 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
             pct = (c['lev'] * c['gross'] / c['entry'] * 100 - FADE_COST) if c['status'] == 'closed' else None
         else:
             leg_risk = c['risk_pct']; pct = c['gross'] / c['entry'] * 100 if c['status'] == 'closed' else None
-        notional = min(eq, eq * RISK / (leg_risk / 100))
+        notional = min(eq * SIZE_CAP, eq * RISK / (leg_risk / 100))
         c.update(leg_risk=leg_risk, notional=notional, pct=pct, usd=notional * pct / 100 if pct is not None else None)
         if pct is not None:
             eq += c['usd']; streak = streak + 1 if c['usd'] < 0 else 0
@@ -368,9 +383,10 @@ def live_actions(today, taken, signals, K, base=None, day=None):
                       f"Proxy {sym} {pnow:.2f}, proxy stop {t['stop']:.2f}, R {r*100:.2f}% proxy = {lev*r*100:.2f}% on {leg}."); continue
             lnow = today[leg][K - 1][3]
             ls = to_leg(lnow, pnow, t['stop'], side, lev)
-            lt = lnow * (1 + lev * 2 * r)
+            lt = lnow * (1 + lev * TARGET_R * r)
             print(f"    ENTER FADE: buy {leg} now (marketable limit). Proxy {sym} {pnow:.2f}, proxy stop {t['stop']:.2f} (R {r*100:.2f}% proxy = {lev*r*100:.2f}% on {leg}).")
-            print(f"      est. at {leg} {lnow:.2f}: stop {ls:.2f}, 2R target {lt:.2f}. From the fill F: stop = F x (1 - {lev*r:.5f}), target = F x (1 + {2*lev*r:.5f}).")
+            print(f"      size (B4.1): {RISK*100:g}% of the account at risk, at most {SIZE_CAP*100:g}% of buying power; take-profit share {frac_txt()} of the shares (floor), the rest {rest_txt()} on the stop-market.")
+            print(f"      est. at {leg} {lnow:.2f}: stop {ls:.2f}, {TARGET_R:g}R target {lt:.2f}. From the fill F: stop = F x (1 - {lev*r:.5f}), target = F x (1 + {TARGET_R*lev*r:.5f}).")
         else:
             print(f"    ENTER PULLBACK: limit buy {sym} at {t['limit']:.2f}, valid for the next bar only. Stop {t['stop']:.2f}, target {t['target']:.2f} (one OCO for 100% after the fill).")
     for c in taken:
@@ -386,25 +402,25 @@ def live_actions(today, taken, signals, K, base=None, day=None):
             hit = any('take profit' in e[1] for e in c['events'])
             if lnow is None:
                 print(f"    MANAGE FADE {leg}: no {leg} bars in the dump - refetch; until then leave the resting orders alone and manage from the broker state (A4.5). "
-                      f"Model: 1/3 take-profit {'DONE' if hit else 'not yet'}, runner stop on the proxy {c['stop_now']:.2f}")
+                      f"Model: {frac_txt()} take-profit {'DONE' if hit else 'not yet'}, runner stop on the proxy {c['stop_now']:.2f}")
             elif c.get('cut_now'):
-                print(f"    MANAGE FADE {leg}: EARLY CUT (v5.2.19, B2.5/B5.3): 15 min after entry the proxy closed at -0.5R or worse. SELL ALL {leg} NOW: "
-                      f"cancel the OCO and the 2/3 stop -> verify cancelled -> sell every share (marketable limit) -> verify flat (B5.7 steps 1-3). "
-                      f"If the real 1/3 already filled, sell the rest the same way.")
+                print(f"    MANAGE FADE {leg}: EARLY CUT (v5.2.19, B2.5/B5.3): 15 min after entry the proxy closed at {CUT_R:g}R or worse. SELL ALL {leg} NOW: "
+                      f"cancel the OCO and the {rest_txt()} stop -> verify cancelled -> sell every share (marketable limit) -> verify flat (B5.7 steps 1-3). "
+                      f"If the real {frac_txt()} already filled, sell the rest the same way.")
             elif not hit and (FROZEN_ON or LOCKCUT_ON) and abs(c['stop_now'] - c['stop0']) > 1e-9:
                 lock = side * (c['stop_now'] - c['entry']) / (side * (c['entry'] - c['stop0']))
                 print(f"    MANAGE FADE {leg}: STOP RAISE (+0.15R lock v5.2.19, B5.3): model stop raised to {lock:+.2f}R (proxy {c['stop_now']:.2f}). "
                       f"Real stop on ALL shares = F x (1 {'+' if lock >= 0 else '-'} {abs(lock):.2f} x {lev:g} x {c['risk_pct']:.3f}%) = about {leg} {to_leg(lnow, pnow, c['stop_now'], side, lev):.2f} "
                       f"(round down to the cent). Raise only, and only if >= 0.10% above the resting stop: cancel the OCO -> verify -> re-place the OCO "
-                      f"(same take-profit, new stop) -> verify; cancel the 2/3 stop -> verify -> place it at the new stop -> verify. "
-                      f"If the new stop is at or above the bid, sell everything (marketable limit). If the REAL 1/3 already filled: runner stop = the higher of this level, "
+                      f"(same take-profit, new stop) -> verify; cancel the {rest_txt()} stop -> verify -> place it at the new stop -> verify. "
+                      f"If the new stop is at or above the bid, sell everything (marketable limit). If the REAL {frac_txt()} already filled: runner stop = the higher of this level, "
                       f"breakeven and the chandelier {leg} {to_leg(lnow, pnow, c['chand_if_done'], side, lev):.2f} (B5.4)")
             elif not hit:
-                print(f"    MANAGE FADE {leg}: 1/3 take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3). "
-                      f"If the REAL 1/3 already filled: runner stop = breakeven (the fill), raised to the chandelier {leg} "
+                print(f"    MANAGE FADE {leg}: {frac_txt()} take-profit not yet in the model - keep the entry stop and OCO exactly as placed (B5.3). "
+                      f"If the REAL {frac_txt()} already filled: runner stop = breakeven (the fill), raised to the chandelier {leg} "
                       f"{to_leg(lnow, pnow, c['chand_if_done'], side, lev):.2f} if that is higher (B5.4)")
             else:
-                print(f"    MANAGE FADE {leg}: 1/3 take-profit DONE in the model; runner stop on the proxy {c['stop_now']:.2f} -> {leg} "
+                print(f"    MANAGE FADE {leg}: {frac_txt()} take-profit DONE in the model; runner stop on the proxy {c['stop_now']:.2f} -> {leg} "
                       f"{to_leg(lnow, pnow, c['stop_now'], side, lev):.2f}. Never below breakeven (the fill); raise only, and only if >= 0.10% higher (B5.4)")
         else:
             print(f"    MANAGE PULLBACK {c['ticker']}: OCO resting (target {c['target']:.2f} / stop {c['stop0']:.2f}); nothing to change")
