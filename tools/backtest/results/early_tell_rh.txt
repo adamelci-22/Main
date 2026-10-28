@@ -1,0 +1,63 @@
+1) Base trades: 90. Keys: ['R_out', 'box_pct', 'brk', 'choppy', 'day', 'depth', 'ext_pct', 'k', 'leg_risk', 'mae6', 'mfe', 'nneg6', 'pct', 'proxy', 'side', 'touch', 'wait', 'xbar']
+   first 6 bars: adverse excursion >= 0.3R        YES n=45 avgR +0.98  best-run(mfe)>=2R  47%  mfe median 1.82R  win  60%
+                                                   NO n=45 avgR +0.94  best-run(mfe)>=2R  47%  mfe median 1.89R  win  69%
+   first 6 bars: adverse excursion >= 0.5R        YES n=36 avgR +0.80  best-run(mfe)>=2R  44%  mfe median 1.82R  win  53%
+                                                   NO n=54 avgR +1.07  best-run(mfe)>=2R  48%  mfe median 1.90R  win  72%
+   first 6 bars: >= 2 closes below entry          YES n=23 avgR +0.14  best-run(mfe)>=2R  30%  mfe median 0.61R  win  43%
+                                                   NO n=67 avgR +1.24  best-run(mfe)>=2R  52%  mfe median 2.02R  win  72%
+   first 6 bars: >= 3 closes below entry          YES n=10 avgR +0.26  best-run(mfe)>=2R  30%  mfe median 0.61R  win  40%
+                                                   NO n=80 avgR +1.05  best-run(mfe)>=2R  49%  mfe median 1.93R  win  68%
+
+2) Choppy trades get an earlier exit (rest of trades: live rules). PF all (half 1 / half 2)
+  BASE (live v5.2.22)                            choppy  0 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=4 {'mae': 0.3} -> full at +0.75R             choppy 28 trades  63 PF 3.33 (3.43/3.19) total  +47.9% avg +0.64%
+  N=4 {'mae': 0.3} -> full at +1.0R              choppy 28 trades  63 PF 3.49 (3.59/3.36) total  +51.9% avg +0.68%
+  N=4 {'mae': 0.3} -> half at +0.75R             choppy 28 trades  63 PF 3.90 (3.75/4.10) total  +62.7% avg +0.79%
+  N=4 {'mae': 0.5} -> full at +0.75R             choppy 19 trades  63 PF 3.99 (3.46/4.71) total  +65.3% avg +0.82%
+  N=4 {'mae': 0.5} -> full at +1.0R              choppy 19 trades  63 PF 4.04 (3.56/4.69) total  +66.6% avg +0.83%
+  N=4 {'mae': 0.5} -> half at +0.75R             choppy 19 trades  63 PF 4.31 (3.72/5.10) total  +74.3% avg +0.91%
+  N=4 {'nneg': 2} -> full at +0.75R              choppy 12 trades  63 PF 4.27 (3.35/5.49) total  +72.8% avg +0.89%
+  N=4 {'nneg': 2} -> full at +1.0R               choppy 12 trades  63 PF 4.38 (3.48/5.59) total  +76.1% avg +0.93%
+  N=4 {'nneg': 2} -> half at +0.75R              choppy 12 trades  63 PF 4.56 (3.72/5.68) total  +81.4% avg +0.97%
+  N=4 {'nneg': 3} -> full at +0.75R              choppy  6 trades  63 PF 4.48 (3.76/5.44) total  +78.9% avg +0.95%
+  N=4 {'nneg': 3} -> full at +1.0R               choppy  6 trades  63 PF 4.56 (3.78/5.59) total  +81.3% avg +0.97%
+  N=4 {'nneg': 3} -> half at +0.75R              choppy  6 trades  63 PF 4.65 (3.89/5.66) total  +84.1% avg +1.00%
+  N=6 {'mae': 0.3} -> full at +0.75R             choppy 24 trades  63 PF 3.63 (3.62/3.64) total  +55.5% avg +0.72%
+  N=6 {'mae': 0.3} -> full at +1.0R              choppy 24 trades  63 PF 3.73 (3.69/3.79) total  +58.3% avg +0.75%
+  N=6 {'mae': 0.3} -> half at +0.75R             choppy 24 trades  63 PF 4.06 (3.84/4.35) total  +67.1% avg +0.84%
+  N=6 {'mae': 0.5} -> full at +0.75R             choppy 17 trades  63 PF 4.13 (3.58/4.86) total  +69.0% avg +0.86%
+  N=6 {'mae': 0.5} -> full at +1.0R              choppy 17 trades  63 PF 4.15 (3.61/4.87) total  +69.7% avg +0.86%
+  N=6 {'mae': 0.5} -> half at +0.75R             choppy 17 trades  63 PF 4.38 (3.77/5.20) total  +76.3% avg +0.92%
+  N=6 {'nneg': 2} -> full at +0.75R              choppy 11 trades  63 PF 4.43 (3.67/5.44) total  +77.4% avg +0.94%
+  N=6 {'nneg': 2} -> full at +1.0R               choppy 11 trades  63 PF 4.51 (3.70/5.59) total  +80.0% avg +0.96%
+  N=6 {'nneg': 2} -> half at +0.75R              choppy 11 trades  63 PF 4.64 (3.88/5.66) total  +83.9% avg +1.00%
+  N=6 {'nneg': 3} -> full at +0.75R              choppy  6 trades  63 PF 4.50 (3.80/5.44) total  +79.7% avg +0.96%
+  N=6 {'nneg': 3} -> full at +1.0R               choppy  6 trades  63 PF 4.57 (3.80/5.59) total  +81.7% avg +0.98%
+  N=6 {'nneg': 3} -> half at +0.75R              choppy  6 trades  63 PF 4.66 (3.91/5.66) total  +84.5% avg +1.00%
+
+2) Choppy trades get a higher lock (live trades keep +0.5R close -> stop +0.15R). PF all (half 1 / half 2)
+  BASE (live v5.2.22)                                choppy  0 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=4 {'mae': 0.5} -> lock 0.5R close -> stop +0.3R  choppy 19 trades  63 PF 4.76 (3.99/5.79) total  +87.7% avg +1.03%
+  N=4 {'mae': 0.5} -> lock 0.4R close -> stop +0.2R  choppy 19 trades  63 PF 4.82 (3.97/5.95) total  +89.5% avg +1.04%
+  N=4 {'mae': 0.5} -> lock 0.4R close -> stop +0.3R  choppy 19 trades  63 PF 4.76 (3.99/5.79) total  +87.7% avg +1.03%
+  N=4 {'mae': 0.5} -> lock 0.3R close -> stop +0.1R  choppy 19 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=4 {'nneg': 2} -> lock 0.5R close -> stop +0.3R   choppy 12 trades  63 PF 4.58 (3.83/5.57) total  +81.9% avg +0.98%
+  N=4 {'nneg': 2} -> lock 0.4R close -> stop +0.2R   choppy 12 trades  63 PF 4.74 (3.83/5.94) total  +86.8% avg +1.02%
+  N=4 {'nneg': 2} -> lock 0.4R close -> stop +0.3R   choppy 12 trades  63 PF 4.58 (3.83/5.57) total  +81.9% avg +0.98%
+  N=4 {'nneg': 2} -> lock 0.3R close -> stop +0.1R   choppy 12 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=4 {'nneg': 3} -> lock 0.5R close -> stop +0.3R   choppy  6 trades  63 PF 4.65 (3.97/5.56) total  +84.1% avg +1.00%
+  N=4 {'nneg': 3} -> lock 0.4R close -> stop +0.2R   choppy  6 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=4 {'nneg': 3} -> lock 0.4R close -> stop +0.3R   choppy  6 trades  63 PF 4.65 (3.97/5.56) total  +84.1% avg +1.00%
+  N=4 {'nneg': 3} -> lock 0.3R close -> stop +0.1R   choppy  6 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=6 {'mae': 0.5} -> lock 0.5R close -> stop +0.3R  choppy 17 trades  63 PF 4.75 (3.98/5.78) total  +87.3% avg +1.03%
+  N=6 {'mae': 0.5} -> lock 0.4R close -> stop +0.2R  choppy 17 trades  63 PF 4.82 (3.97/5.94) total  +89.4% avg +1.04%
+  N=6 {'mae': 0.5} -> lock 0.4R close -> stop +0.3R  choppy 17 trades  63 PF 4.75 (3.98/5.78) total  +87.3% avg +1.03%
+  N=6 {'mae': 0.5} -> lock 0.3R close -> stop +0.1R  choppy 17 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=6 {'nneg': 2} -> lock 0.5R close -> stop +0.3R   choppy 11 trades  63 PF 4.57 (3.83/5.56) total  +81.7% avg +0.98%
+  N=6 {'nneg': 2} -> lock 0.4R close -> stop +0.2R   choppy 11 trades  63 PF 4.73 (3.83/5.94) total  +86.8% avg +1.02%
+  N=6 {'nneg': 2} -> lock 0.4R close -> stop +0.3R   choppy 11 trades  63 PF 4.57 (3.83/5.56) total  +81.7% avg +0.98%
+  N=6 {'nneg': 2} -> lock 0.3R close -> stop +0.1R   choppy 11 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=6 {'nneg': 3} -> lock 0.5R close -> stop +0.3R   choppy  6 trades  63 PF 4.65 (3.97/5.56) total  +84.1% avg +1.00%
+  N=6 {'nneg': 3} -> lock 0.4R close -> stop +0.2R   choppy  6 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
+  N=6 {'nneg': 3} -> lock 0.4R close -> stop +0.3R   choppy  6 trades  63 PF 4.65 (3.97/5.56) total  +84.1% avg +1.00%
+  N=6 {'nneg': 3} -> lock 0.3R close -> stop +0.1R   choppy  6 trades  63 PF 4.81 (3.97/5.94) total  +89.3% avg +1.04%
