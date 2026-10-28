@@ -2,19 +2,57 @@
   "policy": {
     "cadence_trades": 5,
     "min_trial_days": 15,
-    "early_revert_pct": -2.0,
-    "revert_pct": -0.5,
-    "auto_rollback": false
+    "max_trial_days": 30,
+    "promote_pct": 0.5,
+    "discard_pct": -0.5,
+    "early_discard_pct": -2.0
   },
   "space": {
-    "fade.retest_tol_pct": {"lo": 0.05, "hi": 0.20, "step": 0.02, "rule": "B2.3 retest tolerance on the proxy, %"},
-    "fade.lock_trigger_r": {"lo": 0.3, "hi": 0.8, "step": 0.1, "rule": "B2.5 close at this R arms the lock"},
-    "fade.lock_level_r": {"lo": 0.0, "hi": 0.3, "step": 0.05, "rule": "B2.5 stop moves to this R once armed"},
-    "fade.cut_r": {"lo": -0.8, "hi": -0.3, "step": 0.1, "rule": "B2.5 early cut: 3rd bar close at or below this R"},
-    "pb.vol_mult": {"lo": 1.2, "hi": 2.0, "step": 0.1, "rule": "B3.2 breakout volume multiple"}
+    "fade.retest_tol_pct": {
+      "lo": 0.05,
+      "hi": 0.2,
+      "step": 0.02,
+      "rule": "B2.3 retest tolerance on the proxy, %"
+    },
+    "fade.lock_trigger_r": {
+      "lo": 0.3,
+      "hi": 0.8,
+      "step": 0.1,
+      "rule": "B2.5 close at this R arms the lock"
+    },
+    "fade.lock_level_r": {
+      "lo": 0.0,
+      "hi": 0.3,
+      "step": 0.05,
+      "rule": "B2.5 stop moves to this R once armed"
+    },
+    "fade.cut_r": {
+      "lo": -0.8,
+      "hi": -0.3,
+      "step": 0.1,
+      "rule": "B2.5 early cut: 3rd bar close at or below this R"
+    },
+    "pb.vol_mult": {
+      "lo": 1.2,
+      "hi": 2.0,
+      "step": 0.1,
+      "rule": "B3.2 breakout volume multiple"
+    }
   },
   "versions": [
-    {"version": 1, "kind": "baseline", "effective_from": "0000-00-00", "note": "RULEBOOK v5.2.28 constants",
-     "values": {"fade.retest_tol_pct": 0.1, "fade.lock_trigger_r": 0.5, "fade.lock_level_r": 0.15, "fade.cut_r": -0.5, "pb.vol_mult": 1.5}}
-  ]
+    {
+      "version": 1,
+      "kind": "baseline",
+      "effective_from": "0000-00-00",
+      "note": "RULEBOOK v5.2.28 constants",
+      "values": {
+        "fade.retest_tol_pct": 0.1,
+        "fade.lock_trigger_r": 0.5,
+        "fade.lock_level_r": 0.15,
+        "fade.cut_r": -0.5,
+        "pb.vol_mult": 1.5
+      }
+    }
+  ],
+  "challenger": null
 }

@@ -4,17 +4,18 @@ Status: draft for the governor. Nothing here changes a trade until the governor 
 
 ## 1. What it does
 
-The model learns from outcomes, but it cannot change the live system by itself.
+Champion and challenger. **The real account and the paper model keep trading the version in force. A proposed change only runs as a simulated paper challenger until it earns a promotion.**
 
-1. **Tunables.** Five numbers may change, nothing else: `fade.retest_tol_pct` (B2.3), `fade.lock_trigger_r`, `fade.lock_level_r`, `fade.cut_r` (B2.5), `pb.vol_mult` (B3.2). Bounds and a one-step size are in `tools/live/tunables.json`. A1 controls, sizing, ticker lists, hours and exits at 2R are not tunable.
+1. **Tunables.** Five numbers may change, nothing else: `fade.retest_tol_pct` (B2.3), `fade.lock_trigger_r`, `fade.lock_level_r`, `fade.cut_r` (B2.5), `pb.vol_mult` (B3.2). Bounds and a one-step size are in `tools/live/tunables.json`. A1 controls, sizing, ticker lists, hours and the 2R exit are not tunable.
 2. **Menu.** `improve.py menu` re-runs the current rules on the 158-session dataset with every one-step change. A row passes only if it beats the baseline in-sample (first 60%) and out-of-sample (last 40%), gains at least 0.01%/day, adds under 1 point of drawdown and keeps 75% of the trades.
-3. **Proposal.** At most one change. Proposers: the checkpoint session (`session`, default), the Claude API (`api`) or the best passing row (`fallback`). A proposer picks only a passing menu id or `hold`. It cannot invent a value.
-4. **Governor.** `improve.py approve --effective <future trading day> --note "..."`. Never applied mid-session. One change in flight at a time.
-5. **Verdict.** Each close, `tick` runs the old and the new version on the same saved bars. After 15 trading days: keep if new minus old is 0 or better, revert if worse than -0.5% of the account. Early revert at -2.0% after 5 days. At 30 days it decides on the sign.
-6. **Rollback.** `improve.py rollback` appends a new version with the old values. History is append-only. `policy.auto_rollback` is `false`. With it off, a REVERT is reported to the governor and waits for the governor.
-7. **Trigger.** `tick` proposes when 5 model trades have closed since the last decision, and only when no trial or proposal is open.
+3. **Proposal.** At most one. Proposers: the checkpoint session (`session`, default), the Claude API (`api`) or the best passing row (`fallback`). A proposer picks only a passing menu id or `hold`. It cannot invent a value.
+4. **Trial.** `improve.py approve --note "..."` starts the challenger. Nothing live changes. Each close, `tick` runs the champion and the challenger on the same saved bars. Neither places an order.
+5. **Verdict.** After 15 trading days: promote-ready if the challenger beat the champion by 0.5% of the account or more. Discard if it is down 0.5% or worse. Early discard at -2.0% after 5 days. At 30 days anything short of the promote bar is discarded. A discard never touches the live account.
+6. **Promotion.** `improve.py promote --effective <future trading day> --note "..."`. Governor only, never mid-session. The version in force changes only then.
+7. **Rollback.** `improve.py rollback --effective <date>` restores the values the promoted version replaced. History is append-only.
+8. **Trigger.** `tick` proposes when 5 model trades have closed since the last decision, and only when no challenger or proposal is open.
 
-Not built on purpose: automatic approval of a new change. This account trades real money and the rulebook says the governor decides.
+Not built on purpose: any automatic approval or promotion. This account trades real money and the rulebook says the governor decides.
 
 ## 2. Files
 
@@ -29,7 +30,7 @@ Neutrality test: the patched `paper.simulate` was compared with v5.2.28 over 157
 
 ## 3. Rule text to add (new Part D4)
 
-**D4. Self-improvement loop (v5.2.29).** `tools/live/improve.py` may propose a change to the five tunables in `tools/live/tunables.json`. A proposal takes effect only after the governor runs `approve --effective <date>` for a future trading day, and the approval is recorded in the commit with the governor's words. One change is in flight at a time. The trial is judged against the previous version on the same days (C4 step 5). A REVERT verdict is reported at once and rolled back on the governor's word. Nothing in A1 is tunable. `tunables.json`, `archive/improve/` and the version bump are committed together.
+**D4. Self-improvement loop (v5.2.29).** `tools/live/improve.py` may propose a change to the five tunables in `tools/live/tunables.json`. An approved proposal runs only as a paper challenger beside the version in force; the real account and the paper model do not change. The challenger is judged against the version in force on the same saved bars (C4 step 5). It goes live only when the governor runs `promote --effective <future trading day>` after a PROMOTE verdict, and the promotion is recorded in the commit with the governor's words. One challenger at a time. Nothing in A1 is tunable. `tunables.json`, `archive/improve/` and the version bump are committed together.
 
 **C4 step 5 (new):** after `paper.py --close`, run `python3 tools/live/improve.py tick <the day's dump files>` and paste its output into the report. Friday summary includes `improve.py status`.
 
@@ -43,7 +44,8 @@ No one-step change passes the gate. The best raw rows are worth +0.001 to +0.003
 
 - The dataset ends 2026-10-15. Refresh it with `build_data.py` before trusting a menu run.
 - The menu optimises past data. The in-sample and out-of-sample split reduces the risk. It does not remove it.
-- A 15-day trial has little power because most days produce identical results under both versions. Treat the verdict as a guard against harm, not proof of gain.
+- A 15-day trial has little power because most days produce identical results under both versions. Expect most challengers to be discarded or to take the full 30 days.
+- The shadow run ignores slippage, fills and the A1 checks. It compares the two rule sets, not real execution.
 - Live paper results since 2026-10-23 are far below the backtest average. Look at execution and data gaps (C5 health tracker) before tuning rules.
 
 ## 6. Install (for the live session)

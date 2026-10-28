@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 """Self-improvement loop for the FADE and PULLBACK model (RULEBOOK D4, draft: see PROPOSED_SELF_IMPROVEMENT.md).
 
-The loop never changes a live setting by itself. It proposes, the governor approves, and every approved change is judged against the
-version it replaced on the SAME days. Only the five tunables in tools/live/tunables.json can change. Entry safety (A1), sizing (B4.1),
-the ticker lists and the session hours are not tunable.
+Champion / challenger. The REAL account and the paper model keep running the version in force (the champion). A proposed change becomes a
+CHALLENGER that is only simulated, every close, on the same saved bars as the champion. It reaches the live account only if the governor
+promotes it after a passing trial. Only the five tunables in tools/live/tunables.json can change. Entry safety (A1), sizing (B4.1), the
+ticker lists and the session hours are not tunable. Nothing here places an order.
 
 Commands (stdlib only; run from anywhere):
-    improve.py tick [DUMP ...]        13:30 close, AFTER `paper.py --close`: shadow-run + verdict on an active trial, else a proposal if due
-    improve.py status                 versions, active trial, pending proposal, last ledger events
-    improve.py menu                   counterfactual table: every one-step change, walk-forward, with the gate result (about a minute)
+    improve.py tick [DUMP ...]        13:30 close, AFTER `paper.py --close`: shadow-run the challenger, verdict, else a proposal if due
+    improve.py status                 version in force, challenger, pending proposal, last ledger events
+    improve.py menu                   counterfactual table: every one-step change, walk-forward, with the gate result (under a minute)
     improve.py prompt                 print the proposer prompt (the checkpoint session answers it, then runs `submit`)
     improve.py submit CHOICE "why"    CHOICE = a menu id (e.g. fade.cut_r+1) or hold; writes the pending proposal
-    improve.py approve --effective D --note "governor words"      governor only: appends a version that takes effect on date D
-    improve.py reject --note "..."    governor only: discards the pending proposal
-    improve.py rollback --effective D governor (or tick if policy.auto_rollback): re-instates the values the active trial replaced
+    improve.py approve --note "..."   governor: start the shadow trial (--start D, default today). The live account is NOT changed
+    improve.py promote --effective D --note "..."   governor: after a PROMOTE verdict, put the challenger live from future trading day D
+    improve.py discard --note "..."   governor: drop the challenger. improve.py reject: drop a pending proposal
+    improve.py rollback --effective D governor: restore the values the version in force replaced (after a promotion)
 Proposers for `tick --proposer`: session (default; the session reads `prompt`, answers with `submit`), api (ANTHROPIC_API_KEY), fallback (best row of the menu, no LLM).
 """
 import argparse, csv, glob, json, math, os, statistics as st, sys, urllib.request
@@ -68,11 +70,8 @@ def current(t=None):
     return max(v, key=lambda x: x['effective_from'])
 
 
-def active_trial(t=None):
-    """The newest 'change' version that has no keep/revert verdict yet."""
-    t = t or tun(); closed = {e['version'] for e in ledger() if e['event'] in ('keep', 'revert')}
-    ch = [v for v in t['versions'] if v['kind'] == 'change' and v['version'] not in closed]
-    return max(ch, key=lambda x: x['version']) if ch else None
+def challenger(t=None):
+    return (t or tun()).get('challenger')
 
 
 def version_values(t, n):
@@ -211,55 +210,59 @@ def shadow_rows():
     return list(csv.DictReader(open(SHADOW))) if os.path.exists(SHADOW) else []
 
 
-def record_shadow(trial, base_values, dumps):
-    """Run BOTH versions on the same saved bars, so the comparison does not depend on account state or on which version the live model used."""
-    day, ret = shadow_day(dumps, base_values)
-    _, mret = shadow_day(dumps, trial['values'])
-    if any(r['day'] == day and r['trial'] == str(trial['version']) for r in shadow_rows()): return day
-    if day < trial['effective_from']: return day
+def record_shadow(ch, champion_values, dumps):
+    """Run BOTH versions on the same saved bars, so the comparison does not depend on account state or on what the live model did."""
+    day, old = shadow_day(dumps, champion_values)
+    _, new = shadow_day(dumps, ch['values'])
+    if day < ch['start'] or any(r['day'] == day and r['challenger'] == ch['id'] for r in shadow_rows()): return day
     new_file = not os.path.exists(SHADOW); os.makedirs(IDIR, exist_ok=True)
     with open(SHADOW, 'a', newline='') as f:
         w = csv.writer(f)
-        if new_file: w.writerow(['day', 'trial', 'old_ret_pct', 'new_ret_pct'])
-        w.writerow([day, trial['version'], round(ret, 4), round(mret, 4)])
+        if new_file: w.writerow(['day', 'challenger', 'champion_ret_pct', 'challenger_ret_pct'])
+        w.writerow([day, ch['id'], round(old, 4), round(new, 4)])
     return day
 
 
-def verdict(trial, pol):
-    rows = [r for r in shadow_rows() if r['trial'] == str(trial['version'])]
-    n = len(rows); diff = sum(float(r['new_ret_pct']) - float(r['old_ret_pct']) for r in rows)
-    differing = sum(1 for r in rows if abs(float(r['new_ret_pct']) - float(r['old_ret_pct'])) > 1e-9)
-    if n >= 5 and diff <= pol['early_revert_pct']: res = 'revert'
-    elif n >= pol['min_trial_days'] and diff < pol['revert_pct']: res = 'revert'
-    elif n >= pol['min_trial_days'] and diff >= 0: res = 'keep'
-    elif n >= 2 * pol['min_trial_days']: res = 'keep' if diff >= 0 else 'revert'
+def verdict(ch, pol):
+    rows = [r for r in shadow_rows() if r['challenger'] == ch['id']]
+    n = len(rows); diff = sum(float(r['challenger_ret_pct']) - float(r['champion_ret_pct']) for r in rows)
+    differing = sum(1 for r in rows if abs(float(r['challenger_ret_pct']) - float(r['champion_ret_pct'])) > 1e-9)
+    if n >= 5 and diff <= pol['early_discard_pct']: res = 'discard'
+    elif n >= pol['min_trial_days'] and diff <= pol['discard_pct']: res = 'discard'
+    elif n >= pol['min_trial_days'] and diff >= pol['promote_pct']: res = 'promote'
+    elif n >= pol['max_trial_days']: res = 'discard'
     else: res = 'continue'
-    return res, dict(version=trial['version'], days=n, days_that_differed=differing, new_minus_old_pct_of_account=round(diff, 3))
+    return res, dict(challenger=ch['id'], days=n, days_that_differed=differing, challenger_minus_champion_pct_of_account=round(diff, 3))
 
 
-def do_rollback(t, trial, eff, who):
-    vals = version_values(t, trial['base_version'])
+def future_trading_day(eff):
+    if eff <= today().isoformat() or datetime.strptime(eff, '%Y-%m-%d').weekday() >= 5 or eff in paper.NO_TRADE:
+        sys.exit('--effective must be a future trading day: a live day is never changed mid-session')
+
+
+def append_version(t, kind, eff, vals, **kw):
     n = max(v['version'] for v in t['versions']) + 1
-    t['versions'].append(dict(version=n, kind='rollback', effective_from=eff, values=vals, note=f"rollback of v{trial['version']} ({who})", base_version=trial['version']))
-    save_tun(t); ledger('revert', version=trial['version'], new_version=n, effective_from=eff, by=who)
-    print(f"ROLLBACK: v{n} restores v{trial['base_version']} values from {eff}. Commit tools/live/tunables.json and archive/improve/.")
+    t['versions'].append(dict(version=n, kind=kind, effective_from=eff, values=vals, **kw)); return n
 
 
 # ------------------------------------------------------------------ commands
 def cmd_tick(a):
-    t = tun(); pol = t['policy']; trial = active_trial(t)
-    if trial:
+    t = tun(); pol = t['policy']; ch = challenger(t)
+    if ch:
+        if ch['status'] == 'ready':
+            print(f"  challenger {ch['id']} passed its trial and waits for the governor: improve.py promote --effective <date> --note \"...\" (or discard)"); return
         if a.dumps:
-            d = record_shadow(trial, version_values(t, trial['base_version']), a.dumps); print(f"  shadow run for {d} recorded (old version v{trial['base_version']} vs trial v{trial['version']})")
+            d = record_shadow(ch, version_values(t, ch['base_version']), a.dumps); print(f"  shadow run for {d} recorded (champion v{ch['base_version']} vs challenger {ch['id']}; neither places an order)")
         else: print("  no dumps passed: shadow run skipped today (the verdict needs one per trading day)")
-        res, info = verdict(trial, pol); print(f"VERDICT v{trial['version']}: {res.upper()} {info}")
-        if res == 'keep': ledger('keep', **info); print("  Trial closed: keep. Report it to the governor.")
-        elif res == 'revert':
-            if pol['auto_rollback']: do_rollback(t, trial, next_trading_day(today()).isoformat(), 'auto_rollback policy')
-            else: print("  REVERT RECOMMENDED. Tell the governor now. Run: improve.py rollback --effective <date> after the governor agrees (policy.auto_rollback is off).")
+        res, info = verdict(ch, pol); print(f"VERDICT {ch['id']}: {res.upper()} {info}")
+        if res == 'promote':
+            ch['status'] = 'ready'; ch['verdict'] = info; save_tun(t); ledger('verdict', result='promote', **info)
+            print(f"  PROMOTION RECOMMENDED. Tell the governor. The real account stays on v{ch['base_version']} until the governor runs promote.")
+        elif res == 'discard':
+            t['challenger'] = None; save_tun(t); ledger('discarded', reason='trial', **info); print("  Challenger discarded. The live account was never changed.")
         return
     if pending(): print("  proposal pending, waiting for the governor:", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')})); return
-    ev = [e for e in ledger() if e['event'] in ('approved', 'rejected', 'hold', 'keep', 'revert')]
+    ev = [e for e in ledger() if e['event'] in ('approved', 'rejected', 'hold', 'promoted', 'discarded')]
     since = ev[-1]['ts'][:10] if ev else '0000-00-00'
     n = sum(1 for x in model_trades() if x['day'] > since)
     if n < pol['cadence_trades'] and not a.force: print(f"  no proposal due: {n} of {pol['cadence_trades']} model trades since the last decision ({since})"); return
@@ -299,14 +302,13 @@ def cmd_submit(a):
 def cmd_approve(a):
     p = pending(); t = tun()
     if not p: sys.exit('nothing pending')
-    if active_trial(t): sys.exit('a trial is still running: one change at a time')
-    if a.effective <= today().isoformat() or datetime.strptime(a.effective, '%Y-%m-%d').weekday() >= 5 or a.effective in paper.NO_TRADE:
-        sys.exit('--effective must be a future trading day: a live day is never changed mid-session')
-    if p['base_version'] != current(t)['version']: sys.exit('the proposal is stale (the current version changed): reject it and propose again')
-    vals = dict(current(t)['values']); vals[p['variable']] = p['new']; n = current(t)['version'] + 1
-    t['versions'].append(dict(version=n, kind='change', effective_from=a.effective, values=vals, base_version=p['base_version'], proposal=p['id'], note=a.note))
-    save_tun(t); os.remove(PENDING); ledger('approved', id=p['id'], version=n, effective_from=a.effective, note=a.note)
-    print(f"APPROVED: v{n} ({p['variable']} {p['old']} -> {p['new']}) from {a.effective}. Bump the RULEBOOK version, record it in the commit, commit tunables.json + archive/improve/.")
+    if challenger(t): sys.exit('a challenger is already in trial: one at a time')
+    if p['base_version'] != current(t)['version']: sys.exit('the proposal is stale (the version in force changed): reject it and propose again')
+    if a.start < today().isoformat(): sys.exit('--start cannot be in the past')
+    vals = dict(current(t)['values']); vals[p['variable']] = p['new']
+    t['challenger'] = dict(id=p['id'], variable=p['variable'], old=p['old'], new=p['new'], values=vals, base_version=p['base_version'], start=a.start, status='running', note=a.note)
+    save_tun(t); os.remove(PENDING); ledger('approved', id=p['id'], start=a.start, note=a.note)
+    print(f"TRIAL STARTED: {p['variable']} {p['old']} -> {p['new']} as a paper-only challenger from {a.start}. The live account and the paper model stay on v{p['base_version']}.")
 
 
 def cmd_reject(a):
@@ -315,19 +317,36 @@ def cmd_reject(a):
     os.remove(PENDING); ledger('rejected', id=p['id'], note=a.note); print('rejected')
 
 
+def cmd_promote(a):
+    t = tun(); ch = challenger(t)
+    if not ch or ch['status'] != 'ready': sys.exit('no challenger has passed its trial')
+    future_trading_day(a.effective)
+    if ch['base_version'] != current(t)['version']: sys.exit('stale: the version in force changed since the trial started')
+    n = append_version(t, 'change', a.effective, ch['values'], base_version=ch['base_version'], proposal=ch['id'], note=a.note)
+    t['challenger'] = None; save_tun(t); ledger('promoted', id=ch['id'], version=n, effective_from=a.effective, note=a.note)
+    print(f"PROMOTED: v{n} ({ch['variable']} {ch['old']} -> {ch['new']}) live from {a.effective}. Bump the RULEBOOK version, record it in the commit, commit tunables.json + archive/improve/.")
+
+
+def cmd_discard(a):
+    t = tun(); ch = challenger(t)
+    if not ch: sys.exit('no challenger')
+    t['challenger'] = None; save_tun(t); ledger('discarded', reason='governor', id=ch['id'], note=a.note); print('challenger discarded; the live account was never changed')
+
+
 def cmd_rollback(a):
-    t = tun(); trial = active_trial(t)
-    if not trial: sys.exit('no active trial to roll back')
-    if a.effective <= today().isoformat() or datetime.strptime(a.effective, '%Y-%m-%d').weekday() >= 5 or a.effective in paper.NO_TRADE:
-        sys.exit('--effective must be a future trading day')
-    do_rollback(t, trial, a.effective, 'governor')
+    t = tun(); c = current(t)
+    if c['kind'] != 'change': sys.exit('the version in force is not a promoted change')
+    future_trading_day(a.effective)
+    n = append_version(t, 'rollback', a.effective, version_values(t, c['base_version']), base_version=c['version'], note=f"rollback of v{c['version']}")
+    save_tun(t); ledger('rollback', from_version=c['version'], version=n, effective_from=a.effective)
+    print(f"ROLLBACK: v{n} restores v{c['base_version']} values from {a.effective}. Commit tools/live/tunables.json and archive/improve/.")
 
 
 def cmd_status(a):
-    t = tun(); c = current(t); tr = active_trial(t)
-    print(f"version in force: v{c['version']} ({c['kind']}, from {c['effective_from']}) {c['values']}")
-    print(f"active trial: {('v%d since %s' % (tr['version'], tr['effective_from'])) if tr else 'none'}")
-    if tr: print('  verdict so far:', verdict(tr, t['policy']))
+    t = tun(); c = current(t); ch = challenger(t)
+    print(f"version in force (real account and paper model): v{c['version']} ({c['kind']}, from {c['effective_from']}) {c['values']}")
+    if ch: print(f"challenger {ch['id']} ({ch['status']}, paper only, from {ch['start']}): {ch['variable']} {ch['old']} -> {ch['new']}; so far", verdict(ch, t['policy']))
+    else: print('challenger: none')
     print('pending:', json.dumps(pending()) if pending() else 'none')
     try: print('drawdown stop:', 'ACTIVE' if json.load(open(HWM)).get('halted') else 'clear')
     except Exception: pass
@@ -339,7 +358,9 @@ def main():
     s = sub.add_parser('tick'); s.add_argument('dumps', nargs='*'); s.add_argument('--proposer', choices=['session', 'api', 'fallback'], default='session'); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_tick)
     for n, f in (('menu', cmd_menu), ('prompt', cmd_prompt), ('status', cmd_status)): sub.add_parser(n).set_defaults(f=f)
     s = sub.add_parser('submit'); s.add_argument('choice'); s.add_argument('why'); s.set_defaults(f=cmd_submit)
-    s = sub.add_parser('approve'); s.add_argument('--effective', required=True); s.add_argument('--note', required=True); s.set_defaults(f=cmd_approve)
+    s = sub.add_parser('approve'); s.add_argument('--start', default=today().isoformat()); s.add_argument('--note', required=True); s.set_defaults(f=cmd_approve)
+    s = sub.add_parser('promote'); s.add_argument('--effective', required=True); s.add_argument('--note', required=True); s.set_defaults(f=cmd_promote)
+    s = sub.add_parser('discard'); s.add_argument('--note', required=True); s.set_defaults(f=cmd_discard)
     s = sub.add_parser('reject'); s.add_argument('--note', required=True); s.set_defaults(f=cmd_reject)
     s = sub.add_parser('rollback'); s.add_argument('--effective', required=True); s.set_defaults(f=cmd_rollback)
     a = ap.parse_args(); a.f(a)
