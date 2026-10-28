@@ -206,7 +206,7 @@ def append_version(t, kind, eff, vals, **kw):
 
 # ------------------------------------------------------------------ candidates, shadow runs, evidence
 def policy(t):
-    return {'shadow_from': '0000-00-00', 'min_diff_days': 20, 'alpha': 0.10, 'harm_diff_days': 10, 'retire_days': 60, 'resamples': 5000, 'promote_pct': 0.5, 'risk_pstop_slack': 1.0, 'risk_dd_slack': 1.0, **t['policy']}
+    return {'shadow_from': '0000-00-00', 'min_diff_days': 20, 'alpha': 0.10, 'harm_diff_days': 10, 'retire_days': 60, 'resamples': 5000, 'promote_pct': 0.5, 'risk_pstop_slack': 1.0, 'risk_dd_slack': 1.0, 'risk_target_pstop': 2.0, 'risk_cost_max': 0.10, **t['policy']}
 
 
 def ideas():
@@ -259,7 +259,7 @@ def candidates(t, retired=()):
         else: v['x.add_pb'] = [w['leg']]; cid, desc = f"add.pb.{w['leg']}", f"add {w['leg']} to the PULLBACK list"
         out.append(dict(id=cid, kind='idea', desc=desc, values=v, promotable=False))
     cur = current(t)
-    if cur['kind'] == 'change':                 # rollback guard (v5.2.34): the version a promotion replaced is shadowed against it at once
+    if cur['kind'] == 'change' and not cur.get('defensive'):     # a defensive change is undone by RESTORE POSSIBLE (edge INTACT), not by return; rollback guard (v5.2.34): the version a promotion replaced is shadowed against it at once
         v = {**paper.TUNABLE_DEFAULTS, **version_values(t, cur['base_version'])}
         out.append(dict(id=f"rollback.v{cur['base_version']}", kind='rollback', desc=f"go back to v{cur['base_version']} (undo the promotion of v{cur['version']})", values=v, promotable=False))
     return [c for c in out if c['id'] not in retired]
@@ -479,21 +479,34 @@ def health_acts():
 
 
 def defensive(t, D, window=60):
-    """Defensive options on the most recent `window` sessions, judged by risk (stressed scenario), not %/day: each lower risk.pct and
-    size.cap_pct step and the defensive ideas (one loss ends the day, dropping each FADE proxy). Reports only; the governor decides."""
-    base = champion_values(t); _, w, l = SCENARIOS[-1]; rows = []
-    rec = lambda v: run_cf(D, v)[0][-window:]
-    b = risk_profile(rec(base), w, l, seed='def'); opts = []
+    """Defensive options judged by risk, not %/day: each lower risk.pct and size.cap_pct step and the defensive ideas (one loss ends the
+    day, dropping each FADE proxy). Stop risk = the stressed scenario on the last `window` sessions; cost = the change in mean %/day over
+    the whole dataset. Returns the version in force's profile, the rows and the recommendation (v5.2.35): when the version in force's
+    stressed chance of the hard stop is above policy risk_target_pstop, the numeric option with the best whole-dataset %/day among those
+    that bring it to the target or below while keeping at least (1 - risk_cost_max) of the %/day. Ideas are shown, never recommended."""
+    pol = policy(t); base = champion_values(t); _, w, l = SCENARIOS[-1]; rows = []
+    def prof(v):
+        d = run_cf(D, v)[0]; return risk_profile(d[-window:], w, l, seed='def'), stats(d, [])['mean_day']
+    b, bm = prof(base); opts = []
     for var in ('risk.pct', 'size.cap_pct'):
         sp = t['space'][var]; x = base[var]
         while x - sp['step'] >= sp['lo'] - 1e-9:
-            x = round(x - sp['step'], 4); v = dict(base); v[var] = x; opts.append((f"{var} {base[var]:g} -> {x:g}", v))
+            x = round(x - sp['step'], 4); v = dict(base); v[var] = x; opts.append((f"{var} {base[var]:g} -> {x:g}", v, dict(variable=var, old=base[var], new=x)))
     for i in ideas():
-        if i['id'] == 'risk.one_loss_ends_day' or i['id'].startswith('drop.fade.'): v = dict(base); v.update(i['values']); opts.append((i['id'], v))
-    for name, v in opts:
-        rp = risk_profile(rec(v), w, l, seed='def')
-        if rp and b: rows.append((name, rp, rp['p_stop'] <= b['p_stop'] - 1.0 and rp['median'] >= 0.85 * b['median']))
-    return b, rows
+        if i['id'] == 'risk.one_loss_ends_day' or i['id'].startswith('drop.fade.'): v = dict(base); v.update(i['values']); opts.append((i['id'], v, None))
+    for name, v, num in opts:
+        rp, m = prof(v)
+        if rp: rows.append(dict(name=name, rp=rp, mean=m, num=num, ok=bool(num) and rp['p_stop'] <= pol['risk_target_pstop'] and m >= (1 - pol['risk_cost_max']) * bm))
+    rec = None
+    if b and b['p_stop'] > pol['risk_target_pstop']:
+        ok = [r for r in rows if r['ok']]; rec = max(ok, key=lambda r: (r['mean'], -r['rp']['p_stop'])) if ok else None
+    return dict(b=b, mean=bm, window=window, target=pol['risk_target_pstop']), rows, rec
+
+
+def defensive_text(head, rows, rec):
+    L = [risk_line('version in force', head['b']) + f"   whole dataset {head['mean']:+.3f}%/day"]
+    for r in rows: L.append(risk_line(r['name'], r['rp']) + f"   whole dataset {r['mean']:+.3f}%/day" + ('   <- recommended' if rec is r else '   <- meets the target' if r['ok'] else ''))
+    return "\n".join(L)
 
 
 # ------------------------------------------------------------------ proposer prompt
@@ -529,7 +542,7 @@ def cmd_promote(a):
     if not ch or ch['status'] != 'ready': sys.exit('no challenger has passed its trial')
     future_trading_day(a.effective)
     if ch['base_version'] != current(t)['version']: sys.exit('stale: the version in force changed since the trial started')
-    n = append_version(t, 'change', a.effective, ch['values'], base_version=ch['base_version'], proposal=ch['id'], note=a.note)
+    n = append_version(t, 'change', a.effective, ch['values'], base_version=ch['base_version'], proposal=ch['id'], note=a.note, **({'defensive': True} if ch.get('defensive') else {}))
     t['challenger'] = None; save_tun(t); ledger('promoted', id=ch['id'], version=n, effective_from=a.effective, note=a.note)
     print(f"PROMOTED: v{n} ({ch['variable']} {ch['old']} -> {ch['new']}) live from {a.effective}. Bump the RULEBOOK version, record it in the commit, commit tunables.json + archive/improve/.")
 
@@ -564,11 +577,18 @@ def cmd_tick(a):
     try:                                                    # regime and health link (v5.2.33): reports only
         D = load_data(); g = regime(D, champion_values(t)); print(regime_line(g))
         hday, acts = health_acts()
-        if g['state'] == 'HOSTILE' or acts:
-            print(f"DEFENSIVE REVIEW: {'regime HOSTILE (' + ', '.join(g['flags']) + ')' if g['state'] == 'HOSTILE' else ''}{'; ' if g['state'] == 'HOSTILE' and acts else ''}{'health ACT on ' + hday + ': ' + ', '.join(acts) if acts else ''}. "
-                  "Options on the last 60 sessions, stressed scenario; report to the governor at once, nothing changes until the governor decides:")
-            b, rows = defensive(t, D); print(risk_line('version in force', b))
-            for name, rp, good in rows: print(risk_line(name, rp) + ('   <- cuts the stop risk' if good else ''))
+        head, rows, rec = defensive(t, D); bp = head['b']
+        if g['state'] == 'HOSTILE' or acts or rec:
+            why = [x for x in ('regime HOSTILE (' + ', '.join(g['flags']) + ')' if g['state'] == 'HOSTILE' else '', 'health ACT on ' + str(hday) + ': ' + ', '.join(acts) if acts else '',
+                                f"stressed chance of the -15% stop {bp['p_stop']}% on the last {head['window']} sessions, above the {head['target']}% target" if bp and bp['p_stop'] > head['target'] else '') if x]
+            print(f"DEFENSIVE REVIEW: {'; '.join(why)}. Report to the governor at once; nothing changes until the governor decides.")
+            if rec: print(f"DEFENSIVE RECOMMENDATION: {rec['name']} (stop risk {bp['p_stop']}% -> {rec['rp']['p_stop']}%, whole dataset {head['mean']:+.3f} -> {rec['mean']:+.3f}%/day). "
+                          f"Propose it: improve.py defend {rec['num']['variable']} {rec['num']['new']:g} \"why\" (the governor then approves and promotes)")
+            print(defensive_text(head, rows, rec))
+        else: print(f"  stop risk OK: stressed chance of the -15% stop {bp['p_stop'] if bp else 'n/a'}% on the last {head['window']} sessions (target {head['target']}%)")
+        cur = current(t)
+        if cur.get('defensive') and g['edge'] == 'INTACT':
+            print(f"RESTORE POSSIBLE: v{cur['version']} is a defensive change and the edge is INTACT again; tell the governor (improve.py rollback --effective <next trading day> restores v{cur['base_version']})")
         if today().weekday() == 4: print("  live vs model attribution, this week:\n" + attribution_text(attribution((today() - timedelta(days=6)).isoformat())))
     except Exception as x: print(f"  regime/health step failed: {x!r} (reports only; the shadow run above is unaffected)")
     for e in done: print(f"RETIRED {e['id']}: {e['status']} ({e['total']:+.2f}% of account over {e['n_days']} days); written to the research ledger")
@@ -614,9 +634,11 @@ def cmd_approve(a):
     if not p: sys.exit('nothing pending')
     if challenger(t): sys.exit('a challenger is already approved: one at a time')
     if p['base_version'] != current(t)['version']: sys.exit('the proposal is stale (the version in force changed): reject it and propose again')
-    evs, _ = evidence(t); row = next((e for e in evs if e['id'] == p['evidence']['id']), None)
-    if not row or row['status'] != 'ready': sys.exit('the evidence no longer meets the gate: reject the proposal')
-    t['challenger'] = dict(id=p['evidence']['id'], variable=p['variable'], old=p['old'], new=p['new'], values=p['values'], base_version=p['base_version'], start=today().isoformat(), status='ready', note=a.note, evidence=row)
+    if p.get('kind') == 'defensive': row = p['evidence']      # judged on risk by the defensive review, not on forward shadow
+    else:
+        evs, _ = evidence(t); row = next((e for e in evs if e['id'] == p['evidence']['id']), None)
+        if not row or row['status'] != 'ready': sys.exit('the evidence no longer meets the gate: reject the proposal')
+    t['challenger'] = dict(defensive=p.get('kind') == 'defensive', id=p['evidence']['id'], variable=p['variable'], old=p['old'], new=p['new'], values=p['values'], base_version=p['base_version'], start=today().isoformat(), status='ready', note=a.note, evidence=row)
     save_tun(t); os.remove(PENDING); ledger('approved', id=p['id'], note=a.note)
     print(f"APPROVED: {p['variable']} {p['old']} -> {p['new']} is ready to promote (its evidence is forward shadow). The live account and the paper model stay on v{p['base_version']} until: improve.py promote --effective <future trading day> --note \"...\"")
 
@@ -741,9 +763,26 @@ def cmd_attrib(a):
 
 
 def cmd_defensive(a):
-    t = tun(); b, rows = defensive(t, load_data(), a.window)
-    print(f"defensive options on the last {a.window} sessions, scenario '{SCENARIOS[-1][0]}' (reports only; the governor decides):"); print(risk_line('version in force', b))
-    for name, rp, good in rows: print(risk_line(name, rp) + ('   <- cuts the stop risk' if good else ''))
+    t = tun(); head, rows, rec = defensive(t, load_data(), a.window)
+    print(f"defensive options, stop risk on the last {a.window} sessions in scenario '{SCENARIOS[-1][0]}', target {head['target']}% (reports only; the governor decides):")
+    print(defensive_text(head, rows, rec)); print(f"recommendation: {rec['name'] if rec else 'none (the version in force meets the target, or no option meets it within the cost limit)'}")
+
+
+def cmd_defend(a):
+    """Propose a defensive (risk-reducing) numeric change found by the defensive review. It needs no forward shadow evidence (it is judged
+    on risk), but it must be a current recommendation-grade option. The governor approves and promotes as usual."""
+    t = tun()
+    if pending(): sys.exit('a proposal is already pending')
+    head, rows, rec = defensive(t, load_data())
+    row = next((r for r in rows if r['num'] and r['num']['variable'] == a.variable and abs(r['num']['new'] - a.new) < 1e-9), None)
+    if not row or not row['ok']: sys.exit(f"{a.variable} {a.new:g} does not meet the defensive target ({head['target']}% stop risk within the cost limit)")
+    v = dict(champion_values(t)); v[a.variable] = a.new
+    p = dict(id=f"p{len(ledger()) + 1}", kind='defensive', created=datetime.now(ET).isoformat(timespec='seconds'), source='session', rationale=a.why, base_version=current(t)['version'],
+             variable=a.variable, old=row['num']['old'], new=a.new, values=v, evidence=dict(id=f"defend.{a.variable}", stop_risk_before=head['b']['p_stop'], stop_risk_after=row['rp']['p_stop'],
+             mean_before=head['mean'], mean_after=row['mean'], window=head['window']))
+    os.makedirs(IDIR, exist_ok=True); json.dump(p, open(PENDING, 'w'), indent=1); ledger('proposal', **{k: p[k] for k in ('id', 'kind', 'variable', 'old', 'new', 'source', 'rationale')})
+    print(f"DEFENSIVE PROPOSAL {p['id']}: {a.variable} {row['num']['old']:g} -> {a.new:g}. Stressed stop risk {head['b']['p_stop']}% -> {row['rp']['p_stop']}% (last {head['window']} sessions), "
+          f"whole dataset {head['mean']:+.3f} -> {row['mean']:+.3f}%/day. Waiting for the governor: improve.py approve --note \"...\"")
 
 
 def cmd_status(a):
@@ -772,6 +811,7 @@ def main():
     s = sub.add_parser('risk'); s.add_argument('--id'); s.set_defaults(f=cmd_risk)
     s = sub.add_parser('regime'); s.add_argument('--window', type=int, default=20); s.set_defaults(f=cmd_regime)
     s = sub.add_parser('attrib'); s.add_argument('--since'); s.set_defaults(f=cmd_attrib)
+    s = sub.add_parser('defend'); s.add_argument('variable', choices=['risk.pct', 'size.cap_pct']); s.add_argument('new', type=float); s.add_argument('why'); s.set_defaults(f=cmd_defend)
     s = sub.add_parser('defensive'); s.add_argument('--window', type=int, default=60); s.set_defaults(f=cmd_defensive)
     s = sub.add_parser('add-checklist'); s.add_argument('id'); s.set_defaults(f=cmd_add_checklist)
     s = sub.add_parser('research-add'); [s.add_argument('--' + k, required=True) for k in ('id', 'idea', 'method', 'result', 'verdict')]; s.set_defaults(f=cmd_research_add)
