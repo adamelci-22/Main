@@ -1,0 +1,2 @@
+date,fade_trades,fade_pf,pct_reach_2R,drawdown_pct,total_value,hwm,pf_status,reach_2R_status,dd_status,act_count,verdict
+2026-10-27,1,inf (no losses),100,0.11,2568.92,2571.81,HEALTHY (too few trades),HEALTHY (too few trades),HEALTHY,0,HEALTHY
