@@ -12,8 +12,8 @@ import manual as m, pb_final as PBF, pb_inverse as PI, mixed as MXD, expand_list
 from lab import get_data
 
 FADE = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF']
-PB = ['SOXS', 'LABD', 'TECS', 'UVXY']
-PI.PROXY.update({'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA', 'LABD': 'LABD', 'UVXY': 'UVXY'})
+PB = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVDQ', 'NVD', 'MSFU', 'SSG']     # v5.2.21
+PI.PROXY.update({'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA', 'LABD': 'LABD', 'UVXY': 'UVXY', 'NVDQ': 'NVDQ', 'MSFU': 'MSFU', 'SSG': 'SSG'})
 
 
 def cands(D, days):

@@ -22,7 +22,7 @@ for d in days:
     today = {s: D.bars[s][d][:48] for s in syms if d in D.bars[s]}
     prev = {s: D.bars[s][pd] for s in syms if pd in D.bars[s]}
     pri = D.prior(d, 20)
-    base = {q: [st.mean(D.cum[q][x][k] for x in pri) for k in range(79)] for q in list(P.FADE_ROWS) + ['NVDA'] if q in D.cum and all(x in D.cum[q] for x in pri)}
+    base = {q: [st.mean(D.cum[q][x][k] for x in pri) for k in range(79)] for q in list(P.FADE_ROWS) + ['NVDA', 'NVDQ', 'MSFU', 'SSG'] if q in D.cum and all(x in D.cum[q] for x in pri)}
     P.FLOOR_TARGET = True          # the backtest (pb_final TARGET_MODE floor) applies the v5.1 rounding on every day
     taken, skipped, sig, eq2 = P.simulate(today, prev, 48, eq, base, streak)
     for c in taken: ptaken.append((d, c['system'], c['ticker'], c['k'], c['xbar'], round(c['pct'], 3), round(c['usd'], 2)))

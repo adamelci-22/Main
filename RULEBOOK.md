@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.20** (2026-10-28; FADE health tracker in the 13:30 report, C5, no trading rule changed; v5.2.19 2026-10-27: FADE +0.15R lock at the first +0.5R close and early cut 15 min after entry at -0.5R, B2.5/B5.3; v5.2.18 2026-10-27: FADE frozen 1R trail before 2R, capped at +0.75R, B2.5/B5.3; v5.2.17 same day: no FADE entries on Fridays, A1.10; v5.2.16 2026-10-26: A1.13 hard drawdown stop at -15% from the all-time high, nothing else changed; v5.2.15 2026-10-24: DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.21** (2026-10-28; PULLBACK list + NVDQ NVD MSFU SSG with the A1.9 earnings skip back, PULLBACK health tracker, B1/A1.9/C1.2/C5; v5.2.20 same day: FADE health tracker in the 13:30 report, no trading rule changed; v5.2.19 2026-10-27: FADE +0.15R lock at the first +0.5R close and early cut 15 min after entry at -0.5R, B2.5/B5.3; v5.2.18 2026-10-27: FADE frozen 1R trail before 2R, capped at +0.75R, B2.5/B5.3; v5.2.17 same day: no FADE entries on Fridays, A1.10; v5.2.16 2026-10-26: A1.13 hard drawdown stop at -15% from the all-time high, nothing else changed; v5.2.15 2026-10-24: DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -48,7 +48,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 6 | **Fresh data** | `paper.py` must show bars through this slot (or say why not). **PULLBACK:** the order review's quote must agree with the last bar within 0.5%. **FADE (v5.2.3, band widened v5.2.9):** the leg's quote must be within **1.5%** of the leg price at the signal bar (two-sided), and the order must be sent **no later than 6 minutes after the slot** (counted when the order is sent). A late FADE signal inside both limits is a valid entry: marketable limit (B5.1), stop and target re-set from the actual fill with the same R (B5.2), normal sizing. Later than 6 minutes, or outside 1.5% → no entry, logged as skipped. Stale or contradictory data → no entry. | paper.py output, `review_equity_order` |
 | 7 | **Spread** | Skip the entry if the leg's bid–ask spread is wider than **0.30% of its price**. | Order review quote |
 | 8 | **Overnight** | **Nothing is held overnight.** A position found at 9:00 or 9:30 is sold at the 9:30 checkpoint (marketable limit) and reported. | Positions |
-| 9 | **Earnings** | **No single stocks are traded any more (v5.2.13 AMD out, v5.2.14 NVD out), so no earnings skip applies.** If a single-stock ticker is ever added back, skip it on any session where its company reported since the prior close. | `get_earnings_calendar` at 9:00 |
+| 9 | **Earnings** | **Single-stock funds (v5.2.21: NVD and NVDQ = Nvidia, MSFU = Microsoft): no real entry on any session where the company reported since the prior close** (a pm report bars the next session). `paper.py` applies it from its `EARNINGS_SKIP` dates (MSFU 2026-10-29, NVD/NVDQ 2026-11-18, MSFU 2027-01-28, NVD/NVDQ 2027-02-25; prints `EARNINGS SKIP`); the model is unchanged. | `get_earnings_results` for MSFT and NVDA at 9:00 (C3): if a date moved, pass `--skip` and update `EARNINGS_SKIP` |
 | 10 | **Session** | Entries only between 10:00 and 12:55. No trading on early-close days (Nov 27, Dec 24) or market holidays. **No FADE entries on Fridays (v5.2.17, from Fri 2026-10-30); PULLBACK still trades Fridays.** | Calendar; `paper.py` blocks entries on the dates in its `NO_TRADE` list (through 2027-12-31) and blocks FADE on Fridays (prints `FRIDAY: no FADE entries today`) |
 | 11 | **Halt** | Never send an order into a halted ticker (A4). | Broker response |
 | 12 | **Kill switch** | **If the governor says "stop", "halt" or "flatten":** cancel every open order, sell every position (marketable limit), and take no entries until the governor says to resume. This overrides everything else in this file. | — |
@@ -100,9 +100,9 @@ Specs and evidence: `tools/backtest/PULLBACK_SPEC.md`, E3. `tools/live/paper.py`
 | XBI | LABU | LABD | 3 / 3 |
 | XLF | FAS | FAZ | 3 / 3 |
 
-**PULLBACK** reads each ticker's own chart and buys only: **SOXS, LABD, TECS, UVXY.**
+**PULLBACK** reads each ticker's own chart and buys only: **SOXS, LABD, TECS, UVXY, NVDQ, NVD, MSFU, SSG** (v5.2.21; NVDQ and NVD are inverse Nvidia, MSFU is 2x Microsoft, SSG is −2x semiconductors). Same-bar tie order: this list order after RVOL (B4.4).
 
-**Thin tickers: TECS, FAZ, LABU** (about $70–270k traded per 5-minute bar; FAZ is the thinnest). The spread check (A1.7) applies with extra force to these.
+**Thin tickers: TECS, FAZ, LABU, SSG** (about $55–270k traded per 5-minute bar; SSG and FAZ are the thinnest). The spread check (A1.7) applies with extra force to these.
 
 ## B2. FADE — failed-retest fade (signal rules)
 
@@ -208,9 +208,10 @@ Only the first qualifying setup per ticker per day counts.
 ## C1. Each 10:00–13:25 slot
 
 1. **State check** (A3).
-2. **Fetch** 5-minute bars from the prior trading day's 9:30 to now, in two `get_equity_historicals` calls (v5.2.14):
+2. **Fetch** 5-minute bars from the prior trading day's 9:30 to now, in three `get_equity_historicals` calls (v5.2.21):
    - QQQ SOXX IWM XLK XBI XLF TQQQ SQQQ SOXL SOXS
    - TNA TZA TECL TECS LABU LABD FAS FAZ UVXY
+   - NVDQ NVD MSFU SSG
 3. **Run** `python3 tools/live/paper.py --live --now HH:MM <dump files>` (`--skip TICKER` bars a ticker from real entries for the day, e.g. after a corporate-action flag in C3). **Never add `--real-free` routinely:** only after the governor closed a real position by hand (A3). A skipped or blocked entry leaves a ghost position that correctly blocks new entries until the model exits (tested: `results/recheck_all.txt` §2).
 4. **Act on the `LIVE ACTIONS` lines** under A1 and B5. If the newest bar isn't published yet, `paper.py` steps back up to two bars and says so.
 5. **Report only changes:** an entry, a take-profit, a stop move, an exit, or a blocked entry and why. If nothing changed, write one line.
@@ -255,7 +256,7 @@ Only the first qualifying setup per ticker per day counts.
   - the day's P&L and the account value;
   - the losing-streak count;
   - running totals since 2026-10-16: trades, win rate, average %/day, real against model;
-  - **FADE health (v5.2.20):** after the day's trades are in `archive/live_trades.csv`, run `python3 tools/live/health.py <total value>` and paste its table and verdict. It tracks, rolling: profit factor of the last 30 FADE trades (healthy > 1.5, warning 1.0–1.5, ACT < 1.0); % of the last 30 FADE trades reaching +2R (healthy > 40%, warning 30–40%, ACT < 30%); drawdown from the all-time high (healthy < 7%, warning 7–10%, ACT ≥ 10%; A1.13 stops at 15%). Below 30 trades the trade measures are provisional; below 10 they never count as ACT. **Two or more ACT → tell the governor plainly; the governor decides** (switch FADE to the S1 stretch-filter version, or pause and review). The tracker changes no order or rule; one row per day goes to `archive/health_log.csv`. When logging a FADE trade, fill `reached_2R`: `yes` if the position reached +2R while held (the ⅓ take-profit filled), else `no`; blank for PULLBACK.
+  - **FADE health (v5.2.20):** after the day's trades are in `archive/live_trades.csv`, run `python3 tools/live/health.py <total value>` and paste its table and verdict. It tracks, rolling: profit factor of the last 30 FADE trades (healthy > 1.5, warning 1.0–1.5, ACT < 1.0); % of the last 30 FADE trades reaching +2R (healthy > 40%, warning 30–40%, ACT < 30%); drawdown from the all-time high (healthy < 7%, warning 7–10%, ACT ≥ 10%; A1.13 stops at 15%). Below 30 trades the trade measures are provisional; below 10 they never count as ACT. **Two or more ACT → tell the governor plainly; the governor decides** (switch FADE to the S1 stretch-filter version, or pause and review). The tracker changes no order or rule; one row per day goes to `archive/health_log.csv`. **PULLBACK health (v5.2.21)** is printed below it: profit factor of the last 30 PULLBACK trades (> 1.5 / 1.0–1.5 / < 1.0), win rate (> 60% / 50–60% / < 50%), average trade as % of position (> +0.20% / 0–0.20% / < 0); two or more ACT → the governor decides between going back to SOXS LABD TECS UVXY and dropping PULLBACK; the probation review is at 30 live PULLBACK trades. When logging a FADE trade, fill `reached_2R`: `yes` if the position reached +2R while held (the ⅓ take-profit filled), else `no`; blank for PULLBACK.
 - **Friday 13:30:** the week's summary, always sent.
 - **Style:** losses as plainly as gains. Never claim an edge from a small sample. Most checkpoints are one line or silent.
 - **Review after 25–35 live trades:**
@@ -359,6 +360,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 ## E5. Live context — dated, refreshed at 9:00, replaced wholesale
 
+**Wednesday 2026-10-28 (before the open), v5.2.21 (governor: "push it").** PULLBACK adds NVDQ NVD MSFU SSG (B1); C1.2 fetches a third group (NVDQ NVD MSFU SSG); the A1.9 earnings skip is back: **MSFT reports today (10-28) after the close, so no MSFU entry on Thu 10-29**; NVDA reports 11-17 pm, so no NVD/NVDQ on 11-18. PULLBACK health tracker added (C5).
+
 **Wednesday 2026-10-28 (early, before the open), v5.2.20 (governor):** FADE health tracker added to the 13:30 report (C5, `tools/live/health.py`, `archive/health_log.csv`, new `reached_2R` column in `archive/live_trades.csv`, backfilled: 10-27 TNA = yes). No trading rule changed. Seed row 2026-10-27: 1 FADE trade, drawdown 0.1%, HEALTHY (provisional).
 
 **Tuesday 2026-10-27 (8:50 PM ET), v5.2.19 adopted (governor: "lets push B + C").** FADE +0.15R lock at the first +0.5R close and early cut at 15 minutes if the close is −0.5R or worse (B2.5, B5.3), from Wed 2026-10-28. Same commit fixes `paper.py`, which never switched the v5.2.18 frozen trail on (`FROZEN_ON` stayed False); both now switch on by date in `simulate()`. The Wednesday chain prompts say v5.2.17; RULEBOOK governs.
@@ -453,6 +456,8 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 ---
 
 ## Change log
+
+**v5.2.21 — 2026-10-28, governor instruction:** "add any thing with a win rate 60% or over and has an average trade over .1% and is positive in both halves", then "push it" after seeing the combined test. PULLBACK list SOXS LABD TECS UVXY **+ NVDQ NVD MSFU SSG** (B1). Screen (Robinhood cache 2026-03-03..10-14, live B3 rules, each fund alone): of 103 leveraged funds, those four plus the live four pass all three filters (NVDQ 10 setups 70% +0.46%, NVD 8 / 62% / +0.21%, MSFU 5 / 80% / +0.58%, SSG 7 / 86% / +1.05%). Evidence (D3), Robinhood: PULLBACK alone +0.158 -> +0.154%/day (halves +0.162/+0.154 -> +0.166/+0.141, March +0.159 both), trades 45 -> 60, win 69% -> 65%, drawdown 1.9% -> 2.7%; whole account +0.548 -> +0.548%/day (halves +0.562/+0.535 -> +0.549/+0.547, March +0.637 both), +130.9% -> +130.6%, 111 -> 122 trades, drawdown 3.1% -> 4.4%. So about two more PULLBACK trades a month, total return unchanged, drawdown a little higher: the new funds sometimes take the one position before a live-four trade (one position at a time). The governor chose it knowing this. Costs: NVD/NVDQ/MSFU are single-stock funds, so A1.9's earnings skip is back (dates in `paper.py` `EARNINGS_SKIP`); SSG trades about $55k per 5-minute bar (A1.7 spread check). `paper.py` and `final_system.py` updated; replay 122 = 122 trades, identical (`verify_paper_equivalence.py`). PULLBACK health tracker added to `tools/live/health.py` (C5). Reverts in part v5.2.14's removal of NVD.
 
 **v5.2.20 — 2026-10-28, governor instruction:** "make this a tracker that tracks this at the end of every day and lists these and the warning range." Reporting only (C5): `tools/live/health.py <total value>` prints, at each 13:30 close, profit factor of the last 30 real FADE trades (> 1.5 / 1.0–1.5 / < 1.0), % of them reaching +2R (> 40% / 30–40% / < 30%) and drawdown from the all-time high in `archive/hwm.json` (< 7% / 7–10% / ≥ 10%), with HEALTHY / WARNING / ACT for each and a verdict; two or more ACT go to the governor, who decides between switching FADE to the S1 stretch-filter version and pausing. Trade measures are provisional below 30 trades and cannot count as ACT below 10. `archive/live_trades.csv` gains `reached_2R`. No order, entry, exit or sizing rule changed.
 

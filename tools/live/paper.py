@@ -27,7 +27,7 @@ STATE = os.path.join(ROOT, 'archive', 'paper_state.json')
 
 FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3),
              'XBI': ('LABU', 'LABD', 3, 3), 'XLF': ('FAS', 'FAZ', 3, 3)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
-PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY']     # tie order for same-bar pullback triggers
+PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVDQ', 'NVD', 'MSFU', 'SSG']     # tie order for same-bar pullback triggers (v5.2.21: + NVDQ NVD MSFU SSG)
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
 REAL_FREE = False       # --real-free: list LIVE signals even while the MODEL's own position is open (the governor closed the real one by hand; RULEBOOK A3/B4.2)
 FLOOR_TARGET = True     # pullback take-profit = morning high rounded down to the cent; main() turns it off for days before FLOOR_FROM
@@ -44,8 +44,14 @@ NO_TRADE = {'2026-11-26': 'Thanksgiving (closed)', '2026-11-27': 'early close 13
             '2027-09-06': 'Labor Day (closed)', '2027-11-25': 'Thanksgiving (closed)', '2027-11-26': 'early close 13:00', '2027-12-24': 'Christmas observed (closed)'}
 CALENDAR_THROUGH = '2027-12-31'
 EXPECTED = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF', 'TQQQ', 'SQQQ', 'SOXL', 'SOXS', 'TNA', 'TZA', 'TECL', 'TECS', 'LABU', 'LABD',
-            'FAS', 'FAZ', 'UVXY']      # the two C1.2 fetch groups
+            'FAS', 'FAZ', 'UVXY', 'NVDQ', 'NVD', 'MSFU', 'SSG']      # the three C1.2 fetch groups (v5.2.21)
 SKIP = set()            # --skip: proxies/legs barred from REAL entries today (RULEBOOK A1.9 earnings); the model is unchanged
+# A1.9 earnings skip (v5.2.21): single-stock funds are barred from REAL entries on the session after their company reports (pm reports -> next day).
+# Dates from get_earnings_results, checked 2026-10-28; refresh each quarter (C3 at 9:00 confirms). The model is unchanged.
+EARNINGS_SKIP = {'2026-10-29': ['MSFU'],              # MSFT reports 2026-10-28 pm
+                 '2026-11-18': ['NVD', 'NVDQ'],       # NVDA reports 2026-11-17 pm
+                 '2027-01-28': ['MSFU'],              # MSFT 2027-01-27 pm (tentative)
+                 '2027-02-25': ['NVD', 'NVDQ']}       # NVDA 2027-02-24 pm (tentative)
 
 
 def t2k(hhmm):
@@ -216,7 +222,7 @@ def pb_manage(b, K, k, entry, stop, T):
 
 
 # ------------------------------------------------------------------ day simulation (one shared paper account)
-PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK'}     # proxy RVOL used only to break same-bar ties
+PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA', 'NVDQ': 'NVDQ', 'MSFU': 'MSFU', 'SSG': 'SSG'}     # proxy RVOL used only to break same-bar ties
 
 
 def rvol(today, base, p, k):
@@ -324,7 +330,7 @@ def live_actions(today, taken, signals, K, base=None, day=None):
         if blocked:
             print(f"    (signal {sysn} {sym} -> {legs} not entered: {'A1.13 drawdown stop' if halted else 'A1.10 no-trade day'})"); continue
         if sym in SKIP or legs in SKIP:
-            print(f"    SKIP {sysn} {sym} -> {legs}: barred today by --skip (A1.9 earnings). Log it as skipped."); continue
+            print(f"    SKIP {sysn} {sym} -> {legs}: barred today by --skip / earnings (A1.9). Log it as skipped."); continue
         if not first:
             print(f"    SKIP {sysn} {sym} -> {legs}: lost the same-bar tie (B4.4) to the entry above - one position at a time."); continue
         first = False
@@ -426,9 +432,11 @@ def main():
     global FLOOR_TARGET, REAL_FREE, SKIP
     REAL_FREE = a.real_free
     SKIP = {x.strip().upper() for x in a.skip.split(',') if x.strip()}
+    if EARNINGS_SKIP.get(day):
+        SKIP |= set(EARNINGS_SKIP[day]); print(f"  EARNINGS SKIP (A1.9): no real entries today in {' '.join(EARNINGS_SKIP[day])} (company reported since the prior close)")
     missing = [s for s in EXPECTED if s not in today]
     if missing:
-        print(f"  WARNING: no {day} bars for {' '.join(missing)} - fetch both C1.2 groups"
+        print(f"  WARNING: no {day} bars for {' '.join(missing)} - fetch all three C1.2 groups"
               + ". A missing leg blocks its entry.")
     stale = [s for s in EXPECTED if s in today and today[s][K - 1][4] == 0 and s in ('TECS', 'FAZ', 'LABU', 'LABD', 'UVXY', 'SOXS')]
     if stale: print(f"  note: no trade printed in the last bar for {' '.join(stale)} (filled flat, as the backtest does) - confirm with a quote before any order on them")

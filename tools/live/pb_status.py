@@ -3,6 +3,8 @@ sys.path.insert(0, 'tools/live')
 import paper as P, datetime
 raw = P.load(sys.argv[1:]); day = max(d for s in raw.values() for d in s); prevday = max(d for d in {d for s in raw.values() for d in s} if d < day)
 for leg in P.PB_LIST:
+    if day not in raw.get(leg, {}) or prevday not in raw.get(leg, {}):
+        print(f"{leg:<5} no bars for {day} or {prevday} in the dumps - fetch all three C1.2 groups"); continue
     last = max(m for s_ in raw.values() if day in s_ for m in s_[day])           # newest bar start (minutes) across all symbols
     K = (last - 570) // 5 + 1
     t = P.grid(raw[leg][day], K); p = P.grid(raw[leg][prevday], 78)
