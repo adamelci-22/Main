@@ -376,6 +376,13 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 **Tuesday 2026-10-27, 11:40 (governor: "Let's end the day").** No new entries for the rest of the day (treated as a stop for today only, not a kill-switch for tomorrow). The real account is flat at $2,568.92 with no open orders; the model's TNA runner is a ghost (run slots with `--real-free`). Result so far: one real trade, FADE TNA, +$33.36 (see `live_trades.csv`). The remaining waiters, the 13:30 close and Wednesday's arming are left as they are until the governor says otherwise.
 
+**Wednesday 2026-10-28, 9:00 research (v5.2.25).**
+- **Real account:** flat, no positions, no open equity or OCO orders, **total value $2,568.92** (cash $2,568.92, no pending deposit, unchanged from Tuesday's 13:30 value, so no deposit or withdrawal). Daily loss limit (-3%) = $77.07, stop at $2,491.85.
+- **Controls:** losing streak 0/5. **A1.13 drawdown stop: clear**, high $2,571.81, stop level $2,186.04, value -0.11% from the high (`hwm.py check 2568.92`). No A1.10 restriction; normal full session. Friday FADE skip starts Fri 10-30.
+- **Corporate actions (C3.2):** clean. All 13 funds, NVDQ NVD MSFU SSG and 6 proxies active; premarket moves match their underlyings at the stated leverage (QQQ +0.4% vs TQQQ +1.1% / SQQQ -1.1%; SOXX +0.8% vs SOXL +2.3% / SOXS -2.3%; IWM +0.1% vs TNA +0.3%; XLK +0.5% vs TECL +1.4% / TECS -1.1%; XBI -0.3% vs LABU -1.4% / LABD +1.1%; XLF -0.3% vs FAS -1.1% / FAZ +0.8%); none near 20%. Wide premarket spread on SSG (10.71 / 12.83) and TECL, LABU (A1.7 will matter at the open).
+- **RVOL baseline:** 20 sessions (2026-09-30..2026-10-27) -> `archive/paper_rvol_2026-10-28.json`.
+- **Context:** large reports before the open include BIIB, BSX, GE Vernova, ADP, GRMN, PSX, VRT; after the close MSFT, GOOGL, GOOG, KLAC, NOW, EBAY, FTNT, F, FDX, TMUS (none are traded proxies; MSFT is MSFU's underlying, so no MSFU entry Thu 10-29, A1.9). The Fed meets today (Wed 10-28). No scheduled macro release found before 13:30 in the data available.
+
 **Tuesday 2026-10-27, 9:00 research (v5.2.16).**
 - **Real account:** flat, no positions, no open equity or OCO orders, **total value $2,535.56** (cash $2,535.56, no pending deposit, unchanged from Monday's close; the $2,500 deposit has not landed). Daily loss limit (-3%) = $76.07, stop at $2,459.49.
 - **Controls:** losing streak 0/5. **A1.13 drawdown stop: clear**, value = the high $2,535.56, stop level $2,155.23 (`hwm.py check 2535.56`). No A1.10 restriction; normal full session.
