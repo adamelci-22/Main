@@ -1,0 +1,118 @@
+{
+  "policy": {
+    "cadence_trades": 5,
+    "min_trial_days": 15,
+    "max_trial_days": 30,
+    "promote_pct": 0.5,
+    "discard_pct": -0.5,
+    "early_discard_pct": -2.0
+  },
+  "space": {
+    "fade.retest_tol_pct": {
+      "lo": 0.05,
+      "hi": 0.2,
+      "step": 0.02,
+      "rule": "B2.3 retest tolerance on the proxy, %"
+    },
+    "fade.lock_trigger_r": {
+      "lo": 0.3,
+      "hi": 0.8,
+      "step": 0.1,
+      "rule": "B2.5 close at this R arms the lock"
+    },
+    "fade.lock_level_r": {
+      "lo": 0.0,
+      "hi": 0.3,
+      "step": 0.05,
+      "rule": "B2.5 stop moves to this R once armed"
+    },
+    "fade.cut_r": {
+      "lo": -0.8,
+      "hi": -0.3,
+      "step": 0.1,
+      "rule": "B2.5 early cut: 3rd bar close at or below this R"
+    },
+    "pb.vol_mult": {
+      "lo": 1.2,
+      "hi": 2.0,
+      "step": 0.1,
+      "rule": "B3.2 breakout volume multiple"
+    },
+    "fade.target_r": {
+      "lo": 1.5,
+      "hi": 3.0,
+      "step": 0.25,
+      "rule": "B2.5 R multiple of the take-profit (was fixed 2R)"
+    },
+    "fade.take_frac": {
+      "lo": 0.25,
+      "hi": 0.5,
+      "step": 0.05,
+      "rule": "B2.5/B5.2 share sold at the take-profit (was fixed 1/3, floor of shares)"
+    },
+    "fade.chandelier_atr": {
+      "lo": 1.5,
+      "hi": 3.0,
+      "step": 0.25,
+      "rule": "B2.5/B5.4 chandelier ATR multiple for the runner (was fixed 2)"
+    },
+    "pb.stop_buffer_pct": {
+      "lo": 0.02,
+      "hi": 0.15,
+      "step": 0.01,
+      "rule": "B3.7 stop buffer below the dip low, %"
+    },
+    "pb.min_stop_pct": {
+      "lo": 0.5,
+      "hi": 1.0,
+      "step": 0.05,
+      "rule": "B3.7 minimum stop distance, %"
+    },
+    "risk.pct": {
+      "lo": 1.0,
+      "hi": 3.0,
+      "step": 0.5,
+      "down_only": true,
+      "needs": "risk_off",
+      "rule": "B4.1 account risk per trade, as a % of total account value (never dollars). Downward only, only with --risk-off. Raising it above 3.0 needs the governor to edit hi"
+    },
+    "size.cap_pct": {
+      "lo": 50.0,
+      "hi": 100.0,
+      "step": 10.0,
+      "down_only": true,
+      "needs": "risk_off",
+      "rule": "B4.1 largest position as a % of total account value (never dollars). Downward only, only with --risk-off. Adds a third term to B4.1: floor(cap% x total_value / ask). It binds only below 100"
+    }
+  },
+  "versions": [
+    {
+      "version": 1,
+      "kind": "baseline",
+      "effective_from": "0000-00-00",
+      "note": "RULEBOOK v5.2.28 constants",
+      "values": {
+        "fade.retest_tol_pct": 0.1,
+        "fade.lock_trigger_r": 0.5,
+        "fade.lock_level_r": 0.15,
+        "fade.cut_r": -0.5,
+        "pb.vol_mult": 1.5,
+        "fade.target_r": 2.0,
+        "fade.take_frac": 0.3333333333333333,
+        "fade.chandelier_atr": 2.0,
+        "pb.stop_buffer_pct": 0.05,
+        "pb.min_stop_pct": 0.75,
+        "risk.pct": 3.0,
+        "size.cap_pct": 100.0
+      }
+    }
+  ],
+  "challenger": null,
+  "goals": {
+    "target_daily_pct": 0.4,
+    "max_drawdown_pct": 15.0,
+    "min_sharpe": 1.2,
+    "target_sharpe": 2.0,
+    "note": "Governor goals. Objective: 0.4% per trading day averaged over a year. The 15% limit matches A1.13. Used by the menu gate, the proposer prompt and status."
+  }
+}
