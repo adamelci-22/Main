@@ -1,6 +1,6 @@
 # PROPOSED: self-improvement loop, RULEBOOK D4 (draft, not in force)
 
-Status: draft for the governor. Nothing here changes a trade until the governor approves it and the version is bumped to 5.2.29. The only edit to an existing file is `tools/live/paper.py`, and it is behaviour-neutral (section 2). `RULEBOOK.md` is unchanged.
+Status: ADOPTED in RULEBOOK v5.2.29 (governor instruction, 2026-10-28). The text below is the design record; RULEBOOK D4 and C4 step 5 are in force.
 
 ## 1. What it does
 

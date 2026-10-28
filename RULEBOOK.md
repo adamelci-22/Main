@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.28** (2026-10-28; scorecard dashboard refreshed at each 13:30 close, C5, no trading rule changed; v5.2.23 same day: health tracker adds execution gap and trade frequency for both systems, C5, no trading rule changed; v5.2.22 same day: FADE frozen trail removed, B2.5/B5.3; v5.2.21 same day: PULLBACK list + NVDQ NVD MSFU SSG with the A1.9 earnings skip back, PULLBACK health tracker, B1/A1.9/C1.2/C5; v5.2.20 same day: FADE health tracker in the 13:30 report, no trading rule changed; v5.2.19 2026-10-27: FADE +0.15R lock at the first +0.5R close and early cut 15 min after entry at -0.5R, B2.5/B5.3; v5.2.18 2026-10-27: FADE frozen 1R trail before 2R, capped at +0.75R, B2.5/B5.3; v5.2.17 same day: no FADE entries on Fridays, A1.10; v5.2.16 2026-10-26: A1.13 hard drawdown stop at -15% from the all-time high, nothing else changed; v5.2.15 2026-10-24: DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.29** (v5.2.29 2026-10-28: self-improvement loop added (D4, C4 step 5), no trading rule, entry, exit or sizing changed, A1 untouched; 2026-10-28; scorecard dashboard refreshed at each 13:30 close, C5, no trading rule changed; v5.2.23 same day: health tracker adds execution gap and trade frequency for both systems, C5, no trading rule changed; v5.2.22 same day: FADE frozen trail removed, B2.5/B5.3; v5.2.21 same day: PULLBACK list + NVDQ NVD MSFU SSG with the A1.9 earnings skip back, PULLBACK health tracker, B1/A1.9/C1.2/C5; v5.2.20 same day: FADE health tracker in the 13:30 report, no trading rule changed; v5.2.19 2026-10-27: FADE +0.15R lock at the first +0.5R close and early cut 15 min after entry at -0.5R, B2.5/B5.3; v5.2.18 2026-10-27: FADE frozen 1R trail before 2R, capped at +0.75R, B2.5/B5.3; v5.2.17 same day: no FADE entries on Fridays, A1.10; v5.2.16 2026-10-26: A1.13 hard drawdown stop at -15% from the all-time high, nothing else changed; v5.2.15 2026-10-24: DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -245,6 +245,7 @@ Only the first qualifying setup per ticker per day counts.
 2. **Model record:** run `paper.py --now 13:30 --close <dumps>`. This appends the model's trades to `paper_trades.csv`.
 3. **Log** each real trade in `live_trades.csv`.
 4. **Report** (C5), **arm** the next trading day (D1), then commit and push.
+5. After `paper.py --close`, run `python3 tools/live/improve.py tick <the day's dump files>` and paste its output into the report. Friday summary includes `improve.py status`.
 
 ## C5. Reporting
 
@@ -312,12 +313,13 @@ Only the first qualifying setup per ticker per day counts.
 2. A backtest in `tools/backtest`, covering both halves and the untouched March window.
 3. Re-check `paper.py` against the backtest.
 4. Edit this file, bump the version, add one line to the change log, then commit and push.
+5. **Rulebook artifact (v5.2.28, governor instruction 2026-10-28):** https://claude.ai/artifact/LLqr3TUXyCcESFwfc19EYf shows this file and the live and backtest code as one page. After ANY change to `RULEBOOK.md` or to a file listed in `tools/live/rulebook_artifact.py`, in the same checkpoint run `python3 tools/live/rulebook_artifact.py <out.html>` and publish the output to that URL with the Artifact tool (`url` set, read it first if this session has not; no icon). Reporting only.
+
+**D4. Self-improvement loop (v5.2.29).** `tools/live/improve.py` may propose a change to the twelve tunables in `tools/live/tunables.json` (B2.3, B2.5, B3.2, B3.7, B4.1, B5.4). B2.5, B3.7, B4.1 and B5.2 read their numbers from the version in force; the values in those rules are the v1 defaults. An approved proposal runs only as a paper challenger beside the version in force; the real account and the paper model do not change. The challenger is judged against the version in force on the same saved bars (C4 step 5). It goes live only when the governor runs `promote --effective <future trading day>` after a PROMOTE verdict, and the promotion is recorded in the commit with the governor's words. One challenger at a time. Nothing in A1 is tunable. `tunables.json`, `archive/improve/` and the version bump are committed together.
 
 ---
 
 # PART E — REFERENCE (pull on demand)
-
-- **Rulebook artifact (v5.2.28, governor instruction 2026-10-28):** https://claude.ai/artifact/LLqr3TUXyCcESFwfc19EYf shows this file and the live and backtest code as one page. After ANY change to `RULEBOOK.md` or to a file listed in `tools/live/rulebook_artifact.py`, in the same checkpoint run `python3 tools/live/rulebook_artifact.py <out.html>` and publish the output to that URL with the Artifact tool (`url` set, read it first if this session has not; no icon). Reporting only.
 
 ## E1. Account mechanics
 
@@ -554,3 +556,5 @@ Earlier versions: `archive/former_systems/RULEBOOK_v3.132_full.md` and git histo
 **v5.2.27 — 2026-10-28, governor instruction:** the scorecard artifact is refreshed with each trade right after its exit (B5.8a), not only at 13:30. Reporting only.
 
 **v5.2.28 — 2026-10-28, governor instruction:** the rulebook and code are published as an artifact (https://claude.ai/artifact/LLqr3TUXyCcESFwfc19EYf), rebuilt by `tools/live/rulebook_artifact.py` and republished after every change (D3). Reporting only; no trading rule changed.
+
+**v5.2.29 — 2026-10-28, governor instruction:** self-improvement loop added (D4 and C4 step 5; `tools/live/improve.py`, `tools/live/tunables.json`, the behaviour-neutral hook in `tools/live/paper.py`; design in `PROPOSED_SELF_IMPROVEMENT.md`). `tunables.json` v1 equals the v5.2.28 constants. No trading rule, entry, exit or sizing changed, A1 untouched. Neutrality checked before adoption: `paper.simulate` identical to v5.2.28 on 628 backtest day-runs (494 trades), `paper.py --live` text identical except the one added `size (B4.1)` line, `improve.py menu` baseline v1 114 trades +0.5208%/day drawdown 2.76 with no PASS row.
