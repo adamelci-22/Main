@@ -135,9 +135,12 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
     if entry <= stop or k >= SELL_BY: return None
     r = entry - stop; T = entry + R * r
     gross = 0.0; rem = 1.0; hit = False; hic = entry; events = []; bestc = 0.0
-    end = min(SELL_BY, K - 1); closed = False; xbar = None; why = None
+    end = min(SELL_BY, K - 1); closed = False; xbar = None; why = None; cut = False
     for j in range(k, end + 1):
         o, h, l, c, v = b[j]
+        if cut:                                               # v5.2.19 early cut: sell everything at this bar's open
+            gross += rem * (o - entry); events.append((k2t(j), 'early cut (15 min, close <= -0.5R)', to_m(o), rem)); rem = 0
+            closed = True; xbar = j; why = 'early cut'; break
         if l <= stop:
             px = min(stop, o); gross += rem * (px - entry); events.append((k2t(j), 'stop' if not hit else 'ratchet stop', to_m(px), rem)); rem = 0
             closed = True; xbar = j; why = 'stop' if not hit else 'ratchet stop'; break
@@ -148,6 +151,11 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
         if FROZEN_ON and bestc >= 1.0:                        # v5.2.18: frozen 1R trail on closes, capped at +0.75R
             ns = entry + min(0.75, bestc - 1.0) * r
             if ns > stop: stop = ns; events.append((k2t(j), 'frozen-trail stop raised', to_m(ns), rem))
+        if LOCKCUT_ON and bestc >= LOCK_TRIG:                 # v5.2.19 (B): first 5-min close at +0.5R -> stop at least +0.15R
+            ns = entry + LOCK_LVL * r
+            if ns > stop: stop = ns; events.append((k2t(j), 'lock stop raised to +0.15R', to_m(ns), rem))
+        if LOCKCUT_ON and j - k + 1 == CUT_BARS and (c - entry) / r <= CUT_R and j < SELL_BY:   # v5.2.19 (C): 15 min after entry, close <= -0.5R
+            cut = True
         hic = max(hic, c)
         if hit and j < SELL_BY: stop = max(stop, hic - 2 * atr(b, j))
     if not closed and K - 1 >= SELL_BY:
@@ -155,7 +163,7 @@ def fade_manage(raw, K, k, side, e_real, stop_real, R=2.0, frac=1 / 3):
         closed = True; xbar = SELL_BY; why = 'time'
     # runner level the real account uses if ITS 1/3 take-profit filled before the model's (B5.4): breakeven, then the chandelier
     chand = max(entry, hic - 2 * atr(b, end)) if end >= k else entry
-    return dict(status='closed' if closed else 'open', side=side, k=k, xbar=xbar, why=why, entry=e_real, stop0=stop_real,
+    return dict(status='closed' if closed else 'open', cut_now=cut and not closed, side=side, k=k, xbar=xbar, why=why, entry=e_real, stop0=stop_real,
                 stop_now=to_m(stop), chand_if_done=to_m(chand), target=to_m(T), gross=gross, rem=rem, events=events, risk_pct=r / e_real * 100)
 
 
@@ -220,6 +228,9 @@ def rvol(today, base, p, k):
 FADE_NO_FRIDAY_FROM = '2026-10-28'   # RULEBOOK v5.2.17 (A1.10): no FADE entries on Fridays from this date; PULLBACK still trades Fridays
 FROZEN_FROM = '2026-10-28'   # RULEBOOK v5.2.18 (B2): before 2R the FADE stop is frozen at -1R until a 5-min close at +1R, then trails 1R behind the best close, capped at +0.75R
 FROZEN_ON = False            # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.18 exits
+LOCKCUT_FROM = '2026-10-28'  # RULEBOOK v5.2.19 (B2): a 5-min close at +0.5R puts the FADE stop at +0.15R; 15 min after entry a close at -0.5R or worse sells everything at the next checkpoint
+LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.19 exits
+LOCK_TRIG, LOCK_LVL, CUT_BARS, CUT_R = 0.5, 0.15, 3, -0.5
 
 
 def fade_day_ok(day):
@@ -231,6 +242,8 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     day (YYYY-MM-DD) switches off FADE on Fridays from FADE_NO_FRIDAY_FROM (v5.2.17); without it (backtest replays) FADE runs every day.
     streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
     Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
+    global FROZEN_ON, LOCKCUT_ON
+    FROZEN_ON = bool(day and day >= FROZEN_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM)
     cands, signals = [], []
     for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
         if p not in today or not fade_day_ok(day): continue
@@ -342,9 +355,13 @@ def live_actions(today, taken, signals, K, base=None, day=None):
             if lnow is None:
                 print(f"    MANAGE FADE {leg}: no {leg} bars in the dump - refetch; until then leave the resting orders alone and manage from the broker state (A4.5). "
                       f"Model: 1/3 take-profit {'DONE' if hit else 'not yet'}, runner stop on the proxy {c['stop_now']:.2f}")
-            elif not hit and FROZEN_ON and abs(c['stop_now'] - c['stop0']) > 1e-9:
+            elif c.get('cut_now'):
+                print(f"    MANAGE FADE {leg}: EARLY CUT (v5.2.19, B2.5/B5.3): 15 min after entry the proxy closed at -0.5R or worse. SELL ALL {leg} NOW: "
+                      f"cancel the OCO and the 2/3 stop -> verify cancelled -> sell every share (marketable limit) -> verify flat (B5.7 steps 1-3). "
+                      f"If the real 1/3 already filled, sell the rest the same way.")
+            elif not hit and (FROZEN_ON or LOCKCUT_ON) and abs(c['stop_now'] - c['stop0']) > 1e-9:
                 lock = side * (c['stop_now'] - c['entry']) / (side * (c['entry'] - c['stop0']))
-                print(f"    MANAGE FADE {leg}: FROZEN TRAIL (v5.2.18, B5.3): model stop raised to {lock:+.2f}R (proxy {c['stop_now']:.2f}). "
+                print(f"    MANAGE FADE {leg}: STOP RAISE (+0.15R lock v5.2.19 / frozen trail v5.2.18, B5.3): model stop raised to {lock:+.2f}R (proxy {c['stop_now']:.2f}). "
                       f"Real stop on ALL shares = F x (1 {'+' if lock >= 0 else '-'} {abs(lock):.2f} x {lev:g} x {c['risk_pct']:.3f}%) = about {leg} {to_leg(lnow, pnow, c['stop_now'], side, lev):.2f} "
                       f"(round down to the cent). Raise only, and only if >= 0.10% above the resting stop: cancel the OCO -> verify -> re-place the OCO "
                       f"(same take-profit, new stop) -> verify; cancel the 2/3 stop -> verify -> place it at the new stop -> verify. "
