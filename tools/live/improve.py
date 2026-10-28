@@ -605,8 +605,18 @@ def scrapped(t, sysk):
     return {e['id'] for e in rledger() if e.get('kind') == 'trial' and e.get('system') == sysk and e.get('champion_version') == cv and e.get('verdict') in ('scrapped', 'declined')}
 
 
+SHARED = ('risk.pct', 'size.cap_pct')       # shared by both systems: trialled in each cycle, pushed only when both cycles ask for it (governor 2026-10-28)
+
+
 def sys_candidates(t, sysk):
     base = champion_values(t); out = []
+    for var in SHARED:
+        sp = t['space'][var]; new = round(max(sp['lo'], base[var] - sp['step']), 4)
+        if new != base[var]:
+            v = dict(base); v[var] = new
+            out.append(dict(id=f"{var}-1", kind='tunable', desc=f"{var} {base[var]:g} -> {new:g} (shared by both systems: needs a push request from both cycles)", values=v, promotable=True, variable=var, old=base[var], new=new))
+    out = [c for c in out if c['id'] not in scrapped(t, sysk)]
+    for c in out: c['changes'] = {c['variable']: c['new']}
     for c in candidates(t, ()):
         if sys_of(c) != sysk or c['id'] in scrapped(t, sysk): continue
         c['changes'] = {k: v for k, v in c['values'].items() if base.get(k) != v}; out.append(c)
@@ -701,6 +711,9 @@ def advance(t, c):
                 scrap(c, sysk, t, 'scrapped', sc); top.append(f"SCRAPPED ({name}): {st_['id']} still not different after {sc['trades']} trades; pick the next change")
         if c[sysk]['state'] == 'push':
             s2 = c[sysk]; r = s2['result']
+            sh = set(s2['changes']) & set(SHARED); o = c['pb' if sysk == 'fade' else 'fade']
+            if sh and not (o['state'] == 'push' and o.get('changes') == s2['changes']):
+                lines.append(f"  {name}: {s2['id']} passed its trial; it is shared by both systems, so the push request waits until the other cycle passes the same change"); continue
             top.append(f"PUSH REQUEST ({name}): {s2['id']} ({s2['desc']}) beat the live version in the paper trial: {r['trades']} trades, changed {r['new']:+.2f}% vs live {r['live']:+.2f}% of account "
                        f"(delta {r['delta']:+.2f}). Ask the governor: push it live (`improve.py push {sysk} --effective <next trading day> --note \"...\"`) or decline (`improve.py decline {sysk}`)")
     return top, lines
@@ -757,11 +770,17 @@ def cmd_push(a):
     t = tun(); c = cycle(); sysk = a.system; st_ = c[sysk]
     if st_['state'] != 'push': sys.exit(f"{sysk} has no push request")
     future_trading_day(a.effective)
+    other = 'pb' if sysk == 'fade' else 'fade'
+    if set(st_['changes']) & set(SHARED):
+        o = c[other]
+        if o['state'] != 'push' or o.get('changes') != st_['changes']: sys.exit(f"{st_['id']} is shared by both systems: it is pushed only when the {other} cycle also has a push request for the same change")
     vals = {**current(t)['values'], **st_['changes']}
     n = append_version(t, 'change', a.effective, vals, base_version=current(t)['version'], proposal=f"trial.{sysk}.{st_['id']}", note=a.note)
     save_tun(t); radd(kind='trial', system=sysk, id=st_['id'], champion_version=st_['base_version'], idea=st_['desc'], verdict='pushed', why=st_.get('why', ''),
                       method='parallel paper trial', result=json.dumps(st_['result']))
-    ledger('pushed', system=sysk, id=st_['id'], version=n, effective_from=a.effective, note=a.note); c[sysk] = dict(state='waiting', since=a.effective); save_cycle(c)
+    ledger('pushed', system=sysk, id=st_['id'], version=n, effective_from=a.effective, note=a.note); c[sysk] = dict(state='waiting', since=a.effective)
+    if set(st_['changes']) & set(SHARED): c[other] = dict(state='waiting', since=a.effective)      # one push covers both cycles
+    save_cycle(c)
     print(f"PUSHED: v{n} ({st_['id']}) live from {a.effective}. Bump the RULEBOOK version, record it in the commit, commit tunables.json + archive/improve/.")
 
 
