@@ -51,8 +51,15 @@ def pf(rs):
     return (g / l if l else float('inf')) if rs else None
 
 
-fmt_pf = lambda v: 'n/a' if v is None else ('inf (no losses)' if v == float('inf') else f'{v:.2f}')
-line = lambda name, now, h, w, a, st: print(f"  {name:<40}{now:>22}   {h:<10}{w:<16}{a:<10} {st}")
+fmt_pf = lambda v: 'n/a' if v is None else ('inf' if v == float('inf') else f'{v:.2f}')
+STARRED = []
+
+
+def line(name, now, h, w, a, st):
+    """Two short lines per measure (fits an 80-column view): name, value, status; then the three ranges. * = too few trades to count yet."""
+    if st.endswith(' (too few trades)'): st = st.replace(' (too few trades)', '*'); STARRED.append(1)
+    print(f"  {name:<31}{now:<20}{st}")
+    print(f"      healthy {h}   warning {w}   ACT {a}")
 
 
 def system(name, rows, day, tdays, specific):
@@ -63,16 +70,17 @@ def system(name, rows, day, tdays, specific):
     gap = sum(gaps) / len(gaps) if gaps else None
     win = tdays[-FREQ_DAYS:]; got = sum(1 for r in allr if r['date'] in set(win)); exp = RATE[name] * len(win)
     freq = 100 * got / exp if exp else None
-    meas = specific(rs) + [('Execution gap, real - model, per trade', ('n/a' if gap is None else f'{gap:+.2f}%') + f' (n={len(gaps)})', '> -0.10%', '-0.10 to -0.25', '< -0.25%', grade(gap, -0.10, -0.25))]
+    meas = specific(rs) + [('Execution gap (real - model)', ('n/a' if gap is None else f'{gap:+.2f}%') + f' (n={len(gaps)})', '> -0.10%', '-0.10 to -0.25', '< -0.25%', grade(gap, -0.10, -0.25))]
     if n < MIN_ACT: meas = [(a, b, c, d, e, g + ' (too few trades)' if g not in ('n/a',) else g) for a, b, c, d, e, g in meas]
     fg = grade(freq, 59.999, 30)
     fg = 'n/a' if freq is None else ('too early' if len(win) < FREQ_MIN_DAYS else fg.replace('ACT', 'CHECK TOOLING'))
-    print(f"\n{name} HEALTH {day}" + ('' if n >= WINDOW else f'  [provisional: {n} of {WINDOW} trades]'))
-    line('measure', 'now', 'healthy', 'warning', 'ACT', 'status')
+    print(f"\n{name} HEALTH {day}" + ('' if n >= WINDOW else f'  ({n} of {WINDOW} trades so far)'))
+    STARRED.clear()
     for m in meas: line(*m)
     line(f'Trades, last {len(win)} trading days', f'{got} vs {exp:.1f} expected', '>= 60%', '30-60%', '< 30%', f"{fg}" + ('' if freq is None else f' ({freq:.0f}% of pace)'))
-    print(f"  since {LIVE_START} (information): {len(allr)} trades, PF {fmt_pf(pf(allr))}, wins {sum(float(r['pnl_usd']) > 0 for r in allr)}/{len(allr)}, "
-          f"real ${sum(float(r['pnl_usd']) for r in allr):+.2f}")
+    tot = sum(float(r['pnl_usd']) for r in allr)
+    nw = sum(float(r['pnl_usd']) > 0 for r in allr); pl = lambda k, w: f"{k} {w}{'' if k == 1 else 's'}"
+    print(f"  Since Oct 16: {pl(len(allr), 'trade')}, {pl(nw, 'win')}, PF {fmt_pf(pf(allr))}, real {'+' if tot >= 0 else '-'}${abs(tot):,.2f}")
     return meas, fg, n, gap, freq, got, exp
 
 
@@ -109,12 +117,15 @@ def main():
                 ('Average trade (% of position)', 'n/a' if avg is None else f'{avg:+.2f}%', '> +0.20%', '0 to +0.20%', '< 0', grade(avg, 0.20, 0.0))]
 
     fm, ffg, fn, fgap, ffreq, fgot, fexp = system('FADE', rows, day, tdays, fade_specific)
-    line('Drawdown from the all-time high (account)', f'{dd:.1f}% (high ${hwm:,.2f})', '< 7%', '7-10%', '>= 10%', f'{g_dd}   (A1.13 hard stop at 15%)')
+    line('Drawdown from all-time high', f'{dd:.1f}%', '< 7%', '7-10%', '>= 10%', g_dd)
+    print(f"      (account high ${hwm:,.2f}; hard stop at 15%)")
+    if STARRED: print('  * too few trades to count yet (needs 10+)')
     facts, fv = verdict(fm, ffg, [g_dd], 'switch FADE to the S1 stretch-filter version, or pause and review')
     print(f"  VERDICT: {fv}")
     pm, pfg, pn, pgap, pfreq, pgot, pexp = system('PULLBACK', rows, day, tdays, pb_specific)
     pacts, pv = verdict(pm, pfg, [], 'go back to the four funds (SOXS LABD TECS UVXY) or drop PULLBACK')
-    print(f"  VERDICT: {pv}  (probation review at 30 live PULLBACK trades)")
+    if STARRED: print('  * too few trades to count yet (needs 10+)')
+    print(f"  VERDICT: {pv}\n  (probation review at 30 live PULLBACK trades)")
 
     hdr = ['date', 'fade_trades', 'fade_pf', 'pct_reach_2R', 'drawdown_pct', 'total_value', 'hwm', 'pf_status', 'reach_2R_status', 'dd_status', 'act_count', 'verdict',
            'pb_trades', 'pb_pf', 'pb_win_pct', 'pb_avg_pct', 'pb_pf_status', 'pb_win_status', 'pb_avg_status', 'pb_act_count', 'pb_verdict',
