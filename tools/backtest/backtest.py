@@ -24,9 +24,13 @@ PROXIES = list(ROWS)
 LEGS = [x for p in ROWS.values() for x in p]
 
 
-def load():
+def load(live=False):
     raw = json.load(gzip.open(f'{HERE}/data/bt_5m.json.gz'))
     daily = json.load(gzip.open(f'{HERE}/data/bt_daily.json.gz'))
+    lf = f'{HERE}/data/live_5m.json.gz'
+    if live and os.path.exists(lf):                     # live sessions appended by extend_live.py; a day held there replaces the base day
+        for s, days in json.load(gzip.open(lf)).items():
+            for d, bars in days.items(): raw.setdefault(s, {})[d] = bars
     return raw, daily
 
 
@@ -37,15 +41,18 @@ def hhmm_add(t, mins):
 
 
 class Data:
-    def __init__(self):
-        raw, daily = load()
+    def __init__(self, live=False):
+        raw, daily = load(live)
         self.daily = {s: {r[0]: r[1:] for r in rows} for s, rows in daily.items()}
         self.days = []                                    # trading days with a full proxy session
         self.bars = defaultdict(dict)                     # sym -> day -> 78 x (o,h,l,c,v)  (None if no data at all)
         alld = sorted(set(raw['QQQ']))
+        lf = f'{HERE}/data/live_5m.json.gz'
+        live_days = set(json.load(gzip.open(lf))['QQQ']) if live and os.path.exists(lf) else set()
+        LIVE6 = ['QQQ', 'SOXX', 'IWM', 'XLK', 'XBI', 'XLF']        # live sessions carry only the six traded FADE proxies (no SPY, XLE, TLT)
         for d in alld:
             q = raw['QQQ'][d]
-            if len(q) < 78 or any(len(raw[p].get(d, [])) < 78 for p in PROXIES): continue
+            if len(q) < 78 or any(len(raw[p].get(d, [])) < 78 for p in (LIVE6 if d in live_days else PROXIES)): continue
             self.days.append(d)
             t0 = q[0][0]
             grid = [hhmm_add(t0, 5 * i) for i in range(78)]

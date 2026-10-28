@@ -2,6 +2,7 @@ import sys
 sys.path.insert(0,'tools/live')
 import paper as P
 raw=P.load(sys.argv[1:]); day=max(d for s in raw.values() for d in s)
+P.apply_tunables(day)      # RULEBOOK D4: the version in force for this day (retest tolerance)
 K=(max(m for s in raw.values() if day in s for m in s[day])-570)//5+1
 print('last bar starts', P.k2t(K-1))
 for p in ['QQQ','SOXX','IWM','XLK','XBI','XLF']:
@@ -14,7 +15,7 @@ for p in ['QQQ','SOXX','IWM','XLK','XBI','XLF']:
     if not brk: print(f"{p:5} box {lo:.2f}-{hi:.2f} last {last:.2f}  NO BREAK by 10:10 bar -> no FADE today"); continue
     i,side,edge=brk; ret=None
     for j in range(i+1,min(K,i+13)):
-        touch=(b[j][2]<=edge*1.001) if side=='UP' else (b[j][1]>=edge*0.999)
+        tol=P.RETEST_TOL/100; touch=(b[j][2]<=edge*(1+tol)) if side=='UP' else (b[j][1]>=edge*(1-tol))
         inside=(b[j][3]<edge) if side=='UP' else (b[j][3]>edge)
         if touch and inside: ret=(P.k2t(j),'FAILED-RETEST (signal)'); break
         if touch and not inside: ret=(P.k2t(j),'retest HELD (no trade)'); break

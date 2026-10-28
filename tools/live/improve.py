@@ -97,7 +97,7 @@ def load_data():
     import io, contextlib
     with contextlib.redirect_stdout(io.StringIO()):
         from lab import get_data
-        return get_data()
+        return get_data(live=True)      # base dataset plus the live sessions appended by tools/backtest/extend_live.py
 
 
 def run_cf(D, values):

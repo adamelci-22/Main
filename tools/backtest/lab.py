@@ -10,11 +10,16 @@ IDX = {'SPY', 'QQQ', 'IWM'}
 LEV = {'QQQ': 3, 'SPY': 3, 'SOXX': 3, 'IWM': 3, 'XLF': 3, 'XLE': 2, 'TLT': 3, 'XBI': 3,
        'XLU': 3, 'XLRE': 3, 'XOP': 2, 'EEM': 3}
 _DATA = None
+_DATA_LIVE = None
 _FEAT = {}
 
 
-def get_data():
-    global _DATA
+def get_data(live=False):
+    """live=True also loads the sessions appended by extend_live.py (used by tools/live/improve.py); the default keeps the base file only, so old results reproduce."""
+    global _DATA, _DATA_LIVE
+    if live:
+        if _DATA_LIVE is None: _DATA_LIVE = Data(live=True)
+        return _DATA_LIVE
     if _DATA is None: _DATA = Data()
     return _DATA
 

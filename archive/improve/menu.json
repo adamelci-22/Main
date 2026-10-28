@@ -1,0 +1,890 @@
+{
+ "base": {
+  "full": {
+   "mean_day": 0.503,
+   "dd": 4.98,
+   "trades": 120,
+   "pf": 3.43,
+   "ret": 127.23,
+   "sharpe": 5.5
+  },
+  "ins": {
+   "mean_day": 0.654,
+   "dd": 2.76,
+   "trades": 81,
+   "pf": 4.3,
+   "ret": 89.3,
+   "sharpe": 6.15
+  },
+  "oos": {
+   "mean_day": 0.2775,
+   "dd": 4.98,
+   "trades": 39,
+   "pf": 2.5,
+   "ret": 20.03,
+   "sharpe": 4.59
+  }
+ },
+ "rows": [
+  {
+   "id": "fade.retest_tol_pct-1",
+   "variable": "fade.retest_tol_pct",
+   "old": 0.1,
+   "new": 0.08,
+   "delta": {
+    "full": 0.0009,
+    "ins": 0.0,
+    "oos": 0.0023
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.5039,
+     "dd": 4.98,
+     "trades": 122,
+     "pf": 3.43,
+     "ret": 127.58,
+     "sharpe": 5.51,
+     "sharpe_gain": 0.01
+    },
+    "ins": {
+     "mean_day": 0.654,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.3,
+     "ret": 89.3,
+     "sharpe": 6.15
+    },
+    "oos": {
+     "mean_day": 0.2798,
+     "dd": 4.98,
+     "trades": 41,
+     "pf": 2.51,
+     "ret": 20.22,
+     "sharpe": 4.63
+    }
+   },
+   "passes": false,
+   "fails": [
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.retest_tol_pct+1",
+   "variable": "fade.retest_tol_pct",
+   "old": 0.1,
+   "new": 0.12,
+   "delta": {
+    "full": 0.0,
+    "ins": 0.0,
+    "oos": 0.0
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.503,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.43,
+     "ret": 127.23,
+     "sharpe": 5.5,
+     "sharpe_gain": 0.0
+    },
+    "ins": {
+     "mean_day": 0.654,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.3,
+     "ret": 89.3,
+     "sharpe": 6.15
+    },
+    "oos": {
+     "mean_day": 0.2775,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.5,
+     "ret": 20.03,
+     "sharpe": 4.59
+    }
+   },
+   "passes": false,
+   "fails": [
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.lock_trigger_r-1",
+   "variable": "fade.lock_trigger_r",
+   "old": 0.5,
+   "new": 0.4,
+   "delta": {
+    "full": -0.0428,
+    "ins": -0.0394,
+    "oos": -0.0477
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4602,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.19,
+     "ret": 111.72,
+     "sharpe": 5.08,
+     "sharpe_gain": -0.42
+    },
+    "ins": {
+     "mean_day": 0.6146,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.05,
+     "ret": 82.06,
+     "sharpe": 5.82
+    },
+    "oos": {
+     "mean_day": 0.2298,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.23,
+     "ret": 16.29,
+     "sharpe": 3.92
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.lock_trigger_r+1",
+   "variable": "fade.lock_trigger_r",
+   "old": 0.5,
+   "new": 0.6,
+   "delta": {
+    "full": 0.0002,
+    "ins": 0.0073,
+    "oos": -0.0102
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.5032,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.35,
+     "ret": 127.31,
+     "sharpe": 5.49,
+     "sharpe_gain": -0.01
+    },
+    "ins": {
+     "mean_day": 0.6613,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.33,
+     "ret": 90.67,
+     "sharpe": 6.22
+    },
+    "oos": {
+     "mean_day": 0.2673,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.36,
+     "ret": 19.21,
+     "sharpe": 4.39
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.lock_level_r-1",
+   "variable": "fade.lock_level_r",
+   "old": 0.15,
+   "new": 0.1,
+   "delta": {
+    "full": -0.0034,
+    "ins": -0.004,
+    "oos": -0.0022
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4996,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.41,
+     "ret": 125.97,
+     "sharpe": 5.46,
+     "sharpe_gain": -0.04
+    },
+    "ins": {
+     "mean_day": 0.65,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.28,
+     "ret": 88.54,
+     "sharpe": 6.11
+    },
+    "oos": {
+     "mean_day": 0.2753,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.48,
+     "ret": 19.86,
+     "sharpe": 4.55
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.lock_level_r+1",
+   "variable": "fade.lock_level_r",
+   "old": 0.15,
+   "new": 0.2,
+   "delta": {
+    "full": -0.0058,
+    "ins": -0.0095,
+    "oos": -0.0002
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4972,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.41,
+     "ret": 125.05,
+     "sharpe": 5.44,
+     "sharpe_gain": -0.06
+    },
+    "ins": {
+     "mean_day": 0.6445,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.27,
+     "ret": 87.53,
+     "sharpe": 6.07
+    },
+    "oos": {
+     "mean_day": 0.2773,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.5,
+     "ret": 20.01,
+     "sharpe": 4.57
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.cut_r-1",
+   "variable": "fade.cut_r",
+   "old": -0.5,
+   "new": -0.6,
+   "delta": {
+    "full": 0.0026,
+    "ins": 0.0,
+    "oos": 0.0065
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.5056,
+     "dd": 4.56,
+     "trades": 120,
+     "pf": 3.49,
+     "ret": 128.23,
+     "sharpe": 5.53,
+     "sharpe_gain": 0.03
+    },
+    "ins": {
+     "mean_day": 0.654,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.3,
+     "ret": 89.3,
+     "sharpe": 6.15
+    },
+    "oos": {
+     "mean_day": 0.284,
+     "dd": 4.56,
+     "trades": 39,
+     "pf": 2.59,
+     "ret": 20.56,
+     "sharpe": 4.74
+    }
+   },
+   "passes": false,
+   "fails": [
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.cut_r+1",
+   "variable": "fade.cut_r",
+   "old": -0.5,
+   "new": -0.4,
+   "delta": {
+    "full": 0.01,
+    "ins": 0.0,
+    "oos": 0.0249
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.513,
+     "dd": 3.34,
+     "trades": 120,
+     "pf": 3.69,
+     "ret": 131.14,
+     "sharpe": 5.68,
+     "sharpe_gain": 0.18
+    },
+    "ins": {
+     "mean_day": 0.654,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.3,
+     "ret": 89.3,
+     "sharpe": 6.15
+    },
+    "oos": {
+     "mean_day": 0.3024,
+     "dd": 3.34,
+     "trades": 39,
+     "pf": 2.93,
+     "ret": 22.1,
+     "sharpe": 5.37
+    }
+   },
+   "passes": true,
+   "fails": []
+  },
+  {
+   "id": "pb.vol_mult-1",
+   "variable": "pb.vol_mult",
+   "old": 1.5,
+   "new": 1.4,
+   "delta": {
+    "full": -0.0044,
+    "ins": 0.0087,
+    "oos": -0.024
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4986,
+     "dd": 4.98,
+     "trades": 128,
+     "pf": 3.06,
+     "ret": 125.36,
+     "sharpe": 5.31,
+     "sharpe_gain": -0.19
+    },
+    "ins": {
+     "mean_day": 0.6627,
+     "dd": 2.76,
+     "trades": 84,
+     "pf": 4.15,
+     "ret": 90.83,
+     "sharpe": 6.11
+    },
+    "oos": {
+     "mean_day": 0.2535,
+     "dd": 4.98,
+     "trades": 44,
+     "pf": 2.08,
+     "ret": 18.09,
+     "sharpe": 4.01
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "pb.vol_mult+1",
+   "variable": "pb.vol_mult",
+   "old": 1.5,
+   "new": 1.6,
+   "delta": {
+    "full": -0.0305,
+    "ins": -0.0199,
+    "oos": -0.0461
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4725,
+     "dd": 5.33,
+     "trades": 113,
+     "pf": 3.33,
+     "ret": 116.05,
+     "sharpe": 5.18,
+     "sharpe_gain": -0.32
+    },
+    "ins": {
+     "mean_day": 0.6341,
+     "dd": 3.74,
+     "trades": 77,
+     "pf": 4.38,
+     "ret": 85.6,
+     "sharpe": 5.98
+    },
+    "oos": {
+     "mean_day": 0.2314,
+     "dd": 5.33,
+     "trades": 36,
+     "pf": 2.25,
+     "ret": 16.41,
+     "sharpe": 3.89
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.target_r-1",
+   "variable": "fade.target_r",
+   "old": 2.0,
+   "new": 1.75,
+   "delta": {
+    "full": -0.0059,
+    "ins": -0.008,
+    "oos": -0.0026
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4971,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.4,
+     "ret": 125.16,
+     "sharpe": 5.52,
+     "sharpe_gain": 0.02
+    },
+    "ins": {
+     "mean_day": 0.646,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.25,
+     "ret": 87.89,
+     "sharpe": 6.19
+    },
+    "oos": {
+     "mean_day": 0.2749,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.48,
+     "ret": 19.83,
+     "sharpe": 4.58
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.target_r+1",
+   "variable": "fade.target_r",
+   "old": 2.0,
+   "new": 2.25,
+   "delta": {
+    "full": -0.0135,
+    "ins": -0.0275,
+    "oos": 0.0074
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4895,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.38,
+     "ret": 122.11,
+     "sharpe": 5.3,
+     "sharpe_gain": -0.2
+    },
+    "ins": {
+     "mean_day": 0.6265,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.17,
+     "ret": 84.14,
+     "sharpe": 5.83
+    },
+    "oos": {
+     "mean_day": 0.2849,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.54,
+     "ret": 20.62,
+     "sharpe": 4.65
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.take_frac-1",
+   "variable": "fade.take_frac",
+   "old": 0.3333333333333333,
+   "new": 0.2833,
+   "delta": {
+    "full": 0.0083,
+    "ins": 0.0115,
+    "oos": 0.0038
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.5113,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.46,
+     "ret": 130.22,
+     "sharpe": 5.45,
+     "sharpe_gain": -0.05
+    },
+    "ins": {
+     "mean_day": 0.6655,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.36,
+     "ret": 91.32,
+     "sharpe": 6.08
+    },
+    "oos": {
+     "mean_day": 0.2813,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.52,
+     "ret": 20.33,
+     "sharpe": 4.6
+    }
+   },
+   "passes": false,
+   "fails": [
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.take_frac+1",
+   "variable": "fade.take_frac",
+   "old": 0.3333333333333333,
+   "new": 0.3833,
+   "delta": {
+    "full": -0.0084,
+    "ins": -0.0114,
+    "oos": -0.0038
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4946,
+     "dd": 4.98,
+     "trades": 120,
+     "pf": 3.39,
+     "ret": 124.28,
+     "sharpe": 5.54,
+     "sharpe_gain": 0.04
+    },
+    "ins": {
+     "mean_day": 0.6426,
+     "dd": 2.76,
+     "trades": 81,
+     "pf": 4.24,
+     "ret": 87.3,
+     "sharpe": 6.22
+    },
+    "oos": {
+     "mean_day": 0.2737,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.48,
+     "ret": 19.74,
+     "sharpe": 4.56
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.chandelier_atr-1",
+   "variable": "fade.chandelier_atr",
+   "old": 2.0,
+   "new": 1.75,
+   "delta": {
+    "full": -0.0142,
+    "ins": 0.0018,
+    "oos": -0.038
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4888,
+     "dd": 4.98,
+     "trades": 122,
+     "pf": 3.27,
+     "ret": 122.05,
+     "sharpe": 5.44,
+     "sharpe_gain": -0.06
+    },
+    "ins": {
+     "mean_day": 0.6558,
+     "dd": 2.76,
+     "trades": 82,
+     "pf": 4.3,
+     "ret": 89.7,
+     "sharpe": 6.26
+    },
+    "oos": {
+     "mean_day": 0.2395,
+     "dd": 4.98,
+     "trades": 40,
+     "pf": 2.22,
+     "ret": 17.05,
+     "sharpe": 4.14
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "fade.chandelier_atr+1",
+   "variable": "fade.chandelier_atr",
+   "old": 2.0,
+   "new": 2.25,
+   "delta": {
+    "full": -0.0134,
+    "ins": -0.0192,
+    "oos": -0.0046
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4896,
+     "dd": 4.98,
+     "trades": 119,
+     "pf": 3.37,
+     "ret": 122.31,
+     "sharpe": 5.41,
+     "sharpe_gain": -0.09
+    },
+    "ins": {
+     "mean_day": 0.6348,
+     "dd": 2.76,
+     "trades": 80,
+     "pf": 4.19,
+     "ret": 85.77,
+     "sharpe": 6.03
+    },
+    "oos": {
+     "mean_day": 0.2729,
+     "dd": 4.98,
+     "trades": 39,
+     "pf": 2.47,
+     "ret": 19.67,
+     "sharpe": 4.55
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "pb.stop_buffer_pct-1",
+   "variable": "pb.stop_buffer_pct",
+   "old": 0.05,
+   "new": 0.04,
+   "delta": {
+    "full": -0.0011,
+    "ins": 0.0166,
+    "oos": -0.0275
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.5019,
+     "dd": 4.97,
+     "trades": 116,
+     "pf": 3.5,
+     "ret": 126.84,
+     "sharpe": 5.5,
+     "sharpe_gain": 0.0
+    },
+    "ins": {
+     "mean_day": 0.6706,
+     "dd": 2.75,
+     "trades": 79,
+     "pf": 4.64,
+     "ret": 92.47,
+     "sharpe": 6.34
+    },
+    "oos": {
+     "mean_day": 0.25,
+     "dd": 4.97,
+     "trades": 37,
+     "pf": 2.36,
+     "ret": 17.86,
+     "sharpe": 4.17
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "pb.stop_buffer_pct+1",
+   "variable": "pb.stop_buffer_pct",
+   "old": 0.05,
+   "new": 0.06,
+   "delta": {
+    "full": 0.0028,
+    "ins": 0.0052,
+    "oos": -0.0006
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.5058,
+     "dd": 4.99,
+     "trades": 118,
+     "pf": 3.5,
+     "ret": 128.32,
+     "sharpe": 5.53,
+     "sharpe_gain": 0.03
+    },
+    "ins": {
+     "mean_day": 0.6592,
+     "dd": 2.77,
+     "trades": 79,
+     "pf": 4.5,
+     "ret": 90.28,
+     "sharpe": 6.21
+    },
+    "oos": {
+     "mean_day": 0.2769,
+     "dd": 4.99,
+     "trades": 39,
+     "pf": 2.49,
+     "ret": 19.99,
+     "sharpe": 4.57
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "pb.min_stop_pct-1",
+   "variable": "pb.min_stop_pct",
+   "old": 0.75,
+   "new": 0.7,
+   "delta": {
+    "full": -0.0074,
+    "ins": -0.0214,
+    "oos": 0.0136
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4956,
+     "dd": 4.98,
+     "trades": 125,
+     "pf": 3.28,
+     "ret": 124.43,
+     "sharpe": 5.41,
+     "sharpe_gain": -0.09
+    },
+    "ins": {
+     "mean_day": 0.6326,
+     "dd": 3.49,
+     "trades": 84,
+     "pf": 3.87,
+     "ret": 85.28,
+     "sharpe": 5.92
+    },
+    "oos": {
+     "mean_day": 0.2911,
+     "dd": 4.98,
+     "trades": 41,
+     "pf": 2.57,
+     "ret": 21.14,
+     "sharpe": 4.84
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse in-sample",
+    "gain < 0.01%/day"
+   ]
+  },
+  {
+   "id": "pb.min_stop_pct+1",
+   "variable": "pb.min_stop_pct",
+   "old": 0.75,
+   "new": 0.8,
+   "delta": {
+    "full": -0.0134,
+    "ins": 0.0082,
+    "oos": -0.0455
+   },
+   "stats": {
+    "full": {
+     "mean_day": 0.4896,
+     "dd": 4.98,
+     "trades": 114,
+     "pf": 3.37,
+     "ret": 122.26,
+     "sharpe": 5.36,
+     "sharpe_gain": -0.14
+    },
+    "ins": {
+     "mean_day": 0.6622,
+     "dd": 3.4,
+     "trades": 76,
+     "pf": 4.7,
+     "ret": 90.86,
+     "sharpe": 6.25
+    },
+    "oos": {
+     "mean_day": 0.232,
+     "dd": 4.98,
+     "trades": 38,
+     "pf": 2.16,
+     "ret": 16.45,
+     "sharpe": 3.88
+    }
+   },
+   "passes": false,
+   "fails": [
+    "worse out-of-sample",
+    "gain < 0.01%/day"
+   ]
+  }
+ ]
+}
