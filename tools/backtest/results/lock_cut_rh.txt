@@ -1,5 +1,7 @@
 Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24
-  v5.2.18 (before)                   trades  63 PF 4.15 (3.67/4.77) total  +89.0% maxDD  4.0% losing trades  37%
+  v5.2.17 (no frozen, no lock, no cut) trades  63 PF 4.23 (3.81/4.83) total  +97.9% maxDD  4.0% losing trades  38%
+  v5.2.18 (frozen trail)             trades  63 PF 4.15 (3.67/4.77) total  +89.0% maxDD  4.0% losing trades  37%
   B: +0.5R close -> stop +0.15R      trades  63 PF 4.64 (3.67/6.08) total  +86.4% maxDD  4.0% losing trades  30%
   C: 15 min close <= -0.5R -> sell   trades  63 PF 4.51 (4.11/5.00) total  +92.2% maxDD  3.8% losing trades  37%
-  B + C (v5.2.19)                    trades  63 PF 4.74 (3.92/5.84) total  +87.1% maxDD  3.8% losing trades  32%
+  B + C with frozen (v5.2.19)        trades  63 PF 4.74 (3.92/5.84) total  +87.1% maxDD  3.8% losing trades  32%
+  B + C, no frozen (v5.2.22)         trades  63 PF 4.81 (3.97/5.94) total  +89.3% maxDD  3.8% losing trades  32%

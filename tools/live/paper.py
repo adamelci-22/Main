@@ -233,6 +233,7 @@ def rvol(today, base, p, k):
 
 FADE_NO_FRIDAY_FROM = '2026-10-28'   # RULEBOOK v5.2.17 (A1.10): no FADE entries on Fridays from this date; PULLBACK still trades Fridays
 FROZEN_FROM = '2026-10-28'   # RULEBOOK v5.2.18 (B2): before 2R the FADE stop is frozen at -1R until a 5-min close at +1R, then trails 1R behind the best close, capped at +0.75R
+FROZEN_OFF_FROM = '2026-10-28'   # RULEBOOK v5.2.22: frozen trail REMOVED by the governor before it ever ran live (on only for days in [FROZEN_FROM, FROZEN_OFF_FROM), i.e. never)
 FROZEN_ON = False            # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.18 exits
 LOCKCUT_FROM = '2026-10-28'  # RULEBOOK v5.2.19 (B2): a 5-min close at +0.5R puts the FADE stop at +0.15R; 15 min after entry a close at -0.5R or worse sells everything at the next checkpoint
 LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.19 exits
@@ -249,7 +250,7 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
     Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
     global FROZEN_ON, LOCKCUT_ON
-    FROZEN_ON = bool(day and day >= FROZEN_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM)
+    FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM)
     cands, signals = [], []
     for p, (bull, bear, lev_bull, lev_bear) in FADE_ROWS.items():
         if p not in today or not fade_day_ok(day): continue
@@ -367,7 +368,7 @@ def live_actions(today, taken, signals, K, base=None, day=None):
                       f"If the real 1/3 already filled, sell the rest the same way.")
             elif not hit and (FROZEN_ON or LOCKCUT_ON) and abs(c['stop_now'] - c['stop0']) > 1e-9:
                 lock = side * (c['stop_now'] - c['entry']) / (side * (c['entry'] - c['stop0']))
-                print(f"    MANAGE FADE {leg}: STOP RAISE (+0.15R lock v5.2.19 / frozen trail v5.2.18, B5.3): model stop raised to {lock:+.2f}R (proxy {c['stop_now']:.2f}). "
+                print(f"    MANAGE FADE {leg}: STOP RAISE (+0.15R lock v5.2.19, B5.3): model stop raised to {lock:+.2f}R (proxy {c['stop_now']:.2f}). "
                       f"Real stop on ALL shares = F x (1 {'+' if lock >= 0 else '-'} {abs(lock):.2f} x {lev:g} x {c['risk_pct']:.3f}%) = about {leg} {to_leg(lnow, pnow, c['stop_now'], side, lev):.2f} "
                       f"(round down to the cent). Raise only, and only if >= 0.10% above the resting stop: cancel the OCO -> verify -> re-place the OCO "
                       f"(same take-profit, new stop) -> verify; cancel the 2/3 stop -> verify -> place it at the new stop -> verify. "
