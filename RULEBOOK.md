@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.33** (v5.2.33 2026-10-28: loop scores risk the way the account lives it, regime signal, live-vs-model attribution and a health-linked defensive review, D4, reports only, no trading rule, entry, exit or sizing changed; v5.2.32 2026-10-28: watchlist of tickers and proxies to try in shadow, D4, C4, no trading rule, entry, exit or sizing changed; v5.2.31 2026-10-28: loop rebuilt on forward-shadow evidence with idea switches, bootstrap gate and research ledger, 13:30 weekday trigger for the loop, no trading rule, entry, exit or sizing changed; v5.2.30 2026-10-28: loop baseline hold recorded, research dataset extended with live sessions (C4 step 6), B4.1 states the size-cap term, status scripts read the tunables, no trading rule, entry, exit or sizing changed; v5.2.29 2026-10-28: self-improvement loop added (D4, C4 step 5), no trading rule, entry, exit or sizing changed, A1 untouched; 2026-10-28; scorecard dashboard refreshed at each 13:30 close, C5, no trading rule changed; v5.2.23 same day: health tracker adds execution gap and trade frequency for both systems, C5, no trading rule changed; v5.2.22 same day: FADE frozen trail removed, B2.5/B5.3; v5.2.21 same day: PULLBACK list + NVDQ NVD MSFU SSG with the A1.9 earnings skip back, PULLBACK health tracker, B1/A1.9/C1.2/C5; v5.2.20 same day: FADE health tracker in the 13:30 report, no trading rule changed; v5.2.19 2026-10-27: FADE +0.15R lock at the first +0.5R close and early cut 15 min after entry at -0.5R, B2.5/B5.3; v5.2.18 2026-10-27: FADE frozen 1R trail before 2R, capped at +0.75R, B2.5/B5.3; v5.2.17 same day: no FADE entries on Fridays, A1.10; v5.2.16 2026-10-26: A1.13 hard drawdown stop at -15% from the all-time high, nothing else changed; v5.2.15 2026-10-24: DST-proof tooling, 2027 calendar, deposit check, no trading rule changed; v5.2.14 NVD removed from PULLBACK; v5.2.13 AMD fade row replaced by XLF; the take-profit rounding in B3.9/B5 from 2026-10-16; the take-profit rounding in B3.9/B5 applies from Mon 2026-10-19). Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.34** (v5.2.34 2026-10-28: loop cleaned up to protect the edge: edge monitor, candidate pruning, rollback guard, schedule text matches the waiters; no trading rule, entry, exit or sizing changed. Every earlier version is in the change log at the end.) Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -26,7 +26,7 @@ Nothing carries between checkpoints. State lives in this file, `archive/live_tra
 | **9:30** | A1.8 (overnight check) only; otherwise a one-line no-op |
 | **10:00–13:25** (5-minute slots) | A · B · C1 · C2 |
 | **13:30** close | A · B5.7 · C4 · C5 · D |
-| **8:00pm** backup | A2 · D1 |
+| **13:30 loop trigger** | C4 steps 5-6 · D4 |
 
 Part E is reference only. Pull a section when a rule points to it. `grep` for `^# PART` to find each part's current line range; never hardcode line numbers.
 
@@ -56,13 +56,11 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 
 **Losing-streak clearances:** none yet. The live record starts 2026-10-16. Old-system trades in `archive/trade_history/old_system_trades.csv` don't count.
 
-## A2. Trigger hygiene
+## A2. Trigger hygiene (v5.2.34)
 
-1. List triggers. **Delete every one with `ended_reason='run_once_fired'`.**
-2. Exactly one trigger per slot. Delete duplicates before arming.
-3. Never delete the trigger you are running from until tomorrow is armed.
-4. **Never delete the 13:30 close or the 8:00pm backup** (D1).
-5. A past-due trigger that is still enabled is a **missed** checkpoint. Do its work now, say it was missed, then delete it.
+1. The only standing scheduled trigger is the **13:30 ET weekday loop trigger** (D1). Checkpoints are never armed as scheduled triggers (v5.2.26).
+2. List triggers at 9:00. Report and delete any one-shot that already fired (`ended_reason='run_once_fired'`), and report any trigger you do not recognise; never delete the 13:30 loop trigger.
+3. A scheduled message that arrives while a waiter already ran the same step is answered in one line.
 
 ## A3. State check
 
@@ -224,7 +222,7 @@ Only the first qualifying setup per ticker per day counts.
 
 - **Flat, or a FADE position is open:** run every 5-minute slot.
 - **Only a PULLBACK position is open** (its OCO resting): run only the :00 and :30 slots. Every other slot is a one-line no-op.
-- **Early shutdown:** delete the remaining slots before 13:30, keeping 13:30 and 8:00pm, once any of these is true:
+- **Early shutdown:** the remaining slot waiters before 13:30 answer in one line (13:30 still runs), once any of these is true:
   - it is 12:55 or later and the account is flat with no open orders;
   - the daily loss limit (A1.2) has fired and the account is flat;
   - the losing-streak lockout (A1.1) is on and the account is flat.
@@ -245,7 +243,7 @@ Only the first qualifying setup per ticker per day counts.
 1. **Flatten** the real account (B5.7). Verify it's flat with no open orders.
 2. **Model record:** run `paper.py --now 13:30 --close <dumps>`. This appends the model's trades to `paper_trades.csv`.
 3. **Log** each real trade in `live_trades.csv`.
-4. **Report** (C5), **arm** the next trading day (D1), then commit and push.
+4. **Report** (C5), then commit and push. Nothing is armed for the next day (D1: the session starts its waiters at 9:30).
 5. After `paper.py --close`, fetch the watchlist research group (the symbols in `tools/live/watchlist.json` that are not in the C1.2 groups, at most 10 per call, 5-minute bars from the prior trading day's 9:30, D4), then run `python3 tools/live/improve.py tick <the day's dump files, watchlist dumps included>` and paste its output into the report, with any EVIDENCE READY, IDEA READY, TICKER READY, DEFENSIVE REVIEW or RETIRED line at the top (D4). `tick` also prints the regime line every close and, on Fridays, the week's live-vs-model attribution. Friday summary includes `improve.py status`. A scheduled trigger fires this at 13:30 ET each weekday (v5.2.31), after the last exit; it first checks that the account is flat and that the C4 close has run, and is a one-line no-op on a non-trading day.
 6. **Extend the research dataset (v5.2.30):** run `python3 tools/backtest/extend_live.py <the day's dump files, watchlist dumps included>` (a dump without QQQ only adds its symbols to sessions already in the file) (it adds every complete session in the dumps, so each close adds the prior day) and commit `tools/backtest/data/live_5m.json.gz`. `improve.py` reads the base file plus this one; old research scripts read the base file only.
 
@@ -255,7 +253,7 @@ Only the first qualifying setup per ticker per day counts.
   - any safety control that fires (A1), and every blocked entry;
   - any broker or tool fault that left a position unprotected or cost a checkpoint;
   - any disagreement between broker and model (A3);
-  - a break in the trigger chain.
+  - a missed slot or a waiter that did not fire (D1).
 - **13:30 daily:**
   - each trade: real P&L in dollars and %, and the model's result;
   - the day's P&L and the account value;
@@ -274,29 +272,25 @@ Only the first qualifying setup per ticker per day counts.
 
 # PART D — SCHEDULE & ADMIN
 
-## D1. The grid and arming (ET)
+## D1. The trading day and its waiters (ET, v5.2.34)
 
-- **NO SCHEDULED TRIGGERS (v5.2.26, governor instruction 2026-10-28, "remove all the scheduled checks forever, only keep the waiters").** Everything below that arms or relies on scheduled triggers (the 46-slot chain, 13:30 arming, `chain_ids.json` twin deletion, the 8:00pm verification, the DST check, the primaries as fallback) is **retired**; do not create checkpoint triggers. Checkpoints run only from the session's own waiters: `tools/live/slot_clock.sh HH:MM` for every slot 10:00-13:25 (batch 1 at 9:30, batch 2 at 11:25 for 11:30-13:25, a fresh 13:30 waiter with timeout 900000 at about 13:20 runs the close and the report), and the 9:00 and 9:30 steps run when the session is woken. Known limit: a waiter lives only while this session is running; nothing wakes the session at 9:00 on a new day by itself.
+The checkpoint chain of scheduled triggers was retired by v5.2.26 (governor, 2026-10-28: "remove all the scheduled checks forever, only keep the waiters"); its text is in `archive/former_systems/D1_A2_scheduled_chain_v5.2.25.md`. The day runs from the session's own waiters:
 
-`9:00 · 9:30 · 10:00 · 10:05 · … every 5 minutes … · 13:25 · 13:30 · 8:00pm` — 46 slots per trading day.
+| Time | What runs it | What happens |
+|---|---|---|
+| 9:00 | the session, when woken | C3 research |
+| 9:30 | the session | A1.8 overnight check; then start **batch 1** waiters 10:00 ... 11:25 (18) |
+| 10:00-13:25 | slot waiters | C1 at each slot; the 11:25 checkpoint starts **batch 2** (11:30 ... 13:25, 24); the 13:20 checkpoint starts a fresh **13:30** waiter with `timeout` 900000 |
+| 13:30 | the 13:30 waiter | C4 close and C5 report |
+| 13:30 (about 13:37) | the scheduled loop trigger (weekdays) | checks flat, runs the close if the waiter did not, then C4 steps 5-6 (shadow tick, dataset); a one-line no-op when already done |
 
-- **Primary arming at the 13:30 close.**
-  - Friday arms Monday. Skip market holidays.
-  - Create in batches; the trigger API allows about 10 creations per minute. Then confirm all 46 with `list_triggers`.
-- **Slot backups: removed (v5.2.10, governor instruction 2026-10-22).** The 19 backups (v5.2.8) could not cover a scheduler delay: they were delayed with their primaries (11:05 primary +154 s, its backup +638 s). The slot waiters below replace them. Arming a trading day is the 46 primaries only; confirm all 46 with `list_triggers`. The scheduled primaries stay as the fallback and are the duplicates when a waiter has already run the slot.
-- **Slot waiters (v5.2.10, governor instruction 2026-10-22; replaces the v5.2.9 monitor).** The scheduler fires late (E6), and a Monitor dies after 30 minutes, so the entry window is covered by one-shot waiters. `tools/live/slot_clock.sh HH:MM` (v5.2.15: no offset argument; it reads America/New_York from the system tz database, so the daylight-saving change needs nothing) sleeps on the system clock until HH:MM:06 ET and exits, which wakes the session (about 7 s measured). Start each with Bash `run_in_background`, `timeout` 7200000 (the 2-hour cap). **Batch 1, at the 9:30 checkpoint:** one waiter for each slot 10:00, 10:05, ... 11:25 (18). **Batch 2, when the 11:25 waiter fires:** one for each slot 11:30 ... 13:25 (24). 13:30 stays the scheduled close trigger; **do not start a 13:30 waiter in batch 2 (v5.2.16 note: a waiter started at 11:25 hits the 2-hour cap at 13:25 and is killed, as happened 2026-10-26)**; the 13:20 checkpoint starts a fresh 13:30 waiter with `timeout` 900000. Each waiter is a checkpoint trigger: run the slot (C1) at once. If the scheduled primary for that slot already ran, or the waiter did, answer with one line. A waiter that did not fire at its slot, or batch 2 not started, is a missed checkpoint (C1.6): say so and use the scheduled triggers. The early shutdown (C2) deletes the 13:00-13:25 scheduled triggers and may leave their waiters running; a waiter that fires with the account flat and entries over is a one-line no-op.
-- **Delete the scheduled twin after a waiter completes (v5.2.11, governor instruction 2026-10-22).** When arming a day (13:30 close), save each 10:00-13:25 primary's trigger id to `archive/chain_ids.json` (`{"YYYY-MM-DD": {"10:00": "trig_...", ...}}`, committed with the arming). When a waiter's checkpoint has run **completely** (state check, fetch, engine, any orders placed and verified, report sent, execution log written) **and the account is flat**, call `delete_trigger` on that slot's id, so the late primary never fires. Do not delete while a position or an open order exists: keep the scheduled fallback armed until flat. If the checkpoint errored, was partial, or the waiter did not fire, do not delete: the scheduled primary is then the fallback. A delete that fails because the trigger already fired is harmless (answer the duplicate with one line). Never delete 9:00, 9:30, 13:30 or 8:00pm.
-- **Success-rate tracking (v5.2.12, governor instruction 2026-10-22).** Start every waiter with the description `Slot waiter HH:MM` so its completion shows in the transcript. Each waiter appends `date,slot,due_epoch,fired_epoch` to `archive/waiter_log.csv` itself (commit it at each 13:30). `python3 tools/live/slot_report.py --from 2026-10-23` reports, for the entry window 10:00-12:55: slots covered, missed, first-wake lag (the earlier of the waiter and the scheduled primary; median, p90, max, share over 15/60/300 s), how often the scheduled fallback was needed, and a per-day table, against the scheduler-only baseline of 2026-10-16..22 (median 66 s, p90 233 s, 6.7% of slots over 300 s). **Criteria to delete the scheduled 10:00-12:55 primaries (review Fri 2026-11-06, scheduled one-shot):** at least 10 trading days, 0 missed slots, p90 first wake 20 s or less, fallback used in 2% of slots or fewer. Only the governor decides; the review changes nothing by itself.
-- **Backup at 8:00pm:** check that the next trading day's chain exists (the 46 primaries). Create it only if it's missing, and say so.
-- **Time zone (v5.2.15):** triggers take UTC. **Never hard-code the offset.** Convert every ET time with `bash tools/live/et2utc.sh "YYYY-MM-DD HH:MM"` (ET = UTC−4 until Sun 2026-11-01, UTC−5 from Mon 2026-11-02, back to UTC−4 on Sun 2027-03-14). A one-shot check (`DST check`, Fri 2026-10-30 8:15 PM ET) verifies Monday 2026-11-02's chain times.
-- **Next trading day (v5.2.15):** the 13:30 arming picks the next trading day, skipping weekends and every date in `paper.py`'s `NO_TRADE`. In 2026: after Wed 11-25 arm Mon 11-30 (Thu 11-26 closed, Fri 11-27 early close); after Wed 12-23 arm Mon 12-28 (Thu 12-24 early close, Fri 12-25 closed). In 2027 the closures are listed in `NO_TRADE`.
-- **Deposits and withdrawals (v5.2.15):** nothing is held overnight, so at 9:00 compare total value with the previous 13:30 value. An unexplained change is a deposit or withdrawal: record it in E1 and E5, run `python3 tools/live/hwm.py deposit <+/-amount>` so the A1.13 high moves with it, recompute the floor (A1.4 recomputes it from total value and P&L, so it moves by itself), and add the amount to the model equity in `archive/paper_state.json` so the model's dollars stay comparable (percentages are unaffected).
-- **Prompt templates.** Each prompt names its slot and date, and ends: "RULEBOOK.md governs wherever this prompt differs. This is a real live trading account (Robinhood 462514035) acting on real capital."
-  - **9:00:** "Live mode. Read A, C3, D. State check, record the 9:00 value, controls (streak, earnings, session), RVOL baseline, context."
-  - **9:30:** "Live mode. Overnight check (A1.8): sell anything held. Otherwise a one-line no-op."
-  - **10:00–13:25:** "Live mode. Read A, B, C1, C2. State check, fetch bars, run `tools/live/paper.py --live --now <slot>`, act on LIVE ACTIONS under A1/B5, report changes only, apply C2."
-  - **13:30:** "Live mode. Read A, B5.7, C4, C5, D. Flatten and verify, `paper.py --close`, log the live trades, report, arm the next trading day, commit and push."
-  - **8:00pm:** "Verify the next trading day's chain exists; create it only if missing, and say so."
+- **Waiters.** `tools/live/slot_clock.sh HH:MM` sleeps on the system clock until HH:MM:06 ET (it reads America/New_York, so daylight saving needs nothing) and exits, which wakes the session (about 7 s). Start each with Bash `run_in_background`, description `Slot waiter HH:MM`, `timeout` 7200000 (the 2-hour cap: never start a waiter more than 2 hours before its slot). Each waiter appends `date,slot,due_epoch,fired_epoch` to `archive/waiter_log.csv` (commit it at 13:30); `python3 tools/live/slot_report.py --from 2026-10-23` reports coverage and lag.
+- **A missed slot** (a waiter that did not fire, or batch 2 not started) is reported at once (C1.6) and its scan run late within A1.6's limits.
+- **Known limit:** a waiter lives only while this session runs; nothing wakes the session at 9:00 on a new day by itself. A day the session does not wake is a day with no trades; the trade-frequency measure (C5) flags it.
+- **Early shutdown (C2):** once it applies, the remaining waiters before 13:30 answer in one line.
+- **Time zone:** convert any ET time for a trigger with `bash tools/live/et2utc.sh "YYYY-MM-DD HH:MM"` (ET = UTC−4 until Sun 2026-11-01, UTC−5 from Mon 2026-11-02, back to UTC−4 on Sun 2027-03-14). Never hard-code the offset.
+- **Trading days:** weekdays not in `paper.py`'s `NO_TRADE` (holidays and the early closes Nov 27 and Dec 24, through 2027).
+- **Deposits and withdrawals (v5.2.15):** nothing is held overnight, so at 9:00 compare total value with the previous 13:30 value. An unexplained change is a deposit or withdrawal: record it in E1 and E5, run `python3 tools/live/hwm.py deposit <+/-amount>` so the A1.13 high moves with it, and add the amount to the model equity in `archive/paper_state.json` so the model's dollars stay comparable.
 
 ## D2. Files
 
@@ -327,7 +321,9 @@ Only the first qualifying setup per ticker per day counts.
 - **Attribution.** `improve.py attrib [--since D]` splits each real trade's gap to the model (% of position) into entry price, governor hand close and exit/path, and lists model trades the account missed and real trades the model did not have. Printed on Fridays for the week.
 - **Defensive review.** When the regime is HOSTILE or the day's health row (C5) has any ACT, `tick` prints DEFENSIVE REVIEW with `improve.py defensive`: each lower `risk.pct` and `size.cap_pct` step, one loss ends the day, and dropping each FADE proxy, scored on the last 60 sessions in the stressed scenario. Report it to the governor at once; the governor decides (a size cut is `menu --risk-off` then the normal approve and promote, a proxy drop is a rulebook change).
 
-**D4 session rules.** The checkpoint session never runs `approve`, `promote`, `discard`, `rollback` or `reject`, and never edits `tools/live/tunables.json` by hand, unless the governor gives that exact instruction in writing in the chat. The session may run `improve.py screen` and then `improve.py watch-add` to put a ticker or proxy on the watchlist (shadow only, no order, no change to any traded list); it never adds one to `paper.py`'s traded lists or the B lists without the governor's written instruction (D3). If `tick` prints EVIDENCE READY, IDEA READY, TICKER READY, DEFENSIVE REVIEW or RETIRED, or a proposal is pending or approved, put it at the top of the 13:30 report and tell the governor at once (a push notification if the tool exists); never wait silently. On EVIDENCE READY: read `improve.py prompt`, run `improve.py submit` with the READY id or `hold` (hold unless the evidence is clear and fits the recent trades), report it and wait.
+**D4 edge protection (v5.2.34).** The regime line carries an edge monitor (last 40 sessions of the version in force: INTACT, THINNING or FADING; FADING = HOSTILE = DEFENSIVE REVIEW). Candidates ruled out by the whole dataset are parked by `improve.py prune` (run it after every promotion or rollback, and when ideas or watchlist entries are added), so evidence is not diluted. After a promotion, `rollback.v<old>` is shadowed at once; ROLLBACK RECOMMENDED goes to the top of the report and to the governor.
+
+**D4 session rules.** The checkpoint session never runs `approve`, `promote`, `discard`, `rollback` or `reject`, and never edits `tools/live/tunables.json` by hand, unless the governor gives that exact instruction in writing in the chat. The session may run `improve.py screen` and then `improve.py watch-add` to put a ticker or proxy on the watchlist (shadow only, no order, no change to any traded list); it never adds one to `paper.py`'s traded lists or the B lists without the governor's written instruction (D3). If `tick` prints EVIDENCE READY, IDEA READY, TICKER READY, ROLLBACK RECOMMENDED, DEFENSIVE REVIEW or RETIRED, or a proposal is pending or approved, put it at the top of the 13:30 report and tell the governor at once (a push notification if the tool exists); never wait silently. On EVIDENCE READY: read `improve.py prompt`, run `improve.py submit` with the READY id or `hold` (hold unless the evidence is clear and fits the recent trades), report it and wait.
 
 ---
 
@@ -578,3 +574,5 @@ Earlier versions: `archive/former_systems/RULEBOOK_v3.132_full.md` and git histo
 **v5.2.32 — 2026-10-28, governor instruction:** tickers and proxies can be tried. (1) `paper.py` gains `x.add_fade` and `x.add_pb` switches, empty by default: `paper.simulate` identical on 668 day-runs (518 trades). (2) `improve.py` adds `screen`, `watch-add`, `add-checklist` and `tools/live/watchlist.json` (candidates `add.fade.<proxy>`, `add.pb.<leg>`, TICKER READY). Initial list: FADE SPY (UPRO/SPXU) and TLT (TMF/TMV); PULLBACK SQQQ, TZA, FAZ, SPXU; ERX/ERY was refused by the screen (14% empty bars). (3) `extend_live.py` supplement mode adds watchlist-only dumps to existing sessions; their bars for 10-15..10-28 are in `live_5m.json.gz`. (4) C4 step 5 fetches a fourth watchlist group. Shadow evidence starts at the 2026-10-29 close; the 10-session in-sample replay showed nothing (add.fade.TLT 2 differing days, -0.22%). No trading rule, entry, exit or sizing changed, A1 untouched.
 
 **v5.2.33 — 2026-10-28, governor instruction ("push 5 and 4"):** (4) the loop scores risk the way the account lives it: `improve.py risk` (bootstrapped year, chance of the −15% stop, median and 5th-percentile year, drawdowns, three scenarios) and a risk check on every candidate that passes the evidence gate (stressed scenario; P(stop) at most +1.0 point, median drawdown at most +1.0 point, else BLOCKED BY RISK). Version in force on 167 sessions: P(stop) 0.0% / 0.0% / 1.5%, median year +237% / +79% / +61%, 5th percentile +137% / +40% / +23%. (5) Regime signal at every close (`improve.py regime`; today NORMAL: last 20 model FADE trades reach +2R 50%, PF 1.99), Friday live-vs-model attribution (`improve.py attrib`; four trades so far, average gap −0.11% of position, mostly the 10-27 hand close), and a DEFENSIVE REVIEW printed when the regime is HOSTILE or health has an ACT (`improve.py defensive`; on the last 60 sessions under stress the version in force has an 8.8% chance of the hard stop, 1.7% at `risk.pct` 2). `run_cf` trades carry the system and a +2R flag. Reports only: no trading rule, entry, exit or sizing changed, A1 untouched, `paper.py` untouched.
+
+**v5.2.34 — 2026-10-28, governor instruction ("clean up the system ... make sure we don't lose the edge"):** (1) **Edge monitor** in the regime line: the version in force's mean day over the last 40 sessions against the whole dataset and the bootstrap chance it is above zero (INTACT / THINNING / FADING; FADING makes the regime HOSTILE and opens a DEFENSIVE REVIEW). First reading: THINNING, +0.108%/day since 2026-09-02 against +0.503% over the dataset, 77% chance above zero. (2) **Candidate pruning** (`improve.py prune`): 26 of 50 candidates the whole dataset already rules out (80% interval of the in-sample difference below zero) or that never differed were parked in the research ledger (kind prior), so the forward gate's Bonferroni count is 24, not 50; parked candidates return when the version in force changes. (3) **Rollback guard:** after any promotion the replaced version is shadowed at once (`rollback.vN`) and a ROLLBACK RECOMMENDED line needs only 10 differing days with a lower bound above zero. (4) **Schedule text matches reality:** A2 and D1 rewritten for the waiters and the one 13:30 loop trigger, C2/C4/C5 references to arming and the 8:00pm backup removed; the retired text is in `archive/former_systems/D1_A2_scheduled_chain_v5.2.25.md`. The version header no longer repeats the change log. No trading rule, entry, exit or sizing changed, A1 untouched, `paper.py` untouched.

@@ -237,7 +237,7 @@ def radd(**kw):
 
 def retired_ids(t):
     cv = current(t)['version']
-    return {e['id'] for e in rledger() if e.get('kind') == 'shadow' and e.get('champion_version') == cv and e.get('verdict') in ('rejected', 'inconclusive')}
+    return {e['id'] for e in rledger() if e.get('kind') in ('shadow', 'prior') and e.get('champion_version') == cv and e.get('verdict') in ('rejected', 'inconclusive', 'parked')}
 
 
 def candidates(t, retired=()):
@@ -258,6 +258,10 @@ def candidates(t, retired=()):
         if w['type'] == 'fade': v['x.add_fade'] = [[w['proxy'], w['bull'], w['bear'], w['lev_bull'], w['lev_bear']]]; cid, desc = f"add.fade.{w['proxy']}", f"add the {w['proxy']} FADE proxy ({w['bull']}/{w['bear']}, {w['lev_bull']:g}x/{w['lev_bear']:g}x)"
         else: v['x.add_pb'] = [w['leg']]; cid, desc = f"add.pb.{w['leg']}", f"add {w['leg']} to the PULLBACK list"
         out.append(dict(id=cid, kind='idea', desc=desc, values=v, promotable=False))
+    cur = current(t)
+    if cur['kind'] == 'change':                 # rollback guard (v5.2.34): the version a promotion replaced is shadowed against it at once
+        v = {**paper.TUNABLE_DEFAULTS, **version_values(t, cur['base_version'])}
+        out.append(dict(id=f"rollback.v{cur['base_version']}", kind='rollback', desc=f"go back to v{cur['base_version']} (undo the promotion of v{cur['version']})", values=v, promotable=False))
     return [c for c in out if c['id'] not in retired]
 
 
@@ -307,7 +311,7 @@ def evidence(t):
     pol = policy(t); cv = str(current(t)['version']); by = {}
     for r in shadow_rows():
         if r['cver'] == cv: by.setdefault(r['id'], []).append(r)
-    retired = retired_ids(t); m_ever = len(set(by) | retired); m = max(1, m_ever); meta = {c['id']: c for c in candidates(t)}; out = []
+    retired = retired_ids(t); cvi = int(cv); m_ever = len(set(by) | {e['id'] for e in rledger() if e.get('kind') == 'shadow' and e.get('champion_version') == cvi}); m = max(1, m_ever); meta = {c['id']: c for c in candidates(t)}; out = []      # parked (prior) candidates never ran forward, so they do not count
     for cid, rows in by.items():
         if cid in retired: continue
         rows.sort(key=lambda r: r['day']); d = [float(r['candidate_pct']) - float(r['champion_pct']) for r in rows]; n = len(d)
@@ -317,7 +321,9 @@ def evidence(t):
         hi = sums[min(B - 1, int((1 - pol['alpha']) * B))] if sums else None
         e = dict(id=cid, kind=meta[cid]['kind'] if cid in meta else '?', promotable=meta[cid]['promotable'] if cid in meta else False, desc=meta[cid]['desc'] if cid in meta else '',
                  n_days=n, n_diff=sum(int(r['differs']) for r in rows), total=round(sum(d), 3), lo=None if lo is None else round(lo, 3), hi=None if hi is None else round(hi, 3), m=m)
-        if e['n_diff'] >= pol['min_diff_days'] and lo is not None and lo > 0 and e['total'] >= pol['promote_pct']: e['status'] = 'ready'
+        if cid.startswith('rollback.'):        # a promotion is undone on less evidence than it took to make it: 10 differing days, lower bound above zero
+            e['status'] = 'ready' if e['n_diff'] >= pol['harm_diff_days'] and lo is not None and lo > 0 else 'collecting'
+        elif e['n_diff'] >= pol['min_diff_days'] and lo is not None and lo > 0 and e['total'] >= pol['promote_pct']: e['status'] = 'ready'
         elif e['n_diff'] >= pol['harm_diff_days'] and hi is not None and hi < 0: e['status'] = 'harm'
         elif n >= pol['retire_days']: e['status'] = 'stale'
         else: e['status'] = 'collecting'
@@ -325,7 +331,7 @@ def evidence(t):
     if any(e['status'] == 'ready' for e in out):           # risk check (v5.2.33): a READY candidate must not raise the stressed hard-stop risk
         D = load_data(); cd = run_cf(D, champion_values(t))[0]
         for e in out:
-            if e['status'] != 'ready' or e['id'] not in meta: continue
+            if e['status'] != 'ready' or e['id'] not in meta or e['id'].startswith('rollback.'): continue
             why, _, b = risk_check(t, D, cd, meta[e['id']]['values'])
             e['risk'] = b
             if why: e['status'] = 'risk-blocked'; e['risk_why'] = why
@@ -334,7 +340,7 @@ def evidence(t):
 
 def evidence_line(e):
     lo = 'n/a' if e['lo'] is None else f"{e['lo']:+.2f}"
-    return f"  {e['id']:<26}{e['status']:<13}{e['n_days']:>4}d {e['n_diff']:>3} differed  total {e['total']:+7.2f}% of account  lower bound {lo:>6}  {'' if e['promotable'] else '[idea: needs a rulebook change]'}"
+    return f"  {e['id']:<26}{e['status']:<13}{e['n_days']:>4}d {e['n_diff']:>3} differed  total {e['total']:+7.2f}% of account  lower bound {lo:>6}  {'[rollback: governor only]' if e['id'].startswith('rollback.') else '' if e['promotable'] else '[idea: needs a rulebook change]'}"
 
 
 def retire(t, evs):
@@ -403,7 +409,7 @@ def regime(D, values, window=20):
     """The champion's own trades on the most recent sessions of the dataset (it grows by one live session each close): FADE +2R reach
     rate and profit factor over the last `window` FADE trades, PULLBACK profit factor over the last `window`, against the whole dataset.
     Bands as the health tracker (C5): +2R reach > 40% / 30-40% / < 30%, PF > 1.5 / 1.0-1.5 / < 1.0. HOSTILE if any band is in the bottom."""
-    _, tr = run_cf(D, values)
+    daily, tr = run_cf(D, values)
     def pf_(x):
         g = sum(u for u in x if u > 0); l = -sum(u for u in x if u < 0); return round(g / l, 2) if l else None
     f = [x for x in tr if x[3] == 'FADE']; p = [x for x in tr if x[3] != 'FADE']; fw, pw = f[-window:], p[-window:]
@@ -415,12 +421,20 @@ def regime(D, values, window=20):
         if v is None: continue
         if v < lo: bad.append(k)
         elif v <= hi: warn.append(k)
+    # edge monitor (v5.2.34): the version in force's mean day over the last 40 sessions against the whole dataset, and the bootstrap
+    # chance that the recent mean is above zero. INTACT: chance >= 90% and mean at least half the dataset's; FADING: chance below 70%; else THINNING.
+    r = [x for _, x in daily[-40:]]; allm = sum(x for _, x in daily) / len(daily); rng = random.Random(f"edge:{len(daily)}")
+    p = sum(sum(rng.choices(r, k=len(r))) > 0 for _ in range(2000)) / 2000; m = sum(r) / len(r)
+    out.update(edge_from=daily[-40][0], edge_mean=round(m, 3), edge_all=round(allm, 3), edge_p=round(100 * p),
+               edge='FADING' if p < 0.70 else 'INTACT' if p >= 0.90 and m >= allm / 2 else 'THINNING')
+    if out['edge'] == 'FADING': bad.append('edge FADING')
+    elif out['edge'] == 'THINNING': warn.append('edge THINNING')
     out['state'] = 'HOSTILE' if bad else 'THIN' if warn else 'NORMAL'; out['flags'] = bad + warn
     return out
 
 
 def regime_line(g):
-    return (f"  regime {g['state']}: last {g['window']} model FADE trades (from {g['fade_from']}) reach +2R {g['fade_reach']}% (dataset {g['fade_reach_all']}%), PF {g['fade_pf']} (dataset {g['fade_pf_all']}); "
+    return (f"  regime {g['state']}: edge {g['edge']} (last 40 sessions from {g['edge_from']}: {g['edge_mean']:+.3f}%/day vs dataset {g['edge_all']:+.3f}%, chance above zero {g['edge_p']}%); last {g['window']} model FADE trades (from {g['fade_from']}) reach +2R {g['fade_reach']}% (dataset {g['fade_reach_all']}%), PF {g['fade_pf']} (dataset {g['fade_pf_all']}); "
             f"last {g['window']} PULLBACK (from {g['pb_from']}) PF {g['pb_pf']} (dataset {g['pb_pf_all']})" + (f"  [{', '.join(g['flags'])}]" if g['flags'] else ''))
 
 
@@ -562,7 +576,8 @@ def cmd_tick(a):
     if ch: print(f"  challenger {ch['id']} approved and waiting for the governor: improve.py promote --effective <date> --note \"...\" (or discard)"); return
     if pending(): print("  proposal pending, waiting for the governor:", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')})); return
     for e in ready:
-        if e['promotable']: print(f"EVIDENCE READY: {e['id']} ({e['desc']}). Read the table above, answer `improve.py prompt`, then `improve.py submit <id|hold> \"why\"`, report to the governor and wait.")
+        if e['id'].startswith('rollback.'): print(f"ROLLBACK RECOMMENDED: {e['desc']}: the replaced version beat the promoted one on {e['n_diff']} differing days (total {e['total']:+.2f}% of account). Tell the governor at once: improve.py rollback --effective <next trading day>, only on the governor's instruction.")
+        elif e['promotable']: print(f"EVIDENCE READY: {e['id']} ({e['desc']}). Read the table above, answer `improve.py prompt`, then `improve.py submit <id|hold> \"why\"`, report to the governor and wait.")
         elif e['id'].startswith('add.'): print(f"TICKER READY: {e['id']} ({e['desc']}). Report it to the governor at once, then `improve.py add-checklist {e['id']}`; adding a ticker is a rulebook change (D3), only on the governor's instruction.")
         else: print(f"IDEA READY (needs a rulebook change, D3): {e['id']} ({e['desc']}). Report it to the governor at once; the loop will not change a structural rule.")
     if not ready: print("  no candidate is ready")
@@ -686,6 +701,25 @@ def cmd_add_checklist(a):
           f"  6. Republish the rulebook artifact (D3 item 5). Real orders for the new ticker start on the next trading day after the commit.")
 
 
+def cmd_prune(a):
+    """Park candidates that the whole dataset already rules out, so the forward gate is not diluted (Bonferroni counts every tracked
+    candidate): the in-sample 80% bootstrap interval of the total difference is entirely below zero, or the candidate never differed in
+    any session. Parked ones are written to the research ledger (kind prior, verdict parked) for the version in force; a new version
+    re-admits them. Reads the dataset only; changes no rule, order or tunable."""
+    t = tun(); D = load_data(); cv = current(t)['version']; cd = dict(run_cf(D, champion_values(t))[0]); parked = []
+    have = {e['id'] for e in rledger() if e.get('kind') == 'prior' and e.get('champion_version') == cv}
+    for c in candidates(t, retired_ids(t)):
+        if c['id'].startswith('rollback.') or c['id'] in have: continue
+        d = [x - cd[day] for day, x in run_cf(D, c['values'])[0]]; nd = sum(abs(v) > 1e-9 for v in d)
+        rng = random.Random(c['id']); sums = sorted(sum(rng.choices(d, k=len(d))) for _ in range(2000)); hi = sums[1800]
+        why = 'never differed' if nd == 0 else 'ruled out in-sample' if hi < 0 else None
+        print(f"  {c['id']:<26}total {sum(d):+7.2f}%  80% upper {hi:+6.2f}  differing days {nd:3d}  {'PARK: ' + why if why else 'keep'}")
+        if why and not a.dry: parked.append(c['id']); radd(kind='prior', id=c['id'], champion_version=cv, idea=c['desc'], verdict='parked',
+                                                          method=f'in-sample screen on {len(d)} dataset sessions (base + live), paired bootstrap of daily differences',
+                                                          result=f"total {sum(d):+.2f}% of the account, 80% interval upper bound {hi:+.2f}, {nd} differing sessions: {why}")
+    print(f"parked {len(parked)}" + (' (dry run)' if a.dry else '') + "; the rest stay on the forward shadow")
+
+
 def cmd_risk(a):
     t = tun(); D = load_data(); daily = run_cf(D, champion_values(t))[0]
     print(f"risk of the version in force v{current(t)['version']}: one trading year (250 days) bootstrapped from {len(daily)} replayed sessions, 4,000 paths, -15% hard stop ends a path")
@@ -734,6 +768,7 @@ def main():
     s = sub.add_parser('screen'); s.add_argument('symbols', nargs='*'); s.add_argument('--top', type=int, default=40); s.add_argument('--min-usd', type=float, default=50000); s.add_argument('--min-sessions', type=int, default=120); s.add_argument('--traded', action='store_true'); s.set_defaults(f=cmd_screen)
     s = sub.add_parser('watch-add'); s.add_argument('--type', choices=['fade', 'pb'], required=True); s.add_argument('--proxy'); s.add_argument('--bull'); s.add_argument('--bear'); s.add_argument('--lev-bull', type=float); s.add_argument('--lev-bear', type=float); s.add_argument('--leg')
     s.add_argument('--why', default=''); s.add_argument('--force', action='store_true'); s.add_argument('--min-usd', type=float, default=50000); s.add_argument('--min-sessions', type=int, default=100); s.set_defaults(f=cmd_watch_add)
+    s = sub.add_parser('prune'); s.add_argument('--dry', action='store_true'); s.set_defaults(f=cmd_prune)
     s = sub.add_parser('risk'); s.add_argument('--id'); s.set_defaults(f=cmd_risk)
     s = sub.add_parser('regime'); s.add_argument('--window', type=int, default=20); s.set_defaults(f=cmd_regime)
     s = sub.add_parser('attrib'); s.add_argument('--since'); s.set_defaults(f=cmd_attrib)
