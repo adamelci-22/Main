@@ -126,7 +126,7 @@ def run_cf(D, values):
             prv = {s: D.bars[s][pd] for s in WANT() if pd in D.bars.get(s, {})}
             taken, _, _, e2 = paper.simulate(tod, prv, 48, eq, None, 0, d)
             for c in taken:
-                if c['status'] == 'closed': trades.append((d, c['usd'], c['usd'] / eq * 100))
+                if c['status'] == 'closed': trades.append((d, c['usd'], c['usd'] / eq * 100, c['system'], c['system'] == 'FADE' and any('take profit' in e[1] for e in c['events'])))
             daily.append((d, (e2 / eq - 1) * 100)); eq = e2
         return daily, trades
     finally:
@@ -206,7 +206,7 @@ def append_version(t, kind, eff, vals, **kw):
 
 # ------------------------------------------------------------------ candidates, shadow runs, evidence
 def policy(t):
-    return {'shadow_from': '0000-00-00', 'min_diff_days': 20, 'alpha': 0.10, 'harm_diff_days': 10, 'retire_days': 60, 'resamples': 5000, 'promote_pct': 0.5, **t['policy']}
+    return {'shadow_from': '0000-00-00', 'min_diff_days': 20, 'alpha': 0.10, 'harm_diff_days': 10, 'retire_days': 60, 'resamples': 5000, 'promote_pct': 0.5, 'risk_pstop_slack': 1.0, 'risk_dd_slack': 1.0, **t['policy']}
 
 
 def ideas():
@@ -322,12 +322,19 @@ def evidence(t):
         elif n >= pol['retire_days']: e['status'] = 'stale'
         else: e['status'] = 'collecting'
         out.append(e)
+    if any(e['status'] == 'ready' for e in out):           # risk check (v5.2.33): a READY candidate must not raise the stressed hard-stop risk
+        D = load_data(); cd = run_cf(D, champion_values(t))[0]
+        for e in out:
+            if e['status'] != 'ready' or e['id'] not in meta: continue
+            why, _, b = risk_check(t, D, cd, meta[e['id']]['values'])
+            e['risk'] = b
+            if why: e['status'] = 'risk-blocked'; e['risk_why'] = why
     return sorted(out, key=lambda e: (e['status'] != 'ready', -e['total'])), m_ever
 
 
 def evidence_line(e):
     lo = 'n/a' if e['lo'] is None else f"{e['lo']:+.2f}"
-    return f"  {e['id']:<26}{e['status']:<11}{e['n_days']:>4}d {e['n_diff']:>3} differed  total {e['total']:+7.2f}% of account  lower bound {lo:>6}  {'' if e['promotable'] else '[idea: needs a rulebook change]'}"
+    return f"  {e['id']:<26}{e['status']:<13}{e['n_days']:>4}d {e['n_diff']:>3} differed  total {e['total']:+7.2f}% of account  lower bound {lo:>6}  {'' if e['promotable'] else '[idea: needs a rulebook change]'}"
 
 
 def retire(t, evs):
@@ -339,6 +346,140 @@ def retire(t, evs):
              result=f"{e['n_days']} days, {e['n_diff']} differed, total {e['total']:+.2f}% of the account, bootstrap 90% interval upper bound {e['hi']:+.2f}, tracked candidates {e['m']}", verdict=verdict)
         ledger('retired', id=e['id'], verdict=verdict, total=e['total']); done.append(e)
     return done
+
+
+# ------------------------------------------------------------------ risk as the account lives it (D4, v5.2.33)
+SCENARIOS = [('as replayed', 1.0, 1.0), ('wins -40%', 0.6, 1.0), ('wins -40%, losses +25%', 0.6, 1.25)]     # the last one stands in for the live-vs-backtest gap
+
+
+def risk_profile(daily, win=1.0, loss=1.0, days=250, B=4000, stop=15.0, seed='risk'):
+    """Bootstrap one trading year from the daily account returns (each day as replayed, wins and losses scaled for the stress).
+    Returns the chance of reaching the A1.13 hard stop (-15% from the high; the path stops there), the median and 5th-percentile
+    year, and the median and 95th-percentile worst drawdown. Days, not trades, are resampled, so idle days count as they happen."""
+    r = [x * win if x > 0 else x * loss for _, x in daily]
+    if len(r) < 20: return None
+    rng = random.Random(f"{seed}:{len(r)}:{win}:{loss}"); hits = 0; rets = []; dds = []
+    for _ in range(B):
+        eq = peak = 1.0; dd = 0.0
+        for x in rng.choices(r, k=days):
+            eq *= 1 + x / 100
+            if eq > peak: peak = eq
+            dn = (1 - eq / peak) * 100
+            if dn > dd: dd = dn
+            if dn >= stop: hits += 1; break
+        rets.append((eq - 1) * 100); dds.append(dd)
+    rets.sort(); dds.sort()
+    return dict(p_stop=round(100 * hits / B, 2), median=round(rets[B // 2], 1), p5=round(rets[B // 20], 1), dd_med=round(dds[B // 2], 1), dd_p95=round(dds[int(B * 0.95)], 1), n=len(r))
+
+
+def risk_line(name, rp):
+    if not rp: return f"  {name:<26}too few days"
+    return f"  {name:<26}P(-15% stop) {rp['p_stop']:5.1f}%   median year {rp['median']:+7.1f}%   bad year (5th pct) {rp['p5']:+7.1f}%   drawdown median {rp['dd_med']:4.1f}% (95th {rp['dd_p95']:4.1f}%)"
+
+
+def risk_check(t, D, champ_daily, values):
+    """READY also needs the candidate not to raise the stressed risk (third scenario) over the full dataset: P(stop) at most
+    risk_pstop_slack points above the champion's, median worst drawdown at most risk_dd_slack points above. In-sample by nature,
+    so it is a do-no-harm check on risk; the edge itself must come from the forward shadow evidence."""
+    pol = policy(t); _, w, l = SCENARIOS[-1]
+    a = risk_profile(champ_daily, w, l); b = risk_profile(run_cf(D, values)[0], w, l); why = []
+    if a and b:
+        if b['p_stop'] > a['p_stop'] + pol['risk_pstop_slack']: why.append(f"stressed P(stop) {b['p_stop']}% vs {a['p_stop']}%")
+        if b['dd_med'] > a['dd_med'] + pol['risk_dd_slack']: why.append(f"stressed median drawdown {b['dd_med']}% vs {a['dd_med']}%")
+    return why, a, b
+
+
+def live_daily():
+    """The real account's daily returns (acct_pct summed per day) on every trading day since launch, idle days as 0."""
+    import health
+    rows = list(csv.DictReader(open(os.path.join(ROOT, 'archive', 'live_trades.csv')))); by = {}
+    for r in rows: by[r['date']] = by.get(r['date'], 0.0) + float(r['acct_pct'] or 0)
+    days = health.trading_days(health.LIVE_START, today().isoformat())
+    return [(d, by.get(d, 0.0)) for d in days if d < today().isoformat() or d in by]
+
+
+# ------------------------------------------------------------------ regime, attribution, defensive review (D4, v5.2.33)
+def regime(D, values, window=20):
+    """The champion's own trades on the most recent sessions of the dataset (it grows by one live session each close): FADE +2R reach
+    rate and profit factor over the last `window` FADE trades, PULLBACK profit factor over the last `window`, against the whole dataset.
+    Bands as the health tracker (C5): +2R reach > 40% / 30-40% / < 30%, PF > 1.5 / 1.0-1.5 / < 1.0. HOSTILE if any band is in the bottom."""
+    _, tr = run_cf(D, values)
+    def pf_(x):
+        g = sum(u for u in x if u > 0); l = -sum(u for u in x if u < 0); return round(g / l, 2) if l else None
+    f = [x for x in tr if x[3] == 'FADE']; p = [x for x in tr if x[3] != 'FADE']; fw, pw = f[-window:], p[-window:]
+    reach = lambda x: round(100 * sum(1 for y in x if y[4]) / len(x)) if x else None
+    out = dict(window=window, fade_from=fw[0][0] if fw else None, fade_reach=reach(fw), fade_reach_all=reach(f), fade_pf=pf_([x[1] for x in fw]), fade_pf_all=pf_([x[1] for x in f]),
+               pb_from=pw[0][0] if pw else None, pb_pf=pf_([x[1] for x in pw]), pb_pf_all=pf_([x[1] for x in p]))
+    bad = []; warn = []
+    for k, v, hi, lo in (('FADE +2R reach', out['fade_reach'], 40, 30), ('FADE PF', out['fade_pf'], 1.5, 1.0), ('PULLBACK PF', out['pb_pf'], 1.5, 1.0)):
+        if v is None: continue
+        if v < lo: bad.append(k)
+        elif v <= hi: warn.append(k)
+    out['state'] = 'HOSTILE' if bad else 'THIN' if warn else 'NORMAL'; out['flags'] = bad + warn
+    return out
+
+
+def regime_line(g):
+    return (f"  regime {g['state']}: last {g['window']} model FADE trades (from {g['fade_from']}) reach +2R {g['fade_reach']}% (dataset {g['fade_reach_all']}%), PF {g['fade_pf']} (dataset {g['fade_pf_all']}); "
+            f"last {g['window']} PULLBACK (from {g['pb_from']}) PF {g['pb_pf']} (dataset {g['pb_pf_all']})" + (f"  [{', '.join(g['flags'])}]" if g['flags'] else ''))
+
+
+def attribution(since=None):
+    """Live vs model per real trade, % of position: entry price (model entry vs real fill, whole position), hand close (a governor close,
+    exclude_from_gap = yes: the whole gap), exit and path (the rest: exit fills, partial take-profits, stop timing). Plus model trades the
+    account did not take (missed) and real trades the model did not have (extra)."""
+    live = [r for r in csv.DictReader(open(os.path.join(ROOT, 'archive', 'live_trades.csv'))) if not since or r['date'] >= since]
+    model = [r for r in csv.DictReader(open(PAPER_LOG))] if os.path.exists(PAPER_LOG) else []
+    mk = {(r['day'], r['ticker']): r for r in model}; out = []
+    for r in live:
+        if not r.get('model_pct', '').strip(): out.append(dict(date=r['date'], ticker=r['ticker'], system=r['system'], kind='extra', real=float(r['pnl_pct_position']))); continue
+        real, mod = float(r['pnl_pct_position']), float(r['model_pct']); gap = real - mod; m = mk.get((r['date'], r['ticker']))
+        entry = (float(m['entry_px_leg']) - float(r['entry_px'])) / float(m['entry_px_leg']) * 100 if m and m.get('entry_px_leg') else None
+        hand = r.get('exclude_from_gap', '').strip().lower().startswith('yes')
+        out.append(dict(date=r['date'], ticker=r['ticker'], system=r['system'], kind='taken', real=real, model=mod, gap=gap, entry=entry,
+                        hand=gap - (entry or 0.0) if hand else 0.0, path=0.0 if hand else gap - (entry or 0.0)))
+    took = {(r['date'], r['ticker']) for r in live}; first = min([r['date'] for r in live] or ['9999'])
+    for r in model:
+        if (r['day'], r['ticker']) not in took and r['day'] >= max(first, since or ''): out.append(dict(date=r['day'], ticker=r['ticker'], system=r['system'], kind='missed', model=float(r['pct_leg'])))
+    return sorted(out, key=lambda x: x['date'])
+
+
+def attribution_text(rows):
+    if not rows: return "  attribution: no live trades in the window"
+    tk = [x for x in rows if x['kind'] == 'taken']; f = lambda v: 'n/a' if v is None else f"{v:+.2f}%"
+    L = [f"  {x['date']} {x['system']:<9}{x['ticker']:<6}" + (f"real {x['real']:+.2f}% model {x['model']:+.2f}% gap {x['gap']:+.2f}% = entry {f(x['entry'])} + hand close {x['hand']:+.2f}% + exit/path {x['path']:+.2f}%" if x['kind'] == 'taken'
+         else f"MISSED: model {x['model']:+.2f}% on the leg, no real trade" if x['kind'] == 'missed' else f"EXTRA: real {x['real']:+.2f}%, no model trade") for x in rows]
+    if tk:
+        s = lambda k: sum(x[k] or 0.0 for x in tk) / len(tk)
+        L.append(f"  average per taken trade ({len(tk)}): gap {s('gap'):+.2f}% = entry {s('entry'):+.2f}% + hand close {s('hand'):+.2f}% + exit/path {s('path'):+.2f}%; "
+                 f"missed {sum(x['kind'] == 'missed' for x in rows)}, extra {sum(x['kind'] == 'extra' for x in rows)}")
+    return "\n".join(L)
+
+
+def health_acts():
+    """Today's (or the latest) row of archive/health_log.csv: the ACT measures the tracker found."""
+    f = os.path.join(ROOT, 'archive', 'health_log.csv')
+    if not os.path.exists(f): return None, []
+    r = list(csv.DictReader(open(f)))[-1]; acts = [k for k, v in r.items() if k.endswith('_status') and v.strip() == 'ACT']
+    return r['date'], acts
+
+
+def defensive(t, D, window=60):
+    """Defensive options on the most recent `window` sessions, judged by risk (stressed scenario), not %/day: each lower risk.pct and
+    size.cap_pct step and the defensive ideas (one loss ends the day, dropping each FADE proxy). Reports only; the governor decides."""
+    base = champion_values(t); _, w, l = SCENARIOS[-1]; rows = []
+    rec = lambda v: run_cf(D, v)[0][-window:]
+    b = risk_profile(rec(base), w, l, seed='def'); opts = []
+    for var in ('risk.pct', 'size.cap_pct'):
+        sp = t['space'][var]; x = base[var]
+        while x - sp['step'] >= sp['lo'] - 1e-9:
+            x = round(x - sp['step'], 4); v = dict(base); v[var] = x; opts.append((f"{var} {base[var]:g} -> {x:g}", v))
+    for i in ideas():
+        if i['id'] == 'risk.one_loss_ends_day' or i['id'].startswith('drop.fade.'): v = dict(base); v.update(i['values']); opts.append((i['id'], v))
+    for name, v in opts:
+        rp = risk_profile(rec(v), w, l, seed='def')
+        if rp and b: rows.append((name, rp, rp['p_stop'] <= b['p_stop'] - 1.0 and rp['median'] >= 0.85 * b['median']))
+    return b, rows
 
 
 # ------------------------------------------------------------------ proposer prompt
@@ -404,6 +545,18 @@ def cmd_tick(a):
     cv = current(t)['version']; days = max([e['n_days'] for e in evs] or [0])
     print(f"  evidence vs v{cv}: {len(evs)} candidates tracked ({m} ever), {days} forward shadow days, {sum(e['status'] == 'collecting' for e in evs)} collecting")
     for e in evs[:5]: print(evidence_line(e))
+    for e in evs:
+        if e['status'] == 'risk-blocked': print(f"  {e['id']} passed the evidence gate but is BLOCKED BY RISK: {'; '.join(e['risk_why'])} (stressed scenario, D4)")
+    try:                                                    # regime and health link (v5.2.33): reports only
+        D = load_data(); g = regime(D, champion_values(t)); print(regime_line(g))
+        hday, acts = health_acts()
+        if g['state'] == 'HOSTILE' or acts:
+            print(f"DEFENSIVE REVIEW: {'regime HOSTILE (' + ', '.join(g['flags']) + ')' if g['state'] == 'HOSTILE' else ''}{'; ' if g['state'] == 'HOSTILE' and acts else ''}{'health ACT on ' + hday + ': ' + ', '.join(acts) if acts else ''}. "
+                  "Options on the last 60 sessions, stressed scenario; report to the governor at once, nothing changes until the governor decides:")
+            b, rows = defensive(t, D); print(risk_line('version in force', b))
+            for name, rp, good in rows: print(risk_line(name, rp) + ('   <- cuts the stop risk' if good else ''))
+        if today().weekday() == 4: print("  live vs model attribution, this week:\n" + attribution_text(attribution((today() - timedelta(days=6)).isoformat())))
+    except Exception as x: print(f"  regime/health step failed: {x!r} (reports only; the shadow run above is unaffected)")
     for e in done: print(f"RETIRED {e['id']}: {e['status']} ({e['total']:+.2f}% of account over {e['n_days']} days); written to the research ledger")
     ready = [e for e in evs if e['status'] == 'ready']
     if ch: print(f"  challenger {ch['id']} approved and waiting for the governor: improve.py promote --effective <date> --note \"...\" (or discard)"); return
@@ -533,6 +686,32 @@ def cmd_add_checklist(a):
           f"  6. Republish the rulebook artifact (D3 item 5). Real orders for the new ticker start on the next trading day after the commit.")
 
 
+def cmd_risk(a):
+    t = tun(); D = load_data(); daily = run_cf(D, champion_values(t))[0]
+    print(f"risk of the version in force v{current(t)['version']}: one trading year (250 days) bootstrapped from {len(daily)} replayed sessions, 4,000 paths, -15% hard stop ends a path")
+    for name, w, l in SCENARIOS: print(risk_line(name, risk_profile(daily, w, l)))
+    if a.id:
+        c = next((c for c in candidates(t) if c['id'] == a.id), None)
+        if not c: sys.exit(f"{a.id} is not a candidate")
+        cd = run_cf(D, c['values'])[0]; print(f"candidate {a.id} ({c['desc']}):")
+        for name, w, l in SCENARIOS: print(risk_line(name, risk_profile(cd, w, l)))
+    lv = live_daily(); print(f"real account since launch ({len(lv)} trading days):"); print(risk_line('live record', risk_profile(lv)) + ('' if len(lv) >= 20 else '  (needs 20 trading days)'))
+
+
+def cmd_regime(a):
+    t = tun(); print(regime_line(regime(load_data(), champion_values(t), a.window)))
+
+
+def cmd_attrib(a):
+    print(f"live vs model attribution{' since ' + a.since if a.since else ' since launch'} (% of position):"); print(attribution_text(attribution(a.since)))
+
+
+def cmd_defensive(a):
+    t = tun(); b, rows = defensive(t, load_data(), a.window)
+    print(f"defensive options on the last {a.window} sessions, scenario '{SCENARIOS[-1][0]}' (reports only; the governor decides):"); print(risk_line('version in force', b))
+    for name, rp, good in rows: print(risk_line(name, rp) + ('   <- cuts the stop risk' if good else ''))
+
+
 def cmd_status(a):
     t = tun(); c = current(t); ch = challenger(t)
     print(f"version in force (real account and paper model): v{c['version']} ({c['kind']}, from {c['effective_from']}) {c['values']}")
@@ -555,6 +734,10 @@ def main():
     s = sub.add_parser('screen'); s.add_argument('symbols', nargs='*'); s.add_argument('--top', type=int, default=40); s.add_argument('--min-usd', type=float, default=50000); s.add_argument('--min-sessions', type=int, default=120); s.add_argument('--traded', action='store_true'); s.set_defaults(f=cmd_screen)
     s = sub.add_parser('watch-add'); s.add_argument('--type', choices=['fade', 'pb'], required=True); s.add_argument('--proxy'); s.add_argument('--bull'); s.add_argument('--bear'); s.add_argument('--lev-bull', type=float); s.add_argument('--lev-bear', type=float); s.add_argument('--leg')
     s.add_argument('--why', default=''); s.add_argument('--force', action='store_true'); s.add_argument('--min-usd', type=float, default=50000); s.add_argument('--min-sessions', type=int, default=100); s.set_defaults(f=cmd_watch_add)
+    s = sub.add_parser('risk'); s.add_argument('--id'); s.set_defaults(f=cmd_risk)
+    s = sub.add_parser('regime'); s.add_argument('--window', type=int, default=20); s.set_defaults(f=cmd_regime)
+    s = sub.add_parser('attrib'); s.add_argument('--since'); s.set_defaults(f=cmd_attrib)
+    s = sub.add_parser('defensive'); s.add_argument('--window', type=int, default=60); s.set_defaults(f=cmd_defensive)
     s = sub.add_parser('add-checklist'); s.add_argument('id'); s.set_defaults(f=cmd_add_checklist)
     s = sub.add_parser('research-add'); [s.add_argument('--' + k, required=True) for k in ('id', 'idea', 'method', 'result', 'verdict')]; s.set_defaults(f=cmd_research_add)
     s = sub.add_parser('shadow-replay'); s.add_argument('--from', dest='frm', required=True); s.add_argument('--to', required=True); s.add_argument('--force', action='store_true'); s.set_defaults(f=cmd_shadow_replay)
