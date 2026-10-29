@@ -381,6 +381,7 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Corporate actions:** clean. All 17 traded funds and 6 proxies active; each premarket move matches its underlying (SOXX −2.4%, SOXL −7.1%, SOXS +7.4%; QQQ −1.3%).
 - **RVOL baseline:** 20 sessions 2026-10-01..10-28 → `archive/paper_rvol_2026-10-29.json`.
 - **Context:** semis and Nasdaq gap lower premarket (SOXX −2.4%, QQQ −1.3%); MSFT +1.7% after earnings. A gap day: watch the 9:30-10:00 box for a FADE break and retest.
+- **Triggers (governor 2026-10-29):** DST check deleted (the chain it checked is retired; waiters and the two standing triggers follow New York time by themselves); the 11-06 review is now a waiter coverage report only (`trig_018N3oepVLFhbBuPwtwcTWJ1`).
 - **Improvement cycle (D4):** FADE 2 of 5 trades, PULLBACK 1 of 5; no trial running; no proposal pending (p2 withdrawn 10-28).
 
 ## E6. Known issues
