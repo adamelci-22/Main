@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build the scorecard dashboard's live data from archive/live_trades.csv (governor request 2026-10-28).
-    python3 tools/live/dash_data.py OUT_DIR [YYYY-MM-DD]      # writes live_trades.json, live_days.json, health.json and periods_live.json into OUT_DIR
+    python3 tools/live/dash_data.py OUT_DIR [YYYY-MM-DD]      # writes live_trades.json, live_days.json, health.json, periods_live.json and fade_skips.json into OUT_DIR
 Every real trade since 2026-10-16 as a row (n, day, system, ticker, acct_pct, pos_pct, model_pct, reached_2R) plus the number of trading days elapsed.
 Reporting only: it changes no order, rule or state."""
 import csv, json, os, sys
@@ -64,6 +64,15 @@ if log:
     for sname, k in (('FADE', 'fade_trades'), ('PULLBACK', 'pb_trades')):
         for r in hrows:
             if r['system'] == sname: r['trades'] = int(L[k]); r['window'] = W; r['day'] = L['date']
+# fade_skips.json: FADE trades the runaway skip passed on (v5.2.39): live days from archive/fade_skips.csv, the backtest reference beside them
+skips = []
+for src, f in (('live', os.path.join(health.ROOT, 'archive', 'fade_skips.csv')), ('backtest', os.path.join(health.ROOT, 'tools', 'backtest', 'results', 'fade_skips_backtest.csv'))):
+    if not os.path.exists(f): continue
+    for r in csv.DictReader(open(f)):
+        if src == 'live' and r['day'] > day: continue
+        skips.append(dict(n=len(skips) + 1, source=src, day=r['day'], proxy=r['proxy'], ticker=r['ticker'], entry_time=r['entry_time'], trend_pct=float(r['trend_pct']),
+                          acct_pct=float(r['skipped_acct_pct']), reached_2R=r['skipped_reached_2R'] == 'yes', exit_reason=r['exit_reason'], note=r.get('note', '')))
+json.dump(skips, open(os.path.join(out, 'fade_skips.json'), 'w'))
 json.dump(hrows, open(os.path.join(out, 'health.json'), 'w'))
 json.dump(daily, open(os.path.join(out, 'live_days.json'), 'w'))
 json.dump(trades, open(os.path.join(out, 'live_trades.json'), 'w'))

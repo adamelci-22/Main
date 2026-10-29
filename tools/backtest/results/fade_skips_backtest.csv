@@ -1,0 +1,28 @@
+day,proxy,ticker,entry_time,trend_pct,skipped_acct_pct,skipped_reached_2R,exit_reason,day_acct_pct_in_force,note
+2026-03-03,XBI,LABU,10:10,3.22,4.758,yes,time,0.000,backtest
+2026-03-20,QQQ,TQQQ,10:20,1.15,-0.544,no,stop,1.435,backtest
+2026-03-27,XBI,LABU,10:15,1.23,-0.808,no,stop,-1.317,backtest
+2026-03-31,XBI,LABD,10:10,6.46,1.749,yes,ratchet stop,0.000,backtest
+2026-04-30,XLK,TECL,10:15,0.90,-1.049,no,stop,0.732,backtest
+2026-05-08,QQQ,SQQQ,10:10,1.51,-0.247,no,stop,0.000,backtest
+2026-05-18,SOXX,SOXL,10:10,1.10,-2.572,no,stop,0.197,backtest
+2026-05-20,SOXX,SOXS,10:15,3.21,-0.803,no,stop,1.242,backtest
+2026-06-01,XBI,LABU,10:10,2.08,-1.102,no,stop,0.899,backtest
+2026-06-02,XBI,LABU,10:10,3.30,-1.128,no,stop,0.457,backtest
+2026-06-04,QQQ,TQQQ,10:15,1.15,2.273,no,time,0.000,backtest
+2026-06-09,XLF,FAZ,10:15,1.16,0.926,yes,ratchet stop,1.440,backtest
+2026-06-11,QQQ,SQQQ,10:10,1.55,1.293,yes,ratchet stop,0.447,backtest
+2026-06-30,QQQ,SQQQ,10:10,0.99,-0.626,no,stop,0.000,backtest
+2026-07-29,SOXX,SOXL,10:20,2.48,-0.730,no,stop,2.058,backtest
+2026-07-30,QQQ,SQQQ,10:10,2.77,-1.143,no,stop,-0.617,backtest
+2026-08-05,XBI,LABD,10:15,1.66,2.766,yes,ratchet stop,0.000,backtest
+2026-08-06,XBI,LABD,10:15,1.64,3.278,no,time,0.000,backtest
+2026-08-18,QQQ,TQQQ,10:20,1.56,-0.580,no,stop,0.000,backtest
+2026-08-24,XLF,FAZ,10:20,1.49,1.314,yes,time,0.000,backtest
+2026-09-30,XLK,TECS,10:10,1.05,-0.655,no,stop,0.000,backtest
+2026-10-02,SOXX,SOXS,10:10,3.03,2.894,yes,time,0.000,backtest
+2026-10-07,IWM,TNA,10:20,1.21,-0.374,no,stop,0.000,backtest
+2026-10-12,SOXX,SOXL,10:15,2.43,-1.164,no,stop,0.848,backtest
+2026-10-14,IWM,TNA,10:10,1.26,-0.702,no,stop,-0.878,backtest
+2026-10-15,XBI,LABD,10:25,1.47,-3.057,no,stop,-0.909,backtest
+2026-10-28,SOXX,SOXS,10:10,0.85,0.157,no,stop,0.000,backtest
