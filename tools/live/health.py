@@ -25,7 +25,7 @@ LOG = os.path.join(ROOT, 'archive', 'health_log.csv')
 WINDOW, MIN_ACT, FREQ_DAYS, FREQ_MIN_DAYS = 30, 10, 30, 10
 LIVE_START = '2026-10-16'
 # expected trades per trading day: Robinhood backtest 2026-03-03..10-14 of the live rules (v5.2.22, 8-fund PULLBACK), one account, 157 days
-RATE = {'FADE': 63 / 157, 'PULLBACK': 50 / 157}
+RATE = {'FADE': 47 / 157, 'PULLBACK': 50 / 157}      # FADE pace with the runaway skip (v5.2.39; was 63 / 157)
 
 
 def grade(v, healthy, warn, higher_is_better=True):
