@@ -106,6 +106,29 @@
         "risk.pct": 3.0,
         "size.cap_pct": 100.0
       }
+    },
+    {
+      "version": 2,
+      "kind": "change",
+      "effective_from": "2026-10-29",
+      "values": {
+        "fade.retest_tol_pct": 0.1,
+        "fade.lock_trigger_r": 0.5,
+        "fade.lock_level_r": 0.15,
+        "fade.cut_r": -0.5,
+        "pb.vol_mult": 1.5,
+        "fade.target_r": 2.0,
+        "fade.take_frac": 0.3333333333333333,
+        "fade.chandelier_atr": 2.0,
+        "pb.stop_buffer_pct": 0.05,
+        "pb.min_stop_pct": 0.75,
+        "risk.pct": 3.0,
+        "size.cap_pct": 100.0,
+        "x.fade_max_trend": 0.85
+      },
+      "base_version": 1,
+      "proposal": "governor.fade.max_trend.0.85",
+      "note": "Governor 2026-10-29 ~10:55 ET: \"Just push this rule directly now\" (FADE runaway filter, study v5.2.38). Direct D3 change outside the D4 cycle."
     }
   ],
   "challenger": null,

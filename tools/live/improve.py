@@ -619,7 +619,8 @@ def sys_candidates(t, sysk):
     for c in out: c['changes'] = {c['variable']: c['new']}
     for c in candidates(t, ()):
         if sys_of(c) != sysk or c['id'] in scrapped(t, sysk): continue
-        c['changes'] = {k: v for k, v in c['values'].items() if base.get(k) != v}; out.append(c)
+        c['changes'] = {k: v for k, v in c['values'].items() if base.get(k) != v}
+        if c['changes']: out.append(c)            # a candidate already in force is not offered
     return out
 
 
