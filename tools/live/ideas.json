@@ -193,5 +193,13 @@
   "values": {
    "x.one_loss_day": true
   }
+ },
+ {
+  "id": "fade.max_trend.0.85",
+  "desc": "skip a FADE when the proxy has already moved 0.85% or more from the prior close in the break direction (do not fade a runaway)",
+  "values": {
+   "x.fade_max_trend": 0.85
+  },
+  "source": "fade_quality_study 2026-10-29 (governor: 'can we do something that is a bit more sure?')"
  }
 ]

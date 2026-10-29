@@ -375,5 +375,14 @@
   "verdict": "parked",
   "method": "in-sample screen on 167 dataset sessions (base + live), paired bootstrap of daily differences",
   "result": "total +0.00% of the account, 80% interval upper bound +0.00, 0 differing sessions: never differed"
+ },
+ {
+  "date": "2026-10-29",
+  "kind": "study",
+  "id": "study.fade_runaway_filter",
+  "idea": "Skip FADE when the proxy already ran >= X% from the prior close in the break direction (the 2026-10-29 TZA/IWM loss: IWM +0.89%, the day's leader)",
+  "method": "tools/backtest/fade_quality_study.py thirds on 67 FADE trades, then improve.run_cf with x.fade_max_trend on 167 Robinhood sessions (one account), halves and stressed risk",
+  "result": "current +0.503%/day, FADE win 66%, dd 5.0, last 40 sessions +0.108%/day, stressed P(stop) last 60 9.6%. Skip >= 0.85%: +0.496%/day (halves +0.482/+0.510), win 73%, dd 2.8, last 40 +0.205%/day, stressed P(stop) last 60 0.15%. Robust from 0.7 to 1.25. In-sample.",
+  "verdict": "candidate (FADE cycle)"
  }
 ]

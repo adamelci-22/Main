@@ -257,8 +257,9 @@ TUNABLE_FILE = os.path.join(HERE, 'tunables.json')
 TUNABLE_DEFAULTS = {'fade.retest_tol_pct': 0.10, 'fade.lock_trigger_r': 0.5, 'fade.lock_level_r': 0.15, 'fade.cut_r': -0.5, 'pb.vol_mult': 1.5,
                     'fade.target_r': 2.0, 'fade.take_frac': 1 / 3, 'fade.chandelier_atr': 2.0, 'pb.stop_buffer_pct': 0.05, 'pb.min_stop_pct': 0.75, 'risk.pct': 3.0, 'size.cap_pct': 100.0}
 # idea switches (RULEBOOK D4, shadow candidates only; every default is neutral = the version in force). Structural ideas are never promoted by the loop (D3 rule change).
-TUNABLE_DEFAULTS.update({'x.drop_fade': [], 'x.drop_pb': [], 'x.fade_last_bar': 99, 'x.pb_last_bar': 99, 'x.fade_min_wait': 1, 'x.chop': None, 'x.one_loss_day': False, 'x.add_fade': [], 'x.add_pb': []})
+TUNABLE_DEFAULTS.update({'x.drop_fade': [], 'x.drop_pb': [], 'x.fade_last_bar': 99, 'x.pb_last_bar': 99, 'x.fade_min_wait': 1, 'x.chop': None, 'x.one_loss_day': False, 'x.add_fade': [], 'x.add_pb': [], 'x.fade_max_trend': None})
 X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS = (), (), 99, 99, 1, None, False
+X_MAXTREND = None                       # idea switch: skip a FADE when the proxy already moved this many % from the prior close in the break direction (None = off)
 X_ADD_FADE, X_ADD_PB = (), ()          # shadow-only additions: [[proxy, bull leg, bear leg, bull leverage, bear leverage], ...] and [leg, ...] (RULEBOOK D4 watchlist)
 OVERRIDE = None
 
@@ -274,7 +275,7 @@ def rest_txt():
 def apply_tunables(day=None):
     """Set the tunable globals for `day`: OVERRIDE if set, else the last version in tunables.json whose effective_from <= day, else the defaults."""
     global RETEST_TOL, PB_VOL, LOCK_TRIG, LOCK_LVL, CUT_R, TARGET_R, TAKE_FRAC, CHAND_ATR, PB_BUF, PB_MIN_STOP, RISK, SIZE_CAP
-    global X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS, X_ADD_FADE, X_ADD_PB
+    global X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS, X_ADD_FADE, X_ADD_PB, X_MAXTREND
     v = dict(TUNABLE_DEFAULTS)
     if OVERRIDE is not None: v.update(OVERRIDE)
     elif day:
@@ -291,6 +292,7 @@ def apply_tunables(day=None):
     X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST = tuple(v['x.drop_fade']), tuple(v['x.drop_pb']), v['x.fade_last_bar'], v['x.pb_last_bar']
     X_MINWAIT, X_CHOP, X_ONELOSS = v['x.fade_min_wait'], v['x.chop'], bool(v['x.one_loss_day'])
     X_ADD_FADE, X_ADD_PB = tuple(tuple(r) for r in v['x.add_fade']), tuple(v['x.add_pb'])
+    X_MAXTREND = v['x.fade_max_trend']
     return v
 
 
@@ -313,6 +315,8 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
         t = fade(today[p], K)
         if not t: continue
         if t.get('k') is not None and t['k'] > X_FADE_LAST: continue          # idea switch: no FADE entries after this bar
+        if X_MAXTREND is not None and t.get('k') and p in prev and len(today[p]) >= t['k']:      # idea switch: do not fade a runaway (v5.2.38 study)
+            if (today[p][t['k'] - 1][3] / prev[p][-1][3] - 1) * 100 * -t['side'] >= X_MAXTREND: continue
         if t['status'] in ('watching', 'signal'): signals.append(('FADE', p, t)); continue
         leg = bull if t['side'] > 0 else bear; lev = lev_bull if t['side'] > 0 else lev_bear
         t.update(system='FADE', proxy=p, ticker=leg, lev=lev, order=0, leg_entry=today[leg][t['k']][0] if leg in today else None)
