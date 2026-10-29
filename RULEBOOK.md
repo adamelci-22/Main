@@ -1,7 +1,7 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.38** (v5.2.38 2026-10-29: FADE runaway filter added as a neutral switch and a FADE cycle candidate; no trading rule, entry, exit or sizing changed. Every earlier version is in the change log at the end.) Bump on every rule or threshold change and record it in the commit.
+**Policy version: 5.2.39** (v5.2.39 2026-10-29: FADE runaway skip, B2.3, live from 2026-10-29 ~10:55 ET by the governor's direct instruction. Every earlier version is in the change log at the end.) Bump on every rule or threshold change and record it in the commit.
 **MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
@@ -109,6 +109,7 @@ Specs and evidence: `tools/backtest/PULLBACK_SPEC.md`, E3. `tools/live/paper.py`
 3. **Retest:** within the next 12 bars, a bar trades back to the broken edge, within 0.10%.
    - It **closes back inside** the box → the breakout failed. **Buy the opposite leg at the next checkpoint.** A failed upside break buys the inverse leg; a failed downside break buys the bull leg.
    - It closes outside the box → no trade for that proxy today.
+   - **Runaway skip (v5.2.39, governor 2026-10-29):** no trade if, at the retest bar's close, the proxy is already **0.85% or more** past the prior session's close in the breakout direction (an upside break of a proxy up 0.85%+ on the day, or a downside break of one down 0.85%+). Do not fade a runaway. `paper.py` applies it from tunables v2 (`x.fade_max_trend` 0.85).
 4. **Stop:** beyond the failed breakout's extreme, on the proxy. R = the distance from entry to stop.
 5. **Exit:**
    - *(v5.2.18's frozen 1R trail was removed by v5.2.22 before it ever traded live.)*
@@ -512,3 +513,5 @@ Earlier versions: `archive/former_systems/RULEBOOK_v3.132_full.md` and git histo
 **v5.2.37 — 2026-10-28, governor instruction ("if you want to apply p2 you have to go through the appropriate cycle and if you want to push to both systems must do the cycle on both so withdraw for now, try if you want after the 5 unless something better shows up"):** proposal p2 (`risk.pct` 3 → 2) rejected/withdrawn (`archive/improve/ledger.jsonl`). `risk.pct-1` and `size.cap_pct-1` are now changes the session may pick in either cycle (D4 step 2); a passing trial in one cycle waits until the other cycle passes the same change, `push` refuses until both have, and one push resets both cycles. Sizing is unchanged at 3%.
 
 **v5.2.38 — 2026-10-29, governor question ("can we do something that is a bit more sure?") after the TZA loss:** study `tools/backtest/fade_quality_study.py` (67 FADE trades, Robinhood data, in-sample): fades of a proxy that had already run in the break direction (top third, ≥ +0.85% from the prior close) or that led the other proxies made about nothing (avg +0.00% and +0.07% of the account per trade, win rate 48%), while the rest won 73-82%. `paper.py` gains `x.fade_max_trend` (off by default; neutral: 668 day-runs, 518 trades identical). Simulated on 167 sessions: skip ≥ 0.85% keeps +0.496%/day (vs +0.503), FADE win rate 66% → 73%, drawdown 5.0 → 2.8, last 40 sessions +0.108 → +0.205%/day, stressed chance of the −15% stop on the last 60 sessions 9.6% → 0.15%; similar from 0.7 to 1.25. Today's trade (IWM +0.89%) would have been skipped. Added to `ideas.json` as `fade.max_trend.0.85`, the first FADE candidate for the D4 cycle; recorded in the research ledger. No trading rule changed.
+
+**v5.2.39 — 2026-10-29 ~10:55 ET, governor instruction ("Just push this rule directly now"):** the FADE runaway skip (B2.3; study and evidence in v5.2.38) is live as tunables v2 (`x.fade_max_trend` 0.85, effective 2026-10-29), a direct rule change (D3) outside the D4 cycle. Today's model record is recomputed under v2, so the 10:10 TZA trade (IWM +0.89% at the retest) is not in the model's record; the real trade stays in `archive/live_trades.csv` (−$27.42, model −0.72% under v1). The FADE cycle restarts: 5 new FADE trades under v2 from 2026-10-30, then the goal check. No other rule, exit or sizing changed; A1 untouched.
