@@ -1,0 +1,2 @@
+day,proxy,ticker,entry_time,trend_pct,skipped_acct_pct,skipped_reached_2R,exit_reason,day_acct_pct_in_force,note
+2026-10-29,IWM,TZA,10:10,0.88,-0.715,no,early cut,0.000,"taken live at 10:10, before the rule went in (~10:55); real -1.07%"
