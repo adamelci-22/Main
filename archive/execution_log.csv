@@ -19,3 +19,5 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-10-29,TZA,FADE,sell,OCO 19 sh TP 45.67 / stop 44.28 GTC,10:10,10:10:51,10:10:51,44.78,44.79,0.02,,45.67/44.28,,,19,OCO 6ae352ab-d1b8-45d7-8ec1-a2557fb38e55 confirmed,0.75,10:10:06
 2026-10-29,TZA,FADE,sell,stop-market 38 sh 44.28 GTC,10:10,10:10:53,10:10:53,44.80,44.81,0.02,,44.28,,,38,stop 6ae353ed-ba8b-40d2-a239-d4b0b09213b3 confirmed,0.78,10:10:06
 2026-10-29,TZA,FADE,sell,stop (OCO stop leg 19 + stop-market 38) filled,10:21,,10:21:20,,,,44.28,44.28,44.27,0.02,57,both stops filled at 44.27; OCO TP leg cancelled by the broker; early cut 10:25 found the account flat,,
+2026-10-30,SSG,PULLBACK,buy,entry (PULLBACK trigger 10:50),10:55,10:55:33,10:55:33,13.40,13.42,0.15,13.40,13.40,13.40,0.00,189,buying power sized (3% risk term ~690 sh),0.55,10:55:06
+2026-10-30,SSG,PULLBACK,sell,OCO 189 sh TP 13.51 / stop 13.29 GTC,10:55,10:55:49,10:55:50,13.39,13.40,0.07,,13.51/13.29,,,189,OCO 6ae40c65-b5b4-4f59-aa31-9c7bda8c6b1e confirmed,0.82,10:55:06
