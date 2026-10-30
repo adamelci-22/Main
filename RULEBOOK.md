@@ -378,6 +378,14 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 Earlier E5 text is kept in `archive/e5_history.md`.
 
+**Friday 2026-10-30, 9:00 research (8:42 ET, morning trigger, v5.2.39).**
+- **9:00 value (A1.2 base): $2,545.80**, flat, no open orders. Drawdown stop clear (high $2,596.99, −1.97%). Daily loss limit fires at $2,469.43 (−3%).
+- **Controls:** losing streak 1 (10-29 TZA). Trading day. **Friday: no FADE entries (A1.10); PULLBACK trades.** Earnings: none affecting today (NVD/NVDQ skip 11-18).
+- **Corporate actions:** clean; all funds active, premarket moves match their underlyings.
+- **RVOL baseline:** 20 sessions 2026-10-02..10-29 → `archive/paper_rvol_2026-10-30.json`.
+- **Context:** heavy semiconductor sell-off premarket (SOXX −6.7%, QQQ −2.6%, NVDA −2.7%; SOXL −20%, SOXS +20%). Inverse funds (SOXS, TECS, SSG, NVDQ, NVD, UVXY) are PULLBACK candidates on a trend day; spreads on SSG are wide premarket (12.70/14.50), the 0.30% spread check (A1.7) applies.
+- **Cycle (D4):** FADE 0 of 5 under v2, PULLBACK 1 of 5; no trial, no pending proposal.
+
 **Thursday 2026-10-29, 9:00 research (run at 8:44 ET by the 8:41 morning trigger, v5.2.37).**
 - **9:00 value (A1.2 base): $2,573.22**, flat, no open orders. Drawdown stop clear: high $2,596.99, stop $2,207.44, −0.92% from the high. Daily loss limit fires at $2,496.02 (−3%).
 - **Controls:** losing streak 0 (4 live trades, all wins). Trading day, not in `NO_TRADE`. **MSFU: no entry today** (MSFT reported 10-28 pm; `EARNINGS_SKIP` matches). NVDA next reports 11-17 pm, so NVD/NVDQ skip 11-18 (matches). **Friday 10-30: no FADE entries** (A1.10).
