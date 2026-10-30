@@ -132,7 +132,7 @@ Specs and evidence: `tools/backtest/PULLBACK_SPEC.md`, E3. `tools/live/paper.py`
    - the morning high is less than 0.75 × the stop distance above the entry; or
    - the morning high is less than 0.25% above the entry; or
    - the stop and the morning high are less than $0.10 apart.
-9. **Exit:** sell 100% at the morning high, or at the stop. **Sell anything left at 13:30.** The take-profit limit is **the morning high rounded DOWN to the cent** (e.g. high 8.8687 → limit 8.86), so a retest of the high fills. The skip rules in step 8 use that rounded price. *(Effective Mon 2026-10-19; Fri 10-16's LABD order is at 8.87.)*
+9. **Exit:** sell 100% at the morning high, or at the stop. *(Wording clarified 2026-10-29, no rule change: the "morning high" is the day's highest intrabar price, the highest 5-minute bar high from 9:30 up to the start of the dip, not a closing price and not only the 9:30–9:45 range; this is what `paper.py` and the backtest have always used.)* **Sell anything left at 13:30.** The take-profit limit is **the morning high rounded DOWN to the cent** (e.g. high 8.8687 → limit 8.86), so a retest of the high fills. The skip rules in step 8 use that rounded price. *(Effective Mon 2026-10-19; Fri 10-16's LABD order is at 8.87.)*
 
 Only the first qualifying setup per ticker per day counts.
 
