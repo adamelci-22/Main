@@ -409,5 +409,12 @@
   "method": "x.pb_tp_cents_below = -1/-2 (sell limit only), improve.run_cf on 167 Robinhood sessions, current rules",
   "result": "same 54 PB trades, same 37 wins (68.5%); PB compounded +27.60% (at high) -> +29.36% (+1c) -> +30.24% (+2c); both systems +0.496 -> +0.504 -> +0.509%/day, total +125.1 -> +128.2 -> +129.7%. The 5-minute backtest assumes a touch fills; live queue risk is not modelled.",
   "verdict": "not adopted (rule change needs the cycle or a direct governor order); kept as cycle candidate pb.tp_1c_above"
+ },
+ {
+  "id": "study.pb_judge_at_signal",
+  "idea": "Judge the PULLBACK setup at the signal (limit) price instead of the repriced fill, so the model keeps trades like the live SSG and LABD of 2026-10-30 (both opened 1c under the limit, which pushed the model's stop distance under 0.75%)",
+  "method": "x.pb_judge_at_signal switch, improve.run_cf on the Robinhood sessions through 2026-10-29, current rules (v2)",
+  "result": "PB trades 54 -> 57, wins 37 -> 37 (68.5% -> 64.9%); PB compounded +27.60% -> +25.32%; both systems +0.493 -> +0.482%/day, total +125.1 -> +121.1%. The 3 trades the model voids by repricing lost on balance in the backtest.",
+  "verdict": "not adopted; kept as cycle candidate pb.judge_at_signal. The opposite fix (live skips when the ask at order time makes the stop distance < 0.75%, as the model does) is an execution rule change for the governor."
  }
 ]

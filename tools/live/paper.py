@@ -206,9 +206,9 @@ def pullback(b, prev, K):
                 return dict(status='signal', k=j + 1, limit=lim, stop=stop, target=round(hod - X_PBTPOFF / 100, 2),
                             note=f'trigger at {k2t(j)}: limit buy {lim:.2f}, valid for the {k2t(j + 1)} bar only')
             if b[j + 1][2] > lim: continue
-            entry = min(b[j + 1][0], lim)
-            if hod <= entry or entry <= stop or (entry - stop) / entry * 100 < PB_MIN_STOP: continue
-            if (hod - entry) < 0.75 * (entry - stop) or (hod - entry) / entry * 100 < 0.25: continue
+            entry = min(b[j + 1][0], lim); ref = lim if X_PBSIG else entry     # idea switch: judge the setup at the signal (limit) price, as the live order is
+            if hod <= ref or ref <= stop or (ref - stop) / ref * 100 < PB_MIN_STOP: continue
+            if (hod - ref) < 0.75 * (ref - stop) or (hod - ref) / ref * 100 < 0.25: continue
             if hod - stop < 0.10: continue
             return pb_manage(b, K, j + 1, entry, stop, round(hod - X_PBTPOFF / 100, 2))     # idea switch: the sell limit a few cents below the high (the skip rules still use the high)
     return None
@@ -257,8 +257,9 @@ TUNABLE_FILE = os.path.join(HERE, 'tunables.json')
 TUNABLE_DEFAULTS = {'fade.retest_tol_pct': 0.10, 'fade.lock_trigger_r': 0.5, 'fade.lock_level_r': 0.15, 'fade.cut_r': -0.5, 'pb.vol_mult': 1.5,
                     'fade.target_r': 2.0, 'fade.take_frac': 1 / 3, 'fade.chandelier_atr': 2.0, 'pb.stop_buffer_pct': 0.05, 'pb.min_stop_pct': 0.75, 'risk.pct': 3.0, 'size.cap_pct': 100.0}
 # idea switches (RULEBOOK D4, shadow candidates only; every default is neutral = the version in force). Structural ideas are never promoted by the loop (D3 rule change).
-TUNABLE_DEFAULTS.update({'x.drop_fade': [], 'x.drop_pb': [], 'x.fade_last_bar': 99, 'x.pb_last_bar': 99, 'x.fade_min_wait': 1, 'x.chop': None, 'x.one_loss_day': False, 'x.add_fade': [], 'x.add_pb': [], 'x.fade_max_trend': None, 'x.pb_tp_cents_below': 0})
+TUNABLE_DEFAULTS.update({'x.drop_fade': [], 'x.drop_pb': [], 'x.fade_last_bar': 99, 'x.pb_last_bar': 99, 'x.fade_min_wait': 1, 'x.chop': None, 'x.one_loss_day': False, 'x.add_fade': [], 'x.add_pb': [], 'x.fade_max_trend': None, 'x.pb_tp_cents_below': 0, 'x.pb_judge_at_signal': False})
 X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS = (), (), 99, 99, 1, None, False
+X_PBSIG = False                         # idea switch: PULLBACK skip rules judged at the limit price, not the repriced fill (False = off)
 X_PBTPOFF = 0                           # idea switch: PULLBACK take-profit this many cents below the floored morning high (0 = off)
 X_MAXTREND = None                       # idea switch: skip a FADE when the proxy already moved this many % from the prior close in the break direction (None = off)
 X_ADD_FADE, X_ADD_PB = (), ()          # shadow-only additions: [[proxy, bull leg, bear leg, bull leverage, bear leverage], ...] and [leg, ...] (RULEBOOK D4 watchlist)
@@ -276,7 +277,7 @@ def rest_txt():
 def apply_tunables(day=None):
     """Set the tunable globals for `day`: OVERRIDE if set, else the last version in tunables.json whose effective_from <= day, else the defaults."""
     global RETEST_TOL, PB_VOL, LOCK_TRIG, LOCK_LVL, CUT_R, TARGET_R, TAKE_FRAC, CHAND_ATR, PB_BUF, PB_MIN_STOP, RISK, SIZE_CAP
-    global X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS, X_ADD_FADE, X_ADD_PB, X_MAXTREND, X_PBTPOFF
+    global X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST, X_MINWAIT, X_CHOP, X_ONELOSS, X_ADD_FADE, X_ADD_PB, X_MAXTREND, X_PBTPOFF, X_PBSIG
     v = dict(TUNABLE_DEFAULTS)
     if OVERRIDE is not None: v.update(OVERRIDE)
     elif day:
@@ -293,7 +294,7 @@ def apply_tunables(day=None):
     X_DROP_FADE, X_DROP_PB, X_FADE_LAST, X_PB_LAST = tuple(v['x.drop_fade']), tuple(v['x.drop_pb']), v['x.fade_last_bar'], v['x.pb_last_bar']
     X_MINWAIT, X_CHOP, X_ONELOSS = v['x.fade_min_wait'], v['x.chop'], bool(v['x.one_loss_day'])
     X_ADD_FADE, X_ADD_PB = tuple(tuple(r) for r in v['x.add_fade']), tuple(v['x.add_pb'])
-    X_MAXTREND = v['x.fade_max_trend']; X_PBTPOFF = v['x.pb_tp_cents_below']
+    X_MAXTREND = v['x.fade_max_trend']; X_PBTPOFF = v['x.pb_tp_cents_below']; X_PBSIG = bool(v['x.pb_judge_at_signal'])
     return v
 
 

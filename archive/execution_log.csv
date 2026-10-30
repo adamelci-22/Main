@@ -24,3 +24,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-10-30,SSG,PULLBACK,sell,take-profit (OCO limit) filled,11:20,,11:20:12,,,,13.51,13.51,13.51,0.00,189,OCO stop leg cancelled by the broker,,
 2026-10-30,LABD,PULLBACK,buy,entry (PULLBACK trigger 12:45),12:50,12:50:32,12:50:32,7.03,7.04,0.14,7.05,7.05,7.0499,0.00,364,buying power sized (3% risk term ~1540 sh),0.53,12:50:00
 2026-10-30,LABD,PULLBACK,sell,OCO 364 sh TP 7.12 / stop 7.00 GFD,12:50,12:50:46,12:50:46,7.03,7.04,0.14,,7.12/7.00,,,364,OCO 6ae4b71d-5737-4437-abd1-ca7eab51ae52 confirmed,0.77,12:50:00
+2026-10-30,LABD,PULLBACK,sell,time exit 13:30 (OCO cancelled then market sell),13:30,13:30:19,13:30:19,7.04,7.05,0.14,7.04,,7.0601,,364,OCO 6ae4b71d-5737-4437-abd1-ca7eab51ae52 cancelled 13:30:11; fees 0.06,0.32,13:30:00

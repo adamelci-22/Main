@@ -217,5 +217,13 @@
    "x.pb_tp_cents_below": -1
   },
   "source": "governor question 2026-10-30"
+ },
+ {
+  "id": "pb.judge_at_signal",
+  "desc": "PULLBACK skip rules (0.75% minimum stop, reward/risk) judged at the limit price, not at the fill repriced to a lower next-bar open (matches how the live order is sent)",
+  "values": {
+   "x.pb_judge_at_signal": true
+  },
+  "source": "live SSG and LABD extras 2026-10-30"
  }
 ]
