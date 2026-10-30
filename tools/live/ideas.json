@@ -209,5 +209,13 @@
    "x.pb_tp_cents_below": 1
   },
   "source": "governor question 2026-10-30"
+ },
+ {
+  "id": "pb.tp_1c_above",
+  "desc": "PULLBACK take-profit limit 1 cent above the floored morning high (the skip rules still use the high)",
+  "values": {
+   "x.pb_tp_cents_below": -1
+  },
+  "source": "governor question 2026-10-30"
  }
 ]

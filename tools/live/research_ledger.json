@@ -402,5 +402,12 @@
   "method": "x.pb_tp_cents_below switch, improve.run_cf on 167 Robinhood sessions; (a) target lowered before the skip rules, (b) only the sell limit lowered",
   "result": "(a) fewer trades: PB alone 63 -> 57 (-1c), +0.163 -> +0.151%/day. (b) same 63 trades, same 66.7% win rate (no trade in the data touched high-1c without touching the high), PB alone +27.17% -> +25.95% (-1c), +25.14% (-2c), +23.24% (-3c); both systems +0.496 -> +0.490%/day (-1c). The 5-minute backtest assumes a touch fills; live queue risk at the exact high is not modelled.",
   "verdict": "not adopted; kept as cycle candidate pb.tp_1c_below"
+ },
+ {
+  "id": "study.pb_tp_cents_above",
+  "idea": "PULLBACK take-profit 1-2 cents above the morning high (governor question 2026-10-30)",
+  "method": "x.pb_tp_cents_below = -1/-2 (sell limit only), improve.run_cf on 167 Robinhood sessions, current rules",
+  "result": "same 54 PB trades, same 37 wins (68.5%); PB compounded +27.60% (at high) -> +29.36% (+1c) -> +30.24% (+2c); both systems +0.496 -> +0.504 -> +0.509%/day, total +125.1 -> +128.2 -> +129.7%. The 5-minute backtest assumes a touch fills; live queue risk is not modelled.",
+  "verdict": "not adopted (rule change needs the cycle or a direct governor order); kept as cycle candidate pb.tp_1c_above"
  }
 ]
