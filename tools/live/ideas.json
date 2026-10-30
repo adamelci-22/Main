@@ -201,5 +201,13 @@
    "x.fade_max_trend": 0.85
   },
   "source": "fade_quality_study 2026-10-29 (governor: 'can we do something that is a bit more sure?')"
+ },
+ {
+  "id": "pb.tp_1c_below",
+  "desc": "PULLBACK take-profit limit 1 cent below the floored morning high (fill certainty; the skip rules still use the high)",
+  "values": {
+   "x.pb_tp_cents_below": 1
+  },
+  "source": "governor question 2026-10-30"
  }
 ]

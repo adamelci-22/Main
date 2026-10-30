@@ -393,5 +393,14 @@
   "method": "improve-style run, 167 Robinhood sessions, one account, Fridays on vs off, v1 and v2, halves and stressed risk",
   "result": "v2 both systems: off +0.496%/day dd 2.8, on +0.463%/day dd 3.2; Friday FADE trades 8, 4 won, -5.01% (v1: 12, 4 won, -7.82%). Damage mostly in the first half (halves on +0.404/+0.521 vs off +0.482/+0.510). Stressed P(stop) 0.0% off vs 2.65% on.",
   "verdict": "kept (governor 2026-10-29: \"Keep no Friday\")"
+ },
+ {
+  "date": "2026-10-30",
+  "kind": "study",
+  "id": "study.pb_tp_cents_below",
+  "idea": "PULLBACK take-profit 1-3 cents below the morning high instead of at it (governor question 2026-10-30)",
+  "method": "x.pb_tp_cents_below switch, improve.run_cf on 167 Robinhood sessions; (a) target lowered before the skip rules, (b) only the sell limit lowered",
+  "result": "(a) fewer trades: PB alone 63 -> 57 (-1c), +0.163 -> +0.151%/day. (b) same 63 trades, same 66.7% win rate (no trade in the data touched high-1c without touching the high), PB alone +27.17% -> +25.95% (-1c), +25.14% (-2c), +23.24% (-3c); both systems +0.496 -> +0.490%/day (-1c). The 5-minute backtest assumes a touch fills; live queue risk at the exact high is not modelled.",
+  "verdict": "not adopted; kept as cycle candidate pb.tp_1c_below"
  }
 ]
