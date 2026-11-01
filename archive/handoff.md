@@ -47,3 +47,6 @@ After a reset: delete and recreate each with the same prompt and schedule but th
 
 ## Handover done 2026-11-01
 The four triggers above were recreated on session_01Hj1PHBJ2EbF525hCrDMDkw (same prompts and schedules; the reset reminder text names the new session) and the old ones on session_01V36EJFRmzAjymQ4J1ScFMo were deleted. The two `v5 paper` triggers belong to a different session and were left alone, and so was the disabled 2026-10-05 checkpoint trigger. First run on the new session: Mon 2026-11-02 at 8:41 ET. Check once that the Robinhood connector is enabled in the new session before then (load a tool with ToolSearch and call get_portfolio for account 462514035).
+
+## Fetch rule learned in the 2026-11-01 rehearsal
+get_equity_historicals saves a result to a file only when it is large. A short fetch (for example from the same day's 9:30 on a Sunday) comes back inline and no dump file exists. Always start each C1.2 group at the prior trading day's 9:30 ET. If any group still returns inline, write it to a file and pass all three files to `tools/live/helpers/slot_run.sh HH:MM <file1> <file2> <file3>`; the script now stops with an error unless it has exactly three fresh dumps, and exits 0 when there is nothing to commit.
