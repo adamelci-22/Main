@@ -28,10 +28,10 @@ Should live PULLBACK skip an entry when the ask at order time makes the stop dis
 - PULLBACK trades little by design (8 ETFs, breakout + dip + trigger + fill + 0.75% stop + reward filters, before about 12:50).
 
 ## Scheduled triggers (stored prompts; retarget their session if you reset)
-- `trig_01NGqPgDDEGYphGs6T9qwcUh`: 8:41 ET weekdays, morning wake (C3, starts the 9:30 waiter).
-- `trig_01EivXASkzxVU1Z8cnVYQE9T`: 13:30 ET weekdays, close plus improvement cycle.
-- `trig_018N3oepVLFhbBuPwtwcTWJ1`: 2026-11-06 waiter coverage report.
-- `trig_01Dwv81fMNH5Rw141Uy3wLKP`: bimonthly session-reset reminder.
+- `trig_01MQAS3nhFsn4bbwYRYZQoDv`: 8:41 ET weekdays, morning wake (C3, starts the 9:30 waiter).
+- `trig_011FL21P9cUiqcGXuxUSNwba`: 13:30 ET weekdays, close plus improvement cycle.
+- `trig_017ujHLudcTC1EX46NZ9cC5z`: 2026-11-06 waiter coverage report.
+- `trig_01FrusR4YYhq8LHwwNYJBWq9`: bimonthly session-reset reminder.
 After a reset: delete and recreate each with the same prompt and schedule but the new `persistent_session_id`, then check with `list_triggers`.
 
 ## Artifacts (private, update in place, never create a new one)
@@ -44,3 +44,6 @@ After a reset: delete and recreate each with the same prompt and schedule but th
 - Close at 13:30: RULEBOOK C4 (verify flat, fetch groups plus the watchlist group, `paper.py --now 13:30 --close`, hwm check, `health.py`, `improve.py tick`, `fade_skips.py`, `extend_live.py`, `dash_data.py` and the scorecard update, commit and push, report; Friday: also `improve.py status`).
 - Helper scripts now in the repo: `tools/live/helpers/slot_run.sh`, `tools/live/helpers/neutral.py` (needs `main/paper.py` and `branch/paper.py` copies next to it: `git show <commit>:tools/live/paper.py`; expect "identical" for every day-run after a code change that should be neutral).
 - The Robinhood tools are deferred: load them with ToolSearch (`select:` the names) before calling them.
+
+## Handover done 2026-11-01
+The four triggers above were recreated on session_01Hj1PHBJ2EbF525hCrDMDkw (same prompts and schedules; the reset reminder text names the new session) and the old ones on session_01V36EJFRmzAjymQ4J1ScFMo were deleted. The two `v5 paper` triggers belong to a different session and were left alone, and so was the disabled 2026-10-05 checkpoint trigger. First run on the new session: Mon 2026-11-02 at 8:41 ET. Check once that the Robinhood connector is enabled in the new session before then (load a tool with ToolSearch and call get_portfolio for account 462514035).
