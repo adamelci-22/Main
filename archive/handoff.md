@@ -50,3 +50,10 @@ The four triggers above were recreated on session_01Hj1PHBJ2EbF525hCrDMDkw (same
 
 ## Fetch rule learned in the 2026-11-01 rehearsal
 get_equity_historicals saves a result to a file only when it is large. A short fetch (for example from the same day's 9:30 on a Sunday) comes back inline and no dump file exists. Always start each C1.2 group at the prior trading day's 9:30 ET. If any group still returns inline, write it to a file and pass all three files to `tools/live/helpers/slot_run.sh HH:MM <file1> <file2> <file3>`; the script now stops with an error unless it has exactly three fresh dumps, and exits 0 when there is nothing to commit.
+
+## Governor reporting preference (2026-11-02)
+At every :00 and :30 slot while the account is flat (10:00 to 12:55), add a "close to entry" update: FADE proxies with a live break and retest window (`tools/live/fade_status.py`), PULLBACK names with a volume breakout and trend up (`tools/live/pb_status.py`), closest first, one line if nothing is close. Run both on the three C1.2 dump files. Skip it when a position is open. The status scripts do not show the dip or trigger step.
+
+## Governor rulings (2026-11-02)
+The month-end cash interest credit (+$0.99 on 2026-10-31) is interest, not a deposit. Do not run `hwm.py deposit` for it. Later month-end credits get the same treatment.
+
