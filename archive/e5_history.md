@@ -83,3 +83,12 @@
 - **Waiters, first day:** all slots fired 4-10 s after the clock; a container restart at 11:46 ET killed 20 waiters, re-created at once (see E6). Log in `archive/waiter_log.csv`.
 - **Monday 2026-10-26 chain armed:** 46 triggers (9:00, 9:30 with the waiter start, 10:00-13:25, 13:30, 8:00pm), ids of the 10:00-13:25 primaries in `archive/chain_ids.json`. Verified by the Friday 8:00pm check.
 
+<!-- E5 as of the 2026-11-02 9:00 refresh (replaced wholesale) -->
+**Thursday 2026-10-29, 9:00 research (run at 8:44 ET by the 8:41 morning trigger, v5.2.37).**
+- **9:00 value (A1.2 base): $2,573.22**, flat, no open orders. Drawdown stop clear: high $2,596.99, stop $2,207.44, −0.92% from the high. Daily loss limit fires at $2,496.02 (−3%).
+- **Controls:** losing streak 0 (4 live trades, all wins). Trading day, not in `NO_TRADE`. **MSFU: no entry today** (MSFT reported 10-28 pm; `EARNINGS_SKIP` matches). NVDA next reports 11-17 pm, so NVD/NVDQ skip 11-18 (matches). **Friday 10-30: no FADE entries** (A1.10).
+- **Corporate actions:** clean. All 17 traded funds and 6 proxies active; each premarket move matches its underlying (SOXX −2.4%, SOXL −7.1%, SOXS +7.4%; QQQ −1.3%).
+- **RVOL baseline:** 20 sessions 2026-10-01..10-28 → `archive/paper_rvol_2026-10-29.json`.
+- **Context:** semis and Nasdaq gap lower premarket (SOXX −2.4%, QQQ −1.3%); MSFT +1.7% after earnings. A gap day: watch the 9:30-10:00 box for a FADE break and retest.
+- **Triggers (governor 2026-10-29):** DST check deleted (the chain it checked is retired; waiters and the two standing triggers follow New York time by themselves); the 11-06 review is now a waiter coverage report only (`trig_018N3oepVLFhbBuPwtwcTWJ1`).
+- **Improvement cycle (D4):** FADE 2 of 5 trades, PULLBACK 1 of 5; no trial running; no proposal pending (p2 withdrawn 10-28).

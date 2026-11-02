@@ -378,6 +378,16 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 Earlier E5 text is kept in `archive/e5_history.md`.
 
+**Monday 2026-11-02, 9:00 research (morning trigger fired 9:13:10 ET, 32 minutes after its 8:41 slot, v5.2.39).**
+- **9:00 value (A1.2 base): $2,571.18** (pre-open, read 9:15 ET), flat, no open orders. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
+- **Deposit check (D1):** +$0.99 against the 10-30 13:30 value ($2,570.19). No tool here shows the cause. It posted over the weekend, which fits month-end cash interest. `hwm.py deposit` NOT run: the governor decides whether it counts as a deposit (effect: high +$0.99, model equity +$0.99).
+- **Controls:** losing streak 0 (10-29 TZA loss, then SSG and LABD wins). Monday: FADE and PULLBACK both trade. Earnings: MSFT reported 10-28 pm (next 2027-01-27 pm, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
+- **Corporate actions:** clean. All 19 funds and proxies active; each premarket move matches its underlying (QQQ +0.8%, TQQQ +2.4%; SOXX +1.4%, SOXL +4.1%, SOXS -4.2%). Wide premarket spreads on TECL, LABU, TECS and FAS: A1.7 applies at order time.
+- **RVOL baseline:** 20 sessions 2026-10-05..10-30 -> `archive/paper_rvol_2026-11-02.json`.
+- **Context:** premarket proxies up 0.4% to 1.4% (SOXX +1.4%, QQQ +0.8%, IWM +0.8%, XLK +0.9%, XLF +0.6%, XBI +0.4%). No event calendar checked beyond earnings.
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. The morning trigger fired 32 minutes late. About 12 disabled, fired one-shot checkpoints from 10-27 and 10-28 remain on the old session: reported, not deleted. The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null in `tunables.json`. No proposal pending, no approved challenger.
+
 **Friday 2026-10-30, 9:00 research (8:42 ET, morning trigger, v5.2.39).**
 - **9:00 value (A1.2 base): $2,545.80**, flat, no open orders. Drawdown stop clear (high $2,596.99, −1.97%). Daily loss limit fires at $2,469.43 (−3%).
 - **Controls:** losing streak 1 (10-29 TZA). Trading day. **Friday: no FADE entries (A1.10); PULLBACK trades.** Earnings: none affecting today (NVD/NVDQ skip 11-18).
@@ -385,15 +395,6 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **RVOL baseline:** 20 sessions 2026-10-02..10-29 → `archive/paper_rvol_2026-10-30.json`.
 - **Context:** heavy semiconductor sell-off premarket (SOXX −6.7%, QQQ −2.6%, NVDA −2.7%; SOXL −20%, SOXS +20%). Inverse funds (SOXS, TECS, SSG, NVDQ, NVD, UVXY) are PULLBACK candidates on a trend day; spreads on SSG are wide premarket (12.70/14.50), the 0.30% spread check (A1.7) applies.
 - **Cycle (D4):** FADE 0 of 5 under v2, PULLBACK 1 of 5; no trial, no pending proposal.
-
-**Thursday 2026-10-29, 9:00 research (run at 8:44 ET by the 8:41 morning trigger, v5.2.37).**
-- **9:00 value (A1.2 base): $2,573.22**, flat, no open orders. Drawdown stop clear: high $2,596.99, stop $2,207.44, −0.92% from the high. Daily loss limit fires at $2,496.02 (−3%).
-- **Controls:** losing streak 0 (4 live trades, all wins). Trading day, not in `NO_TRADE`. **MSFU: no entry today** (MSFT reported 10-28 pm; `EARNINGS_SKIP` matches). NVDA next reports 11-17 pm, so NVD/NVDQ skip 11-18 (matches). **Friday 10-30: no FADE entries** (A1.10).
-- **Corporate actions:** clean. All 17 traded funds and 6 proxies active; each premarket move matches its underlying (SOXX −2.4%, SOXL −7.1%, SOXS +7.4%; QQQ −1.3%).
-- **RVOL baseline:** 20 sessions 2026-10-01..10-28 → `archive/paper_rvol_2026-10-29.json`.
-- **Context:** semis and Nasdaq gap lower premarket (SOXX −2.4%, QQQ −1.3%); MSFT +1.7% after earnings. A gap day: watch the 9:30-10:00 box for a FADE break and retest.
-- **Triggers (governor 2026-10-29):** DST check deleted (the chain it checked is retired; waiters and the two standing triggers follow New York time by themselves); the 11-06 review is now a waiter coverage report only (`trig_018N3oepVLFhbBuPwtwcTWJ1`).
-- **Improvement cycle (D4):** FADE 2 of 5 trades, PULLBACK 1 of 5; no trial running; no proposal pending (p2 withdrawn 10-28).
 
 ## E6. Known issues
 
