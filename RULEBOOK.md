@@ -380,7 +380,7 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 
 **Monday 2026-11-02, 9:00 research (morning trigger fired 9:13:10 ET, 32 minutes after its 8:41 slot, v5.2.39).**
 - **9:00 value (A1.2 base): $2,571.18** (pre-open, read 9:15 ET), flat, no open orders. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
-- **Deposit check (D1):** +$0.99 against the 10-30 13:30 value ($2,570.19). No tool here shows the cause. It posted over the weekend, which fits month-end cash interest. `hwm.py deposit` NOT run: the governor decides whether it counts as a deposit (effect: high +$0.99, model equity +$0.99).
+- **Deposit check (D1):** +$0.99 against the 10-30 13:30 value ($2,570.19). Governor (2026-11-02): it is the monthly interest on the account's cash. Not a deposit: `hwm.py deposit` not run, high unchanged ($2,596.99), model equity unchanged. Month-end interest credits will recur and are treated the same way.
 - **Controls:** losing streak 0 (10-29 TZA loss, then SSG and LABD wins). Monday: FADE and PULLBACK both trade. Earnings: MSFT reported 10-28 pm (next 2027-01-27 pm, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
 - **Corporate actions:** clean. All 19 funds and proxies active; each premarket move matches its underlying (QQQ +0.8%, TQQQ +2.4%; SOXX +1.4%, SOXL +4.1%, SOXS -4.2%). Wide premarket spreads on TECL, LABU, TECS and FAS: A1.7 applies at order time.
 - **RVOL baseline:** 20 sessions 2026-10-05..10-30 -> `archive/paper_rvol_2026-11-02.json`.
