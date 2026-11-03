@@ -388,13 +388,24 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. The morning trigger fired 32 minutes late. About 12 disabled, fired one-shot checkpoints from 10-27 and 10-28 remain on the old session: reported, not deleted. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null in `tunables.json`. No proposal pending, no approved challenger.
 
-**Friday 2026-10-30, 9:00 research (8:42 ET, morning trigger, v5.2.39).**
-- **9:00 value (A1.2 base): $2,545.80**, flat, no open orders. Drawdown stop clear (high $2,596.99, −1.97%). Daily loss limit fires at $2,469.43 (−3%).
-- **Controls:** losing streak 1 (10-29 TZA). Trading day. **Friday: no FADE entries (A1.10); PULLBACK trades.** Earnings: none affecting today (NVD/NVDQ skip 11-18).
-- **Corporate actions:** clean; all funds active, premarket moves match their underlyings.
-- **RVOL baseline:** 20 sessions 2026-10-02..10-29 → `archive/paper_rvol_2026-10-30.json`.
-- **Context:** heavy semiconductor sell-off premarket (SOXX −6.7%, QQQ −2.6%, NVDA −2.7%; SOXL −20%, SOXS +20%). Inverse funds (SOXS, TECS, SSG, NVDQ, NVD, UVXY) are PULLBACK candidates on a trend day; spreads on SSG are wide premarket (12.70/14.50), the 0.30% spread check (A1.7) applies.
-- **Cycle (D4):** FADE 0 of 5 under v2, PULLBACK 1 of 5; no trial, no pending proposal.
+**Tuesday 2026-11-03, 9:00 research (morning trigger fired 8:41:46 ET on time, v5.2.39).**
+- **9:00 value (A1.2 base): $2,571.18** (pre-open, read 8:43 ET), flat, no open orders, same as the 11-02 close. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
+- **Controls:** losing streak 0. Tuesday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 pm (tentative, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
+- **Corporate actions:** clean. All 19 funds and proxies active; each premarket move matches its underlying (SOXX +3.8%, SOXL +11.5%, SOXS -11.7%; QQQ +0.8%, TQQQ +2.2%; XLK +0.9%, TECL +3.0%). Wide premarket spreads on TECS, LABU, XBI and TECL: A1.7 applies at order time.
+- **RVOL baseline:** 20 sessions 2026-10-06..11-02 -> `archive/paper_rvol_2026-11-03.json`.
+- **Context:** large semiconductor gap up premarket (SOXX +3.8%) after a down day, broad proxies up 0.5% to 0.9%, XLF -0.3%. No event calendar checked beyond earnings. Month-end cash interest (+$0.99 on 10-31) is not a deposit (governor, 11-02).
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. About 100 disabled, fired one-shot checkpoints from the old session remain (94 deleted 11-02 at the governor's instruction, rest inert). The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger.
+
+**Monday 2026-11-02, 9:00 research (morning trigger fired 9:13:10 ET, 32 minutes after its 8:41 slot, v5.2.39).**
+- **9:00 value (A1.2 base): $2,571.18** (pre-open, read 9:15 ET), flat, no open orders. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
+- **Deposit check (D1):** +$0.99 against the 10-30 13:30 value ($2,570.19). Governor (2026-11-02): it is the monthly interest on the account's cash. Not a deposit: `hwm.py deposit` not run, high unchanged ($2,596.99), model equity unchanged. Month-end interest credits will recur and are treated the same way.
+- **Controls:** losing streak 0 (10-29 TZA loss, then SSG and LABD wins). Monday: FADE and PULLBACK both trade. Earnings: MSFT reported 10-28 pm (next 2027-01-27 pm, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
+- **Corporate actions:** clean. All 19 funds and proxies active; each premarket move matches its underlying (QQQ +0.8%, TQQQ +2.4%; SOXX +1.4%, SOXL +4.1%, SOXS -4.2%). Wide premarket spreads on TECL, LABU, TECS and FAS: A1.7 applies at order time.
+- **RVOL baseline:** 20 sessions 2026-10-05..10-30 -> `archive/paper_rvol_2026-11-02.json`.
+- **Context:** premarket proxies up 0.4% to 1.4% (SOXX +1.4%, QQQ +0.8%, IWM +0.8%, XLK +0.9%, XLF +0.6%, XBI +0.4%). No event calendar checked beyond earnings.
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. The morning trigger fired 32 minutes late. About 12 disabled, fired one-shot checkpoints from 10-27 and 10-28 remain on the old session: reported, not deleted. The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null in `tunables.json`. No proposal pending, no approved challenger.
 
 ## E6. Known issues
 

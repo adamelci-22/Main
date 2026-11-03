@@ -92,3 +92,12 @@
 - **Context:** semis and Nasdaq gap lower premarket (SOXX −2.4%, QQQ −1.3%); MSFT +1.7% after earnings. A gap day: watch the 9:30-10:00 box for a FADE break and retest.
 - **Triggers (governor 2026-10-29):** DST check deleted (the chain it checked is retired; waiters and the two standing triggers follow New York time by themselves); the 11-06 review is now a waiter coverage report only (`trig_018N3oepVLFhbBuPwtwcTWJ1`).
 - **Improvement cycle (D4):** FADE 2 of 5 trades, PULLBACK 1 of 5; no trial running; no proposal pending (p2 withdrawn 10-28).
+
+<!-- E5 as of the 2026-11-03 9:00 refresh (replaced wholesale) -->
+**Friday 2026-10-30, 9:00 research (8:42 ET, morning trigger, v5.2.39).**
+- **9:00 value (A1.2 base): $2,545.80**, flat, no open orders. Drawdown stop clear (high $2,596.99, −1.97%). Daily loss limit fires at $2,469.43 (−3%).
+- **Controls:** losing streak 1 (10-29 TZA). Trading day. **Friday: no FADE entries (A1.10); PULLBACK trades.** Earnings: none affecting today (NVD/NVDQ skip 11-18).
+- **Corporate actions:** clean; all funds active, premarket moves match their underlyings.
+- **RVOL baseline:** 20 sessions 2026-10-02..10-29 → `archive/paper_rvol_2026-10-30.json`.
+- **Context:** heavy semiconductor sell-off premarket (SOXX −6.7%, QQQ −2.6%, NVDA −2.7%; SOXL −20%, SOXS +20%). Inverse funds (SOXS, TECS, SSG, NVDQ, NVD, UVXY) are PULLBACK candidates on a trend day; spreads on SSG are wide premarket (12.70/14.50), the 0.30% spread check (A1.7) applies.
+- **Cycle (D4):** FADE 0 of 5 under v2, PULLBACK 1 of 5; no trial, no pending proposal.
