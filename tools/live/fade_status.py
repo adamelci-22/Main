@@ -12,7 +12,10 @@ for p in ['QQQ','SOXX','IWM','XLK','XBI','XLF']:
         if b[i][3]>hi: brk=(i,'UP',hi); break
         if b[i][3]<lo: brk=(i,'DOWN',lo); break
     last=b[K-1][3]
-    if not brk: print(f"{p:5} box {lo:.2f}-{hi:.2f} last {last:.2f}  NO BREAK by 10:10 bar -> no FADE today"); continue
+    if not brk:
+        if K<9: print(f"{p:5} box {lo:.2f}-{hi:.2f} last {last:.2f}  no break yet (break window runs through the 10:10 bar)")
+        else: print(f"{p:5} box {lo:.2f}-{hi:.2f} last {last:.2f}  NO BREAK by 10:10 bar -> no FADE today")
+        continue
     i,side,edge=brk; ret=None
     for j in range(i+1,min(K,i+13)):
         tol=P.RETEST_TOL/100; touch=(b[j][2]<=edge*(1+tol)) if side=='UP' else (b[j][1]>=edge*(1-tol))
