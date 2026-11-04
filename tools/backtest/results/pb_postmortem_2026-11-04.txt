@@ -1,0 +1,72 @@
+PART 1  bar-by-bar (5-minute bars: open high low close, time = bar start ET)
+
+SOXS: morning high bar 11:05 (upper wick 62% of its range, 4 bars before entry), stop 1.89% below entry, reward/risk 1.92, typical 5-minute range 1.97% so the stop sits 0.96 ranges away, leg is +11.1% on the day
+  10:55     59.63    60.36    59.35    60.05   SOXX   446.56 (-0.36%)  QQQ -0.01%
+  11:00     60.08    60.90    59.27    60.78   SOXX   444.49 (-0.46%)  QQQ -0.19%
+  11:05     60.78    61.81    60.15    60.15   SOXX   446.35 (+0.42%)  QQQ +0.08%
+  11:10     60.19    60.22    59.01    59.32   SOXX   448.64 (+0.51%)  QQQ +0.09%
+  11:15     59.40    59.54    58.54    58.73   SOXX   450.50 (+0.41%)  QQQ +0.06%
+  11:20     58.78    59.85    58.73    59.64   SOXX   447.90 (-0.58%)  QQQ -0.34%   <- trigger bar
+  11:25     59.66    60.12    59.38    59.46   SOXX   448.31 (+0.09%)  QQQ -0.06%   <- entry bar
+  11:30     59.43    59.50    58.27    58.84   SOXX   450.10 (+0.40%)  QQQ +0.27%   <- stop traded
+  11:35     58.84    59.88    58.67    59.43   SOXX   448.35 (-0.39%)  QQQ -0.03%
+  11:40     59.42    59.54    57.90    58.16   SOXX   452.05 (+0.82%)  QQQ +0.34%
+  11:45     58.16    58.82    58.16    58.58   SOXX   450.93 (-0.25%)  QQQ +0.02%
+  11:50     58.52    58.67    57.15    57.29   SOXX   454.60 (+0.81%)  QQQ +0.27%
+
+MSFU: morning high bar 11:55 (upper wick 47% of its range, 10 bars before entry), stop 0.77% below entry, reward/risk 0.94, typical 5-minute range 0.32% so the stop sits 2.38 ranges away, leg is +13.4% on the day
+  12:15     45.45    45.45    45.38    45.38   XLK   176.94 (-0.07%)  QQQ +0.01%
+  12:20     45.42    45.45    45.29    45.45   XLK   177.39 (+0.25%)  QQQ +0.17%
+  12:25     45.37    45.39    45.32    45.38   XLK   177.60 (+0.12%)  QQQ +0.09%
+  12:30     45.36    45.38    45.18    45.18   XLK   177.41 (-0.11%)  QQQ -0.06%
+  12:35     45.11    45.26    45.06    45.26   XLK   177.09 (-0.18%)  QQQ -0.11%
+  12:40     45.19    45.39    45.17    45.39   XLK   177.26 (+0.10%)  QQQ +0.11%   <- trigger bar
+  12:45     45.38    45.38    45.30    45.35   XLK   177.53 (+0.15%)  QQQ +0.07%   <- entry bar
+  12:50     45.29    45.30    45.05    45.05   XLK   177.47 (-0.03%)  QQQ -0.03%
+  12:55     45.05    45.11    44.91    44.92   XLK   177.58 (+0.06%)  QQQ +0.03%   <- stop traded
+  13:00     44.89    45.05    44.89    45.03   XLK   177.43 (-0.08%)  QQQ -0.05%
+  13:05     45.04    45.18    45.04    45.15   XLK   177.35 (-0.04%)  QQQ -0.05%
+
+PART 2  54 PULLBACK trades, 2026-03-02..2026-11-03, rules in force
+  all                            n= 54 win  69%  avg +0.457%  total  +24.67%  stopped  26%
+stop distance / typical 5-minute range: thirds split at 1.17 / 1.48  (today: SOXS 0.96, MSFU 2.38)
+    low third                    n= 18 win  61%  avg +0.321%  total   +5.78%  stopped  39%
+    middle third                 n= 18 win  72%  avg +0.580%  total  +10.45%  stopped  22%
+    high third                   n= 18 win  72%  avg +0.469%  total   +8.45%  stopped  17%
+reward / risk: thirds split at 1.01 / 1.48  (today: SOXS 1.92, MSFU 0.94)
+    low third                    n= 18 win  78%  avg +0.583%  total  +10.50%  stopped  22%
+    middle third                 n= 18 win  72%  avg +0.559%  total  +10.07%  stopped  17%
+    high third                   n= 18 win  56%  avg +0.228%  total   +4.11%  stopped  39%
+stop distance, %: thirds split at 0.87 / 1.07  (today: SOXS 1.89, MSFU 0.77)
+    low third                    n= 18 win  61%  avg +0.189%  total   +3.40%  stopped  39%
+    middle third                 n= 18 win  67%  avg +0.365%  total   +6.57%  stopped  22%
+    high third                   n= 18 win  78%  avg +0.817%  total  +14.70%  stopped  17%
+upper wick share of the morning-high bar: thirds split at 0.20 / 0.52  (today: SOXS 0.62, MSFU 0.47)
+    low third                    n= 18 win  83%  avg +0.759%  total  +13.66%  stopped  17%
+    middle third                 n= 18 win  56%  avg +0.342%  total   +6.15%  stopped  28%
+    high third                   n= 18 win  67%  avg +0.270%  total   +4.86%  stopped  33%
+bars from morning high to entry: thirds split at 6.00 / 10.00  (today: SOXS 4.00, MSFU 10.00)
+    low third                    n= 14 win  79%  avg +0.698%  total   +9.78%  stopped  14%
+    middle third                 n= 21 win  57%  avg +0.268%  total   +5.62%  stopped  38%
+    high third                   n= 19 win  74%  avg +0.488%  total   +9.28%  stopped  21%
+entry bar (time of day): thirds split at 20.00 / 31.00  (today: SOXS 23.00, MSFU 39.00)
+    low third                    n= 15 win  67%  avg +0.328%  total   +4.92%  stopped  33%
+    middle third                 n= 20 win  70%  avg +0.536%  total  +10.72%  stopped  25%
+    high third                   n= 19 win  68%  avg +0.475%  total   +9.03%  stopped  21%
+leg move since prior close, %: thirds split at 2.63 / 5.27  (today: SOXS 11.06, MSFU 13.42)
+    low third                    n= 18 win  67%  avg +0.397%  total   +7.15%  stopped  22%
+    middle third                 n= 18 win  61%  avg +0.243%  total   +4.37%  stopped  39%
+    high third                   n= 18 win  78%  avg +0.731%  total  +13.16%  stopped  17%
+
+single cuts
+  reward/risk < 1.0              n= 16 win  81%  avg +0.655%  total  +10.47%  stopped  19%
+  reward/risk >= 1.0             n= 38 win  63%  avg +0.374%  total  +14.20%  stopped  29%
+  stop < 1 typical range         n= 11 win  45%  avg -0.058%  total   -0.64%  stopped  55%
+  stop >= 1 typical range        n= 43 win  74%  avg +0.589%  total  +25.31%  stopped  19%
+  stop < 1.5 typical ranges      n= 38 win  68%  avg +0.469%  total  +17.83%  stopped  29%
+  stop >= 1.5 typical ranges     n= 16 win  69%  avg +0.427%  total   +6.84%  stopped  19%
+  wick >= 50% (spike high)       n= 20 win  65%  avg +0.290%  total   +5.79%  stopped  35%
+  wick < 50%                     n= 34 win  71%  avg +0.555%  total  +18.88%  stopped  21%
+  entry before 11:30             n= 25 win  76%  avg +0.627%  total  +15.67%  stopped  24%
+  entry 11:30 to 12:30           n= 17 win  59%  avg +0.239%  total   +4.06%  stopped  29%
+  entry 12:30 or later           n= 12 win  67%  avg +0.412%  total   +4.94%  stopped  25%
