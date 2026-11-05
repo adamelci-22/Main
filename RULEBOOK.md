@@ -392,15 +392,6 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 Earlier E5 text is kept in `archive/e5_history.md`.
 
-**Tuesday 2026-11-03, 9:00 research (morning trigger fired 8:41:46 ET on time, v5.2.39).**
-- **9:00 value (A1.2 base): $2,571.18** (pre-open, read 8:43 ET), flat, no open orders, same as the 11-02 close. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
-- **Controls:** losing streak 0. Tuesday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 pm (tentative, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
-- **Corporate actions:** clean. All 19 funds and proxies active; each premarket move matches its underlying (SOXX +3.8%, SOXL +11.5%, SOXS -11.7%; QQQ +0.8%, TQQQ +2.2%; XLK +0.9%, TECL +3.0%). Wide premarket spreads on TECS, LABU, XBI and TECL: A1.7 applies at order time.
-- **RVOL baseline:** 20 sessions 2026-10-06..11-02 -> `archive/paper_rvol_2026-11-03.json`.
-- **Context:** large semiconductor gap up premarket (SOXX +3.8%) after a down day, broad proxies up 0.5% to 0.9%, XLF -0.3%. No event calendar checked beyond earnings. Month-end cash interest (+$0.99 on 10-31) is not a deposit (governor, 11-02).
-- **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. About 100 disabled, fired one-shot checkpoints from the old session remain (94 deleted 11-02 at the governor's instruction, rest inert). The two `v5 paper` triggers belong to another session.
-- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger.
-
 **Wednesday 2026-11-04, 9:00 research (morning trigger fired 8:42:14 ET, v5.2.39).**
 - **9:00 value (A1.2 base): $2,571.18** (pre-open, read 8:43 ET), flat, no open orders, same as the 11-03 close. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
 - **Controls:** losing streak 0. Wednesday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 pm (tentative, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
@@ -409,6 +400,16 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Context:** day after the US midterm election. Small caps, financials and biotech up premarket, semiconductors down. No event calendar checked beyond earnings.
 - **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. One disabled 10-05 checkpoint remains on the old session, inert. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE waiting 0 of 5, PULLBACK waiting 1 of 5.
+
+**Thursday 2026-11-05, 9:00 research (morning trigger fired 8:42:00 ET, v5.2.42).**
+- **9:00 value (A1.2 base): $2,503.12** (pre-open, read 8:42 ET), flat, no open orders or advanced orders. It is 2,502 USDG plus $1.12 cash (B4.8, bought 00:55 ET). Equal to the 11-04 close value. Drawdown stop clear (high $2,596.99, -3.61%). Daily loss limit fires at $2,428.03 (-3%).
+- **Controls:** losing streak 2 of 5 (11-04 PULLBACK SOXS -1.94%, MSFU -0.72%). Thursday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 pm (tentative). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). No earnings skip today.
+- **Rules in force:** tunables v4. Runaway skip 0.85% (from 10-29), PULLBACK breakout volume 1.3x and the same-system loss block B4.7 (both from today). v5.2.42 USDG rule ON (governor "Start usdg buy all capital into it now", cap 100%): peg quote bid = ask = $1.00. No interest has been credited yet: the balance is still 2,502 after 7.8 hours, so the crediting schedule is unknown. Check at the close.
+- **Corporate actions:** SOXX 3-for-1 split effective today (previous close $450.41 raw = $150.14 split-adjusted; premarket $144.5). Robinhood bars come split-adjusted, history rescaled, so the SOXX box, ranges and the RVOL baseline use one scale. The SOXX RVOL baseline (12.5M shares to 13:30) should be compared with the first slot's SOXX volume: if SOXX RVOL reads near 0.33 or 3, the volume history is not adjusted and it only affects same-bar ties. Other premarket moves match their underlyings: SOXX -3.8%, SOXL -11.7%, SOXS +12.0%; QQQ -0.8%, TQQQ -2.4%; XLK -1.6%, TECL -5.3%; XLF +1.3%, FAS +4.3%; XBI -0.4%, LABU -1.0%; IWM +0.3%, TNA +0.8%. No fund more than 20% off its close except SOXL and SOXS, which follow SOXX by 3x. Wide premarket spreads on SSG, TECL, TECS, FAS and NVDQ: A1.7 applies at order time.
+- **RVOL baseline:** 20 sessions 2026-10-08..11-04 -> `archive/paper_rvol_2026-11-05.json`.
+- **Context:** second day after the US midterm election. Semiconductors down about 4% premarket, tech down 1.6%, financials up 1.3%. No FOMC (the last was 10-28). Weekly jobless claims 8:30. The October jobs report is due Friday 11-06. No event calendar checked beyond earnings.
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers, the 11-06 waiter coverage report and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains on the old session, inert.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. Both cycles restarted at 0 of 5 from 2026-11-05 (v4).
 
 ## E6. Known issues
 

@@ -111,3 +111,12 @@
 - **Context:** premarket proxies up 0.4% to 1.4% (SOXX +1.4%, QQQ +0.8%, IWM +0.8%, XLK +0.9%, XLF +0.6%, XBI +0.4%). No event calendar checked beyond earnings.
 - **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. The morning trigger fired 32 minutes late. About 12 disabled, fired one-shot checkpoints from 10-27 and 10-28 remain on the old session: reported, not deleted. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null in `tunables.json`. No proposal pending, no approved challenger.
+
+**Tuesday 2026-11-03, 9:00 research (morning trigger fired 8:41:46 ET on time, v5.2.39).**
+- **9:00 value (A1.2 base): $2,571.18** (pre-open, read 8:43 ET), flat, no open orders, same as the 11-02 close. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
+- **Controls:** losing streak 0. Tuesday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 pm (tentative, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
+- **Corporate actions:** clean. All 19 funds and proxies active; each premarket move matches its underlying (SOXX +3.8%, SOXL +11.5%, SOXS -11.7%; QQQ +0.8%, TQQQ +2.2%; XLK +0.9%, TECL +3.0%). Wide premarket spreads on TECS, LABU, XBI and TECL: A1.7 applies at order time.
+- **RVOL baseline:** 20 sessions 2026-10-06..11-02 -> `archive/paper_rvol_2026-11-03.json`.
+- **Context:** large semiconductor gap up premarket (SOXX +3.8%) after a down day, broad proxies up 0.5% to 0.9%, XLF -0.3%. No event calendar checked beyond earnings. Month-end cash interest (+$0.99 on 10-31) is not a deposit (governor, 11-02).
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. About 100 disabled, fired one-shot checkpoints from the old session remain (94 deleted 11-02 at the governor's instruction, rest inert). The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger.
