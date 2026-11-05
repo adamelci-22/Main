@@ -1,0 +1,47 @@
+172 Robinhood sessions 2026-03-02..2026-11-03, rules in force (tunables v3); the research copy at live settings equals the live engine
+rules in force: +0.495%/day win 70% DD 2.76% PF 4.08 trades 113 | FADE 49 trades win 73% total +58.2%
+
+ONE CHANGE AT A TIME (each constant moved alone)
+         sbuf 0.05                              acct +0.499 (+0.003; halves +0.006/-0.000) win  70% (+0.0) DD 2.91 PF 3.92 | FADE n  49 win  73% total +58.7% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         sbuf 0.1                               acct +0.505 (+0.009; halves -0.010/+0.038) win  72% (+1.8) DD 3.11 PF 3.83 | FADE n  49 win  78% total +59.8% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         depth 0.05                             acct +0.466 (-0.029; halves -0.042/-0.011) win  71% (+1.1) DD 2.76 PF 4.31 | FADE n  35 win  80% total +54.0% | adds  4 (100% win,  +2.7%) removes 18 ( +6.9%)
+         depth 0.1                              acct +0.394 (-0.101; halves -0.103/-0.098) win  71% (+0.9) DD 2.83 PF 3.87 | FADE n  20 win  90% total +41.7% | adds  3 ( 67% win,  -0.3%) removes 32 (+16.1%)
+         rw 6                                   acct +0.495 (+0.000; halves +0.000/+0.000) win  70% (+0.0) DD 2.76 PF 4.08 | FADE n  49 win  73% total +58.2% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         rw 9                                   acct +0.495 (+0.000; halves +0.000/+0.000) win  70% (+0.0) DD 2.76 PF 4.08 | FADE n  49 win  73% total +58.2% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         rw 18                                  acct +0.510 (+0.014; halves +0.024/+0.000) win  70% (+0.3) DD 2.76 PF 4.16 | FADE n  50 win  74% total +60.6% | adds  1 (100% win,  +2.5%) removes  0 ( +0.0%)
+         brk 10                                 acct +0.463 (-0.033; halves -0.029/-0.038) win  67% (-3.2) DD 2.76 PF 3.41 | FADE n  58 win  67% total +53.4% | adds  9 ( 33% win,  -4.8%) removes  2 ( +0.7%)
+         brk 12                                 acct +0.468 (-0.028; halves -0.027/-0.029) win  66% (-4.3) DD 2.76 PF 3.28 | FADE n  67 win  66% total +55.5% | adds 18 ( 44% win,  -2.7%) removes  3 ( +2.0%)
+         box 4                                  acct +0.361 (-0.134; halves -0.218/-0.011) win  61% (-8.8) DD 4.65 PF 2.43 | FADE n  79 win  56% total +33.8% | adds 61 ( 52% win, +20.9%) removes 35 (+45.1%)
+         box 3                                  acct +0.187 (-0.308; halves -0.441/-0.112) win  61% (-9.3) DD 5.64 PF 1.73 | FADE n  67 win  54% total  +3.1% | adds 52 ( 50% win,  +1.8%) removes 36 (+56.6%)
+         box 2                                  acct +0.264 (-0.231; halves -0.325/-0.093) win  63% (-7.3) DD 4.84 PF 2.17 | FADE n  56 win  59% total +19.0% | adds 44 ( 55% win, +16.9%) removes 42 (+58.6%)
+
+ALL 432 COMBINATIONS: 0 pass ADD, 0 pass REMOVE
+
+best five by account win rate with %/day kept (>= live - 0.01):
+         rw 18, sbuf 0.1                        acct +0.518 (+0.022; halves +0.012/+0.038) win  72% (+2.0) DD 3.11 PF 3.90 | FADE n  50 win  78% total +62.0% | adds  1 (100% win,  +2.2%) removes  0 ( +0.0%)
+         sbuf 0.1                               acct +0.505 (+0.009; halves -0.010/+0.038) win  72% (+1.8) DD 3.11 PF 3.83 | FADE n  49 win  78% total +59.8% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         rw 6, sbuf 0.1                         acct +0.505 (+0.009; halves -0.010/+0.038) win  72% (+1.8) DD 3.11 PF 3.83 | FADE n  49 win  78% total +59.8% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         rw 9, sbuf 0.1                         acct +0.505 (+0.009; halves -0.010/+0.038) win  72% (+1.8) DD 3.11 PF 3.83 | FADE n  49 win  78% total +59.8% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         rw 18                                  acct +0.510 (+0.014; halves +0.024/+0.000) win  70% (+0.3) DD 2.76 PF 4.16 | FADE n  50 win  74% total +60.6% | adds  1 (100% win,  +2.5%) removes  0 ( +0.0%)
+best five by account %/day:
+         rw 18, sbuf 0.1                        acct +0.518 (+0.022; halves +0.012/+0.038) win  72% (+2.0) DD 3.11 PF 3.90 | FADE n  50 win  78% total +62.0% | adds  1 (100% win,  +2.2%) removes  0 ( +0.0%)
+         rw 18, sbuf 0.05                       acct +0.512 (+0.017; halves +0.029/-0.000) win  70% (+0.3) DD 2.91 PF 4.00 | FADE n  50 win  74% total +61.1% | adds  1 (100% win,  +2.4%) removes  0 ( +0.0%)
+         rw 18                                  acct +0.510 (+0.014; halves +0.024/+0.000) win  70% (+0.3) DD 2.76 PF 4.16 | FADE n  50 win  74% total +60.6% | adds  1 (100% win,  +2.5%) removes  0 ( +0.0%)
+         sbuf 0.1                               acct +0.505 (+0.009; halves -0.010/+0.038) win  72% (+1.8) DD 3.11 PF 3.83 | FADE n  49 win  78% total +59.8% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+         rw 6, sbuf 0.1                         acct +0.505 (+0.009; halves -0.010/+0.038) win  72% (+1.8) DD 3.11 PF 3.83 | FADE n  49 win  78% total +59.8% | adds  0 (  0% win,  +0.0%) removes  0 ( +0.0%)
+
+Massive before 2026-03 (never fitted): rules in force -0.030%/day win 49% DD 37.9% PF 0.89 n 619
+  near     rw 18, depth 0.05, sbuf 0.1            -0.051%/day (-0.020) win  50% (+0.7) DD  50.2% PF 0.82 | FADE n 209 win  54%
+  near     depth 0.05, sbuf 0.1                   -0.051%/day (-0.020) win  50% (+0.7) DD  50.2% PF 0.82 | FADE n 209 win  54%
+  near     rw 6, depth 0.05, sbuf 0.1             -0.052%/day (-0.022) win  50% (+0.4) DD  50.4% PF 0.82 | FADE n 207 win  53%
+  near     rw 18, sbuf 0.1                        -0.046%/day (-0.016) win  52% (+2.5) DD  51.6% PF 0.85 | FADE n 292 win  57%
+  near     rw 18, sbuf 0.05                       -0.037%/day (-0.007) win  51% (+1.9) DD  44.7% PF 0.87 | FADE n 295 win  55%
+  near     rw 18                                  -0.030%/day (+0.000) win  49% (+0.0) DD  37.9% PF 0.89 | FADE n 299 win  51%
+
+Massive 2026-03 on: rules in force +0.374%/day win 65% DD 5.2% PF 3.08 n 97
+  near     rw 18, depth 0.05, sbuf 0.1            +0.375%/day (+0.001) win  71% (+5.8) DD   4.2% PF 3.53 | FADE n 34 win  85%
+  near     depth 0.05, sbuf 0.1                   +0.362%/day (-0.012) win  70% (+5.4) DD   4.2% PF 3.44 | FADE n 33 win  85%
+  near     rw 6, depth 0.05, sbuf 0.1             +0.362%/day (-0.012) win  70% (+5.4) DD   4.2% PF 3.44 | FADE n 33 win  85%
+  near     rw 18, sbuf 0.1                        +0.392%/day (+0.018) win  69% (+4.1) DD   5.5% PF 3.12 | FADE n 50 win  78%
+  near     rw 18, sbuf 0.05                       +0.382%/day (+0.008) win  66% (+1.0) DD   5.0% PF 3.08 | FADE n 50 win  72%
+  near     rw 18                                  +0.388%/day (+0.014) win  65% (+0.4) DD   5.2% PF 3.16 | FADE n 51 win  71%
