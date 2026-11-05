@@ -35,3 +35,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-05,USDG,-,buy,usdg,00:41,00:41:53,00:41:54,1,1,0,1,,1,0,10,$10 test buy order 6aec1721; fee 0,,
 2026-11-05,USDG,-,sell,usdg,00:42,00:42:08,00:42:09,1,1,0,1,,1,0,10,$10 test sell order 6aec1730; fee 0,,
 2026-11-05,USDG,-,buy,usdg,00:55,00:55:01,00:55:02,1,1,0,1,,1,0,2502,governor start: all capital order 6aec1a35; fee 0,,
+2026-11-05,USDG,-,sell,usdg,10:05,10:05:34,10:05:35,1,1,0,1,,1,0,2502,trigger FADE IWM+XLF break down 10:00; order 6aec9b3e; buying_power 2503.12 restored; fee 0,,
