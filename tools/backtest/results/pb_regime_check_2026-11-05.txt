@@ -1,0 +1,14 @@
+54 PULLBACK trades with regime data, 2026-03-02..2026-11-03
+  all                                n= 54 win  69%  stopped  26%  avg +0.457%  total  +24.67%
+QQQ range ratio
+    below 1.0 (calm)                 n= 24 win  67%  stopped  29%  avg +0.376%  total   +9.01%
+    1.0 to 1.5                       n= 19 win  74%  stopped  21%  avg +0.566%  total  +10.76%
+    1.5 to 2.0                       n=  7 win  57%  stopped  29%  avg +0.402%  total   +2.81%
+    2.0 and up (wild)                n=  4 win  75%  stopped  25%  avg +0.522%  total   +2.09%
+SOXX range ratio
+    below 1.0 (calm)                 n= 23 win  57%  stopped  39%  avg +0.141%  total   +3.25%
+    1.0 to 1.5                       n= 17 win  82%  stopped  18%  avg +0.689%  total  +11.71%
+    1.5 to 2.0                       n=  5 win  80%  stopped   0%  avg +0.983%  total   +4.91%
+    2.0 and up (wild)                n=  9 win  67%  stopped  22%  avg +0.534%  total   +4.80%
+today SOXS at bar 23: QQQ range ratio 2.54, SOXX range ratio 3.38
+today MSFU at bar 39: QQQ range ratio 2.26, SOXX range ratio 3.02
