@@ -1,12 +1,12 @@
 {
  "fade": {
   "state": "waiting",
-  "since": "2026-10-30",
-  "reason": "v2 pushed by the governor 2026-10-29 (runaway filter); 5 new trades under v2 before the next goal check"
+  "since": "2026-11-05",
+  "reason": "v4 pushed by the governor 2026-11-05 (no second trade from a system that lost earlier that day); 5 new trades under v4 before the next goal check"
  },
  "pb": {
   "state": "waiting",
   "since": "2026-11-05",
-  "reason": "v3 pushed by the governor 2026-11-04 (breakout volume 1.3x); 5 new PULLBACK trades under v3 before the next goal check"
+  "reason": "v4 pushed by the governor 2026-11-05 (no second trade from a system that lost earlier that day); 5 new trades under v4 before the next goal check"
  }
 }
