@@ -1,0 +1,59 @@
+172 Robinhood sessions 2026-03-02..2026-11-03 (extra tickers carry data to the end of the base file); halves split at 2026-07-29
+live rules: +0.485%/day  win 71%  DD 2.76%  PF 4.59  trades 103
+
+== A. extra PULLBACK legs: 62 tried, 0 pass ==
+     PB + MSTU                          adds  14 win  43% avg +0.27% halves  -5.0/ +8.8  displaces  2 ( +1.8%) | account +0.496%/day (+0.011) win  67% ( -4) DD 4.67 PF 3.60 n 115
+     PB + TSLQ                          adds   4 win  75% avg +0.47% halves  +1.9/ +0.0  displaces  1 ( +1.2%) | account +0.488%/day (+0.004) win  71% ( -0) DD 2.16 PF 4.48 n 106
+     PB + TSLL                          adds   8 win  50% avg +0.22% halves  +0.9/ +0.8  displaces  0 ( +0.0%) | account +0.495%/day (+0.010) win  69% ( -2) DD 2.76 PF 4.36 n 111
+     PB + NVDL                          adds   6 win  50% avg +0.24% halves  +1.5/ +0.0  displaces  1 ( -0.6%) | account +0.496%/day (+0.012) win  70% ( -1) DD 3.24 PF 4.34 n 108
+     PB + ETHU                          adds   9 win  67% avg +0.15% halves  +1.1/ +0.3  displaces  0 ( +0.0%) | account +0.492%/day (+0.008) win  71% ( -0) DD 3.94 PF 4.17 n 112
+     PB + BOIL                          adds   7 win  57% avg +0.12% halves  -0.2/ +1.0  displaces  0 ( +0.0%) | account +0.490%/day (+0.005) win  70% ( -1) DD 2.76 PF 4.34 n 110
+     PB + BITX                          adds   9 win  44% avg +0.07% halves  +0.5/ +0.1  displaces  3 ( +1.5%) | account +0.479%/day (-0.005) win  69% ( -2) DD 2.76 PF 4.19 n 109
+     PB + SCO                           adds   4 win  50% avg +0.14% halves  +0.4/ +0.1  displaces  0 ( +0.0%) | account +0.488%/day (+0.003) win  70% ( -1) DD 2.76 PF 4.36 n 107
+     PB + BTCZ                          adds   3 win  33% avg +0.02% halves  +0.1/ +0.0  displaces  0 ( +0.0%) | account +0.485%/day (+0.000) win  70% ( -1) DD 2.83 PF 4.38 n 106
+     PB + ZSL                           adds   5 win  60% avg +0.01% halves  +0.4/ -0.4  displaces  0 ( +0.0%) | account +0.485%/day (+0.000) win  70% ( -1) DD 2.76 PF 4.33 n 108
+     PB + KORU                          adds  19 win  42% avg -0.00% halves  +1.0/ -1.1  displaces  1 ( +0.7%) | account +0.480%/day (-0.004) win  66% ( -5) DD 4.09 PF 3.35 n 121
+     PB + TECL                          adds   4 win  50% avg -0.06% halves  -0.9/ +0.6  displaces  0 ( +0.0%) | account +0.483%/day (-0.002) win  70% ( -1) DD 2.76 PF 4.30 n 107
+     PB + TSDD                          adds   7 win  43% avg -0.14% halves  -1.0/ +0.0  displaces  1 ( +1.2%) | account +0.471%/day (-0.013) win  69% ( -2) DD 2.76 PF 3.97 n 109
+     PB + TQQQ                          adds   6 win  50% avg -0.19% halves  -1.3/ +0.2  displaces  1 ( +0.8%) | account +0.473%/day (-0.012) win  69% ( -1) DD 2.76 PF 4.11 n 108
+     PB + KOLD                          adds   5 win  40% avg -0.26% halves  -1.4/ +0.1  displaces  0 ( +0.0%) | account +0.477%/day (-0.008) win  69% ( -1) DD 4.59 PF 4.02 n 108
+     PB + DRIP                          adds   5 win  40% avg -0.28% halves  +0.4/ -1.8  displaces  1 ( -0.9%) | account +0.482%/day (-0.003) win  70% ( -1) DD 2.76 PF 4.31 n 107
+     PB + CONL                          adds  15 win  40% avg -0.10% halves  -1.7/ +0.1  displaces  0 ( +0.0%) | account +0.475%/day (-0.009) win  67% ( -4) DD 4.01 PF 3.47 n 118
+     PB + FNGU                          adds   4 win  25% avg -0.44% halves  -0.9/ -0.9  displaces  0 ( +0.0%) | account +0.474%/day (-0.010) win  69% ( -2) DD 2.76 PF 4.15 n 107
+     PB + AGQ                           adds   5 win  20% avg -0.36% halves  -1.0/ -0.8  displaces  1 ( -0.8%) | account +0.479%/day (-0.006) win  69% ( -2) DD 2.89 PF 4.17 n 107
+     PB + RAM                           adds   8 win  38% avg -0.30% halves  +0.7/ -3.1  displaces  1 ( +0.7%) | account +0.466%/day (-0.018) win  68% ( -3) DD 3.33 PF 3.77 n 110
+     PB + TZA                           adds   6 win  33% avg -0.41% halves  -3.3/ +0.9  displaces  2 ( +0.6%) | account +0.467%/day (-0.018) win  69% ( -2) DD 2.76 PF 4.06 n 107
+     PB + TNA                           adds   3 win   0% avg -1.00% halves  -3.0/ +0.0  displaces  0 ( +0.0%) | account +0.467%/day (-0.018) win  69% ( -2) DD 2.76 PF 4.06 n 106
+     PB + NUGT                          adds   7 win  29% avg -0.49% halves  -1.4/ -2.0  displaces  1 ( +1.0%) | account +0.458%/day (-0.026) win  68% ( -3) DD 5.08 PF 3.77 n 109
+     PB + METU                          adds   6 win  17% avg -0.63% halves  +0.0/ -3.8  displaces  0 ( +0.0%) | account +0.462%/day (-0.022) win  68% ( -3) DD 3.78 PF 3.85 n 109
+     PB + AMZU                          adds   4 win   0% avg -1.08% halves  -4.3/ +0.0  displaces  2 ( +4.5%) | account +0.433%/day (-0.052) win  69% ( -2) DD 3.60 PF 3.78 n 105
+     PB + AMDL                          adds  18 win  33% avg -0.25% halves  +2.8/ -7.2  displaces  0 ( +0.0%) | account +0.458%/day (-0.026) win  65% ( -6) DD 4.21 PF 3.16 n 121
+     PB + UVIX                          adds   6 win   0% avg -0.82% halves  -3.1/ -1.8  displaces  0 ( +0.0%) | account +0.455%/day (-0.029) win  67% ( -4) DD 2.82 PF 3.78 n 109
+     PB + MSTZ                          adds  17 win  29% avg -0.33% halves  -4.0/ -1.7  displaces  0 ( +0.0%) | account +0.451%/day (-0.033) win  65% ( -6) DD 3.74 PF 3.11 n 120
+     PB + LABU                          adds   8 win  12% avg -0.83% halves  -3.2/ -3.5  displaces  0 ( +0.0%) | account +0.445%/day (-0.039) win  67% ( -4) DD 2.95 PF 3.48 n 111
+     PB + SOXL                          adds  16 win  38% avg -0.45% halves  -5.2/ -1.9  displaces  1 ( +0.8%) | account +0.438%/day (-0.047) win  66% ( -5) DD 4.04 PF 3.07 n 118
+
+== B. extra FADE proxies: 16 tried, 0 pass ==
+     FADE + EEM (EDC/EDZ)               adds   7 win  57% avg +0.44% halves  +3.4/ -0.3  displaces  0 ( +0.0%) | account +0.503%/day (+0.018) win  70% ( -1) DD 2.76 PF 4.66 n 110
+     FADE + XLU (UTSL/SDP)              adds  11 win  55% avg +0.13% halves  +0.4/ +1.0  displaces  3 ( +2.2%) | account +0.480%/day (-0.005) win  69% ( -2) DD 2.76 PF 4.16 n 111
+     FADE + XLE (ERX/ERY)               adds   9 win  33% avg +0.10% halves  +4.1/ -3.2  displaces  1 ( -0.4%) | account +0.492%/day (+0.008) win  68% ( -2) DD 2.80 PF 4.14 n 111
+     FADE + TLT (TMF/TMV)               adds  12 win  42% avg +0.07% halves  -0.3/ +1.1  displaces  3 ( -0.8%) | account +0.494%/day (+0.009) win  69% ( -2) DD 2.76 PF 4.59 n 112
+     FADE + SPY (UPRO/SPXU)             adds  10 win  30% avg +0.05% halves  +0.3/ +0.2  displaces  1 ( -0.2%) | account +0.489%/day (+0.004) win  68% ( -3) DD 3.18 PF 4.38 n 112
+     FADE + FXI (YINN/YANG)             adds   7 win  57% avg +0.01% halves  -0.4/ +0.5  displaces  2 ( +2.6%) | account +0.470%/day (-0.014) win  70% ( -1) DD 2.76 PF 4.36 n 108
+     FADE + UNG (BOIL/KOLD)             adds  10 win  50% avg -0.00% halves  +1.3/ -1.3  displaces  2 ( +6.1%) | account +0.449%/day (-0.035) win  68% ( -2) DD 3.08 PF 4.02 n 111
+     FADE + SLV (AGQ/ZSL)               adds   6 win  67% avg -0.10% halves  -0.7/ +0.1  displaces  2 ( -2.0%) | account +0.493%/day (+0.008) win  72% ( +1) DD 2.76 PF 4.69 n 107
+     FADE + XLRE (DRN/DRV)              adds   5 win  20% avg -0.17% halves  -1.2/ +0.3  displaces  2 ( -0.1%) | account +0.480%/day (-0.004) win  69% ( -2) DD 2.76 PF 4.51 n 106
+     FADE + GLD (UGL/GLL)               adds   9 win  33% avg -0.14% halves  -1.0/ -0.3  displaces  2 ( -1.6%) | account +0.486%/day (+0.002) win  69% ( -2) DD 2.76 PF 4.59 n 110
+     FADE + IBIT (BITX/SBIT)            adds   4 win  25% avg -0.36% halves  -1.4/ +0.0  displaces  0 ( +0.0%) | account +0.476%/day (-0.008) win  69% ( -2) DD 3.25 PF 4.31 n 107
+     FADE + ETHA (ETHU/ETHD)            adds   6 win  33% avg -0.31% halves  -0.3/ -1.6  displaces  3 ( +1.8%) | account +0.463%/day (-0.022) win  68% ( -3) DD 2.78 PF 4.09 n 106
+     FADE + KRE (DPST/FAZ)              adds   9 win  33% avg -0.24% halves  -2.7/ +0.5  displaces  3 ( -1.6%) | account +0.481%/day (-0.003) win  69% ( -2) DD 3.32 PF 4.27 n 109
+     FADE + XOP (GUSH/DRIP)             adds   5 win  40% avg -0.65% halves  -1.0/ -2.2  displaces  2 ( +4.9%) | account +0.437%/day (-0.048) win  70% ( -1) DD 2.76 PF 3.88 n 106
+
+== C. looser setup thresholds: 10 tried, 0 pass ==
+     pb.vol_mult 1.3                    adds  10 win  60% avg +0.18% halves  +1.0/ +0.9  displaces  0 ( +0.0%) | account +0.495%/day (+0.011) win  70% ( -1) DD 2.76 PF 4.08 n 113
+     pb.min_stop_pct 0.65               adds  19 win  47% avg +0.07% halves  -0.3/ +1.7  displaces  3 ( +1.4%) | account +0.485%/day (+0.000) win  67% ( -4) DD 2.16 PF 3.77 n 119
+     pb.min_stop_pct 0.7                adds   7 win  57% avg +0.12% halves  -0.9/ +1.8  displaces  1 ( +1.2%) | account +0.482%/day (-0.002) win  70% ( -1) DD 3.49 PF 4.23 n 109
+     pb.vol_mult 1.2                    adds  18 win  56% avg +0.01% halves  -3.4/ +3.6  displaces  3 ( -1.8%) | account +0.496%/day (+0.012) win  69% ( -1) DD 3.52 PF 3.66 n 118
+     pb.vol_mult 1.4                    adds   8 win  50% avg -0.10% halves  +0.0/ -0.8  displaces  0 ( +0.0%) | account +0.480%/day (-0.004) win  69% ( -2) DD 2.76 PF 3.98 n 111
+     pb.min_stop_pct 0.6                adds  30 win  40% avg -0.08% halves  -0.3/ -2.0  displaces  6 ( +3.0%) | account +0.453%/day (-0.031) win  64% ( -7) DD 3.09 PF 3.26 n 127
+
