@@ -37,3 +37,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-05,USDG,-,buy,usdg,00:55,00:55:01,00:55:02,1,1,0,1,,1,0,2502,governor start: all capital order 6aec1a35; fee 0,,
 2026-11-05,USDG,-,sell,usdg,10:05,10:05:34,10:05:35,1,1,0,1,,1,0,2502,trigger FADE IWM+XLF break down 10:00; order 6aec9b3e; buying_power 2503.12 restored; fee 0,,
 2026-11-05,USDG,-,buy,usdg,11:10,11:10:40,11:10:41,1,1,0,1,,1,0,2502,rebuy: 11:10 slot read hold or buy (QQQ window expired); order 6aecaa80; buying_power 1.12; fee 0,,
+2026-11-05,USDG,-,sell,usdg,11:15,11:15:30,11:15:31,1,1,0,1,,1,0,2502,trigger PB TECS/UVXY/NVDQ/NVD/SSG ARMED; order 6aecaba2; buying_power 2503.12 restored; fee 0,,
