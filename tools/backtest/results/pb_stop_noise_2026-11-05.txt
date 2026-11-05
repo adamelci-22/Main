@@ -1,0 +1,63 @@
+
+== ALL 2021-11..2026-11: 307 PULLBACK trades ==
+  all                                n=307 win  47%  stopped  48%  avg -0.028%  total   -8.73%
+  stop < 0.8 typical ranges          n= 19 win  37%  stopped  58%  avg +0.031%  total   +0.60%
+  stop 0.8 to 1.0                    n= 55 win  47%  stopped  51%  avg +0.084%  total   +4.64%
+  stop 1.0 to 1.5                    n=157 win  46%  stopped  49%  avg -0.084%  total  -13.14%
+  stop >= 1.5                        n= 76 win  51%  stopped  41%  avg -0.011%  total   -0.83%
+  stop < 1.0 (the candidate rule)    n= 74 win  45%  stopped  53%  avg +0.071%  total   +5.24%
+  stop >= 1.0                        n=233 win  48%  stopped  46%  avg -0.060%  total  -13.97%
+  reward/risk < 1.0                  n=104 win  55%  stopped  40%  avg -0.035%  total   -3.65%
+  reward/risk >= 1.0                 n=203 win  43%  stopped  52%  avg -0.025%  total   -5.09%
+  upper wick >= 50% (spike high)     n=106 win  47%  stopped  52%  avg -0.115%  total  -12.17%
+  entry before 11:30                 n=109 win  50%  stopped  48%  avg +0.050%  total   +5.50%
+  entry 11:30 or later               n=198 win  45%  stopped  48%  avg -0.072%  total  -14.23%
+
+== BEFORE 2026-03 (no edge years): 269 PULLBACK trades ==
+  all                                n=269 win  46%  stopped  49%  avg -0.049%  total  -13.22%
+  stop < 0.8 typical ranges          n= 17 win  35%  stopped  59%  avg +0.003%  total   +0.06%
+  stop 0.8 to 1.0                    n= 48 win  46%  stopped  52%  avg +0.049%  total   +2.35%
+  stop 1.0 to 1.5                    n=140 win  46%  stopped  49%  avg -0.075%  total  -10.50%
+  stop >= 1.5                        n= 64 win  48%  stopped  45%  avg -0.080%  total   -5.14%
+  stop < 1.0 (the candidate rule)    n= 65 win  43%  stopped  54%  avg +0.037%  total   +2.41%
+  stop >= 1.0                        n=204 win  47%  stopped  48%  avg -0.077%  total  -15.64%
+  reward/risk < 1.0                  n= 91 win  54%  stopped  42%  avg -0.039%  total   -3.56%
+  reward/risk >= 1.0                 n=178 win  42%  stopped  53%  avg -0.054%  total   -9.66%
+  upper wick >= 50% (spike high)     n= 92 win  47%  stopped  52%  avg -0.120%  total  -11.08%
+  entry before 11:30                 n= 94 win  49%  stopped  50%  avg +0.021%  total   +2.02%
+  entry 11:30 or later               n=175 win  45%  stopped  49%  avg -0.087%  total  -15.24%
+
+== 2026-03 ON (live regime): 38 PULLBACK trades ==
+  all                                n= 38 win  55%  stopped  37%  avg +0.118%  total   +4.49%
+  stop < 0.8 typical ranges          n=  2 win  50%  stopped  50%  avg +0.269%  total   +0.54%
+  stop 0.8 to 1.0                    n=  7 win  57%  stopped  43%  avg +0.327%  total   +2.29%
+  stop 1.0 to 1.5                    n= 17 win  47%  stopped  47%  avg -0.156%  total   -2.65%
+  stop >= 1.5                        n= 12 win  67%  stopped  17%  avg +0.359%  total   +4.31%
+  stop < 1.0 (the candidate rule)    n=  9 win  56%  stopped  44%  avg +0.314%  total   +2.83%
+  stop >= 1.0                        n= 29 win  55%  stopped  34%  avg +0.057%  total   +1.67%
+  reward/risk < 1.0                  n= 13 win  62%  stopped  31%  avg -0.006%  total   -0.08%
+  reward/risk >= 1.0                 n= 25 win  52%  stopped  40%  avg +0.183%  total   +4.57%
+  upper wick >= 50% (spike high)     n= 14 win  50%  stopped  50%  avg -0.077%  total   -1.08%
+  entry before 11:30                 n= 15 win  60%  stopped  33%  avg +0.232%  total   +3.48%
+  entry 11:30 or later               n= 23 win  52%  stopped  39%  avg +0.044%  total   +1.01%
+
+by year, trades with stop < 1.0 typical range against the rest
+  2021: stop<1.0 n= 4 stopped  75% avg -1.11%   |   rest n= 12 stopped  50% avg -0.02%
+  2022: stop<1.0 n=18 stopped  56% avg -0.02%   |   rest n= 59 stopped  42% avg -0.03%
+  2023: stop<1.0 n=13 stopped  69% avg -0.16%   |   rest n= 44 stopped  64% avg -0.43%
+  2024: stop<1.0 n=15 stopped  40% avg +0.37%   |   rest n= 39 stopped  36% avg +0.24%
+  2025: stop<1.0 n=13 stopped  54% avg +0.10%   |   rest n= 42 stopped  55% avg -0.25%
+  2026: stop<1.0 n=11 stopped  36% avg +0.47%   |   rest n= 37 stopped  32% avg +0.21%
+
+the candidate safety as a stand-aside on PULLBACK entries (trades removed, account % they carried)
+  skip stop < 0.8 ranges: removes 19 of 307 trades, they netted +0.60% of the account (avg +0.03%); kept 288 avg -0.03%
+  skip stop < 1.0 ranges: removes 74 of 307 trades, they netted +5.24% of the account (avg +0.07%); kept 233 avg -0.06%
+  skip stop < 1.2 ranges: removes 152 of 307 trades, they netted +5.84% of the account (avg +0.04%); kept 155 avg -0.09%
+  skip stop < 1.5 ranges: removes 231 of 307 trades, they netted -7.91% of the account (avg -0.03%); kept 76 avg -0.01%
+
+PERMUTATION TESTS on average account % per trade (cut against the rest), 307 trades
+  stop < 1.0 typical range           cut n= 74 avg +0.071%   rest n=233 avg -0.060%   p 0.417
+  upper wick >= 50% (spike high)     cut n=106 avg -0.115%   rest n=201 avg +0.017%   p 0.357
+  entry 11:30 or later               cut n=198 avg -0.072%   rest n=109 avg +0.050%   p 0.391
+  reward/risk >= 1.0                 cut n=203 avg -0.025%   rest n=104 avg -0.035%   p 0.941
+  ... of 4 cuts tried (plus the ~10 in the earlier post-mortem), so expect one at p < 0.1 by chance
