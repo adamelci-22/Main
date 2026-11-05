@@ -1,0 +1,18 @@
+Robinhood 5-minute data (the D3 evidence feed), 172 sessions
+  RH       all             0.85 (live)  +0.485%/day  ret   125.1%  DD   2.8%  win  71%  PF 4.70  trades 103 (FADE 49, FADE total +58.2%)
+  RH       1st half        0.85 (live)  +0.658%/day  ret    92.7%  DD   2.8%  win  71%  PF 5.35  trades  75 (FADE 35, FADE total +48.0%)
+  RH       2nd half        0.85 (live)  +0.228%/day  ret    16.8%  DD   2.2%  win  71%  PF 3.60  trades  28 (FADE 14, FADE total +10.2%)
+  RH       all             removed      +0.487%/day  ret   125.6%  DD   5.0%  win  67%  PF 3.32  trades 121 (FADE 68, FADE total +57.7%)
+  RH       1st half        removed      +0.652%/day  ret    91.3%  DD   2.8%  win  68%  PF 4.38  trades  82 (FADE 42, FADE total +47.4%)
+  RH       2nd half        removed      +0.244%/day  ret    17.9%  DD   5.0%  win  64%  PF 2.27  trades  39 (FADE 26, FADE total +10.4%)
+  RH       all             1.25         +0.479%/day  ret   123.0%  DD   2.8%  win  69%  PF 4.16  trades 111 (FADE 57, FADE total +57.3%)
+  RH       1st half        1.25         +0.658%/day  ret    92.6%  DD   2.8%  win  70%  PF 4.85  trades  79 (FADE 39, FADE total +48.0%)
+  RH       2nd half        1.25         +0.215%/day  ret    15.8%  DD   2.2%  win  69%  PF 3.04  trades  32 (FADE 18, FADE total +9.3%)
+
+Massive 5-minute data, 5 years (the part before 2026-03 was never used to fit the rule)
+  Massive  before 2026-03  0.85 (live)  -0.039%/day  ret   -36.3%  DD  42.7%  win  49%  PF 0.84  trades 568 (FADE 299, FADE total -28.3%)
+  Massive  2026-03 on      0.85 (live)  +0.341%/day  ret    77.4%  DD   6.3%  win  64%  PF 3.06  trades  88 (FADE 50, FADE total +54.6%)
+  Massive  before 2026-03  removed      -0.056%/day  ret   -47.2%  DD  52.5%  win  48%  PF 0.82  trades 699 (FADE 431, FADE total -44.1%)
+  Massive  2026-03 on      removed      +0.327%/day  ret    72.8%  DD   7.0%  win  59%  PF 2.29  trades 109 (FADE 73, FADE total +52.3%)
+  Massive  before 2026-03  1.25         -0.039%/day  ret   -36.5%  DD  42.8%  win  49%  PF 0.84  trades 612 (FADE 344, FADE total -27.0%)
+  Massive  2026-03 on      1.25         +0.332%/day  ret    74.6%  DD   6.3%  win  62%  PF 2.74  trades  97 (FADE 59, FADE total +53.0%)
