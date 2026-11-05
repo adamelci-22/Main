@@ -40,3 +40,5 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-05,USDG,-,sell,usdg,11:15,11:15:30,11:15:31,1,1,0,1,,1,0,2502,trigger PB TECS/UVXY/NVDQ/NVD/SSG ARMED; order 6aecaba2; buying_power 2503.12 restored; fee 0,,
 2026-11-05,LABD,PULLBACK,buy,entry,11:45,11:45:52,11:45:53,7.48,7.49,0.13,7.49,7.49,7.49,0,334,signal PB LABD trigger 11:40 limit 7.49; filled 11:45:56 order 6aecb2c0; USDG already sold 10:05/11:15 so cash was ready,,
 2026-11-05,LABD,PULLBACK,sell,oco,11:46,11:46:13,11:46:14,7.48,7.50,0.27,7.49,,,,334,OCO GTC take-profit 7.64 / stop 7.33 id 6aeca3bb; both legs confirmed,,
+2026-11-05,LABD,PULLBACK,sell,exit,12:04,12:04:54,,7.48,7.50,0.27,7.64,7.64,7.64,0,334,OCO take-profit leg filled (found 12:25); fee 0.06,,
+2026-11-05,USDG,-,buy,usdg,12:25,12:26:00,12:26:01,1,1,0,1,,1,0,2552,rebuy after LABD exit; model holds ghost TECS so no entry predicted; order 6aecbc27; fee 0,,

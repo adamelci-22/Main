@@ -618,7 +618,7 @@ def main():
     if a.live: live_actions(today, taken, signals, K, base, day)
     open_ = [] if REAL_FREE else [c for c in taken if c['status'] == 'open']
     cadence = '5 min (fade open: ratchet the stop)' if any(c['system'] == 'FADE' for c in open_) else \
-              ('30 min (pullback OCO resting)' if open_ else ('5 min (flat, scanning)' if K < 41 and streak0 < LOCKOUT_LOSSES else 'none needed until 13:30'))
+              ('5 min (light check: pullback OCO resting; :00 and :30 full, v5.2.43)' if open_ else ('5 min (flat, scanning)' if K < 41 and streak0 < LOCKOUT_LOSSES else 'none needed until 13:30'))
     st_now = taken[-1]['streak'] if taken and taken[-1].get('pct') is not None else (taken[-2]['streak'] if len(taken) > 1 else streak0)
     usdg_txt = usdg_trigger(today, prev, K, taken if not REAL_FREE else [c for c in taken if c['status'] != 'open'], signals, day, st_now)[1] if a.live else None
     print(f"  entries today {len(taken)}; losing streak {st_now}/{LOCKOUT_LOSSES}; next check-in: {cadence}; paper equity now ${eq:,.2f}")
