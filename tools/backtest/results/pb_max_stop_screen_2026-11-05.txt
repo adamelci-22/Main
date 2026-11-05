@@ -1,0 +1,56 @@
+172 Robinhood sessions, rules in force (tunables v3), halves split at 2026-07-29
+
+Robinhood, whole sample
+  live (no cap)                  %/day +0.495 (+0.000) win  70% (+0.0) DD  2.76 PF 4.08 n 113 | PB n 64 win  67% worst -1.33%
+  cap 2.00%                      %/day +0.489 (-0.006) win  71% (+0.6) DD  2.76 PF 4.05 n 112 | PB n 63 win  68% worst -1.33%
+  cap 1.75%                      %/day +0.491 (-0.004) win  71% (+0.6) DD  2.76 PF 4.06 n 112 | PB n 63 win  68% worst -1.33%
+  cap 1.50%                      %/day +0.484 (-0.011) win  70% (+0.5) DD  2.76 PF 4.17 n 108 | PB n 59 win  68% worst -1.32%
+  cap 1.25%                      %/day +0.447 (-0.048) win  69% (-0.7) DD  2.38 PF 4.00 n 104 | PB n 55 win  65% worst -1.16%
+  cap 1.00%                      %/day +0.422 (-0.073) win  69% (-0.8) DD  3.74 PF 4.26 n  94 | PB n 45 win  64% worst -1.01%
+  cap 1.75% + floor 0.85%        %/day +0.468 (-0.027) win  72% (+2.4) DD  3.15 PF 4.64 n  94 | PB n 45 win  71% worst -1.33%
+  cap 1.50% + floor 0.85%        %/day +0.461 (-0.035) win  72% (+2.3) DD  3.15 PF 4.82 n  90 | PB n 41 win  71% worst -1.32%
+  cap 1.25% + floor 0.85%        %/day +0.414 (-0.081) win  70% (+0.3) DD  3.15 PF 4.53 n  84 | PB n 35 win  66% worst -1.17%
+
+Robinhood first half (< 2026-07-29)
+  live (no cap)                  %/day +0.668 (+0.000) win  70% (+0.0) DD  2.76 PF 4.52 n  80 | PB n 45 win  69% worst -1.33%
+  cap 2.00%                      %/day +0.665 (-0.003) win  71% (+0.9) DD  2.76 PF 4.52 n  79 | PB n 44 win  70% worst -1.33%
+  cap 1.75%                      %/day +0.669 (+0.001) win  71% (+0.9) DD  2.76 PF 4.54 n  79 | PB n 44 win  70% worst -1.33%
+  cap 1.50%                      %/day +0.673 (+0.006) win  71% (+1.1) DD  2.76 PF 4.83 n  76 | PB n 41 win  71% worst -1.32%
+  cap 1.25%                      %/day +0.610 (-0.057) win  69% (-1.1) DD  2.38 PF 4.33 n  74 | PB n 39 win  67% worst -1.16%
+  cap 1.00%                      %/day +0.604 (-0.063) win  70% (+0.1) DD  3.74 PF 5.04 n  67 | PB n 32 win  69% worst -0.96%
+  cap 1.75% + floor 0.85%        %/day +0.632 (-0.036) win  72% (+1.6) DD  3.15 PF 4.94 n  67 | PB n 32 win  72% worst -1.33%
+  cap 1.50% + floor 0.85%        %/day +0.636 (-0.031) win  72% (+1.9) DD  3.15 PF 5.31 n  64 | PB n 29 win  72% worst -1.32%
+  cap 1.25% + floor 0.85%        %/day +0.557 (-0.111) win  68% (-1.7) DD  3.15 PF 4.60 n  60 | PB n 25 win  64% worst -1.17%
+
+Robinhood second half (>= 2026-07-29)
+  live (no cap)                  %/day +0.241 (+0.000) win  70% (+0.0) DD  2.16 PF 3.03 n  33 | PB n 19 win  63% worst -1.32%
+  cap 2.00%                      %/day +0.229 (-0.012) win  70% (+0.0) DD  2.16 PF 2.93 n  33 | PB n 19 win  63% worst -1.32%
+  cap 1.75%                      %/day +0.229 (-0.012) win  70% (+0.0) DD  2.16 PF 2.93 n  33 | PB n 19 win  63% worst -1.32%
+  cap 1.50%                      %/day +0.205 (-0.036) win  69% (-0.9) DD  2.16 PF 2.72 n  32 | PB n 18 win  61% worst -1.32%
+  cap 1.25%                      %/day +0.207 (-0.034) win  70% (+0.3) DD  2.16 PF 3.07 n  30 | PB n 16 win  62% worst -1.01%
+  cap 1.00%                      %/day +0.153 (-0.088) win  67% (-3.0) DD  2.16 PF 2.54 n  27 | PB n 13 win  54% worst -1.01%
+  cap 1.75% + floor 0.85%        %/day +0.226 (-0.015) win  74% (+4.4) DD  1.32 PF 3.79 n  27 | PB n 13 win  69% worst -1.32%
+  cap 1.50% + floor 0.85%        %/day +0.201 (-0.040) win  73% (+3.4) DD  1.32 PF 3.49 n  26 | PB n 12 win  67% worst -1.32%
+  cap 1.25% + floor 0.85%        %/day +0.203 (-0.038) win  75% (+5.3) DD  1.29 PF 4.29 n  24 | PB n 10 win  70% worst -1.01%
+
+Massive before 2026-03 (never fitted)
+  live (no cap)                  %/day -0.030 (+0.000) win  49% (+0.0) DD 37.94 PF 0.89 n 619 | PB n 320 win  48% worst -3.03%
+  cap 2.00%                      %/day -0.024 (+0.006) win  49% (-0.0) DD 35.46 PF 0.91 n 613 | PB n 314 win  47% worst -1.97%
+  cap 1.75%                      %/day -0.020 (+0.010) win  49% (+0.1) DD 33.90 PF 0.92 n 609 | PB n 310 win  48% worst -1.77%
+  cap 1.50%                      %/day -0.028 (+0.003) win  49% (-0.3) DD 33.48 PF 0.89 n 596 | PB n 297 win  47% worst -1.52%
+  cap 1.25%                      %/day -0.029 (+0.001) win  49% (-0.4) DD 33.64 PF 0.88 n 571 | PB n 272 win  46% worst -1.28%
+  cap 1.00%                      %/day -0.029 (+0.002) win  49% (-0.5) DD 31.97 PF 0.86 n 502 | PB n 203 win  45% worst -1.22%
+  cap 1.75% + floor 0.85%        %/day -0.009 (+0.021) win  51% (+2.1) DD 25.92 PF 0.96 n 537 | PB n 238 win  52% worst -1.77%
+  cap 1.50% + floor 0.85%        %/day -0.016 (+0.014) win  51% (+1.7) DD 26.29 PF 0.93 n 524 | PB n 225 win  51% worst -1.52%
+  cap 1.25% + floor 0.85%        %/day -0.013 (+0.017) win  51% (+2.0) DD 22.79 PF 0.93 n 495 | PB n 196 win  52% worst -1.28%
+
+Massive 2026-03 on
+  live (no cap)                  %/day +0.374 (+0.000) win  65% (+0.0) DD  5.16 PF 3.08 n  97 | PB n 47 win  60% worst -2.44%
+  cap 2.00%                      %/day +0.386 (+0.012) win  66% (+1.4) DD  5.16 PF 3.36 n  95 | PB n 45 win  62% worst -1.92%
+  cap 1.75%                      %/day +0.397 (+0.023) win  67% (+2.1) DD  5.16 PF 3.60 n  94 | PB n 44 win  64% worst -1.48%
+  cap 1.50%                      %/day +0.400 (+0.026) win  67% (+2.4) DD  5.16 PF 3.77 n  92 | PB n 42 win  64% worst -1.48%
+  cap 1.25%                      %/day +0.370 (-0.004) win  67% (+2.1) DD  5.12 PF 3.92 n  85 | PB n 35 win  63% worst -1.18%
+  cap 1.00%                      %/day +0.324 (-0.050) win  65% (-0.1) DD  5.68 PF 3.85 n  74 | PB n 24 win  54% worst -1.00%
+  cap 1.75% + floor 0.85%        %/day +0.401 (+0.027) win  70% (+4.9) DD  3.86 PF 4.24 n  83 | PB n 33 win  70% worst -1.48%
+  cap 1.50% + floor 0.85%        %/day +0.405 (+0.031) win  70% (+5.4) DD  3.86 PF 4.50 n  81 | PB n 31 win  71% worst -1.48%
+  cap 1.25% + floor 0.85%        %/day +0.363 (-0.011) win  69% (+4.0) DD  3.64 PF 4.50 n  74 | PB n 24 win  67% worst -1.18%
