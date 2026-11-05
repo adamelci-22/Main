@@ -1,0 +1,100 @@
+2592 combinations on 172 Robinhood sessions 2026-03-02..2026-11-03
+stage 1 done in 92s
+2592 of 2592 meet >= 0.25%/day with >= 50 trades
+
+                  %/day    ret%   DD%   win    PF    n (FADE/PB)  Shrp | first half          | second half        | what differs from the live rules
+live rules       +0.485   125.1  2.76   71%  4.70  103 ( 49/ 54)   5.7 | H1 +0.658 dd  2.8 | H2 +0.228 dd  2.2 | LIVE RULES
+best return      +0.539   145.8  5.31   67%  3.44  121 ( 68/ 53)   5.6 | H1 +0.748 dd  2.3 | H2 +0.229 dd  5.3 | runaway=None, pb_target=floor+1c, fade_list=oldAMD
+best drawdown    +0.485   125.2  2.16   71%  4.47  102 ( 48/ 54)   5.6 | H1 +0.663 dd  2.0 | H2 +0.222 dd  2.2 | runaway=1.25, pb_target=floor+1c, fade_list=noXLF5
+best win rate    +0.420   101.9  2.30   79%  8.05   61 ( 42/ 19)   5.2 | H1 +0.584 dd  2.3 | H2 +0.176 dd  1.3 | pb_target=raw, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+best PF          +0.423   103.2  2.30   78%  8.18   60 ( 41/ 19)   5.2 | H1 +0.580 dd  2.3 | H2 +0.192 dd  1.3 | pb_target=raw, frozen=on, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+mixed            +0.486   125.3  4.85   67%  3.50  113 ( 68/ 45)   5.4 | H1 +0.643 dd  2.8 | H2 +0.255 dd  4.9 | runaway=None, pb_target=floor+1c, pb_list=fiveNVD
+
+TOP 8 by each measure (>= 0.25%/day, >= 50 trades)
+-- return
+                 +0.539   145.8  5.31   67%  3.44  121 ( 68/ 53)   5.6 | H1 +0.748 dd  2.3 | H2 +0.229 dd  5.3 | runaway=None, pb_target=floor+1c, fade_list=oldAMD
+                 +0.537   145.3  5.15   67%  3.44  121 ( 68/ 53)   5.6 | H1 +0.744 dd  2.3 | H2 +0.232 dd  5.1 | runaway=None, pb_target=floor+1c, frozen=on, fade_list=oldAMD
+                 +0.537   145.1  4.98   66%  3.29  128 ( 68/ 60)   5.6 | H1 +0.744 dd  2.3 | H2 +0.230 dd  5.0 | runaway=None, pb_target=raw, fade_list=oldAMD, judge_sig=on
+                 +0.536   144.9  4.98   67%  3.44  122 ( 68/ 54)   5.6 | H1 +0.741 dd  2.3 | H2 +0.233 dd  5.0 | runaway=None, pb_target=raw, fade_list=oldAMD
+                 +0.536   144.6  4.98   66%  3.29  128 ( 68/ 60)   5.6 | H1 +0.741 dd  2.3 | H2 +0.233 dd  5.0 | runaway=None, pb_target=raw, frozen=on, fade_list=oldAMD, judge_sig=on
+                 +0.535   144.3  5.31   66%  3.27  126 ( 68/ 58)   5.6 | H1 +0.751 dd  2.3 | H2 +0.216 dd  5.3 | runaway=None, pb_target=floor+1c, fade_list=oldAMD, judge_sig=on
+                 +0.535   144.3  4.98   67%  3.44  122 ( 68/ 54)   5.6 | H1 +0.738 dd  2.3 | H2 +0.236 dd  5.0 | runaway=None, pb_target=raw, frozen=on, fade_list=oldAMD
+                 +0.534   143.8  5.15   66%  3.28  126 ( 68/ 58)   5.5 | H1 +0.747 dd  2.3 | H2 +0.219 dd  5.1 | runaway=None, pb_target=floor+1c, frozen=on, fade_list=oldAMD, judge_sig=on
+-- drawdown
+                 +0.481   124.0  2.16   74%  5.57   87 ( 41/ 46)   5.7 | H1 +0.647 dd  2.0 | H2 +0.237 dd  2.2 | pb_target=floor+1c, fade_list=noXLF5, pb_list=fiveNVD
+                 +0.485   125.2  2.16   71%  4.47  102 ( 48/ 54)   5.6 | H1 +0.663 dd  2.0 | H2 +0.222 dd  2.2 | runaway=1.25, pb_target=floor+1c, fade_list=noXLF5
+                 +0.468   118.9  2.16   72%  4.73   96 ( 49/ 47)   5.5 | H1 +0.638 dd  2.0 | H2 +0.217 dd  2.2 | runaway=1.25, pb_target=raw, frozen=on, fade_list=oldAMD, pb_list=fiveNVD
+                 +0.454   113.8  2.16   71%  4.96   83 ( 42/ 41)   5.3 | H1 +0.614 dd  2.0 | H2 +0.218 dd  2.2 | lockcut=off, pb_target=raw, fade_list=oldAMD, pb_list=four
+                 +0.463   117.2  2.16   71%  4.93   87 ( 42/ 45)   5.4 | H1 +0.630 dd  2.0 | H2 +0.218 dd  2.2 | lockcut=off, pb_target=raw, fade_list=oldAMD, pb_list=fiveNVD
+                 +0.461   116.3  2.16   72%  5.18   87 ( 41/ 46)   5.5 | H1 +0.619 dd  2.0 | H2 +0.227 dd  2.2 | frozen=on, fade_list=noXLF5, pb_list=four, judge_sig=on
+                 +0.465   117.9  2.16   74%  5.56   84 ( 42/ 42)   5.5 | H1 +0.627 dd  2.0 | H2 +0.226 dd  2.2 | pb_target=floor+1c, frozen=on, fade_list=oldAMD, pb_list=four
+                 +0.466   118.0  2.16   74%  5.55   85 ( 42/ 43)   5.5 | H1 +0.627 dd  2.0 | H2 +0.227 dd  2.2 | pb_target=raw, fade_list=oldAMD, pb_list=four
+-- win rate
+                 +0.420   101.9  2.30   79%  8.05   61 ( 42/ 19)   5.2 | H1 +0.584 dd  2.3 | H2 +0.176 dd  1.3 | pb_target=raw, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.418   101.4  2.30   79%  8.06   61 ( 42/ 19)   5.2 | H1 +0.580 dd  2.3 | H2 +0.179 dd  1.3 | pb_target=raw, frozen=on, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.415   100.3  2.30   78%  7.95   60 ( 42/ 18)   5.1 | H1 +0.582 dd  2.3 | H2 +0.168 dd  1.3 | fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.413    99.8  2.30   78%  7.96   60 ( 42/ 18)   5.1 | H1 +0.578 dd  2.3 | H2 +0.170 dd  1.3 | frozen=on, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.418   101.2  2.29   78%  8.00   60 ( 42/ 18)   5.2 | H1 +0.586 dd  2.3 | H2 +0.168 dd  1.3 | pb_target=floor+1c, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.416   100.7  2.29   78%  8.01   60 ( 42/ 18)   5.2 | H1 +0.582 dd  2.3 | H2 +0.171 dd  1.3 | pb_target=floor+1c, frozen=on, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.425   103.7  2.30   78%  8.16   60 ( 41/ 19)   5.3 | H1 +0.584 dd  2.3 | H2 +0.190 dd  1.3 | pb_target=raw, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.423   103.2  2.30   78%  8.18   60 ( 41/ 19)   5.2 | H1 +0.580 dd  2.3 | H2 +0.192 dd  1.3 | pb_target=raw, frozen=on, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+-- PF
+                 +0.423   103.2  2.30   78%  8.18   60 ( 41/ 19)   5.2 | H1 +0.580 dd  2.3 | H2 +0.192 dd  1.3 | pb_target=raw, frozen=on, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.425   103.7  2.30   78%  8.16   60 ( 41/ 19)   5.3 | H1 +0.584 dd  2.3 | H2 +0.190 dd  1.3 | pb_target=raw, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.421   102.5  2.29   78%  8.13   59 ( 41/ 18)   5.2 | H1 +0.582 dd  2.3 | H2 +0.184 dd  1.3 | pb_target=floor+1c, frozen=on, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.423   103.0  2.29   78%  8.12   59 ( 41/ 18)   5.2 | H1 +0.586 dd  2.3 | H2 +0.181 dd  1.3 | pb_target=floor+1c, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.419   101.6  2.30   78%  8.08   59 ( 41/ 18)   5.2 | H1 +0.578 dd  2.3 | H2 +0.183 dd  1.3 | frozen=on, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.420   102.1  2.30   78%  8.06   59 ( 41/ 18)   5.2 | H1 +0.582 dd  2.3 | H2 +0.181 dd  1.3 | fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+                 +0.418   101.4  2.30   79%  8.06   61 ( 42/ 19)   5.2 | H1 +0.580 dd  2.3 | H2 +0.179 dd  1.3 | pb_target=raw, frozen=on, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+                 +0.420   101.9  2.30   79%  8.05   61 ( 42/ 19)   5.2 | H1 +0.584 dd  2.3 | H2 +0.176 dd  1.3 | pb_target=raw, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+
+WHICH CHANGES MATTER: average %/day and drawdown over all 2,592 combinations, by factor level (the live level first)
+  lockcut        True: +0.421%/day DD 4.06%      False: +0.400%/day DD 4.82%
+  no_friday      True: +0.440%/day DD 3.81%      False: +0.381%/day DD 5.08%
+  runaway        0.85: +0.413%/day DD 3.11%       None: +0.422%/day DD 6.17%       1.25: +0.396%/day DD 4.06%
+  pb_target     floor: +0.407%/day DD 4.46%   floor+1c: +0.411%/day DD 4.43%        raw: +0.413%/day DD 4.44%
+  frozen        False: +0.413%/day DD 4.45%       True: +0.408%/day DD 4.44%
+  fade_list     live6: +0.406%/day DD 4.63%     noXLF5: +0.406%/day DD 4.32%     oldAMD: +0.419%/day DD 4.38%
+  pb_list       live8: +0.420%/day DD 4.36%       four: +0.401%/day DD 4.49%    fiveNVD: +0.410%/day DD 4.49%
+  judge_sig     False: +0.415%/day DD 4.35%       True: +0.405%/day DD 4.54%
+  pb_1130       False: +0.440%/day DD 4.04%       True: +0.380%/day DD 4.85%
+
+STAGE 2  position size cap on the finalists (lower cap = smaller position = smaller swings and return)
+                  %/day    ret%   DD%   win    PF    n (FADE/PB)  Shrp | first half          | second half        | what differs from the live rules
+                 +0.251    53.0  1.08   72%  4.82  102 ( 41/ 61)   5.7 | H1 +0.341 dd  1.0 | H2 +0.119 dd  1.1 | pb_target=raw, frozen=on, fade_list=noXLF5, judge_sig=on, size cap 50%
+                 +0.251    52.9  1.08   71%  4.80  100 ( 41/ 59)   5.7 | H1 +0.346 dd  1.0 | H2 +0.111 dd  1.1 | pb_target=floor+1c, fade_list=noXLF5, judge_sig=on, size cap 50%
+                 +0.253    53.4  1.08   73%  5.21   95 ( 41/ 54)   5.7 | H1 +0.344 dd  1.0 | H2 +0.118 dd  1.1 | pb_target=floor+1c, fade_list=noXLF5, size cap 50%
+                 +0.252    53.2  1.08   72%  4.82  102 ( 41/ 61)   5.8 | H1 +0.343 dd  1.0 | H2 +0.118 dd  1.1 | pb_target=raw, fade_list=noXLF5, judge_sig=on, size cap 50%
+                 +0.250    52.7  1.08   71%  4.57  102 ( 48/ 54)   5.6 | H1 +0.344 dd  1.0 | H2 +0.111 dd  1.1 | runaway=1.25, pb_target=floor+1c, fade_list=noXLF5, size cap 50%
+                 +0.252    53.2  1.08   73%  5.21   95 ( 41/ 54)   5.7 | H1 +0.342 dd  1.0 | H2 +0.119 dd  1.1 | pb_target=floor+1c, frozen=on, fade_list=noXLF5, size cap 50%
+                 +0.251    52.9  1.08   73%  5.20   96 ( 41/ 55)   5.7 | H1 +0.339 dd  1.0 | H2 +0.121 dd  1.1 | pb_target=raw, frozen=on, fade_list=noXLF5, size cap 50%
+                 +0.250    52.8  1.08   71%  4.79  100 ( 41/ 59)   5.7 | H1 +0.344 dd  1.0 | H2 +0.112 dd  1.1 | pb_target=floor+1c, frozen=on, fade_list=noXLF5, judge_sig=on, size cap 50%
+                 +0.252    53.1  1.08   73%  5.20   96 ( 41/ 55)   5.7 | H1 +0.341 dd  1.0 | H2 +0.120 dd  1.1 | pb_target=raw, fade_list=noXLF5, size cap 50%
+                 +0.302    66.4  1.30   72%  4.80  102 ( 41/ 61)   5.8 | H1 +0.410 dd  1.2 | H2 +0.142 dd  1.3 | pb_target=raw, fade_list=noXLF5, judge_sig=on, size cap 60%
+
+FINAL FIVE (and the live rules)
+                  %/day    ret%   DD%   win    PF    n (FADE/PB)  Shrp | first half          | second half        | what differs from the live rules
+live rules       +0.485   125.1  2.76   71%  4.70  103 ( 49/ 54)   5.7 | H1 +0.658 dd  2.8 | H2 +0.228 dd  2.2 | LIVE RULES
+best return      +0.539   145.8  5.31   67%  3.44  121 ( 68/ 53)   5.6 | H1 +0.748 dd  2.3 | H2 +0.229 dd  5.3 | runaway=None, pb_target=floor+1c, fade_list=oldAMD
+best drawdown    +0.251    53.0  1.08   72%  4.82  102 ( 41/ 61)   5.7 | H1 +0.341 dd  1.0 | H2 +0.119 dd  1.1 | pb_target=raw, frozen=on, fade_list=noXLF5, judge_sig=on, size cap 50%
+best win rate    +0.420   101.9  2.30   79%  8.05   61 ( 42/ 19)   5.2 | H1 +0.584 dd  2.3 | H2 +0.176 dd  1.3 | pb_target=raw, fade_list=oldAMD, pb_list=fiveNVD, pb_1130=on
+best PF          +0.423   103.2  2.30   78%  8.18   60 ( 41/ 19)   5.2 | H1 +0.580 dd  2.3 | H2 +0.192 dd  1.3 | pb_target=raw, frozen=on, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on
+mixed            +0.486   125.3  4.85   67%  3.50  113 ( 68/ 45)   5.4 | H1 +0.643 dd  2.8 | H2 +0.255 dd  4.9 | runaway=None, pb_target=floor+1c, pb_list=fiveNVD
+
+WALK-FORWARD  pick on the first half only (>= 0.25%/day there, >= 25 trades), then score on the second half (the honest number)
+  best return    first half +0.781%/day dd 2.3 win 67% PF 4.69  ->  second half +0.149%/day dd 6.3 win 51% PF 1.49   [lockcut=off, runaway=None, pb_target=floor+1c, fade_list=oldAMD, judge_sig=on]
+  best drawdown  first half +0.659%/day dd 2.0 win 73% PF 5.83  ->  second half +0.236%/day dd 2.2 win 68% PF 3.22   [pb_target=raw, fade_list=noXLF5, judge_sig=on]
+  best win rate  first half +0.604%/day dd 2.3 win 80% PF 8.23  ->  second half +0.180%/day dd 1.3 win 71% PF 4.83   [pb_target=floor+1c, fade_list=noXLF5, pb_1130=on]
+  best PF        first half +0.586%/day dd 2.3 win 80% PF 8.93  ->  second half +0.181%/day dd 1.3 win 73% PF 6.30   [pb_target=floor+1c, fade_list=noXLF5, pb_list=fiveNVD, pb_1130=on]
+  live rules     first half +0.658%/day  ->  second half +0.228%/day
+
+OUT OF SAMPLE  Massive 5-minute bars 2021-11-05..2026-11-04 (rules never fitted on the part before 2026-03; AMD and NVDQ/NVD/MSFU/SSG absent)
+                  before 2026-03: %/day    ret%    DD%   win    PF    n |  2026-03 on: %/day    ret%    DD%
+live rules                       -0.039   -36.3   42.7   49%  0.84  568 |             +0.341    77.4    6.3
+best return                      -0.065   -52.3   57.8   47%  0.80  654 |             +0.323    71.5    7.3
+best drawdown                    -0.016   -16.1   21.5   48%  0.87  530 |             +0.168    33.3    2.0
+best win rate                    -0.027   -26.7   30.3   50%  0.83  351 |             +0.331    74.7    4.5
+best PF                          -0.023   -23.3   27.5   50%  0.85  351 |             +0.306    67.6    4.0
+mixed                            -0.062   -50.6   55.5   48%  0.81  699 |             +0.330    73.5    7.0
+
+done in 118s
