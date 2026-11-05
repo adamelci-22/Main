@@ -1,0 +1,35 @@
+
+Robinhood, whole sample
+  live                             %/day +0.495 (+0.000) win  70% (+0.0) DD  2.76 PF 4.08 n 113 | days with the same system twice: 4
+  1 per system a day               %/day +0.493 (-0.003) win  71% (+1.4) DD  2.76 PF 4.26 n 108 | days with the same system twice: 0
+  1 per system, only after a loss  %/day +0.495 (+0.000) win  70% (+0.0) DD  2.76 PF 4.08 n 113 | days with the same system twice: 4
+  PB at most 2 a day               %/day +0.491 (-0.005) win  70% (-0.3) DD  2.76 PF 4.05 n 112 | days with the same system twice: 4
+  1 trade a day in total           %/day +0.455 (-0.040) win  71% (+0.8) DD  4.68 PF 4.19 n  99 | days with the same system twice: 0
+
+Robinhood first half (< 2026-07-29)
+  live                             %/day +0.668 (+0.000) win  70% (+0.0) DD  2.76 PF 4.52 n  80 | days with the same system twice: 4
+  1 per system a day               %/day +0.663 (-0.005) win  72% (+2.0) DD  2.76 PF 4.83 n  75 | days with the same system twice: 0
+  1 per system, only after a loss  %/day +0.668 (+0.000) win  70% (+0.0) DD  2.76 PF 4.52 n  80 | days with the same system twice: 4
+  PB at most 2 a day               %/day +0.660 (-0.008) win  70% (-0.4) DD  2.76 PF 4.48 n  79 | days with the same system twice: 4
+  1 trade a day in total           %/day +0.592 (-0.076) win  70% (+0.1) DD  4.68 PF 4.53 n  67 | days with the same system twice: 0
+
+Robinhood second half (>= 2026-07-29)
+  live                             %/day +0.241 (+0.000) win  70% (+0.0) DD  2.16 PF 3.03 n  33 | days with the same system twice: 0
+  1 per system a day               %/day +0.241 (+0.000) win  70% (+0.0) DD  2.16 PF 3.03 n  33 | days with the same system twice: 0
+  1 per system, only after a loss  %/day +0.241 (+0.000) win  70% (+0.0) DD  2.16 PF 3.03 n  33 | days with the same system twice: 0
+  PB at most 2 a day               %/day +0.241 (-0.000) win  70% (+0.0) DD  2.16 PF 3.03 n  33 | days with the same system twice: 0
+  1 trade a day in total           %/day +0.253 (+0.013) win  72% (+2.2) DD  2.16 PF 3.39 n  32 | days with the same system twice: 0
+
+Massive before 2026-03 (never fitted)
+  live                             %/day -0.030 (+0.000) win  49% (+0.0) DD 37.94 PF 0.89 n 619 | days with the same system twice: 39
+  1 per system a day               %/day -0.031 (-0.001) win  49% (-0.3) DD 38.20 PF 0.88 n 578 | days with the same system twice: 0
+  1 per system, only after a loss  %/day -0.024 (+0.006) win  49% (+0.1) DD 34.60 PF 0.91 n 599 | days with the same system twice: 21
+  PB at most 2 a day               %/day -0.029 (+0.002) win  49% (+0.2) DD 36.74 PF 0.90 n 617 | days with the same system twice: 39
+  1 trade a day in total           %/day -0.035 (-0.005) win  49% (-0.2) DD 37.68 PF 0.85 n 517 | days with the same system twice: 0
+
+Massive 2026-03 on
+  live                             %/day +0.374 (+0.000) win  65% (+0.0) DD  5.16 PF 3.08 n  97 | days with the same system twice: 6
+  1 per system a day               %/day +0.381 (+0.007) win  68% (+2.8) DD  5.86 PF 3.40 n  90 | days with the same system twice: 0
+  1 per system, only after a loss  %/day +0.384 (+0.010) win  66% (+1.4) DD  3.86 PF 3.26 n  95 | days with the same system twice: 4
+  PB at most 2 a day               %/day +0.369 (-0.005) win  65% (-0.4) DD  5.91 PF 3.06 n  96 | days with the same system twice: 6
+  1 trade a day in total           %/day +0.379 (+0.005) win  68% (+3.3) DD  4.01 PF 3.85 n  82 | days with the same system twice: 0
