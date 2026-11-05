@@ -1,0 +1,40 @@
+1237 sessions 2021-11-08..2026-11-04  base +0.014%/day
+
+sit out                                         days weeks     ret%    DD%   %/day      H1      H2      p  removed trades
+(nothing)                                          0     0     13.0  42.69  +0.014  -0.047  +0.075
+election weeks                                    13     3     15.5  42.56  +0.016  -0.047  +0.079  0.457  n=3 win  33% avg -0.71% total -2.14%
+rate-hike weeks                                   55    11     14.7  41.71  +0.015  -0.045  +0.075  0.749  n=31 win  48% avg -0.04% total -1.31%
+election weeks + rate-hike weeks                  68    14     17.2  41.58  +0.017  -0.045  +0.079  0.549  n=34 win  47% avg -0.10% total -3.45%
+every FOMC decision week (hike, hold or cut)     198    40     12.6  40.82  +0.013  -0.044  +0.071  0.873  n=108 win  49% avg +0.01% total +0.89%
+
+election weeks, day by day (account %, trades)
+  2022-11-07 Mon  +0.00%  
+  2022-11-08 Tue  +0.00%  
+  2022-11-09 Wed  +0.18%  FADE +0.18%
+  2022-11-10 Thu  +0.00%  
+  2022-11-11 Fri  +0.00%  
+  2024-11-04 Mon  +0.00%  
+  2024-11-05 Tue  -0.40%  FADE -0.40%
+  2024-11-06 Wed  +0.00%  
+  2024-11-07 Thu  +0.00%  
+  2024-11-08 Fri  +0.00%  
+  2026-11-02 Mon  +0.00%  
+  2026-11-03 Tue  +0.00%  
+  2026-11-04 Wed  -1.92%  PB -1.92%
+
+rate-hike weeks: account % for the whole week, by hike
+  hike 2022-03-16: week of 2022-03-14   +0.15%  trades FADE +0.15%
+  hike 2022-05-04: week of 2022-05-02   +0.71%  trades FADE +0.24%, PB +2.01%, PB -1.53%
+  hike 2022-06-15: week of 2022-06-13   -0.66%  trades PB -0.66%
+  hike 2022-07-27: week of 2022-07-25   -1.15%  trades FADE -0.51%, PB -1.07%, PB -1.00%, PB +1.43%
+  hike 2022-09-21: week of 2022-09-19   -2.20%  trades FADE -1.18%, PB -0.97%, PB -0.97%, PB +0.92%
+  hike 2022-11-02: week of 2022-10-31   +0.81%  trades PB -0.84%, FADE -0.54%, FADE -1.10%, PB +1.05%, PB +2.25%
+  hike 2022-12-14: week of 2022-12-12   +0.63%  trades PB +1.29%, FADE +0.14%, PB -0.80%
+  hike 2023-02-01: week of 2023-01-30   +3.20%  trades FADE +1.46%, PB +0.86%, FADE +0.88%
+  hike 2023-03-22: week of 2023-03-20   -0.92%  trades PB +1.42%, PB -1.05%, PB -1.29%
+  hike 2023-05-03: week of 2023-05-01   -1.60%  trades PB +0.89%, PB -2.49%
+  hike 2023-07-26: week of 2023-07-24   -0.28%  trades PB -0.31%, FADE +0.03%
+
+the same hike weeks in the last two years of the data, other weeks of equal length for comparison
+  hike weeks: n=11 mean -0.119%/week   all other weeks: n=250 mean +0.075%/week
+  election weeks: n=3 mean -0.713%/week
