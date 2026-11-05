@@ -6,6 +6,7 @@
  },
  "pb": {
   "state": "waiting",
-  "since": "2026-10-16"
+  "since": "2026-11-05",
+  "reason": "v3 pushed by the governor 2026-11-04 (breakout volume 1.3x); 5 new PULLBACK trades under v3 before the next goal check"
  }
 }
