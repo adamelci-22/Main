@@ -1,0 +1,57 @@
+172 Robinhood sessions 2026-03-02..2026-11-03, rules in force (tunables v3); halves split at 2026-07-29
+rules in force: win 70%  +0.495%/day (halves +0.668/+0.241)  DD 2.76%  PF 4.08  trades 113  losers 34 (-27.5% of the account)
+
+PASS FADE retest tolerance 0.08%                  win  70% (+0.5)  %/day +0.496 (+0.001; halves +0.000/+0.002)  DD 2.76  PF 4.08  n 115  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     PULLBACK min stop 1.00%                      win  74% (+3.8)  %/day +0.459 (-0.036; halves -0.078/+0.025)  DD 3.91  PF 5.30  n  80  losers 21 (-18.2%)  removed 36 trades (win  58%,  +5.2%)
+     no PULLBACK entry at 11:30+                  win  73% (+3.5)  %/day +0.443 (-0.053; halves -0.076/-0.019)  DD 2.85  PF 5.42  n  79  losers 21 (-17.1%)  removed 34 trades (win  62%,  +9.0%)
+     PULLBACK min stop 0.85%                      win  72% (+1.7)  %/day +0.472 (-0.024; halves -0.037/-0.004)  DD 2.80  PF 4.66  n  95  losers 27 (-22.1%)  removed 20 trades (win  60%,  +3.0%)
+     PULLBACK stop buffer 0.03%                   win  71% (+1.4)  %/day +0.497 (+0.002; halves +0.020/-0.025)  DD 2.74  PF 4.37  n 108  losers 31 (-25.3%)  removed  7 trades (win  43%,  -0.0%)
+     no PULLBACK entry at 12:30+                  win  70% (+0.1)  %/day +0.460 (-0.035; halves -0.048/-0.017)  DD 3.39  PF 4.15  n 100  losers 30 (-25.0%)  removed 13 trades (win  69%,  +6.0%)
+     no FADE entry after 11:00                    win  70% (+0.0)  %/day +0.495 (+0.000; halves +0.000/+0.000)  DD 2.76  PF 4.08  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     no FADE entry after 11:30                    win  70% (+0.0)  %/day +0.495 (+0.000; halves +0.000/+0.000)  DD 2.76  PF 4.08  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     early cut at -0.4R                           win  70% (+0.0)  %/day +0.495 (+0.000; halves +0.000/+0.000)  DD 2.76  PF 4.08  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     early cut at -0.6R                           win  70% (+0.0)  %/day +0.491 (-0.004; halves -0.007/-0.000)  DD 2.76  PF 3.98  n 113  losers 34 (-28.2%)  removed  0 trades (win   0%,  +0.0%)
+     lock trigger 0.4R                            win  70% (+0.0)  %/day +0.474 (-0.021; halves -0.018/-0.027)  DD 2.76  PF 3.94  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     lock trigger 0.6R                            win  70% (+0.0)  %/day +0.495 (+0.000; halves +0.000/+0.000)  DD 2.76  PF 4.08  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     FADE take-profit at 1.5R                     win  70% (+0.0)  %/day +0.479 (-0.016; halves -0.023/-0.007)  DD 2.76  PF 3.97  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     FADE take-profit at 1.75R                    win  70% (+0.0)  %/day +0.491 (-0.004; halves -0.007/-0.001)  DD 2.76  PF 4.05  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     FADE sells 1/2 at the target                 win  70% (+0.0)  %/day +0.468 (-0.027; halves -0.041/-0.008)  DD 2.76  PF 3.91  n 113  losers 34 (-27.6%)  removed  0 trades (win   0%,  +0.0%)
+     FADE sells 1/4 at the target                 win  70% (+0.0)  %/day +0.509 (+0.014; halves +0.020/+0.004)  DD 2.76  PF 4.16  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     chop: 3 of first 6 closes red -> 1/2 at 1R   win  70% (+0.0)  %/day +0.483 (-0.012; halves -0.005/-0.022)  DD 2.76  PF 4.00  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     chop: 4 of first 6 closes red -> 1/2 at 1R   win  70% (+0.0)  %/day +0.486 (-0.009; halves +0.000/-0.022)  DD 2.76  PF 4.02  n 113  losers 34 (-27.5%)  removed  0 trades (win   0%,  +0.0%)
+     one loss ends the day                        win  70% (-0.2)  %/day +0.474 (-0.022; halves -0.037/+0.000)  DD 4.68  PF 4.00  n 109  losers 33 (-27.0%)  removed  4 trades (win  75%,  +3.7%)
+     no FADE entry after 10:30                    win  70% (-0.3)  %/day +0.478 (-0.017; halves -0.029/+0.000)  DD 2.76  PF 3.97  n 112  losers 34 (-27.5%)  removed  1 trades (win 100%,  +2.9%)
+     chandelier 3.0 ATR                           win  70% (-0.3)  %/day +0.477 (-0.019; halves -0.030/-0.002)  DD 2.76  PF 3.96  n 112  losers 34 (-27.5%)  removed  1 trades (win 100%,  +0.8%)
+     no PULLBACK entry at 12:00+                  win  70% (-0.3)  %/day +0.434 (-0.061; halves -0.073/-0.043)  DD 3.39  PF 4.11  n  92  losers 28 (-23.9%)  removed 21 trades (win  71%, +10.4%)
+     chandelier 1.5 ATR                           win  69% (-0.4)  %/day +0.444 (-0.051; halves -0.080/-0.009)  DD 2.76  PF 3.59  n 118  losers 36 (-29.3%)  removed  0 trades (win   0%,  +0.0%)
+     lock level 0.25R                             win  69% (-0.6)  %/day +0.486 (-0.009; halves -0.015/-0.001)  DD 2.76  PF 3.93  n 114  losers 35 (-28.4%)  removed  0 trades (win   0%,  +0.0%)
+     early cut at -0.3R                           win  69% (-0.9)  %/day +0.483 (-0.013; halves +0.000/-0.032)  DD 2.76  PF 3.96  n 113  losers 35 (-27.8%)  removed  0 trades (win   0%,  +0.0%)
+     FADE retest tolerance 0.06%                  win  69% (-0.9)  %/day +0.470 (-0.025; halves -0.025/-0.024)  DD 3.47  PF 3.75  n 116  losers 36 (-29.2%)  removed  2 trades (win 100%,  +3.3%)
+     runaway skip 0.70%                           win  69% (-1.1)  %/day +0.472 (-0.023; halves -0.031/-0.012)  DD 2.76  PF 3.86  n 109  losers 34 (-28.2%)  removed  6 trades (win  83%,  +3.5%)
+     PULLBACK stop buffer 0.10%                   win  69% (-1.2)  %/day +0.482 (-0.013; halves -0.015/-0.011)  DD 3.59  PF 3.83  n 115  losers 36 (-29.1%)  removed  7 trades (win  71%,  +4.8%)
+     FADE take-profit at 2.5R                     win  68% (-2.1)  %/day +0.486 (-0.009; halves -0.020/+0.008)  DD 2.76  PF 4.01  n 112  losers 36 (-27.6%)  removed  1 trades (win 100%,  +0.8%)
+     runaway skip 0.60%                           win  67% (-2.9)  %/day +0.446 (-0.050; halves -0.074/-0.014)  DD 3.58  PF 3.62  n 109  losers 36 (-29.1%)  removed  8 trades (win  88%,  +7.1%)
+     FADE retest wait >= 2 bars                   win  67% (-3.2)  %/day +0.184 (-0.312; halves -0.424/-0.145)  DD 2.35  PF 2.35  n  75  losers 25 (-23.3%)  removed 49 trades (win  73%, +56.0%)
+     FADE retest wait >= 3 bars                   win  67% (-3.2)  %/day +0.184 (-0.312; halves -0.424/-0.145)  DD 2.35  PF 2.35  n  75  losers 25 (-23.3%)  removed 49 trades (win  73%, +56.0%)
+     PULLBACK stop buffer 0.15%                   win  66% (-3.5)  %/day +0.480 (-0.016; halves -0.024/-0.004)  DD 2.36  PF 3.39  n 125  losers 42 (-34.3%)  removed  9 trades (win  67%,  +5.2%)
+     lock level 0.0R (breakeven)                  win  65% (-5.3)  %/day +0.489 (-0.006; halves -0.009/-0.002)  DD 2.76  PF 4.00  n 113  losers 40 (-27.9%)  removed  0 trades (win   0%,  +0.0%)
+
+1 of 34 pass
+
+Massive before 2026-03 (never fitted): rules in force win 49% -0.030%/day DD 37.9% PF 0.89 n 619
+  PASS FADE retest tolerance 0.08%                  win  49% (+0.3)  %/day -0.030 (+0.000)  DD  39.0%  PF 0.90  n 631
+  near PULLBACK min stop 1.00%                      win  51% (+1.5)  %/day -0.028 (+0.003)  DD  33.3%  PF 0.87  n 460
+  near no PULLBACK entry at 11:30+                  win  51% (+1.6)  %/day -0.020 (+0.011)  DD  25.0%  PF 0.89  n 424
+  near PULLBACK min stop 0.85%                      win  51% (+1.8)  %/day -0.021 (+0.010)  DD  32.8%  PF 0.92  n 548
+  near PULLBACK stop buffer 0.03%                   win  49% (+0.1)  %/day -0.029 (+0.001)  DD  38.3%  PF 0.89  n 610
+  near no PULLBACK entry at 12:30+                  win  50% (+0.7)  %/day -0.026 (+0.004)  DD  36.0%  PF 0.90  n 570
+  near no FADE entry after 11:00                    win  49% (+0.0)  %/day -0.030 (+0.000)  DD  37.9%  PF 0.89  n 619
+
+Massive 2026-03 on: rules in force win 65% +0.374%/day DD 5.2% PF 3.08 n 97
+  PASS FADE retest tolerance 0.08%                  win  66% (+0.7)  %/day +0.376 (+0.002)  DD   5.2%  PF 3.09  n 99
+  near PULLBACK min stop 1.00%                      win  68% (+3.5)  %/day +0.365 (-0.009)  DD   5.2%  PF 3.67  n 76
+  near no PULLBACK entry at 11:30+                  win  69% (+3.7)  %/day +0.351 (-0.023)  DD   4.6%  PF 4.16  n 67
+  near PULLBACK min stop 0.85%                      win  67% (+2.5)  %/day +0.378 (+0.004)  DD   4.3%  PF 3.51  n 86
+  near PULLBACK stop buffer 0.03%                   win  66% (+1.0)  %/day +0.382 (+0.008)  DD   4.3%  PF 3.14  n 97
+  near no PULLBACK entry at 12:30+                  win  66% (+1.0)  %/day +0.366 (-0.008)  DD   6.5%  PF 3.25  n 88
+  near no FADE entry after 11:00                    win  65% (+0.0)  %/day +0.374 (+0.000)  DD   5.2%  PF 3.08  n 97
