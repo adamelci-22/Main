@@ -1,0 +1,12 @@
+
+Robinhood: 171 sessions, 113 model entries
+  entries a live signal would show (paper.py prints ENTER at that checkpoint): 108 of 113; the other 5 are model-only entries (the model reprices the fill, the live order does not)
+  recall 108/108 = 100.0% (includes 0 entries that came right after another position closed: the cash was already out of USDG) | missed: []
+  sessions with a trigger 164 (96%, 4.8 per week) | sell events (episodes) 503 = 14.7 per week | episodes that ended in an entry 113 (22%)
+  out of USDG 79 min per session on average (of 1440) -> in USDG 94.5% of the time -> 0.0254%/trading day at 7% APY (weekends held in USDG); always-in-USDG would earn 0.0268%
+
+Massive 2021-11 to 2026-11: 1237 sessions, 716 model entries
+  entries a live signal would show (paper.py prints ENTER at that checkpoint): 698 of 716; the other 18 are model-only entries (the model reprices the fill, the live order does not)
+  recall 698/698 = 100.0% (includes 16 entries that came right after another position closed: the cash was already out of USDG) | missed: []
+  sessions with a trigger 1123 (91%, 4.5 per week) | sell events (episodes) 3088 = 12.5 per week | episodes that ended in an entry 695 (23%)
+  out of USDG 55 min per session on average (of 1440) -> in USDG 96.2% of the time -> 0.0258%/trading day at 7% APY (weekends held in USDG); always-in-USDG would earn 0.0268%

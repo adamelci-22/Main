@@ -457,6 +457,86 @@ def live_actions(today, taken, signals, K, base=None, day=None):
     if not any_: print("    none")
 
 
+PB_LAST_TRIGGER = 40           # paper.pullback: trigger bar index j < 41 (12:50 bar)
+
+
+def pb_dip_bar(t, i):
+    return t[i][3] < t[i][0] or t[i][1] < t[i - 1][1]
+
+
+def pb_stage(t, p, K, e9, e20, bh, bo, slack=0.0):
+    """Where the setup stands for a trigger on the NEXT bar (index K). Returns (text, armed)."""
+    if K > PB_LAST_TRIGGER: return 'past the trigger window (last trigger bar 12:50)', False
+    if not bo: return 'no volume breakout yet', False
+    if K < 8: return 'too early', False        # pullback() starts at trigger bar 8, so the stage for the next bar is meaningful from K = 8
+    run = 0
+    for i in range(K - 1, 3, -1):
+        if pb_dip_bar(t, i): run += 1
+        else: break
+    trend = e9[K - 1] > e20[K - 1] and t[K - 1][3] > e9[K - 1]
+    if run < 2:
+        return f'dip {run} bar{"s" if run != 1 else ""} (needs 2 to 5 red or lower-high bars)' + ('' if trend else ', trend off'), False
+    notes = []
+    for n in (2, 3, 4, 5):
+        if n > run or K - n < 4: continue
+        low = min(t[i][2] for i in range(K - n, K)); lo_b, hi_b = e20[K - 1] * 0.995, e9[K - 1] * 1.001
+        if not (lo_b <= low <= hi_b):
+            notes.append(f'{n}-bar dip low {low:.2f} outside EMA band {lo_b:.2f} to {hi_b:.2f}'); continue
+        pre = K - n
+        if not any(i in bo for i in range(3, pre)): notes.append(f'{n}-bar dip starts before the breakout'); continue
+        hod = max(t[i][1] for i in range(0, pre))
+        if FLOOR_TARGET: hod = math.floor(hod * 100 + 1e-9) / 100
+        stop = low * (1 - PB_BUF / 100)
+        # The trigger bar must close above the last high (paper.pullback: b[j][3] > b[j-1][1]). The skip rules (B3.7, B3.8) then pull in opposite
+        # directions on that close (the limit): the stop distance needs it high enough, the reward needs it low enough. So give the window of closes that pass.
+        lo = max(t[K - 1][1] + 0.01, stop / (1 - PB_MIN_STOP / 100))
+        hi = min((hod + 0.75 * stop) / 1.75, hod / 1.0025, hod - 0.01)
+        if hod - stop < 0.10 or lo > hi + slack:
+            if t[K - 1][1] + 0.01 > hi: why = f'trigger close would have to exceed {t[K - 1][1]:.2f} but the reward rules cap it at {hi:.2f} (morning high {hod:.2f})'
+            else: why = f'stop distance needs a close of at least {lo:.2f} but the reward rules cap it at {hi:.2f} (morning high {hod:.2f}, stop {stop:.2f})'
+            notes.append(f'{n}-bar dip blocked by skip rules: {why}'); continue
+        return (f'ARMED ({n}-bar dip): a bar closing above {t[K - 1][1]:.2f} triggers, and it passes the skip rules only if it closes between {lo:.2f} and {hi:.2f}. '
+                f'stop {stop:.2f}, target {hod:.2f}' + ('' if trend else ' (trend off now)')), True
+    return 'dip in progress (' + str(run) + ' bars), not armed: ' + '; '.join(notes) if notes else f'dip {run} bars, not armed', False
+
+
+def usdg_trigger(today, prev, K, taken, signals, day, streak=0):
+    """RULEBOOK B4.8 (v5.2.42): is a real entry predicted at the next checkpoint (about 5 minutes ahead)?
+    Returns (trigger_active, text). Trigger = a FADE proxy with a confirmed break and its retest window still open (fade() status 'watching'),
+    or a PULLBACK leg that pb_stage() calls ARMED, or a live signal already printed. A superset of the entries the model can take at the next
+    checkpoint (a FADE signal at K needs 'watching' at K-1; a PULLBACK signal at K needs ARMED at K-1; tested in tools/backtest/usdg_trigger_backtest.py)."""
+    try: halted = json.load(open(os.path.join(ROOT, 'archive', 'hwm.json'))).get('halted')
+    except Exception: halted = None
+    why = NO_TRADE.get(day) if day else None
+    if halted: why = 'drawdown stop (A1.13)'
+    if streak >= LOCKOUT_LOSSES: why = f'{LOCKOUT_LOSSES}-loss lockout (A1.1)'
+    late = K >= PB_LAST_TRIGGER + 1           # the 12:55 slot is the last entry slot: nothing can be predicted beyond it, only a signal printed now counts
+    if why: return False, f"no entry is possible for the rest of today ({why}): hold or buy USDG"
+    if any(c['status'] == 'open' for c in taken): return False, "the model holds a position: no entry is predicted. After the real exit buy USDG unless a trigger shows"
+    lost = {c['system'] for c in taken if c['status'] == 'closed' and c['usd'] < 0} if X_SYSLOSS else set()
+    hits = []
+    for sysn, sym, tt in signals:
+        if sysn in lost: continue
+        if tt['status'] == 'signal': hits.append(f"{sysn} {sym} SIGNAL now")
+        elif tt['status'] == 'watching' and not late: hits.append(f"{sysn} {sym} {tt['note']}")
+    if K == 7 and 'FADE' not in lost and fade_day_ok(day):       # fade() needs 8 bars; a break on the 10:00 bar can retest on the 10:05 bar, so the 10:05 slot is the only warning for a 10:10 entry
+        for p in FADE_ROWS:
+            if p not in today or p in X_DROP_FADE or any(s[0] == 'FADE' and s[1] == p for s in signals): continue
+            b = today[p]; H, L = max(x[1] for x in b[:6]), min(x[2] for x in b[:6])
+            if b[6][3] > H or b[6][3] < L: hits.append(f"FADE {p} break {'up' if b[6][3] > H else 'down'} at 10:00, waiting for a retest")
+    if 'PB' not in lost and not late:
+        for leg in PB_LIST:
+            if leg not in today or leg not in prev or any(s[0] == 'PB' and s[1] == leg for s in signals): continue
+            tl = today[leg][:K]; pl = prev[leg]
+            ser = [x[3] for x in pl] + [x[3] for x in tl]; e9 = ema(ser, 9)[len(pl):]; e20 = ema(ser, 20)[len(pl):]
+            bh = max(x[1] for x in tl[:3]); bo = [i for i in range(3, K) if tl[i][3] > bh and tl[i][4] > PB_VOL * st.mean(tl[q][4] for q in range(max(0, i - 6), i))]
+            txt, armed = pb_stage(tl, pl, K, e9, e20, bh, set(bo), 0.02)      # 2 cents of slack: the window can close by a cent of rounding
+            if armed: hits.append(f"PB {leg} {txt.split(':')[0]}")
+    if late and not hits: return False, "12:55 or later: no entry is predicted for the next slot (entries end at 12:55): hold or buy USDG"
+    if hits: return True, "SELL ALL USDG NOW (before the next checkpoint). Trigger: " + " | ".join(hits)
+    return False, "no entry is predicted for the next checkpoint: hold or buy USDG"
+
+
 def px(v, nd=2):
     """Format a leg price; None means the leg's bars were missing from the dump (the model's P&L is unaffected: it uses the proxy)."""
     return f"{v:.{nd}f}" if v is not None else 'n/a (leg bars missing)'
@@ -540,7 +620,13 @@ def main():
     cadence = '5 min (fade open: ratchet the stop)' if any(c['system'] == 'FADE' for c in open_) else \
               ('30 min (pullback OCO resting)' if open_ else ('5 min (flat, scanning)' if K < 41 and streak0 < LOCKOUT_LOSSES else 'none needed until 13:30'))
     st_now = taken[-1]['streak'] if taken and taken[-1].get('pct') is not None else (taken[-2]['streak'] if len(taken) > 1 else streak0)
+    usdg_txt = usdg_trigger(today, prev, K, taken if not REAL_FREE else [c for c in taken if c['status'] != 'open'], signals, day, st_now)[1] if a.live else None
     print(f"  entries today {len(taken)}; losing streak {st_now}/{LOCKOUT_LOSSES}; next check-in: {cadence}; paper equity now ${eq:,.2f}")
+    if usdg_txt:
+        try: us = json.load(open(os.path.join(ROOT, 'archive', 'usdg_state.json')))
+        except Exception: us = {}
+        mode = 'KILLED (stay in cash, tell the governor)' if us.get('killed') else ('ON' if us.get('enabled') else 'OFF: ignore this line')
+        print(f"  USDG (B4.8, rule {mode}): {usdg_txt}")
     if a.close:
         if K - 1 < SELL_BY: sys.exit('--close needs --now 13:30 or later')
         if day in S['days_logged']: print('  already logged'); return
