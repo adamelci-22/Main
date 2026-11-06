@@ -43,3 +43,4 @@ Massive 2026-03 on: rules in force +0.384%/day win 66% DD 3.9% n 95
   trend>=1.20% stop edge Fri off           CONT n  32 win  41% avg -0.13% | acct +0.345 (-0.039) win  60% (-6.5) DD   5.8% | alone n  40 win  38% avg -0.22%
   trend>=1.20% stop low  Fri on            CONT n  43 win  49% avg -0.11% | acct +0.336 (-0.048) win  61% (-5.7) DD   9.0% | alone n  51 win  47% avg -0.18%
   trend>=1.20% stop low  Fri off           CONT n  32 win  41% avg -0.25% | acct +0.323 (-0.061) win  60% (-6.5) DD   8.6% | alone n  40 win  40% avg -0.32%
+exit 0
