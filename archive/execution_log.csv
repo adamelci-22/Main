@@ -42,3 +42,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-05,LABD,PULLBACK,sell,oco,11:46,11:46:13,11:46:14,7.48,7.50,0.27,7.49,,,,334,OCO GTC take-profit 7.64 / stop 7.33 id 6aeca3bb; both legs confirmed,,
 2026-11-05,LABD,PULLBACK,sell,exit,12:04,12:04:54,,7.48,7.50,0.27,7.64,7.64,7.64,0,334,OCO take-profit leg filled (found 12:25); fee 0.06,,
 2026-11-05,USDG,-,buy,usdg,12:25,12:26:00,12:26:01,1,1,0,1,,1,0,2552,rebuy after LABD exit; model holds ghost TECS so no entry predicted; order 6aecbc27; fee 0,,
+2026-11-06,USDG,-,sell,usdg,11:35,11:36:02,11:36:03,1,1,0,1,,1,0,2552,trigger PB NVDQ ARMED; order 6aee01f2; buying_power 2553.16 restored; fee 0,,
