@@ -80,7 +80,7 @@ def next_trading_day(d):
 
 def current(t=None):
     v = (t or tun())['versions']
-    return max(v, key=lambda x: x['effective_from'])
+    return max(v, key=lambda x: (x['effective_from'], x['version']))      # v5.2.42 fix: two versions with the same effective date (v3, v4 on 2026-11-05) took the first, so research baselines missed v4
 
 
 def challenger(t=None):
