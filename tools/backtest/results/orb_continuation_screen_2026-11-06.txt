@@ -1,0 +1,45 @@
+173 Robinhood sessions, rules in force (tunables v4), halves split at 2026-07-29; the research copy with CONT off equals the live engine
+rules in force: +0.481%/day win 69% DD 2.76% PF 3.81 trades 114
+
+    trend>=0.00% stop low  Fri off           CONT n  70 ( 70 days) win  46% avg -0.11% halves   -8.0/  +0.5 | acct +0.340 (-0.141) win  59% (-10.6) DD 7.17 | alone: n  86 win  44% avg -0.21%
+    trend>=0.00% stop low  Fri on            CONT n  93 ( 93 days) win  46% avg -0.09% halves   -6.1/  -2.0 | acct +0.306 (-0.175) win  57% (-12.8) DD 7.00 | alone: n 109 win  45% avg -0.17%
+    trend>=0.00% stop edge Fri off           CONT n  70 ( 70 days) win  51% avg -0.08% halves   -5.2/  -0.7 | acct +0.353 (-0.128) win  62% (-7.3) DD 5.97 | alone: n  85 win  48% avg -0.22%
+    trend>=0.00% stop edge Fri on            CONT n  93 ( 93 days) win  53% avg -0.07% halves   -3.9/  -2.5 | acct +0.325 (-0.157) win  61% (-8.8) DD 5.91 | alone: n 108 win  50% avg -0.18%
+    trend>=0.50% stop low  Fri off           CONT n  58 ( 58 days) win  50% avg -0.18% halves  -13.1/  +2.8 | acct +0.321 (-0.160) win  61% (-8.0) DD 7.17 | alone: n  72 win  47% avg -0.28%
+    trend>=0.50% stop low  Fri on            CONT n  77 ( 77 days) win  51% avg -0.10% halves   -9.7/  +2.3 | acct +0.314 (-0.167) win  60% (-9.6) DD 7.00 | alone: n  91 win  48% avg -0.19%
+    trend>=0.50% stop edge Fri off           CONT n  58 ( 58 days) win  52% avg -0.15% halves   -9.5/  +1.0 | acct +0.334 (-0.148) win  62% (-6.8) DD 5.97 | alone: n  71 win  49% avg -0.22%
+    trend>=0.50% stop edge Fri on            CONT n  77 ( 77 days) win  55% avg -0.11% halves   -6.8/  -2.0 | acct +0.319 (-0.162) win  62% (-7.2) DD 5.91 | alone: n  90 win  52% avg -0.17%
+    trend>=0.85% stop low  Fri off           CONT n  43 ( 43 days) win  47% avg -0.14% halves   -6.2/  -0.0 | acct +0.367 (-0.115) win  61% (-8.2) DD 6.07 | alone: n  55 win  45% avg -0.26%
+    trend>=0.85% stop low  Fri on            CONT n  60 ( 60 days) win  48% avg -0.05% halves   -2.7/  -0.5 | acct +0.361 (-0.121) win  60% (-9.8) DD 6.07 | alone: n  72 win  47% avg -0.16%
+    trend>=0.85% stop edge Fri off           CONT n  43 ( 43 days) win  49% avg -0.03% halves   -0.5/  -0.7 | acct +0.388 (-0.093) win  61% (-7.8) DD 5.23 | alone: n  54 win  48% avg -0.10%
+    trend>=0.85% stop edge Fri on            CONT n  60 ( 60 days) win  53% avg -0.01% halves   +3.0/  -3.7 | acct +0.378 (-0.103) win  61% (-7.9) DD 5.23 | alone: n  71 win  52% avg -0.07%
+    trend>=1.20% stop low  Fri off           CONT n  32 ( 32 days) win  44% avg -0.16% halves   -5.1/  -0.1 | acct +0.425 (-0.056) win  63% (-6.3) DD 4.91 | alone: n  41 win  41% avg -0.30%
+    trend>=1.20% stop low  Fri on            CONT n  43 ( 43 days) win  51% avg -0.01% halves   -4.8/  +4.4 | acct +0.437 (-0.044) win  63% (-6.0) DD 4.91 | alone: n  52 win  48% avg -0.14%
+    trend>=1.20% stop edge Fri off           CONT n  32 ( 32 days) win  47% avg -0.06% halves   -0.9/  -1.1 | acct +0.437 (-0.044) win  64% (-5.8) DD 5.23 | alone: n  40 win  45% avg -0.12%
+    trend>=1.20% stop edge Fri on            CONT n  43 ( 43 days) win  56% avg +0.02% halves   -0.2/  +1.0 | acct +0.446 (-0.035) win  65% (-4.7) DD 5.26 | alone: n  51 win  53% avg -0.04%
+
+0 of 16 pass the ADD bar
+
+OTHER EXITS AND A PLAIN BREAK ENTRY
+    trend>=0.85% stop edge Fri on | retest exit 1R sell 1.00 CONT n  60 ( 60 days) win  53% avg -0.18% halves   -8.4/  -2.4 | acct +0.319 (-0.162) win  61% (-7.9) DD 5.23 | alone: n  71 win  52% avg -0.20%
+    trend>=0.85% stop edge Fri on | retest exit 1.5R sell 1.00 CONT n  60 ( 60 days) win  53% avg -0.16% halves   -6.9/  -2.7 | acct +0.326 (-0.155) win  61% (-7.9) DD 5.23 | alone: n  71 win  52% avg -0.17%
+    trend>=0.85% stop edge Fri on | retest exit 3R sell 0.33 CONT n  60 ( 60 days) win  52% avg -0.01% halves   +4.5/  -5.1 | acct +0.379 (-0.103) win  61% (-8.6) DD 5.23 | alone: n  71 win  51% avg -0.08%
+    trend>=0.85% stop edge Fri on | retest exit 3R sell 1.00 CONT n  60 ( 60 days) win  52% avg -0.09% halves   +0.1/  -5.8 | acct +0.349 (-0.132) win  61% (-8.6) DD 5.23 | alone: n  71 win  51% avg -0.15%
+    trend>=0.00% stop edge Fri on | break exit 2R sell 0.33 CONT n 133 (133 days) win  50% avg -0.02% halves   -7.6/  +5.0 | acct +0.282 (-0.200) win  57% (-12.2) DD 5.66 | alone: n 138 win  51% avg -0.02%
+    trend>=0.00% stop edge Fri on | break exit 1R sell 1.00 CONT n 133 (133 days) win  50% avg -0.09% halves  -11.8/  -0.2 | acct +0.236 (-0.245) win  57% (-12.0) DD 7.00 | alone: n 138 win  52% avg -0.08%
+    trend>=0.85% stop edge Fri on | break exit 2R sell 0.33 CONT n  92 ( 92 days) win  50% avg -0.04% halves   +3.3/  -6.8 | acct +0.300 (-0.182) win  58% (-11.7) DD 7.44 | alone: n 103 win  51% avg -0.03%
+    trend>=0.85% stop edge Fri on | break exit 1R sell 1.00 CONT n  92 ( 92 days) win  52% avg -0.14% halves   -5.9/  -6.7 | acct +0.257 (-0.224) win  59% (-10.4) DD 5.61 | alone: n 103 win  54% avg -0.12%
+
+0 of 8 pass the ADD bar
+
+Massive before 2026-03 (never fitted): rules in force -0.024%/day win 49% DD 34.6% n 599
+  trend>=1.20% stop edge Fri on            CONT n 299 win  53% avg -0.05% | acct -0.037 (-0.013) win  51% (+1.5) DD  41.3% | alone n 327 win  54% avg -0.04%
+  trend>=1.20% stop edge Fri off           CONT n 233 win  52% avg -0.05% | acct -0.030 (-0.005) win  51% (+1.4) DD  40.3% | alone n 261 win  54% avg -0.03%
+  trend>=1.20% stop low  Fri on            CONT n 298 win  53% avg -0.06% | acct -0.042 (-0.018) win  51% (+1.3) DD  47.0% | alone n 326 win  54% avg -0.05%
+  trend>=1.20% stop low  Fri off           CONT n 233 win  53% avg -0.07% | acct -0.037 (-0.013) win  51% (+1.4) DD  47.2% | alone n 261 win  55% avg -0.05%
+
+Massive 2026-03 on: rules in force +0.384%/day win 66% DD 3.9% n 95
+  trend>=1.20% stop edge Fri on            CONT n  43 win  51% avg -0.05% | acct +0.351 (-0.033) win  61% (-5.0) DD   5.9% | alone n  51 win  47% avg -0.13%
+  trend>=1.20% stop edge Fri off           CONT n  32 win  41% avg -0.13% | acct +0.345 (-0.039) win  60% (-6.5) DD   5.8% | alone n  40 win  38% avg -0.22%
+  trend>=1.20% stop low  Fri on            CONT n  43 win  49% avg -0.11% | acct +0.336 (-0.048) win  61% (-5.7) DD   9.0% | alone n  51 win  47% avg -0.18%
+  trend>=1.20% stop low  Fri off           CONT n  32 win  41% avg -0.25% | acct +0.323 (-0.061) win  60% (-6.5) DD   8.6% | alone n  40 win  40% avg -0.32%
