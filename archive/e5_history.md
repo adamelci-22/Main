@@ -120,3 +120,12 @@
 - **Context:** large semiconductor gap up premarket (SOXX +3.8%) after a down day, broad proxies up 0.5% to 0.9%, XLF -0.3%. No event calendar checked beyond earnings. Month-end cash interest (+$0.99 on 10-31) is not a deposit (governor, 11-02).
 - **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. About 100 disabled, fired one-shot checkpoints from the old session remain (94 deleted 11-02 at the governor's instruction, rest inert). The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger.
+
+**Wednesday 2026-11-04, 9:00 research (morning trigger fired 8:42:14 ET, v5.2.39).**
+- **9:00 value (A1.2 base): $2,571.18** (pre-open, read 8:43 ET), flat, no open orders, same as the 11-03 close. Drawdown stop clear (high $2,596.99, -0.99%). Daily loss limit fires at $2,494.04 (-3%).
+- **Controls:** losing streak 0. Wednesday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 pm (tentative, matches `EARNINGS_SKIP` 2027-01-28). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18, matches). No earnings skip today.
+- **Corporate actions:** clean. All 23 funds and proxies active; each premarket move matches its underlying (IWM +1.7%, TNA +5.1%; XLF +1.8%, FAS +5.5%; XBI +2.3%, LABU +7.0%; SOXX -1.1%, SOXL -3.2%, SOXS +3.4%). No fund more than 20% off its close. Wide premarket spreads on SSG, TECL, TECS, NVDQ and LABU: A1.7 applies at order time.
+- **RVOL baseline:** 20 sessions 2026-10-07..11-03 -> `archive/paper_rvol_2026-11-04.json`.
+- **Context:** day after the US midterm election. Small caps, financials and biotech up premarket, semiconductors down. No event calendar checked beyond earnings.
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers and the two dated ones are enabled on this session. One disabled 10-05 checkpoint remains on the old session, inert. The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE waiting 0 of 5, PULLBACK waiting 1 of 5.
