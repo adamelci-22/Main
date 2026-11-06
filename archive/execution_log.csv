@@ -45,3 +45,5 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-06,USDG,-,sell,usdg,11:35,11:36:02,11:36:03,1,1,0,1,,1,0,2552,trigger PB NVDQ ARMED; order 6aee01f2; buying_power 2553.16 restored; fee 0,,
 2026-11-06,NVDQ,PULLBACK,buy,entry,11:45,11:45:52,11:45:53,11.33,11.34,0.09,11.33,11.33,11.33,0,225,signal PB NVDQ trigger 11:40 limit 11.33; filled 11:46:24 order 6aee0440; USDG sold 11:36,,
 2026-11-06,NVDQ,PULLBACK,sell,oco,11:50,11:50:38,11:50:39,11.36,11.37,0.09,11.33,,,,225,OCO GTC 11.45/11.20 id 6aede846 placed 11:50:38: 4 min after the fill (found at the 11:50 slot; the 11:45 poll said unfilled),,
+2026-11-06,NVDQ,PULLBACK,sell,exit,12:36,12:36:36,,11.44,11.45,0.09,11.45,11.45,11.45,0,225,OCO take-profit leg filled (found 12:40); fee 0.06,,
+2026-11-06,USDG,-,buy,usdg,12:40,12:40:57,12:40:58,1,1,0,1,,1,0,2579,rebuy after NVDQ exit; order 6aee1129; fee 0,,
