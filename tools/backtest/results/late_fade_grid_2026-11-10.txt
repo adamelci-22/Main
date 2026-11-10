@@ -197,3 +197,21 @@ rules in force: +0.490%/day win 70% DD 2.76% PF 3.89 trades 116
 0 of 192 pass the ADD bar
 
 OTHER EXITS AND A PLAIN BREAK ENTRY
+
+0 of 0 pass the ADD bar
+
+Massive before 2026-03 (never fitted): rules in force -0.024%/day win 49% DD 34.6% n 599
+  to bar 24 stop high   wait>=1 depth 0.20% exit 1.5R sell 0.33 CONT n 299 win  53% avg -0.02% | acct -0.038 (-0.014) win  50% (+0.8) DD  62.7% | alone n 360 win  52% avg -0.09%
+  to bar 24 stop high   wait>=1 depth 0.20% exit 3R sell 0.33 CONT n 299 win  53% avg +0.01% | acct -0.029 (-0.005) win  50% (+0.8) DD  64.3% | alone n 360 win  52% avg -0.08%
+  to bar 24 stop recent wait>=1 depth 0.20% exit 1.5R sell 0.33 CONT n 298 win  52% avg -0.00% | acct -0.033 (-0.009) win  50% (+0.5) DD  62.0% | alone n 359 win  52% avg -0.08%
+  to bar 15 stop recent wait>=1 depth 0.10% exit 3R sell 0.33 CONT n 276 win  55% avg -0.08% | acct -0.051 (-0.027) win  50% (+1.0) DD  52.7% | alone n 347 win  54% avg -0.16%
+  to bar 24 stop recent wait>=1 depth 0.20% exit 3R sell 0.33 CONT n 298 win  52% avg +0.00% | acct -0.031 (-0.007) win  50% (+0.6) DD  64.6% | alone n 359 win  52% avg -0.09%
+  to bar 24 stop high   wait>=2 depth 0.20% exit 1.5R sell 0.33 CONT n 296 win  54% avg -0.04% | acct -0.044 (-0.020) win  50% (+0.9) DD  64.4% | alone n 358 win  53% avg -0.12%
+
+Massive 2026-03 on: rules in force +0.384%/day win 66% DD 3.9% n 95
+  to bar 24 stop high   wait>=1 depth 0.20% exit 1.5R sell 0.33 CONT n  39 win  64% avg +0.25% | acct +0.447 (+0.063) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.13%
+  to bar 24 stop high   wait>=1 depth 0.20% exit 3R sell 0.33 CONT n  39 win  64% avg +0.23% | acct +0.444 (+0.060) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.11%
+  to bar 24 stop recent wait>=1 depth 0.20% exit 1.5R sell 0.33 CONT n  39 win  64% avg +0.21% | acct +0.440 (+0.056) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.08%
+  to bar 15 stop recent wait>=1 depth 0.10% exit 3R sell 0.33 CONT n  38 win  53% avg +0.23% | acct +0.429 (+0.045) win  63% (-3.3) DD   6.0% | alone n  53 win  55% avg +0.12%
+  to bar 24 stop recent wait>=1 depth 0.20% exit 3R sell 0.33 CONT n  39 win  64% avg +0.20% | acct +0.437 (+0.053) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.06%
+  to bar 24 stop high   wait>=2 depth 0.20% exit 1.5R sell 0.33 CONT n  40 win  62% avg +0.19% | acct +0.428 (+0.045) win  66% (-0.7) DD   4.5% | alone n  54 win  59% avg +0.10%
