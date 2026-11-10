@@ -49,3 +49,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-06,USDG,-,buy,usdg,12:40,12:40:57,12:40:58,1,1,0,1,,1,0,2579,rebuy after NVDQ exit; order 6aee1129; fee 0,,
 2026-11-10,USDG,-,sell,usdg,10:05,10:05:42,10:05:42,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (FADE QQQ IWM XLK break up at 10:00); order 6af332c6; fee 0; buying power 2580.10,,
 2026-11-10,USDG,-,buy,usdg,10:10,10:10:54,10:10:54,1,1,0,1,,1,0,2579,rebuy: trigger cleared (QQQ IWM XLK retests held at 10:05); order 6af333fe; fee 0,,
+2026-11-10,USDG,-,sell,usdg,11:10,11:10:40,11:10:40,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (PB NVDQ and NVD ARMED); order 6af34200; fee 0; buying power 2580.10,,
