@@ -139,3 +139,14 @@
 - **Context:** second day after the US midterm election. Semiconductors down about 4% premarket, tech down 1.6%, financials up 1.3%. No FOMC (the last was 10-28). Weekly jobless claims 8:30. The October jobs report is due Friday 11-06. No event calendar checked beyond earnings.
 - **Triggers (A2):** the 8:41 and 13:30 standing triggers, the 11-06 waiter coverage report and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains on the old session, inert.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. Both cycles restarted at 0 of 5 from 2026-11-05 (v4).
+
+**Friday 2026-11-06, 9:00 research (morning trigger fired 8:42:53 ET, v5.2.43).**
+- **9:00 value (A1.2 base): $2,553.16** (pre-open, read 8:43 ET), flat, no open orders. It is 2,552 USDG plus $1.16 cash. Equal to the 11-05 close. Drawdown stop clear (high $2,596.99, -1.69%). Daily loss limit fires at $2,476.56 (-3%).
+- **Controls:** losing streak 0 (11-05 LABD was a win). Friday: **FADE does not trade** (A1.10), PULLBACK only. Earnings: MSFT next reports 2027-01-27 pm (tentative). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). No earnings skip today.
+- **Rules in force:** tunables v4: runaway skip 0.85%, PULLBACK volume 1.3x, same-system loss block (B4.7). USDG rule ON (B4.8, v5.2.42); every-5-minute check (C2, v5.2.43).
+- **USDG:** peg bid = ask = $1.00. Balance 2,552.00 exactly. **No interest has been credited in 32 hours** (bought 00:55 on 11-05, 7% APY would be about $0.20 an hour). The governor's 7% rate is unverified: the credit schedule or the rate needs the governor's check in the app.
+- **Corporate actions:** clean. Premarket moves match their underlyings: SOXX +4.8%, SOXL +16.8%, SOXS -16.7%; QQQ +1.5%, TQQQ +3.7%; XLK +2.3%, TECL +7.4%; XLF -1.0%, FAS -2.5%; IWM +0.2%, TNA +0.3%. NVD and NVDQ -8% with the inverse Nvidia legs. Wide premarket spreads on SSG, TECS, TECL, LABU, FAS: A1.7 at order time.
+- **RVOL baseline:** 20 sessions 2026-10-09..11-05 -> `archive/paper_rvol_2026-11-06.json`.
+- **Context:** the October jobs report came out at 8:30. Semiconductors are up about 5% premarket, tech up 2%, financials down 1%. No FOMC. No event calendar checked beyond earnings.
+- **Triggers (A2):** the 8:41 and 13:30 standing triggers, the 11-06 waiter coverage report (13:45) and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains, inert.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 1 of 5 (model TECS 11-05).

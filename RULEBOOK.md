@@ -395,17 +395,6 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 Earlier E5 text is kept in `archive/e5_history.md`.
 
-**Friday 2026-11-06, 9:00 research (morning trigger fired 8:42:53 ET, v5.2.43).**
-- **9:00 value (A1.2 base): $2,553.16** (pre-open, read 8:43 ET), flat, no open orders. It is 2,552 USDG plus $1.16 cash. Equal to the 11-05 close. Drawdown stop clear (high $2,596.99, -1.69%). Daily loss limit fires at $2,476.56 (-3%).
-- **Controls:** losing streak 0 (11-05 LABD was a win). Friday: **FADE does not trade** (A1.10), PULLBACK only. Earnings: MSFT next reports 2027-01-27 pm (tentative). NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). No earnings skip today.
-- **Rules in force:** tunables v4: runaway skip 0.85%, PULLBACK volume 1.3x, same-system loss block (B4.7). USDG rule ON (B4.8, v5.2.42); every-5-minute check (C2, v5.2.43).
-- **USDG:** peg bid = ask = $1.00. Balance 2,552.00 exactly. **No interest has been credited in 32 hours** (bought 00:55 on 11-05, 7% APY would be about $0.20 an hour). The governor's 7% rate is unverified: the credit schedule or the rate needs the governor's check in the app.
-- **Corporate actions:** clean. Premarket moves match their underlyings: SOXX +4.8%, SOXL +16.8%, SOXS -16.7%; QQQ +1.5%, TQQQ +3.7%; XLK +2.3%, TECL +7.4%; XLF -1.0%, FAS -2.5%; IWM +0.2%, TNA +0.3%. NVD and NVDQ -8% with the inverse Nvidia legs. Wide premarket spreads on SSG, TECS, TECL, LABU, FAS: A1.7 at order time.
-- **RVOL baseline:** 20 sessions 2026-10-09..11-05 -> `archive/paper_rvol_2026-11-06.json`.
-- **Context:** the October jobs report came out at 8:30. Semiconductors are up about 5% premarket, tech up 2%, financials down 1%. No FOMC. No event calendar checked beyond earnings.
-- **Triggers (A2):** the 8:41 and 13:30 standing triggers, the 11-06 waiter coverage report (13:45) and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains, inert.
-- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 1 of 5 (model TECS 11-05).
-
 **Monday 2026-11-09, 9:00 research (morning trigger fired 8:41 ET, v5.2.43).**
 - **9:00 value (A1.2 base): $2,580.10** (pre-open, read 8:42 ET), flat, no open orders. It is 2,579 USDG plus $1.10 cash. Equal to the 11-06 close. Drawdown stop clear (high $2,596.99, -0.65%). Daily loss limit fires at $2,502.70 (-3%).
 - **Controls:** losing streak 0. Monday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 (tentative). NVDA next reports 2026-11-17, verified (NVD/NVDQ skip 11-18). No earnings skip today.
@@ -414,6 +403,17 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Corporate actions:** clean. Premarket moves match their underlyings: SOXX +1.2%, SOXL +3.8%, SOXS -3.7%; QQQ +0.9%, TQQQ +2.6%; XLK +0.4%, TECL +1.1%; IWM +1.4%, TNA +4.3%; XLF +1.2%, FAS +2.8%; XBI +0.8%. NVD and NVDQ about +11% against NVDA -5.2% (inverse legs, under the 20% threshold). MSFU +4.0% with MSFT +2.0%. Wide premarket spreads on SSG, LABU, TECS, TECL, FAS (A1.7 applies at order time).
 - **RVOL baseline:** 20 sessions 2026-10-12..11-06 -> `archive/paper_rvol_2026-11-09.json`.
 - **Triggers (A2):** the 8:41, 13:30 and watchdog (9:36 to 12:36) standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains, inert.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).
+
+**Tuesday 2026-11-10, 9:00 research (morning trigger fired 8:41 ET, v5.2.44).**
+- **9:00 value (A1.2 base): $2,580.10** (pre-open, read 8:42 ET), flat, no open orders. It is 2,579 USDG plus $1.10 cash. Equal to the 11-09 close. Drawdown stop clear (high $2,596.99, -0.65%). Daily loss limit fires at $2,502.70 (-3%).
+- **Controls:** losing streak 0. Tuesday: FADE and PULLBACK both trade. Earnings: NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). MSFT next reports 2027-01-27 (tentative). No earnings skip today.
+- **Rules in force:** tunables v4: runaway skip 0.85%, PULLBACK volume 1.3x, same-system loss block (B4.7). USDG rule ON (B4.8). Every-5-minute check (C2). Waiter watchdog at 9:36, 10:36, 11:36, 12:36 (A2.4, v5.2.44).
+- **USDG:** peg bid = ask = $1.00. Balance 2,579.00 exactly, unchanged since 11-05 bought. No interest credited in 5 days. The governor must check the posted rate and credit schedule in the Robinhood app. Turn the rule off if it pays nothing.
+- **Container:** uptime was 0 minutes at 8:41. The container restarted overnight and the 8:41 trigger revived it. The 9:30 waiter started on the new container.
+- **Corporate actions:** clean. Premarket moves match their underlyings: QQQ -1.5%, TQQQ -4.2%; SOXX -3.1%, SOXL -9.2%, SOXS +9.3%; IWM -1.0%, TNA -2.9%; XLK -1.6%, TECL -5.4%; XBI -0.9%, LABU -2.2%; XLF +0.1%. NVDA -2.0% with NVDQ and NVD +3.9%. MSFT -0.6%, MSFU -1.2%. Wide premarket spreads on SSG, LABU, TECS, TECL, FAS (A1.7 applies at order time).
+- **RVOL baseline:** 20 sessions 2026-10-13..11-09 -> `archive/paper_rvol_2026-11-10.json`.
+- **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).
 
 ## E6. Known issues
@@ -426,6 +426,7 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Checkpoint processing time is short (measured 2026-10-22 from the transcript, 117-180 slots).** Wake to engine run: median 9 s (p90 is inflated by slots where other work was running). Wake to report: median 11 s, p90 22 s. So the delay that cost entries was the scheduler (median 62 s), not processing. Order review check (2026-10-22, no order placed): a FADE leg buy limit reviews clean; the OCO and stop-market sells review with only EQUITY_MAX_SELL_SHARES_EXCEEDED because no shares were owned, so the protective-order structure is untested until a first live entry (E2 item 1).
 - **A container restart kills every running slot waiter (seen 2026-10-23 at 11:46 ET; the 20 waiters for 11:50-13:25 were lost, the 10:00-11:45 ones had already fired).** The harness reports it as a notice listing the stopped tasks. On that notice: re-create the lost waiters at once (same command, timeout 7200000, only for slots that have not yet passed; the 2-hour limit restarts from now). Their scheduled twins are not deleted until the waiter completes, so the scheduled primaries cover the gap, which is exactly what they are for. Check `date` and the repo first: the working tree and committed files survive.
 - **The container can be reclaimed while idle (seen 2026-11-09).** After the 9:00 report the session made no tool calls from about 8:45 ET. The container restarted at 10:41 ET (uptime 2 min, shell snapshot born 10:42 ET, no 09:30 row in `archive/waiter_log.csv`). The restart killed the 9:30 waiter, which was the only wake for batch 1. The 8:41 trigger is a scheduler wake and survived. The first user message at 10:42 revived the session. Slots 10:00 to 10:35 were not run live. The paper simulation covers the whole day, so the catch-up run at 10:40 showed no missed signal. On any wake: check `uptime` and `pgrep -af slot_clock` first. If uptime is short or the waiters are gone, restart them for the remaining slots and run the current slot at once. Fix in v5.2.44: the watchdog trigger (A2.4).
+- **A background waiter stops at its 2-hour cap (seen 2026-11-09).** A waiter started before 11:25 for the 13:25 slot is killed at the cap. Start batch 2 at the 11:25 slot, not earlier.
 - **The MCP connection can drop for hours.** GTC protective orders cover an open position. A missed 13:30 means flattening at the first checkpoint after reconnecting, and at 9:30 the next day at the latest (A1.8).
 - **Robinhood stop orders can fail silently:** cancelled with no fill, or rejected when the stop is at or above the market price. Always verify the state (B5.1, B5.5).
 - **Local git can desync from the remote.** If a push is rejected, fetch and merge; never force-push.
