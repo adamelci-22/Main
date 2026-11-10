@@ -47,3 +47,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-06,NVDQ,PULLBACK,sell,oco,11:50,11:50:38,11:50:39,11.36,11.37,0.09,11.33,,,,225,OCO GTC 11.45/11.20 id 6aede846 placed 11:50:38: 4 min after the fill (found at the 11:50 slot; the 11:45 poll said unfilled),,
 2026-11-06,NVDQ,PULLBACK,sell,exit,12:36,12:36:36,,11.44,11.45,0.09,11.45,11.45,11.45,0,225,OCO take-profit leg filled (found 12:40); fee 0.06,,
 2026-11-06,USDG,-,buy,usdg,12:40,12:40:57,12:40:58,1,1,0,1,,1,0,2579,rebuy after NVDQ exit; order 6aee1129; fee 0,,
+2026-11-10,USDG,-,sell,usdg,10:05,10:05:42,10:05:42,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (FADE QQQ IWM XLK break up at 10:00); order 6af332c6; fee 0; buying power 2580.10,,
