@@ -53,3 +53,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-10,USDG,-,buy,usdg,11:15,11:15:43,11:15:43,1,1,0,1,,1,0,2579,rebuy: PB NVDQ NVD trigger bar closed 13.83 under 13.86 so no signal; order 6af3432f; fee 0,,
 2026-11-10,USDG,-,sell,usdg,11:35,11:35:39,11:35:39,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (PB NVD ARMED); order 6af347db; fee 0; buying power 2580.10,,
 2026-11-10,USDG,-,buy,usdg,11:40,11:40:49,11:40:49,1,1,0,1,,1,0,2579,rebuy: NVD trigger bar closed 6.28 above the 6.25-6.27 pass band so skipped; order 6af34911; fee 0,,
+2026-11-10,USDG,-,sell,usdg,12:05,12:05:33,12:05:33,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (PB LABD ARMED); order 6af34edd; fee 0; buying power 2580.10,,
