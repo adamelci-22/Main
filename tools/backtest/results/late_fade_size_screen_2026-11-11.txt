@@ -1,0 +1,133 @@
+176 Robinhood sessions, rules in force (tunables v4), halves split at 2026-07-31; the research copy with CONT off equals the live engine
+rules in force: +0.487%/day win 70% DD 2.76% PF 3.89 trades 116
+
+    to bar 15 depth 0.10% exit 2R size 1.00 any-day   CONT n  40 ( 40 days) win  60% avg +0.23% halves   +9.7/  -0.4 | acct +0.519 (+0.032) win  68% (-2.0) DD 4.89 | alone: n  55 win  60% avg +0.15%
+    to bar 15 depth 0.10% exit 2R size 1.00 idle-days CONT n  30 ( 30 days) win  53% avg +0.12% halves   +5.3/  -1.9 | acct +0.486 (-0.001) win  67% (-2.9) DD 4.89 | alone: n  55 win  60% avg +0.15%
+    to bar 15 depth 0.10% exit 2R size 0.50 any-day   CONT n  40 ( 40 days) win  60% avg +0.12% halves   +4.8/  -0.2 | acct +0.493 (+0.006) win  68% (-2.0) DD 3.82 | alone: n  55 win  60% avg +0.08%
+    to bar 15 depth 0.10% exit 2R size 0.50 idle-days CONT n  30 ( 30 days) win  53% avg +0.06% halves   +2.7/  -0.9 | acct +0.477 (-0.010) win  67% (-2.9) DD 3.82 | alone: n  55 win  60% avg +0.08%
+    to bar 15 depth 0.10% exit 2R size 0.33 any-day   CONT n  40 ( 40 days) win  60% avg +0.08% halves   +3.2/  -0.1 | acct +0.484 (-0.003) win  68% (-2.0) DD 3.46 | alone: n  55 win  60% avg +0.05%
+    to bar 15 depth 0.10% exit 2R size 0.33 idle-days CONT n  30 ( 30 days) win  53% avg +0.04% halves   +1.8/  -0.6 | acct +0.473 (-0.014) win  67% (-2.9) DD 3.46 | alone: n  55 win  60% avg +0.05%
+    to bar 15 depth 0.10% exit 1.5R size 1.00 any-day   CONT n  40 ( 40 days) win  60% avg +0.23% halves   +7.6/  +1.6 | acct +0.519 (+0.032) win  68% (-2.0) DD 4.89 | alone: n  55 win  60% avg +0.16%
+    to bar 15 depth 0.10% exit 1.5R size 1.00 idle-days CONT n  30 ( 30 days) win  53% avg +0.12% halves   +3.2/  +0.3 | acct +0.486 (-0.000) win  67% (-2.9) DD 4.89 | alone: n  55 win  60% avg +0.16%
+    to bar 15 depth 0.10% exit 1.5R size 0.50 any-day   CONT n  40 ( 40 days) win  60% avg +0.11% halves   +3.8/  +0.8 | acct +0.493 (+0.006) win  68% (-2.0) DD 3.82 | alone: n  55 win  60% avg +0.08%
+    to bar 15 depth 0.10% exit 1.5R size 0.50 idle-days CONT n  30 ( 30 days) win  53% avg +0.06% halves   +1.6/  +0.1 | acct +0.477 (-0.010) win  67% (-2.9) DD 3.82 | alone: n  55 win  60% avg +0.08%
+    to bar 15 depth 0.10% exit 1.5R size 0.33 any-day   CONT n  40 ( 40 days) win  60% avg +0.08% halves   +2.5/  +0.5 | acct +0.484 (-0.003) win  68% (-2.0) DD 3.46 | alone: n  55 win  60% avg +0.05%
+    to bar 15 depth 0.10% exit 1.5R size 0.33 idle-days CONT n  30 ( 30 days) win  53% avg +0.04% halves   +1.1/  +0.1 | acct +0.473 (-0.014) win  67% (-2.9) DD 3.46 | alone: n  55 win  60% avg +0.05%
+    to bar 15 depth 0.10% exit 3R size 1.00 any-day   CONT n  40 ( 40 days) win  60% avg +0.27% halves  +12.5/  -1.7 | acct +0.528 (+0.041) win  68% (-2.0) DD 4.89 | alone: n  55 win  60% avg +0.19%
+    to bar 15 depth 0.10% exit 3R size 1.00 idle-days CONT n  30 ( 30 days) win  53% avg +0.14% halves   +6.2/  -1.9 | acct +0.491 (+0.004) win  67% (-2.9) DD 4.89 | alone: n  55 win  60% avg +0.19%
+    to bar 15 depth 0.10% exit 3R size 0.50 any-day   CONT n  40 ( 40 days) win  60% avg +0.13% halves   +6.3/  -0.9 | acct +0.497 (+0.011) win  68% (-2.0) DD 3.82 | alone: n  55 win  60% avg +0.09%
+    to bar 15 depth 0.10% exit 3R size 0.50 idle-days CONT n  30 ( 30 days) win  53% avg +0.07% halves   +3.1/  -0.9 | acct +0.479 (-0.008) win  67% (-2.9) DD 3.82 | alone: n  55 win  60% avg +0.09%
+    to bar 15 depth 0.10% exit 3R size 0.33 any-day   CONT n  40 ( 40 days) win  60% avg +0.09% halves   +4.1/  -0.6 | acct +0.487 (+0.000) win  68% (-2.0) DD 3.46 | alone: n  55 win  60% avg +0.06%
+    to bar 15 depth 0.10% exit 3R size 0.33 idle-days CONT n  30 ( 30 days) win  53% avg +0.05% halves   +2.0/  -0.6 | acct +0.475 (-0.012) win  67% (-2.9) DD 3.46 | alone: n  55 win  60% avg +0.06%
+    to bar 15 depth 0.20% exit 2R size 1.00 any-day   CONT n  25 ( 25 days) win  72% avg +0.41% halves  +11.9/  -1.6 | acct +0.549 (+0.062) win  72% (+2.0) DD 3.54 | alone: n  38 win  68% avg +0.19%
+    to bar 15 depth 0.20% exit 2R size 1.00 idle-days CONT n  17 ( 17 days) win  71% avg +0.50% halves  +10.2/  -1.7 | acct +0.539 (+0.052) win  72% (+1.8) DD 3.15 | alone: n  38 win  68% avg +0.19%
+    to bar 15 depth 0.20% exit 2R size 0.50 any-day   CONT n  25 ( 25 days) win  72% avg +0.21% halves   +5.9/  -0.8 | acct +0.520 (+0.033) win  72% (+2.0) DD 2.77 | alone: n  38 win  68% avg +0.09%
+    to bar 15 depth 0.20% exit 2R size 0.50 idle-days CONT n  17 ( 17 days) win  71% avg +0.25% halves   +5.1/  -0.9 | acct +0.514 (+0.028) win  72% (+1.8) DD 2.69 | alone: n  38 win  68% avg +0.09%
+    to bar 15 depth 0.20% exit 2R size 0.33 any-day   CONT n  25 ( 25 days) win  72% avg +0.14% halves   +3.9/  -0.5 | acct +0.510 (+0.023) win  72% (+2.0) DD 2.72 | alone: n  38 win  68% avg +0.06%
+    to bar 15 depth 0.20% exit 2R size 0.33 idle-days CONT n  17 ( 17 days) win  71% avg +0.16% halves   +3.4/  -0.6 | acct +0.506 (+0.019) win  72% (+1.8) DD 2.72 | alone: n  38 win  68% avg +0.06%
+    to bar 15 depth 0.20% exit 1.5R size 1.00 any-day   CONT n  25 ( 25 days) win  72% avg +0.57% halves  +12.6/  +1.6 | acct +0.571 (+0.084) win  72% (+2.0) DD 3.54 | alone: n  38 win  68% avg +0.30%
+ADD to bar 15 depth 0.20% exit 1.5R size 1.00 idle-days CONT n  17 ( 17 days) win  71% avg +0.69% halves  +11.3/  +0.4 | acct +0.557 (+0.070) win  72% (+1.8) DD 3.15 | alone: n  38 win  68% avg +0.30%
+ADD to bar 15 depth 0.20% exit 1.5R size 0.50 any-day   CONT n  25 ( 25 days) win  72% avg +0.28% halves   +6.3/  +0.8 | acct +0.531 (+0.044) win  72% (+2.0) DD 2.77 | alone: n  38 win  68% avg +0.15%
+ADD to bar 15 depth 0.20% exit 1.5R size 0.50 idle-days CONT n  17 ( 17 days) win  71% avg +0.35% halves   +5.7/  +0.2 | acct +0.524 (+0.037) win  72% (+1.8) DD 2.69 | alone: n  38 win  68% avg +0.15%
+ADD to bar 15 depth 0.20% exit 1.5R size 0.33 any-day   CONT n  25 ( 25 days) win  72% avg +0.19% halves   +4.1/  +0.5 | acct +0.517 (+0.030) win  72% (+2.0) DD 2.72 | alone: n  38 win  68% avg +0.10%
+ADD to bar 15 depth 0.20% exit 1.5R size 0.33 idle-days CONT n  17 ( 17 days) win  71% avg +0.23% halves   +3.7/  +0.1 | acct +0.512 (+0.025) win  72% (+1.8) DD 2.72 | alone: n  38 win  68% avg +0.10%
+    to bar 15 depth 0.20% exit 3R size 1.00 any-day   CONT n  25 ( 25 days) win  72% avg +0.55% halves  +15.4/  -1.6 | acct +0.569 (+0.082) win  72% (+2.0) DD 3.54 | alone: n  38 win  68% avg +0.28%
+    to bar 15 depth 0.20% exit 3R size 1.00 idle-days CONT n  17 ( 17 days) win  71% avg +0.70% halves  +13.6/  -1.7 | acct +0.558 (+0.071) win  72% (+1.8) DD 3.15 | alone: n  38 win  68% avg +0.28%
+    to bar 15 depth 0.20% exit 3R size 0.50 any-day   CONT n  25 ( 25 days) win  72% avg +0.28% halves   +7.7/  -0.8 | acct +0.530 (+0.043) win  72% (+2.0) DD 2.77 | alone: n  38 win  68% avg +0.14%
+    to bar 15 depth 0.20% exit 3R size 0.50 idle-days CONT n  17 ( 17 days) win  71% avg +0.35% halves   +6.8/  -0.9 | acct +0.524 (+0.037) win  72% (+1.8) DD 2.69 | alone: n  38 win  68% avg +0.14%
+    to bar 15 depth 0.20% exit 3R size 0.33 any-day   CONT n  25 ( 25 days) win  72% avg +0.18% halves   +5.1/  -0.5 | acct +0.516 (+0.029) win  72% (+2.0) DD 2.72 | alone: n  38 win  68% avg +0.09%
+    to bar 15 depth 0.20% exit 3R size 0.33 idle-days CONT n  17 ( 17 days) win  71% avg +0.23% halves   +4.5/  -0.6 | acct +0.513 (+0.026) win  72% (+1.8) DD 2.72 | alone: n  38 win  68% avg +0.09%
+    to bar 18 depth 0.10% exit 2R size 1.00 any-day   CONT n  47 ( 46 days) win  55% avg +0.11% halves   +7.1/  -1.9 | acct +0.498 (+0.011) win  66% (-3.8) DD 5.15 | alone: n  64 win  55% avg +0.03%
+    to bar 18 depth 0.10% exit 2R size 1.00 idle-days CONT n  35 ( 35 days) win  49% avg -0.00% halves   +3.2/  -3.3 | acct +0.472 (-0.015) win  65% (-4.4) DD 4.89 | alone: n  63 win  56% avg +0.04%
+    to bar 18 depth 0.10% exit 2R size 0.50 any-day   CONT n  47 ( 46 days) win  55% avg +0.06% halves   +3.6/  -1.0 | acct +0.483 (-0.004) win  66% (-3.8) DD 3.91 | alone: n  64 win  55% avg +0.01%
+    to bar 18 depth 0.10% exit 2R size 0.50 idle-days CONT n  35 ( 35 days) win  49% avg -0.00% halves   +1.6/  -1.7 | acct +0.472 (-0.015) win  65% (-4.4) DD 3.82 | alone: n  63 win  56% avg +0.02%
+    to bar 18 depth 0.10% exit 2R size 0.33 any-day   CONT n  47 ( 46 days) win  55% avg +0.04% halves   +2.3/  -0.6 | acct +0.478 (-0.009) win  66% (-3.8) DD 3.49 | alone: n  64 win  55% avg +0.01%
+    to bar 18 depth 0.10% exit 2R size 0.33 idle-days CONT n  35 ( 35 days) win  49% avg -0.00% halves   +1.1/  -1.1 | acct +0.472 (-0.015) win  65% (-4.4) DD 3.46 | alone: n  63 win  56% avg +0.01%
+    to bar 18 depth 0.10% exit 1.5R size 1.00 any-day   CONT n  47 ( 46 days) win  55% avg +0.13% halves   +6.1/  +0.1 | acct +0.503 (+0.016) win  66% (-3.8) DD 5.15 | alone: n  64 win  55% avg +0.05%
+    to bar 18 depth 0.10% exit 1.5R size 1.00 idle-days CONT n  35 ( 35 days) win  49% avg +0.03% halves   +2.2/  -1.2 | acct +0.478 (-0.009) win  65% (-4.4) DD 4.89 | alone: n  63 win  56% avg +0.06%
+    to bar 18 depth 0.10% exit 1.5R size 0.50 any-day   CONT n  47 ( 46 days) win  55% avg +0.07% halves   +3.1/  +0.0 | acct +0.486 (-0.001) win  66% (-3.8) DD 3.91 | alone: n  64 win  55% avg +0.02%
+    to bar 18 depth 0.10% exit 1.5R size 0.50 idle-days CONT n  35 ( 35 days) win  49% avg +0.01% halves   +1.1/  -0.6 | acct +0.475 (-0.012) win  65% (-4.4) DD 3.82 | alone: n  63 win  56% avg +0.03%
+    to bar 18 depth 0.10% exit 1.5R size 0.33 any-day   CONT n  47 ( 46 days) win  55% avg +0.04% halves   +2.0/  +0.0 | acct +0.480 (-0.007) win  66% (-3.8) DD 3.49 | alone: n  64 win  55% avg +0.02%
+    to bar 18 depth 0.10% exit 1.5R size 0.33 idle-days CONT n  35 ( 35 days) win  49% avg +0.01% halves   +0.7/  -0.4 | acct +0.474 (-0.013) win  65% (-4.4) DD 3.46 | alone: n  63 win  56% avg +0.02%
+    to bar 18 depth 0.10% exit 3R size 1.00 any-day   CONT n  47 ( 46 days) win  55% avg +0.14% halves  +10.0/  -3.2 | acct +0.506 (+0.019) win  66% (-3.8) DD 5.15 | alone: n  64 win  55% avg +0.06%
+    to bar 18 depth 0.10% exit 3R size 1.00 idle-days CONT n  35 ( 35 days) win  49% avg +0.02% halves   +4.1/  -3.3 | acct +0.476 (-0.011) win  65% (-4.4) DD 4.89 | alone: n  63 win  56% avg +0.07%
+    to bar 18 depth 0.10% exit 3R size 0.50 any-day   CONT n  47 ( 46 days) win  55% avg +0.07% halves   +5.0/  -1.6 | acct +0.487 (+0.000) win  66% (-3.8) DD 3.91 | alone: n  64 win  55% avg +0.03%
+    to bar 18 depth 0.10% exit 3R size 0.50 idle-days CONT n  35 ( 35 days) win  49% avg +0.01% halves   +2.0/  -1.7 | acct +0.474 (-0.013) win  65% (-4.4) DD 3.82 | alone: n  63 win  56% avg +0.03%
+    to bar 18 depth 0.10% exit 3R size 0.33 any-day   CONT n  47 ( 46 days) win  55% avg +0.05% halves   +3.3/  -1.1 | acct +0.481 (-0.006) win  66% (-3.8) DD 3.49 | alone: n  64 win  55% avg +0.02%
+    to bar 18 depth 0.10% exit 3R size 0.33 idle-days CONT n  35 ( 35 days) win  49% avg +0.01% halves   +1.3/  -1.1 | acct +0.474 (-0.013) win  65% (-4.4) DD 3.46 | alone: n  63 win  56% avg +0.02%
+    to bar 18 depth 0.20% exit 2R size 1.00 any-day   CONT n  29 ( 29 days) win  66% avg +0.25% halves  +12.2/  -5.0 | acct +0.523 (+0.036) win  70% (+0.2) DD 4.59 | alone: n  43 win  63% avg +0.10%
+    to bar 18 depth 0.20% exit 2R size 1.00 idle-days CONT n  21 ( 21 days) win  62% avg +0.26% halves  +10.5/  -5.1 | acct +0.512 (+0.025) win  70% (-0.1) DD 3.25 | alone: n  43 win  63% avg +0.10%
+    to bar 18 depth 0.20% exit 2R size 0.50 any-day   CONT n  29 ( 29 days) win  66% avg +0.12% halves   +6.1/  -2.5 | acct +0.502 (+0.015) win  70% (+0.2) DD 2.80 | alone: n  43 win  63% avg +0.05%
+    to bar 18 depth 0.20% exit 2R size 0.50 idle-days CONT n  21 ( 21 days) win  62% avg +0.13% halves   +5.3/  -2.5 | acct +0.497 (+0.010) win  70% (-0.1) DD 2.69 | alone: n  43 win  63% avg +0.05%
+    to bar 18 depth 0.20% exit 2R size 0.33 any-day   CONT n  29 ( 29 days) win  66% avg +0.08% halves   +4.0/  -1.6 | acct +0.495 (+0.008) win  70% (+0.2) DD 2.72 | alone: n  43 win  63% avg +0.03%
+    to bar 18 depth 0.20% exit 2R size 0.33 idle-days CONT n  21 ( 21 days) win  62% avg +0.09% halves   +3.5/  -1.7 | acct +0.492 (+0.005) win  70% (-0.1) DD 2.72 | alone: n  43 win  63% avg +0.03%
+    to bar 18 depth 0.20% exit 1.5R size 1.00 any-day   CONT n  29 ( 29 days) win  66% avg +0.42% halves  +13.9/  -1.8 | acct +0.551 (+0.064) win  70% (+0.2) DD 4.59 | alone: n  43 win  63% avg +0.22%
+    to bar 18 depth 0.20% exit 1.5R size 1.00 idle-days CONT n  21 ( 21 days) win  62% avg +0.47% halves  +12.7/  -2.9 | acct +0.537 (+0.050) win  70% (-0.1) DD 3.25 | alone: n  43 win  63% avg +0.22%
+    to bar 18 depth 0.20% exit 1.5R size 0.50 any-day   CONT n  29 ( 29 days) win  66% avg +0.21% halves   +7.0/  -0.9 | acct +0.516 (+0.029) win  70% (+0.2) DD 2.80 | alone: n  43 win  63% avg +0.11%
+    to bar 18 depth 0.20% exit 1.5R size 0.50 idle-days CONT n  21 ( 21 days) win  62% avg +0.23% halves   +6.4/  -1.5 | acct +0.509 (+0.022) win  70% (-0.1) DD 2.69 | alone: n  43 win  63% avg +0.11%
+    to bar 18 depth 0.20% exit 1.5R size 0.33 any-day   CONT n  29 ( 29 days) win  66% avg +0.14% halves   +4.6/  -0.6 | acct +0.504 (+0.017) win  70% (+0.2) DD 2.72 | alone: n  43 win  63% avg +0.07%
+    to bar 18 depth 0.20% exit 1.5R size 0.33 idle-days CONT n  21 ( 21 days) win  62% avg +0.15% halves   +4.2/  -1.0 | acct +0.500 (+0.013) win  70% (-0.1) DD 2.72 | alone: n  43 win  63% avg +0.07%
+    to bar 18 depth 0.20% exit 3R size 1.00 any-day   CONT n  29 ( 29 days) win  66% avg +0.37% halves  +15.7/  -5.0 | acct +0.543 (+0.056) win  70% (+0.2) DD 4.59 | alone: n  43 win  63% avg +0.17%
+    to bar 18 depth 0.20% exit 3R size 1.00 idle-days CONT n  21 ( 21 days) win  62% avg +0.42% halves  +13.9/  -5.1 | acct +0.532 (+0.045) win  70% (-0.1) DD 3.25 | alone: n  43 win  63% avg +0.17%
+    to bar 18 depth 0.20% exit 3R size 0.50 any-day   CONT n  29 ( 29 days) win  66% avg +0.19% halves   +7.9/  -2.5 | acct +0.512 (+0.025) win  70% (+0.2) DD 2.80 | alone: n  43 win  63% avg +0.09%
+    to bar 18 depth 0.20% exit 3R size 0.50 idle-days CONT n  21 ( 21 days) win  62% avg +0.21% halves   +7.0/  -2.5 | acct +0.507 (+0.020) win  70% (-0.1) DD 2.69 | alone: n  43 win  63% avg +0.09%
+    to bar 18 depth 0.20% exit 3R size 0.33 any-day   CONT n  29 ( 29 days) win  66% avg +0.12% halves   +5.2/  -1.6 | acct +0.502 (+0.015) win  70% (+0.2) DD 2.72 | alone: n  43 win  63% avg +0.06%
+    to bar 18 depth 0.20% exit 3R size 0.33 idle-days CONT n  21 ( 21 days) win  62% avg +0.14% halves   +4.6/  -1.7 | acct +0.498 (+0.011) win  70% (-0.1) DD 2.72 | alone: n  43 win  63% avg +0.06%
+    to bar 24 depth 0.10% exit 2R size 1.00 any-day   CONT n  55 ( 54 days) win  56% avg +0.18% halves  +11.8/  -1.7 | acct +0.526 (+0.039) win  66% (-4.0) DD 4.89 | alone: n  74 win  55% avg +0.09%
+    to bar 24 depth 0.10% exit 2R size 1.00 idle-days CONT n  41 ( 41 days) win  51% avg +0.13% halves   +6.5/  -1.2 | acct +0.503 (+0.016) win  66% (-4.3) DD 4.89 | alone: n  72 win  57% avg +0.13%
+    to bar 24 depth 0.10% exit 2R size 0.50 any-day   CONT n  55 ( 54 days) win  56% avg +0.09% halves   +5.9/  -0.9 | acct +0.497 (+0.010) win  66% (-4.0) DD 3.82 | alone: n  74 win  55% avg +0.04%
+    to bar 24 depth 0.10% exit 2R size 0.50 idle-days CONT n  41 ( 41 days) win  51% avg +0.07% halves   +3.3/  -0.6 | acct +0.488 (+0.001) win  66% (-4.3) DD 3.82 | alone: n  72 win  57% avg +0.06%
+    to bar 24 depth 0.10% exit 2R size 0.33 any-day   CONT n  55 ( 54 days) win  56% avg +0.06% halves   +3.9/  -0.6 | acct +0.487 (+0.000) win  66% (-4.0) DD 3.46 | alone: n  74 win  55% avg +0.03%
+    to bar 24 depth 0.10% exit 2R size 0.33 idle-days CONT n  41 ( 41 days) win  51% avg +0.04% halves   +2.1/  -0.4 | acct +0.482 (-0.005) win  66% (-4.3) DD 3.46 | alone: n  72 win  57% avg +0.04%
+    to bar 24 depth 0.10% exit 1.5R size 1.00 any-day   CONT n  55 ( 54 days) win  56% avg +0.20% halves  +10.6/  +0.3 | acct +0.530 (+0.043) win  66% (-4.0) DD 4.89 | alone: n  74 win  55% avg +0.11%
+    to bar 24 depth 0.10% exit 1.5R size 1.00 idle-days CONT n  41 ( 41 days) win  51% avg +0.15% halves   +5.2/  +1.0 | acct +0.507 (+0.020) win  66% (-4.3) DD 4.89 | alone: n  72 win  57% avg +0.15%
+    to bar 24 depth 0.10% exit 1.5R size 0.50 any-day   CONT n  55 ( 54 days) win  56% avg +0.10% halves   +5.3/  +0.1 | acct +0.499 (+0.012) win  66% (-4.0) DD 3.82 | alone: n  74 win  55% avg +0.06%
+    to bar 24 depth 0.10% exit 1.5R size 0.50 idle-days CONT n  41 ( 41 days) win  51% avg +0.07% halves   +2.6/  +0.5 | acct +0.490 (+0.003) win  66% (-4.3) DD 3.82 | alone: n  72 win  57% avg +0.08%
+    to bar 24 depth 0.10% exit 1.5R size 0.33 any-day   CONT n  55 ( 54 days) win  56% avg +0.06% halves   +3.5/  +0.1 | acct +0.488 (+0.001) win  66% (-4.0) DD 3.46 | alone: n  74 win  55% avg +0.04%
+    to bar 24 depth 0.10% exit 1.5R size 0.33 idle-days CONT n  41 ( 41 days) win  51% avg +0.05% halves   +1.7/  +0.3 | acct +0.484 (-0.003) win  66% (-4.3) DD 3.46 | alone: n  72 win  57% avg +0.05%
+    to bar 24 depth 0.10% exit 3R size 1.00 any-day   CONT n  55 ( 54 days) win  56% avg +0.22% halves  +15.4/  -3.0 | acct +0.539 (+0.052) win  66% (-4.0) DD 4.89 | alone: n  74 win  55% avg +0.12%
+    to bar 24 depth 0.10% exit 3R size 1.00 idle-days CONT n  41 ( 41 days) win  51% avg +0.17% halves   +8.0/  -1.2 | acct +0.512 (+0.025) win  66% (-4.3) DD 4.89 | alone: n  72 win  57% avg +0.16%
+    to bar 24 depth 0.10% exit 3R size 0.50 any-day   CONT n  55 ( 54 days) win  56% avg +0.11% halves   +7.7/  -1.5 | acct +0.503 (+0.016) win  66% (-4.0) DD 3.82 | alone: n  74 win  55% avg +0.06%
+    to bar 24 depth 0.10% exit 3R size 0.50 idle-days CONT n  41 ( 41 days) win  51% avg +0.08% halves   +4.0/  -0.6 | acct +0.492 (+0.005) win  66% (-4.3) DD 3.82 | alone: n  72 win  57% avg +0.08%
+    to bar 24 depth 0.10% exit 3R size 0.33 any-day   CONT n  55 ( 54 days) win  56% avg +0.07% halves   +5.1/  -1.0 | acct +0.491 (+0.004) win  66% (-4.0) DD 3.46 | alone: n  74 win  55% avg +0.04%
+    to bar 24 depth 0.10% exit 3R size 0.33 idle-days CONT n  41 ( 41 days) win  51% avg +0.06% halves   +2.7/  -0.4 | acct +0.485 (-0.002) win  66% (-4.3) DD 3.46 | alone: n  72 win  57% avg +0.05%
+    to bar 24 depth 0.20% exit 2R size 1.00 any-day   CONT n  39 ( 39 days) win  64% avg +0.26% halves  +15.2/  -5.0 | acct +0.535 (+0.048) win  69% (-0.6) DD 4.59 | alone: n  54 win  61% avg +0.14%
+    to bar 24 depth 0.20% exit 2R size 1.00 idle-days CONT n  28 ( 28 days) win  64% avg +0.32% halves  +13.0/  -4.1 | acct +0.533 (+0.046) win  70% (+0.0) DD 3.25 | alone: n  53 win  62% avg +0.16%
+    to bar 24 depth 0.20% exit 2R size 0.50 any-day   CONT n  39 ( 39 days) win  64% avg +0.13% halves   +7.6/  -2.5 | acct +0.506 (+0.019) win  69% (-0.6) DD 2.80 | alone: n  54 win  61% avg +0.07%
+    to bar 24 depth 0.20% exit 2R size 0.50 idle-days CONT n  28 ( 28 days) win  64% avg +0.16% halves   +6.5/  -2.0 | acct +0.507 (+0.020) win  70% (+0.0) DD 2.69 | alone: n  53 win  62% avg +0.08%
+    to bar 24 depth 0.20% exit 2R size 0.33 any-day   CONT n  39 ( 39 days) win  64% avg +0.09% halves   +5.0/  -1.7 | acct +0.496 (+0.009) win  69% (-0.6) DD 2.72 | alone: n  54 win  61% avg +0.05%
+    to bar 24 depth 0.20% exit 2R size 0.33 idle-days CONT n  28 ( 28 days) win  64% avg +0.11% halves   +4.3/  -1.3 | acct +0.498 (+0.011) win  70% (+0.0) DD 2.72 | alone: n  53 win  62% avg +0.05%
+    to bar 24 depth 0.20% exit 1.5R size 1.00 any-day   CONT n  39 ( 39 days) win  64% avg +0.38% halves  +16.6/  -1.8 | acct +0.561 (+0.074) win  69% (-0.6) DD 4.59 | alone: n  54 win  61% avg +0.24%
+    to bar 24 depth 0.20% exit 1.5R size 1.00 idle-days CONT n  28 ( 28 days) win  64% avg +0.46% halves  +14.9/  -1.9 | acct +0.555 (+0.068) win  70% (+0.0) DD 3.25 | alone: n  53 win  62% avg +0.27%
+    to bar 24 depth 0.20% exit 1.5R size 0.50 any-day   CONT n  39 ( 39 days) win  64% avg +0.19% halves   +8.3/  -0.9 | acct +0.519 (+0.032) win  69% (-0.6) DD 2.80 | alone: n  54 win  61% avg +0.12%
+    to bar 24 depth 0.20% exit 1.5R size 0.50 idle-days CONT n  28 ( 28 days) win  64% avg +0.23% halves   +7.4/  -1.0 | acct +0.518 (+0.031) win  70% (+0.0) DD 2.69 | alone: n  53 win  62% avg +0.13%
+    to bar 24 depth 0.20% exit 1.5R size 0.33 any-day   CONT n  39 ( 39 days) win  64% avg +0.13% halves   +5.5/  -0.6 | acct +0.505 (+0.018) win  69% (-0.6) DD 2.72 | alone: n  54 win  61% avg +0.08%
+    to bar 24 depth 0.20% exit 1.5R size 0.33 idle-days CONT n  28 ( 28 days) win  64% avg +0.15% halves   +4.9/  -0.6 | acct +0.506 (+0.019) win  70% (+0.0) DD 2.72 | alone: n  53 win  62% avg +0.09%
+    to bar 24 depth 0.20% exit 3R size 1.00 any-day   CONT n  39 ( 39 days) win  64% avg +0.36% halves  +19.1/  -5.0 | acct +0.557 (+0.071) win  69% (-0.6) DD 4.59 | alone: n  54 win  61% avg +0.21%
+    to bar 24 depth 0.20% exit 3R size 1.00 idle-days CONT n  28 ( 28 days) win  64% avg +0.46% halves  +16.8/  -4.1 | acct +0.554 (+0.067) win  70% (+0.0) DD 3.25 | alone: n  53 win  62% avg +0.23%
+    to bar 24 depth 0.20% exit 3R size 0.50 any-day   CONT n  39 ( 39 days) win  64% avg +0.18% halves   +9.6/  -2.5 | acct +0.517 (+0.030) win  69% (-0.6) DD 2.80 | alone: n  54 win  61% avg +0.10%
+    to bar 24 depth 0.20% exit 3R size 0.50 idle-days CONT n  28 ( 28 days) win  64% avg +0.23% halves   +8.4/  -2.0 | acct +0.518 (+0.031) win  70% (+0.0) DD 2.69 | alone: n  53 win  62% avg +0.11%
+    to bar 24 depth 0.20% exit 3R size 0.33 any-day   CONT n  39 ( 39 days) win  64% avg +0.12% halves   +6.3/  -1.7 | acct +0.504 (+0.017) win  69% (-0.6) DD 2.72 | alone: n  54 win  61% avg +0.07%
+    to bar 24 depth 0.20% exit 3R size 0.33 idle-days CONT n  28 ( 28 days) win  64% avg +0.15% halves   +5.6/  -1.3 | acct +0.505 (+0.019) win  70% (+0.0) DD 2.72 | alone: n  53 win  62% avg +0.08%
+
+5 of 108 pass the ADD bar
+
+OTHER EXITS AND A PLAIN BREAK ENTRY
+
+0 of 0 pass the ADD bar
+
+Massive before 2026-03 (never fitted): rules in force -0.024%/day win 49% DD 34.6% n 599
+  to bar 24 depth 0.20% exit 1.5R size 1.00 any-day   CONT n 299 win  53% avg -0.02% | acct -0.038 (-0.014) win  50% (+0.8) DD  62.7% | alone n 360 win  52% avg -0.09%
+  to bar 24 depth 0.20% exit 3R size 1.00 any-day   CONT n 299 win  53% avg +0.01% | acct -0.029 (-0.005) win  50% (+0.8) DD  64.3% | alone n 360 win  52% avg -0.08%
+  to bar 15 depth 0.10% exit 3R size 1.00 any-day   CONT n 275 win  54% avg -0.08% | acct -0.054 (-0.029) win  50% (+0.8) DD  54.0% | alone n 346 win  53% avg -0.15%
+  to bar 24 depth 0.20% exit 2R size 1.00 any-day   CONT n 299 win  53% avg -0.01% | acct -0.035 (-0.011) win  50% (+0.8) DD  64.3% | alone n 360 win  52% avg -0.09%
+  to bar 15 depth 0.10% exit 2R size 1.00 any-day   CONT n 275 win  54% avg -0.11% | acct -0.060 (-0.036) win  50% (+0.8) DD  56.4% | alone n 346 win  53% avg -0.16%
+  to bar 15 depth 0.10% exit 1.5R size 1.00 any-day   CONT n 275 win  54% avg -0.11% | acct -0.061 (-0.037) win  50% (+0.8) DD  55.9% | alone n 346 win  53% avg -0.17%
+
+Massive 2026-03 on: rules in force +0.384%/day win 66% DD 3.9% n 95
+  to bar 24 depth 0.20% exit 1.5R size 1.00 any-day   CONT n  39 win  64% avg +0.25% | acct +0.447 (+0.063) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.13%
+  to bar 24 depth 0.20% exit 3R size 1.00 any-day   CONT n  39 win  64% avg +0.23% | acct +0.444 (+0.060) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.11%
+  to bar 15 depth 0.10% exit 3R size 1.00 any-day   CONT n  38 win  53% avg +0.14% | acct +0.408 (+0.025) win  63% (-3.3) DD   6.0% | alone n  53 win  55% avg +0.08%
+  to bar 24 depth 0.20% exit 2R size 1.00 any-day   CONT n  39 win  64% avg +0.17% | acct +0.430 (+0.046) win  66% (+0.1) DD   4.5% | alone n  55 win  62% avg +0.08%
+  to bar 15 depth 0.10% exit 2R size 1.00 any-day   CONT n  38 win  53% avg +0.14% | acct +0.408 (+0.024) win  63% (-3.3) DD   6.0% | alone n  53 win  55% avg +0.07%
+  to bar 15 depth 0.10% exit 1.5R size 1.00 any-day   CONT n  38 win  53% avg +0.14% | acct +0.409 (+0.025) win  63% (-3.3) DD   6.0% | alone n  53 win  55% avg +0.08%
