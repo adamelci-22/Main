@@ -1,0 +1,31 @@
+2026-03-06 QQQ P k 8 S 600.12 K 600 R 0.41% iv 0.24 fill 3.35 exit 2.22 stop      ret  -33.7% qty 0 usd      +0 eq       0
+2026-03-10 SPY C k 9 S 675.54 K 676 R 0.12% iv 0.21 fill 3.09 exit 3.78 target    ret  +22.5% qty 0 usd      +0 eq       0
+2026-03-11 QQQ P k 8 S 610.27 K 610 R 0.35% iv 0.26 fill 3.58 exit 5.18 target    ret  +44.7% qty 0 usd      +0 eq       0
+2026-03-24 SPY P k10 S 652.56 K 653 R 0.16% iv 0.22 fill 3.58 exit 3.02 early_cut ret  -15.6% qty 0 usd      +0 eq       0
+2026-04-15 QQQ P k 8 S 630.17 K 630 R 0.07% iv 0.19 fill 2.72 exit 2.37 stop      ret  -13.0% qty 1 usd     -35 eq     465
+2026-05-01 SPY P k 8 S 724.16 K 724 R 0.07% iv 0.15 fill 2.43 exit 2.11 stop      ret  -13.2% qty 1 usd     -32 eq     433
+2026-05-04 QQQ P k10 S 675.90 K 676 R 0.02% iv 0.18 fill 2.85 exit 2.95 target    ret   +3.6% qty 0 usd      +0 eq       0
+2026-05-05 SPY P k 9 S 722.28 K 722 R 0.15% iv 0.15 fill 2.47 exit 1.85 stop      ret  -25.2% qty 0 usd      +0 eq       0
+2026-05-06 SPY P k10 S 729.75 K 730 R 0.07% iv 0.14 fill 2.61 exit 2.30 stop      ret  -11.9% qty 0 usd      +0 eq       0
+2026-05-08 SPY P k 8 S 736.57 K 737 R 0.04% iv 0.15 fill 2.83 exit 2.61 stop      ret   -7.8% qty 0 usd      +0 eq       0
+2026-05-20 QQQ C k10 S 707.57 K 708 R 0.53% iv 0.18 fill 2.85 exit 3.22 time      ret  +13.0% qty 0 usd      +0 eq       0
+2026-05-20 SPY C k10 S 737.30 K 737 R 0.46% iv 0.15 fill 2.81 exit 3.44 time      ret  +22.4% qty 0 usd      +0 eq       0
+2026-05-21 QQQ P k 9 S 710.13 K 710 R 0.19% iv 0.18 fill 2.95 exit 4.40 target    ret  +49.4% qty 0 usd      +0 eq       0
+2026-05-21 SPY P k 9 S 739.40 K 739 R 0.14% iv 0.15 fill 2.42 exit 3.09 target    ret  +27.6% qty 0 usd      +0 eq       0
+2026-06-10 SPY P k 9 S 736.58 K 737 R 0.14% iv 0.17 fill 3.19 exit 2.59 stop      ret  -18.9% qty 0 usd      +0 eq       0
+2026-06-22 QQQ P k 9 S 744.06 K 744 R 0.18% iv 0.18 fill 3.11 exit 4.51 target    ret  +45.1% qty 0 usd      +0 eq       0
+2026-06-22 SPY P k 9 S 749.27 K 749 R 0.12% iv 0.15 fill 2.50 exit 3.35 target    ret  +33.9% qty 0 usd      +0 eq       0
+2026-06-30 SPY P k 8 S 743.57 K 744 R 0.13% iv 0.15 fill 2.89 exit 2.37 early_cut ret  -17.8% qty 0 usd      +0 eq       0
+2026-07-21 QQQ C k 9 S 704.35 K 704 R 0.22% iv 0.18 fill 3.15 exit 4.55 target    ret  +44.5% qty 0 usd      +0 eq       0
+2026-07-22 SPY P k 8 S 748.54 K 749 R 0.11% iv 0.15 fill 2.90 exit 3.60 target    ret  +24.4% qty 0 usd      +0 eq       0
+2026-08-07 SPY C k 8 S 770.48 K 770 R 0.01% iv 0.13 fill 2.65 exit 2.55 stop      ret   -4.0% qty 0 usd      +0 eq       0
+2026-08-12 SPY C k 8 S 772.37 K 772 R 0.06% iv 0.13 fill 2.60 exit 2.17 stop      ret  -16.6% qty 0 usd      +0 eq       0
+2026-08-19 QQQ C k10 S 713.63 K 714 R 0.14% iv 0.16 fill 2.53 exit 3.50 target    ret  +38.5% qty 0 usd      +0 eq       0
+2026-08-28 QQQ C k10 S 719.21 K 719 R 0.34% iv 0.15 fill 2.60 exit 5.56 target    ret +113.9% qty 0 usd      +0 eq       0
+2026-08-31 SPY C k 9 S 765.80 K 766 R 0.06% iv 0.13 fill 2.25 exit 1.95 stop      ret  -13.5% qty 1 usd     -30 eq     402
+2026-09-03 SPY C k 9 S 768.33 K 768 R 0.10% iv 0.13 fill 2.53 exit 1.82 stop      ret  -28.0% qty 0 usd      +0 eq       0
+2026-09-08 QQQ C k 9 S 716.50 K 716 R 0.13% iv 0.16 fill 2.95 exit 3.74 target    ret  +26.8% qty 0 usd      +0 eq       0
+2026-09-14 SPY P k 9 S 760.08 K 760 R 0.14% iv 0.15 fill 2.64 exit 3.45 target    ret  +30.8% qty 0 usd      +0 eq       0
+2026-10-06 QQQ P k 9 S 761.35 K 761 R 0.10% iv 0.16 fill 2.68 exit 3.27 target    ret  +22.1% qty 0 usd      +0 eq       0
+2026-10-19 QQQ C k 8 S 717.91 K 718 R 0.19% iv 0.19 fill 3.18 exit 4.59 target    ret  +44.2% qty 0 usd      +0 eq       0
+base                                         sig  30 taken   3 skip 27 | win  57% avg  +12.9% med  +17.5% PF 2.77 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day

@@ -1,0 +1,8 @@
+{
+  "mode": "paper",
+  "bucket_start": 500.0,
+  "bucket": 500.0,
+  "halted": false,
+  "halt_below": 250.0,
+  "note": "Separate 0DTE bucket (governor 2026-11-11: deposit $500, trade only that $500 and its profit). Paper until the governor says live."
+}

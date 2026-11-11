@@ -1,0 +1,46 @@
+Sessions 2026-03-02 .. 2026-11-10 (177). Option prices are modelled (see docstring).
+
+== base: FADE SPY+QQQ, ATM, 2R target, early cut, 13:30 exit, IV x0.9 decay 0.5, spread 0.01, risk 10%, max premium 60% ==
+base                                         sig  30 taken   3 skip 27 | win  57% avg  +12.9% med  +17.5% PF 2.77 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+
+== IV multiplier (the main unknown) ==
+iv x0.6                                      sig  30 taken  10 skip 20 | win  57% avg  +27.4% med  +37.6% PF 3.78 | $500->    347 DD 39.5% H1 -0.17 H2 -0.21 %/day
+iv x0.75                                     sig  30 taken  10 skip 20 | win  57% avg  +18.5% med  +28.3% PF 3.22 | $500->    333 DD 41.7% H1 -0.20 H2 -0.23 %/day
+iv x1.05                                     sig  30 taken   2 skip 28 | win  57% avg   +9.2% med   +6.6% PF 2.40 | $500->    435 DD 13.0% H1 -0.08 H2 -0.08 %/day
+iv x1.2                                      sig  30 taken   0 skip 30 | win  53% avg   +6.5% med   +1.9% PF 2.05 | $500->    500 DD  0.0% H1 +0.00 H2 +0.00 %/day
+iv decay 0.0                                 sig  30 taken   3 skip 27 | win  57% avg  +14.8% med  +22.7% PF 3.36 | $500->    412 DD 17.7% H1 -0.14 H2 -0.07 %/day
+iv decay 0.3                                 sig  30 taken   3 skip 27 | win  57% avg  +13.7% med  +19.7% PF 2.99 | $500->    406 DD 18.8% H1 -0.15 H2 -0.08 %/day
+iv decay 0.7                                 sig  30 taken   4 skip 26 | win  57% avg  +12.2% med  +15.1% PF 2.58 | $500->    367 DD 26.6% H1 -0.25 H2 -0.09 %/day
+
+== costs ==
+half-spread $0.02                            sig  30 taken   3 skip 27 | win  57% avg  +12.2% med  +16.8% PF 2.61 | $500->    396 DD 20.8% H1 -0.17 H2 -0.09 %/day
+half-spread $0.03                            sig  30 taken   3 skip 27 | win  57% avg  +11.4% med  +16.0% PF 2.45 | $500->    390 DD 22.0% H1 -0.18 H2 -0.09 %/day
+half-spread $0.05                            sig  30 taken   3 skip 27 | win  57% avg   +9.9% med  +14.4% PF 2.18 | $500->    378 DD 24.4% H1 -0.20 H2 -0.10 %/day
+
+== tickers ==
+SPY                                          sig  17 taken   4 skip 13 | win  35% avg   -0.6% med  -11.9% PF 0.94 | $500->    363 DD 27.3% H1 -0.15 H2 -0.20 %/day
+QQQ                                          sig  13 taken   2 skip 11 | win  85% avg  +30.7% med  +38.5% PF 9.55 | $500->    524 DD  7.1% H1 -0.08 H2 +0.14 %/day
+IWM                                          sig  16 taken  15 skip  1 | win  62% avg   +8.6% med   +9.7% PF 1.84 | $500->    753 DD 23.7% H1 -0.07 H2 +0.62 %/day
+QQQ+IWM                                      sig  28 taken  17 skip 11 | win  71% avg  +17.8% med  +17.5% PF 3.37 | $500->    630 DD 26.5% H1 -0.13 H2 +0.46 %/day
+SPY+QQQ+IWM                                  sig  46 taken  16 skip 30 | win  59% avg  +11.4% med  +12.9% PF 2.37 | $500->    443 DD 38.4% H1 -0.30 H2 +0.23 %/day
+
+== strike ==
+1 strike OTM                                 sig  30 taken  10 skip 20 | win  57% avg  +12.6% med   +9.0% PF 2.57 | $500->    333 DD 40.7% H1 -0.21 H2 -0.23 %/day
+2 strike OTM                                 sig  30 taken  15 skip 15 | win  53% avg  +11.9% med   +3.3% PF 2.33 | $500->    313 DD 43.6% H1 -0.24 H2 -0.22 %/day
+
+== exits ==
+target 1R                                    sig  30 taken   3 skip 27 | win  60% avg   +6.7% med   +9.5% PF 1.99 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+target 1.5R                                  sig  30 taken   3 skip 27 | win  60% avg   +9.2% med  +14.3% PF 2.36 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+target 3R                                    sig  30 taken   3 skip 27 | win  33% avg   -3.3% med  -13.3% PF 0.82 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+no target (stop/time)                        sig  30 taken   3 skip 27 | win  27% avg   -1.9% med  -14.5% PF 0.90 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+no early cut                                 sig  30 taken   3 skip 27 | win  57% avg  +12.6% med  +17.5% PF 2.65 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+premium +50%                                 sig  30 taken   3 skip 27 | win  40% avg   +6.6% med  -10.5% PF 1.50 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+premium +100%                                sig  30 taken   3 skip 27 | win  33% avg  +11.7% med  -13.1% PF 1.72 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+time exit 12:00                              sig  30 taken   3 skip 27 | win  57% avg  +15.0% med  +22.3% PF 3.06 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+time exit 15:00                              sig  30 taken   3 skip 27 | win  57% avg  +12.7% med  +12.9% PF 2.75 | $500->    402 DD 19.6% H1 -0.16 H2 -0.08 %/day
+
+== sizing ==
+risk 5% max prem 60%                         sig  30 taken   3 skip 27 | win  57% avg  +12.9% med  +17.5% PF 2.77 | $500->    478 DD  6.4% H1 -0.03 H2 -0.02 %/day
+risk 15% max prem 60%                        sig  30 taken   3 skip 27 | win  57% avg  +12.9% med  +17.5% PF 2.77 | $500->    370 DD 25.9% H1 -0.33 H2 +0.00 %/day
+risk 20% max prem 80%                        sig  28 taken  25 skip  3 | win  54% avg  +11.7% med   +8.3% PF 2.49 | $500->   2176 DD 35.7% H1 +0.45 H2 +1.63 %/day
+risk 10% max prem 100%                       sig  30 taken   9 skip 21 | win  57% avg  +12.9% med  +17.5% PF 2.77 | $500->    340 DD 40.3% H1 -0.16 H2 -0.24 %/day

@@ -1,0 +1,1 @@
+date,underlying,type,strike,entry_time,entry_spot,stop,target,qty,entry_bid,entry_ask,fill,exit_time,exit_spot,exit_bid,exit_ask,exit_fill,exit_reason,pnl_usd,ret_pct,model_ret_pct,mode,notes
