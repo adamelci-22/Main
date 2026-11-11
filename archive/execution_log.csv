@@ -57,3 +57,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-10,NVDQ,PULLBACK,buy,entry,12:35,12:35:49,12:35:49,14.18,14.19,0.07,14.14,14.14,,,181,limit GFD at trigger close 14.14 (valid for the 12:35 bar); order 6af355f5; stop 14.02 target 14.24; sized by buying power (3% risk cap 430); unfilled at 12:36,,
 2026-11-10,NVDQ,PULLBACK,buy,entry,12:40,12:40:20,12:40:20,,,,14.14,14.14,,,181,limit unfilled (market ran to 14.20+); cancelled at the 12:40 slot per B5; order 6af355f5; no position; not a USDG kill (full buying power was free),,
 2026-11-10,USDG,-,buy,usdg,12:40,12:41:02,12:41:02,1,1,0,1,,1,0,2579,rebuy: PB entry limit unfilled and cancelled, no leg armed; order 6af3572e; fee 0,,
+2026-11-11,USDG,-,sell,usdg,10:15,10:15:25,10:15:25,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (FADE XBI break down at 10:10 waiting for retest); order 6af4868d; fee 0,,
