@@ -1,0 +1,14 @@
+
+Massive before 2026-03 (never fitted): live rule -0.024%/day win 49% DD 34.6% n 599
+  to bar 15 depth 0.20% exit 1.5R size 1.00 idle-days  CONT n 171 win  54% avg +0.052% | acct -0.022 (+0.003) win  50% DD  43.7% (live 34.6%)
+  to bar 15 depth 0.20% exit 1.5R size 0.50 any-day    CONT n 201 win  53% avg -0.008% | acct -0.034 (-0.009) win  49% DD  43.7% (live 34.6%)
+  to bar 15 depth 0.20% exit 1.5R size 0.50 idle-days  CONT n 171 win  54% avg +0.026% | acct -0.026 (-0.001) win  50% DD  40.3% (live 34.6%)
+  to bar 15 depth 0.20% exit 1.5R size 0.33 any-day    CONT n 201 win  53% avg -0.005% | acct -0.033 (-0.009) win  49% DD  42.2% (live 34.6%)
+  to bar 15 depth 0.20% exit 1.5R size 0.33 idle-days  CONT n 171 win  54% avg +0.017% | acct -0.027 (-0.003) win  50% DD  39.5% (live 34.6%)
+
+Massive 2026-03 on: live rule +0.384%/day win 66% DD 3.9% n 95
+  to bar 15 depth 0.20% exit 1.5R size 1.00 idle-days  CONT n  19 win  68% avg +0.648% | acct +0.454 (+0.070) win  68% DD   3.9% (live 3.9%)
+  to bar 15 depth 0.20% exit 1.5R size 0.50 any-day    CONT n  25 win  68% avg +0.197% | acct +0.425 (+0.041) win  68% DD   3.9% (live 3.9%)
+  to bar 15 depth 0.20% exit 1.5R size 0.50 idle-days  CONT n  19 win  68% avg +0.324% | acct +0.418 (+0.034) win  68% DD   3.9% (live 3.9%)
+  to bar 15 depth 0.20% exit 1.5R size 0.33 any-day    CONT n  25 win  68% avg +0.130% | acct +0.416 (+0.032) win  68% DD   3.8% (live 3.9%)
+  to bar 15 depth 0.20% exit 1.5R size 0.33 idle-days  CONT n  19 win  68% avg +0.214% | acct +0.406 (+0.022) win  68% DD   3.9% (live 3.9%)
