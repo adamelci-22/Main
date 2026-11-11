@@ -11,6 +11,23 @@ if [ $# -gt 0 ]; then F="$*"
 else F=$(find "$HOME"/.claude/projects/*/*/tool-results -name 'mcp-Robinhood-get_equity_historicals-*.txt' -mmin -20 -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -3 | cut -d' ' -f2-); fi
 N=$(echo $F | wc -w)
 if [ "$N" -ne 3 ]; then echo "ERROR: found $N dump file(s), need 3 (fresh within 20 min). Refetch the missing group(s) from the prior trading day's 9:30; if a result came back inline, save it to a file and pass the three files as arguments."; exit 2; fi
+# Freshness guard (v5.2.44, 2026-11-11): two parallel fetches once wrote to the same dump file. Every dump must hold a bar for today that starts at or after T-5 min (the bar ending at T).
+python3 -I - "$T" $F <<'PYEOF' || exit 1
+import json, sys, datetime as d
+from zoneinfo import ZoneInfo
+slot, files = sys.argv[1], sys.argv[2:]
+et = ZoneInfo('America/New_York'); today = d.datetime.now(et).date()
+need = d.datetime.combine(today, d.time(int(slot[:2]), int(slot[3:])), et) - d.timedelta(minutes=5)
+for f in files:
+    last = None
+    for r in json.load(open(f))['data']['results']:
+        ks = [k for k in r if isinstance(r[k], list)]
+        for b in (r[ks[0]] if ks else []):
+            t = d.datetime.fromisoformat(b['begins_at'].replace('Z', '+00:00')).astimezone(et)
+            if t.date() == today and (last is None or t > last): last = t
+    if last is None or last < need:
+        print(f"ERROR: stale or short dump {f.split('/')[-1]}: newest bar today {last.strftime('%H:%M') if last else 'none'}, need {need.strftime('%H:%M')}. Refetch that group alone and pass all 3 files."); sys.exit(1)
+PYEOF
 python3 -I tools/live/paper.py --live --now "$T" $F 2>&1 | tail -16
 git add -A >/dev/null
 git commit -qm "waiter log $T" >/dev/null 2>&1 && { git pull -q --rebase origin "$BR" >/dev/null 2>&1; timeout 60 git push -q origin "$BR" >/dev/null 2>&1; }
