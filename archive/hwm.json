@@ -1,5 +1,5 @@
 {
- "hwm": 2599.3,
+ "hwm": 2600.7,
  "halted": false,
  "events": [
   "2026-10-26 v5.2.16 start: high set to the 2026-10-24 13:30 total value $2,535.56 (highest recorded; governor instruction: hard stop at -15% from the all-time high)",
@@ -12,6 +12,7 @@
   "2026-10-28 10:15 ET new high $2,576.25",
   "2026-10-28 10:40 ET new high $2,589.98",
   "2026-10-28 10:55 ET new high $2,596.99",
-  "2026-11-11 11:05 ET new high $2,599.30"
+  "2026-11-11 11:05 ET new high $2,599.30",
+  "2026-11-11 11:10 ET new high $2,600.70"
  ]
 }
