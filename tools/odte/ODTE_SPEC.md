@@ -92,3 +92,30 @@ Signal `orb_signal` in `odte_backtest.py`:
 Every stock lost, as did every target, VIX split and strike. The underlying moves near 0R after a trend breakout, so the option buyer loses theta plus spread, about 19% per trade.
 
 News cannot be backtested from Robinhood data: there is no historical news feed. A news rule is tested forward only, on paper.
+
+## Day-before entries (2026-11-11, governor: "put the order in the night before or day before, not buy same day")
+
+Script `tools/odte/overnight.py`, output `results/overnight.txt`. Signals use only information known on day D:
+- A: buy the 1DTE contract at D 15:45, hold overnight, sell on D+1 at 10:00, 12:00 or 15:30.
+- B: order placed the evening of D, fills at the D+1 9:30 open as a 0DTE, sold at 10:00, 12:00 or 13:30.
+
+Baselines: buying a call or put every day loses in both modes (stocks: -4% to -39% per option). Random entries pay the cost, as expected.
+
+Best rows. With 11 rules x 4 groups x 6 exits = 264 rows, a few t near 2 are expected by chance.
+
+| Rule | Mode, exit | Trades | Win | Mean per option | t | Underlying |
+|---|---|---|---|---|---|---|
+| VIX closes up >10% on D -> QQQ call | A, D+1 10:00 | 18 | 61% | +41.8% | 1.85 | +0.50% |
+| same | A, D+1 12:00 | 18 | 56% | +40.5% | 1.67 | +0.70% (t 3.2) |
+| same, IV x1.05 / overnight 0.6 | A, 10:00 | 18 | | +29.6% / +32.8% | 1.6 | |
+| VIX up >10% -> IWM call | A, 12:00 | 18 | 67% | +20.4% | 1.09 | +0.52% |
+| D down >1.5% -> QQQ call | A, 10:00 | 21 | 52% | +17.3% | 0.92 | +0.23% |
+| QQQ up >0.5% with market up -> QQQ call | B, 10:00 | 66 | 56% | +14.9% | 2.19 | +0.13% (halves +3% / +27%) |
+| 6 stocks, any rule | A or B | | | none above t 2 after the IV fix | | |
+
+Candidate: the **VIX spike reversal**. After VIX closes up more than 10%, buy a QQQ call expiring the next day at 15:45 and sell it the next day at 10:00-12:00.
+- 18 events in 8 months, about 2 a month.
+- The underlying effect is real (+0.70% by noon, t 3.2). The option edge is not yet significant (t 1.7-1.9).
+- Cost: an ATM 1DTE QQQ call on those evenings cost about $380-600. That is 75-120% of a $500 bucket. Use IWM (about $150-260) or an out-of-the-money strike until the bucket grows.
+
+A first version of this test priced the 1DTE entry with afternoon IV and showed +50-85% on every row, puts included. That was a bug, fixed by using the next full day's IV from D's VIX close.
