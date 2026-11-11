@@ -45,8 +45,8 @@ F._manage = manage
 def summ(dd, T):
     S = set(dd); a = F.account(ds, dd, [t for t in T if t['day'] in S]); tk = a['taken']
     g = sum(t['acct'] for t in tk if t['acct'] > 0); l = -sum(t['acct'] for t in tk if t['acct'] <= 0)
-    gn = [t['acct'] for t in tk if t['acct'] > 0]
-    return dict(n=len(tk), pf=g / l, ret=a['ret'], dd=a['mdd'], red=100 * sum(t['acct'] <= 0 for t in tk) / len(tk), r2=100 * sum(t.get('R_out', 0) >= 0.6 for t in tk) / len(tk))
+    gn = [t['acct'] for t in tk if t['acct'] > 0]; ls = [t['acct'] for t in tk if t['acct'] <= 0]
+    return dict(aw=sum(gn)/len(gn), al=sum(ls)/len(ls), bw=max(gn), med=sorted(gn)[len(gn)//2], n=len(tk), pf=g / l, ret=a['ret'], dd=a['mdd'], red=100 * sum(t['acct'] <= 0 for t in tk) / len(tk), r2=100 * sum(t.get('R_out', 0) >= 0.6 for t in tk) / len(tk))
 print("Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24")
 RUNS = [('LIVE v5.2.22: 1/3 at 2R, lock, chandelier', 1/3, True, None),
         ('50/50 at 2R, lock, chandelier (split only)', 1/2, True, None),
@@ -58,4 +58,4 @@ for name, fr, ch, tr in RUNS:
     TRAIL, STEP, FRAC, CHAND = tr, [], fr, ch
     T = [t for t in F.trades(ds, days, F.LIVE, F.P(), ctx) if not fri(t['day'])]
     a, b1, b2 = summ(days, T), summ(H1, T), summ(H2, T)
-    print(f"  {name:<60} trades {a['n']:3d} PF {a['pf']:4.2f} ({b1['pf']:4.2f}/{b2['pf']:4.2f}) total {a['ret']:+6.1f}% maxDD {a['dd']:4.1f}% losing {a['red']:3.0f}% avgR>=0.6 {a['r2']:3.0f}%")
+    print(f"  {name:<60} trades {a['n']:3d} PF {a['pf']:4.2f} ({b1['pf']:4.2f}/{b2['pf']:4.2f}) total {a['ret']:+6.1f}% maxDD {a['dd']:4.1f}% losing {a['red']:3.0f}% avg win {a['aw']:+.2f}% median win {a['med']:+.2f}% best {a['bw']:+.2f}% avg loss {a['al']:+.2f}%")
