@@ -1,0 +1,11 @@
+Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24
+  LIVE v5.2.22: 1/3 at 2R                        trades  63 PF 4.81 (3.97/5.94) total  +89.3% maxDD  3.8% losing  32% avg win +1.93% median win +1.24% best +8.00% avg loss -0.86%
+  1/3 at 1.0R                                    trades  63 PF 4.21 (3.36/5.35) total  +71.5% maxDD  3.8% losing  33% avg win +1.73% median win +1.16% best +7.48% avg loss -0.82%
+  1/3 at 1.25R                                   trades  63 PF 4.34 (3.43/5.55) total  +75.0% maxDD  3.8% losing  32% avg win +1.74% median win +1.21% best +7.61% avg loss -0.86%
+  1/3 at 1.5R                                    trades  63 PF 4.48 (3.56/5.70) total  +79.2% maxDD  3.8% losing  32% avg win +1.80% median win +1.25% best +7.74% avg loss -0.86%
+  1/3 at 1.75R                                   trades  63 PF 4.62 (3.71/5.84) total  +83.6% maxDD  3.8% losing  32% avg win +1.85% median win +1.29% best +7.87% avg loss -0.86%
+  1/2 at 1.5R                                    trades  63 PF 4.13 (3.34/5.17) total  +69.1% maxDD  3.8% losing  32% avg win +1.65% median win +1.10% best +6.37% avg loss -0.86%
+  scale: 1/3 at 1R + 1/3 at 2R, runner 1/3       trades  63 PF 3.67 (3.03/4.51) total  +56.8% maxDD  3.8% losing  32% avg win +1.47% median win +0.96% best +5.00% avg loss -0.86%
+  scale: 1/3 at 1.5R + 1/3 at 2R, runner 1/3     trades  63 PF 3.93 (3.24/4.86) total  +63.9% maxDD  3.8% losing  32% avg win +1.58% median win +1.03% best +5.26% avg loss -0.86%
+  scale: 1/4 at 1R + 1/4 at 2R, runner 1/2       trades  63 PF 4.05 (3.27/5.08) total  +66.9% maxDD  3.8% losing  32% avg win +1.62% median win +1.10% best +6.37% avg loss -0.86%
+  scale: 1/6 at 1.5R + 1/3 at 2R, runner 1/2     trades  63 PF 4.29 (3.46/5.39) total  +73.8% maxDD  3.8% losing  32% avg win +1.72% median win +1.23% best +6.63% avg loss -0.86%

@@ -1,0 +1,14 @@
+Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24
+  LIVE v5.2.22: 1/3 at 2R                        trades  63 PF 4.81 (3.97/5.94) total  +89.3% maxDD  3.8% losing  32% avg win +1.93% median win +1.24% best +8.00% avg loss -0.86%
+  2R, then 1R after 30 min                       trades  63 PF 4.47 (3.47/5.79) total  +78.8% maxDD  3.8% losing  32% avg win +1.79% median win +1.19% best +8.00% avg loss -0.86%
+  2R, then 1.25R after 30 min                    trades  63 PF 4.52 (3.54/5.84) total  +80.5% maxDD  3.8% losing  32% avg win +1.81% median win +1.31% best +8.00% avg loss -0.86%
+  2R, then 1.5R after 30 min                     trades  63 PF 4.60 (3.61/5.91) total  +82.8% maxDD  3.8% losing  32% avg win +1.84% median win +1.31% best +8.00% avg loss -0.86%
+  2R, then 1R after 45 min                       trades  63 PF 4.50 (3.54/5.78) total  +79.8% maxDD  3.8% losing  32% avg win +1.80% median win +1.19% best +8.00% avg loss -0.86%
+  2R, then 1.25R after 45 min                    trades  63 PF 4.54 (3.57/5.83) total  +81.0% maxDD  3.8% losing  32% avg win +1.82% median win +1.28% best +8.00% avg loss -0.86%
+  2R, then 1.5R after 45 min                     trades  63 PF 4.60 (3.61/5.90) total  +82.6% maxDD  3.8% losing  32% avg win +1.84% median win +1.28% best +8.00% avg loss -0.86%
+  2R, then 1R after 60 min                       trades  63 PF 4.62 (3.69/5.86) total  +83.5% maxDD  3.8% losing  32% avg win +1.85% median win +1.19% best +8.00% avg loss -0.86%
+  2R, then 1.25R after 60 min                    trades  63 PF 4.65 (3.70/5.91) total  +84.2% maxDD  3.8% losing  32% avg win +1.86% median win +1.24% best +8.00% avg loss -0.86%
+  2R, then 1.5R after 60 min                     trades  63 PF 4.67 (3.71/5.96) total  +85.1% maxDD  3.8% losing  32% avg win +1.87% median win +1.28% best +8.00% avg loss -0.86%
+  2R, then 1R after 90 min                       trades  63 PF 4.61 (3.64/5.89) total  +83.0% maxDD  3.8% losing  32% avg win +1.85% median win +1.31% best +8.00% avg loss -0.86%
+  2R, then 1.25R after 90 min                    trades  63 PF 4.62 (3.64/5.92) total  +83.3% maxDD  3.8% losing  32% avg win +1.85% median win +1.31% best +8.00% avg loss -0.86%
+  2R, then 1.5R after 90 min                     trades  63 PF 4.64 (3.64/5.97) total  +83.9% maxDD  3.8% losing  32% avg win +1.86% median win +1.31% best +8.00% avg loss -0.86%
