@@ -1,0 +1,6 @@
+Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24
+  LIVE v5.2.22 (lock +0.15R at +0.5R, cut, 2R, chandelier)   trades  63 PF 4.81 (3.97/5.94) total  +89.3% maxDD  3.8% losing  32% avgR>=0.6  52%
+  trail from +0.5R, 1.00R behind best close                  trades  63 PF 3.85 (3.02/4.95) total  +61.4% maxDD  3.8% losing  32% avgR>=0.6  51%
+  trail from +0.5R, 1.25R behind best close                  trades  63 PF 3.98 (3.18/5.04) total  +64.9% maxDD  3.8% losing  32% avgR>=0.6  52%
+  trail from +0.5R, 1.50R behind best close                  trades  63 PF 4.06 (3.10/5.34) total  +67.1% maxDD  3.8% losing  32% avgR>=0.6  52%
+  step: +1R -> stop +0.5R, +1.5R -> stop +1R                 trades  64 PF 3.45 (3.02/3.89) total  +58.1% maxDD  3.8% losing  33% avgR>=0.6  44%
