@@ -1,0 +1,5 @@
+Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24
+  LIVE v5.2.22: 1/3 at 2R, runner 2/3            trades  63 PF 4.81 (3.97/5.94) total  +89.3% maxDD  3.8% losing  32% avg win +1.93% median win +1.24% best +8.00% avg loss -0.86%
+  thirds: 1/3 at 1R, 1/3 at 1.5R, 1/3 at 2R      trades  63 PF 2.96 (2.59/3.45) total  +39.2% maxDD  3.8% losing  32% avg win +1.18% median win +0.72% best +4.44% avg loss -0.86%
+  thirds: 1/3 at 1.5R, 1/3 at 2R, 1/3 at 2.5R    trades  63 PF 3.37 (2.79/4.13) total  +49.1% maxDD  3.8% losing  32% avg win +1.35% median win +0.97% best +4.88% avg loss -0.86%
+  thirds: 1/3 at 1R, 1/3 at 2R, 1/3 at 3R        trades  63 PF 3.21 (2.65/3.97) total  +45.3% maxDD  3.8% losing  32% avg win +1.29% median win +0.88% best +4.38% avg loss -0.86%
