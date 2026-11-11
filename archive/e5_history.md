@@ -150,3 +150,13 @@
 - **Context:** the October jobs report came out at 8:30. Semiconductors are up about 5% premarket, tech up 2%, financials down 1%. No FOMC. No event calendar checked beyond earnings.
 - **Triggers (A2):** the 8:41 and 13:30 standing triggers, the 11-06 waiter coverage report (13:45) and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains, inert.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 1 of 5 (model TECS 11-05).
+
+**Monday 2026-11-09, 9:00 research (morning trigger fired 8:41 ET, v5.2.43).**
+- **9:00 value (A1.2 base): $2,580.10** (pre-open, read 8:42 ET), flat, no open orders. It is 2,579 USDG plus $1.10 cash. Equal to the 11-06 close. Drawdown stop clear (high $2,596.99, -0.65%). Daily loss limit fires at $2,502.70 (-3%).
+- **Controls:** losing streak 0. Monday: FADE and PULLBACK both trade. Earnings: MSFT next reports 2027-01-27 (tentative). NVDA next reports 2026-11-17, verified (NVD/NVDQ skip 11-18). No earnings skip today.
+- **Rules in force:** tunables v4: runaway skip 0.85%, PULLBACK volume 1.3x, same-system loss block (B4.7). USDG rule ON (B4.8, v5.2.42). Every-5-minute check (C2, v5.2.43).
+- **USDG:** peg bid = ask = $1.00. Balance 2,579.00 exactly, unchanged from Friday. No interest credited over the weekend. The governor must check the posted rate and credit schedule in the Robinhood app. Turn the rule off if it pays nothing.
+- **Corporate actions:** clean. Premarket moves match their underlyings: SOXX +1.2%, SOXL +3.8%, SOXS -3.7%; QQQ +0.9%, TQQQ +2.6%; XLK +0.4%, TECL +1.1%; IWM +1.4%, TNA +4.3%; XLF +1.2%, FAS +2.8%; XBI +0.8%. NVD and NVDQ about +11% against NVDA -5.2% (inverse legs, under the 20% threshold). MSFU +4.0% with MSFT +2.0%. Wide premarket spreads on SSG, LABU, TECS, TECL, FAS (A1.7 applies at order time).
+- **RVOL baseline:** 20 sessions 2026-10-12..11-06 -> `archive/paper_rvol_2026-11-09.json`.
+- **Triggers (A2):** the 8:41, 13:30 and watchdog (9:36 to 12:36) standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. One disabled 10-05 checkpoint remains, inert.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).
