@@ -7,6 +7,8 @@ SPY          hs 0.03      n 17 mean  -2.1% t -0.41 halves  -1.6% /  -2.6% worst 
 SPY          1 OTM        n 17 mean  -2.0% t -0.37 halves  -2.0% /  -2.0% worst  -32%
 SPY          target 1.5R  n 17 mean  -0.6% t -0.12 halves  -0.9% /  -0.2% worst  -28%
 SPY          exit 12:00   n 17 mean  +0.5% t +0.08 halves  +2.2% /  -1.1% worst  -28%
+SPY          stock IV x1.3 n 17 mean  -0.6% t -0.12 halves  -0.1% /  -1.1% worst  -28%
+SPY          stock hs 4%  n 17 mean  -0.6% t -0.12 halves  -0.1% /  -1.1% worst  -28%
 
 QQQ          base         n 13 mean +30.7% t +3.23 halves +10.7% / +47.9% worst  -34%
 QQQ          iv x1.05     n 13 mean +23.8% t +2.99 halves  +6.2% / +38.9% worst  -30%
@@ -15,6 +17,8 @@ QQQ          hs 0.03      n 13 mean +29.1% t +3.09 halves  +9.3% / +46.1% worst 
 QQQ          1 OTM        n 13 mean +31.6% t +3.04 halves  +9.2% / +50.8% worst  -35%
 QQQ          target 1.5R  n 13 mean +21.8% t +3.02 halves  +5.7% / +35.6% worst  -34%
 QQQ          exit 12:00   n 13 mean +34.1% t +3.56 halves +17.9% / +47.9% worst  -34%
+QQQ          stock IV x1.3 n 13 mean +30.7% t +3.23 halves +10.7% / +47.9% worst  -34%
+QQQ          stock hs 4%  n 13 mean +30.7% t +3.23 halves +10.7% / +47.9% worst  -34%
 
 IWM          base         n 16 mean  +8.6% t +1.04 halves -11.2% / +28.4% worst  -38%
 IWM          iv x1.05     n 16 mean  +4.6% t +0.67 halves -11.8% / +21.1% worst  -40%
@@ -23,20 +27,106 @@ IWM          hs 0.03      n 16 mean  +5.5% t +0.67 halves -13.8% / +24.7% worst 
 IWM          1 OTM        n 16 mean  +4.4% t +0.46 halves -16.7% / +25.4% worst  -62%
 IWM          target 1.5R  n 16 mean +10.6% t +1.43 halves  -4.8% / +26.1% worst  -38%
 IWM          exit 12:00   n 16 mean  +8.6% t +1.16 halves  -9.7% / +26.9% worst  -34%
+IWM          stock IV x1.3 n 16 mean  +8.6% t +1.04 halves -11.2% / +28.4% worst  -38%
+IWM          stock hs 4%  n 16 mean  +8.6% t +1.04 halves -11.2% / +28.4% worst  -38%
 
-QQQ+IWM      base         n 28 mean +17.8% t +2.63 halves  +9.8% / +25.8% worst  -38%
-QQQ+IWM      iv x1.05     n 28 mean +12.6% t +2.21 halves  +6.1% / +19.0% worst  -40%
-QQQ+IWM      iv x1.2      n 28 mean  +8.8% t +1.78 halves  +3.5% / +14.0% worst  -42%
-QQQ+IWM      hs 0.03      n 28 mean +15.3% t +2.28 halves  +7.9% / +22.8% worst  -41%
-QQQ+IWM      1 OTM        n 28 mean +15.7% t +2.06 halves  +8.4% / +23.1% worst  -62%
-QQQ+IWM      target 1.5R  n 28 mean +15.2% t +2.76 halves  +9.9% / +20.5% worst  -38%
-QQQ+IWM      exit 12:00   n 28 mean +19.4% t +2.94 halves +12.9% / +25.8% worst  -34%
+QQQ+IWM      base         n 29 mean +18.5% t +2.82 halves  +9.8% / +26.6% worst  -38%
+QQQ+IWM      iv x1.05     n 29 mean +13.2% t +2.39 halves  +6.1% / +19.8% worst  -40%
+QQQ+IWM      iv x1.2      n 29 mean  +9.4% t +1.96 halves  +3.5% / +14.9% worst  -42%
+QQQ+IWM      hs 0.03      n 29 mean +16.1% t +2.46 halves  +7.9% / +23.7% worst  -41%
+QQQ+IWM      1 OTM        n 29 mean +16.6% t +2.23 halves  +8.4% / +24.2% worst  -62%
+QQQ+IWM      target 1.5R  n 29 mean +15.7% t +2.93 halves  +9.9% / +21.0% worst  -38%
+QQQ+IWM      exit 12:00   n 29 mean +20.0% t +3.14 halves +12.9% / +26.6% worst  -34%
+QQQ+IWM      stock IV x1.3 n 29 mean +18.5% t +2.82 halves  +9.8% / +26.6% worst  -38%
+QQQ+IWM      stock hs 4%  n 29 mean +18.5% t +2.82 halves  +9.8% / +26.6% worst  -38%
 
-SPY+QQQ+IWM  base         n 41 mean +10.0% t +1.93 halves  +1.1% / +18.6% worst  -38%
-SPY+QQQ+IWM  iv x1.05     n 41 mean  +6.5% t +1.49 halves  -0.6% / +13.3% worst  -40%
-SPY+QQQ+IWM  iv x1.2      n 41 mean  +3.9% t +1.05 halves  -1.8% /  +9.5% worst  -42%
-SPY+QQQ+IWM  hs 0.03      n 41 mean  +8.0% t +1.54 halves  -0.6% / +16.1% worst  -41%
-SPY+QQQ+IWM  1 OTM        n 41 mean  +8.3% t +1.44 halves  -0.3% / +16.5% worst  -62%
-SPY+QQQ+IWM  target 1.5R  n 41 mean  +8.5% t +1.97 halves  +1.2% / +15.5% worst  -38%
-SPY+QQQ+IWM  exit 12:00   n 41 mean +11.1% t +2.16 halves  +3.3% / +18.6% worst  -34%
+SPY+QQQ+IWM  base         n 46 mean +11.4% t +2.41 halves  +4.6% / +18.2% worst  -38%
+SPY+QQQ+IWM  iv x1.05     n 46 mean  +7.6% t +1.91 halves  +2.0% / +13.2% worst  -40%
+SPY+QQQ+IWM  iv x1.2      n 46 mean  +4.8% t +1.41 halves  +0.2% /  +9.5% worst  -42%
+SPY+QQQ+IWM  hs 0.03      n 46 mean  +9.4% t +1.99 halves  +2.9% / +15.8% worst  -41%
+SPY+QQQ+IWM  1 OTM        n 46 mean  +9.7% t +1.85 halves  +3.1% / +16.3% worst  -62%
+SPY+QQQ+IWM  target 1.5R  n 46 mean  +9.7% t +2.45 halves  +4.4% / +15.0% worst  -38%
+SPY+QQQ+IWM  exit 12:00   n 46 mean +12.8% t +2.71 halves  +7.3% / +18.2% worst  -34%
+SPY+QQQ+IWM  stock IV x1.3 n 46 mean +11.4% t +2.41 halves  +4.6% / +18.2% worst  -38%
+SPY+QQQ+IWM  stock hs 4%  n 46 mean +11.4% t +2.41 halves  +4.6% / +18.2% worst  -38%
+
+NVDA         base         n 16 mean -18.1% t -2.10 halves -12.1% / -24.1% worst  -62%
+NVDA         iv x1.05     n 16 mean -19.3% t -2.58 halves -15.0% / -23.5% worst  -60%
+NVDA         iv x1.2      n 16 mean -20.1% t -3.00 halves -17.1% / -23.0% worst  -59%
+NVDA         hs 0.03      n 16 mean -18.3% t -2.12 halves -12.3% / -24.2% worst  -63%
+NVDA         1 OTM        n 16 mean -22.7% t -2.32 halves -17.7% / -27.7% worst  -71%
+NVDA         target 1.5R  n 16 mean -11.9% t -1.59 halves -15.2% /  -8.5% worst  -50%
+NVDA         exit 12:00   n 16 mean -13.4% t -1.72 halves -11.8% / -15.0% worst  -50%
+NVDA         stock IV x1.3 n 16 mean -19.9% t -2.92 halves -16.7% / -23.1% worst  -59%
+NVDA         stock hs 4%  n 16 mean -21.3% t -2.58 halves -15.5% / -27.1% worst  -64%
+
+AAPL         base         n  5 mean -20.6% t -2.12 halves -29.3% / -14.9% worst  -51%
+AAPL         iv x1.05     n  5 mean -21.5% t -2.60 halves -27.0% / -17.7% worst  -49%
+AAPL         iv x1.2      n  5 mean -22.0% t -3.04 halves -25.3% / -19.8% worst  -47%
+AAPL         hs 0.03      n  5 mean -20.6% t -2.12 halves -29.3% / -14.9% worst  -51%
+AAPL         1 OTM        n  5 mean -24.5% t -2.51 halves -31.9% / -19.6% worst  -56%
+AAPL         target 1.5R  n  5 mean -11.5% t -1.63 halves -29.3% /  +0.3% worst  -38%
+AAPL         exit 12:00   n  5 mean -14.9% t -2.19 halves -29.3% /  -5.3% worst  -38%
+AAPL         stock IV x1.3 n  5 mean -21.9% t -2.95 halves -25.6% / -19.5% worst  -48%
+AAPL         stock hs 4%  n  5 mean -23.8% t -2.54 halves -32.1% / -18.2% worst  -53%
+
+MSFT         base         n  6 mean -31.6% t -9.84 halves -32.7% / -30.6% worst  -44%
+MSFT         iv x1.05     n  6 mean -29.0% t -9.94 halves -29.7% / -28.2% worst  -40%
+MSFT         iv x1.2      n  6 mean -26.9% t -10.05 halves -27.4% / -26.5% worst  -37%
+MSFT         hs 0.03      n  6 mean -31.6% t -9.81 halves -32.7% / -30.6% worst  -44%
+MSFT         1 OTM        n  6 mean -33.5% t -9.55 halves -34.8% / -32.1% worst  -47%
+MSFT         target 1.5R  n  6 mean -23.4% t -2.86 halves -32.7% / -14.1% worst  -44%
+MSFT         exit 12:00   n  6 mean -31.6% t -9.84 halves -32.7% / -30.6% worst  -44%
+MSFT         stock IV x1.3 n  6 mean -27.3% t -10.03 halves -27.8% / -26.8% worst  -38%
+MSFT         stock hs 4%  n  6 mean -34.3% t -11.11 halves -35.3% / -33.3% worst  -46%
+
+AMZN         base         n  7 mean -18.6% t -1.56 halves  -3.7% / -29.8% worst  -83%
+AMZN         iv x1.05     n  7 mean -18.8% t -1.70 halves  -5.0% / -29.2% worst  -80%
+AMZN         iv x1.2      n  7 mean -18.9% t -1.82 halves  -6.0% / -28.6% worst  -77%
+AMZN         hs 0.03      n  7 mean -18.8% t -1.55 halves  -3.7% / -30.2% worst  -84%
+AMZN         1 OTM        n  7 mean -21.0% t -1.61 halves  -4.9% / -33.1% worst  -92%
+AMZN         target 1.5R  n  7 mean -20.2% t -1.78 halves  -4.8% / -31.8% worst  -83%
+AMZN         exit 12:00   n  7 mean  -7.1% t -1.05 halves  -3.7% /  -9.6% worst  -42%
+AMZN         stock IV x1.3 n  7 mean -18.9% t -1.80 halves  -5.8% / -28.7% worst  -78%
+AMZN         stock hs 4%  n  7 mean -21.8% t -1.90 halves  -7.4% / -32.5% worst  -83%
+
+META         base         n 11 mean  -5.4% t -0.46 halves +11.2% / -19.2% worst  -55%
+META         iv x1.05     n 11 mean  -8.1% t -0.78 halves  +5.8% / -19.7% worst  -55%
+META         iv x1.2      n 11 mean -10.0% t -1.06 halves  +1.9% / -20.0% worst  -55%
+META         hs 0.03      n 11 mean  -5.4% t -0.46 halves +11.2% / -19.2% worst  -55%
+META         1 OTM        n 11 mean  -6.1% t -0.49 halves +10.9% / -20.2% worst  -59%
+META         target 1.5R  n 11 mean  -5.6% t -0.54 halves  +4.6% / -14.1% worst  -55%
+META         exit 12:00   n 11 mean  -0.1% t -0.01 halves +20.3% / -17.1% worst  -48%
+META         stock IV x1.3 n 11 mean  -9.7% t -1.01 halves  +2.6% / -19.9% worst  -55%
+META         stock hs 4%  n 11 mean  -9.1% t -0.80 halves  +6.9% / -22.3% worst  -57%
+
+TSLA         base         n  6 mean -20.5% t -11.47 halves -19.9% / -21.0% worst  -27%
+TSLA         iv x1.05     n  6 mean -19.9% t -10.96 halves -18.3% / -21.6% worst  -25%
+TSLA         iv x1.2      n  6 mean -19.5% t -8.69 halves -17.0% / -22.0% worst  -29%
+TSLA         hs 0.03      n  6 mean -20.5% t -11.47 halves -19.9% / -21.0% worst  -27%
+TSLA         1 OTM        n  6 mean -21.9% t -11.65 halves -20.6% / -23.2% worst  -28%
+TSLA         target 1.5R  n  6 mean -20.5% t -11.47 halves -19.9% / -21.0% worst  -27%
+TSLA         exit 12:00   n  6 mean -20.0% t -10.70 halves -19.9% / -20.0% worst  -27%
+TSLA         stock IV x1.3 n  6 mean -19.6% t -9.10 halves -17.2% / -21.9% worst  -29%
+TSLA         stock hs 4%  n  6 mean -23.6% t -13.75 halves -23.1% / -24.1% worst  -30%
+
+NVDA+AAPL+MSFT+AMZN+META+TSLA base         n 51 mean -17.5% t -4.06 halves -16.9% / -18.2% worst  -83%
+NVDA+AAPL+MSFT+AMZN+META+TSLA iv x1.05     n 51 mean -18.2% t -4.81 halves -17.7% / -18.7% worst  -80%
+NVDA+AAPL+MSFT+AMZN+META+TSLA iv x1.2      n 51 mean -18.7% t -5.44 halves -18.3% / -19.1% worst  -77%
+NVDA+AAPL+MSFT+AMZN+META+TSLA hs 0.03      n 51 mean -17.6% t -4.07 halves -17.0% / -18.2% worst  -84%
+NVDA+AAPL+MSFT+AMZN+META+TSLA 1 OTM        n 51 mean -20.2% t -4.30 halves -19.9% / -20.6% worst  -92%
+NVDA+AAPL+MSFT+AMZN+META+TSLA target 1.5R  n 51 mean -14.0% t -3.61 halves -18.8% /  -9.3% worst  -83%
+NVDA+AAPL+MSFT+AMZN+META+TSLA exit 12:00   n 51 mean -12.7% t -3.39 halves -11.2% / -14.2% worst  -50%
+NVDA+AAPL+MSFT+AMZN+META+TSLA stock IV x1.3 n 51 mean -18.6% t -5.33 halves -18.2% / -19.0% worst  -78%
+NVDA+AAPL+MSFT+AMZN+META+TSLA stock hs 4%  n 51 mean -20.8% t -5.01 halves -20.1% / -21.4% worst  -83%
+
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA base         n 64 mean  -7.7% t -1.67 halves  -9.8% /  -5.7% worst  -83%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA iv x1.05     n 64 mean  -9.7% t -2.41 halves -11.5% /  -7.9% worst  -80%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA iv x1.2      n 64 mean -11.1% t -3.07 halves -12.7% /  -9.4% worst  -77%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA hs 0.03      n 64 mean  -8.1% t -1.77 halves -10.2% /  -6.1% worst  -84%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA 1 OTM        n 64 mean  -9.7% t -1.93 halves -12.3% /  -7.1% worst  -92%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA target 1.5R  n 64 mean  -6.7% t -1.74 halves -12.6% /  -0.8% worst  -83%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA exit 12:00   n 64 mean  -3.2% t -0.76 halves  -4.0% /  -2.5% worst  -50%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA stock IV x1.3 n 64 mean  -8.6% t -2.05 halves -10.8% /  -6.4% worst  -78%
+QQQ+NVDA+AAPL+MSFT+AMZN+META+TSLA stock hs 4%  n 64 mean -10.3% t -2.23 halves -12.3% /  -8.3% worst  -83%
 

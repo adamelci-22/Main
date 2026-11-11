@@ -50,6 +50,9 @@ Per-trade option return, 1 contract on every signal:
 | QQQ, 0.03 half-spread | 13 | +29.1% | 3.09 | | |
 | IWM | 16 | +8.6% | 1.04 | -11.2% / +28.4% | -38% |
 | SPY | 17 | -0.6% | -0.12 | | -28% |
+| 6 daily-expiry stocks (NVDA AAPL MSFT AMZN META TSLA) | 51 | -17.5% | -4.06 | -16.9% / -18.2% | -83% |
+
+**Single stocks (governor's screenshot 2026-11-11: Robinhood's daily-expiry equity list is NVDA, GOOGL, AAPL, MSFT, AMZN, META, AVGO, TSLA).** That list covers single stocks only. ETFs (QQQ, SPY, IWM) and index options (XSP, SPX) also expire daily, as the option chains confirm. No bar data for GOOGL and AVGO. On the other six, the FADE signal fails on the stock itself, at -0.1R per trade across all six: MSFT 0 of 6, TSLA 1 of 6, NVDA 6 of 16. Stock 0DTE IV runs 1.3-4.2x SPY's (live 2026-11-11) and spreads run 0.02-0.16. Even where the stock moved the right way (AMZN +0.32R, META +0.55R), the option lost after premium and spread. Every stock is rejected. Stock IV = trailing 20-day realised-vol ratio to SPY. Spread = 2% of premium. Days with a gap over 3% are skipped as an earnings proxy.
 
 QQQ $500 bucket, 1 contract each signal: 13 trades, 11 wins.
 - At IV x0.9, $500 grew to $8,560 with a 22.5% max drawdown.

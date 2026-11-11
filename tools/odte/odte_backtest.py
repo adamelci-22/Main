@@ -26,13 +26,28 @@ from dataclasses import dataclass, replace
 HERE = os.path.dirname(os.path.abspath(__file__))
 BT = os.path.join(HERE, '..', 'backtest', 'data')
 NO_TRADE = {'2026-11-27', '2026-12-24'}
+STOCKS = ('NVDA', 'AAPL', 'MSFT', 'AMZN', 'META', 'TSLA')     # Robinhood daily-expiry equity options (GOOGL, AVGO: no bar data)
+_RV = {}
+
+
+def rv_ratio(bars, sym, d, n=20):
+    """IV ratio vs SPY for a stock = its realised 5-min vol / SPY's over the prior n sessions (known before the day)."""
+    key = (sym, d)
+    if key in _RV: return _RV[key]
+    def rv(s):
+        days = [x for x in sorted(bars[s]) if x < d][-n:]
+        r = [math.log(b[i][3] / b[i - 1][3]) for x in days for b in [bars[s][x]] for i in range(1, len(b))]
+        return st.pstdev(r) if len(r) > 50 else None
+    a, b = rv(sym), rv('SPY')
+    _RV[key] = a / b if a and b else None
+    return _RV[key]
 
 
 def load_bars():
     raw = json.load(gzip.open(os.path.join(BT, 'bt_5m.json.gz')))
     live = json.load(gzip.open(os.path.join(BT, 'live_5m.json.gz')))
     out = {}
-    for s in ('SPY', 'QQQ', 'IWM'):
+    for s in ('SPY', 'QQQ', 'IWM') + STOCKS:
         days = dict(raw.get(s, {})); days.update(live.get(s, {}))
         out[s] = {d: [tuple(r[1:6]) for r in bars] for d, bars in days.items() if len(bars) >= 78}
     return out
@@ -111,6 +126,11 @@ class Cfg:
     risk: float = 0.10           # bucket fraction risked to the stop
     max_prem: float = 0.60       # max bucket fraction spent on premium
     start: float = 500.0
+    stock_iv_prem: float = 1.0  # stock IV = realised-vol ratio x this x SPY's IV (0DTE stock IV usually sits above realised)
+    stock_hs_pct: float = 0.02  # stock half-spread: max(half_spread, 2% of premium); 0.05 ticks above $3
+    gap_skip: float = 3.0       # skip a stock on a day it gaps more than this % (earnings proxy)
+    bars_ref: object = None
+    one_pos: bool = True        # False: every signal is taken (per-trade edge study)
     iv_ratio: tuple = (('SPY', 1.0), ('QQQ', 1.2), ('IWM', 1.3))   # IV relative to VIX (VXN, RVX run above VIX)
 
 
@@ -121,15 +141,21 @@ def sim_trade(b, d, sym, vix, c, sig):
     R = abs(S0 - stop)
     if R <= 0: return None
     if dirn > 0 and stop >= S0 or dirn < 0 and stop <= S0: return None
-    base = vix[d][0] / 100 * dict(c.iv_ratio)[sym]
+    if sym in STOCKS:
+        ratio = rv_ratio(c.bars_ref, sym, d) if c.bars_ref else None
+        if not ratio: return None
+        ratio *= c.stock_iv_prem
+    else: ratio = dict(c.iv_ratio)[sym]
+    base = vix[d][0] / 100 * ratio
     sigma = iv_at(c, base, k)
     K = round(S0) + dirn * c.otm
     cp = dirn
     T0 = t_left(k)
     mid0 = bs(S0, K, T0, sigma, cp)
-    fill = mid0 + c.half_spread + c.fee
+    hs = max(c.half_spread, c.stock_hs_pct * mid0) if sym in STOCKS else c.half_spread
+    fill = mid0 + hs + c.fee
     stop_val = bs(stop, K, t_left(k + 1), iv_at(c, base, k + 1), cp)              # rough loss estimate for sizing
-    est_loss = max(fill - (stop_val - c.half_spread - c.fee), 0.05)
+    est_loss = max(fill - (stop_val - hs - c.fee), 0.05)
     tgt = S0 + dirn * c.tgt_R * R if c.tgt_R else None
     xk, xS, why = None, None, None
     for i in range(k, 78):
@@ -154,14 +180,15 @@ def sim_trade(b, d, sym, vix, c, sig):
     if xk is None: xk, xS, why = 77, b[77][3], 'eod'
     if why == 'prem': exit_mid = xval
     else: exit_mid = bs(xS, K, t_left(xk), iv_at(c, base, xk), cp)
-    exit_px = max(exit_mid - c.half_spread - c.fee, 0.0)
+    exit_px = max(exit_mid - (max(c.half_spread, c.stock_hs_pct * exit_mid) if sym in STOCKS else c.half_spread) - c.fee, 0.0)
     return dict(day=d, sym=sym, dir='C' if dirn > 0 else 'P', k=k, S0=S0, K=K, R_pct=R / S0 * 100, iv=sigma,
                 fill=fill, exit=exit_px, why=why, xk=xk, ret=exit_px / fill - 1, est_loss=est_loss,
                 und_R=(xS - S0) * dirn / R if xS is not None else None)
 
 
 def run(c, bars, vix, verbose=False):
-    days = sorted(set.intersection(*[set(bars[s]) for s in c.syms]) & set(vix))
+    if c.bars_ref is None: c = replace(c, bars_ref=bars)
+    days = sorted(set(bars['SPY']) & set(vix))
     days = [d for d in days if d not in NO_TRADE]
     eq = c.start; peak = eq; mdd = 0; trades = []; skipped_size = 0; signals = 0; daily = {}
     for n, d in enumerate(days):
@@ -169,13 +196,15 @@ def run(c, bars, vix, verbose=False):
         pd_ = days[n - 1]
         cands = []
         for s in c.syms:
+            if d not in bars[s] or pd_ not in bars[s]: continue
             b = bars[s][d]; prev = bars[s][pd_][-1][3]
+            if s in STOCKS and abs(b[0][0] / prev - 1) * 100 > c.gap_skip: continue
             sig = fade_signal(b, prev)
             if sig and sig != 'watching': cands.append((sig[0], s, sig))
         cands.sort()
         busy_until = -1; e0 = eq
         for k, s, sig in cands:
-            if k <= busy_until: continue                     # one position at a time
+            if c.one_pos and k <= busy_until: continue       # one position at a time
             t = sim_trade(bars[s][d], d, s, vix, c, sig)
             if not t: continue
             signals += 1
@@ -208,7 +237,7 @@ def summ(c, r, label):
 
 def edge(c, bars, vix):
     """Per-trade option return, independent of the bucket: every signal taken at 1 contract."""
-    r = run(replace(c, risk=1.0, max_prem=1.0, start=1e7), bars, vix)
+    r = run(replace(c, risk=1.0, max_prem=1.0, start=1e7, one_pos=False), bars, vix)
     x = [t['ret'] for t in r['trades']]
     if len(x) < 3: return 'n<3'
     m = st.mean(x); se = st.pstdev(x) / math.sqrt(len(x))
@@ -220,10 +249,11 @@ def main():
     bars = load_bars(); vix = load_vix()
     if '--edge' in sys.argv:
         print('Per-trade option return, 1 contract every signal (no bucket). Modelled prices.\n')
-        for syms in (('SPY',), ('QQQ',), ('IWM',), ('QQQ', 'IWM'), ('SPY', 'QQQ', 'IWM')):
+        for syms in (('SPY',), ('QQQ',), ('IWM',), ('QQQ', 'IWM'), ('SPY', 'QQQ', 'IWM')) + tuple((x,) for x in STOCKS) + (STOCKS, ('QQQ',) + STOCKS):
             for lab, kw in [('base', {}), ('iv x1.05', dict(iv_mult=1.05)), ('iv x1.2', dict(iv_mult=1.2)),
                             ('hs 0.03', dict(half_spread=0.03)), ('1 OTM', dict(otm=1)), ('target 1.5R', dict(tgt_R=1.5)),
-                            ('exit 12:00', dict(time_exit=30))]:
+                            ('exit 12:00', dict(time_exit=30)), ('stock IV x1.3', dict(stock_iv_prem=1.3)),
+                            ('stock hs 4%', dict(stock_hs_pct=0.04))]:
                 print(f"{'+'.join(syms):12s} {lab:12s} {edge(replace(Cfg(syms=syms), **kw), bars, vix)}")
             print()
         return
