@@ -111,6 +111,20 @@ def fade_signal(b, prev_close, brk_last=8, wait=12, tol=0.10, runaway=0.85, K=78
     return None
 
 
+def orb_signal(b, m, or_bars=6, last_k=24, need_mkt=True):
+    """TREND (momentum) signal: the first 5-min close outside the 9:30-10:00 range, at or after 10:00 and before bar last_k
+    (24 = 11:30), in the direction the market (QQQ, m) agrees with: QQQ's close on that bar above its 9:30 open for a call,
+    below for a put. Entry next bar open. Stop = the range midpoint. Returns (k, dir, stop) or None."""
+    H = max(x[1] for x in b[:or_bars]); L = min(x[2] for x in b[:or_bars]); mid = (H + L) / 2
+    for j in range(or_bars, last_k):
+        c = b[j][3]
+        side = 1 if c > H else -1 if c < L else 0
+        if not side: continue
+        if need_mkt and m is not None and (m[j][3] - m[0][0]) * side <= 0: return None
+        return j + 1, side, mid
+    return None
+
+
 @dataclass(frozen=True)
 class Cfg:
     syms: tuple = ('SPY', 'QQQ')
@@ -130,6 +144,11 @@ class Cfg:
     stock_hs_pct: float = 0.02  # stock half-spread: max(half_spread, 2% of premium); 0.05 ticks above $3
     gap_skip: float = 3.0       # skip a stock on a day it gaps more than this % (earnings proxy)
     bars_ref: object = None
+    signal: str = 'fade'        # 'fade' | 'orb' (trend breakout with the market)
+    hold_bars: int = None       # time exit this many bars after entry (24 = 2 hours), capped by time_exit
+    need_mkt: bool = True
+    vix_max: float = None
+    vix_min: float = None
     one_pos: bool = True        # False: every signal is taken (per-trade edge study)
     iv_ratio: tuple = (('SPY', 1.0), ('QQQ', 1.2), ('IWM', 1.3))   # IV relative to VIX (VXN, RVX run above VIX)
 
@@ -137,6 +156,7 @@ class Cfg:
 def sim_trade(b, d, sym, vix, c, sig):
     k, dirn, stop = sig
     if k >= c.time_exit: return None
+    if c.signal == 'orb' and c.early_cut: c = replace(c, early_cut=False)
     S0 = b[k][0]
     R = abs(S0 - stop)
     if R <= 0: return None
@@ -158,9 +178,10 @@ def sim_trade(b, d, sym, vix, c, sig):
     est_loss = max(fill - (stop_val - hs - c.fee), 0.05)
     tgt = S0 + dirn * c.tgt_R * R if c.tgt_R else None
     xk, xS, why = None, None, None
+    tx = min(c.time_exit, k + c.hold_bars) if c.hold_bars else c.time_exit
     for i in range(k, 78):
         o, h, l, cl, v = b[i]
-        if i >= c.time_exit:
+        if i >= tx:
             xk, xS, why = i, o, 'time'; break
         adverse = l if dirn > 0 else h
         favor = h if dirn > 0 else l
@@ -199,7 +220,8 @@ def run(c, bars, vix, verbose=False):
             if d not in bars[s] or pd_ not in bars[s]: continue
             b = bars[s][d]; prev = bars[s][pd_][-1][3]
             if s in STOCKS and abs(b[0][0] / prev - 1) * 100 > c.gap_skip: continue
-            sig = fade_signal(b, prev)
+            if c.vix_max and vix[d][0] > c.vix_max or c.vix_min and vix[d][0] < c.vix_min: continue
+            sig = fade_signal(b, prev) if c.signal == 'fade' else orb_signal(b, bars['QQQ'].get(d), need_mkt=c.need_mkt)
             if sig and sig != 'watching': cands.append((sig[0], s, sig))
         cands.sort()
         busy_until = -1; e0 = eq

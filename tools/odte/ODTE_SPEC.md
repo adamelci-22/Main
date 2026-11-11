@@ -73,3 +73,22 @@ QQQ $500 bucket, 1 contract each signal: 13 trades, 11 wins.
 2. **Gate:** at least 8 paper trades. Paper mean return per trade above +10% on real quotes. Real IV ratio within the backtest's 0.75-1.2 range.
 3. **Governor says "ODTE live"** and deposits $500. Then set `state.json` mode to live.
 4. **Before the deposit lands:** RULEBOOK B4.1 sizing (`total_value`, `buying_power`), the daily loss limit (A1.2), the drawdown stop (A1.13), and USDG parking (B4.8) must subtract the bucket. Without that carve-out, FADE and PULLBACK size up with the $500 and USDG parks it. This change needs D3: governor instruction, rulebook edit, version bump.
+
+## Trend breakout test (2026-11-11, governor: "couple hour trades based on news and current market trends and VIX")
+
+Signal `orb_signal` in `odte_backtest.py`:
+- The first 5-minute close outside the 9:30-10:00 range, from 10:00 to 11:30.
+- QQQ must agree: above its open for a call, below for a put.
+- Buy the ATM 0DTE option. Stop at the range midpoint, 2R target, 2-hour hold.
+
+| Set | Trades | Win | Mean per option | t | Underlying |
+|---|---|---|---|---|---|
+| 6 stocks | 452 | 27% | -19.3% | -8.4 | +0.03R |
+| 6 stocks, no market filter | 652 | 26% | -19.0% | -9.7 | +0.04R |
+| 6 stocks, VIX < 18 / >= 18 | 263 / 189 | 26% / 27% | -18.9% / -19.9% | | |
+| QQQ | 153 | 30% | -10.9% | -2.2 | -0.01R |
+| SPY | 163 | 27% | -13.0% | -3.3 | +0.08R |
+
+Every stock lost, as did every target, VIX split and strike. The underlying moves near 0R after a trend breakout, so the option buyer loses theta plus spread, about 19% per trade.
+
+News cannot be backtested from Robinhood data: there is no historical news feed. A news rule is tested forward only, on paper.
