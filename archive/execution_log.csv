@@ -58,3 +58,6 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-10,NVDQ,PULLBACK,buy,entry,12:40,12:40:20,12:40:20,,,,14.14,14.14,,,181,limit unfilled (market ran to 14.20+); cancelled at the 12:40 slot per B5; order 6af355f5; no position; not a USDG kill (full buying power was free),,
 2026-11-10,USDG,-,buy,usdg,12:40,12:41:02,12:41:02,1,1,0,1,,1,0,2579,rebuy: PB entry limit unfilled and cancelled, no leg armed; order 6af3572e; fee 0,,
 2026-11-11,USDG,-,sell,usdg,10:15,10:15:25,10:15:25,1,1,0,1,,1,0,2579,SELL ALL on B4.8 trigger (FADE XBI break down at 10:10 waiting for retest); order 6af4868d; fee 0,,
+2026-11-11,LABU,FADE,buy,entry,10:20,10:23:48,10:23:48,237.00,237.60,0.25,237.60,237.84,237.5999,0,10,FADE XBI break down 10:10 failed retest 10:15; LABU spread 0.49% at 10:20 skipped under A1.7 then 0.25% at 10:23 so entered; sized by buying power (3% risk cap 24); order 6af48884; fee 0,3.8,10:20
+2026-11-11,LABU,FADE,sell,protect,10:20,10:24:08,10:24:08,237.23,237.96,0.31,,244.01,,,3,OCO on 1/3 of shares: take-profit 244.01 stop 234.38 GTC; advanced order 6af481e7; confirmed,,
+2026-11-11,LABU,FADE,sell,protect,10:20,10:24:12,10:24:12,237.23,237.96,0.31,,,,,7,stop-market on 2/3 of shares at 234.38 GTC; order 6af4889c; confirmed,,
