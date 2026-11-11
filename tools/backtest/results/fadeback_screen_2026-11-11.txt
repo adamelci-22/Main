@@ -1,0 +1,18 @@
+Robinhood cache 2026-03-03..10-14, FADE live 6, no Fridays. PF all (half 1 / half 2), halves split 2026-06-24
+  LIVE v5.2.22 (no detector)                                     PF 4.81 (3.97/5.94) total  +89.3% avg win +1.93% median +1.24% fired  0
+  arm 1R: 2 lower closes + gave back 0.5R                        PF 4.56 (3.53/5.94) total  +81.6% avg win +1.83% median +0.96% fired  5
+  arm 1R: 3 lower closes                                         PF 4.67 (3.67/6.00) total  +84.9% avg win +1.87% median +1.31% fired  5
+  arm 1R: 3 lower closes + gave back 0.5R                        PF 4.73 (3.82/5.94) total  +86.6% avg win +1.89% median +0.96% fired  3
+  arm 1R: close under EMA9 + gave back 0.5R                      PF 4.52 (3.45/5.94) total  +80.3% avg win +1.81% median +0.96% fired  4
+  arm 1R: close under EMA9 on 1.5x volume                        PF 4.78 (3.93/5.92) total  +88.4% avg win +1.92% median +1.13% fired  3
+  arm 1R: close under prior bar low (engulf) + gave back 0.5R    PF 4.56 (3.53/5.94) total  +81.6% avg win +1.83% median +0.96% fired  5
+  arm 1R: 30 min since best close + gave back 0.5R               PF 4.48 (3.38/5.94) total  +79.1% avg win +1.79% median +0.96% fired  4
+  arm 1R: gave back 0.75R on 1.5x volume                         PF 4.79 (3.97/5.90) total  +88.7% avg win +1.92% median +1.24% fired  1
+  arm 1.25R: 2 lower closes + gave back 0.5R                     PF 4.58 (3.56/5.94) total  +82.2% avg win +1.84% median +1.02% fired  4
+  arm 1.25R: 3 lower closes                                      PF 4.66 (3.66/6.00) total  +84.7% avg win +1.87% median +1.24% fired  4
+  arm 1.25R: 3 lower closes + gave back 0.5R                     PF 4.75 (3.86/5.94) total  +87.2% avg win +1.90% median +1.02% fired  2
+  arm 1.25R: close under EMA9 + gave back 0.5R                   PF 4.54 (3.49/5.94) total  +80.9% avg win +1.82% median +1.02% fired  3
+  arm 1.25R: close under EMA9 on 1.5x volume                     PF 4.80 (3.97/5.92) total  +89.0% avg win +1.93% median +1.24% fired  2
+  arm 1.25R: close under prior bar low (engulf) + gave back 0.5R PF 4.58 (3.56/5.94) total  +82.2% avg win +1.84% median +1.02% fired  4
+  arm 1.25R: 30 min since best close + gave back 0.5R            PF 4.52 (3.46/5.94) total  +80.4% avg win +1.81% median +1.02% fired  3
+  arm 1.25R: gave back 0.75R on 1.5x volume                      PF 4.79 (3.97/5.90) total  +88.7% avg win +1.92% median +1.24% fired  1
