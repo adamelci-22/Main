@@ -1,0 +1,20 @@
+Decision point: the first 5-minute close at +1R or better, before the 2R take-profit. Label: the default reaches 2R.
+  RH 26-03..10: 35 trades reached +1R, 28 went on to 2R (80%)
+  MASSIVE H1 21-12..24-03: 72 trades reached +1R, 40 went on to 2R (56%)
+  MASSIVE H2 24-04..26-10: 95 trades reached +1R, 56 went on to 2R (59%)
+
+One feature at a time (Massive, both halves): AUC = chance the feature ranks a 2R trade above a fade-back (0.50 = no information)
+  speed (bars to +1R)          AUC 0.482
+  ER6                          AUC 0.546
+  ER12                         AUC 0.553
+  RSI                          AUC 0.521
+  vol ratio last 3 vs day      AUC 0.493
+  above VWAP (R)               AUC 0.500
+  QQQ since entry %            AUC 0.502
+  far edge (R)                 AUC 0.621
+  prior-day level (R)          AUC 0.524
+  ATR / R                      AUC 0.624
+  bar of day                   AUC 0.472
+
+Logistic model, all features, trained on Massive H1 only:  AUC in-sample 0.805 | out-of-sample Massive H2 0.640 | out-of-sample Robinhood 0.653
+  weights (standardised): speed (bars to +1R) +0.58, ER6 +0.74, ER12 -0.79, RSI +0.50, vol ratio last 3 vs day +0.14, above VWAP (R) +0.90, QQQ since entry % +0.23, far edge (R) +1.51, prior-day level (R) -0.21, ATR / R +0.69, bar of day -0.33
