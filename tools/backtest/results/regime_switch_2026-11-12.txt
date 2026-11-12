@@ -1,0 +1,31 @@
+Regime switch between the live book (FADE v5.2.45 + PULLBACK runner v5.2.46) and first-hour momentum (HOUR1: QQQ SOXX IWM XLK XBI XLF
+  RH 2026: 136 days | book +133.5% DD 4.7% | HOUR1 -17.0% DD 31.2%
+  M H1 21-24: 569 days | book +17.3% DD 38.8% | HOUR1 +56.0% DD 18.1%
+  M H2 24-26: 647 days | book +161.2% DD 22.5% | HOUR1 +22.8% DD 29.1%
+
+A. One feature: momentum day when the feature is in the H1-chosen band (else the live book). total % (change vs book) DD, share of momentum days
+       first-hour continuation 20d low/mid (cuts 0.5/0.6)             RH 2026   +69.2% ( -64.2) DD 20.5 mom 71% | M H1 21-24  +110.0% ( +92.6) DD 22.4 mom 65% | M H2 24-26  +142.3% ( -18.9) DD 27.9 mom 64%
+       UVXY 5-day change % mid (cuts -7.43/-0.329)                    RH 2026  +103.3% ( -30.2) DD  4.9 mom 46% | M H1 21-24   +97.7% ( +80.4) DD 17.8 mom 33% | M H2 24-26  +102.7% ( -58.5) DD 28.9 mom 33%
+       20-day return % low/high (cuts -2.36/3.9)                      RH 2026   +18.5% (-115.0) DD 17.0 mom 62% | M H1 21-24   +65.5% ( +48.2) DD 21.4 mom 67% | M H2 24-26  +118.1% ( -43.1) DD 18.3 mom 51%
+       |5-day return| % low (cuts 1.41/3.26)                          RH 2026   +94.5% ( -39.0) DD  8.6 mom 33% | M H1 21-24  +117.2% ( +99.9) DD 19.2 mom 33% | M H2 24-26   +27.2% (-134.0) DD 41.6 mom 42%
+       first-hour continuation 10d low/mid (cuts 0.5/0.6)             RH 2026   +32.5% (-100.9) DD 13.5 mom 54% | M H1 21-24   +92.2% ( +74.9) DD 23.7 mom 54% | M H2 24-26   +83.9% ( -77.2) DD 26.9 mom 52%
+       20-day avg range % mid (cuts 1.46/2.13)                        RH 2026   +53.6% ( -79.9) DD  9.8 mom 43% | M H1 21-24  +100.0% ( +82.7) DD 15.7 mom 33% | M H2 24-26   +25.6% (-135.6) DD 23.9 mom 33%
+       gap today % low/high (cuts 0.288/0.708)                        RH 2026    +4.6% (-128.8) DD 21.1 mom 76% | M H1 21-24  +186.1% (+168.7) DD 16.8 mom 67% | M H2 24-26   +59.5% (-101.7) DD 30.8 mom 68%
+       prior-day return % mid (cuts -0.568/0.661)                     RH 2026   +44.6% ( -88.9) DD 11.3 mom 41% | M H1 21-24  +108.1% ( +90.8) DD 15.9 mom 33% | M H2 24-26   +11.3% (-149.9) DD 40.4 mom 46%
+       prior-day efficiency low/mid (cuts 0.0786/0.166)               RH 2026   +10.5% (-123.0) DD 22.5 mom 76% | M H1 21-24   +90.2% ( +72.9) DD 19.1 mom 67% | M H2 24-26   +33.3% (-127.9) DD 35.1 mom 71%
+       5-day return % mid/high (cuts -1.16/1.61)                      RH 2026    +2.7% (-130.8) DD 17.3 mom 76% | M H1 21-24  +120.1% (+102.8) DD 14.2 mom 67% | M H2 24-26   +14.4% (-146.8) DD 34.5 mom 73%
+       HOUR1 minus book, 20d % low/high (cuts -2.73/5.77)             RH 2026    +3.2% (-130.2) DD 23.6 mom 85% | M H1 21-24   +90.6% ( +73.3) DD 19.1 mom 67% | M H2 24-26    +0.8% (-160.4) DD 31.6 mom 64%
+       range 5/20 ratio low/mid (cuts 0.911/1.05)                     RH 2026   -11.0% (-144.5) DD 27.6 mom 68% | M H1 21-24   +81.7% ( +64.3) DD 18.0 mom 67% | M H2 24-26   -13.0% (-174.2) DD 41.6 mom 64%
+
+B. Two features (both in their H1 bands -> momentum day): top 10 by the weaker out-of-sample change
+       first-hour continuation 20d AND UVXY 5-day change %            RH 2026  +123.9% (  -9.6) DD  4.9 mom 37% | M H1 21-24   +78.6% ( +61.3) DD 27.5 mom 23% | M H2 24-26  +156.5% (  -4.7) DD 26.1 mom 22%
+       prior-day efficiency AND UVXY 5-day change %                   RH 2026  +112.8% ( -20.7) DD  4.7 mom 39% | M H1 21-24   +84.9% ( +67.5) DD 22.9 mom 23% | M H2 24-26  +139.3% ( -21.9) DD 24.5 mom 24%
+       |5-day return| % AND UVXY 5-day change %                       RH 2026  +139.4% (  +5.9) DD  4.9 mom 20% | M H1 21-24   +74.2% ( +56.9) DD 21.2 mom 16% | M H2 24-26  +138.4% ( -22.8) DD 23.3 mom 17%
+       20-day avg range % AND UVXY 5-day change %                     RH 2026  +122.3% ( -11.2) DD  4.9 mom 15% | M H1 21-24   +20.7% (  +3.4) DD 32.1 mom  9% | M H2 24-26  +137.1% ( -24.0) DD 23.9 mom  8%
+       20-day return % AND UVXY 5-day change %                        RH 2026  +122.6% ( -10.8) DD  4.9 mom 29% | M H1 21-24   +82.7% ( +65.4) DD 29.3 mom 22% | M H2 24-26  +137.0% ( -24.1) DD 28.0 mom 17%
+       prior-day return % AND UVXY 5-day change %                     RH 2026  +125.4% (  -8.1) DD  4.7 mom 22% | M H1 21-24   +38.9% ( +21.6) DD 31.5 mom 13% | M H2 24-26  +136.9% ( -24.3) DD 26.7 mom 17%
+       20-day return % AND first-hour continuation 20d                RH 2026  +103.1% ( -30.4) DD 12.6 mom 49% | M H1 21-24  +107.4% ( +90.1) DD 29.7 mom 45% | M H2 24-26  +205.2% ( +44.0) DD 23.7 mom 35%
+       first-hour continuation 20d AND gap today %                    RH 2026  +100.9% ( -32.5) DD 10.3 mom 51% | M H1 21-24  +233.6% (+216.2) DD 20.7 mom 43% | M H2 24-26  +167.4% (  +6.2) DD 31.5 mom 44%
+       20-day return % AND 20-day avg range %                         RH 2026  +100.3% ( -33.2) DD  6.1 mom 21% | M H1 21-24   +76.4% ( +59.0) DD 18.9 mom 21% | M H2 24-26  +142.1% ( -19.1) DD 20.1 mom 16%
+       gap today % AND UVXY 5-day change %                            RH 2026  +133.5% (  +0.0) DD  4.9 mom 31% | M H1 21-24  +124.4% (+107.0) DD 25.1 mom 22% | M H2 24-26  +119.9% ( -41.3) DD 34.3 mom 23%
+  pairs better on H1: 66, also better on RH and M H2: 0
