@@ -126,7 +126,7 @@ def curve(d):
     return (eq - 1) * 100, mdd
 def main():
     FB = EF.blocks(F.P(floor_pct=0.5)); PB = PS.load(); RUN = dict(frac=1 / 3, run=('ema', 20))
-    ds_rh = F.DS(None, PX); cx_rh = F.context(ds_rh, PX); dm = F.DS(OS.AE.M5, PX); cm = F.context(dm, PX); H = [(ds_rh, cx_rh), (dm, cm), (dm, cm)]
+    ds_rh = F.DS(None, PX + PS.LEGS_RH); cx_rh = F.context(ds_rh, PX); dm = F.DS(OS.AE.M5, PX + PS.LEGS_M); cm = F.context(dm, PX); H = [(ds_rh, cx_rh), (dm, cm), (dm, cm)]
     bookT = [[FS.manage(t, {}) for t in FB[b].E] + [PS.manage(t, RUN) for t in PB[b].E] for b in range(3)]
     book = [F.account(PB[b].ds, PB[b].days, bookT[b])['daily'] for b in range(3)]
     names = ['RH 2026', 'M H1 21-24', 'M H2 24-26']
@@ -143,7 +143,7 @@ def main():
             bk = curve([book[b].get(d, 0.0) for d in days])
             if pm: cmb = curve([((1 + book[b].get(d, 0.0) / 100) * (1 + a['daily'].get(d, 0.0) / 100) - 1) * 100 for d in days])
             else:
-                sh = F.account(PB[b].ds, days, bookT[b] + T); cmb = curve([sh['daily'].get(d, 0.0) for d in days])
+                sh = F.account(d_, days, bookT[b] + T); cmb = curve([sh['daily'].get(d, 0.0) for d in days])
             ok &= cmb[0] > bk[0]
             cells.append(f"{names[b]} n{len(tk):4d} w{100*sum(x['acct'] > 0 for x in tk)/len(tk):3.0f}% {st.mean(x['pct'] for x in tk):+.2f}% PF{(g/l if l else 9):4.2f} {a['ret']:+7.1f}% | +BOOK {cmb[0]:+7.1f}% ({cmb[0] - bk[0]:+6.1f}) DD{cmb[1]:5.1f}")
         print(f"  {'PASS ' if ok else '     '}{name:<20} " + ' || '.join(cells))
