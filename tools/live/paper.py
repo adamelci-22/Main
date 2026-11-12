@@ -126,6 +126,9 @@ def fade(b, K):
                 if cc < E:
                     side = -bside
                     stop_real = to_m(max(bb[q][1] for q in range(j, i + 1)))
+                    if FLOOR_ON:                                          # v5.2.45 (B2.4): stop at least FADE_STOP_FLOOR % from the entry
+                        e_ref = b[i + 1][0] if i + 1 < K else b[i][3]     # live signal: the retest close (the price the order is judged at)
+                        if (e_ref - stop_real) * side < e_ref * FADE_STOP_FLOOR / 100: stop_real = e_ref - side * e_ref * FADE_STOP_FLOOR / 100
                     if i + 1 >= K:
                         return dict(status='signal', side=side, k=i + 1, stop=stop_real,
                                     note=f'failed retest at {k2t(i)}: paper-buy the {"bull" if side > 0 else "inverse"} leg at the {k2t(i + 1)} open (this checkpoint)')
@@ -246,6 +249,8 @@ FROZEN_ON = False            # set per day by simulate(); backtest replays (no d
 LOCKCUT_FROM = '2026-10-28'  # RULEBOOK v5.2.19 (B2): a 5-min close at +0.5R puts the FADE stop at +0.15R; 15 min after entry a close at -0.5R or worse sells everything at the next checkpoint
 LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.19 exits
 LOCK_TRIG, LOCK_LVL, CUT_BARS, CUT_R = 0.5, 0.15, 3, -0.5
+FLOOR_FROM = '2026-11-12'    # RULEBOOK v5.2.45 (B2.4): FADE stop at least FADE_STOP_FLOOR % of the proxy from the entry (governor 2026-11-12)
+FADE_STOP_FLOOR = 0.5; FLOOR_ON = False   # FLOOR_ON set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.45 stop
 RETEST_TOL, PB_VOL = 0.10, 1.5       # FADE retest tolerance in % (B2.3); PULLBACK breakout volume multiple (B3.2)
 TARGET_R, TAKE_FRAC, CHAND_ATR = 2.0, 1 / 3, 2.0   # FADE take-profit R, share sold there (B2.5), chandelier ATR multiple (B5.4)
 SIZE_CAP = 1.0                       # largest position as a share of total account value (a percentage, never dollars); 1.0 = the model's existing cap at 100% of equity
@@ -308,9 +313,9 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     day (YYYY-MM-DD) switches off FADE on Fridays from FADE_NO_FRIDAY_FROM (v5.2.17); without it (backtest replays) FADE runs every day.
     streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
     Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
-    global FROZEN_ON, LOCKCUT_ON
+    global FROZEN_ON, LOCKCUT_ON, FLOOR_ON
     apply_tunables(day)
-    FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM)
+    FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM); FLOOR_ON = bool(day and day >= FLOOR_FROM)
     cands, signals = [], []
     rows = dict(FADE_ROWS); rows.update({r[0]: tuple(r[1:5]) for r in X_ADD_FADE})        # idea switch: extra FADE proxies (shadow only)
     for p, (bull, bear, lev_bull, lev_bear) in rows.items():
