@@ -163,6 +163,10 @@ class OC:
     hs_min: float = 0.03
     fee: float = 0.0065
     skip_earn: bool = True        # skip a trade when an earnings day falls inside the hold
+    exit_mode: str = 'time'       # 'time' | 'trail_und' (close < lowest low of the prior trail_n sessions) | 'trail_opt'
+    trail_n: int = 10
+    trail_arm: float = 0.5        # trail_opt: armed once the option is up this much at a close
+    trail_give: float = 0.35      # trail_opt: then exit when it falls this fraction from its peak value
 
 
 def iv_of(U, s, i, reg_d, spy, vixv, earn_ahead):
@@ -196,7 +200,7 @@ def option_trade(U, reg, vix, s, i, cp, oc):
     hs = lambda m: max(oc.hs_min, oc.hs_pct * m)
     fill = m0 + hs(m0) + oc.fee
     xk, why = e + oc.hold - 1, 'time'
-    peak = -1.0; peak_k = None
+    peak = -1.0; peak_k = None; peak_val = 0.0
     for k in range(e, e + oc.hold):
         T = (oc.dte - (k - e) - 1) / 252                         # at the close of k
         eb = any(q in S_['earn_band'] for q in range(k + 1, e + oc.dte + 1))
@@ -206,6 +210,13 @@ def option_trade(U, reg, vix, s, i, cp, oc):
         if r_k > peak: peak, peak_k = r_k, k - e + 1
         if oc.stop is not None and val <= fill * (1 - oc.stop): xk, why = k, 'stop'; break
         if oc.target is not None and val >= fill * (1 + oc.target): xk, why = k, 'target'; break
+        if oc.exit_mode == 'trail_und' and k > e and k - oc.trail_n >= 0:
+            lowest = min(S_['l'][q] for q in range(k - oc.trail_n, k)) if cp > 0 else None
+            highest = max(S_['h'][q] for q in range(k - oc.trail_n, k)) if cp < 0 else None
+            if (cp > 0 and S_['c'][k] < lowest) or (cp < 0 and S_['c'][k] > highest): xk, why = k, 'trail'; break
+        if oc.exit_mode == 'trail_opt':
+            peak_val = max(peak_val, val)
+            if peak_val >= fill * (1 + oc.trail_arm) and val <= peak_val * (1 - oc.trail_give): xk, why = k, 'trail'; break
     T = (oc.dte - (xk - e) - 1) / 252
     eb = any(q in S_['earn_band'] for q in range(xk + 1, e + oc.dte + 1))
     m1 = bs(S_['c'][xk], K, T, iv_of(U, s, xk, None, spy, vix.get(S_['d'][xk]), eb), cp)

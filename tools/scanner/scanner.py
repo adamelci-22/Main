@@ -74,9 +74,18 @@ def scan(U, reg, vix, on, rising, vx):
                    rv=max(S['rv20'][i] or 0, S['rv60'][i] or 0), chg5=pct(S['c'][i], S['c'][i - 5]))
         if fired: hits.append(row)
         elif S['sma200'][i] and S['c'][i] > S['sma200'][i] and S['rsi2'][i] is not None and S['rsi2'][i] < 20: near.append(row)
-    print(f"\nFEAR-DIP SIGNALS ON THE LAST BAR ({len(hits)})" + ('' if on else '  [regime OFF: shown for the watchlist only, do not trade]'))
-    hits.sort(key=lambda r: r['rsi2'] if r['rsi2'] is not None else 99)
+    import p50
+    sc = p50.score_last(U, reg, vix, [r['sym'] for r in hits])
+    for r in hits: r['p50'] = sc.get(r['sym'], float('nan'))
+    hits.sort(key=lambda r: -(r['p50'] if r['p50'] == r['p50'] else -1))
+    print(f"\nFEAR-DIP SIGNALS ON THE LAST BAR ({len(hits)}), ranked by the P50 model. TRADE THE TOP 2 that pass earnings + news."
+          + ('' if on else '  [regime OFF: watchlist only, do not trade]'))
+    rank = 0
     for r in hits:
+        ok = not (r['earn_bd'] is not None and r['earn_bd'] <= HOLD + 1)
+        rank += ok
+        tag = f"#{rank} {'TOP-2' if ok and rank <= 2 else ''}" if ok else 'SKIP'
+        print(f"  {tag:9s} P50 {100*r['p50']:4.0f}% (a ranking; out-of-sample calibration in results/p50_study.txt)")
         e = f"earnings {r['earn'][0]} ({r['earn_bd']} sessions){' SKIP: inside hold' if r['earn_bd'] is not None and r['earn_bd'] <= HOLD + 1 else ''}" if r['earn'] else 'no earnings inside 60 days on file'
         K, prem = plan(r['px'], r['rv'])
         print(f"  {r['sym']:5s} {r['px']:9.2f} [{'+'.join(r['sig'])}] RSI2 {r['rsi2']:4.1f}  5d {r['chg5']:+5.1f}%  vs200d {r['v200']:+5.1f}%  | {e}")
@@ -88,10 +97,13 @@ def scan(U, reg, vix, on, rising, vx):
           f"win {100*st_['win']:.0f}%, avg win {100*st_['avg_w']:+.0f}%, avg loss {100*st_['avg_l']:+.0f}%, EV {100*st_['mean']:+.1f}% per trade")
     for k, v in stats['per_signal'].items():
         print(f"   {k}: n {v['n']}, win {100*v['win']:.0f}%, EV {100*v['mean']:+.1f}%")
+    print('\nSYSTEM (results/bigwin.txt): top 2 names per signal day by P50, 42-session 0.75-delta call, sell at the 10th session close.'
+          '\n  Backtest 2023-07..2026-11: +16.4% per trade vs +11.9% for 2 random picks, 17 of 17 fear episodes positive; few-trades book'
+          '\n  (10% of equity per trade, max 3 open): ~17 trades a year, x3.48, max drawdown 18%. Longer holds and trailing exits tested worse.')
     print('\nNEXT STEPS FOR THE SESSION: (1) Massive /v2/reference/news for each signal name: veto company-specific bad news.'
           '\n (2) get_option_chains + get_option_instruments for the ~55-65 DTE expiry, strike nearest the plan; get_option_quotes.'
           '\n (3) score each quote: scanner.py --contract SYM STRIKE ASK IV SESSIONS. Take EV > +5% and P(profit) > 50% only.'
-          '\n (4) size: premium <= 5% of the account per trade, max 6 open. Exit at the 10th session close, or earlier on a news veto.')
+          '\n (4) size: premium <= 10% of the account per trade, max 3 open. Exit at the 10th session close, or earlier on a news veto.')
     return hits
 
 

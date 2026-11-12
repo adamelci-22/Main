@@ -93,3 +93,45 @@ Results, out of sample:
 - What drives the probability: call vs put, days to earnings, short vs long volatility ratio, volatility level, VIX, sector. Mostly volatility, not direction.
 
 Conclusion: a confident "+50% in 10 sessions" call does not exist in this data. The best measured odds are about 4 in 10, inside fear dips. Capping winners at +50% removes the tail that pays for the losers. Use FEAR-DIP's structure, which holds 10 sessions without a cap, and treat any P(+50%) shown by the scanner as a ranking, not a guarantee.
+
+## BIG-WIN system (2026-11-12): few trades, let winners run
+
+Governor: "I don't want to sell at 50%. I would rather have a couple of consistent big winners." Study: `bigwin.py`, `results/bigwin.txt`.
+
+**Exit structures** (all FEAR-DIP signals, fixed before running):
+
+| Structure | Mean per trade | Win | Doublers | Episodes positive | IV +30% & spread 3% |
+|---|---|---|---|---|---|
+| 42-session 0.75-delta, sell at session 10 | **+13.4%** | 60% | 3% | **15/19** | **+8.5%** |
+| 63-session 0.70-delta, sell at session 20 | +10.1% | 51% | 3% | 13/19 | +5.0% |
+| 63s, trail: stock closes under its 10-day low, max 30 | +5.0% | 32% | 5% | 11/19 | +0.4% |
+| 63s, trail: option up 50% then gives back 35%, max 30 | +7.5% | 50% | 6% | 10/19 | +2.2% |
+
+Longer holds make the best trade bigger (+407% against +237%) but lower the average and the consistency. The fear-dip rebound plays out in about two weeks.
+
+**Concentration**, 10-session structure, 92 signal days from 2023-07 (P50 scores are out of sample):
+
+| Pick per signal day | Mean | Episodes positive |
+|---|---|---|
+| all signals | +13.7% | 14/17 |
+| **top 2 by P50** | **+16.4%** | **17/17** |
+| top 2 random (200 draws) | +11.9% (95th percentile +14.6%) | |
+| top 2 highest beta | +12.6% | 14/17 |
+| top 2 deepest 5-day drop | +13.8% | 14/17 |
+
+**The system:**
+1. SPY 200-day rising and VIX >= 20.
+2. FEAR-DIP signals, ranked by P50.
+3. Take the top 2 that pass the earnings and news checks.
+4. Buy a 42-session (about 60-day) 0.75-delta call. Sell at the close of the 10th session.
+5. Spend 10% of the account in premium per trade, at most 3 open.
+
+Backtest, 2023-07 to 2026-11:
+- 61 trades, about 17 a year: x3.48, max drawdown 18%.
+- In fractions of the starting account: 2023 +0.19, 2024 +0.47, 2025 +0.08, 2026 +1.74.
+- About 1 trade in 6 ends at +50% or more, and about 1 in 25 doubles. The average win is about +35%.
+
+Setup after cloning:
+- Run `python3 tools/scanner/p50.py --study`. It builds `data/p50_rows.pkl` in about 20 minutes, then runs the walk-forward.
+- Then run `p50.py --score`, which trains `data/p50_model.pkl`.
+- Both files are gitignored. `features_at` matches the training features on 300 of 300 sampled rows.

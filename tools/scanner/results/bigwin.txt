@@ -1,0 +1,87 @@
+A. EXIT STRUCTURES (all FEAR-DIP signals, 2023-2026, modelled prices)
+  S1 42s .75d hold 10
+     ALL  n  654 | win  60% | >=+50%  14% | >=+100%   3% | mean  +13.4% median  +7.3% | avg loss   -19% | best +237% | top 10% of trades =  71% of profit | episodes + 15/19
+     DEV  n   68 | win  71% | >=+50%  29% | >=+100%  13% | mean  +29.6% median +21.0% | avg loss   -21% | best +141% | top 10% of trades =  37% of profit | episodes + 2/3
+     TEST n  586 | win  59% | >=+50%  12% | >=+100%   2% | mean  +11.5% median  +6.1% | avg loss   -19% | best +237% | top 10% of trades =  77% of profit | episodes + 13/16
+  S2 63s .70d hold 20
+     ALL  n  550 | win  51% | >=+50%  18% | >=+100%   3% | mean  +10.1% median  +0.5% | avg loss   -24% | best +224% | top 10% of trades =  99% of profit | episodes + 13/19
+     DEV  n   63 | win  84% | >=+50%  43% | >=+100%  10% | mean  +41.7% median +43.9% | avg loss   -38% | best +224% | top 10% of trades =  30% of profit | episodes + 3/3
+     TEST n  487 | win  46% | >=+50%  15% | >=+100%   3% | mean   +6.0% median  -2.1% | avg loss   -23% | best +190% | top 10% of trades = 151% of profit | episodes + 10/16
+  S3 63s .70d trail stock 10d low, max 30
+     ALL  n  460 | win  32% | >=+50%  12% | >=+100%   5% | mean   +5.0% median -11.6% | avg loss   -19% | best +407% | top 10% of trades = 244% of profit | episodes + 11/19
+     DEV  n   59 | win  42% | >=+50%  25% | >=+100%  10% | mean  +20.3% median -12.5% | avg loss   -22% | best +328% | top 10% of trades =  73% of profit | episodes + 3/3
+     TEST n  401 | win  31% | >=+50%  10% | >=+100%   4% | mean   +2.7% median -11.4% | avg loss   -19% | best +407% | top 10% of trades = 407% of profit | episodes + 8/16
+  S4 63s .70d trail option +50%/-35%, max 30
+     ALL  n  460 | win  50% | >=+50%  15% | >=+100%   6% | mean   +7.5% median  -0.2% | avg loss   -31% | best +407% | top 10% of trades = 167% of profit | episodes + 10/19
+     DEV  n   59 | win  81% | >=+50%  29% | >=+100%   8% | mean  +35.4% median +28.8% | avg loss   -31% | best +328% | top 10% of trades =  39% of profit | episodes + 3/3
+     TEST n  401 | win  45% | >=+50%  13% | >=+100%   5% | mean   +3.4% median  -4.9% | avg loss   -31% | best +407% | top 10% of trades = 350% of profit | episodes + 7/16
+
+   stress (IV 30% richer + spread 3%):
+  S1 42s .75d hold 10                        n  654 | win  55% | >=+50%  10% | >=+100%   3% | mean   +8.5% median  +3.2% | avg loss   -19% | best +205% | top 10% of trades =  97% of profit | episodes + 14/19
+  S2 63s .70d hold 20                        n  550 | win  47% | >=+50%  13% | >=+100%   2% | mean   +5.0% median  -3.0% | avg loss   -24% | best +188% | top 10% of trades = 170% of profit | episodes + 10/19
+  S3 63s .70d trail stock 10d low, max 30    n  460 | win  30% | >=+50%  10% | >=+100%   4% | mean   +0.4% median -14.0% | avg loss   -21% | best +353% | top 10% of trades = 2900% of profit | episodes + 9/19
+  S4 63s .70d trail option +50%/-35%, max 30 n  460 | win  47% | >=+50%  12% | >=+100%   4% | mean   +2.2% median  -3.3% | avg loss   -31% | best +353% | top 10% of trades = 493% of profit | episodes + 10/19
+
+B. CONCENTRATION: keep only the top K names per signal day (P50 scores exist from 2023-07)
+  S1 42s .75d hold 10  (scored trades 634 on 92 days)
+     all            n  634 | win  60% | >=+50%  14% | >=+100%   3% | mean  +13.7% median  +7.3% | avg loss   -19% | best +237% | top 10% of trades =  70% of profit | episodes + 14/17
+     top 1 P50 model       n   92 | win  58% | >=+50%  16% | >=+100%   5% | mean  +15.6% median  +5.9% | avg loss   -22% | best +237% | top 10% of trades =  80% of profit | episodes + 15/17
+     top 1 highest beta    n   92 | win  53% | >=+50%  16% | >=+100%   5% | mean  +13.2% median  +4.5% | avg loss   -19% | best +165% | top 10% of trades =  85% of profit | episodes + 12/17
+     top 1 deepest 5d drop n   92 | win  49% | >=+50%  12% | >=+100%   3% | mean   +8.9% median  -0.2% | avg loss   -18% | best +161% | top 10% of trades = 105% of profit | episodes + 12/17
+     top 1 random          mean  +10.5% (5th-95th pct of 200 draws +5.9% .. +15.2%)
+     top 2 P50 model       n  163 | win  59% | >=+50%  17% | >=+100%   4% | mean  +16.4% median +10.1% | avg loss   -20% | best +237% | top 10% of trades =  68% of profit | episodes + 17/17
+     top 2 highest beta    n  163 | win  58% | >=+50%  16% | >=+100%   3% | mean  +12.6% median  +7.2% | avg loss   -20% | best +165% | top 10% of trades =  74% of profit | episodes + 14/17
+     top 2 deepest 5d drop n  163 | win  56% | >=+50%  17% | >=+100%   4% | mean  +13.8% median  +5.8% | avg loss   -19% | best +161% | top 10% of trades =  72% of profit | episodes + 14/17
+     top 2 random          mean  +11.9% (5th-95th pct of 200 draws +9.2% .. +14.6%)
+     top 3 P50 model       n  226 | win  60% | >=+50%  17% | >=+100%   3% | mean  +14.7% median  +9.7% | avg loss   -21% | best +237% | top 10% of trades =  68% of profit | episodes + 17/17
+     top 3 highest beta    n  226 | win  57% | >=+50%  15% | >=+100%   3% | mean  +12.1% median  +6.5% | avg loss   -19% | best +165% | top 10% of trades =  76% of profit | episodes + 14/17
+     top 3 deepest 5d drop n  226 | win  58% | >=+50%  18% | >=+100%   4% | mean  +13.6% median  +5.9% | avg loss   -21% | best +161% | top 10% of trades =  71% of profit | episodes + 16/17
+     top 3 random          mean  +12.4% (5th-95th pct of 200 draws +10.3% .. +14.9%)
+  S2 63s .70d hold 20  (scored trades 531 on 86 days)
+     all            n  531 | win  50% | >=+50%  19% | >=+100%   3% | mean  +10.1% median  +0.3% | avg loss   -24% | best +224% | top 10% of trades =  98% of profit | episodes + 11/17
+     top 1 P50 model       n   86 | win  51% | >=+50%  22% | >=+100%   3% | mean  +13.3% median  +3.9% | avg loss   -25% | best +162% | top 10% of trades =  76% of profit | episodes + 14/17
+     top 1 highest beta    n   86 | win  45% | >=+50%  15% | >=+100%   6% | mean   +8.4% median  -5.7% | avg loss   -27% | best +190% | top 10% of trades = 133% of profit | episodes + 9/17
+     top 1 deepest 5d drop n   86 | win  47% | >=+50%  10% | >=+100%   3% | mean   +4.3% median  -3.6% | avg loss   -29% | best +146% | top 10% of trades = 218% of profit | episodes + 10/17
+     top 1 random          mean   +7.3% (5th-95th pct of 200 draws +2.3% .. +13.0%)
+     top 2 P50 model       n  154 | win  51% | >=+50%  19% | >=+100%   5% | mean  +12.9% median  +0.4% | avg loss   -23% | best +224% | top 10% of trades =  88% of profit | episodes + 13/17
+     top 2 highest beta    n  154 | win  44% | >=+50%  18% | >=+100%   5% | mean   +8.4% median  -4.7% | avg loss   -25% | best +190% | top 10% of trades = 128% of profit | episodes + 8/17
+     top 2 deepest 5d drop n  154 | win  49% | >=+50%  16% | >=+100%   5% | mean   +9.1% median  -1.0% | avg loss   -27% | best +176% | top 10% of trades = 115% of profit | episodes + 12/17
+     top 2 random          mean   +7.5% (5th-95th pct of 200 draws +4.3% .. +11.0%)
+     top 3 P50 model       n  211 | win  49% | >=+50%  20% | >=+100%   5% | mean  +12.4% median  -0.5% | avg loss   -24% | best +224% | top 10% of trades =  91% of profit | episodes + 12/17
+     top 3 highest beta    n  211 | win  43% | >=+50%  17% | >=+100%   5% | mean   +7.4% median  -5.6% | avg loss   -24% | best +224% | top 10% of trades = 153% of profit | episodes + 5/17
+     top 3 deepest 5d drop n  211 | win  47% | >=+50%  17% | >=+100%   5% | mean   +9.3% median  -2.7% | avg loss   -26% | best +190% | top 10% of trades = 120% of profit | episodes + 9/17
+     top 3 random          mean   +8.4% (5th-95th pct of 200 draws +6.0% .. +11.1%)
+  S3 63s .70d trail stock 10d low, max 30  (scored trades 442 on 82 days)
+     all            n  442 | win  31% | >=+50%  11% | >=+100%   5% | mean   +4.6% median -11.6% | avg loss   -19% | best +407% | top 10% of trades = 266% of profit | episodes + 9/17
+     top 1 P50 model       n   82 | win  30% | >=+50%  16% | >=+100%  11% | mean  +11.4% median -11.4% | avg loss   -19% | best +407% | top 10% of trades = 144% of profit | episodes + 11/17
+     top 1 highest beta    n   82 | win  22% | >=+50%  11% | >=+100%  10% | mean   +5.3% median -16.5% | avg loss   -22% | best +407% | top 10% of trades = 365% of profit | episodes + 8/17
+     top 1 deepest 5d drop n   82 | win  21% | >=+50%   7% | >=+100%   7% | mean   +2.1% median -12.9% | avg loss   -19% | best +407% | top 10% of trades = 738% of profit | episodes + 6/17
+     top 1 random          mean   +4.9% (5th-95th pct of 200 draws -0.9% .. +11.1%)
+     top 2 P50 model       n  145 | win  34% | >=+50%  12% | >=+100%  10% | mean  +11.1% median -10.9% | avg loss   -18% | best +407% | top 10% of trades = 150% of profit | episodes + 10/17
+     top 2 highest beta    n  145 | win  27% | >=+50%  11% | >=+100%   9% | mean   +5.5% median -13.9% | avg loss   -20% | best +407% | top 10% of trades = 300% of profit | episodes + 7/17
+     top 2 deepest 5d drop n  145 | win  27% | >=+50%  11% | >=+100%   9% | mean   +5.9% median -12.5% | avg loss   -19% | best +407% | top 10% of trades = 261% of profit | episodes + 8/17
+     top 2 random          mean   +6.7% (5th-95th pct of 200 draws +2.6% .. +11.0%)
+     top 3 P50 model       n  196 | win  32% | >=+50%  13% | >=+100%   9% | mean   +8.7% median -11.4% | avg loss   -18% | best +407% | top 10% of trades = 175% of profit | episodes + 11/17
+     top 3 highest beta    n  196 | win  29% | >=+50%   9% | >=+100%   7% | mean   +4.9% median -12.9% | avg loss   -20% | best +407% | top 10% of trades = 313% of profit | episodes + 9/17
+     top 3 deepest 5d drop n  196 | win  27% | >=+50%  11% | >=+100%   9% | mean   +5.1% median -12.7% | avg loss   -19% | best +407% | top 10% of trades = 299% of profit | episodes + 8/17
+     top 3 random          mean   +6.2% (5th-95th pct of 200 draws +2.7% .. +9.2%)
+  S4 63s .70d trail option +50%/-35%, max 30  (scored trades 442 on 82 days)
+     all            n  442 | win  49% | >=+50%  15% | >=+100%   6% | mean   +7.2% median  -0.8% | avg loss   -31% | best +407% | top 10% of trades = 177% of profit | episodes + 8/17
+     top 1 P50 model       n   82 | win  55% | >=+50%  21% | >=+100%  13% | mean  +17.3% median  +4.3% | avg loss   -36% | best +407% | top 10% of trades = 105% of profit | episodes + 11/17
+     top 1 highest beta    n   82 | win  46% | >=+50%  21% | >=+100%  10% | mean  +12.2% median  -4.6% | avg loss   -34% | best +407% | top 10% of trades = 164% of profit | episodes + 7/17
+     top 1 deepest 5d drop n   82 | win  38% | >=+50%  16% | >=+100%   9% | mean   +5.3% median  -9.5% | avg loss   -32% | best +407% | top 10% of trades = 344% of profit | episodes + 6/17
+     top 1 random          mean   +8.0% (5th-95th pct of 200 draws +1.0% .. +15.6%)
+     top 2 P50 model       n  145 | win  57% | >=+50%  18% | >=+100%  11% | mean  +17.6% median  +5.9% | avg loss   -32% | best +407% | top 10% of trades = 100% of profit | episodes + 11/17
+     top 2 highest beta    n  145 | win  50% | >=+50%  19% | >=+100%   9% | mean  +13.3% median  +1.2% | avg loss   -32% | best +407% | top 10% of trades = 129% of profit | episodes + 7/17
+     top 2 deepest 5d drop n  145 | win  44% | >=+50%  17% | >=+100%  10% | mean   +8.7% median  -4.9% | avg loss   -31% | best +407% | top 10% of trades = 186% of profit | episodes + 7/17
+     top 2 random          mean  +10.1% (5th-95th pct of 200 draws +5.1% .. +15.0%)
+     top 3 P50 model       n  196 | win  55% | >=+50%  18% | >=+100%  10% | mean  +15.0% median  +5.9% | avg loss   -32% | best +407% | top 10% of trades = 106% of profit | episodes + 11/17
+     top 3 highest beta    n  196 | win  50% | >=+50%  15% | >=+100%   7% | mean  +10.3% median  +0.5% | avg loss   -31% | best +407% | top 10% of trades = 155% of profit | episodes + 7/17
+     top 3 deepest 5d drop n  196 | win  45% | >=+50%  16% | >=+100%   9% | mean   +9.6% median  -3.8% | avg loss   -30% | best +407% | top 10% of trades = 162% of profit | episodes + 8/17
+     top 3 random          mean   +9.2% (5th-95th pct of 200 draws +6.0% .. +12.7%)
+
+C. FEW-TRADES PORTFOLIO: max 3 open, 10% of equity in premium each, P50-ranked within each signal day
+  S1 42s .75d hold 10                        trades  61 (doublers 3) | x3.48 | max DD 18% | 2023 +0.19, 2024 +0.47, 2025 +0.08, 2026 +1.74
+  S2 63s .70d hold 20                        trades  51 (doublers 0) | x1.82 | max DD 12% | 2023 +0.22, 2024 +0.36, 2025 +0.17, 2026 +0.07
+  S3 63s .70d trail stock 10d low, max 30    trades  38 (doublers 3) | x1.15 | max DD 15% | 2023 -0.05, 2024 -0.00, 2025 +0.20, 2026 -0.00
+  S4 63s .70d trail option +50%/-35%, max 30 trades  38 (doublers 4) | x1.44 | max DD 19% | 2023 +0.18, 2024 +0.10, 2025 +0.11, 2026 +0.05

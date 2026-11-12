@@ -45,6 +45,66 @@ def bs_vec(S, K, T, sig, cp):
     return np.where(T <= 0, intrinsic, out)
 
 
+def features_at(U, reg, vd, vix20, vix5, s, i):
+    """Feature dict for symbol s at bar i (known at that close). None when inputs are missing."""
+    spy = U['SPY']; S = U[s]; c = S['c']; o = S['o']; n = len(S['d'])
+    earn = S['earn']; band = S['earn_band']
+    lr = np.diff(np.log(np.array(c[:i + 1])), prepend=np.nan)
+    d = S['d'][i]; R0 = reg.get(d)
+    if not R0 or d not in spy['idx'] or d not in vd: return None
+    j = spy['idx'][d]; e = i + 1
+    rv20 = S['rv20'][i] or np.nan; rv60 = S['rv60'][i] or np.nan
+    prev_e = [k for k in earn if k <= i]; next_e = [k for k in sorted(band) if k > i]
+    last_move = (c[prev_e[-1]] / c[prev_e[-1] - 1] - 1) if prev_e and prev_e[-1] > 0 else np.nan
+    bw = S['bbw'][i]; lo = S['bbw_lo120'][i]; hi20 = S['hi20'][i]; lo20 = S['lo20'][i]
+    beta = np.nan
+    if j > 61:
+        a_ = lr[i - 59:i + 1]; b_ = np.diff(np.log(np.array(spy['c'][j - 60:j + 1])))
+        if len(a_) == len(b_) and np.var(b_) > 0: beta = float(np.cov(a_, b_)[0, 1] / np.var(b_))
+    hyg = U['HYG']; tlt = U['TLT']
+    return dict(
+        ret1=c[i] / c[i - 1] - 1, ret5=c[i] / c[i - 5] - 1, ret10=c[i] / c[i - 10] - 1, ret21=c[i] / c[i - 21] - 1,
+        ret63=c[i] / c[i - 63] - 1, rsi2=S['rsi2'][i], rsi14=S['rsi14'][i],
+        z20=(c[i] - S['sma20'][i]) / S['atr14'][i] if S['sma20'][i] and S['atr14'][i] else np.nan,
+        z50=(c[i] - S['sma50'][i]) / S['atr14'][i] if S['sma50'][i] and S['atr14'][i] else np.nan,
+        z200=(c[i] - S['sma200'][i]) / S['atr14'][i] if S['sma200'][i] and S['atr14'][i] else np.nan,
+        rv20=rv20, rv60=rv60, rv_ratio=rv20 / rv60 if rv60 == rv60 and rv60 else np.nan,
+        vol_ratio=S['v'][i] / S['vavg50'][i] if S['vavg50'][i] else np.nan,
+        pos20=(c[i] - lo20) / (hi20 - lo20) if hi20 and lo20 and hi20 > lo20 else np.nan,
+        bbw_pct=bw / lo if bw and lo else np.nan, gap=o[i] / c[i - 1] - 1,
+        range_atr=(S['h'][i] - S['l'][i]) / S['atr14'][i] if S['atr14'][i] else np.nan,
+        rs21=(c[i] / c[i - 21]) / (spy['c'][j] / spy['c'][j - 21]) - 1, rs63=(c[i] / c[i - 63]) / (spy['c'][j] / spy['c'][j - 63]) - 1,
+        beta=beta, days_to_earn=(next_e[0] - i) if next_e else 99, days_since_earn=(i - prev_e[-1]) if prev_e else 99,
+        last_earn_move=last_move, earn_in_hold=float(any(k in band for k in range(e, e + HOLD + 1))),
+        is_etf=float(s in L.ETFS), sector=SECTORS.index(SECTOR.get(s, 'index/macro')),
+        spy_ret5=spy['c'][j] / spy['c'][j - 5] - 1, spy_ret21=spy['c'][j] / spy['c'][j - 21] - 1,
+        spy_z200=spy['c'][j] / spy['sma200'][j] - 1, spy_trend=float(bool(R0['spy_trend'])), vix=vd[d],
+        vix_chg5=vix5.get(d, np.nan), vix_vs20=vd[d] / vix20[d] - 1 if d in vix20 else np.nan,
+        hyg_z50=(hyg['c'][hyg['idx'][d]] / hyg['sma50'][hyg['idx'][d]] - 1) if d in hyg['idx'] and hyg['sma50'][hyg['idx'][d]] else np.nan,
+        tlt_z50=(tlt['c'][tlt['idx'][d]] / tlt['sma50'][tlt['idx'][d]] - 1) if d in tlt['idx'] and tlt['sma50'][tlt['idx'][d]] else np.nan,
+        dow=__import__('datetime').date.fromisoformat(d).weekday())
+
+
+def vix_aux(vix):
+    vdates = sorted(vix); vix20 = {}; vix5 = {}
+    for j, d in enumerate(vdates):
+        if j >= 20: vix20[d] = sum(vix[x] for x in vdates[j - 19:j + 1]) / 20
+        if j >= 5: vix5[d] = vix[d] / vix[vdates[j - 5]] - 1
+    return vix20, vix5
+
+
+def score_last(U, reg, vix, syms):
+    """P(+50% within 10 sessions) for a CALL on each symbol at its last bar, from the model trained on all history."""
+    f = os.path.join(HERE, 'data', 'p50_model.pkl')
+    if not os.path.exists(f): return {}
+    m = pickle.load(open(f, 'rb')); vix20, vix5 = vix_aux(vix); out = {}
+    for s in syms:
+        i = len(U[s]['d']) - 1; ft = features_at(U, reg, vix, vix20, vix5, s, i)
+        if ft is None: continue
+        ft['cp'] = 1; out[s] = float(m.predict_proba(np.array([[ft[k] for k in FEATS]], dtype=float))[0, 1])
+    return out
+
+
 def build_rows(U, reg, vix):
     spy = U['SPY']; vd = {d: v for d, v in vix.items()}
     vdates = sorted(vd)
