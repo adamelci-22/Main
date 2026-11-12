@@ -1,0 +1,21 @@
+1024 real earnings reactions, 60 stocks, 2021-12-01 .. 2026-11-04
+average absolute move vs SPY on the reaction day: 5.9% (median 4.1%)
+Direction tests (share of reactions in the predicted direction; 50% = coin flip):
+  always UP                                            49.8% of 1024  (z -0.1)
+  same direction as the 20-session trend into the report 49.6% of 1024  (z -0.2)
+  same direction as the last earnings reaction         50.3% of 964  (z +0.2)
+After the reaction (post-earnings drift, next 5 sessions, same direction as the reaction):
+  big reactions (>4%): 53.1% of 529 continue; mean continuation -0.02%
+Biggest average movers (avg |reaction| over all reports):
+  PLTR   14.9% over 20 reports
+  SHOP   14.0% over 17 reports
+  SMCI   13.8% over 17 reports
+  SNOW   12.5% over 10 reports
+  PANW   11.1% over 9 reports
+  DELL   11.0% over 9 reports
+  META   10.5% over 20 reports
+  INTC   10.0% over 20 reports
+  NFLX    9.7% over 20 reports
+  SOFI    9.4% over 20 reports
+  RIVN    9.4% over 19 reports
+  TGT     9.3% over 9 reports

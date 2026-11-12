@@ -1,0 +1,86 @@
+FEAR-DIP trades: 654 (42-session 0.75-delta call, exit at the 10th session close)
+  ended >= +50%: 90 (14%)   touched >= +50% at some close during the hold: 120 (18%)
+  ended >= +100%: 22   ended positive: 391 (60%)   lost >= 50%: 10
+  session the peak came on, for the 120 that touched +50%: median 9.0, 1:0, 2:0, 3:7, 4:8, 5:8, 6:4, 7:9, 8:6, 9:19, 10:59
+
+A. +50% winners by name (repeat winners?)
+  BA    consumer/industrial trades 14  >=+50%:  5 ( 36%)  mean   +27%  DEV 2/3  TEST 3/11
+  AAPL  mega internet      trades 10  >=+50%:  3 ( 30%)  mean   +22%  DEV 0/0  TEST 3/10
+  SMH   semis/AI           trades 14  >=+50%:  3 ( 21%)  mean   +31%  DEV 1/3  TEST 2/11
+  HOOD  crypto/fintech     trades  7  >=+50%:  3 ( 43%)  mean   +49%  DEV 0/0  TEST 3/7
+  GLD   index/macro        trades 10  >=+50%:  3 ( 30%)  mean   +24%  DEV 0/0  TEST 3/10
+  NFLX  mega internet      trades  5  >=+50%:  3 ( 60%)  mean   +92%  DEV 0/0  TEST 3/5
+  INTC  semis/AI           trades  7  >=+50%:  3 ( 43%)  mean   +38%  DEV 0/0  TEST 3/7
+  JPM   banks/cards        trades 12  >=+50%:  3 ( 25%)  mean   +26%  DEV 1/4  TEST 2/8
+  GS    banks/cards        trades 10  >=+50%:  3 ( 30%)  mean   +24%  DEV 1/1  TEST 2/9
+  WFC   banks/cards        trades 10  >=+50%:  3 ( 30%)  mean   +27%  DEV 0/0  TEST 3/10
+  SPY   index/macro        trades 23  >=+50%:  2 (  9%)  mean   +12%  DEV 1/3  TEST 1/20
+  QQQ   index/macro        trades 17  >=+50%:  2 ( 12%)  mean   +19%  DEV 1/3  TEST 1/14
+  META  mega internet      trades  5  >=+50%:  2 ( 40%)  mean   +23%  DEV 1/1  TEST 1/4
+  XLF   banks/cards        trades 18  >=+50%:  2 ( 11%)  mean   +12%  DEV 1/1  TEST 1/17
+  XLK   index/macro        trades 13  >=+50%:  2 ( 15%)  mean   +16%  DEV 1/2  TEST 1/11
+  XLY   consumer/industrial trades 14  >=+50%:  2 ( 14%)  mean   +11%  DEV 1/1  TEST 1/13
+  XOM   energy             trades 11  >=+50%:  2 ( 18%)  mean   +17%  DEV 0/1  TEST 2/10
+  COP   energy             trades  5  >=+50%:  2 ( 40%)  mean   +23%  DEV 0/0  TEST 2/5
+  TLT   index/macro        trades 12  >=+50%:  2 ( 17%)  mean    -6%  DEV 1/1  TEST 1/11
+  SLV   index/macro        trades  8  >=+50%:  2 ( 25%)  mean   +15%  DEV 0/0  TEST 2/8
+
+B. By sector: share of trades ending >= +50%, mean return, DEV | TEST
+  mega internet        ALL  24% / +31.2% (n50)   DEV  33% / +31.9% (n3)   TEST  23% / +31.2% (n47)
+  EV/high beta         ALL  20% / +10.1% (n15)   DEV 100% / +125.2% (n1)   TEST  14% /  +1.9% (n14)
+  banks/cards          ALL  17% / +16.7% (n108)   DEV  42% / +26.7% (n12)   TEST  14% / +15.5% (n96)
+  semis/AI             ALL  17% / +26.4% (n66)   DEV  11% / +31.2% (n9)   TEST  18% / +25.6% (n57)
+  crypto/fintech       ALL  17% / +17.2% (n42)   DEV n0   TEST  17% / +17.2% (n42)
+  index/macro          ALL  12% / +10.5% (n124)   DEV  55% / +74.3% (n11)   TEST   8% /  +4.3% (n113)
+  energy               ALL  12% /  +2.9% (n42)   DEV   0% / -34.0% (n5)   TEST  14% /  +7.9% (n37)
+  software             ALL  10% /  +4.3% (n40)   DEV  14% / +17.1% (n7)   TEST   9% /  +1.5% (n33)
+  consumer/industrial  ALL  10% /  +8.2% (n122)   DEV  25% / +18.6% (n16)   TEST   8% /  +6.7% (n106)
+  health               ALL   7% /  +3.3% (n45)   DEV  25% / +31.7% (n4)   TEST   5% /  +0.5% (n41)
+
+C. Traits measured at the signal: thirds (low / mid / high). Columns: share ending >= +50% | mean return | n. DEV then TEST.
+  stock volatility (realised) (cuts 0.23 / 0.35)
+    DEV  low  33% +38.3% n 30 | mid  37% +29.4% n 27 | high   0%  +6.3% n 11
+    TEST low   6%  +4.7% n188 | mid  14% +14.2% n191 | high  15% +15.1% n207
+  beta to SPY (60d) (cuts 0.82 / 1.30)
+    DEV  low  29% +22.1% n 21 | mid  32% +29.0% n 28 | high  26% +38.8% n 19
+    TEST low  10%  +6.9% n197 | mid  11% +11.2% n190 | high  15% +16.3% n199
+  5-day % change (more negative = deeper dip) (cuts -6.71 / -3.37)
+    DEV  low  12%  +6.8% n  8 | mid  41% +36.7% n 27 | high  24% +29.3% n 33
+    TEST low  17% +18.3% n210 | mid  10%  +9.0% n191 | high   8%  +6.3% n185
+  ATRs below the 20-day average (cuts 1.39 / 2.57)
+    DEV  low  15% +18.0% n 33 | mid  60% +62.1% n 20 | high  20% +11.8% n 15
+    TEST low   9%  +7.8% n185 | mid  12% +12.8% n198 | high  15% +13.5% n203
+  % above the 200-day (cuts 0.87 / 7.81)
+    DEV  low  46% +45.4% n 26 | mid  18% +20.3% n 28 | high  21% +18.9% n 14
+    TEST low  12% +12.8% n192 | mid   9%  +8.4% n190 | high  14% +13.1% n204
+  3-month return % (cuts -4.60 / 3.99)
+    DEV  low  46% +48.1% n 35 | mid  14% +10.3% n 29 | high   0%  +7.8% n  4
+    TEST low  15% +14.2% n183 | mid   9%  +6.2% n189 | high  12% +13.8% n214
+  VIX at signal (cuts 21.51 / 24.09)
+    DEV  low  36% +32.6% n 53 | mid   7% +19.0% n 15 | high n0
+    TEST low   9%  +8.4% n158 | mid  15% +13.7% n207 | high  10% +11.5% n221
+  session number inside the fear episode (cuts 1.00 / 4.00)
+    DEV  low n0 | mid  24% +27.2% n 54 | high  50% +38.8% n 14
+    TEST low n0 | mid  12% +11.2% n379 | high  12% +11.9% n207
+
+D. By signal:
+  C1: n 278, ended >= +50% 10%, mean +9.9%, win 59%
+  C7: n 264, ended >= +50% 18%, mean +17.6%, win 62%
+  C8: n 112, ended >= +50% 14%, mean +12.0%, win 57%
+
+E. Rule candidates built from the traits (fixed cut: top third of volatility, i.e. rv >= DEV cut). Does it repeat in TEST?
+  all FEAR-DIP                       DEV  n  68  >=+50%  29%  win  71%  mean +29.6%  worst  -56%  t +5.2
+  all FEAR-DIP                       TEST n 586  >=+50%  12%  win  59%  mean +11.5%  worst  -74%  t +7.5
+  high vol only (rv >= 0.29)         DEV  n  23  >=+50%   9%  win  70%  mean +15.8%  worst  -27%  t +2.4
+  high vol only (rv >= 0.29)         TEST n 297  >=+50%  15%  win  62%  mean +15.3%  worst  -51%  t +7.0
+  high vol + 5d drop <= -8%          DEV  n   6  >=+50%   0%  win  67%  mean  +9.1%  worst  -27%  t +0.9
+  high vol + 5d drop <= -8%          TEST n 149  >=+50%  18%  win  67%  mean +18.9%  worst  -47%  t +6.4
+  first 3 sessions of an episode     DEV  n  54  >=+50%  24%  win  69%  mean +27.2%  worst  -56%  t +4.1
+  first 3 sessions of an episode     TEST n 379  >=+50%  12%  win  60%  mean +11.2%  worst  -74%  t +6.1
+  high vol + first 3 sessions        DEV  n  20  >=+50%   5%  win  70%  mean +14.8%  worst  -27%  t +2.1
+  high vol + first 3 sessions        TEST n 177  >=+50%  15%  win  60%  mean +13.8%  worst  -47%  t +4.8
+
+F. Exit rule test: take profit at +50% at a close (otherwise exit at session 10), all FEAR-DIP trades:
+  DEV  hold to day 10: mean +29.6%   take +50%: mean +23.7%   (n 68)
+  TEST hold to day 10: mean +11.5%   take +50%: mean +8.1%   (n 586)
+  ALL  hold to day 10: mean +13.4%   take +50%: mean +9.7%   (n 654)

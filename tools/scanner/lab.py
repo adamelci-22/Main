@@ -196,11 +196,14 @@ def option_trade(U, reg, vix, s, i, cp, oc):
     hs = lambda m: max(oc.hs_min, oc.hs_pct * m)
     fill = m0 + hs(m0) + oc.fee
     xk, why = e + oc.hold - 1, 'time'
+    peak = -1.0; peak_k = None
     for k in range(e, e + oc.hold):
         T = (oc.dte - (k - e) - 1) / 252                         # at the close of k
         eb = any(q in S_['earn_band'] for q in range(k + 1, e + oc.dte + 1))
         sg = iv_of(U, s, k, None, spy, vix.get(S_['d'][k]), eb)
         val = bs(S_['c'][k], K, T, sg, cp)
+        r_k = (max(val - hs(val) - oc.fee, 0)) / fill - 1
+        if r_k > peak: peak, peak_k = r_k, k - e + 1
         if oc.stop is not None and val <= fill * (1 - oc.stop): xk, why = k, 'stop'; break
         if oc.target is not None and val >= fill * (1 + oc.target): xk, why = k, 'target'; break
     T = (oc.dte - (xk - e) - 1) / 252
@@ -208,7 +211,7 @@ def option_trade(U, reg, vix, s, i, cp, oc):
     m1 = bs(S_['c'][xk], K, T, iv_of(U, s, xk, None, spy, vix.get(S_['d'][xk]), eb), cp)
     ex = max(m1 - hs(m1) - oc.fee, 0)
     return dict(sym=s, d=S_['d'][i], cp=cp, ret=ex / fill - 1, und=(S_['c'][xk] / S0 - 1) * cp, why=why,
-                prem_pct=fill / S0 * 100, iv=sig0, earn=earn_in_hold)
+                prem_pct=fill / S0 * 100, iv=sig0, earn=earn_in_hold, peak=peak, peak_day=peak_k, i=i)
 
 
 # ------------------------------------------------------------------ signals (evaluated at the close of i)
