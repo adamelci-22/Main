@@ -72,3 +72,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-12,USDG,B4.8,sell,usdg_sell,10:40,10:40:36,10:40:37,1,1,0,1,,1,0,2584,market sell all USDG on trigger (PB LABD ARMED 2-bar dip); order 6af5ddf4-dd23-4d84-a726-fc11c62e5ba9,,
 2026-11-12,USDG,B4.8,buy,usdg_rebuy,10:50,10:50:57,10:50:58,1,1,0,1,,1,0,2584,market buy dollar_amount 2584: LABD disarmed (dip low left the EMA band), USDG line hold or buy; order 6af5e061-3070-4f6f-8370-be088ef71871,,
 2026-11-12,USDG,B4.8,sell,usdg_sell,12:20,12:20:48,12:20:49,1,1,0,1,,1,0,2584,market sell all USDG on trigger (PB LABD ARMED 2-bar dip); order 6af5f570-a5d6-4129-ba7d-a81fbaad768f,,
+2026-11-12,USDG,B4.8,buy,usdg_rebuy,12:25,12:25:36,12:25:37,1,1,0,1,,1,0,2584,market buy dollar_amount 2584: LABD closed above trigger with trend off (no signal), USDG line hold or buy; order 6af5f690-892f-4971-a5f6-ec9c81978581,,
