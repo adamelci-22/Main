@@ -1,0 +1,69 @@
+Variable exits on the v5.2.46 system (governor 2026-11-12: "test a variable exit using the current as a default, find other exits
+
+==================== FADE (default v5.2.45 exits) ====================
+blocks: RH 26 90 setups, default +0.574R | M H1 21-24 334 setups, default +0.026R | M H2 24-26 398 setups, default +0.076R
+
+  ENTRY: 43 rules that helped on H1 (design); passing out of sample: 0. Top 8 by the weaker out-of-sample block:
+         box % < 1.15 -> 1/3@3R                                                                           H1 +0.006 | RH +0.005 ( 71%) | H2 +0.013 ( 97%)
+         ATR/R < 0.563 -> 100%@far edge                                                                   H1 +0.008 | RH +0.003 ( 57%) | H2 +0.007 ( 81%)
+         gap vs trade % < -0.457 -> 1/3@2R no lock                                                        H1 +0.021 | RH +0.044 ( 87%) | H2 +0.003 ( 57%)
+         prior-day level R >= 4.29 -> 100%@2R                                                             H1 +0.017 | RH +0.002 ( 55%) | H2 +0.002 ( 75%)
+         far edge R < 1.22 -> 100%@2R                                                                     H1 +0.003 | RH +0.005 ( 72%) | H2 +0.002 ( 73%)
+         ATR/R < 0.778 -> 1/3@3R                                                                          H1 +0.013 | RH +0.001 ( 56%) | H2 +0.007 ( 87%)
+         box % < 0.794 -> 1/3@2R chand1.5                                                                 H1 +0.003 | RH -0.017 ( 10%) | H2 +0.002 (100%)
+         retest depth < 0.117 -> 1/3@3R                                                                   H1 +0.010 | RH -0.019 ( 20%) | H2 +0.004 ( 87%)
+
+  DURING: 28 rules that helped on H1 (design); passing out of sample: 0. Top 8 by the weaker out-of-sample block:
+         arm 0.5R RSI divergence -> chandelier 1 ATR on all                                               H1 +0.000 | RH +0.000 ( 63%) | H2 -0.000 ( 34%)
+         arm 1R RSI divergence -> swing stop 3 bars                                                       H1 +0.000 | RH +0.000 ( 64%) | H2 -0.000 (  0%)
+         arm 1R RSI divergence -> chandelier 1 ATR on all                                                 H1 +0.000 | RH -0.000 (  0%) | H2 -0.000 (  0%)
+         arm 1R ER4 + QQQ against -> swing stop 3 bars                                                    H1 +0.001 | RH +0.003 ( 60%) | H2 -0.001 ( 48%)
+         arm 0.5R ER4 + QQQ against -> swing stop 3 bars                                                  H1 +0.002 | RH +0.001 ( 57%) | H2 -0.002 ( 45%)
+         arm 0.5R ER4 + QQQ against -> stop to +0.5R                                                      H1 +0.000 | RH -0.004 ( 38%) | H2 -0.004 ( 24%)
+         arm 1R QQQ against 0.25% & gave 0.3R -> swing stop 3 bars                                        H1 +0.001 | RH -0.001 ( 34%) | H2 -0.005 ( 22%)
+         arm 1R QQQ against 0.25% & gave 0.3R -> sell 1/3 now                                             H1 +0.001 | RH -0.003 ( 36%) | H2 -0.006 ( 16%)
+
+  BOTH: 43 rules that helped on H1 (design); passing out of sample: 0. Top 8 by the weaker out-of-sample block:
+         box % >= 1.15 AND arm 1R VWAP lost -> stop to +0.5R                                              H1 +0.004 | RH +0.008 ( 88%) | H2 +0.003 ( 71%)
+         far edge R < 1.22 AND arm 0.5R VWAP lost -> sell 1/3 + stop +0.5R                                H1 +0.005 | RH +0.008 ( 99%) | H2 +0.001 ( 68%)
+         ATR/R >= 0.778 AND arm 0.5R PSAR flip -> stop to +0.5R                                           H1 +0.004 | RH +0.000 (  0%) | H2 +0.001 ( 74%)
+         stop % < 0.5 AND arm 0.5R 3 lower highs & gave 0.3R -> sell 1/3 + stop +0.5R                     H1 +0.003 | RH +0.002 ( 58%) | H2 -0.000 ( 50%)
+         prior-day level R >= 4.29 AND arm 0.5R PSAR flip -> stop to +0.5R                                H1 +0.005 | RH +0.000 (  0%) | H2 -0.001 ( 46%)
+         retest depth < 0.224 AND arm 0.5R 3 lower highs & gave 0.3R -> stop to +0.5R                     H1 +0.008 | RH +0.005 ( 71%) | H2 -0.002 ( 38%)
+         prior-day level R >= 1.99 AND arm 0.5R 3 lower highs & gave 0.3R -> stop to +0.5R                H1 +0.007 | RH +0.004 ( 71%) | H2 -0.002 ( 38%)
+         RVOL >= 1.09 AND arm 0.5R ER4 + volume distribution -> chandelier 1 ATR on all                   H1 +0.006 | RH +0.006 ( 68%) | H2 -0.005 ( 24%)
+
+==================== PULLBACK (default v5.2.46 runner) ====================
+blocks: RH 26-03..10 94 setups, default +0.482R | MASSIVE H1 2 229 setups, default -0.025R | MASSIVE H2 2 223 setups, default +0.309R
+
+  ENTRY: 45 rules that helped on H1 (design); passing out of sample: 0. Top 8 by the weaker out-of-sample block:
+         stop % >= 0.882 -> 1/3 at 2R, EMA20                                                              H1 +0.015 | RH +0.015 ( 60%) | H2 +0.009 ( 64%)
+         RVOL < 0.983 -> 1/3 at 2R, EMA20                                                                 H1 +0.029 | RH +0.005 ( 52%) | H2 +0.004 ( 59%)
+         day move to entry % >= 4.2 -> 1/3 at 2R, EMA20                                                   H1 +0.009 | RH +0.014 ( 67%) | H2 +0.002 ( 56%)
+         gap % < -0.0761 -> 1/3 at 2R, EMA20                                                              H1 +0.030 | RH +0.008 ( 59%) | H2 +0.000 ( 53%)
+         prior day move % >= 2.92 -> 1/3 high, 3-ATR chandelier                                           H1 +0.005 | RH +0.001 ( 62%) | H2 +0.000 ( 49%)
+         QQQ day move % >= -0.328 -> 1/3 high, 3-ATR chandelier                                           H1 +0.002 | RH +0.000 (  0%) | H2 +0.005 ( 65%)
+         gap % < 2.18 -> 1/3 at 2R, EMA20                                                                 H1 +0.026 | RH +0.013 ( 58%) | H2 -0.003 ( 45%)
+         room to high (R) < 0.971 -> 1/3 high, hold to 13:30                                              H1 +0.001 | RH -0.005 (  0%) | H2 -0.008 (  0%)
+
+  DURING: 18 rules that helped on H1 (design); passing out of sample: 0. Top 8 by the weaker out-of-sample block:
+         pre: PSAR flip after +0.5R -> tight1                                                             H1 +0.019 | RH -0.000 ( 48%) | H2 +0.004 ( 58%)
+         pre: no target after 60 min -> tight1                                                            H1 +0.007 | RH -0.021 ( 19%) | H2 -0.011 ( 29%)
+         run: close < EMA9 -> hold                                                                        H1 +0.000 | RH -0.027 (  4%) | H2 -0.004 ( 33%)
+         pre: ER4 <= -0.5 after +0.5R -> tight1                                                           H1 +0.008 | RH -0.028 ( 14%) | H2 +0.004 ( 61%)
+         pre: PSAR flip after +0.5R -> be                                                                 H1 +0.015 | RH -0.033 (  1%) | H2 -0.017 ( 23%)
+         pre: no target after 60 min -> exit                                                              H1 +0.012 | RH -0.041 (  3%) | H2 -0.016 ( 25%)
+         pre: PSAR flip after +0.5R -> third                                                              H1 +0.021 | RH -0.052 (  0%) | H2 -0.020 ( 19%)
+         pre: ER4 <= -0.5 after +0.5R -> exit                                                             H1 +0.005 | RH -0.052 (  0%) | H2 -0.028 ( 15%)
+
+  BOTH: 46 rules that helped on H1 (design); passing out of sample: 0. Top 8 by the weaker out-of-sample block:
+         prior day move % >= 2.92 AND run: 3 lower closes -> exit                                         H1 +0.010 | RH -0.001 ( 35%) | H2 +0.000 ( 59%)
+         RVOL >= 0.983 AND pre: PSAR flip after +0.5R -> tight1                                           H1 +0.015 | RH -0.002 ( 48%) | H2 -0.002 ( 47%)
+         gap % < -0.0761 AND run: ER6 < -0.3 -> exit                                                      H1 +0.008 | RH +0.001 ( 56%) | H2 -0.005 ( 35%)
+         stop % >= 1.09 AND run: close < EMA9 -> hold                                                     H1 +0.011 | RH -0.010 (  0%) | H2 -0.002 ( 37%)
+         RVOL >= 1.32 AND pre: close < EMA9 after +0.5R -> tight1                                         H1 +0.004 | RH -0.006 ( 34%) | H2 -0.010 ( 27%)
+         trigger bar vol / 6-bar avg >= 0.944 AND run: ER6 < -0.3 -> hold                                 H1 +0.010 | RH -0.011 (  0%) | H2 -0.001 ( 27%)
+         room to high (R) < 1.33 AND pre: no target after 60 min -> exit                                  H1 +0.006 | RH -0.014 ( 18%) | H2 -0.014 ( 15%)
+         ATR/R < 0.812 AND pre: close < EMA9 after +0.5R -> tight1                                        H1 +0.007 | RH -0.017 (  8%) | H2 +0.011 ( 92%)
+
+Account check of passing rules (system alone, live account rules): none above means nothing to check.
