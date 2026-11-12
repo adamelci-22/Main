@@ -1,2 +1,4 @@
 __pycache__/
 *.pyc
+tools/scanner/data/*.pkl
+tools/scanner/data/*.npy
