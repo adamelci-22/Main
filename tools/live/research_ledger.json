@@ -416,5 +416,65 @@
   "method": "x.pb_judge_at_signal switch, improve.run_cf on the Robinhood sessions through 2026-10-29, current rules (v2)",
   "result": "PB trades 54 -> 57, wins 37 -> 37 (68.5% -> 64.9%); PB compounded +27.60% -> +25.32%; both systems +0.493 -> +0.482%/day, total +125.1 -> +121.1%. The 3 trades the model voids by repricing lost on balance in the backtest.",
   "verdict": "not adopted; kept as cycle candidate pb.judge_at_signal. The opposite fix (live skips when the ask at order time makes the stop distance < 0.75%, as the model does) is an execution rule change for the governor."
+ },
+ {
+  "id": "study.fade_exit_variants_2026-11-11",
+  "date": "2026-11-11",
+  "kind": "study",
+  "idea": "FADE exits for trades that reach +1R..2R and fade back (trails, step locks, splits, lower targets, scale-outs, time targets, detectors, learned classifier, setup-conditional, lock recheck)",
+  "method": "tools/backtest ratchet_*, tp_*, fadeback_screen, adaptive_exit, fade_setup_exits, fade_lock_recheck; RH + Massive halves, design on H1",
+  "result": "no variant beat the live exits out of sample; learned classifier AUC 0.64-0.65 out of sample, gated rule overfit (+0.141R in sample, +0.031R / -0.007R out)",
+  "verdict": "not adopted; live exits kept",
+  "champion_version": "5.2.44"
+ },
+ {
+  "id": "change.fade_stop_floor_0.5",
+  "date": "2026-11-12",
+  "kind": "change",
+  "idea": "FADE stop at least 0.5% of the proxy from the entry",
+  "method": "entry_fade.py, entry_fade_floor.py (floors 0.3-1.0), combo_candidates.py, verify_fade_floor.py",
+  "result": "FADE alone RH +89.3->+104.8%, H1 +2.8->+32.8%, H2 +24.6->+42.1%; plateau 0.3-1.0%; combined bootstrap 92/92/84%",
+  "verdict": "adopted v5.2.45 (governor \"push the new fade entry system\")",
+  "champion_version": "5.2.45"
+ },
+ {
+  "id": "change.pb_runner",
+  "date": "2026-11-12",
+  "kind": "change",
+  "idea": "PULLBACK: 1/3 at the morning high, 2/3 to breakeven and a 20-EMA close exit",
+  "method": "pb_exit_screen.py (70 exits), pb_exit_confirm.py, combo_floor_final.py, verify_pb_runner.py",
+  "result": "PB alone RH +29.9->+38.7%, H1 -19.7->-14.1%, H2 +33.9->+90.0%; combined on v5.2.45 +159.7->+162.7 / +11.5->+17.3 / +87.5->+161.2%; per setup RH neutral, H2 +0.145R (100%)",
+  "verdict": "adopted v5.2.46 (governor \"push the pull back runner\")",
+  "champion_version": "5.2.46"
+ },
+ {
+  "id": "study.entries_and_other_systems",
+  "date": "2026-11-12",
+  "kind": "study",
+  "idea": "FADE and PULLBACK entry mechanics and filters; published intraday systems; regime rotation",
+  "method": "entry_fade.py, entry_pb.py, other_systems.py, regime_rotation.py",
+  "result": "FADE: only the stop floor passed (21 mechanics, 13 filters); PULLBACK: 0 of 39; ORB/noise/VWAP/gap lose; first-hour momentum mirrors the book (H1 +53%, 2026 -18%); rotation unstable",
+  "verdict": "only the floor adopted; first-hour momentum noted as a regime indicator candidate",
+  "champion_version": "5.2.45"
+ },
+ {
+  "id": "study.fade_exit_on_floor",
+  "date": "2026-11-12",
+  "kind": "study",
+  "idea": "FADE exits re-searched on the floored system",
+  "method": "fade_exit_floor.py, combo_floor_final.py",
+  "result": "only pass: breakeven lock at +0.5R (+6..+7.5 points, bootstrap 61-72%, single peak, win rate 71->62%, lockout risk)",
+  "verdict": "not adopted; live exits kept",
+  "champion_version": "5.2.46"
+ },
+ {
+  "id": "study.variable_exits_v5.2.46",
+  "date": "2026-11-12",
+  "kind": "study",
+  "idea": "entry-triggered, mid-trade and combined exit overrides on the v5.2.46 defaults, both systems",
+  "method": "variable_exits.py, design on Massive H1, judged on H2 and RH, bootstrap > 90%",
+  "result": "FADE 114 and PULLBACK 109 rules helped on H1; 0 passed out of sample; near misses about 0.01R/trade",
+  "verdict": "not adopted; defaults kept; re-run at 30 live trades per system (archive/research_2026-11-12.md)",
+  "champion_version": "5.2.46"
  }
 ]
