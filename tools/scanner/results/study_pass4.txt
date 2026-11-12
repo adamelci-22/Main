@@ -1,0 +1,46 @@
+== 7. FEAR-DIP (C1|C7|C8, SPY 200d rising & VIX >= 20, 42-session 0.75-delta call, 10-session hold) ==
+all trades: n  654 win  60% avgW   +35% avgL   -19% EV +13.4% t +8.91 PF 2.75 und +3.59%
+19 episodes:
+  ep  1 2023-05-04 .. 2023-05-04  trades   8  win  50%  mean   -3.8%  stock move +1.02%
+  ep  2 2023-05-24 .. 2023-05-24  trades  12  win  50%  mean   +8.8%  stock move +1.95%
+  ep  3 2023-10-19 .. 2023-10-27  trades  48  win  79%  mean  +40.4%  stock move +3.80%
+  ep  4 2024-08-02 .. 2024-08-09  trades  51  win  90%  mean  +41.0%  stock move +8.84%
+  ep  5 2024-09-03 .. 2024-09-06  trades  28  win  61%  mean  +12.9%  stock move +3.54%
+  ep  6 2024-10-03 .. 2024-10-15  trades  21  win  43%  mean   +4.0%  stock move +1.53%
+  ep  7 2024-10-25 .. 2024-11-04  trades  29  win  66%  mean  +31.4%  stock move +6.64%
+  ep  8 2024-12-18 .. 2024-12-19  trades  47  win  36%  mean   -5.8%  stock move +1.58%
+  ep  9 2025-02-27 .. 2025-03-13  trades  59  win  42%  mean   -3.4%  stock move +0.48%
+  ep 10 2025-03-28 .. 2025-04-17  trades  67  win  63%  mean  +16.0%  stock move +3.75%
+  ep 11 2025-05-21 .. 2025-05-23  trades  15  win  53%  mean   +5.9%  stock move +2.70%
+  ep 12 2025-06-13 .. 2025-06-20  trades  17  win  59%  mean  +10.6%  stock move +4.27%
+  ep 13 2025-08-01 .. 2025-08-01  trades  26  win  69%  mean  +17.3%  stock move +3.54%
+  ep 14 2025-10-10 .. 2025-10-17  trades  23  win  83%  mean  +14.8%  stock move +4.25%
+  ep 15 2025-11-13 .. 2025-11-24  trades  49  win  82%  mean  +20.4%  stock move +5.18%
+  ep 16 2026-01-20 .. 2026-01-20  trades  13  win  38%  mean   -4.2%  stock move -0.09%
+  ep 17 2026-02-05 .. 2026-04-08  trades 112  win  40%  mean   +1.6%  stock move +2.01%
+  ep 18 2026-06-05 .. 2026-06-10  trades  16  win  75%  mean  +12.2%  stock move +6.54%
+  ep 19 2026-07-29 .. 2026-07-29  trades  13  win  85%  mean  +22.7%  stock move +9.01%
+episode-level: 15/19 episodes positive, mean of episode means +12.8%, median +12.2%
+portfolio 5% premium per trade, max 6 open: x2.68 total, max drawdown 15%, P&L by year (fraction of start): 2023 +0.27, 2024 +0.28, 2025 +0.26, 2026 +0.86
+portfolio 3% premium per trade, max 10 open: x2.18 total, max drawdown 13%, P&L by year (fraction of start): 2023 +0.22, 2024 +0.27, 2025 +0.20, 2026 +0.50
+portfolio 10% premium per trade, max 4 open: x5.34 total, max drawdown 19%, P&L by year (fraction of start): 2023 +0.60, 2024 +0.66, 2025 +0.60, 2026 +2.49
+
+== 8. FEAR-DIP sensitivity: IV premium, spread, expiry ==
+vrp 1.15 (base)          ALL n  654 win  60% avgW   +35% avgL   -19% EV +13.4% t +8.91 PF 2.75 und +3.59%
+                         DEV +29.6% (n 68)  TEST +11.5% (n 586)
+vrp 1.30                 ALL n  654 win  59% avgW   +32% avgL   -18% EV +11.8% t +8.41 PF 2.59 und +3.59%
+                         DEV +28.0% (n 68)  TEST  +9.9% (n 586)
+vrp 1.50                 ALL n  654 win  58% avgW   +30% avgL   -17% EV +10.2% t +7.79 PF 2.41 und +3.59%
+                         DEV +26.4% (n 68)  TEST  +8.3% (n 586)
+spread 3% of premium     ALL n  654 win  56% avgW   +33% avgL   -20% EV +10.0% t +6.88 PF 2.16 und +3.59%
+                         DEV +25.8% (n 68)  TEST  +8.2% (n 586)
+vrp 1.3 + spread 3%      ALL n  654 win  55% avgW   +31% avgL   -19% EV  +8.5% t +6.24 PF 2.00 und +3.59%
+                         DEV +24.2% (n 68)  TEST  +6.7% (n 586)
+21-session expiry        ALL n  654 win  62% avgW   +51% avgL   -29% EV +20.1% t +9.47 PF 2.81 und +3.59%
+                         DEV +36.8% (n 68)  TEST +18.2% (n 586)
+hold 5                   ALL n  728 win  49% avgW   +24% avgL   -17% EV  +3.1% t +2.78 PF 1.35 und +1.34%
+                         DEV  +1.7% (n 82)  TEST  +3.3% (n 646)
+hold 15                  ALL n  616 win  59% avgW   +43% avgL   -24% EV +15.9% t +8.45 PF 2.60 und +4.61%
+                         DEV +34.7% (n 66)  TEST +13.6% (n 550)
+0.60 delta               ALL n  654 win  53% avgW   +47% avgL   -24% EV +13.4% t +6.60 PF 2.17 und +3.59%
+                         DEV +39.1% (n 68)  TEST +10.4% (n 586)

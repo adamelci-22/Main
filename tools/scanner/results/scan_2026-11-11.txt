@@ -1,0 +1,22 @@
+MACRO / REGIME  (bars through 2026-11-10, VIX close 2026-11-11)
+  SPY 749.92: +2.6% vs 200d, 200d RISING (+0.99% in 20 sessions), -2.0% vs 50d
+  VIX 17.49 (20d avg 19.31, falling). Fear threshold 20: NOT MET
+  Credit HYG -0.7% vs 50d (risk-off). Rates TLT +0.7% vs 50d (yields falling)
+  1-month leaders: XLV +9.8%, XLP +7.8%, XLY +7.8%, XLF +5.9% | laggards: ARKK -12.4%, XLK -14.0%, SMH -18.2%
+  FEAR-DIP RULE: OFF: no new swing calls (VIX below 20)
+
+FEAR-DIP SIGNALS ON THE LAST BAR (1)  [regime OFF: shown for the watchlist only, do not trade]
+  XOM      164.47 [C1] RSI2  8.3  5d  -7.3%  vs200d  +5.5%  | no earnings date on file
+        plan: ~60-day CALL, strike about 151 (0.75 delta), model premium about 17.74 (10.8% of stock). Hold 10 sessions.
+
+WATCHLIST: uptrend names near a dip (above 200d, RSI2 < 20), 3: CRM(18), CVX(18), MSFT(20)
+
+RULE STATS (backtest 2023-2026, modelled option prices): 654 trades, 19 episodes, win 60%, avg win +35%, avg loss -19%, EV +13.4% per trade
+   C1: n 278, win 59%, EV +9.9%
+   C7: n 264, win 62%, EV +17.6%
+   C8: n 112, win 57%, EV +12.0%
+
+NEXT STEPS FOR THE SESSION: (1) Massive /v2/reference/news for each signal name: veto company-specific bad news.
+ (2) get_option_chains + get_option_instruments for the ~55-65 DTE expiry, strike nearest the plan; get_option_quotes.
+ (3) score each quote: scanner.py --contract SYM STRIKE ASK IV SESSIONS. Take EV > +5% and P(profit) > 50% only.
+ (4) size: premium <= 5% of the account per trade, max 6 open. Exit at the 10th session close, or earlier on a news veto.

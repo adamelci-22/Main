@@ -1,0 +1,147 @@
+
+== 3. Robustness: option structure and IV assumption (DEV | TEST mean per trade) ==
+C1 uptrend pullback: >200 & >50, RSI2<10 -> CALL
+   base 21d .60d hold10 vrp1.15   DEV   -9.2% t -3.4 n 552 | TEST   -1.7% t -0.7 n 736
+   vrp 1.00 (IV = realised)       DEV   -6.2% t -2.0 n 552 | TEST   +1.4% t +0.5 n 736
+   42-session expiry              DEV   -6.6% t -3.7 n 552 | TEST   -1.4% t -0.9 n 736
+   0.75 delta (ITM)               DEV   -4.8% t -2.2 n 552 | TEST   +1.5% t +0.8 n 736
+   hold 5                         DEV   -5.2% t -3.3 n 691 | TEST   -2.7% t -1.9 n 932
+   42d expiry .75 delta           DEV   -3.9% t -2.7 n 552 | TEST   +0.4% t +0.3 n 736
+   stop -50% target +100%         DEV  -10.1% t -4.1 n 552 | TEST   -1.6% t -0.8 n 736
+C2 breakout: close > prior 55d high, vol >1.5x, >200 -> CALL
+   base 21d .60d hold10 vrp1.15   DEV   +2.2% t +0.5 n 309 | TEST   -2.6% t -0.8 n 373
+   vrp 1.00 (IV = realised)       DEV   +6.6% t +1.4 n 309 | TEST   +0.3% t +0.1 n 373
+   42-session expiry              DEV   +1.5% t +0.5 n 309 | TEST   -0.4% t -0.2 n 373
+   0.75 delta (ITM)               DEV   +4.4% t +1.3 n 309 | TEST   +0.5% t +0.2 n 373
+   hold 5                         DEV   -1.5% t -0.7 n 377 | TEST   -3.1% t -1.5 n 456
+   42d expiry .75 delta           DEV   +2.6% t +1.1 n 309 | TEST   +0.6% t +0.3 n 373
+   stop -50% target +100%         DEV   -0.9% t -0.3 n 309 | TEST   -1.4% t -0.5 n 373
+C3 squeeze breakout: BB width at 6m low, close > 20d high -> CALL
+   base 21d .60d hold10 vrp1.15   DEV   -3.7% t -0.6 n 110 | TEST  -10.9% t -1.9 n 132
+   vrp 1.00 (IV = realised)       DEV   -0.8% t -0.1 n 110 | TEST   -8.4% t -1.3 n 132
+   42-session expiry              DEV   -3.4% t -0.9 n 110 | TEST   -6.6% t -1.7 n 132
+   0.75 delta (ITM)               DEV   -0.1% t -0.0 n 110 | TEST   -6.8% t -1.5 n 132
+   hold 5                         DEV   -8.0% t -2.5 n 117 | TEST   -6.6% t -1.4 n 136
+   42d expiry .75 delta           DEV   -1.1% t -0.4 n 110 | TEST   -4.8% t -1.6 n 132
+   stop -50% target +100%         DEV   -0.3% t -0.1 n 110 | TEST  -10.4% t -2.1 n 132
+C4 post-earnings drift UP: earnings day gap >+4%, closes top 30% -> CA
+   base 21d .60d hold10 vrp1.15   DEV   -4.5% t -0.5 n  33 | TEST   -9.7% t -1.1 n  29
+   vrp 1.00 (IV = realised)       DEV   -0.3% t -0.0 n  33 | TEST   -6.7% t -0.7 n  29
+   42-session expiry              DEV   -1.0% t -0.1 n  33 | TEST   -3.2% t -0.5 n  29
+   0.75 delta (ITM)               DEV   +0.5% t +0.1 n  33 | TEST   -4.5% t -0.6 n  29
+   hold 5                         DEV  -13.9% t -2.8 n  33 | TEST   +1.8% t +0.2 n  30
+   42d expiry .75 delta           DEV   +1.1% t +0.2 n  33 | TEST   -1.6% t -0.3 n  29
+   stop -50% target +100%         DEV  -10.1% t -1.2 n  33 | TEST   -5.6% t -0.6 n  29
+P4 post-earnings drift DOWN: gap <-4%, closes bottom 30% -> PUT
+   base 21d .60d hold10 vrp1.15   DEV  -22.2% t -4.1 n  39 | TEST   -8.4% t -1.0 n  33
+   vrp 1.00 (IV = realised)       DEV  -22.1% t -3.6 n  39 | TEST   -5.7% t -0.6 n  33
+   42-session expiry              DEV  -13.2% t -3.5 n  39 | TEST   -5.3% t -1.0 n  33
+   0.75 delta (ITM)               DEV  -15.0% t -3.2 n  39 | TEST   -4.5% t -0.7 n  33
+   hold 5                         DEV   -9.3% t -2.1 n  39 | TEST   -8.7% t -2.0 n  33
+   42d expiry .75 delta           DEV   -9.7% t -3.1 n  39 | TEST   -3.3% t -0.8 n  33
+   stop -50% target +100%         DEV  -20.9% t -4.1 n  39 | TEST   -7.1% t -0.9 n  33
+C5 relative strength leader: 3m return top 10% of universe, >50 & >200
+   base 21d .60d hold10 vrp1.15   DEV   +1.1% t +0.2 n 208 | TEST   -6.1% t -1.5 n 269
+   vrp 1.00 (IV = realised)       DEV   +6.7% t +1.2 n 208 | TEST   -1.5% t -0.3 n 269
+   42-session expiry              DEV   +0.2% t +0.1 n 208 | TEST   -5.6% t -2.1 n 269
+   0.75 delta (ITM)               DEV   +4.6% t +1.2 n 208 | TEST   -1.3% t -0.4 n 269
+   hold 5                         DEV   -2.6% t -1.1 n 357 | TEST   -7.0% t -3.8 n 463
+   42d expiry .75 delta           DEV   +2.5% t +0.9 n 208 | TEST   -2.3% t -1.1 n 269
+   stop -50% target +100%         DEV   -1.9% t -0.5 n 208 | TEST   -4.3% t -1.2 n 269
+P1 downtrend rally fail: <200 & 50<200, RSI2>90 -> PUT
+   base 21d .60d hold10 vrp1.15   DEV   -7.1% t -2.5 n 474 | TEST  -11.7% t -4.4 n 455
+   vrp 1.00 (IV = realised)       DEV   -4.8% t -1.5 n 474 | TEST   -9.6% t -3.2 n 455
+   42-session expiry              DEV   -5.8% t -3.3 n 474 | TEST   -7.6% t -4.6 n 455
+   0.75 delta (ITM)               DEV   -3.8% t -1.7 n 474 | TEST   -7.4% t -3.6 n 455
+   hold 5                         DEV   -5.7% t -3.7 n 604 | TEST  -10.1% t -7.0 n 613
+   42d expiry .75 delta           DEV   -3.7% t -2.8 n 474 | TEST   -5.2% t -4.1 n 455
+   stop -50% target +100%         DEV   -5.3% t -2.0 n 474 | TEST  -10.4% t -4.2 n 455
+P2 breakdown: close < prior 20d low, vol >1.5x, <200 -> PUT
+   base 21d .60d hold10 vrp1.15   DEV  -14.7% t -3.9 n 253 | TEST  -27.8% t-10.3 n 315
+   vrp 1.00 (IV = realised)       DEV  -13.7% t -3.3 n 253 | TEST  -27.6% t -9.1 n 315
+   42-session expiry              DEV   -7.7% t -3.0 n 253 | TEST  -17.3% t -9.7 n 315
+   0.75 delta (ITM)               DEV  -10.9% t -3.7 n 253 | TEST  -20.5% t -9.5 n 315
+   hold 5                         DEV  -12.1% t -4.8 n 292 | TEST  -12.6% t -6.7 n 376
+   42d expiry .75 delta           DEV   -6.3% t -3.3 n 253 | TEST  -13.1% t -9.6 n 315
+   stop -50% target +100%         DEV  -13.4% t -4.0 n 253 | TEST  -24.9% t -9.9 n 315
+C6 capitulation bounce: RSI2<5, close >3 ATR below 20SMA, VIX>25 -> CA
+   base 21d .60d hold10 vrp1.15   DEV  -12.0% t -1.5 n  72 | TEST  +33.4% t +5.8 n 123
+   vrp 1.00 (IV = realised)       DEV  -10.1% t -1.1 n  72 | TEST  +40.6% t +6.2 n 123
+   42-session expiry              DEV   -7.0% t -1.4 n  72 | TEST  +20.8% t +5.5 n 123
+   0.75 delta (ITM)               DEV   -8.0% t -1.3 n  72 | TEST  +32.1% t +7.7 n 123
+   hold 5                         DEV   -8.8% t -1.9 n  79 | TEST  +22.3% t +5.2 n 126
+   42d expiry .75 delta           DEV   -5.2% t -1.3 n  72 | TEST  +20.6% t +7.6 n 123
+   stop -50% target +100%         DEV  -11.7% t -1.6 n  72 | TEST  +41.3% t +6.6 n 123
+C7 breakdown reversal: close < prior 20d low on vol >1.5x -> CALL (mea
+   base 21d .60d hold10 vrp1.15   DEV   +1.4% t +0.4 n 333 | TEST   +2.4% t +0.8 n 461
+   vrp 1.00 (IV = realised)       DEV   +4.9% t +1.1 n 333 | TEST   +6.2% t +1.7 n 461
+   42-session expiry              DEV   +2.3% t +0.9 n 333 | TEST   +2.3% t +1.1 n 461
+   0.75 delta (ITM)               DEV   +3.3% t +1.1 n 333 | TEST   +4.9% t +2.0 n 461
+   hold 5                         DEV   +8.5% t +2.8 n 382 | TEST   -0.1% t -0.1 n 559
+   42d expiry .75 delta           DEV   +2.6% t +1.2 n 333 | TEST   +3.5% t +2.1 n 461
+   stop -50% target +100%         DEV   +3.9% t +1.0 n 333 | TEST   +3.1% t +1.0 n 461
+C8 deep oversold in uptrend: >200, RSI2<5, 3 down days -> CALL
+   base 21d .60d hold10 vrp1.15   DEV   -3.7% t -1.1 n 382 | TEST   +0.1% t +0.0 n 479
+   vrp 1.00 (IV = realised)       DEV   -0.0% t -0.0 n 382 | TEST   +3.8% t +1.1 n 479
+   42-session expiry              DEV   -3.6% t -1.8 n 382 | TEST   -0.5% t -0.2 n 479
+   0.75 delta (ITM)               DEV   +0.4% t +0.2 n 382 | TEST   +2.9% t +1.2 n 479
+   hold 5                         DEV   -3.8% t -1.9 n 442 | TEST   -1.5% t -0.8 n 559
+   42d expiry .75 delta           DEV   -0.8% t -0.5 n 382 | TEST   +1.3% t +0.8 n 479
+   stop -50% target +100%         DEV   -2.1% t -0.7 n 382 | TEST   +0.9% t +0.3 n 479
+
+== 4. Filters on every call signal (base option) ==
+C1 uptrend pullback: >200 & >50, R | market with trade (SPY>200 calls / DEV   -8.3% t -2.8 n 485 | TEST   -1.7% t -0.7 n 721
+C1 uptrend pullback: >200 & >50, R | VIX < 20                           DEV   -8.4% t -2.7 n 450 | TEST   -7.3% t -2.8 n 569
+C1 uptrend pullback: >200 & >50, R | VIX >= 20                          DEV  -10.9% t -2.0 n 120 | TEST  +12.9% t +3.0 n 252
+C1 uptrend pullback: >200 & >50, R | VIX falling (VIX < 20d avg)        DEV  -14.6% t -4.0 n 244 | TEST   -3.3% t -1.0 n 359
+C1 uptrend pullback: >200 & >50, R | credit risk-on (HYG>50SMA)         DEV   -6.7% t -1.8 n 296 | TEST   -5.5% t -1.8 n 407
+C2 breakout: close > prior 55d hig | market with trade (SPY>200 calls / DEV   +4.6% t +1.0 n 276 | TEST   -2.3% t -0.7 n 361
+C2 breakout: close > prior 55d hig | VIX < 20                           DEV   +5.6% t +1.1 n 262 | TEST   -4.1% t -1.1 n 331
+C2 breakout: close > prior 55d hig | VIX >= 20                          DEV   -9.9% t -1.2 n  54 | TEST   +6.4% t +0.9 n  66
+C2 breakout: close > prior 55d hig | VIX falling (VIX < 20d avg)        DEV   +1.1% t +0.2 n 237 | TEST   -2.3% t -0.5 n 221
+C2 breakout: close > prior 55d hig | credit risk-on (HYG>50SMA)         DEV   +1.9% t +0.4 n 233 | TEST   -0.8% t -0.2 n 268
+C3 squeeze breakout: BB width at 6 | market with trade (SPY>200 calls / DEV   +0.3% t +0.1 n  91 | TEST  -11.0% t -1.9 n 131
+C3 squeeze breakout: BB width at 6 | VIX < 20                           DEV   +3.1% t +0.5 n  88 | TEST  -11.0% t -1.8 n 123
+C3 squeeze breakout: BB width at 6 | VIX >= 20                          DEV  -30.8% t -2.8 n  22 | TEST  -13.9% t -0.9 n  11
+C3 squeeze breakout: BB width at 6 | VIX falling (VIX < 20d avg)        DEV   -1.7% t -0.2 n  82 | TEST  -11.3% t -2.1 n  93
+C3 squeeze breakout: BB width at 6 | credit risk-on (HYG>50SMA)         DEV   -0.7% t -0.1 n  80 | TEST  -11.5% t -1.7 n 103
+C4 post-earnings drift UP: earning | market with trade (SPY>200 calls / DEV   -2.1% t -0.2 n  25 | TEST   -9.7% t -1.1 n  29
+C4 post-earnings drift UP: earning | VIX < 20                           DEV   +0.1% t +0.0 n  23 | TEST  -18.8% t -2.2 n  25
+C4 post-earnings drift UP: earning | VIX falling (VIX < 20d avg)        DEV  -10.3% t -0.8 n  19 | TEST   -6.3% t -0.6 n  18
+C4 post-earnings drift UP: earning | credit risk-on (HYG>50SMA)         DEV   -6.5% t -0.6 n  25 | TEST  -20.9% t -2.1 n  18
+P4 post-earnings drift DOWN: gap < | VIX < 20                           DEV  -24.3% t -3.9 n  27 | TEST   -1.6% t -0.2 n  25
+P4 post-earnings drift DOWN: gap < | VIX >= 20                          DEV  -17.3% t -1.7 n  12 | TEST  -29.9% t -1.9 n   8
+P4 post-earnings drift DOWN: gap < | VIX falling (VIX < 20d avg)        DEV  -24.9% t -3.3 n  17 | TEST   +0.2% t +0.0 n  14
+P4 post-earnings drift DOWN: gap < | credit risk-on (HYG>50SMA)         DEV  -17.3% t -2.0 n  19 | TEST   -1.4% t -0.1 n  16
+C5 relative strength leader: 3m re | market with trade (SPY>200 calls / DEV   -0.2% t -0.0 n 173 | TEST   -6.5% t -1.6 n 253
+C5 relative strength leader: 3m re | VIX < 20                           DEV   +1.9% t +0.4 n 172 | TEST   -8.7% t -1.9 n 231
+C5 relative strength leader: 3m re | VIX >= 20                          DEV   -1.2% t -0.2 n  60 | TEST  +12.6% t +1.6 n  91
+C5 relative strength leader: 3m re | VIX falling (VIX < 20d avg)        DEV   -0.2% t -0.0 n 159 | TEST   -7.7% t -1.5 n 197
+C5 relative strength leader: 3m re | credit risk-on (HYG>50SMA)         DEV   +3.3% t +0.6 n 142 | TEST  -11.1% t -2.3 n 175
+P1 downtrend rally fail: <200 & 50 | market with trade (SPY>200 calls / DEV   +1.8% t +0.4 n 210 | TEST  -23.7% t -3.2 n  60
+P1 downtrend rally fail: <200 & 50 | VIX < 20                           DEV  -18.0% t -5.5 n 276 | TEST   -9.4% t -3.3 n 388
+P1 downtrend rally fail: <200 & 50 | VIX >= 20                          DEV   -0.7% t -0.2 n 245 | TEST  -18.4% t -3.4 n 106
+P1 downtrend rally fail: <200 & 50 | VIX falling (VIX < 20d avg)        DEV   -7.6% t -2.2 n 379 | TEST  -12.9% t -4.5 n 376
+P1 downtrend rally fail: <200 & 50 | credit risk-on (HYG>50SMA)         DEV   +8.0% t +1.8 n 232 | TEST  -13.1% t -2.9 n 199
+P2 breakdown: close < prior 20d lo | market with trade (SPY>200 calls / DEV  -14.0% t -2.6 n 131 | TEST  -38.7% t-11.9 n  85
+P2 breakdown: close < prior 20d lo | VIX < 20                           DEV  -17.8% t -3.0 n 111 | TEST  -13.1% t -3.0 n 159
+P2 breakdown: close < prior 20d lo | VIX >= 20                          DEV   -9.6% t -1.9 n 152 | TEST  -40.0% t-15.1 n 180
+P2 breakdown: close < prior 20d lo | VIX falling (VIX < 20d avg)        DEV  -19.1% t -2.8 n  89 | TEST   -9.9% t -1.5 n  82
+P2 breakdown: close < prior 20d lo | credit risk-on (HYG>50SMA)         DEV  -13.0% t -2.7 n 183 | TEST  -30.9% t -9.9 n 225
+C6 capitulation bounce: RSI2<5, cl | VIX >= 20                          DEV  -12.0% t -1.5 n  72 | TEST  +33.4% t +5.8 n 123
+C7 breakdown reversal: close < pri | market with trade (SPY>200 calls / DEV   +1.7% t +0.3 n 192 | TEST   -1.9% t -0.5 n 373
+C7 breakdown reversal: close < pri | VIX < 20                           DEV   +1.5% t +0.3 n 175 | TEST  -13.3% t -3.3 n 242
+C7 breakdown reversal: close < pri | VIX >= 20                          DEV   +3.2% t +0.6 n 168 | TEST  +19.3% t +4.3 n 259
+C7 breakdown reversal: close < pri | VIX falling (VIX < 20d avg)        DEV   -0.5% t -0.1 n 110 | TEST  -12.7% t -2.2 n 114
+C7 breakdown reversal: close < pri | credit risk-on (HYG>50SMA)         DEV   -8.0% t -1.3 n 113 | TEST   -6.6% t -1.3 n 183
+C8 deep oversold in uptrend: >200, | market with trade (SPY>200 calls / DEV   -4.7% t -1.4 n 318 | TEST   -2.4% t -0.8 n 454
+C8 deep oversold in uptrend: >200, | VIX < 20                           DEV   -4.2% t -1.2 n 298 | TEST   -9.3% t -2.8 n 345
+C8 deep oversold in uptrend: >200, | VIX >= 20                          DEV   -4.8% t -0.7 n  94 | TEST  +18.9% t +3.4 n 174
+C8 deep oversold in uptrend: >200, | VIX falling (VIX < 20d avg)        DEV   -6.7% t -1.2 n 138 | TEST   -0.8% t -0.2 n 194
+C8 deep oversold in uptrend: >200, | credit risk-on (HYG>50SMA)         DEV   +1.3% t +0.2 n 165 | TEST  -10.5% t -2.5 n 243
+
+== 5. Concentration: months with the most trades (TEST) ==
+C6 capitulation bounce: RSI2<5, close >3: 2025-04:43x+20%, 2024-12:20x-16%, 2026-03:18x+37%, 2024-08:18x+66%, 2025-03:16x+71%
+   without 2025-04: n   80 win  64% avgW   +81% avgL   -30% EV +40.7% t +5.04 PF 4.79 und +6.99%
+C7 breakdown reversal: close < prior 20d: 2025-04:56x+20%, 2025-03:36x-5%, 2024-08:29x+62%, 2026-02:28x+16%, 2026-09:24x-42%
+   without 2025-04: n  405 win  41% avgW   +64% avgL   -45% EV  -0.1% t -0.03 PF 1.00 und +1.23%

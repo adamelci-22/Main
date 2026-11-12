@@ -1,0 +1,40 @@
+Earnings proxy check:
+  NVDA: 0/6 report reactions mapped
+  JPM: 7/7 report reactions mapped
+
+Universe 80 symbols, 2022-08-18 .. 2026-11-10. DEV < 2024-07-01 <= TEST. Option: 21-session expiry, 0.60 delta, hold 10 sessions, no stop/target, earnings in hold skipped.
+
+== 1. Every signal, no filter: DEV | TEST ==
+C1 uptrend pullback: >200 & >50, RSI2<10 -> CALL              
+   DEV  n  552 win  35% avgW   +60% avgL   -47% EV  -9.2% t -3.37 PF 0.70 und +0.26%
+   TEST n  733 win  41% avgW   +57% avgL   -44% EV  -1.9% t -0.76 PF 0.93 und +1.00%
+C2 breakout: close > prior 55d high, vol >1.5x, >200 -> CALL  
+   DEV  n  309 win  39% avgW   +76% avgL   -44% EV  +2.2% t +0.51 PF 1.08 und +2.02%
+   TEST n  372 win  41% avgW   +59% avgL   -45% EV  -2.5% t -0.74 PF 0.91 und +1.16%
+C3 squeeze breakout: BB width at 6m low, close > 20d high -> C
+   DEV  n  110 win  41% avgW   +56% avgL   -45% EV  -3.7% t -0.62 PF 0.86 und +0.91%
+   TEST n  132 win  36% avgW   +54% avgL   -47% EV -10.9% t -1.85 PF 0.64 und +0.41%
+C4 post-earnings drift UP: earnings day gap >+4%, closes top 3
+   DEV  n   33 win  45% avgW   +42% avgL   -44% EV  -4.5% t -0.45 PF 0.81 und +2.28%
+   TEST n   28 win  43% avgW   +39% avgL   -44% EV  -8.1% t -0.91 PF 0.67 und +1.31%
+P4 post-earnings drift DOWN: gap <-4%, closes bottom 30% -> PU
+   DEV  n   39 win  26% avgW   +23% avgL   -38% EV -22.2% t -4.07 PF 0.21 und -2.00%
+   TEST n   33 win  33% avgW   +45% avgL   -35% EV  -8.4% t -1.04 PF 0.64 und -0.12%
+C5 relative strength leader: 3m return top 10% of universe, >5
+   DEV  n  208 win  44% avgW   +61% avgL   -46% EV  +1.1% t +0.24 PF 1.04 und +2.57%
+   TEST n  269 win  35% avgW   +64% avgL   -45% EV  -6.2% t -1.54 PF 0.79 und +1.84%
+P1 downtrend rally fail: <200 & 50<200, RSI2>90 -> PUT        
+   DEV  n  474 win  35% avgW   +60% avgL   -44% EV  -7.1% t -2.50 PF 0.75 und +0.24%
+   TEST n  454 win  34% avgW   +51% avgL   -44% EV -11.6% t -4.40 PF 0.60 und -0.28%
+P2 breakdown: close < prior 20d low, vol >1.5x, <200 -> PUT   
+   DEV  n  253 win  32% avgW   +51% avgL   -46% EV -14.7% t -3.88 PF 0.53 und -1.02%
+   TEST n  315 win  22% avgW   +45% avgL   -48% EV -27.8% t -10.28 PF 0.26 und -2.36%
+C6 capitulation bounce: RSI2<5, close >3 ATR below 20SMA, VIX>
+   DEV  n   72 win  33% avgW   +62% avgL   -49% EV -12.0% t -1.48 PF 0.63 und +0.06%
+   TEST n  123 win  66% avgW   +65% avgL   -28% EV +33.4% t +5.82 PF 4.56 und +6.36%
+
+== 2. Baseline: random-ish entries (every 10th session, call / put) ==
+calls  DEV  n 3285 win  38% avgW   +62% avgL   -48% EV  -6.3% t -5.33 PF 0.79 und +0.69%
+       TEST n 3915 win  38% avgW   +56% avgL   -45% EV  -6.8% t -6.73 PF 0.76 und +0.66%
+puts   DEV  n 3285 win  33% avgW   +49% avgL   -48% EV -16.0% t -16.35 PF 0.50 und -0.69%
+       TEST n 3915 win  31% avgW   +51% avgL   -44% EV -15.1% t -16.31 PF 0.51 und -0.66%
