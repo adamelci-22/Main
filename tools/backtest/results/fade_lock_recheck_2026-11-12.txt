@@ -1,0 +1,9 @@
+Recheck of the v5.2.19 FADE lock (+0.15R at the first +0.5R close) and early cut on all three blocks (it was adopted on the
+variant                              RH 26-03..10                                               | MASSIVE H1 21-12..24-03                                    | MASSIVE H2 24-04..26-10                                   
+LIVE: lock +0.15R at +0.5R, cut      R +0.961 (+0.000,   0%) acct  +89.3% DD  3.8% losing  32%  | R +0.017 (+0.000,   0%) acct   +2.8% DD 13.1% losing  45%  | R +0.099 (+0.000,   0%) acct  +24.6% DD 34.3% losing  51% 
+no lock (cut kept)                   R +1.029 (+0.068,  86%) acct +101.3% DD  3.8% losing  38%  | R +0.013 (-0.004,  45%) acct  -10.0% DD 20.2% losing  61%  | R +0.133 (+0.034,  83%) acct  +32.3% DD 37.2% losing  61% 
+no lock, no cut (v5.2.17 exits)      R +1.015 (+0.054,  77%) acct  +97.9% DD  4.0% losing  38%  | R +0.004 (-0.013,  38%) acct   -8.7% DD 18.7% losing  60%  | R +0.123 (+0.024,  72%) acct  +27.8% DD 37.9% losing  61% 
+lock armed at +0.75R, +0.15R         R +0.991 (+0.029,  85%) acct  +94.1% DD  3.8% losing  33%  | R -0.006 (-0.024,  10%) acct   -5.8% DD 14.5% losing  50%  | R +0.108 (+0.008,  65%) acct  +23.8% DD 35.3% losing  55% 
+lock armed at +1.0R, +0.15R          R +0.979 (+0.017,  66%) acct  +93.6% DD  3.8% losing  37%  | R +0.001 (-0.016,  32%) acct   -8.9% DD 16.6% losing  57%  | R +0.140 (+0.041,  92%) acct  +36.2% DD 32.1% losing  56% 
+lock armed at +1.0R, breakeven       R +1.001 (+0.040,  74%) acct +100.2% DD  3.8% losing  40%  | R +0.022 (+0.005,  53%) acct   -7.2% DD 16.4% losing  65%  | R +0.155 (+0.056,  96%) acct  +42.9% DD 31.9% losing  63% 
+lock armed at +1.5R, +0.5R           R +0.937 (-0.024,  42%) acct  +92.8% DD  3.8% losing  38%  | R -0.027 (-0.044,  18%) acct  -14.3% DD 21.2% losing  60%  | R +0.107 (+0.007,  58%) acct  +22.9% DD 36.5% losing  61% 

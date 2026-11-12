@@ -1,0 +1,58 @@
+FADE setup-conditional exits (governor 2026-11-12: "variable exits, multiple exit types triggered by certain setups").
+blocks: RH 26-03..10: 90 setups | MASSIVE H1 21-12..24-03: 334 setups | MASSIVE H2 24-04..26-10: 398 setups
+
+A. Each exit package alone: mean R per setup (all setups, no account)
+  LIVE 1/3@2R chand2             RH 26-03.. +0.961 | MASSIVE H1 +0.017 | MASSIVE H2 +0.099
+  1/3@far edge                   RH 26-03.. +0.925 | MASSIVE H1 +0.009 | MASSIVE H2 +0.089
+  1/3@1.5R                       RH 26-03.. +0.876 | MASSIVE H1 +0.010 | MASSIVE H2 +0.085
+  1/3@2.5R                       RH 26-03.. +0.951 | MASSIVE H1 +0.014 | MASSIVE H2 +0.092
+  1/3@3R                         RH 26-03.. +0.946 | MASSIVE H1 +0.012 | MASSIVE H2 +0.094
+  1/2@2R                         RH 26-03.. +0.895 | MASSIVE H1 +0.031 | MASSIVE H2 +0.095
+  100%@2R                        RH 26-03.. +0.697 | MASSIVE H1 +0.072 | MASSIVE H2 +0.082
+  100%@far edge                  RH 26-03.. +0.637 | MASSIVE H1 +0.054 | MASSIVE H2 +0.066
+  100%@1.5R                      RH 26-03.. +0.514 | MASSIVE H1 +0.052 | MASSIVE H2 +0.045
+  no target, chand2 from +1R     RH 26-03.. +1.056 | MASSIVE H1 -0.018 | MASSIVE H2 +0.098
+  no target, chand3 from +1R     RH 26-03.. +1.013 | MASSIVE H1 +0.002 | MASSIVE H2 +0.103
+  1/3@2R chand3                  RH 26-03.. +0.910 | MASSIVE H1 +0.029 | MASSIVE H2 +0.100
+  1/3@2R chand1.5                RH 26-03.. +0.663 | MASSIVE H1 -0.002 | MASSIVE H2 +0.074
+  1/3@2R no lock                 RH 26-03.. +1.029 | MASSIVE H1 +0.013 | MASSIVE H2 +0.133
+  1/3@2R no cut                  RH 26-03.. +0.966 | MASSIVE H1 +0.010 | MASSIVE H2 +0.095
+  1/3@2R hold runner (BE only)   RH 26-03.. +0.902 | MASSIVE H1 +0.026 | MASSIVE H2 +0.087
+  ORACLE (best per trade, hindsight) RH 26-03.. +1.619 | MASSIVE H1 +0.515 | MASSIVE H2 +0.593
+
+B. Two-class policies: feature < threshold -> package A, else package B (packages picked on MASSIVE H1 only). Change in mean R per setup vs LIVE.
+   Out-of-sample blocks are MASSIVE H2 and RH. OOS PASS = better in both, with a bootstrap chance > 90% in each.
+       ATR/R                  <   1.462 (p67) -> 1/3@3R                       else 1/3@2R no lock               | RH +0.015 ( 58%) | H1 +0.065 (design) | H2 +0.008 ( 61%)
+       stop %                 <   0.301 (p50) -> 1/3@2R no lock               else 1/3@3R                       | RH +0.028 ( 73%) | H1 +0.062 (design) | H2 +0.007 ( 59%)
+       prior-day level R      <   5.182 (p50) -> 100%@2R                      else 1/3@2R no lock               | RH -0.009 ( 44%) | H1 +0.070 (design) | H2 +0.012 ( 65%)
+       far edge R             <   3.802 (p67) -> 100%@2R                      else 1/3@2R no lock               | RH -0.003 ( 49%) | H1 +0.083 (design) | H2 -0.018 ( 28%)
+       prior-day level R      <   7.667 (p67) -> 100%@2R                      else 1/3@2R no lock               | RH -0.041 ( 30%) | H1 +0.099 (design) | H2 -0.017 ( 32%)
+       trend vs trade %       <  -0.402 (p50) -> 100%@2R                      else 1/3@2R no lock               | RH -0.034 ( 37%) | H1 +0.075 (design) | H2 -0.043 ( 14%)
+       stop %                 <   0.213 (p33) -> 1/3@2R no lock               else 100%@2R                      | RH -0.092 (  9%) | H1 +0.085 (design) | H2 -0.052 (  6%)
+       prior-day level R      <   3.498 (p33) -> 100%@1.5R                    else 1/3@2R no lock               | RH -0.103 ( 12%) | H1 +0.079 (design) | H2 -0.011 ( 36%)
+       gap vs trade %         <  -0.103 (p50) -> 1/3@2R no lock               else 100%@2R                      | RH -0.110 ( 28%) | H1 +0.076 (design) | H2 +0.023 ( 73%)
+       retest depth           <   0.116 (p33) -> 1/3@2R no lock               else 100%@2R                      | RH -0.171 ( 14%) | H1 +0.078 (design) | H2 -0.009 ( 39%)
+       gap vs trade %         <  -0.476 (p33) -> 1/3@2R no lock               else 100%@2R                      | RH -0.196 ( 14%) | H1 +0.094 (design) | H2 -0.014 ( 37%)
+       trend vs trade %       <  -3.686 (p33) -> no target, chand2 from +1R   else 100%@2R                      | RH -0.197 ( 11%) | H1 +0.063 (design) | H2 +0.017 ( 71%)
+       gap vs trade %         <   0.206 (p67) -> 1/3@2R no lock               else 100%@1.5R                    | RH -0.211 (  9%) | H1 +0.082 (design) | H2 -0.028 ( 25%)
+       far edge R             <   2.254 (p33) -> 1/3@3R                       else 100%@2R                      | RH -0.246 (  6%) | H1 +0.062 (design) | H2 -0.017 ( 34%)
+       stop %                 <   0.395 (p67) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  5%) | H1 +0.055 (design) | H2 -0.018 ( 33%)
+       box %                  <   0.783 (p33) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  6%) | H1 +0.055 (design) | H2 -0.018 ( 32%)
+       box %                  <   1.147 (p67) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  5%) | H1 +0.055 (design) | H2 -0.018 ( 33%)
+       trend vs trade %       <   3.615 (p67) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  5%) | H1 +0.055 (design) | H2 -0.018 ( 34%)
+       RVOL                   <   0.804 (p33) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  5%) | H1 +0.055 (design) | H2 -0.018 ( 33%)
+       RVOL                   <   0.911 (p50) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  5%) | H1 +0.055 (design) | H2 -0.018 ( 32%)
+       RVOL                   <   1.088 (p67) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  6%) | H1 +0.055 (design) | H2 -0.018 ( 33%)
+       retest depth           <   0.226 (p67) -> 100%@2R                      else 100%@2R                      | RH -0.265 (  5%) | H1 +0.055 (design) | H2 -0.018 ( 34%)
+       ATR/R                  <   1.174 (p50) -> 1/3@3R                       else 100%@2R                      | RH -0.272 (  4%) | H1 +0.065 (design) | H2 -0.017 ( 33%)
+       ATR/R                  <   0.984 (p33) -> 100%@1.5R                    else 100%@2R                      | RH -0.296 (  4%) | H1 +0.071 (design) | H2 -0.029 ( 24%)
+       far edge R             <   2.861 (p50) -> 100%@1.5R                    else 100%@2R                      | RH -0.314 (  2%) | H1 +0.062 (design) | H2 -0.020 ( 30%)
+       box %                  <   0.976 (p50) -> 100%@1.5R                    else 100%@2R                      | RH -0.344 (  2%) | H1 +0.055 (design) | H2 -0.018 ( 35%)
+       retest depth           <   0.160 (p50) -> 100%@1.5R                    else 100%@2R                      | RH -0.350 (  1%) | H1 +0.057 (design) | H2 -0.026 ( 27%)
+       entry bar              <   9.000 (p50) -> 100%@2R                      else 100%@1.5R                    | RH -0.383 (  1%) | H1 +0.061 (design) | H2 -0.036 ( 20%)
+       entry bar              <   9.000 (p67) -> 100%@2R                      else 100%@1.5R                    | RH -0.383 (  1%) | H1 +0.061 (design) | H2 -0.036 ( 20%)
+
+C. Account check of the top policy (ATR/R < 1.462 -> 1/3@3R, else 1/3@2R no lock): FADE alone, live account rules
+  RH 26-03..10               live   +89.3% DD  3.8%  ->  policy   +96.7% DD  3.8%
+  MASSIVE H1 21-12..24-03    live    +2.8% DD 13.1%  ->  policy    +5.0% DD 13.5%
+  MASSIVE H2 24-04..26-10    live   +24.6% DD 34.3%  ->  policy   +35.8% DD 36.2%
