@@ -77,3 +77,6 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-12,LABD,PULLBACK,buy,entry,12:40,12:40:48,12:40:48,7.08,7.09,0.14,7.09,7.09,7.0799,-0.14,364,ENTER PULLBACK filled 364 @ 7.0799 at 12:40:48; limit buy at trigger close 7.09 (trigger 12:35 bar); stop 7.04 target 7.39; runner v5.2.46; order 6af5fa20-4ee1-45ce-91db-ae8cbcc7bde7,0.8,
 2026-11-12,LABD,PULLBACK,sell,protect,12:40,12:41:02,12:41:03,7.08,7.09,0.14,,7.39,,,121,OCO on 1/3 (floor 364/3): take-profit 7.39 stop 7.04 GTC; advanced order 6af5f274-831c-4ec1-aae4-0ad7a04efa35; confirmed,0.9,
 2026-11-12,LABD,PULLBACK,sell,protect,12:40,12:41:13,12:41:13,7.08,7.09,0.14,,,,,243,stop-market on 2/3 at 7.04 GTC (runner, v5.2.46); order 6af5fa39-f593-402f-85ef-73b646d5116e; confirmed,1.2,
+2026-11-12,LABD,PULLBACK,cancel,close,13:30,13:30:37,13:30:38,7.07,7.08,0.14,,,,,364,C4 close: cancelled OCO 6af5f274 (121) and stop-market 6af5fa39 (243); both verified cancelled,,
+2026-11-12,LABD,PULLBACK,sell,exit,13:30,13:31:11,13:31:11,7.07,7.08,0.14,7.07,7.06,7.0801,0.00,364,13:30 time exit marketable limit 7.06 filled 364 @ 7.0801 fee 0.06; order 6af605ef-77c9-4580-b5eb-59226f97c5b3,,
+2026-11-12,USDG,B4.8,buy,usdg_rebuy,13:30,13:31:40,13:31:41,1,1,0,1,,1,0,2584,market buy dollar_amount 2584 after the 13:30 flatten; order 6af6060c-40f6-406d-a3df-e434e448d26b,,
