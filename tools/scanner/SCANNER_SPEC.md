@@ -72,3 +72,24 @@ Buying options on chart signals alone loses to the option's time decay and sprea
 1. Paper trade every FEAR-DIP signal on real quotes: news veto, `--contract` score, entry at the next open, exit at session 10. Log each trade in `tools/scanner/paper_trades.csv`.
 2. After 2 fear episodes or 15 paper trades, compare real fills with the model, then decide on live money.
 3. Live use needs the agent account's options level 2 (it has it) and a bucket rule like the 0DTE plan.
+
+## P50 deep dive (2026-11-12): can +50% trades be identified with confidence?
+
+The governor asked for a system that identifies, with a stated confidence, trades that return at least 50% with acceptable risk/reward. Files: `p50.py`, `results/p50_study.txt`, `results/p50_fear_dip.txt`.
+
+Setup:
+- 166,420 candidates: every symbol and day, call and put.
+- Trade: a 21-session 0.60-delta option with a +50% take-profit, otherwise exit at session 10.
+- 38 features known at the close: price, trend, volatility, volume, earnings timing, sector, SPY, VIX, credit, rates.
+- Gradient boosting, retrained every 6 months on past data only with a 15-session purge. 133,154 out-of-sample predictions.
+
+Results, out of sample:
+- Base rate: 22.5% of candidates hit +50%, mean -15.2%.
+- The model ranks (AUC 0.59): its lowest bucket hits 6.8% and its highest 31.5%.
+- It is overconfident: predicted 50%+ meant 31.5% in practice.
+- No bucket made money. Break-even needs about 45% hits, because a miss averages -41% and a hit is capped at +50%.
+- The model's top 1 to 5 picks per day hit 31-35% and lost 10% to 15% per trade, in both halves and in every half-year.
+- Inside the FEAR-DIP regime (calls, SPY 200-day rising, VIX >= 20, stock RSI(2) < 10, model P >= 0.40): 455 trades on 75 days, 41.1% hit, +3.9% mean. That is the best short-dated result, still below FEAR-DIP's 60-day 0.75-delta structure (+13.4% per trade).
+- What drives the probability: call vs put, days to earnings, short vs long volatility ratio, volatility level, VIX, sector. Mostly volatility, not direction.
+
+Conclusion: a confident "+50% in 10 sessions" call does not exist in this data. The best measured odds are about 4 in 10, inside fear dips. Capping winners at +50% removes the tail that pays for the losers. Use FEAR-DIP's structure, which holds 10 sessions without a cap, and treat any P(+50%) shown by the scanner as a ranking, not a guarantee.

@@ -1,0 +1,61 @@
+rows 166,420 (symbol-days x call/put), features 38, hit rate 22.6%
+  block 2023-07-01..2024-01-01: trained on 30,866 rows (to 2023-06-09), scored 20,160
+  block 2024-01-01..2024-07-01: trained on 51,026 rows (to 2023-12-08), scored 19,840
+  block 2024-07-01..2025-01-01: trained on 70,866 rows (to 2024-06-07), scored 20,480
+  block 2025-01-01..2025-07-01: trained on 91,346 rows (to 2024-12-10), scored 19,520
+  block 2025-07-01..2026-01-01: trained on 110,866 rows (to 2025-06-09), scored 20,480
+  block 2026-01-01..2026-07-01: trained on 131,346 rows (to 2025-12-10), scored 19,680
+  block 2026-07-01..2027-01-01: trained on 151,026 rows (to 2026-06-09), scored 12,994
+
+OUT-OF-SAMPLE (every prediction made by a model that never saw that period): 133,154 candidate trades
+  base rate: 22.5% of all candidates hit +50% within 10 sessions; mean return -15.2%  (calls 26.2%, puts 18.7%)
+
+CALIBRATION (predicted probability bucket -> what actually happened)
+  predicted P(+50%)   trades    hit +50%   mean return   avg loss when missed   distinct days
+     0-5   %          7,247      6.8%      -22.8%        -28.1%             802
+     5-10  %         16,138     13.8%      -19.9%        -31.1%             833
+    10-15  %         21,232     20.2%      -16.1%        -32.9%             833
+    15-20  %         23,568     23.2%      -14.5%        -34.0%             833
+    20-25  %         22,181     25.1%      -13.3%        -34.6%             833
+    25-30  %         17,174     25.8%      -13.5%        -35.5%             833
+    30-35  %         10,538     28.1%      -13.0%        -37.5%             828
+    35-40  %          6,135     28.8%      -12.9%        -38.4%             788
+    40-50  %          5,637     30.6%      -13.2%        -41.0%             716
+    50-101 %          3,304     31.5%      -12.2%        -40.9%             430
+
+TOP PICKS: the K highest-probability candidates per day (one per symbol), out of sample
+  top 1/day, P >= 0.00: n   833 on 833 days | hit +50%  31.9% | mean  -14.9% (1st half -14.4%, 2nd -15.3%) | avg miss  -45.3% | worst -100% | calls 81%
+  top 1/day, P >= 0.30: n   831 on 831 days | hit +50%  32.0% | mean  -14.8% (1st half -14.4%, 2nd -15.1%) | avg miss  -45.3% | worst -100% | calls 81%
+  top 1/day, P >= 0.40: n   718 on 718 days | hit +50%  32.6% | mean  -14.2% (1st half -13.8%, 2nd -14.5%) | avg miss  -45.2% | worst -100% | calls 82%
+  top 1/day, P >= 0.50: n   430 on 430 days | hit +50%  34.9% | mean  -11.3% (1st half -11.6%, 2nd -11.1%) | avg miss  -44.2% | worst -99% | calls 86%
+  top 3/day, P >= 0.00: n  2499 on 833 days | hit +50%  31.3% | mean  -12.7% (1st half -11.7%, 2nd -13.7%) | avg miss  -41.3% | worst -100% | calls 80%
+  top 3/day, P >= 0.30: n  2462 on 831 days | hit +50%  31.6% | mean  -12.6% (1st half -11.7%, 2nd -13.6%) | avg miss  -41.5% | worst -100% | calls 80%
+  top 3/day, P >= 0.40: n  1941 on 718 days | hit +50%  32.0% | mean  -12.7% (1st half -11.3%, 2nd -14.0%) | avg miss  -42.2% | worst -100% | calls 82%
+  top 3/day, P >= 0.50: n   952 on 430 days | hit +50%  33.9% | mean  -10.0% (1st half -7.6%, 2nd -12.6%) | avg miss  -40.8% | worst -100% | calls 88%
+  top 5/day, P >= 0.00: n  4165 on 833 days | hit +50%  30.7% | mean  -13.2% (1st half -13.5%, 2nd -12.9%) | avg miss  -41.2% | worst -100% | calls 80%
+  top 5/day, P >= 0.30: n  4041 on 831 days | hit +50%  30.9% | mean  -13.3% (1st half -13.7%, 2nd -12.9%) | avg miss  -41.6% | worst -100% | calls 80%
+  top 5/day, P >= 0.40: n  2923 on 718 days | hit +50%  31.5% | mean  -13.0% (1st half -12.4%, 2nd -13.7%) | avg miss  -42.0% | worst -100% | calls 83%
+  top 5/day, P >= 0.50: n  1295 on 430 days | hit +50%  33.1% | mean   -9.8% (1st half -7.3%, 2nd -12.8%) | avg miss  -39.4% | worst -100% | calls 89%
+
+BY HALF-YEAR BLOCK: candidates with P >= 0.40
+  2023-07: n  2503  hit  32.6%  mean  -11.2%  days 126
+  2024-01: n  1377  hit  28.5%  mean  -13.8%  days 115
+  2024-07: n   666  hit  29.0%  mean  -13.3%  days 105
+  2025-01: n  2390  hit  31.3%  mean  -12.9%  days 100
+  2025-07: n   425  hit  34.8%  mean   -6.4%  days 84
+  2026-01: n   843  hit  30.5%  mean  -17.3%  days 106
+  2026-07: n   737  hit  29.0%  mean  -14.3%  days 82
+
+WHAT DRIVES IT (permutation importance, model trained to 2025-06, tested 2025-07-15..; test AUC 0.590)
+  cp               +0.0326
+  days_to_earn     +0.0149
+  rv_ratio         +0.0139
+  rv60             +0.0105
+  vix              +0.0105
+  sector           +0.0067
+  spy_z200         +0.0065
+  last_earn_move   +0.0055
+  rv20             +0.0050
+  beta             +0.0047
+  bbw_pct          +0.0042
+  vix_vs20         +0.0026

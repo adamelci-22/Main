@@ -1,0 +1,8 @@
+Break-even hit rate for this trade (+50% target, miss = avg loss L): P* = L/(0.5+L). With L = 41%: 45%.
+
+all candidates                           n 133154 days  833 | hit +50%  22.5% | mean  -15.2% | avg miss  -34.2%
+calls, SPY 200d rising & VIX>=20         n   9360 days  117 | hit +50%  31.8% | mean   -2.0% | avg miss  -26.2%
+  + stock dip (RSI2<10)                  n   1985 days  109 | hit +50%  36.5% | mean   +3.7% | avg miss  -23.0%
+  + dip + model P>=0.40                  n    455 days   75 | hit +50%  41.1% | mean   +3.9% | avg miss  -28.3%
+calls, VIX>=25 & SPY 200d rising         n   2720 days   34 | hit +50%  33.3% | mean   +3.1% | avg miss  -20.3%
+calls, model P>=0.50, no regime          n   2872 days  377 | hit +50%  29.4% | mean  -14.4% | avg miss  -41.2%
