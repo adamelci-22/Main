@@ -22,7 +22,7 @@ class Block:
         self.name, self.ds, self.days = name, ds, days
         PP.apply_tunables('2026-11-12'); PP.FLOOR_TARGET = True
         E = []; cap = {}
-        def grab(b, K, k, entry, stop, T): cap.update(k=k, entry=entry, stop=stop, T=T); return dict(status='closed')
+        def grab(b, K, k, entry, stop, T, e20=None): cap.update(k=k, entry=entry, stop=stop, T=T); return dict(status="closed")
         old = PP.pb_manage; PP.pb_manage = grab
         try:
             for s in legs:

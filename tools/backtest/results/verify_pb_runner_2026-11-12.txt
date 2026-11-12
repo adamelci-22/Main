@@ -1,0 +1,1 @@
+setups compared 94, mismatches 0, max difference 1.50e-03 % of position; open intraday states checked 1212

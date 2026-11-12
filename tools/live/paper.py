@@ -213,12 +213,13 @@ def pullback(b, prev, K):
             if hod <= ref or ref <= stop or (ref - stop) / ref * 100 < PB_MIN_STOP: continue
             if (hod - ref) < 0.75 * (ref - stop) or (hod - ref) / ref * 100 < 0.25: continue
             if hod - stop < 0.10: continue
-            return pb_manage(b, K, j + 1, entry, stop, round(hod - X_PBTPOFF / 100, 2))     # idea switch: the sell limit a few cents below the high (the skip rules still use the high)
+            return pb_manage(b, K, j + 1, entry, stop, round(hod - X_PBTPOFF / 100, 2), e20)     # idea switch: the sell limit a few cents below the high (the skip rules still use the high)
     return None
 
 
-def pb_manage(b, K, k, entry, stop, T):
+def pb_manage(b, K, k, entry, stop, T, e20=None):
     if k > SELL_BY: return None
+    if RUNNER_ON and e20 is not None: return pb_manage_runner(b, K, k, entry, stop, T, e20)
     end = min(SELL_BY, K - 1); gross = 0.0; cost = PB_IN * entry; closed = False; xbar = None; why = None; ev = []
     for j in range(k, end + 1):
         o, h, l, c, v = b[j]
@@ -230,6 +231,33 @@ def pb_manage(b, K, k, entry, stop, T):
         px = b[SELL_BY][3]; gross = px - entry; cost += PB_OUT * px; closed = True; xbar = SELL_BY; why = 'time'; ev.append(('13:30', 'time exit', px))
     return dict(status='closed' if closed else 'open', k=k, xbar=xbar, why=why, entry=entry, stop0=stop, target=T,
                 gross=gross - cost if closed else None, events=ev, risk_pct=(entry - stop) / entry * 100)
+
+
+def pb_manage_runner(b, K, k, entry, stop, T, e20):
+    """RULEBOOK v5.2.46 (B3.9, governor 2026-11-12 "push the pull back runner"): sell 1/3 at the morning high; the other 2/3 goes to
+    breakeven and is sold at the next checkpoint after a 5-minute close below the leg's 20-EMA, or at the stop, or at 13:30.
+    Same order of checks as tools/backtest/pb_exit_screen.manage(frac=1/3, run=('ema', 20))."""
+    end = min(SELL_BY, K - 1); stop0 = stop; rem = 1.0; gross = 0.0; out_px = 0.0; hit = False; out = False
+    closed = False; xbar = None; why = None; ev = []
+    for j in range(k, end + 1):
+        o, h, l, c, v = b[j]
+        if out:
+            gross += rem * (o - entry); out_px += rem * o; ev.append((k2t(j), 'runner exit (close under the 20-EMA)', o, rem)); rem = 0
+            closed = True; xbar = j; why = 'runner ema'; break
+        if l <= stop:
+            px = min(stop, o); gross += rem * (px - entry); out_px += rem * px; ev.append((k2t(j), 'stop' if not hit else 'runner stop (breakeven)', px, rem)); rem = 0
+            closed = True; xbar = j; why = 'stop' if not hit else 'runner be'; break
+        if not hit and h >= T:
+            px = max(T, o); q = 1 / 3; gross += q * (px - entry); out_px += q * px; rem -= q; hit = True; stop = max(stop, entry)
+            ev.append((k2t(j), 'take profit 1/3 at the morning high', px, q))
+        if hit and j < SELL_BY and c < e20[j]: out = True
+    if not closed and K - 1 >= SELL_BY:
+        px = b[SELL_BY][3]; gross += rem * (px - entry); out_px += rem * px; ev.append(('13:30', 'time exit', px, rem)); rem = 0
+        closed = True; xbar = SELL_BY; why = 'time' if not hit else 'runner time'
+    cost = PB_IN * entry + PB_OUT * out_px
+    return dict(status='closed' if closed else 'open', k=k, xbar=xbar, why=why, entry=entry, stop0=stop0, target=T, stop_now=stop, hit=hit, rem=rem,
+                runner_exit_now=out and not closed, ema20=e20[end] if end >= k else None,
+                gross=gross - cost if closed else None, events=ev, risk_pct=(entry - stop0) / entry * 100)
 
 
 # ------------------------------------------------------------------ day simulation (one shared paper account)
@@ -251,6 +279,8 @@ LOCKCUT_ON = False           # set per day by simulate(); backtest replays (no d
 LOCK_TRIG, LOCK_LVL, CUT_BARS, CUT_R = 0.5, 0.15, 3, -0.5
 FLOOR_FROM = '2026-11-12'    # RULEBOOK v5.2.45 (B2.4): FADE stop at least FADE_STOP_FLOOR % of the proxy from the entry (governor 2026-11-12)
 FADE_STOP_FLOOR = 0.5; FLOOR_ON = False   # FLOOR_ON set per day by simulate(); backtest replays (no day passed) keep the pre-v5.2.45 stop
+RUNNER_FROM = '2026-11-12'   # RULEBOOK v5.2.46 (B3.9): PULLBACK 1/3 at the morning high, 2/3 runner (breakeven, 20-EMA close exit) (governor 2026-11-12)
+RUNNER_ON = False            # set per day by simulate(); backtest replays (no day passed) keep the 100%-at-the-high exit
 RETEST_TOL, PB_VOL = 0.10, 1.5       # FADE retest tolerance in % (B2.3); PULLBACK breakout volume multiple (B3.2)
 TARGET_R, TAKE_FRAC, CHAND_ATR = 2.0, 1 / 3, 2.0   # FADE take-profit R, share sold there (B2.5), chandelier ATR multiple (B5.4)
 SIZE_CAP = 1.0                       # largest position as a share of total account value (a percentage, never dollars); 1.0 = the model's existing cap at 100% of equity
@@ -313,9 +343,9 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
     day (YYYY-MM-DD) switches off FADE on Fridays from FADE_NO_FRIDAY_FROM (v5.2.17); without it (backtest replays) FADE runs every day.
     streak = consecutive losing trades carried in from earlier days (lockout at LOCKOUT_LOSSES).
     Returns (taken, skipped, signals, equity_after); each taken trade carries the streak after it in c['streak']."""
-    global FROZEN_ON, LOCKCUT_ON, FLOOR_ON
+    global FROZEN_ON, LOCKCUT_ON, FLOOR_ON, RUNNER_ON
     apply_tunables(day)
-    FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM); FLOOR_ON = bool(day and day >= FLOOR_FROM)
+    FROZEN_ON = bool(day and FROZEN_FROM <= day < FROZEN_OFF_FROM); LOCKCUT_ON = bool(day and day >= LOCKCUT_FROM); FLOOR_ON = bool(day and day >= FLOOR_FROM); RUNNER_ON = bool(day and day >= RUNNER_FROM)
     cands, signals = [], []
     rows = dict(FADE_ROWS); rows.update({r[0]: tuple(r[1:5]) for r in X_ADD_FADE})        # idea switch: extra FADE proxies (shadow only)
     for p, (bull, bear, lev_bull, lev_bear) in rows.items():
@@ -423,7 +453,7 @@ def live_actions(today, taken, signals, K, base=None, day=None):
             print(f"      size (B4.1): {RISK*100:g}% of the account at risk; position value at most {SIZE_CAP*100:g}% of total account value (extra B4.1 term, binds only below 100%); take-profit share {frac_txt()} of the shares (floor), the rest {rest_txt()} on the stop-market.")
             print(f"      est. at {leg} {lnow:.2f}: stop {ls:.2f}, {TARGET_R:g}R target {lt:.2f}. From the fill F: stop = F x (1 - {lev*r:.5f}), target = F x (1 + {TARGET_R*lev*r:.5f}).")
         else:
-            print(f"    ENTER PULLBACK: limit buy {sym} at {t['limit']:.2f}, valid for the next bar only. Stop {t['stop']:.2f}, target {t['target']:.2f} (one OCO for 100% after the fill).")
+            print(f"    ENTER PULLBACK: limit buy {sym} at {t['limit']:.2f}, valid for the next bar only. Stop {t['stop']:.2f}, target {t['target']:.2f} " + ("(after the fill: OCO on 1/3 = take-profit at the target + stop, and a stop-market on the other 2/3 at the stop; B5.6 v5.2.46)." if RUNNER_ON else "(one OCO for 100% after the fill)."))
     for c in taken:
         if c['status'] != 'open': continue
         if REAL_FREE:
@@ -458,7 +488,17 @@ def live_actions(today, taken, signals, K, base=None, day=None):
                 print(f"    MANAGE FADE {leg}: {frac_txt()} take-profit DONE in the model; runner stop on the proxy {c['stop_now']:.2f} -> {leg} "
                       f"{to_leg(lnow, pnow, c['stop_now'], side, lev):.2f}. Never below breakeven (the fill); raise only, and only if >= 0.10% higher (B5.4)")
         else:
-            print(f"    MANAGE PULLBACK {c['ticker']}: OCO resting (target {c['target']:.2f} / stop {c['stop0']:.2f}); nothing to change")
+            if not RUNNER_ON or 'hit' not in c:
+                print(f"    MANAGE PULLBACK {c['ticker']}: OCO resting (target {c['target']:.2f} / stop {c['stop0']:.2f}); nothing to change")
+            elif not c['hit']:
+                print(f"    MANAGE PULLBACK {c['ticker']}: 1/3 take-profit not yet in the model - keep the 1/3 OCO (target {c['target']:.2f} / stop {c['stop0']:.2f}) and the 2/3 stop {c['stop0']:.2f} as placed. "
+                      f"If the REAL 1/3 already filled: move the 2/3 stop to breakeven (the entry fill) now, cancel -> verify -> place -> verify (B5.6 v5.2.46), and run full slots from now on (C2)")
+            elif c.get('runner_exit_now'):
+                print(f"    MANAGE PULLBACK {c['ticker']}: RUNNER EXIT (B5.6 v5.2.46): the last 5-minute close is below the 20-EMA ({c['ema20']:.2f}). SELL THE 2/3 RUNNER NOW: "
+                      f"cancel its stop -> verify cancelled -> sell every remaining share (marketable limit) -> verify flat")
+            else:
+                print(f"    MANAGE PULLBACK {c['ticker']}: 1/3 take-profit DONE in the model; runner stop = breakeven {c['stop_now']:.2f} (the real entry fill if different). "
+                      f"20-EMA now {c['ema20']:.2f}: hold while the 5-minute close is at or above it; a close below it prints RUNNER EXIT. Full slot every 5 minutes (C2)")
     if not any_: print("    none")
 
 
