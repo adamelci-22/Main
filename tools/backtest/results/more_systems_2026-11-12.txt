@@ -1,0 +1,18 @@
+More practitioner systems as a possible third system (governor 2026-11-12: "deep dive, other systems people use").
+per block: ALONE n, win, avg leg %, PF, total | WITH BOOK total (change vs book alone) DD.  Morning = shared account; afternoon = compounded after 13:30
+Traceback (most recent call last):
+  File "/home/user/Main/tools/backtest/more_systems.py", line 151, in <module>
+    main()
+    ~~~~^^
+  File "/home/user/Main/tools/backtest/more_systems.py", line 146, in main
+    sh = F.account(PB[b].ds, days, bookT[b] + T); cmb = curve([sh['daily'].get(d, 0.0) for d in days])
+  File "/home/user/Main/tools/backtest/fade_diag.py", line 202, in account
+    same.sort(key=lambda t: -ds.rvol(t['proxy'], d, t['k']))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Main/tools/backtest/fade_diag.py", line 202, in <lambda>
+    same.sort(key=lambda t: -ds.rvol(t['proxy'], d, t['k']))
+                             ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Main/tools/backtest/fade_diag.py", line 80, in rvol
+    i = self.idx[d]; pri = [x for x in self.days[max(0, i - 20):i] if x in self.cum[p]]
+                                                                           ~~~~~~~~^^^
+KeyError: 'SPY'
