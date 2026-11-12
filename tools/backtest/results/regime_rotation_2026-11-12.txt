@@ -1,0 +1,28 @@
+Regime rotation between the live mean-reversion book (FADE + PULLBACK) and first-hour momentum (HOUR1 >= 0.5%).
+
+RH 26-03..10 (157 days)
+  live book (FADE + PULLBACK)                          total   +136.3%  +0.562%/day  max DD   3.2%
+  HOUR1 momentum alone                                 total    -17.7%  -0.107%/day  max DD  31.2%
+  50/50 split                                          total    +41.3%  +0.227%/day  max DD   8.6%
+  rotation, trailing 10 days (momentum 22% of days)    total    +71.1%  +0.356%/day  max DD   5.6%
+  rotation, trailing 20 days (momentum 13% of days)    total    +93.9%  +0.436%/day  max DD   7.7%
+  rotation, trailing 40 days (momentum 6% of days)     total   +108.2%  +0.482%/day  max DD   8.5%
+  rotation, trailing 60 days (momentum 1% of days)     total   +138.2%  +0.567%/day  max DD   3.2%
+
+MASSIVE H1 21-12..24-03 (570 days)
+  live book (FADE + PULLBACK)                          total    -14.0%  -0.021%/day  max DD  30.7%
+  HOUR1 momentum alone                                 total    +53.2%  +0.095%/day  max DD  18.1%
+  50/50 split                                          total    +18.8%  +0.037%/day  max DD  13.6%
+  rotation, trailing 10 days (momentum 57% of days)    total    +38.7%  +0.070%/day  max DD  19.7%
+  rotation, trailing 20 days (momentum 62% of days)    total     -0.6%  +0.011%/day  max DD  32.3%
+  rotation, trailing 40 days (momentum 65% of days)    total     -8.3%  -0.001%/day  max DD  23.0%
+  rotation, trailing 60 days (momentum 76% of days)    total     -9.7%  -0.002%/day  max DD  31.2%
+
+MASSIVE H2 24-04..26-10 (647 days)
+  live book (FADE + PULLBACK)                          total    +63.8%  +0.083%/day  max DD  28.0%
+  HOUR1 momentum alone                                 total    +22.8%  +0.049%/day  max DD  29.1%
+  50/50 split                                          total    +47.6%  +0.066%/day  max DD  23.4%
+  rotation, trailing 10 days (momentum 50% of days)    total   +107.8%  +0.126%/day  max DD  31.5%
+  rotation, trailing 20 days (momentum 52% of days)    total    +41.0%  +0.067%/day  max DD  45.2%
+  rotation, trailing 40 days (momentum 50% of days)    total    +71.7%  +0.097%/day  max DD  30.3%
+  rotation, trailing 60 days (momentum 46% of days)    total    +46.6%  +0.071%/day  max DD  47.0%

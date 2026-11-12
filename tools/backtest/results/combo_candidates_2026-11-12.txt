@@ -1,0 +1,5 @@
+Combined live account with the two candidates from 2026-11-12: FADE stop floor 0.5% (entry) and the PULLBACK runner exit
+  LIVE               RH 26-03..  +136.3% +0.562%/d DD  3.2 win 67% n122 | MASSIVE H1   -14.0% -0.021%/d DD 30.7 win 50% n411 | MASSIVE H2   +63.8% +0.083%/d DD 28.0 win 52% n433
+  FADE floor 0.5%    RH 26-03..  +159.7% +0.624%/d DD  4.0 win 71% n118 | MASSIVE H1   +11.5% +0.027%/d DD 34.3 win 54% n385 | MASSIVE H2   +87.5% +0.106%/d DD 30.4 win 56% n413
+  PULLBACK runner    RH 26-03..  +147.3% +0.593%/d DD  3.9 win 68% n121 | MASSIVE H1    -8.3% -0.008%/d DD 35.9 win 50% n405 | MASSIVE H2  +134.3% +0.140%/d DD 16.6 win 52% n424
+  BOTH               RH 26-03..  +162.7% +0.632%/d DD  4.7 win 72% n117 | MASSIVE H1   +17.3% +0.037%/d DD 38.8 win 54% n379 | MASSIVE H2  +161.2% +0.159%/d DD 22.5 win 56% n404
