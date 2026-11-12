@@ -1,0 +1,5 @@
+Combined account on the v5.2.45 system: FADE (stop floor 0.5%) with the live exits or the breakeven lock (+0R at +0.5R),
+  v5.2.45 (FADE floor, live exits; PB live)    RH 26-03..  +159.7% +0.624%/d DD  4.0 win 71% (  0%) | MASSIVE H1   +11.5% +0.027%/d DD 34.3 win 54% (  0%) | MASSIVE H2   +87.5% +0.106%/d DD 30.4 win 56% (  0%)
+  PB runner                                    RH 26-03..  +162.7% +0.632%/d DD  4.7 win 72% ( 58%) | MASSIVE H1   +17.3% +0.037%/d DD 38.8 win 54% ( 70%) | MASSIVE H2  +161.2% +0.159%/d DD 22.5 win 56% (100%)
+  FADE breakeven lock                          RH 26-03..  +166.6% +0.641%/d DD  4.0 win 62% ( 64%) | MASSIVE H1   +13.6% +0.031%/d DD 32.4 win 36% ( 57%) | MASSIVE H2   +95.5% +0.112%/d DD 29.0 win 44% ( 72%)
+  FADE breakeven lock + PB runner              RH 26-03..  +164.4% +0.637%/d DD  4.7 win 63% ( 60%) | MASSIVE H1   +19.0% +0.040%/d DD 37.8 win 36% ( 69%) | MASSIVE H2  +172.3% +0.165%/d DD 22.0 win 44% (100%)

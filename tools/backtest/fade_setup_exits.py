@@ -38,7 +38,7 @@ def manage(t, pk):
         if ch and j < LAST and (hit or (T is None and bestc >= pk.get('arm', 1.0))):
             ns = hic - s * ch * at[j]
             if (ns - stop) * s > 0: stop = ns
-        if pk.get('cut', True) and j - k + 1 == 3 and cr <= -0.5 and j < LAST: out = True
+        if pk.get('cut', True) and j - k + 1 == pk.get('cutbars', 3) and cr <= pk.get('cutR', -0.5) and j < LAST: out = True
     if rem > 0: g += rem * (b[j][3] - e) * s
     lev = F.LEV[t['proxy']][0] if s > 0 else F.LEV[t['proxy']][1]
     return dict(day=t['day'], proxy=t['proxy'], k=k, xbar=j, R_out=g / r, pct=lev * g / e * 100 - F.LEGCOST, leg_risk=lev * r / e * 100)
