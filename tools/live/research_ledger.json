@@ -526,5 +526,15 @@
   "result": "Live test 2023 -29.8, 2025 +18.3 (-16.9% compounded). System 1 pick -30.2, +15.9 (worse than live both years; score-to-test rank correlation +0.15). System 2 pick (FADE off) +3.7% test, 33% and 42% winning months. RELVAL flat on test (+0.2%), parallel with zero interference. DIP fails (-6.7%). IBS-TREND (IBS<0.1 above the 20-day average, 9:35 to 15:55) passes: +17.9, +37.2 on test, positive all five years, DD 11.8; it replaces the live book on its signal days (14% of days). LIVE + IBS-TREND test +50.3% vs live -16.9%",
   "verdict": "not adopted; offered as \"shadow IBS-TREND\" / \"push IBS-TREND\"; systems 1 and 2 tunes rejected",
   "champion_version": "5.2.47"
+ },
+ {
+  "id": "study.boost_30pct",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Reach a 30% average year without 2026: daily-trend filters on FADE and PULLBACK, IBS-TREND mechanics (36 settings), afternoon-only IBS, IBS mirror on the inverse leg (12 settings)",
+  "method": "tools/backtest/boost.py, boost_mirror.py; train 2022/2024/2026, test 2023/2025; mirror rule fixed before reading the grid",
+  "result": "v5.2.48 book +43.0, -13.5, +13.6, +73.7, +126.8 (average 2022-25 +29.2). Mirror 0.95 / 20 sessions: book +110.6, +18.3, -5.4, +97.7, +144.7 (average +55.3, DD 24.7); 4 of 12 settings qualified on train, all 4 passed test. Trend filters not approved on train; PULLBACK underlying-down filter is a lead (+53.8, +9.7, +8.2, +59.4, +91.9 in the book)",
+  "verdict": "ADOPTED: IBS-TREND (v5.2.48) and its mirror (v5.2.49), governor instruction 2026-11-13; filters not adopted",
+  "champion_version": "5.2.49"
  }
 ]

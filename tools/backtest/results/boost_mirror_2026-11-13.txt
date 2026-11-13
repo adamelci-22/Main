@@ -1,0 +1,38 @@
+Boost study, part 2 (governor 2026-11-13): the IBS-TREND MIRROR. IBS-TREND buys the 3x long leg after a weak close in an uptrend.
+     book                                                  2022    2023    2024    2025    2026 | average and compound rate 2022-2025 | TRAIN and TEST compounded | worst year, max DD | winning months
+     LIVE v5.2.48: FADE + PULLBACK + IBS-TREND            +43.0   -13.5   +13.6   +73.7  +126.8 | avg 22-25  +29.2 cmpd  +25.0/yr | TRAIN  +268.6 TEST  +50.3 | worst  -13.5 DD 23.9 | win mo  64%
+     IBS-TREND alone                                      +24.1   +17.9    +7.3   +37.2    +8.0 | avg 22-25  +21.6 cmpd  +21.1/yr | TRAIN   +43.8 TEST  +61.7 | worst   +7.3 DD 11.8 | win mo  51%
+
+MIRROR ALONE (inverse leg only)
+     book                                                  2022    2023    2024    2025    2026 | average and compound rate 2022-2025 | TRAIN and TEST compounded | worst year, max DD | winning months
+     mirror IBS > 0.85, below the 10-day average, 394 signals   +20.8    -3.8   -29.9    -4.1    -0.9 | avg 22-25   -4.2 cmpd   -6.0/yr | TRAIN   -16.1 TEST   -7.7 | worst  -29.9 DD 31.8 | win mo  43%
+     mirror IBS > 0.85, below the 20-day average, 474 signals   +29.0   +10.1   -22.8   +12.1   -10.6 | avg 22-25   +7.1 cmpd   +5.3/yr | TRAIN   -10.9 TEST  +23.4 | worst  -22.8 DD 24.5 | win mo  47%
+     mirror IBS > 0.85, below the 30-day average, 496 signals   +12.1    -0.7   -21.0   +21.4    -9.6 | avg 22-25   +3.0 cmpd   +1.7/yr | TRAIN   -20.0 TEST  +20.6 | worst  -21.0 DD 22.7 | win mo  38%
+     mirror IBS > 0.85, below the 50-day average, 504 signals    +8.2   -16.9   +12.2    -0.9   -21.6 | avg 22-25   +0.6 cmpd   -0.0/yr | TRAIN    -4.8 TEST  -17.6 | worst  -21.6 DD 27.4 | win mo  32%
+     mirror IBS > 0.90, below the 10-day average, 276 signals    -2.3    -0.6   -30.7    -5.6   +12.0 | avg 22-25   -9.8 cmpd  -10.7/yr | TRAIN   -24.1 TEST   -6.2 | worst  -30.7 DD 32.6 | win mo  38%
+     mirror IBS > 0.90, below the 20-day average, 321 signals   +40.5   +12.1   -17.4    +9.3   +11.2 | avg 22-25  +11.1 cmpd   +9.2/yr | TRAIN   +28.9 TEST  +22.5 | worst  -17.4 DD 20.9 | win mo  41%
+     mirror IBS > 0.90, below the 30-day average, 339 signals   +11.8    -0.4   -20.7   +17.9   +17.9 | avg 22-25   +2.1 cmpd   +1.0/yr | TRAIN    +4.5 TEST  +17.4 | worst  -20.7 DD 25.8 | win mo  35%
+     mirror IBS > 0.90, below the 50-day average, 348 signals    +0.2   -12.3    -7.1    +9.9    +0.5 | avg 22-25   -2.3 cmpd   -2.7/yr | TRAIN    -6.5 TEST   -3.6 | worst  -12.3 DD 23.4 | win mo  36%
+     mirror IBS > 0.95, below the 10-day average, 140 signals    +0.8   +17.0   -19.1    -1.9    +4.8 | avg 22-25   -0.8 cmpd   -1.6/yr | TRAIN   -14.6 TEST  +14.8 | worst  -19.1 DD 19.1 | win mo  35%
+     mirror IBS > 0.95, below the 20-day average, 157 signals   +59.8   +25.6   -17.6    +7.1    +6.0 | avg 22-25  +18.7 cmpd  +15.4/yr | TRAIN   +39.7 TEST  +34.5 | worst  -17.6 DD 17.6 | win mo  39%
+     mirror IBS > 0.95, below the 30-day average, 174 signals   +35.6   +14.2   -17.5    +7.4   +11.7 | avg 22-25   +9.9 cmpd   +8.2/yr | TRAIN   +25.0 TEST  +22.7 | worst  -17.5 DD 19.1 | win mo  38%
+     mirror IBS > 0.95, below the 50-day average, 181 signals   +19.5    +8.3   -10.8    +5.5    +3.7 | avg 22-25   +5.6 cmpd   +5.1/yr | TRAIN   +10.6 TEST  +14.3 | worst  -10.8 DD 18.6 | win mo  32%
+
+BOOK: FADE + PULLBACK + IBS-TREND + MIRROR   (Q = qualifies on TRAIN, P = also passes TEST)
+     book                                                  2022    2023    2024    2025    2026 | average and compound rate 2022-2025 | TRAIN and TEST compounded | worst year, max DD | winning months
+     + mirror IBS > 0.85, 10-day                          +70.4   -10.9   -14.0   +69.5   +89.6 | avg 22-25  +28.7 cmpd  +21.9/yr | TRAIN  +177.7 TEST  +51.0 | worst  -14.0 DD 26.2 | win mo  60%
+     + mirror IBS > 0.85, 20-day                          +71.5    +2.9   -10.3  +105.2   +81.3 | avg 22-25  +42.3 cmpd  +34.2/yr | TRAIN  +178.9 TEST +111.1 | worst  -10.3 DD 27.5 | win mo  55%
+     + mirror IBS > 0.85, 30-day                          +56.5    -5.0    -5.5  +118.6   +81.5 | avg 22-25  +41.1 cmpd  +32.4/yr | TRAIN  +168.4 TEST +107.6 | worst   -5.5 DD 30.9 | win mo  57%
+     + mirror IBS > 0.85, 50-day                          +54.5   -25.1   +30.5   +65.9   +70.1 | avg 22-25  +31.5 cmpd  +25.8/yr | TRAIN  +242.9 TEST  +24.3 | worst  -25.1 DD 33.1 | win mo  55%
+     + mirror IBS > 0.90, 10-day                          +35.6    -8.4   -16.4   +62.7  +123.8 | avg 22-25  +18.4 cmpd  +14.0/yr | TRAIN  +153.7 TEST  +48.9 | worst  -16.4 DD 28.3 | win mo  60%
+   P + mirror IBS > 0.90, 20-day                          +83.5    +4.1    -5.5   +94.0  +141.4 | avg 22-25  +44.0 cmpd  +36.8/yr | TRAIN  +318.7 TEST +102.0 | worst   -5.5 DD 28.5 | win mo  58%
+     + mirror IBS > 0.90, 30-day                          +52.6    -6.6    -5.9  +105.9  +147.4 | avg 22-25  +36.5 cmpd  +28.9/yr | TRAIN  +255.5 TEST  +92.2 | worst   -6.6 DD 34.8 | win mo  56%
+     + mirror IBS > 0.90, 50-day                          +39.9   -20.5   +10.0   +83.4  +123.4 | avg 22-25  +28.2 cmpd  +22.4/yr | TRAIN  +243.7 TEST  +45.8 | worst  -20.5 DD 33.9 | win mo  58%
+     + mirror IBS > 0.95, 10-day                          +36.7   +10.5    -3.8   +75.4  +119.4 | avg 22-25  +29.7 cmpd  +26.4/yr | TRAIN  +188.6 TEST  +93.8 | worst   -3.8 DD 27.5 | win mo  66%
+   P + mirror IBS > 0.95, 20-day                         +110.6   +18.3    -5.4   +97.7  +144.7 | avg 22-25  +55.3 cmpd  +46.9/yr | TRAIN  +387.2 TEST +133.9 | worst   -5.4 DD 24.7 | win mo  64%
+   P + mirror IBS > 0.95, 30-day                          +78.8    +7.2    -2.9   +98.2  +152.1 | avg 22-25  +45.3 cmpd  +38.6/yr | TRAIN  +337.7 TEST +112.6 | worst   -2.9 DD 30.8 | win mo  61%
+   P + mirror IBS > 0.95, 50-day                          +66.3    +0.2    +5.2   +89.7  +132.1 | avg 22-25  +40.4 cmpd  +35.1/yr | TRAIN  +306.2 TEST  +90.2 | worst   +0.2 DD 30.0 | win mo  61%
+
+   4 of 12 settings qualify on TRAIN; 4 of those pass TEST. Beat the live book in both test years regardless of train: 8 of 12.
+   TRAIN pick: mirror IBS > 0.95, 20-day. TEST: 2023 +18.3% (live -13.5%), 2025 +97.7% (live +73.7%) -> PASS
+   mirror signal days 79 of 1198 (7%); with IBS-TREND long days the IBS family trades on 21% of days
