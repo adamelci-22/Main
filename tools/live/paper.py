@@ -342,13 +342,14 @@ IBS_STATE = os.path.join(ROOT, 'archive', 'ibs_state.json')      # written by to
 
 
 def ibs_busy(day):
-    """v5.2.48 (B6, B4.4): first bar at which the account is free of today's IBS-TREND position. 0 = no IBS-TREND trade today,
-    10**6 = still open. One position at a time: no FADE or PULLBACK entry before it. Backtest replays (no day) are unaffected."""
+    """v5.2.48 (B6, B4.4), v5.2.51 (B6.6): 0 = no IBS-TREND trade today, 10**6 = an IBS-TREND trade was taken today. While it is
+    open the account is busy; after a stop-out there is no further entry that day; a time exit is at 15:55, past every entry slot.
+    So one IBS-TREND trade closes the day for FADE and PULLBACK. Backtest replays (no day) are unaffected."""
     if not day: return 0
     try: s = json.load(open(IBS_STATE)).get(day)
     except Exception: return 0
     if not s or s.get('status') not in ('open', 'closed'): return 0
-    return 10 ** 6 if s.get('xbar') is None else s['xbar'] + 1
+    return 10 ** 6
 
 
 def simulate(today, prev, K, equity, base=None, streak=0, day=None):
@@ -570,7 +571,7 @@ def usdg_trigger(today, prev, K, taken, signals, day, streak=0):
     if streak >= LOCKOUT_LOSSES: why = f'{LOCKOUT_LOSSES}-loss lockout (A1.1)'
     late = K >= PB_LAST_TRIGGER + 1           # the 12:55 slot is the last entry slot: nothing can be predicted beyond it, only a signal printed now counts
     if why: return False, f"no entry is possible for the rest of today ({why}): hold or buy USDG"
-    if ibs_busy(day) >= 10 ** 6: return False, "an IBS-TREND position is open (B6): no FADE or PULLBACK entry is predicted. After the real exit buy USDG unless a trigger shows"
+    if ibs_busy(day) >= 10 ** 6: return False, "an IBS-TREND trade was taken today (B6.6): no FADE or PULLBACK entry today. After the real exit buy USDG"
     if any(c['status'] == 'open' for c in taken): return False, "the model holds a position: no entry is predicted. After the real exit buy USDG unless a trigger shows"
     lost = {c['system'] for c in taken if c['status'] == 'closed' and c['usd'] < 0} if X_SYSLOSS else set()
     hits = []

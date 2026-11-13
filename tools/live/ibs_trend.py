@@ -184,7 +184,7 @@ def cmd_manage(argv):
         print(f"  IBS EXIT (15:55, B6.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat, then buy USDG (B4.8). Model {pct_leg(m):+.2f}% on the leg.")
     else:
         print(f"  IBS-TREND model STOPPED at {P.k2t(m['xbar'])} (proxy {p} touched {m['stop']:.2f}); model {pct_leg(m):+.2f}% on the leg. Check the real stop filled (get_equity_orders). "
-              f"If the real position is still open, leave the resting stop and sell at 15:55. The account is free for FADE and PULLBACK from the next slot (A1.2 daily loss limit first).")
+              f"If the real position is still open, leave the resting stop and sell at 15:55. No new entry today (B6.6): once flat, buy USDG and the remaining slots are one-line checks.")
     if first: print(f"  logged the model trade to archive/ibs_trades.csv")
 
 

@@ -1,0 +1,30 @@
+Audit of the v5.2.50 joint book (governor 2026-11-13: "one last pass to clean up anything you can to reduce drag and inefficiency
+
+v5.2.50 book by year: 2022 +106.2% 2023 +26.4% 2024 +17.4% 2025 +98.5% 2026 +196.0% | average 2022-25 +62.1%
+
+1. USAGE in the shared account: trades taken (wins %) and account points added, by year
+   subsystem                     2022              2023              2024              2025              2026 |               all | days traded
+   FADE               42 (57%)   +0.0   42 (64%)   -1.3   58 (53%)   -3.4   57 (53%)   +3.4   37 (76%)  +35.8 | 236 (59%)  +34.5 | 235 (20%)
+   PULLBACK           70 (46%)  +10.4   41 (37%)  -17.1   39 (62%)  +10.5   43 (49%)  +24.1   42 (67%)  +28.2 | 235 (51%)  +56.1 | 231 (19%)
+   IBS-TREND long     24 (50%)  +24.4   33 (55%)  +10.8   31 (55%)   +5.7   33 (67%)  +37.2   34 (50%)   +5.0 | 155 (55%)  +83.2 | 155 (13%)
+   IBS mirror         29 (48%)  +50.7   13 (85%)  +23.4   12 (33%)  -15.8   14 (36%)   +8.2    6 (33%)   -1.8 |  74 (49%)  +64.7 | 74 (6%)
+   DIP                15 (40%)   -4.0   24 (54%)  +11.3   41 (61%)  +22.5   21 (57%)   +2.1   32 (72%)  +46.5 | 133 (59%)  +78.5 | 133 (11%)
+   days with any trade: 757 of 1198 (63%). Signals offered: FADE 470, PULLBACK 444, IBS long 305, mirror 157, DIP 232.
+   signals lost to another subsystem holding the account: DIP blocked FADE 55x, IBS-TREND long blocked FADE 53x, IBS-TREND long blocked PULLBACK 50x, IBS mirror blocked FADE 31x, FADE blocked PULLBACK 31x, IBS mirror blocked PULLBACK 27x
+
+2. LIVE RULES THE BACKTEST DID NOT APPLY
+   A1.2 daily loss limit 3% (live rule)              +121.8   +30.0   +13.1  +105.6  +189.8 | change +15.7  +3.6  -4.3  +7.1  -6.2 | average 22-25 +67.6 | trades 797 (was 833)
+   no entry after an IBS-family stop-out that day    +121.8   +30.0   +13.1  +105.6  +189.8 | change +15.7  +3.6  -4.3  +7.1  -6.2 | average 22-25 +67.6 | trades 797 (was 833)
+   daily loss limit 2.5%                             +121.8   +30.0   +13.1  +105.6  +189.8 | change +15.7  +3.6  -4.3  +7.1  -6.2 | average 22-25 +67.6 | trades 797 (was 833)
+   trades taken after an IBS-family stop-out the same day: 36, wins 36%, account points -7.4 over five years
+
+3. COST SENSITIVITY (leg cost 0.06% a round trip in the model)
+   cost 0.12% a round trip:   +85.1   +15.3    +5.3   +79.7  +170.7 | average 22-25 +46.4
+   cost 0.20% a round trip:   +60.4    +2.0    -8.9   +57.3  +140.2 | average 22-25 +27.7
+
+4. ONE SUBSYSTEM REMOVED (what each is worth inside the joint book)
+   without FADE             +105.5   +31.5   +24.3   +89.0  +113.5 | change   -0.7   +5.1   +6.9   -9.5  -82.5 | average 22-25 +62.6 (+0.5)
+   without PULLBACK          +88.1   +50.4    +6.0   +58.2  +124.5 | change  -18.1  +24.0  -11.4  -40.3  -71.5 | average 22-25 +50.7 (-11.4)
+   without IBS-TREND long    +61.1   +17.1   +19.7   +26.6  +213.7 | change  -45.1   -9.2   +2.3  -71.9  +17.7 | average 22-25 +31.1 (-31.0)
+   without IBS mirror        +40.0    -7.6   +36.7   +79.8  +205.7 | change  -66.1  -34.0  +19.3  -18.7   +9.7 | average 22-25 +37.2 (-24.9)
+   without DIP              +110.6   +18.3    -5.4   +97.7  +144.7 | change   +4.4   -8.0  -22.8   -0.9  -51.3 | average 22-25 +55.3 (-6.8)
