@@ -1,0 +1,62 @@
+Systems 1 and 2 (governor 2026-11-13): the current book (FADE + PULLBACK, proxy -> leveraged leg) re-tuned two ways.
+combinations tested: 14244; Massive 2021-12-08..2026-10-30 (1214 days, 59 months); Robinhood 2026-03-03..2026-10-14
+
+LIVE v5.2.46
+   FADE: floor 0.5|lock +0.15R|cut on|tp 2R|chand 2|runaway 0.85|Fri skip
+   PULLBACK: vol 1.3|minstop 0.75|OR 9:45|runner EMA20
+   years 2022 +19.4% 2023 -29.8% 2024 +15.4% 2025 +18.3% 2026 +151.1% | worst year -29.8% | total +187.4% | max DD 43.3%
+   months: mean +2.03% median +0.86% winning 59% worst -9.6% best +29.6% | Robinhood 2026 check: +152.2% DD 3.5%
+
+SYSTEM 1 (most robust: best worst-year)
+   FADE: floor 0.3|lock BE|cut on|tp 2R|chand 3|runaway 0.85|Fri skip
+   PULLBACK: vol 1.3|minstop 0.75|OR 10:00|100% at high
+   years 2022 +6.6% 2023 -1.2% 2024 -0.8% 2025 +4.9% 2026 +101.1% | worst year -1.2% | total +120.4% | max DD 20.5%
+   months: mean +1.52% median -0.27% winning 47% worst -6.3% best +32.1% | Robinhood 2026 check: +109.9% DD 3.5%
+   next four by worst year:
+     worst -1.3% median -0.5% total +113% RH +115% | floor 0.3|lock BE|cut on|tp 2R|chand 2|runaway 0.85|Fri skip || vol 1.3|minstop 0.75|OR 10:00|100% at high
+     worst -1.9% median -1.1% total +113% RH +114% | floor 0.3|lock BE|cut off|tp 2R|chand 2|runaway 0.85|Fri skip || vol 1.3|minstop 0.75|OR 10:00|100% at high
+     worst -2.0% median -0.4% total +104% RH +107% | floor 0.3|lock +0.15R|cut on|tp 2R|chand 2|runaway 0.85|Fri skip || vol 1|minstop 1|OR 10:00|100% at high
+     worst -2.1% median -0.4% total +79% RH +87% | floor 0.5|lock BE|cut on|tp 2R|chand 2|runaway 0.85|Fri skip || PB off
+
+SYSTEM 2 (highest average month)
+   FADE: floor 1|lock BE|cut off|tp 2R|chand 2|runaway off|Fri skip
+   PULLBACK: vol 1|minstop 0.75|OR 10:00|runner EMA20
+   years 2022 +44.7% 2023 -8.4% 2024 -10.9% 2025 +65.2% 2026 +112.3% | worst year -10.9% | total +314.3% | max DD 33.8%
+   months: mean +2.77% median +1.43% winning 63% worst -10.6% best +27.5% | Robinhood 2026 check: +116.3% DD 14.6%
+   next four by average month:
+     mean +2.74% winning 53% total +306% RH +154% | floor 0.7|lock BE|cut on|tp 2R|chand 2|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner EMA20
+     mean +2.73% winning 58% total +296% RH +131% | floor 1|lock BE|cut off|tp 2R|chand 2|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner EMA20
+     mean +2.73% winning 53% total +304% RH +153% | floor 0.7|lock BE|cut on|tp 2R|chand 2|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner chand3
+     mean +2.73% winning 58% total +317% RH +137% | floor 0.5|lock BE|cut on|tp 3R|chand 3|runaway off|Fri skip || vol 1|minstop 0.75|OR 10:00|runner EMA20
+
+SYSTEM 1 top 2% (284 configs): most common settings: OR 10:00 91%, floor 0.3 89%, Fri skip 79%, tp 2R 76%, runaway 0.85 65%, minstop 1 62%, cut on 61%, lock BE 56%, vol 1 50%, chand 3 49%, chand 2 47%, 100% at high 38%, cut off 35%, vol 1.3 34%
+
+SYSTEM 2 top 2% (284 configs): most common settings: Fri skip 100%, minstop 0.75 100%, runaway off 99%, vol 1 70%, OR 10:00 65%, tp 2R 54%, lock BE 52%, chand 2 51%, cut on 51%, runner EMA20 50%, runner chand3 50%, cut off 49%, chand 3 49%, tp 3R 46%
+
+WALK-FORWARD (pick on the years before, trade the next year). Yearly return of the pick vs LIVE that year:
+   robust   2023: pick -20.9% vs live -29.8% | 2024: pick -28.2% vs live +15.4% | 2025: pick -2.0% vs live +18.3% | 2026: pick +101.1% vs live +151.1% || compounded +11.9% vs live +140.7%
+   monthly  2023: pick -20.9% vs live -29.8% | 2024: pick -12.6% vs live +15.4% | 2025: pick +31.6% vs live +18.3% | 2026: pick +112.3% vs live +151.1% || compounded +93.2% vs live +140.7%
+
+ONE CHANGE AT A TIME vs LIVE (points: year by year, total, average month, max drawdown, Robinhood 2026). better = years improved of 5
+   FADE off               years   -9.0  +11.3   +0.2   -0.7 -111.1 | better 2/5 | total  -116.0 | avg month -1.03 | worst yr  -18.5 | DD 32.9 (-10.5) | RH -113.4
+   FADE floor 0.3         years   -3.3  +10.8  -11.6   -8.6   -3.9 | better 1/5 | total   -22.6 | avg month -0.15 | worst yr  -19.0 | DD 33.8 (-9.6) | RH   -4.0
+   FADE runaway off       years  +29.3   +1.1   -2.9  -10.1   -8.1 | better 2/5 | total   +26.2 | avg month +0.19 | worst yr  -28.7 | DD 36.3 (-7.1) | RH   +7.3
+   FADE Fri trade         years  -11.9   -0.5  -14.2   -5.4  -35.2 | better 0/5 | total  -102.4 | avg month -0.78 | worst yr  -30.2 | DD 44.7 (+1.4) | RH  -25.4
+   PB off                 years  -11.8  +19.8  -15.5  -20.3  -66.6 | better 1/5 | total  -112.4 | avg month -0.95 | worst yr  -10.0 | DD 30.5 (-12.8) | RH  -63.0
+   PB vol 1               years   +1.7   -1.0   +2.4   +4.4   +5.7 | better 4/5 | total   +24.0 | avg month +0.17 | worst yr  -30.8 | DD 43.9 (+0.6) | RH   +0.3
+   PB 100% at high        years  -10.5   +2.7   -3.3  -18.8  -25.8 | better 1/5 | total   -87.9 | avg month -0.66 | worst yr  -27.1 | DD 39.3 (-4.1) | RH  -11.2
+   PB runner chand3       years   -0.4   -0.2   +3.5   -0.0   -2.7 | better 1/5 | total    +3.7 | avg month +0.02 | worst yr  -30.0 | DD 43.2 (-0.2) | RH   -1.4
+   PB OR 10:00            years  +13.5  +10.1   -7.5  +10.8  -24.1 | better 3/5 | total   +50.3 | avg month +0.24 | worst yr  -19.6 | DD 34.4 (-9.0) | RH  -18.4
+   PB minstop 1           years   +0.4   +7.6   -1.7   -6.0  -16.8 | better 2/5 | total    -8.7 | avg month -0.07 | worst yr  -22.2 | DD 35.0 (-8.3) | RH  -20.6
+   PB vol 1.5             years   +5.2   +0.1   -5.3   -8.2  -18.2 | better 2/5 | total   -40.1 | avg month -0.28 | worst yr  -29.7 | DD 42.2 (-1.2) | RH   -9.1
+   FADE chand 3           years   -1.1   -0.9   +1.1   +1.2   -8.2 | better 2/5 | total   -10.0 | avg month -0.07 | worst yr  -30.7 | DD 44.1 (+0.8) | RH   -7.3
+   FADE tp 3R             years   -4.9   -1.4   +3.7   +3.2  +10.0 | better 3/5 | total   +10.3 | avg month +0.08 | worst yr  -31.2 | DD 45.1 (+1.7) | RH   +1.7
+   FADE cut off           years   -2.8   -2.4   -1.8   -0.7   -2.7 | better 0/5 | total   -24.7 | avg month -0.15 | worst yr  -32.1 | DD 46.3 (+3.0) | RH   -2.6
+   FADE lock BE           years  -11.8   +6.2   -0.3   +2.6   +1.1 | better 3/5 | total    +1.2 | avg month +0.01 | worst yr  -23.6 | DD 41.9 (-1.4) | RH  -10.5
+   FADE lock off          years  -27.0   +0.3   +5.6   -6.3  +15.8 | better 3/5 | total   -51.5 | avg month -0.32 | worst yr  -29.5 | DD 51.0 (+7.6) | RH   -3.4
+   FADE floor 0.7         years  -18.6   -1.3   -7.8   -4.4   +3.6 | better 1/5 | total   -70.4 | avg month -0.45 | worst yr  -31.1 | DD 48.8 (+5.4) | RH   +3.1
+   FADE floor 1           years  -20.9   -1.2   -5.5   -8.3   -9.6 | better 0/5 | total   -88.8 | avg month -0.58 | worst yr  -30.9 | DD 53.7 (+10.3) | RH  -14.2
+   WF sharpe  2023: pick -23.9% vs live -29.8% | 2024: pick -9.3% vs live +15.4% | 2025: pick +35.3% vs live +18.3% | 2026: pick +24.8% vs live +151.1% || compounded +16.4% vs live +140.7%
+   WF rank    2023: pick -20.9% vs live -29.8% | 2024: pick -23.6% vs live +15.4% | 2025: pick +35.3% vs live +18.3% | 2026: pick +24.8% vs live +151.1% || compounded +2.0% vs live +140.7%
+
+LIVE rank among 14244: total 92th percentile, average month 91th, worst year 15th, Robinhood 2026 98th

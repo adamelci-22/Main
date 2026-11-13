@@ -486,5 +486,35 @@
   "result": "PULLBACK: all 12 variants lose to the live runner on RH and 2024-26 (best -7.2 and -33.8 points); LABD of 11-12 peaked at 24% of the way to the high so a half-way target would not have filled. FADE edge: an edge inside the 2R path lowers the chance of reaching 2R from +1R (-19, -4, -9 points, 69-87% confidence) but all four edge actions lose to the live exits",
   "verdict": "not adopted; box-edge paper log still offered (\"log the box edge\")",
   "champion_version": "5.2.47"
+ },
+ {
+  "id": "study.tune_book_robust_and_monthly",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Re-tune the live FADE + PULLBACK knobs two ways: most robust (worst year) and best average month; 14,244 combinations",
+  "method": "tools/backtest/tune_book.py, book_compare.py: Massive tape by year 2022-2026 + Robinhood 2026 check, walk-forward under four pick rules, one-change-at-a-time table",
+  "result": "Live: 2022-25 +14.4% compounded, DD 43.3%, 2026 +151%. System 1 (FADE lock at breakeven + PULLBACK range 10:00): worst year -12.6% vs -29.8%, DD 30.1%, 2022-25 +48.6%, RH +124.0 vs +152.2. System 2 (floor 1.0, lock BE, no cut, no runaway skip; PB vol 1.0, range 10:00): avg month +2.77% vs +2.03%, RH +116.3 DD 14.6. Walk-forward picks lost to live under all four rules (+11.9/+93.2/+16.4/+2.0 vs +140.7)",
+  "verdict": "not adopted; offered as \"push system 1\" / \"push system 2\"; tuned picks do not transfer in walk-forward",
+  "champion_version": "5.2.47"
+ },
+ {
+  "id": "study.new_proxy_systems",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "New proxy-to-leg systems to replace or join FADE and PULLBACK: 21 families, 135 settings",
+  "method": "tools/backtest/new_systems.py, new_systems2.py, new_systems3.py, book_compare.py; settings chosen on 2021-12..2024-03, judged on 2024-04..2026-10 and RH 2026",
+  "result": "PASS: RELVAL afternoon (+8.4/+11.9/+8.7, PF 1.35/1.36/3.06), DIP = RSI(2)<10 above the 50-day average, long 9:35 (+28.6/+67.3/+22.0), IBS-TREND = IBS<0.1 above the 50-day average (+28.4/+56.9/+22.2, 1 of 10 settings). All breakout and momentum families fail 2024-26. SYSTEM 1 + DIP + RELVAL: positive every year 2022-26, DD 21.6%, RH +149.2",
+  "verdict": "not adopted; offered as \"shadow DIP\", \"shadow RELVAL\", \"push DIP\", \"push RELVAL\"",
+  "champion_version": "5.2.47"
+ },
+ {
+  "id": "study.stock_scanner",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Stock scanner day-trading system (signals, charts, news): gap scanner with news, FADE on single stocks via 2x funds, daily-signal scanner across all liquid stocks",
+  "method": "tools/backtest/scan_download.py + scan_bt.py (4,640 stock-days, 621 entry x filter cells, first half vs second half), stock_fade.py (9 stocks 2021-26), scan_dip.py (all liquid stocks, 807 days)",
+  "result": "Gap scanner: 32 cells PF>=1.15 in the first half, 2 held, correlation of edge across halves -0.01; gap-ups lose 0.23% open to 15:55 before cost. Stock FADE: PF 0.98/0.66/1.38, account -15.7/-28.0/+1.3. Daily DIP top 3: PF 0.79 then 0.87. Day-two momentum top 1: PF 0.99 then 1.29 (unconfirmed)",
+  "verdict": "rejected: no long-only stock scanner passes",
+  "champion_version": "5.2.47"
  }
 ]

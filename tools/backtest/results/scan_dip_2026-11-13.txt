@@ -1,0 +1,39 @@
+System 4, third design (governor 2026-11-13): a DAILY-SIGNAL stock scanner. Every morning rank all liquid US common stocks and
+days 2023-08-28..2026-11-12 (807); TRAIN ..2025-04-04, TEST 2025-04-07..; cost 0.15% a round trip
+baseline: the average liquid stock, open to close, no cost: TRAIN -0.027% a day, TEST +0.028%
+
+DIP
+   every signal        TRAIN n 12534 w 45% -0.200% PF 0.73 | TEST n 15476 w 49% -0.005% PF 0.99
+   top 1 by rank       TRAIN n   396 w 47% -0.134% PF 0.82 | TEST n   398 w 48% -0.097% PF 0.90
+   top 3 by rank       TRAIN n  1151 w 46% -0.162% PF 0.79 | TEST n  1182 w 48% -0.127% PF 0.87
+   top 5 by rank       TRAIN n  1866 w 46% -0.181% PF 0.77 | TEST n  1956 w 47% -0.131% PF 0.86
+   account, top 1 equal weight, full cash:  TRAIN   -45.6% DD 50.8 days traded 396 | TEST   -41.3% DD 59.0 days traded 398
+   account, top 3 equal weight, full cash:  TRAIN   -48.2% DD 48.6 days traded 396 | TEST   -43.1% DD 52.9 days traded 398
+DIPDEEP
+   every signal        TRAIN n  5878 w 46% -0.198% PF 0.73 | TEST n  6586 w 51% +0.003% PF 1.00
+   top 1 by rank       TRAIN n   374 w 47% -0.212% PF 0.70 | TEST n   382 w 45% -0.350% PF 0.65
+   top 3 by rank       TRAIN n   992 w 45% -0.232% PF 0.69 | TEST n  1091 w 44% -0.294% PF 0.70
+   top 5 by rank       TRAIN n  1507 w 46% -0.188% PF 0.74 | TEST n  1736 w 45% -0.232% PF 0.77
+   account, top 1 equal weight, full cash:  TRAIN   -57.1% DD 57.1 days traded 374 | TEST   -76.5% DD 77.3 days traded 382
+   account, top 3 equal weight, full cash:  TRAIN   -54.7% DD 54.7 days traded 374 | TEST   -67.4% DD 67.9 days traded 382
+IBS
+   every signal        TRAIN n 20159 w 45% -0.202% PF 0.73 | TEST n 25607 w 46% -0.073% PF 0.92
+   top 1 by rank       TRAIN n   399 w 34% -0.649% PF 0.41 | TEST n   400 w 24% -0.989% PF 0.24
+   top 3 by rank       TRAIN n  1192 w 41% -0.280% PF 0.68 | TEST n  1198 w 38% -0.297% PF 0.67
+   top 5 by rank       TRAIN n  1954 w 44% -0.222% PF 0.73 | TEST n  1980 w 42% -0.160% PF 0.81
+   account, top 1 equal weight, full cash:  TRAIN   -93.2% DD 93.4 days traded 399 | TEST   -98.3% DD 98.3 days traded 400
+   account, top 3 equal weight, full cash:  TRAIN   -68.7% DD 69.2 days traded 399 | TEST   -70.9% DD 72.6 days traded 400
+MOMO
+   every signal        TRAIN n   812 w 45% -0.278% PF 0.79 | TEST n  1376 w 45% -0.246% PF 0.85
+   top 1 by rank       TRAIN n   269 w 49% -0.010% PF 0.99 | TEST n   307 w 49% +0.425% PF 1.29
+   top 3 by rank       TRAIN n   539 w 48% -0.204% PF 0.85 | TEST n   733 w 50% +0.292% PF 1.21
+   top 5 by rank       TRAIN n   644 w 47% -0.233% PF 0.83 | TEST n   960 w 50% +0.217% PF 1.15
+   account, top 1 equal weight, full cash:  TRAIN   -18.3% DD 49.3 days traded 269 | TEST  +172.6% DD 47.9 days traded 307
+   account, top 3 equal weight, full cash:  TRAIN   -34.0% DD 42.8 days traded 269 | TEST   +86.8% DD 25.0 days traded 307
+WEAK
+   every signal        TRAIN n 36665 w 45% -0.201% PF 0.76 | TEST n 48180 w 47% +0.001% PF 1.00
+   top 1 by rank       TRAIN n   403 w 49% -0.069% PF 0.92 | TEST n   403 w 43% -0.396% PF 0.66
+   top 3 by rank       TRAIN n  1209 w 47% -0.185% PF 0.80 | TEST n  1207 w 44% -0.304% PF 0.73
+   top 5 by rank       TRAIN n  2001 w 47% -0.159% PF 0.82 | TEST n  2005 w 44% -0.298% PF 0.73
+   account, top 1 equal weight, full cash:  TRAIN   -34.0% DD 56.0 days traded 403 | TEST   -83.9% DD 84.5 days traded 403
+   account, top 3 equal weight, full cash:  TRAIN   -55.4% DD 59.8 days traded 403 | TEST   -72.9% DD 76.3 days traded 403

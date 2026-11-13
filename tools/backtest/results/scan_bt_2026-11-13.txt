@@ -1,0 +1,195 @@
+System 4 (governor 2026-11-13): a stock scanner day-trading system - "trade any stock, scan for the best opportunity using signals,
+days 2025-10-30..2026-11-12 (261); TRAIN ..2026-05-07, TEST 2026-05-08..; 4640 stock-days, 1023 with news; cost 0.20% a round trip
+
+baseline, open to 15:55, no cost: gap-ups -0.23% a stock-day, gap-downs +0.30%
+
+PER-TRADE EDGE by entry and filter (every signal taken): n, win %, average net %, profit factor.  TRAIN | TEST
+  OPENBUY 9:35 stop 1 ATR
+          all                n 2298 w 41% -0.40% PF 0.76 | n 2342 w 41% -0.28% PF 0.82
+          gap up             n 1546 w 39% -0.46% PF 0.72 | n 1567 w 40% -0.23% PF 0.84
+          gap down           n  752 w 46% -0.29% PF 0.84 | n  775 w 44% -0.38% PF 0.79
+          up + news          n  342 w 39% -0.07% PF 0.95 | n  327 w 39% -0.44% PF 0.72
+          up no news         n 1204 w 39% -0.57% PF 0.65 | n 1240 w 40% -0.17% PF 0.88
+          down + news        n  156 w 48% -0.11% PF 0.93 | n  198 w 47% +0.20% PF 1.13
+          down no news       n  596 w 46% -0.34% PF 0.82 | n  577 w 43% -0.57% PF 0.70
+  OPENBUY stop 0.5 ATR
+          all                n 2298 w 32% -0.37% PF 0.74 | n 2342 w 33% -0.21% PF 0.84
+          gap up             n 1546 w 30% -0.42% PF 0.68 | n 1567 w 31% -0.22% PF 0.82
+          gap down           n  752 w 36% -0.26% PF 0.83 | n  775 w 37% -0.20% PF 0.87
+          up + news          n  342 w 29% -0.24% PF 0.82 | n  327 w 30% -0.18% PF 0.85
+          up no news         n 1204 w 30% -0.47% PF 0.65 | n 1240 w 32% -0.23% PF 0.81
+          down + news        n  156 w 33% -0.20% PF 0.86 | n  198 w 40% +0.28% PF 1.23
+          down no news       n  596 w 37% -0.28% PF 0.83 | n  577 w 37% -0.36% PF 0.77
+  OPENBUY out 13:30
+          all                n 2298 w 43% -0.35% PF 0.77 | n 2342 w 42% -0.26% PF 0.82
+          gap up             n 1546 w 42% -0.36% PF 0.76 | n 1567 w 40% -0.20% PF 0.85
+          gap down           n  752 w 46% -0.34% PF 0.80 | n  775 w 46% -0.39% PF 0.77
+          up + news          n  342 w 41% +0.03% PF 1.02 | n  327 w 39% -0.24% PF 0.83
+          up no news         n 1204 w 42% -0.47% PF 0.68 | n 1240 w 40% -0.19% PF 0.85
+          down + news        n  156 w 47% -0.26% PF 0.82 | n  198 w 50% +0.29% PF 1.21
+          down no news       n  596 w 45% -0.36% PF 0.80 | n  577 w 44% -0.62% PF 0.65
+  OPENBUY 10:00
+          all                n 2298 w 42% -0.39% PF 0.74 | n 2342 w 43% -0.36% PF 0.73
+          gap up             n 1546 w 40% -0.47% PF 0.68 | n 1567 w 43% -0.25% PF 0.79
+          gap down           n  752 w 47% -0.23% PF 0.85 | n  775 w 42% -0.59% PF 0.63
+          up + news          n  342 w 38% -0.15% PF 0.90 | n  327 w 43% -0.41% PF 0.68
+          up no news         n 1204 w 40% -0.56% PF 0.62 | n 1240 w 43% -0.20% PF 0.83
+          down + news        n  156 w 51% +0.16% PF 1.13 | n  198 w 40% -0.32% PF 0.76
+          down no news       n  596 w 46% -0.33% PF 0.80 | n  577 w 43% -0.68% PF 0.59
+  WASHOUT
+          all                n 1256 w 33% -0.37% PF 0.73 | n 1266 w 35% -0.38% PF 0.70
+          gap up             n  875 w 32% -0.35% PF 0.74 | n  881 w 34% -0.44% PF 0.65
+          gap down           n  381 w 35% -0.42% PF 0.72 | n  385 w 37% -0.26% PF 0.80
+          news positive      n  170 w 31% +0.28% PF 1.21 | n  156 w 34% -0.60% PF 0.54
+          up + news          n  191 w 31% +0.21% PF 1.16 | n  205 w 34% -0.55% PF 0.58
+          up + news pos      n  144 w 29% +0.38% PF 1.27 | n  124 w 35% -0.58% PF 0.57
+          up no news         n  684 w 33% -0.51% PF 0.62 | n  676 w 34% -0.40% PF 0.68
+          up pm >= 20%       n  121 w 27% +0.39% PF 1.18 | n  147 w 33% -0.52% PF 0.79
+          down + news        n   79 w 33% -0.29% PF 0.73 | n  106 w 42% +0.21% PF 1.20
+          down no news       n  302 w 36% -0.46% PF 0.72 | n  279 w 35% -0.43% PF 0.69
+  WASHOUT 0.25
+          all                n 1700 w 34% -0.37% PF 0.72 | n 1744 w 36% -0.34% PF 0.73
+          gap up             n 1183 w 33% -0.42% PF 0.68 | n 1191 w 36% -0.35% PF 0.72
+          gap down           n  517 w 38% -0.26% PF 0.82 | n  553 w 38% -0.32% PF 0.75
+          up + news          n  261 w 31% -0.03% PF 0.98 | n  254 w 35% -0.52% PF 0.60
+          up no news         n  922 w 33% -0.53% PF 0.59 | n  937 w 36% -0.30% PF 0.75
+          down + news        n  114 w 38% -0.12% PF 0.88 | n  138 w 40% -0.08% PF 0.93
+          down no news       n  403 w 39% -0.29% PF 0.81 | n  415 w 37% -0.41% PF 0.70
+  ORB5
+          all                n  672 w 40% -0.35% PF 0.76 | n  701 w 42% -0.14% PF 0.90
+          gap up             n  435 w 38% -0.46% PF 0.69 | n  449 w 40% -0.22% PF 0.85
+          gap down           n  237 w 45% -0.14% PF 0.90 | n  252 w 45% +0.01% PF 1.01
+          up + news          n  100 w 37% -0.58% PF 0.64 | n  107 w 43% -0.39% PF 0.73
+          up no news         n  335 w 38% -0.43% PF 0.70 | n  342 w 39% -0.17% PF 0.89
+          down + news        n   41 w 54% +0.37% PF 1.31 | n   63 w 49% -0.03% PF 0.98
+          down no news       n  196 w 43% -0.25% PF 0.83 | n  189 w 43% +0.03% PF 1.02
+  ORB5 atr stop 0.10
+          all                n  672 w 12% -0.25% PF 0.57 | n  701 w 12% -0.09% PF 0.84
+          gap up             n  435 w 11% -0.24% PF 0.56 | n  449 w 11% +0.02% PF 1.03
+          gap down           n  237 w 13% -0.26% PF 0.58 | n  252 w 13% -0.29% PF 0.57
+          up + news          n  100 w 12% -0.29% PF 0.43 | n  107 w 15% +0.00% PF 1.01
+          up no news         n  335 w 11% -0.22% PF 0.59 | n  342 w 10% +0.02% PF 1.04
+          down + news        n   41 w 17% -0.24% PF 0.61 | n   63 w 11% -0.28% PF 0.66
+          down no news       n  196 w 12% -0.26% PF 0.58 | n  189 w 13% -0.29% PF 0.53
+  ORB5 out 13:30
+          all                n  672 w 41% -0.48% PF 0.66 | n  701 w 41% -0.10% PF 0.92
+          gap up             n  435 w 39% -0.55% PF 0.62 | n  449 w 40% -0.11% PF 0.92
+          gap down           n  237 w 45% -0.35% PF 0.74 | n  252 w 44% -0.10% PF 0.92
+          up + news          n  100 w 43% -0.44% PF 0.72 | n  107 w 45% -0.28% PF 0.78
+          up no news         n  335 w 38% -0.58% PF 0.59 | n  342 w 38% -0.05% PF 0.96
+          down + news        n   41 w 49% -0.08% PF 0.93 | n   63 w 49% +0.29% PF 1.22
+          down no news       n  196 w 44% -0.40% PF 0.70 | n  189 w 42% -0.22% PF 0.81
+  ORB30
+          all                n  729 w 38% -0.33% PF 0.73 | n  725 w 40% -0.39% PF 0.66
+          gap up             n  477 w 36% -0.30% PF 0.75 | n  492 w 40% -0.44% PF 0.64
+          gap down           n  252 w 43% -0.39% PF 0.71 | n  233 w 40% -0.28% PF 0.73
+          news positive      n   96 w 33% +0.44% PF 1.37 | n   82 w 48% -0.43% PF 0.66
+          up + news          n  105 w 34% +0.24% PF 1.19 | n  113 w 44% -0.60% PF 0.53
+          up + news pos      n   82 w 34% +0.65% PF 1.53 | n   68 w 49% -0.43% PF 0.67
+          up no news         n  372 w 36% -0.45% PF 0.61 | n  379 w 39% -0.40% PF 0.67
+          up pm >= 20%       n   52 w 40% +1.31% PF 1.62 | n   69 w 54% -0.56% PF 0.82
+          down + news        n   44 w 52% -0.09% PF 0.91 | n   58 w 45% -0.37% PF 0.70
+          down no news       n  208 w 41% -0.45% PF 0.68 | n  175 w 39% -0.26% PF 0.74
+  PBK runner
+          all                n  311 w 28% -0.38% PF 0.56 | n  332 w 29% -0.44% PF 0.44
+          gap up             n  215 w 25% -0.46% PF 0.51 | n  243 w 28% -0.37% PF 0.47
+          gap down           n   96 w 36% -0.20% PF 0.70 | n   89 w 34% -0.63% PF 0.36
+          up no news         n  176 w 22% -0.49% PF 0.43 | n  208 w 27% -0.36% PF 0.49
+          down no news       n   83 w 34% -0.29% PF 0.59 | n   74 w 31% -0.71% PF 0.34
+          down gap > -6%     n   42 w 38% +0.09% PF 1.21 | n   53 w 30% -0.31% PF 0.51
+  PBK target
+          all                n  311 w 40% -0.41% PF 0.53 | n  332 w 40% -0.40% PF 0.51
+          gap up             n  215 w 35% -0.56% PF 0.42 | n  243 w 38% -0.34% PF 0.53
+          gap down           n   96 w 50% -0.08% PF 0.88 | n   89 w 44% -0.53% PF 0.45
+          up no news         n  176 w 32% -0.61% PF 0.31 | n  208 w 39% -0.34% PF 0.55
+          down no news       n   83 w 48% -0.20% PF 0.73 | n   74 w 41% -0.61% PF 0.42
+          down 1st bar strong n   54 w 52% +0.12% PF 1.24 | n   49 w 43% -0.75% PF 0.38
+  PBK runner 13:30
+          all                n  311 w 31% -0.35% PF 0.53 | n  332 w 32% -0.37% PF 0.48
+          gap up             n  215 w 27% -0.42% PF 0.51 | n  243 w 31% -0.28% PF 0.56
+          gap down           n   96 w 42% -0.19% PF 0.61 | n   89 w 35% -0.63% PF 0.32
+          up no news         n  176 w 24% -0.52% PF 0.35 | n  208 w 30% -0.28% PF 0.57
+          down no news       n   83 w 40% -0.24% PF 0.55 | n   74 w 34% -0.71% PF 0.29
+  R2G
+          all                n  821 w 38% -0.31% PF 0.76 | n  802 w 42% -0.16% PF 0.86
+          gap up             n  581 w 37% -0.39% PF 0.71 | n  530 w 42% -0.14% PF 0.89
+          gap down           n  240 w 42% -0.13% PF 0.89 | n  272 w 42% -0.22% PF 0.81
+          news positive      n  111 w 31% +0.37% PF 1.25 | n   87 w 39% -0.51% PF 0.61
+          up + news          n  129 w 31% +0.12% PF 1.09 | n  112 w 46% -0.23% PF 0.82
+          up + news pos      n   97 w 29% +0.40% PF 1.25 | n   68 w 46% -0.38% PF 0.71
+          up no news         n  452 w 39% -0.53% PF 0.60 | n  418 w 41% -0.11% PF 0.91
+     KEEP up pm >= 20%       n   67 w 36% +0.66% PF 1.26 | n   87 w 48% +0.44% PF 1.16
+          down + news        n   45 w 40% -0.16% PF 0.84 | n   68 w 44% +0.13% PF 1.16
+          down no news       n  195 w 42% -0.13% PF 0.90 | n  204 w 41% -0.34% PF 0.74
+  R2G deep 0.5
+          all                n  497 w 39% -0.27% PF 0.82 | n  463 w 47% -0.07% PF 0.95
+          gap up             n  341 w 38% -0.21% PF 0.86 | n  314 w 46% -0.16% PF 0.88
+          gap down           n  156 w 40% -0.39% PF 0.73 | n  149 w 49% +0.13% PF 1.13
+          news               n   93 w 39% +0.89% PF 1.64 | n  128 w 50% -0.03% PF 0.97
+          news positive      n   63 w 35% +1.47% PF 1.96 | n   64 w 41% -0.66% PF 0.53
+          up + news          n   73 w 38% +1.12% PF 1.74 | n   82 w 48% -0.39% PF 0.72
+          up + news pos      n   57 w 35% +1.59% PF 1.98 | n   51 w 45% -0.67% PF 0.55
+          up no news         n  268 w 38% -0.58% PF 0.61 | n  232 w 46% -0.08% PF 0.94
+          up pm >= 5%        n  146 w 42% +0.56% PF 1.34 | n  147 w 44% -0.44% PF 0.78
+          up pm >= 20%       n   42 w 48% +3.14% PF 2.51 | n   66 w 53% -0.05% PF 0.98
+          up gap/ATR >= 2    n  196 w 44% +0.23% PF 1.18 | n  167 w 50% -0.13% PF 0.91
+          up top-3 gap/ATR   n  100 w 39% +0.31% PF 1.21 | n   96 w 47% -0.66% PF 0.64
+          down no news       n  136 w 40% -0.45% PF 0.71 | n  103 w 47% -0.08% PF 0.93
+  VWAPH
+          all                n  884 w 23% -0.34% PF 0.62 | n  921 w 26% -0.31% PF 0.65
+          gap up             n  584 w 22% -0.31% PF 0.64 | n  571 w 26% -0.20% PF 0.76
+          gap down           n  300 w 25% -0.40% PF 0.60 | n  350 w 26% -0.49% PF 0.48
+          news positive      n  111 w 23% +0.13% PF 1.15 | n  114 w 30% -0.13% PF 0.86
+          up + news          n  131 w 21% -0.02% PF 0.98 | n  129 w 31% -0.04% PF 0.96
+          up + news pos      n  101 w 22% +0.18% PF 1.19 | n   83 w 31% +0.02% PF 1.02
+          up no news         n  453 w 23% -0.39% PF 0.54 | n  442 w 24% -0.24% PF 0.71
+     KEEP up pm >= 20%       n   56 w 29% +0.49% PF 1.34 | n   75 w 39% +0.57% PF 1.34
+          down + news        n   48 w 23% -0.38% PF 0.54 | n   92 w 26% -0.33% PF 0.66
+          down no news       n  252 w 25% -0.41% PF 0.61 | n  258 w 26% -0.54% PF 0.42
+  VWAPH 10:30
+          all                n  877 w 26% -0.16% PF 0.81 | n  881 w 26% -0.32% PF 0.62
+          gap up             n  569 w 25% -0.10% PF 0.87 | n  555 w 26% -0.19% PF 0.74
+          gap down           n  308 w 28% -0.26% PF 0.73 | n  326 w 25% -0.53% PF 0.47
+          news positive      n  109 w 30% +0.47% PF 1.62 | n   94 w 33% -0.02% PF 0.98
+          up + news          n  121 w 27% +0.29% PF 1.36 | n  122 w 34% -0.02% PF 0.97
+          up + news pos      n   97 w 30% +0.61% PF 1.83 | n   70 w 34% +0.03% PF 1.04
+          up no news         n  448 w 25% -0.21% PF 0.74 | n  433 w 24% -0.24% PF 0.68
+          up rv5 >= 8        n  258 w 29% +0.23% PF 1.25 | n  228 w 32% +0.03% PF 1.03
+          up pm >= 20%       n   64 w 38% +1.33% PF 1.96 | n   76 w 41% +0.03% PF 1.02
+          down + news        n   49 w 35% -0.29% PF 0.70 | n   79 w 25% -0.31% PF 0.62
+          down no news       n  259 w 26% -0.26% PF 0.74 | n  247 w 24% -0.60% PF 0.43
+  FADEL
+          all                n   92 w 48% +0.06% PF 1.06 | n   94 w 38% -0.07% PF 0.91
+          gap up             n   57 w 49% -0.09% PF 0.88 | n   63 w 37% -0.09% PF 0.88
+          up no news         n   49 w 49% -0.10% PF 0.87 | n   53 w 36% -0.10% PF 0.85
+          up price >= 20     n   47 w 47% +0.10% PF 1.16 | n   52 w 38% -0.02% PF 0.97
+  FADEL 13:30
+          all                n   92 w 50% +0.11% PF 1.15 | n   94 w 40% -0.06% PF 0.91
+          gap up             n   57 w 51% +0.04% PF 1.06 | n   63 w 37% -0.10% PF 0.85
+          up no news         n   49 w 51% +0.06% PF 1.08 | n   53 w 36% -0.14% PF 0.78
+          up price >= 20     n   47 w 49% +0.17% PF 1.29 | n   52 w 38% -0.02% PF 0.97
+  HOD
+          all                n  720 w 33% -0.31% PF 0.68 | n  714 w 34% -0.33% PF 0.63
+          gap up             n  486 w 30% -0.36% PF 0.61 | n  492 w 33% -0.23% PF 0.72
+          gap down           n  234 w 40% -0.21% PF 0.80 | n  222 w 35% -0.53% PF 0.48
+          up + news          n  112 w 29% -0.31% PF 0.67 | n  113 w 28% -0.36% PF 0.55
+          up no news         n  374 w 30% -0.37% PF 0.59 | n  379 w 35% -0.20% PF 0.76
+          down + news        n   48 w 35% -0.58% PF 0.52 | n   57 w 35% -0.67% PF 0.44
+          down no news       n  186 w 41% -0.12% PF 0.88 | n  165 w 35% -0.48% PF 0.49
+
+PERSISTENCE: 621 entry x filter cells with >= 40 trades in each half; 32 had TRAIN PF >= 1.15; of those 6 stayed positive on TEST and 2 kept PF >= 1.15
+   all cells: TRAIN mean PF 0.77, TEST mean PF 0.79; correlation of TRAIN and TEST average net % across cells -0.01
+
+ACCOUNT (3% risk a trade capped at cash, one position at a time, 3 entries a day, earliest signal first, ties to the higher first-bar relative volume)
+   R2G deep 0.5       up pm >= 20%       TRAIN   +17.0% DD  9.0 n  36 | TEST    -1.6% DD 15.2 n  49 w 51% avg -0.10% PF 0.96
+   R2G deep 0.5       up + news pos      TRAIN   -13.3% DD 19.8 n  48 | TEST   -17.2% DD 17.9 n  40 w 42% avg -0.69% PF 0.55
+   R2G deep 0.5       news positive      TRAIN   -14.0% DD 20.4 n  52 | TEST   -19.2% DD 20.6 n  50 w 40% avg -0.66% PF 0.54
+   VWAPH 10:30        up pm >= 20%       TRAIN    +9.1% DD  5.6 n  49 | TEST    -1.8% DD  6.6 n  52 w 40% avg +0.11% PF 1.07
+   R2G deep 0.5       up + news          TRAIN   -19.4% DD 23.0 n  60 | TEST    -6.0% DD 17.0 n  55 w 49% avg -0.31% PF 0.77
+   ORB30              up pm >= 20%       TRAIN   +15.8% DD 13.2 n  40 | TEST   -24.8% DD 26.9 n  48 w 42% avg -1.08% PF 0.71
+   R2G deep 0.5       news               TRAIN   -17.9% DD 21.8 n  71 | TEST    +4.5% DD 15.9 n  70 w 50% avg -0.05% PF 0.95
+   R2G deep 0.5       up pm >= 5%        TRAIN   +10.9% DD 19.3 n  90 | TEST   -29.1% DD 38.2 n  85 w 41% avg -0.43% PF 0.78
+   VWAPH 10:30        up + news pos      TRAIN    -5.6% DD  9.3 n  72 | TEST   -11.9% DD 13.8 n  50 w 30% avg -0.21% PF 0.73
+   ORB30              up + news pos      TRAIN   -10.5% DD 16.7 n  59 | TEST   -17.3% DD 21.2 n  46 w 46% avg -0.71% PF 0.52
+   R2G                up pm >= 20%       TRAIN   -23.4% DD 33.5 n  56 | TEST    +1.1% DD 18.4 n  63 w 49% avg +0.98% PF 1.41
+   VWAPH 10:30        news positive      TRAIN    -4.2% DD  9.6 n  78 | TEST   -13.3% DD 16.3 n  62 w 29% avg -0.19% PF 0.75
