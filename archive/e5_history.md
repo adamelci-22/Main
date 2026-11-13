@@ -171,3 +171,15 @@
 - **RVOL baseline:** 20 sessions 2026-10-13..11-09 -> `archive/paper_rvol_2026-11-10.json`.
 - **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).
+
+**Wednesday 2026-11-11, 9:00 research (morning trigger fired 8:41 ET, v5.2.44).**
+- **9:00 value (A1.2 base): $2,580.10** (pre-open, read 8:42 ET), flat, no open orders. It is 2,579 USDG plus $1.10 cash. Equal to the 11-10 close. Drawdown stop clear (high $2,596.99, -0.65%). Daily loss limit fires at $2,502.70 (-3%).
+- **Controls:** losing streak 0. Wednesday: FADE and PULLBACK both trade. Veterans Day: US stocks are open (not in `NO_TRADE`). Earnings: NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). MSFT next reports 2027-01-27 (tentative). No earnings skip today.
+- **Rules in force:** tunables v4: runaway skip 0.85%, PULLBACK volume 1.3x, same-system loss block (B4.7). USDG rule ON (B4.8). Every-5-minute check (C2). Waiter watchdog 9:36, 10:36, 11:36, 12:36 (A2.4). Batch 2 starts at the 11:25 slot, not earlier (E6).
+- **USDG:** peg bid = ask = $1.00. Balance 2,579.00 exactly. No interest credited in 6 days. The governor must check the posted rate and credit schedule in the Robinhood app. Turn the rule off if it pays nothing.
+- **Container:** uptime was 0 minutes at 8:42. The container restarted overnight again and the 8:41 trigger revived it. The 9:30 waiter started on the new container.
+- **Corporate actions:** clean. Premarket moves match their underlyings: QQQ +1.9%, TQQQ +5.7%; SOXX +5.2%, SOXL +15.4%, SOXS -15.6%; IWM +1.0%, TNA +2.8%; XLK +2.9%, TECL +8.7%, TECS -8.5%; XBI +0.6%, LABU +1.9%; XLF -0.2%, FAS -0.5%. NVDA +3.8% with NVDQ -7.6% and NVD -7.5% (inverse legs). MSFT +0.5%, MSFU +0.6%. Wide premarket spreads on SSG, LABU, TECS, TECL, FAS (A1.7 applies at order time).
+- **RVOL baseline:** 20 sessions 2026-10-14..11-10 -> `archive/paper_rvol_2026-11-11.json`.
+- **Context:** a strong gap up after yesterday's reversal day. Semiconductors +5.2% and tech +2.9% premarket, financials flat. No FOMC.
+- **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).

@@ -403,18 +403,6 @@ Only the **5-loss lockout** carries over from the old rules (A1.1, governor 2026
 
 Earlier E5 text is kept in `archive/e5_history.md`.
 
-**Wednesday 2026-11-11, 9:00 research (morning trigger fired 8:41 ET, v5.2.44).**
-- **9:00 value (A1.2 base): $2,580.10** (pre-open, read 8:42 ET), flat, no open orders. It is 2,579 USDG plus $1.10 cash. Equal to the 11-10 close. Drawdown stop clear (high $2,596.99, -0.65%). Daily loss limit fires at $2,502.70 (-3%).
-- **Controls:** losing streak 0. Wednesday: FADE and PULLBACK both trade. Veterans Day: US stocks are open (not in `NO_TRADE`). Earnings: NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). MSFT next reports 2027-01-27 (tentative). No earnings skip today.
-- **Rules in force:** tunables v4: runaway skip 0.85%, PULLBACK volume 1.3x, same-system loss block (B4.7). USDG rule ON (B4.8). Every-5-minute check (C2). Waiter watchdog 9:36, 10:36, 11:36, 12:36 (A2.4). Batch 2 starts at the 11:25 slot, not earlier (E6).
-- **USDG:** peg bid = ask = $1.00. Balance 2,579.00 exactly. No interest credited in 6 days. The governor must check the posted rate and credit schedule in the Robinhood app. Turn the rule off if it pays nothing.
-- **Container:** uptime was 0 minutes at 8:42. The container restarted overnight again and the 8:41 trigger revived it. The 9:30 waiter started on the new container.
-- **Corporate actions:** clean. Premarket moves match their underlyings: QQQ +1.9%, TQQQ +5.7%; SOXX +5.2%, SOXL +15.4%, SOXS -15.6%; IWM +1.0%, TNA +2.8%; XLK +2.9%, TECL +8.7%, TECS -8.5%; XBI +0.6%, LABU +1.9%; XLF -0.2%, FAS -0.5%. NVDA +3.8% with NVDQ -7.6% and NVD -7.5% (inverse legs). MSFT +0.5%, MSFU +0.6%. Wide premarket spreads on SSG, LABU, TECS, TECL, FAS (A1.7 applies at order time).
-- **RVOL baseline:** 20 sessions 2026-10-14..11-10 -> `archive/paper_rvol_2026-11-11.json`.
-- **Context:** a strong gap up after yesterday's reversal day. Semiconductors +5.2% and tech +2.9% premarket, financials flat. No FOMC.
-- **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session.
-- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).
-
 **Thursday 2026-11-12, 9:00 research (morning trigger fired 8:41 ET, v5.2.47).**
 - **9:00 value (A1.2 base): $2,585.13** (pre-open, read 8:42 ET), flat, no open orders. It is 2,584 USDG plus $1.13 cash. Equal to the 11-11 close. Drawdown stop clear (high $2,628.85, -1.66%). Daily loss limit fires at $2,507.58 (-3%).
 - **Controls:** losing streak 0 (last three trades won: LABD 11-05, NVDQ 11-06, LABU 11-11). Thursday: FADE and PULLBACK both trade. Earnings: NVDA next reports 2026-11-17 pm, verified (NVD/NVDQ skip 11-18). MSFT next reports 2027-01-27 (tentative). No earnings skip today.
@@ -426,6 +414,15 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Context:** a risk-off open: NVDA gap down 8.6%, semiconductors -2.6%, Nasdaq -1.3%, volatility up (UVXY +5%). Inverse Nvidia funds (NVDQ, NVD) and SOXS, TECS are PULLBACK legs and sit on the strong side of today's move. No FOMC.
 - **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. An old one-shot from 2026-10-05 (`Checkpoint 10:10 ET`, session `session_01V36...`) is disabled and never fired; it belongs to the retired session and is inert.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 1 of 5 (LABU 11-11), PULLBACK 2 of 5 (NVDQ 11-06).
+
+**Friday 2026-11-13, 9:00 research (morning trigger fired 8:41 ET, v5.2.47). INCOMPLETE: Robinhood connector down.**
+- **Broker connection: DOWN at 8:42 ET.** The Robinhood connector returned 503 (`CLIENT_HTTP_NOT_IMPLEMENTED`) on three attempts. No state check (A3), no 9:00 value, no earnings call, no corporate-action check, no RVOL baseline yet. Rule A4.1: report and retry at the next slot. The 9:30 waiter is running and retries there. No order is placed before a clean state check.
+- **Last known state (11-12 close, 13:36 ET):** flat, no open orders. $2,585.15 = 2,584 USDG + $1.15 cash. High $2,628.85, drawdown -1.66%, account stop level $2,234.52. Nothing held overnight, so the outage carries no position risk.
+- **Controls (from the record, not re-verified):** losing streak 0 real (LABD 11-12 closed +$0.01), model streak 1 of 5. **Friday: FADE does not trade. PULLBACK trades.** Earnings: NVDA reports 2026-11-17 pm (NVD/NVDQ skip 11-18). MSFT 2027-01-27 (tentative). No earnings skip today.
+- **Rules in force:** v5.2.47. FADE stop floor 0.5% (B2.4), PULLBACK runner (B3.9, B5.6, C2), tunables v4, USDG rule ON (B4.8), every-5-minute check (C2), watchdog 9:36-12:36 (A2.4), batch 2 at the 11:25 slot.
+- **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. The disabled 2026-10-05 one-shot is inert.
+- **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 1 of 5, PULLBACK 3 of 5.
+- **Research overnight:** four-system build in `archive/systems_2026-11-13.md` (nothing adopted). The 3 AM year-split rebuild (`tools/backtest/split_build.py`) is written and not run: the permission system blocked the run and it waits for the governor's "run it".
 
 ## E6. Known issues
 
