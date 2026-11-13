@@ -536,5 +536,15 @@
   "result": "v5.2.48 book +43.0, -13.5, +13.6, +73.7, +126.8 (average 2022-25 +29.2). Mirror 0.95 / 20 sessions: book +110.6, +18.3, -5.4, +97.7, +144.7 (average +55.3, DD 24.7); 4 of 12 settings qualified on train, all 4 passed test. Trend filters not approved on train; PULLBACK underlying-down filter is a lead (+53.8, +9.7, +8.2, +59.4, +91.9 in the book)",
   "verdict": "ADOPTED: IBS-TREND (v5.2.48) and its mirror (v5.2.49), governor instruction 2026-11-13; filters not adopted",
   "champion_version": "5.2.49"
+ },
+ {
+  "id": "study.boost_floor",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Joint book of all systems scored by its worst year: FADE on/off, PULLBACK underlying filter, mirror variants and QQQ gate, DIP, RELVAL (160 books)",
+  "method": "tools/backtest/boost_floor.py; train 2022/2024/2026, test 2023/2025; one-piece-at-a-time table against the v5.2.49 book",
+  "result": "DIP signal: book +106.2, +26.4, +17.4, +98.5, +196.0 (worst year +17.4, average 2022-25 +62.1), better in 2 of 3 train years and both test years. 4 of 160 books reach +30% in every year 2022-25, all hindsight; train pick worst year +3.9. FADE off costs 82 points in 2026",
+  "verdict": "ADOPTED: DIP signal (v5.2.50), governor instruction 2026-11-13; 30% floor in every year not reached",
+  "champion_version": "5.2.50"
  }
 ]

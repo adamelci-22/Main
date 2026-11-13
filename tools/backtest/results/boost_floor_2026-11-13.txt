@@ -1,0 +1,36 @@
+Boost study, part 3 (governor 2026-11-13: "the entire system, all 3, IBS FADE and PULLBACK, to a joint min of 30% per year
+   160 joint books. Years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th).
+
+      v5.2.48 (IBS long, no mirror): FADE live | PB live | mirror off | DIP off | RELVAL off   +43.0   -13.5   +13.6   +73.7  +126.8 | worst 22-25  -13.5 avg  +29.2 | train worst  +13.6 | TEST   +50.3
+      v5.2.49 LIVE: FADE live | PB live | mirror 20d (live) | DIP off | RELVAL off  +110.6   +18.3    -5.4   +97.7  +144.7 | worst 22-25   -5.4 avg  +55.3 | train worst   -5.4 | TEST  +133.9
+
+TOP 12 by the worst TRAIN year (then train total). T = the train pick
+   T  FADE off | PB live | mirror 20d, QQQ<100d | DIP on | RELVAL on             +96.8    +3.9   +47.1   +85.8  +136.4 | worst 22-25   +3.9 avg  +58.4 | train worst  +47.1 | TEST   +93.1
+      FADE off | PB live | mirror 20d, QQQ<100d | DIP on | RELVAL off            +83.0    +8.8   +44.4   +81.9  +113.5 | worst 22-25   +8.8 avg  +54.5 | train worst  +44.4 | TEST   +97.9
+      FADE off | PB live | mirror 20d, QQQ<50d | DIP on | RELVAL on              +63.0    +3.9   +44.1  +104.3  +136.4 | worst 22-25   +3.9 avg  +53.8 | train worst  +44.1 | TEST  +112.3
+      FADE off | PB live | mirror 20d, QQQ<50d | DIP on | RELVAL off             +51.6    +8.8   +41.5   +98.7  +113.5 | worst 22-25   +8.8 avg  +50.1 | train worst  +41.5 | TEST  +116.1
+      FADE off | PB live | mirror off | DIP on | RELVAL on                       +41.3    -4.5   +46.4   +78.7  +136.0 | worst 22-25   -4.5 avg  +40.5 | train worst  +41.3 | TEST   +70.6
+      FADE off | PB und<50d | mirror 20d, QQQ<100d | DIP on | RELVAL on         +110.1   +27.9   +40.3   +66.9   +99.2 | worst 22-25  +27.9 avg  +61.3 | train worst  +40.3 | TEST  +113.5
+      FADE live | PB live | mirror 20d, QQQ<100d | DIP on | RELVAL on           +105.1    -4.0   +39.9   +91.9  +223.0 | worst 22-25   -4.0 avg  +58.2 | train worst  +39.9 | TEST   +84.2
+      FADE off | PB und<50d | mirror off | DIP on | RELVAL on                    +50.3   +17.5   +39.7   +60.6   +98.8 | worst 22-25  +17.5 avg  +42.0 | train worst  +39.7 | TEST   +88.6
+      FADE live | PB live | mirror off | DIP on | RELVAL on                      +50.6   -11.7   +39.3   +84.9  +223.5 | worst 22-25  -11.7 avg  +40.8 | train worst  +39.3 | TEST   +63.3
+      FADE off | PB und<10d | mirror 20d, QQQ<100d | DIP on | RELVAL on         +126.5   +24.6   +38.8   +74.3   +99.7 | worst 22-25  +24.6 avg  +66.0 | train worst  +38.8 | TEST  +117.1
+      FADE live | PB live | mirror 20d, QQQ<50d | DIP on | RELVAL on             +63.8    -4.0   +38.5  +111.0  +223.0 | worst 22-25   -4.0 avg  +52.3 | train worst  +38.5 | TEST  +102.5
+      FADE off | PB und<10d | mirror off | DIP on | RELVAL on                    +61.4   +14.4   +38.1   +72.9   +98.4 | worst 22-25  +14.4 avg  +46.7 | train worst  +38.1 | TEST   +97.8
+
+   books with every year 2022-2025 at +30% or more: 4 of 160; at +20% or more: 27; at +10% or more: 75; all five years positive: 126
+   best possible worst year 2022-2025 over all 160 books (hindsight, not a pick): +33.9%
+      hindsight best floor: FADE off | PB und<50d | mirror 20d, QQQ<50d | DIP on | RELVAL off   +61.2   +33.9   +34.9   +78.5   +79.9 | worst 22-25  +33.9 avg  +52.1 | train worst  +34.9 | TEST  +139.0
+   2024 across all books: best +47.1%, median +17.8%.  2023: best +53.7%, median +18.4%.
+
+ONE PIECE AT A TIME from v5.2.49 LIVE (change in each year, points)
+      FADE off                  +0.1    +9.4    +7.1   -17.6   -81.7 | worst 22-25   +1.6 avg  +55.0 | train years better 2/3, test years better 1/2
+      PB und<10d               +30.6   +22.4    -5.2   -12.1   -38.9 | worst 22-25  -10.6 avg  +64.2 | train years better 1/3, test years better 1/2
+      PB und<20d               +25.0   +15.5    -7.9   -12.8   -35.2 | worst 22-25  -13.3 avg  +60.2 | train years better 1/3, test years better 1/2
+      PB und<50d               +19.3   +24.2    -4.5   -17.9   -39.4 | worst 22-25   -9.9 avg  +60.6 | train years better 1/3, test years better 1/2
+      mirror off               -67.5   -31.8   +19.1   -23.9   -17.9 | worst 22-25  -13.5 avg  +29.2 | train years better 1/3, test years better 0/2
+      mirror 50d               -44.3   -18.1   +10.6    -7.9   -12.6 | worst 22-25   +0.2 avg  +40.4 | train years better 1/3, test years better 0/2
+      mirror 20d, QQQ<50d      -54.9   -24.3   +18.4    +0.7   -25.1 | worst 22-25   -6.0 avg  +40.2 | train years better 1/3, test years better 1/2
+      mirror 20d, QQQ<100d     -15.7   -24.3   +19.6   -16.1   -25.1 | worst 22-25   -6.0 avg  +46.2 | train years better 1/3, test years better 0/2
+      DIP on                    -4.4    +8.0   +22.8    +0.9   +51.3 | worst 22-25  +17.4 avg  +62.1 | train years better 2/3, test years better 2/2
+      RELVAL on                +15.8    -5.3    +3.5    +5.9   +33.6 | worst 22-25   -1.9 avg  +60.3 | train years better 3/3, test years better 1/2
