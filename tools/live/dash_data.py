@@ -27,7 +27,7 @@ for i, d in enumerate(days, 1):
     for t in trades:
         if t['day'] == d:
             row['combined'] = round(row['combined'] + t['acct_pct'], 4)
-            k = 'fade' if t['system'] == 'FADE' else 'pullback'; row[k] = round(row[k] + t['acct_pct'], 4)
+            k = 'fade' if t['system'] == 'FADE' else 'ibs' if t['system'].startswith('IBS') else 'pullback'; row[k] = round(row.get(k, 0.0) + t['acct_pct'], 4)      # v5.2.48: IBS-TREND has its own column
     daily.append(row)
 # health.json: the latest tracker row (archive/health_log.csv, written by health.py) as one line per measure, for the dashboard's health cards
 def tone(st):

@@ -1,8 +1,8 @@
 # Agentic Trading Rulebook
 
 **Account:** Robinhood `462514035` ("Agentic"), **limited margin**, `agentic_allowed=true`, trade approvals off.
-**Policy version: 5.2.47** (v5.2.47 2026-11-12: research record and the v5.2.46 live review plan, C5 and E3, no trading rule changed. v5.2.46 2026-11-12: PULLBACK runner exit, 1/3 at the morning high and 2/3 held to a 20-EMA close, B3.9/B5.6/C2, by the governor's instruction. v5.2.45 2026-11-12: FADE stop at least 0.5% of the proxy from the entry, B2.4, by the governor's instruction. v5.2.44 2026-11-09: waiter watchdog trigger at 9:36, 10:36, 11:36, 12:36 ET, A2.4, by the governor's instruction. v5.2.43 2026-11-05: every 5-minute slot gets a check even with a PULLBACK position open, C2, by the governor's instruction. v5.2.42 2026-11-05: USDG cash parking, B4.8, built by the governor's instruction and OFF until the governor says start. v5.2.41 2026-11-05: a system that closed a losing trade takes no further entry that day, B4.7, live from Thu 2026-11-05 by the governor's direct instruction. v5.2.40 2026-11-04: PULLBACK breakout volume 1.5× → 1.3×, B3.2, live from Thu 2026-11-05 by the governor's direct instruction. Every earlier version is in the change log at the end.) Bump on every rule or threshold change and record it in the commit.
-**MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Two systems trade the real account: FADE and PULLBACK (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
+**Policy version: 5.2.48** (v5.2.48 2026-11-13: IBS-TREND, a third system, is live from Monday 2026-11-16, B6, by the governor's instruction "push IBS-TREND". v5.2.47 2026-11-12: research record and the v5.2.46 live review plan, C5 and E3, no trading rule changed. v5.2.46 2026-11-12: PULLBACK runner exit, 1/3 at the morning high and 2/3 held to a 20-EMA close, B3.9/B5.6/C2, by the governor's instruction. v5.2.45 2026-11-12: FADE stop at least 0.5% of the proxy from the entry, B2.4, by the governor's instruction. v5.2.44 2026-11-09: waiter watchdog trigger at 9:36, 10:36, 11:36, 12:36 ET, A2.4, by the governor's instruction. v5.2.43 2026-11-05: every 5-minute slot gets a check even with a PULLBACK position open, C2, by the governor's instruction. v5.2.42 2026-11-05: USDG cash parking, B4.8, built by the governor's instruction and OFF until the governor says start. v5.2.41 2026-11-05: a system that closed a losing trade takes no further entry that day, B4.7, live from Thu 2026-11-05 by the governor's direct instruction. v5.2.40 2026-11-04: PULLBACK breakout volume 1.5× → 1.3×, B3.2, live from Thu 2026-11-05 by the governor's direct instruction. Every earlier version is in the change log at the end.) Bump on every rule or threshold change and record it in the commit.
+**MODE: LIVE — real money, from Friday 2026-10-16** (direct governor instruction, 2026-10-15). Three systems trade the real account: FADE, PULLBACK and, from 2026-11-16, IBS-TREND (Part B). Orders follow B5, and the safety controls in A1 bind every entry.
 
 **Retired rules:** everything before v4.0 is preserved word for word in `archive/former_systems/RULEBOOK_v3.132_full.md`. The shelved breakout system is in `archive/former_systems/SHELVED_SELECTION_RULES.md`. Nothing in either document is in force.
 
@@ -24,8 +24,10 @@ Nothing carries between checkpoints. State lives in this file, `archive/live_tra
 |---|---|
 | **9:00** research | A · C3 · D |
 | **9:30** | A1.8 (overnight check) only; otherwise a one-line no-op |
+| **9:35** (only on an IBS-TREND signal day) | A · B6 |
 | **10:00–13:25** (5-minute slots) | A · B · C1 · C2 |
 | **13:30** close | A · B5.7 · C4 · C5 · D |
+| **13:30–15:55** (only while an IBS-TREND position is open) | A · B6.6–B6.7 |
 | **13:30 loop trigger** | C4 steps 5-6 · D4 |
 
 Part E is reference only. Pull a section when a rule points to it. `grep` for `^# PART` to find each part's current line range; never hardcode line numbers.
@@ -49,7 +51,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 | 7 | **Spread** | Skip the entry if the leg's bid–ask spread is wider than **0.30% of its price**. | Order review quote |
 | 8 | **Overnight** | **Nothing is held overnight.** A position found at 9:00 or 9:30 is sold at the 9:30 checkpoint (marketable limit) and reported. **Exception (v5.2.42): USDG parked under B4.8 is a cash holding, not a position, and may be held overnight and over weekends.** | Positions |
 | 9 | **Earnings** | **Single-stock funds (v5.2.21: NVD and NVDQ = Nvidia, MSFU = Microsoft): no real entry on any session where the company reported since the prior close** (a pm report bars the next session). `paper.py` applies it from its `EARNINGS_SKIP` dates (MSFU 2026-10-29, NVD/NVDQ 2026-11-18, MSFU 2027-01-28, NVD/NVDQ 2027-02-25; prints `EARNINGS SKIP`); the model is unchanged. | `get_earnings_results` for MSFT and NVDA at 9:00 (C3): if a date moved, pass `--skip` and update `EARNINGS_SKIP` |
-| 10 | **Session** | Entries only between 10:00 and 12:55. No trading on early-close days (Nov 27, Dec 24) or market holidays. **No FADE entries on Fridays (v5.2.17, from Fri 2026-10-30); PULLBACK still trades Fridays.** | Calendar; `paper.py` blocks entries on the dates in its `NO_TRADE` list (through 2027-12-31) and blocks FADE on Fridays (prints `FRIDAY: no FADE entries today`) |
+| 10 | **Session** | Entries only between 10:00 and 12:55. **IBS-TREND (v5.2.48) enters at the 9:35 slot only, on any weekday, Fridays included (B6).** No trading on early-close days (Nov 27, Dec 24) or market holidays. **No FADE entries on Fridays (v5.2.17, from Fri 2026-10-30); PULLBACK still trades Fridays.** | Calendar; `paper.py` blocks entries on the dates in its `NO_TRADE` list (through 2027-12-31) and blocks FADE on Fridays (prints `FRIDAY: no FADE entries today`) |
 | 11 | **Halt** | Never send an order into a halted ticker (A4). | Broker response |
 | 12 | **Kill switch** | **If the governor says "stop", "halt" or "flatten":** cancel every open order, sell every position (marketable limit), and take no entries until the governor says to resume. This overrides everything else in this file. **v5.2.42: also sell all USDG (B4.8) and set `killed` in `archive/usdg_state.json`.** | — |
 | 13 | **Drawdown stop (v5.2.16)** | **If total value is 15% or more below its all-time high → HARD STOP: cancel every open order, sell any position (marketable limit), take no entries, and stay stopped until the governor clears it** (`hwm.py clear`). The all-time high is the highest total value ever recorded at a checkpoint, kept in `archive/hwm.json` (starts at $2,535.56, the 2026-10-24 close). Deposits and withdrawals move the high by the same dollars (`hwm.py deposit`), so they never count as a drawdown or a new high. Measured at every state check on the live total value, including the mark of an open position, so it can fire mid-day. The system is otherwise unchanged. **v5.2.42: also sell all USDG (B4.8) and set `killed`.** | `python3 tools/live/hwm.py check <total value>` at **every** state check (exit 2 = stopped). `paper.py --live` also blocks entries while `hwm.json` says halted |
@@ -58,7 +60,7 @@ Part E is reference only. Pull a section when a rule points to it. `grep` for `^
 
 ## A2. Trigger hygiene (v5.2.34)
 
-1. The standing scheduled triggers are the **8:41 ET weekday morning wake** (v5.2.35, governor instruction 2026-10-28) and the **13:30 ET weekday loop trigger** (D1). Slot checkpoints are never armed as scheduled triggers (v5.2.26).
+1. The standing scheduled triggers are the **8:41 ET weekday morning wake** (v5.2.35, governor instruction 2026-10-28), the **13:30 ET weekday loop trigger** (D1) and, from v5.2.48, the **15:57 ET weekday IBS-TREND exit backstop** (B6.7). Slot checkpoints are never armed as scheduled triggers (v5.2.26).
 2. List triggers at 9:00. Report and delete any one-shot that already fired (`ended_reason='run_once_fired'`), and report any trigger you do not recognise; never delete the 8:41 morning, 13:30 loop or watchdog trigger.
 3. A scheduled message that arrives while a waiter already ran the same step is answered in one line.
 4. **Waiter watchdog (v5.2.44, governor 2026-11-09: "Push what ever rule or safety to make sure this never happens again").** A third standing trigger fires at 9:36, 10:36, 11:36 and 12:36 ET on weekdays (`trig_01BWg13ntSHX1iwqWMrcfYyu`). A restarted or reclaimed container kills every waiter (E6, 2026-11-09), and a scheduler wake revives it. Each firing runs `uptime` and `pgrep -af slot_clock`. Healthy: one line. Missing waiters: restart every missing slot through 13:25, run the current slot at once, report the gap at the top, log it in E6. The watchdog is a backstop. It is not a slot checkpoint (A2.1 still bars those).
@@ -148,7 +150,7 @@ Only the first qualifying setup per ticker per day counts.
 2. **One position at a time.** The earliest trigger takes it. A setup that triggers while a position is open is **skipped**, not queued. **Real entries follow the model:** enter only on a signal `paper.py --live` prints for *this* checkpoint, and only if A1 is clear.
 3. **No daily entry cap** beyond the bug fuse (A1.3), except the same-system loss block (B4.7).
 4. **Same-bar ties:** the higher proxy RVOL wins. Then FADE beats PULLBACK, then list order.
-5. **Flat by 13:30.**
+5. **Flat by 13:30.** **Exception (v5.2.48): an IBS-TREND position is held to the 15:55 slot (B6).**
 6. **Liquidity cap (DORMANT below $100,000).** Active only while `total_value` (read at the checkpoint) is **≥ $100,000**; it switches off by itself whenever the value is under $100,000 and back on when it is at or above it. While active, after B4.1 sizes the order: `shares = min(shares, floor(0.10 × signal-bar dollar volume ÷ ask))`, where signal-bar dollar volume = close × volume of the 5-minute bar that gave the signal, for the leg being bought. If the cap cuts the order, log `cap` in the notes and the execution log (B5.9). The cap only reduces size; it never adds a trade or changes a stop or target. Evidence: `tools/backtest/results/cap_best.txt`, `scale_500k.txt` (impact is an assumption; tune the 10% from logged slippage). `paper.py` does not enforce it: apply it by hand at B4.1 until the code is updated before the account nears $100k.
 7. **Same-system loss block (v5.2.41, tunables v4 `x.sys_loss_block`, from 2026-11-05).** Once FADE has closed a losing trade today, FADE takes no further entry today. Once PULLBACK has closed a losing trade today, PULLBACK takes no further entry today. The two systems are counted separately: a FADE loss does not block PULLBACK, and the reverse. `paper.py` enforces it: it skips the entry (`FADE lost earlier today` / `PB lost earlier today`) and prints no signal for that system. A winning or open trade blocks nothing. Enter only on a signal `paper.py --live` prints (B4.2); if the model prints none, there is no entry. Evidence: `tools/backtest/one_per_system_screen.py`.
 8. **USDG cash parking (v5.2.42, governor 2026-11-05: "sell at a trigger 5 before predicted trade then immediately buy after position sell").** Idle cash earns interest in USDG (Global Dollar stablecoin, USDG-USD, bought and sold in the agent account). It is a cash holding, not a position (A1.5, A1.8). **The rule is OFF** until `archive/usdg_state.json` shows `"enabled": true`, which only the governor sets ("start USDG"). While it shows `"killed": true`, hold no USDG.
@@ -221,6 +223,34 @@ Only the first qualifying setup per ticker per day counts.
 
 **B5.8a Dashboard right after each exit (v5.2.27, governor instruction 2026-10-28).** As soon as a real position is fully closed (take-profit, stop, early cut or hand close), in that same checkpoint: log the trade (B5.8), run `python3 tools/live/dash_data.py <tmp dir>`, upload `live_trades.json`, `live_days.json` and the merged `periods.json` to the scorecard artifact, and update `datasets/live_trades`, `datasets/live_days` and `datasets/periods` (C5). `health.json` only changes at the 13:30 `health.py` run. Reporting only; the 13:30 refresh still runs and covers the full day.
 
+## B6. IBS-TREND — weak close in an uptrend (v5.2.48, governor "push IBS-TREND" 2026-11-13, live from Mon 2026-11-16)
+
+`tools/live/ibs_trend.py` implements this section. Evidence: `archive/systems_split_2026-11-13.md` (settings chosen on 2022, 2024, 2026; judged on 2023 and 2025).
+
+1. **Signal (known at the prior close).** A FADE proxy (QQQ SOXX IWM XLK XBI XLF) qualifies when both hold on regular-session 5-minute bars:
+   - yesterday's close is **above the average of its last 20 closes** (yesterday included);
+   - yesterday's **IBS = (close − low) ÷ (high − low) is below 0.10** (it closed in the bottom tenth of its range).
+   `python3 -I tools/live/ibs_trend.py signal <the 20-session baseline dump>` at C3 prints each proxy and `IBS-TREND SIGNAL TODAY` or `NO IBS-TREND SIGNAL`.
+2. **Leg.** The proxy's **3x long leg** only: TQQQ, SOXL, TNA, TECL, LABU, FAS. Never an inverse leg.
+3. **One trade a day.** With several signals, the proxy with the highest first-5-minute relative volume (today's 9:30 bar volume ÷ its 20-session average) is traded. The tool picks it.
+4. **Entry: the 9:35 slot only.**
+   - 9:31: sell all USDG (B4.8 peg guard first).
+   - 9:35: fetch 5-minute bars for the six proxies and their long legs (from the prior trading day's 9:30) and run `python3 -I tools/live/ibs_trend.py enter --now 09:35 <dump>`.
+   - A1 applies in full (one position, fresh data, spread A1.7, drawdown stop, no-trade days). A1.9 earnings does not apply: these are index and sector funds.
+   - Buy with the B5.2 steps (marketable limit). **Size (B4.1): the leg stop is 3% of the fill, so 3% risk equals 100% of cash.** Whole shares, floor.
+   - A missed 9:35 slot (first run after 9:40) means no IBS-TREND trade that day.
+5. **Stop.** One **stop-market for all shares at fill × 0.97**, rounded down to the cent, placed at once after the fill (B5.5 applies: no position without a confirmed protective order). No take-profit order, no lock, no early cut.
+6. **While it is open.**
+   - **No FADE or PULLBACK entry** (B4.4). `paper.py` reads `archive/ibs_state.json` and prints no entry and no `SELL ALL USDG` trigger.
+   - Every morning slot: after `slot_run.sh`, run `python3 -I tools/live/ibs_trend.py manage --now HH:MM <dump>` and check the broker (position and the resting stop).
+   - After 13:25: start waiters for 13:30, 14:00, 14:30, 15:00, 15:30 and 15:55 at the 13:20 slot (and 15:30 and 15:55 again at 13:30: the 2-hour waiter cap). Each runs `manage` and the broker check.
+   - **If the stop fills:** the account is free. FADE and PULLBACK resume at the next slot if A1 allows it. A full stop is about −3% of the account, so the daily loss limit (A1.2) normally ends the day's entries. Buy USDG when `paper.py` says hold or buy.
+7. **Exit: the 15:55 slot.** Cancel the resting stop, sell all shares (marketable limit, B5.7 steps), verify flat, buy USDG (B4.8), run `ibs_trend.py manage --now 15:55 <dump>` (it logs the model trade), then log the real trade. **Backstop:** a standing trigger at 15:57 ET (`trig_01MfvNEPpde3HTpvwoycoq2G`) sells the position if the waiter missed. Nothing is held overnight (A1.8).
+8. **The 13:30 close on an IBS-TREND day.** C4 runs as usual for the model and the report, but **the IBS-TREND position and its stop stay**. The 13:30 loop trigger treats them as expected. The day's final value, the IBS-TREND trade and the scorecard refresh follow the 15:55 exit.
+9. **Records.** Real trade: `archive/live_trades.csv`, system `IBS-TREND`, `target_px` empty, `model_pct` from `archive/ibs_trades.csv`. Model trade: `archive/ibs_trades.csv` (on the proxy chart: 3 × the proxy move from the 9:35 open to the stop or the 15:55 open, minus 0.06%). IBS-TREND trades count in the A1.1 losing streak. The same-system loss block (B4.7) does not link it to FADE or PULLBACK.
+10. **Backtest (Massive tape, alone, full cash):** 2022 +24.1%, 2023 +17.9%, 2024 +7.3%, 2025 +37.2%, 2026 +8.0%; drawdown 11.8%; about 35 trading days a year (14% of days). With the live book: 2023 −13.5% (was −29.8%), 2025 +73.7% (was +18.3%), 2026 +126.8% (was +151.1%).
+11. **Review.** At 20 and 30 live trades (C5 list): profit factor, win rate, real against model. Profit factor under 1.0 at 20 trades is a warning; under 1.0 at 30 trades goes to the governor.
+
 ---
 
 # PART C — CHECKPOINT PROCEDURE
@@ -254,13 +284,13 @@ Only the first qualifying setup per ticker per day counts.
    - the losing streak from `live_trades.csv` (lockout status);
    - whether today is an early-close day or a holiday (A1.10).
    - **corporate actions (v5.2.6):** for the 13 traded funds (TQQQ SQQQ SOXL SOXS TNA TZA TECL TECS LABU LABD FAS FAZ UVXY) and the proxies, check for a split or reverse split, ticker change, halt or delisting notice, and compare each fund's current quote with yesterday's close. If a fund is more than **20%** off yesterday's close without the underlying index having moved anywhere near that, or any notice is found, **exclude that fund for the day** (no entries, and use the proxy-based exit if it is held), note it in E5 and the 9:00 report. If everything is clean, write one line.
-3. **RVOL baseline:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI XLF. Run `paper.py --build-rvol --day <today> --now 09:00 <dump>`.
+3. **RVOL baseline:** fetch the 20 prior sessions of 5-minute bars for QQQ SOXX IWM XLK XBI XLF. Run `paper.py --build-rvol --day <today> --now 09:00 <dump>`. **Then (v5.2.48) `python3 -I tools/live/ibs_trend.py signal <the same dump>` (B6.1).** On `IBS-TREND SIGNAL TODAY`: put it at the top of the 9:00 report and E5, and start a 9:35 waiter with the 9:30 waiter.
 4. **One line of context:** any scheduled event before 13:30, such as CPI, FOMC or a major earnings report.
 5. Refresh E5, commit and push.
 
 ## C4. 13:30 close
 
-1. **Flatten** the real account (B5.7). Verify it's flat with no open orders. **Then buy USDG with the cash if the rule is ON (B4.8).**
+1. **Flatten** the real account (B5.7). **Exception (v5.2.48): an open IBS-TREND position and its stop stay until 15:55 (B6.8).** Verify it's flat with no open orders (apart from that). **Then buy USDG with the cash if the rule is ON (B4.8).**
 2. **Model record:** run `paper.py --now 13:30 --close <dumps>`. This appends the model's trades to `paper_trades.csv`.
 3. **Log** each real trade in `live_trades.csv`.
 4. **Report** (C5), then commit and push. Nothing is armed for the next day (D1: the session starts its waiters at 9:30).
@@ -305,8 +335,11 @@ The checkpoint chain of scheduled triggers was retired by v5.2.26 (governor, 202
 |---|---|---|
 | 8:41 | the scheduled morning wake (weekdays; before 9:00 because the scheduler runs late from 9 to 12 ET) | C3 research (the pre-open value is the day's 9:00 value), A2, then start the 9:30 waiter |
 | 9:30 | the 9:30 waiter | A1.8 overnight check; then start **batch 1** waiters 10:00 ... 11:25 (18) |
+| 9:35 | a 9:35 waiter, **only on an IBS-TREND signal day** (v5.2.48) | B6.4: USDG sold at 9:31, IBS-TREND entry |
 | 10:00-13:25 | slot waiters | C1 at each slot; the 11:25 checkpoint starts **batch 2** (11:30 ... 13:25, 24); the 13:20 checkpoint starts a fresh **13:30** waiter with `timeout` 900000 |
 | 13:30 | the 13:30 waiter | C4 close and C5 report |
+| 13:30–15:55 | waiters 13:30, 14:00, 14:30, 15:00, 15:30, 15:55, **only while an IBS-TREND position is open** (v5.2.48) | B6.6 checks, B6.7 exit at 15:55 |
+| 15:57 | the scheduled IBS-TREND backstop (weekdays) | sells an IBS-TREND position the 15:55 waiter missed; a one-line no-op otherwise |
 | 13:30 (about 13:37) | the scheduled loop trigger (weekdays) | checks flat, runs the close if the waiter did not, then C4 steps 5-6 (shadow tick, dataset); a one-line no-op when already done |
 
 - **Waiters.** `tools/live/slot_clock.sh HH:MM` sleeps on the system clock until HH:MM:06 ET (it reads America/New_York, so daylight saving needs nothing) and exits, which wakes the session (about 7 s). Start each with Bash `run_in_background`, description `Slot waiter HH:MM`, `timeout` 7200000 (the 2-hour cap: never start a waiter more than 2 hours before its slot). Each waiter appends `date,slot,due_epoch,fired_epoch` to `archive/waiter_log.csv` (commit it at 13:30); `python3 tools/live/slot_report.py --from 2026-10-23` reports coverage and lag.
@@ -325,6 +358,7 @@ The checkpoint chain of scheduled triggers was retired by v5.2.26 (governor, 202
 | `archive/execution_log.csv` | Per-order spread, timestamps and slippage (B5.9). Append-only; data only, no rule reads it |
 | `archive/paper_trades.csv`, `archive/paper_state.json` | The model's own record (`paper.py --close`), for comparison |
 | `archive/paper_rvol_<day>.json` | The day's RVOL tie-break baseline |
+| `archive/ibs_daily.json`, `archive/ibs_state.json`, `archive/ibs_trades.csv` | IBS-TREND (B6): daily high, low, close and first-bar volume per proxy; the day's signal and position (read by `paper.py`); the model record |
 | `archive/trade_history/`, `archive/former_systems/` | Old-system trades, selection log, rulebook and shelved rules. History only; nothing in them is in force. Map: `archive/README.md` |
 | `tools/backtest/` | Research code. `final_system.py` = this system's backtest; `stress.py` = its stress tests; outputs in `results/` (`research_results_former.txt` holds every other experiment) |
 
@@ -563,6 +597,8 @@ Earlier versions: `archive/former_systems/RULEBOOK_v3.132_full.md` and git histo
 **v5.2.41 — 2026-11-05, governor instruction ("just push that rule"):** B4.7. No second entry from a system that closed a losing trade earlier the same day (FADE and PULLBACK counted separately), live as tunables v4 (`x.sys_loss_block` true, effective Thu 2026-11-05), a direct rule change (D3) outside the D4 cycle. Trigger: 2026-11-04, PULLBACK SOXS stopped out at 11:31 (-1.94%), then PULLBACK MSFU entered at 12:45 and stopped out (-0.72%). Evidence (`tools/backtest/one_per_system_screen.py`, rules in force v3): Robinhood 172 sessions, no change (+0.495%/day, win 70%, drawdown 2.76%, 113 trades), because no session had a PULLBACK or FADE loss followed by a second entry from the same system; Massive 2026-03 on, +0.374 → +0.384%/day, win 65% → 66%, drawdown 5.2% → 3.9%, 2 trades removed; Massive 2021-11 to 2026-02 (never fitted), -0.030 → -0.024%/day, drawdown 37.9% → 34.6%, 20 trades removed. Blocking a system after any second trade (not only after a loss) and one trade a day in total were worse and are not adopted. Both improvement cycles restart: 5 new trades per system under v4 from 2026-11-05, then the goal check. `paper.py` change: switch `x.sys_loss_block` in `simulate` (default off, so earlier dates replay unchanged). No exit, sizing or A1 rule changed.
 
 **v5.2.42 — 2026-11-05, governor instruction ("build the USDG rule to sell at a trigger 5 before predicted trade then immediately buy after position sell"):** B4.8 USDG cash parking, built and **OFF** (`archive/usdg_state.json` `enabled: false`) until the governor says start. Code: `paper.usdg_trigger` and the `USDG (B4.8)` line in `paper.py --live`; the PULLBACK ARMED test moved from `pb_status.py` into `paper.pb_stage` (output unchanged except that the stage for the next bar is now computed from bar 8, one slot earlier, because `pullback()` can trigger on bar 8); `pb_stage` takes 2 cents of slack when the trigger calls it. A1.8, A1.12 and A1.13 carve out or add USDG. Not a tunable and not a D4 candidate. Evidence in B4.8. Test: the $10 round trip of 2026-11-05. No entry, exit, stop or sizing rule changed; with the rule OFF every order is as before.
+
+**v5.2.48 — 2026-11-13, governor instruction:** "push IBS-TREND". **A third system, IBS-TREND (B6), is live from Monday 2026-11-16.** A FADE proxy that closed above its 20-session average close and in the bottom 10% of its prior-day range: buy its 3x long leg at the 9:35 slot with all cash, one stop-market at fill × 0.97, sell at 15:55. One trade a day; no FADE or PULLBACK entry while it is open. New: `tools/live/ibs_trend.py` (signal, enter, manage, replay), `paper.py` `ibs_busy()` (the account is busy while `archive/ibs_state.json` shows an open IBS-TREND position; replays without a date are unchanged, `verify_paper_equivalence.py` 122 = 122), a 15:57 ET backstop trigger, a 9:35 waiter on signal days and afternoon waiters while it is open. Changed text: header, READ MAP, A1.10, A2.1, B4.5, B6 (new), C3.3, C4.1, D1, D2. Evidence: `archive/systems_split_2026-11-13.md`: settings chosen on 2022, 2024 and 2026, judged on 2023 (+17.9%) and 2025 (+37.2%); the live code replayed on the same tape gives +24.5, +17.9, +6.4, +37.2, +8.0 by year. FADE and PULLBACK rules are unchanged.
 
 **v5.2.47 — 2026-11-12, governor instruction:** "push all this for the future". Records the 2026-11-11/12 research and its limits (`archive/research_2026-11-12.md`, `tools/live/research_ledger.json` entries dated 2026-11-11/12, E3 note) and adds the v5.2.46 live review to C5. **No entry, exit, sizing or list rule changed.**
 
