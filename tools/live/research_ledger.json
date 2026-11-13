@@ -556,5 +556,15 @@
   "result": "833 trades in 4.8 years on 63% of days: FADE 236, PULLBACK 235, IBS long 155, mirror 74, dip 133. No entry after an IBS-family stop-out: +121.8, +30.0, +13.1, +105.6, +189.8 (average 2022-25 +67.6 vs +62.1). Cost 0.12%: average +46.4; 0.20%: +27.7. FADE worth +0.5 to the 2022-25 average and +82.5 in 2026",
   "verdict": "ADOPTED: no entry after an IBS-TREND stop-out and lighter IBS-day slots (v5.2.51); cost is the main drag, reviewed at 20 trades",
   "champion_version": "5.2.51"
+ },
+ {
+  "id": "study.universe",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Do the five subsystems work together; shrink (drop one ticker from one subsystem) or expand (12 new proxies for the 9:35 family: SPY DIA TLT EEM FXI XLRE XLE GDX XOP KRE XLV XLU)",
+  "method": "tools/backtest/universe.py; baseline v5.2.51 joint book; train 2022/2024/2026, test 2023/2025; same pre-set rule as the mirror",
+  "result": "No removal of a subsystem or ticker passes. No new proxy passes: SPY qualifies on train and misses 2025 by 0.9 points; adding all twelve cuts the 2022-25 average from +67.6 to +42.3. The 9:35 family leans on SOXX: without it the average falls to +33.3",
+  "verdict": "no change: universe and subsystems stay as in v5.2.51",
+  "champion_version": "5.2.51"
  }
 ]

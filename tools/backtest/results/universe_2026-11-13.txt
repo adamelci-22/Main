@@ -1,0 +1,59 @@
+Universe study (governor 2026-11-13: "do all of these systems work with each other or do we need to remove some, also feel free
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th); change = points against the baseline
+
+        BASELINE v5.2.51 joint book                   +121.8   +30.0   +13.1  +105.6  +189.8 | avg 22-25  +67.6 worst  +13.1
+
+A. DO THE SYSTEMS WORK TOGETHER? one subsystem removed
+        without FADE                                  +113.9   +38.0   +19.7  +102.4  +106.6 | avg 22-25  +68.5 worst  +19.7  change   -8.0   +8.0   +6.6   -3.2  -83.2
+        without PULLBACK                               +94.5   +47.4    +6.0   +54.4  +127.2 | avg 22-25  +50.6 worst   +6.0  change  -27.3  +17.4   -7.0  -51.3  -62.6
+        without IBS-TREND long                         +67.5   +13.0   +18.1   +27.2  +224.3 | avg 22-25  +31.4 worst  +13.0  change  -54.4  -17.0   +5.0  -78.4  +34.5
+        without the mirror                             +46.3    -4.9   +32.0   +81.5  +199.3 | avg 22-25  +38.7 worst   -4.9  change  -75.5  -35.0  +18.9  -24.1   +9.5
+        without the dip                               +124.4   +26.2    -7.8  +108.3  +135.4 | avg 22-25  +62.8 worst   -7.8  change   +2.6   -3.8  -20.9   +2.6  -54.4
+
+B. SHRINK: one ticker removed from one subsystem
+        FADE without QQQ                              +122.5   +25.1   +10.4  +105.3  +195.8 | avg 22-25  +65.8 worst  +10.4  change   +0.6   -4.9   -2.7   -0.4   +6.0
+        FADE without SOXX                             +116.3   +35.6   +24.2  +109.9  +148.4 | avg 22-25  +71.5 worst  +24.2  change   -5.5   +5.6  +11.2   +4.2  -41.4
+        FADE without IWM                              +110.9   +27.5   +11.0  +102.7  +168.3 | avg 22-25  +63.0 worst  +11.0  change  -10.9   -2.5   -2.1   -3.0  -21.5
+        FADE without XLK                              +110.6   +34.0   +15.3  +104.5  +178.8 | avg 22-25  +66.1 worst  +15.3  change  -11.2   +4.0   +2.2   -1.1  -11.0
+        FADE without XBI                              +111.6   +32.9   +11.6  +106.5  +159.5 | avg 22-25  +65.6 worst  +11.6  change  -10.2   +2.8   -1.5   +0.9  -30.3
+        FADE without XLF                              +121.3   +31.6    +8.1   +96.9  +188.2 | avg 22-25  +64.5 worst   +8.1  change   -0.5   +1.6   -5.0   -8.7   -1.6
+        PULLBACK without SOXS                          +97.1   +29.2    +8.7  +110.0  +159.5 | avg 22-25  +61.3 worst   +8.7  change  -24.7   -0.8   -4.4   +4.4  -30.3
+        PULLBACK without LABD                         +117.7   +27.3   +15.3  +117.1  +186.7 | avg 22-25  +69.3 worst  +15.3  change   -4.1   -2.7   +2.2  +11.4   -3.1
+        PULLBACK without TECS                         +121.7   +32.6   +13.4   +88.2  +167.3 | avg 22-25  +63.9 worst  +13.4  change   -0.2   +2.5   +0.3  -17.5  -22.5
+        PULLBACK without UVXY                         +123.5   +44.1   +15.0   +62.4  +177.7 | avg 22-25  +61.2 worst  +15.0  change   +1.7  +14.1   +1.9  -43.2  -12.1
+   qual 9:35 family without QQQ                        +99.7   +27.7   +15.3  +102.0  +262.4 | avg 22-25  +61.2 worst  +15.3  change  -22.1   -2.3   +2.2   -3.6  +72.6
+        9:35 family without SOXX                       +58.0    -6.6    -5.7   +87.5  +198.8 | avg 22-25  +33.3 worst   -6.6  change  -63.9  -36.7  -18.7  -18.1   +9.0
+        9:35 family without IWM                        +93.5   +42.6   +21.0   +97.9  +173.6 | avg 22-25  +63.7 worst  +21.0  change  -28.4  +12.5   +8.0   -7.7  -16.2
+   qual 9:35 family without XLK                       +114.7   +24.1   +23.0   +96.6  +191.7 | avg 22-25  +64.6 worst  +23.0  change   -7.1   -5.9   +9.9   -9.1   +1.9
+   qual 9:35 family without XBI                       +131.9    +8.0   +27.2   +79.3  +151.5 | avg 22-25  +61.6 worst   +8.0  change  +10.0  -22.0  +14.2  -26.3  -38.3
+        9:35 family without XLF                       +106.5   +20.2   +25.8   +97.8  +144.1 | avg 22-25  +62.6 worst  +20.2  change  -15.3   -9.8  +12.8   -7.8  -45.7
+
+C. EXPAND: one new proxy added to the 9:35 family (alone = that proxy only, full cash)
+   qual + SPY (SPXL/SPXS, 3x), 99 signals             +108.9   +47.8   +24.9  +104.8  +193.1 | avg 22-25  +71.6 worst  +24.9  change  -13.0  +17.7  +11.8   -0.9   +3.3
+        SPY alone:   -4.2   +9.8   +6.8   +5.4   +0.6
+        + DIA (UDOW/SDOW, 3x), 118 signals             +91.3   +27.8   +14.4   +77.8  +198.8 | avg 22-25  +52.8 worst  +14.4  change  -30.5   -2.2   +1.3  -27.8   +9.0
+        DIA alone:   +3.1   -0.2  -10.8   +5.4   +8.4
+        + TLT (TMF/TMV, 3x), 107 signals              +125.9   +32.6   +14.9  +101.1  +176.4 | avg 22-25  +68.6 worst  +14.9  change   +4.1   +2.5   +1.8   -4.6  -13.4
+        TLT alone:   -4.5  +11.1   -2.3   +1.3   +8.3
+        + EEM (EDC/EDZ, 3x), 122 signals               +89.0   +33.9    +5.9   +77.7  +200.7 | avg 22-25  +51.6 worst   +5.9  change  -32.8   +3.9   -7.2  -27.9  +10.9
+        EEM alone:  -13.3   +6.6   -9.3  +13.5   +8.3
+        + FXI (YINN/YANG, 3x), 105 signals            +128.4   +15.6   +17.9   +97.8  +156.7 | avg 22-25  +64.9 worst  +15.6  change   +6.6  -14.4   +4.8   -7.8  -33.1
+        FXI alone:  -11.4   -5.5   +5.0   -7.8   +3.8
+        + XLRE (DRN/DRV, 3x), 113 signals              +96.8    +5.7   +11.3  +136.9  +167.2 | avg 22-25  +62.7 worst   +5.7  change  -25.1  -24.3   -1.7  +31.3  -22.6
+        XLRE alone:   +4.7   -0.1   -7.3  +11.9   -9.3
+        + XLE (ERX/ERY, 2x), 108 signals               +72.9   +33.7    -8.1  +100.9  +184.3 | avg 22-25  +49.9 worst   -8.1  change  -48.9   +3.7  -21.1   -4.7   -5.5
+        XLE alone:  -13.1   +3.1  -18.2   +3.6   +6.3
+        + GDX (NUGT/DUST, 2x), 114 signals             +85.3   +28.7   +23.9  +119.2  +135.9 | avg 22-25  +64.3 worst  +23.9  change  -36.6   -1.3  +10.8  +13.5  -53.9
+        GDX alone:   -7.4   +1.8  +12.0  +17.3  -22.4
+        + XOP (GUSH/DRIP, 2x), 111 signals            +111.2   +26.2   -10.6   +91.9  +145.1 | avg 22-25  +54.7 worst  -10.6  change  -10.6   -3.8  -23.7  -13.7  -44.7
+        XOP alone:   -3.7   -0.7  -23.9  +10.0   -7.4
+        + KRE (DPST, 3x, long only), 103 signals      +155.4   +36.6    +2.6   +93.4  +173.2 | avg 22-25  +72.0 worst   +2.6  change  +33.6   +6.5  -10.5  -12.2  -16.6
+        KRE alone:   +4.6   -3.5   -9.9  +14.5   -3.7
+        + XLV (CURE, 3x, long only), 84 signals       +100.9   +19.8   +15.8   +94.1  +195.5 | avg 22-25  +57.7 worst  +15.8  change  -20.9  -10.2   +2.7  -11.5   +5.7
+        XLV alone:  +18.3   -1.0   -0.3   +0.8   +3.7
+        + XLU (UTSL, 3x, long only), 87 signals       +122.0   +23.4    +7.9  +129.4  +168.6 | avg 22-25  +70.7 worst   +7.9  change   +0.2   -6.6   -5.2  +23.8  -21.2
+        XLU alone:   -0.5   -8.2   -1.2  +21.7   -2.9
+
+   qualified on TRAIN: SPY (qual)
+   qual + ALL that qualify on train: SPY              +108.9   +47.8   +24.9  +104.8  +193.1 | avg 22-25  +71.6 worst  +24.9  change  -13.0  +17.7  +11.8   -0.9   +3.3
+        + ALL twelve                                   +71.7   -15.2    +1.9  +111.0   +47.3 | avg 22-25  +42.3 worst  -15.2  change  -50.1  -45.2  -11.2   +5.4 -142.5
