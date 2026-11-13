@@ -1,0 +1,29 @@
+Two governor leads (2026-11-13): (1) PULLBACK partial targets set part-way to the morning high with the rest still aiming for the
+PART 1. PULLBACK partial targets part-way to the morning high (entries as live). account total (change), DD | per-setup mean R change, bootstrap chance > 0
+blocks: RH 26-03..10 94 setups | MASSIVE H1 2 229 setups | MASSIVE H2 2 223 setups
+  LIVE v5.2.46: 1/3 at the high, 2/3 runner                +38.7% DD  2.3 R+0.482 |   -14.1% DD 35.5 R-0.025 |   +90.0% DD 10.2 R+0.309
+       OLD: 100% at the high                                    +29.9% (  -8.9) DD 2.3 R+0.014 ( 57%) |   -19.7% (  -5.6) DD30.8 R-0.011 ( 44%) |   +33.9% ( -56.1) DD14.2 R-0.145 (  0%)
+       A. 1/3 half-way + 1/3 high + 1/3 runner                  +15.8% ( -22.9) DD 2.4 R-0.184 (  0%) |   -14.9% (  -0.7) DD24.9 R+0.017 ( 65%) |   +30.6% ( -59.5) DD12.2 R-0.162 (  0%)
+       B. same, runner exit armed after the half-way fill       +15.6% ( -23.2) DD 2.3 R-0.186 (  0%) |   -14.6% (  -0.4) DD24.6 R+0.018 ( 66%) |   +31.0% ( -59.1) DD12.2 R-0.160 (  0%)
+       C. 1/3 half-way, 2/3 to the high (no runner)             +15.3% ( -23.5) DD 2.5 R-0.178 (  2%) |   -18.1% (  -3.9) DD23.3 R-0.003 ( 48%) |    +9.5% ( -80.5) DD14.4 R-0.233 (  0%)
+       D. 1/2 half-way, 1/2 to the high                         +15.4% ( -23.4) DD 2.3 R-0.186 (  2%) |   -17.6% (  -3.4) DD23.0 R-0.004 ( 47%) |    +8.8% ( -81.3) DD14.5 R-0.233 (  0%)
+       E. 1/3 half-way, 2/3 runner only (no high target)        +16.2% ( -22.5) DD 2.4 R-0.192 (  0%) |   -11.1% (  +3.1) DD26.8 R+0.038 ( 87%) |   +56.2% ( -33.8) DD10.0 R-0.089 (  1%)
+       F. 1/3 at 1/3 of the way + 1/3 high + runner             +11.8% ( -27.0) DD 2.0 R-0.253 (  0%) |   -15.7% (  -1.5) DD25.2 R+0.014 ( 63%) |   +20.0% ( -70.0) DD 9.0 R-0.211 (  0%)
+       G. 1/3 at 2/3 of the way + 1/3 high + runner             +28.7% ( -10.0) DD 2.3 R-0.077 (  8%) |   -21.1% (  -7.0) DD30.1 R-0.011 ( 39%) |   +44.4% ( -45.6) DD11.7 R-0.118 (  0%)
+       H. 1/4 half-way + 1/4 high + 1/2 runner                  +16.2% ( -22.6) DD 2.5 R-0.183 (  0%) |   -13.3% (  +0.8) DD26.1 R+0.027 ( 77%) |   +42.9% ( -47.1) DD11.0 R-0.126 (  0%)
+       I. like A, stop stays at the dip stop after half-way     +31.5% (  -7.2) DD 2.1 R-0.043 ( 18%) |   -13.6% (  +0.5) DD29.8 R+0.001 ( 53%) |   +46.6% ( -43.4) DD11.9 R-0.108 (  0%)
+       J. 1/3 at 40% of the way + 2/3 runner                    +12.7% ( -26.1) DD 3.3 R-0.244 (  0%) |   -11.2% (  +2.9) DD27.0 R+0.037 ( 80%) |   +41.6% ( -48.4) DD 8.9 R-0.141 (  0%)
+       K. 1/3 at 30% of the way + 2/3 runner                    +13.4% ( -25.4) DD 2.4 R-0.253 (  0%) |   -13.0% (  +1.1) DD25.4 R+0.037 ( 78%) |   +31.6% ( -58.4) DD 7.2 R-0.174 (  0%)
+
+PART 2a. Does a far box edge inside the 2R path predict a stall? (FADE, live exits)
+   Trades that reached +1R (before the edge matters): share that go on to 2R, split by where the far edge sits
+   RH 26          edge inside 2R: n  22, reach 2R  50% | edge beyond 2R: n  16, reach 2R  69% | gap -19 pts, chance edge-inside is lower  87%
+   M H1 21-24     edge inside 2R: n  64, reach 2R  41% | edge beyond 2R: n  49, reach 2R  45% | gap -4 pts, chance edge-inside is lower  69%
+   M H2 24-26     edge inside 2R: n  75, reach 2R  36% | edge beyond 2R: n  40, reach 2R  45% | gap -9 pts, chance edge-inside is lower  82%
+
+PART 2b. Edge-triggered actions on the live FADE exits. account total (change) DD | per-setup mean R change, bootstrap chance > 0
+   LIVE exits: RH 26  +104.8% DD  4.6 R+0.574 | M H1 21-24   +32.8% DD 18.4 R+0.026 | M H2 24-26   +42.1% DD 29.8 R+0.076
+        sell 1/3 at the far edge (replaces the 2R tranche)       +97.3% (  -7.5) DD 4.6 R-0.034 (  3%) |   +26.0% (  -6.8) DD18.1 R-0.018 (  3%) |   +31.6% ( -10.5) DD31.9 R-0.018 (  1%)
+        sell 1/3 at the far edge AND keep 1/3 at 2R              +94.0% ( -10.8) DD 4.6 R-0.048 (  1%) |   +28.9% (  -3.8) DD17.8 R-0.005 ( 18%) |   +34.8% (  -7.2) DD29.8 R-0.011 (  2%)
+        raise the stop to +0.5R at the far edge                 +100.5% (  -4.3) DD 5.2 R-0.023 ( 22%) |   +34.3% (  +1.5) DD17.6 R+0.003 ( 70%) |   +31.0% ( -11.1) DD33.5 R-0.018 (  3%)
+        sell half of what is left at the far edge                +88.8% ( -16.0) DD 4.6 R-0.072 (  0%) |   +27.0% (  -5.7) DD18.0 R-0.008 ( 19%) |   +31.3% ( -10.7) DD29.7 R-0.016 (  3%)

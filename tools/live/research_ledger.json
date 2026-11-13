@@ -476,5 +476,15 @@
   "result": "FADE 114 and PULLBACK 109 rules helped on H1; 0 passed out of sample; near misses about 0.01R/trade",
   "verdict": "not adopted; defaults kept; re-run at 30 live trades per system (archive/research_2026-11-12.md)",
   "champion_version": "5.2.46"
+ },
+ {
+  "id": "study.pb_partial_targets_and_fade_edge",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "PULLBACK partial targets part-way to the morning high (13 variants); FADE far-box-edge stall signal and edge-triggered actions (4)",
+  "method": "tools/backtest/halfway_and_edge.py, three blocks (RH 2026, Massive 2021-24, 2024-26)",
+  "result": "PULLBACK: all 12 variants lose to the live runner on RH and 2024-26 (best -7.2 and -33.8 points); LABD of 11-12 peaked at 24% of the way to the high so a half-way target would not have filled. FADE edge: an edge inside the 2R path lowers the chance of reaching 2R from +1R (-19, -4, -9 points, 69-87% confidence) but all four edge actions lose to the live exits",
+  "verdict": "not adopted; box-edge paper log still offered (\"log the box edge\")",
+  "champion_version": "5.2.47"
  }
 ]
