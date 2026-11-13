@@ -1,0 +1,155 @@
+Four-system build, second pass (governor 2026-11-12 evening): TRAIN = calendar 2022, 2024, 2026. TEST = 2023 and 2025.
+Massive tape 2022-01-03..2026-10-30; 14244 combinations of the live knobs; TRAIN 2022, 2024, 2026; TEST 2023, 2025
+
+LIVE v5.2.46
+   FADE: floor 0.5|lock +0.15R|cut on|tp 2R|chand 2|runaway 0.85|Fri skip
+   PULLBACK: vol 1.3|minstop 0.75|OR 9:45|runner EMA20
+      year           return  max DD | months:  win %    mean  median   worst
+      2022 TRAIN     +11.8    15.7 |             58   +1.06   +0.12    -5.4
+      2023 TEST      -29.8    31.8 |             25   -2.81   -3.43    -9.6
+      2024 TRAIN     +15.4     7.1 |             67   +1.26   +0.84    -2.9
+      2025 TEST      +18.3    15.8 |             58   +1.52   +0.74    -5.2
+      2026 TRAIN    +151.1     4.1 |             90  +10.09   +7.37    -1.0
+      TEST 2023+2025 compounded -16.9%, worst test DD 31.8 | TRAIN compounded +223.9%
+
+SYSTEM 1: robust over time (score = worst TRAIN year, averaged with the one-step neighbours; all three train years positive: 1948 of 14244 qualify)
+   FADE: floor 0.5|lock +0.15R|cut on|tp 3R|chand 3|runaway off|Fri skip
+   PULLBACK: vol 1|minstop 0.75|OR 9:45|runner chand3
+   score +16.0 (own worst train year +27.3); live score +5.2 (own +11.8)
+      year           return  max DD | months:  win %    mean  median   worst
+      2022 TRAIN     +50.4    10.2 |             67   +3.61   +2.59    -3.4
+      2023 TEST      -30.2    31.8 |             25   -2.82   -3.25   -11.8
+      2024 TRAIN     +27.3    12.0 |             58   +2.18   +0.92    -4.9
+      2025 TEST      +15.9    25.3 |             50   +1.58   -0.06    -9.4
+      2026 TRAIN    +146.5     6.1 |             80   +9.93   +5.75    -0.9
+      TEST 2023+2025 compounded -19.1%, worst test DD 31.8 | TRAIN compounded +371.8%
+   next five:
+      score +15.1 train  +45.3  +26.3 +152.4 | test 2023  -29.8 2025  +16.8 | floor 0.5|lock +0.15R|cut on|tp 3R|chand 2|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner chand3
+      score +14.2 train  +53.7  +22.9 +139.2 | test 2023  -30.0 2025  +12.8 | floor 0.5|lock +0.15R|cut on|tp 2R|chand 3|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner chand3
+      score +14.1 train  +52.8  +23.5 +148.4 | test 2023  -30.1 2025  +16.2 | floor 0.5|lock +0.15R|cut on|tp 3R|chand 3|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner EMA20
+      score +13.6 train  +45.8  +22.1 +127.6 | test 2023  -24.9 2025   +7.0 | floor 0.5|lock +0.15R|cut on|tp 3R|chand 3|runaway off|Fri skip || vol 1|minstop 1|OR 9:45|runner chand3
+      score +13.5 train  +48.6  +22.0 +150.1 | test 2023  -29.8 2025  +11.7 | floor 0.5|lock +0.15R|cut on|tp 2R|chand 2|runaway off|Fri skip || vol 1|minstop 0.75|OR 9:45|runner chand3
+   top 1% (142): common settings: floor 0.5 83%, Fri skip 83%, runaway off 82%, OR 9:45 73%, cut on 61%, vol 1 61%, runner chand3 61%, lock +0.15R 60%, minstop 0.75 56%, tp 3R 54%, chand 3 49%, minstop 1 44%
+   does the score transfer? top 1% on TEST: 2023 median -25.0% (live -29.8%), 2025 median +12.9% (live +18.3%); beat live in 2023 82%, in 2025 25%, in both 20%
+   all 14244: test 2023+2025 compounded median -13.5%, live -16.9% (40th percentile), pick -19.1% (33th); rank correlation of the score with the test result +0.15
+
+SYSTEM 2: most consistent months (each year alone; score = the WORST train year's winning-month share and median month, neighbour-averaged, ranks summed)
+   FADE: FADE off
+   PULLBACK: vol 1|minstop 0.75|OR 10:00|100% at high
+   worst train year: winning months 50% (live 58%), median month +0.37% (live +0.12%)
+      year           return  max DD | months:  win %    mean  median   worst
+      2022 TRAIN      +2.2     7.9 |             50   +0.22   +0.37    -3.5
+      2023 TEST       -6.0    15.8 |             33   -0.48   -1.04    -4.6
+      2024 TRAIN     +10.4     5.3 |             75   +0.86   +0.67    -4.2
+      2025 TEST      +10.3     6.7 |             42   +0.90   -0.08    -4.2
+      2026 TRAIN     +16.7     6.1 |             60   +1.60   +2.94    -3.5
+      TEST 2023+2025 compounded +3.7%, worst test DD 15.8 | TRAIN compounded +31.7%
+   next five:
+      worst-year win  58% median +0.89 | test 2023 win  25% med -0.30, 2025 win  25% med -0.56 | FADE off || vol 1.3|minstop 1|OR 9:45|100% at high
+      worst-year win  60% median +0.39 | test 2023 win  25% med -0.90, 2025 win  33% med -1.55 | FADE off || vol 1.5|minstop 0.75|OR 9:45|100% at high
+      worst-year win  58% median +0.85 | test 2023 win  33% med -0.69, 2025 win  33% med -0.43 | FADE off || vol 1.5|minstop 0.75|OR 10:00|100% at high
+      worst-year win  58% median +0.40 | test 2023 win   8% med -0.24, 2025 win  25% med -0.82 | FADE off || vol 1.5|minstop 1|OR 9:45|100% at high
+      worst-year win  58% median +0.40 | test 2023 win  25% med +0.00, 2025 win  25% med -0.22 | FADE off || vol 1.5|minstop 1|OR 10:00|100% at high
+   top 1% (142): common settings: floor 0.5 75%, Fri skip 75%, lock +0.15R 70%, cut on 65%, minstop 0.75 64%, runaway off 62%, OR 10:00 57%, tp 3R 47%, chand 3 47%, OR 9:45 43%, runner EMA20 38%, vol 1 37%
+   does it transfer? top 1% on TEST: worst test-year winning share median 25% (live 25%), worst test-year median month -1.80% (live -3.43%); beat live on both figures 39%
+   all 14244: live sits at the 16th percentile on test winning share and the 8th on test median month; pick 42th and 82th
+
+SYSTEM 3: the three new systems re-chosen on the TRAIN years (alone, best worst-train-year), judged on 2023 and 2025
+   RELVAL: 9 settings. Years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th). * = TRAIN pick
+       xm: 0.75, ksd: 2.0                  +22.3   -3.7   +0.5  -10.5  +10.5 | worst train   +0.5 | test 2023   -3.7 2025  -10.5 | trades 464 DD 12.6
+       xm: 0.75, ksd: 2.5                   +2.5   -2.9   +5.6   -2.2   +8.8 | worst train   +2.5 | test 2023   -2.9 2025   -2.2 | trades 230 DD 6.5
+       xm: 0.75, ksd: 3.0                   +7.4   -0.0   -0.7   -7.2   +4.9 | worst train   -0.7 | test 2023   -0.0 2025   -7.2 | trades 108 DD 8.7
+       xm: 1.0, ksd: 2.0                   +25.2   -3.0   -2.0   -7.1  +12.5 | worst train   -2.0 | test 2023   -3.0 2025   -7.1 | trades 442 DD 9.9
+     * xm: 1.0, ksd: 2.5                    +7.5   -3.1   +4.5   +3.3   +7.6 | worst train   +4.5 | test 2023   -3.1 2025   +3.3 | trades 219 DD 6.0
+       xm: 1.0, ksd: 3.0                    +9.3   +0.5   -0.7   -3.8   +4.9 | worst train   -0.7 | test 2023   +0.5 2025   -3.8 | trades 101 DD 6.1
+       xm: 1.25, ksd: 2.0                  +20.4   -3.8   +3.7   -9.1  +14.1 | worst train   +3.7 | test 2023   -3.8 2025   -9.1 | trades 404 DD 10.9
+       xm: 1.25, ksd: 2.5                   +6.4   -2.9   +4.4   +0.4   +8.1 | worst train   +4.4 | test 2023   -2.9 2025   +0.4 | trades 206 DD 5.7
+       xm: 1.25, ksd: 3.0                   +7.8   +0.5   +1.8   -4.2   +6.7 | worst train   +1.8 | test 2023   +0.5 2025   -4.2 | trades 92 DD 5.8
+       settings positive in BOTH test years: 0 of 9; train pick test: 2023 -3.1%, 2025 +3.3%
+   DIP: 24 settings. Years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th). * = TRAIN pick
+       th: 5, n: 20, last: 13:30            -4.1   -1.6   +2.8   +6.2   -6.3 | worst train   -6.3 | test 2023   -1.6 2025   +6.2 | trades 15 DD 7.0
+       th: 5, n: 20, last: 15:55            -4.6   -3.1   +1.3   +5.1   -6.2 | worst train   -6.2 | test 2023   -3.1 2025   +5.1 | trades 15 DD 7.1
+       th: 5, n: 50, last: 13:30            +5.3   -7.6   +7.0   +8.1   +2.1 | worst train   +2.1 | test 2023   -7.6 2025   +8.1 | trades 83 DD 10.0
+     * th: 5, n: 50, last: 15:55            +4.9  -12.2   +4.0   +6.3   +6.7 | worst train   +4.0 | test 2023  -12.2 2025   +6.3 | trades 83 DD 12.2
+       th: 5, n: 100, last: 13:30           -1.0   -2.5   -1.1   -4.3   +2.8 | worst train   -1.1 | test 2023   -2.5 2025   -4.3 | trades 126 DD 12.7
+       th: 5, n: 100, last: 15:55           -1.8  -13.6   -6.1   -0.2   +6.2 | worst train   -6.1 | test 2023  -13.6 2025   -0.2 | trades 126 DD 14.6
+       th: 10, n: 20, last: 13:30           -6.1  +16.2   +6.5   +0.7   -0.6 | worst train   -6.1 | test 2023  +16.2 2025   +0.7 | trades 74 DD 11.7
+       th: 10, n: 20, last: 15:55           -6.8  +15.8  +11.1   -1.1   +2.4 | worst train   -6.8 | test 2023  +15.8 2025   -1.1 | trades 74 DD 11.7
+       th: 10, n: 50, last: 13:30           -4.8  +18.0  +14.9   +1.7  +41.0 | worst train   -4.8 | test 2023  +18.0 2025   +1.7 | trades 232 DD 16.6
+       th: 10, n: 50, last: 15:55           -4.5  +18.3  +24.8   +1.9  +49.9 | worst train   -4.5 | test 2023  +18.3 2025   +1.9 | trades 232 DD 15.3
+       th: 10, n: 100, last: 13:30         -12.6  +28.4   +7.4  +12.4  +23.2 | worst train  -12.6 | test 2023  +28.4 2025  +12.4 | trades 318 DD 15.2
+       th: 10, n: 100, last: 15:55         -14.3  +17.1   +8.1  +19.9  +28.7 | worst train  -14.3 | test 2023  +17.1 2025  +19.9 | trades 318 DD 18.0
+       th: 15, n: 20, last: 13:30          -13.2   +9.4   -5.1   +3.3   -2.1 | worst train  -13.2 | test 2023   +9.4 2025   +3.3 | trades 158 DD 16.9
+       th: 15, n: 20, last: 15:55           -5.9   +8.5   +2.6   +0.6   +3.0 | worst train   -5.9 | test 2023   +8.5 2025   +0.6 | trades 158 DD 16.9
+       th: 15, n: 50, last: 13:30           -3.6  +29.8  -10.2   +3.4  +34.3 | worst train  -10.2 | test 2023  +29.8 2025   +3.4 | trades 390 DD 18.9
+       th: 15, n: 50, last: 15:55           +1.3  +31.6   -0.1   +1.6  +50.0 | worst train   -0.1 | test 2023  +31.6 2025   +1.6 | trades 390 DD 21.5
+       th: 15, n: 100, last: 13:30         -11.8  +30.6   -6.2   +8.5   -0.3 | worst train  -11.8 | test 2023  +30.6 2025   +8.5 | trades 511 DD 21.4
+       th: 15, n: 100, last: 15:55         -13.3  +23.5   -8.3  +16.7   +5.6 | worst train  -13.3 | test 2023  +23.5 2025  +16.7 | trades 511 DD 26.4
+       th: 20, n: 20, last: 13:30           -8.0  +22.2  -14.8   +5.6   -6.0 | worst train  -14.8 | test 2023  +22.2 2025   +5.6 | trades 274 DD 20.1
+       th: 20, n: 20, last: 15:55           +5.9  +22.2  -10.8   +7.3   -2.6 | worst train  -10.8 | test 2023  +22.2 2025   +7.3 | trades 274 DD 23.0
+       th: 20, n: 50, last: 13:30          -12.4  +37.1  -15.3  +11.5  +15.6 | worst train  -15.3 | test 2023  +37.1 2025  +11.5 | trades 552 DD 24.0
+       th: 20, n: 50, last: 15:55           +4.4  +47.4   -8.0  +21.8  +25.6 | worst train   -8.0 | test 2023  +47.4 2025  +21.8 | trades 552 DD 21.5
+       th: 20, n: 100, last: 13:30          -1.3  +49.4  -16.0  +10.8  -27.3 | worst train  -27.3 | test 2023  +49.4 2025  +10.8 | trades 704 DD 42.9
+       th: 20, n: 100, last: 15:55          +3.9  +38.5  -14.9  +27.9  -23.9 | worst train  -23.9 | test 2023  +38.5 2025  +27.9 | trades 704 DD 42.5
+       settings positive in BOTH test years: 17 of 24; train pick test: 2023 -12.2%, 2025 +6.3%
+   IBS-TREND: 18 settings. Years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th). * = TRAIN pick
+       lo: 0.1, n: 20, last: 13:30          +7.9  +10.7  +11.5  +26.1   +3.9 | worst train   +3.9 | test 2023  +10.7 2025  +26.1 | trades 305 DD 12.8
+     * lo: 0.1, n: 20, last: 15:55         +24.1  +17.9   +7.3  +37.2   +8.0 | worst train   +7.3 | test 2023  +17.9 2025  +37.2 | trades 305 DD 11.8
+       lo: 0.1, n: 50, last: 13:30          +6.8  +31.4   -2.8  +22.1   +4.1 | worst train   -2.8 | test 2023  +31.4 2025  +22.1 | trades 369 DD 15.1
+       lo: 0.1, n: 50, last: 15:55         +10.5  +30.9  -12.2  +38.8  +14.3 | worst train  -12.2 | test 2023  +30.9 2025  +38.8 | trades 369 DD 16.3
+       lo: 0.1, n: 100, last: 13:30         +9.5   +5.9   +7.2   +7.5  +28.7 | worst train   +7.2 | test 2023   +5.9 2025   +7.5 | trades 424 DD 16.6
+       lo: 0.1, n: 100, last: 15:55        +19.4   +0.9   +4.8  +20.8  +38.6 | worst train   +4.8 | test 2023   +0.9 2025  +20.8 | trades 424 DD 16.8
+       lo: 0.2, n: 20, last: 13:30          +7.0   +7.1  -14.4   +8.3   -7.8 | worst train  -14.4 | test 2023   +7.1 2025   +8.3 | trades 605 DD 19.6
+       lo: 0.2, n: 20, last: 15:55         +21.3  +26.6  -19.1  +21.9  +10.9 | worst train  -19.1 | test 2023  +26.6 2025  +21.9 | trades 605 DD 22.4
+       lo: 0.2, n: 50, last: 13:30          -0.0  +53.5  -18.6  +13.3   -0.4 | worst train  -18.6 | test 2023  +53.5 2025  +13.3 | trades 723 DD 25.0
+       lo: 0.2, n: 50, last: 15:55          +7.9  +68.2  -29.9  +31.9  +20.4 | worst train  -29.9 | test 2023  +68.2 2025  +31.9 | trades 723 DD 33.2
+       lo: 0.2, n: 100, last: 13:30        +11.8  +29.9  -18.8  -12.3   -6.9 | worst train  -18.8 | test 2023  +29.9 2025  -12.3 | trades 801 DD 28.4
+       lo: 0.2, n: 100, last: 15:55        +29.9  +29.7  -24.6   +3.5  +10.7 | worst train  -24.6 | test 2023  +29.7 2025   +3.5 | trades 801 DD 28.1
+       lo: 0.3, n: 20, last: 13:30          -5.6  +13.7  -32.2   +1.8   -7.9 | worst train  -32.2 | test 2023  +13.7 2025   +1.8 | trades 904 DD 34.8
+       lo: 0.3, n: 20, last: 15:55         +22.8  +42.9  -38.8   +4.1  +14.2 | worst train  -38.8 | test 2023  +42.9 2025   +4.1 | trades 904 DD 40.4
+       lo: 0.3, n: 50, last: 13:30         -14.4  +67.3  -38.6  -10.9   +8.8 | worst train  -38.6 | test 2023  +67.3 2025  -10.9 | trades 1057 DD 43.7
+       lo: 0.3, n: 50, last: 15:55          +1.1 +117.4  -48.7  -14.5  +30.5 | worst train  -48.7 | test 2023 +117.4 2025  -14.5 | trades 1057 DD 52.3
+       lo: 0.3, n: 100, last: 13:30         +5.7  +36.4  -31.5  -19.7   -9.7 | worst train  -31.5 | test 2023  +36.4 2025  -19.7 | trades 1151 DD 37.2
+       lo: 0.3, n: 100, last: 15:55        +19.2  +63.5  -41.6  -16.6  +10.9 | worst train  -41.6 | test 2023  +63.5 2025  -16.6 | trades 1151 DD 45.7
+       settings positive in BOTH test years: 13 of 18; train pick test: 2023 +17.9%, 2025 +37.2%
+
+PARALLEL OR REPLACEMENT? (one position at a time, earliest signal first)
+   clock: entry time (median, 10th-90th percentile) and exit
+      FADE       n  470 | entry 10:15 (10:10-10:20) | exit median 11:20, latest 13:30 | signal days 330 of 1198
+      PULLBACK   n  444 | entry 11:35 (10:40-12:35) | exit median 12:50, latest 13:30 | signal days 337 of 1198
+      RELVAL     n  219 | entry 13:40 (13:35-15:10) | exit median 15:55, latest 15:55 | signal days 181 of 1198
+      DIP        n   83 | entry 9:35 (9:35-9:35) | exit median 15:55, latest 15:55 | signal days 60 of 1198
+      IBS-TREND  n  305 | entry 9:35 (9:35-9:35) | exit median 15:55, latest 15:55 | signal days 170 of 1198
+   signal days: what the live book did on them, what the new system did alone, and both in one account
+      RELVAL     TRAIN: 106 signal days | live also had a trade on  66% | per signal day: live alone +0.40%, RELVAL alone +0.18%, both in one account +0.59%, sum of the two +0.58%
+      RELVAL     TEST:  75 signal days | live also had a trade on  60% | per signal day: live alone +0.28%, RELVAL alone +0.01%, both in one account +0.29%, sum of the two +0.29%
+      DIP        TRAIN:  37 signal days | live also had a trade on  54% | per signal day: live alone +0.26%, DIP alone +0.45%, both in one account +0.47%, sum of the two +0.72%
+      DIP        TEST:  23 signal days | live also had a trade on  52% | per signal day: live alone +0.03%, DIP alone -0.27%, both in one account -0.18%, sum of the two -0.24%
+      IBS-TREND  TRAIN:  94 signal days | live also had a trade on  47% | per signal day: live alone +0.29%, IBS-TREND alone +0.44%, both in one account +0.47%, sum of the two +0.73%
+      IBS-TREND  TEST:  76 signal days | live also had a trade on  55% | per signal day: live alone -0.26%, IBS-TREND alone +0.68%, both in one account +0.57%, sum of the two +0.42%
+
+   book                                          2022    2023    2024    2025    2026 | TRAIN cmpd  TEST cmpd | max DD | months win% avg (worst year)
+   LIVE (FADE + PULLBACK)                       +11.8   -29.8   +15.4   +18.3  +151.1 |    +223.9%     -16.9% |   31.8 |  60% (25%)
+   LIVE + RELVAL                                +20.2   -31.9   +20.6   +22.2  +170.1 |    +291.3%     -16.8% |   35.1 |  61% (25%)
+   LIVE + DIP (one position, DIP first)         +14.2   -35.8   +19.2   +22.5  +153.7 |    +245.3%     -21.4% |   37.7 |  55% (17%)
+   LIVE + DIP (split cash 50/50 on DIP days)    +13.0   -34.0   +16.0   +21.5  +154.2 |    +233.3%     -19.7% |   35.9 |  55% (25%)
+   LIVE + IBS-TREND (one position)              +43.0   -13.5   +13.6   +73.7  +126.8 |    +268.6%     +50.3% |   23.9 |  64% (50%)
+   LIVE + IBS-TREND (split cash)                +29.6   -19.3   +13.5   +46.4  +135.4 |    +246.3%     +18.2% |   24.0 |  64% (50%)
+   LIVE + DIP + RELVAL                          +22.8   -37.5   +23.5   +26.5  +175.1 |    +317.1%     -20.9% |   40.4 |  58% (17%)
+   LIVE + DIP + RELVAL (split cash)             +21.5   -36.0   +20.7   +25.7  +173.5 |    +301.0%     -19.6% |   39.0 |  56% (17%)
+   LIVE + DIP-or-IBS + RELVAL                   +57.2   -24.0   +22.8   +86.2  +157.7 |    +397.4%     +41.5% |   30.5 |  68% (42%)
+   LIVE + DIP-or-IBS + RELVAL (split cash)      +40.9   -26.7   +19.3   +56.1  +157.9 |    +333.6%     +14.5% |   31.1 |  66% (25%)
+
+   NEW ONLY: DIP + RELVAL                       +12.8   -14.5    +7.8    +9.8   +15.6 |     +40.7%      -6.1% |   16.9 |  58% (33%)
+   NEW ONLY: DIP-or-IBS + RELVAL                +40.0    -0.6   +16.9   +50.9   +28.6 |    +110.3%     +50.0% |   17.3 |  62% (50%)
+   RELVAL alone                                  +7.5    -3.1    +4.5    +3.3    +7.6 |     +20.8%      +0.2% |    6.0 |  57% (33%)
+   DIP alone                                     +4.9   -12.2    +4.0    +6.3    +6.7 |     +16.4%      -6.7% |   12.2 |  30% (0%)
+   IBS-TREND alone                              +24.1   +17.9    +7.3   +37.2    +8.0 |     +43.8%     +61.7% |   11.8 |  51% (40%)
+
+   SYSTEM 1 (train pick)                        +50.4   -30.2   +27.3   +15.9  +146.5 |    +371.8%     -19.1% |   31.8 |  56% (25%)
+   SYSTEM 1 + RELVAL                            +61.7   -32.3   +33.0   +19.8  +165.1 |    +470.1%     -19.0% |   35.0 |  60% (17%)
+   SYSTEM 1 + DIP + RELVAL                      +65.8   -40.1   +35.9   +25.9  +196.3 |    +567.7%     -24.5% |   42.4 |  61% (8%)
+   SYSTEM 1 + DIP + RELVAL (split cash)         +63.8   -37.6   +33.0   +26.5  +182.6 |    +515.7%     -21.1% |   40.1 |  61% (17%)
+   SYSTEM 2 (train pick)                         +2.2    -6.0   +10.4   +10.3   +16.7 |     +31.7%      +3.7% |   15.8 |  52% (33%)
+   SYSTEM 2 + RELVAL                             +9.9    -8.8   +15.4   +14.0   +25.6 |     +59.2%      +3.9% |   17.9 |  57% (25%)
+   SYSTEM 2 + DIP + RELVAL                      +15.3   -19.7   +17.6   +21.2   +32.9 |     +80.3%      -2.6% |   27.6 |  64% (25%)

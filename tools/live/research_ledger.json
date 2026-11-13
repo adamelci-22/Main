@@ -516,5 +516,15 @@
   "result": "Gap scanner: 32 cells PF>=1.15 in the first half, 2 held, correlation of edge across halves -0.01; gap-ups lose 0.23% open to 15:55 before cost. Stock FADE: PF 0.98/0.66/1.38, account -15.7/-28.0/+1.3. Daily DIP top 3: PF 0.79 then 0.87. Day-two momentum top 1: PF 0.99 then 1.29 (unconfirmed)",
   "verdict": "rejected: no long-only stock scanner passes",
   "champion_version": "5.2.47"
+ },
+ {
+  "id": "study.year_split_rebuild",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Rebuild systems 1-3 with TRAIN = 2022, 2024, 2026 and TEST = 2023, 2025: robust tune, most-consistent-months tune (each year alone), new systems re-chosen, parallel vs replacement",
+  "method": "tools/backtest/split_build.py: 14,244 tunes scored on train years with neighbour averaging; RELVAL 9, DIP 24, IBS-TREND 18 settings; clock overlap, signal-day accounting, one-position and split-cash books",
+  "result": "Live test 2023 -29.8, 2025 +18.3 (-16.9% compounded). System 1 pick -30.2, +15.9 (worse than live both years; score-to-test rank correlation +0.15). System 2 pick (FADE off) +3.7% test, 33% and 42% winning months. RELVAL flat on test (+0.2%), parallel with zero interference. DIP fails (-6.7%). IBS-TREND (IBS<0.1 above the 20-day average, 9:35 to 15:55) passes: +17.9, +37.2 on test, positive all five years, DD 11.8; it replaces the live book on its signal days (14% of days). LIVE + IBS-TREND test +50.3% vs live -16.9%",
+  "verdict": "not adopted; offered as \"shadow IBS-TREND\" / \"push IBS-TREND\"; systems 1 and 2 tunes rejected",
+  "champion_version": "5.2.47"
  }
 ]

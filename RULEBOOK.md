@@ -422,7 +422,7 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **Rules in force:** v5.2.47. FADE stop floor 0.5% (B2.4), PULLBACK runner (B3.9, B5.6, C2), tunables v4, USDG rule ON (B4.8), every-5-minute check (C2), watchdog 9:36-12:36 (A2.4), batch 2 at the 11:25 slot.
 - **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session. The disabled 2026-10-05 one-shot is inert.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 1 of 5, PULLBACK 3 of 5.
-- **Research overnight:** four-system build in `archive/systems_2026-11-13.md` (nothing adopted). The 3 AM year-split rebuild (`tools/backtest/split_build.py`) is written and not run: the permission system blocked the run and it waits for the governor's "run it".
+- **Research overnight:** four-system build in `archive/systems_2026-11-13.md` (nothing adopted). The year-split rebuild ran at 9:40 ET on the governor's "Run the 3 am": results in `archive/systems_split_2026-11-13.md` (nothing adopted).
 
 ## E6. Known issues
 
