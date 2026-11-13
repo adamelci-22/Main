@@ -1,0 +1,19 @@
+Overnight study (governor 2026-11-13: "can we add another subsystem ... can we change anything fundamentally"). Research only.
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th). Full cash on a 3x leg, cost 0.06%.
+
+        BASELINE v5.2.51 joint book (no overnight)            +121.8   +30.0   +13.1  +105.6  +189.8 | avg 22-25  +67.6 worst  +13.1 DD 25.4
+
+OVERNIGHT LEG ALONE (15:55 to the next 9:35)
+        all three signals, one a night                         +36.2   -10.1    +8.4   +50.2   -11.7 | avg 22-25  +21.1 worst  -10.1 DD 31.0 | 640 signals, win 55%, avg leg +0.20%, worst -17.2%
+        long signals only                                      +12.7   +10.2    -1.3    +6.7    +9.1 | avg 22-25   +7.1 worst   -1.3 DD 13.4 | 257 signals, win 61%, avg leg +0.34%, worst -8.7%
+        dip signals only                                       +10.8    -5.8   +12.1   +33.7   -14.8 | avg 22-25  +12.7 worst   -5.8 DD 27.0 | 224 signals, win 56%, avg leg +0.21%, worst -17.2%
+        mirror signals only                                     +9.0   -11.4    +0.5   +11.5    -8.5 | avg 22-25   +2.4 worst  -11.4 DD 20.4 | 159 signals, win 45%, avg leg -0.03%, worst -10.4%
+        every signal, equal weight (not one a night)           +21.5    -6.9    +1.5   +47.7   -25.5 | avg 22-25  +16.0 worst   -6.9 DD 34.9
+
+JOINT BOOK + OVERNIGHT LEG (compounded with the next day)
+   qual + overnight, all three signals                        +202.0   +16.9   +22.6  +208.8  +155.8 | avg 22-25 +112.6 worst  +16.9 DD 27.8
+   PASS + overnight, long + dip only                          +177.1   +32.0   +20.8  +176.9  +162.4 | avg 22-25 +101.7 worst  +20.8 DD 27.8
+   PASS + overnight, long only                                +150.0   +43.3   +11.6  +119.3  +216.2 | avg 22-25  +81.1 worst  +11.6 DD 23.5
+   qual + overnight, mirror only                              +141.8   +15.1   +13.7  +129.3  +165.3 | avg 22-25  +75.0 worst  +13.7 DD 33.4
+
+TAIL (no stop is possible overnight): 640 signals on 345 nights (29% of nights). Worst five legs: -17.2% -12.4% -10.4% -8.9% -8.7%. Legs worse than -5%: 28; worse than -3%: 92; better than +5%: 35.

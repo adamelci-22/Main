@@ -566,5 +566,15 @@
   "result": "No removal of a subsystem or ticker passes. No new proxy passes: SPY qualifies on train and misses 2025 by 0.9 points; adding all twelve cuts the 2022-25 average from +67.6 to +42.3. The 9:35 family leans on SOXX: without it the average falls to +33.3",
   "verdict": "no change: universe and subsystems stay as in v5.2.51",
   "champion_version": "5.2.51"
+ },
+ {
+  "id": "study.overnight_leg",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Overnight leg for the 9:35 family: buy at 15:55 on the signal computed from the day so far, sell at the next 9:35 open (A1.8 forbids overnight holds: test only)",
+  "method": "tools/backtest/overnight.py; baseline v5.2.51 joint book; train 2022/2024/2026, test 2023/2025; same pre-set rule",
+  "result": "Long signals overnight alone +12.7, +10.2, -1.3, +6.7, +9.1 (257 signals, 61% wins, +0.34% a leg, worst -8.7%); in the book +150.0, +43.3, +11.6, +119.3, +216.2: PASS. Long + dip: +177.1, +32.0, +20.8, +176.9, +162.4: PASS, worst leg -17.2%. Mirror overnight: no edge. 28 of 640 legs worse than -5%; no stop is possible overnight",
+  "verdict": "not adopted: breaks A1.8; offered as \"add overnight long\" (full or half size)",
+  "champion_version": "5.2.51"
  }
 ]
