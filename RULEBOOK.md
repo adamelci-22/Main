@@ -464,6 +464,8 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 
 ## E6. Known issues
 
+- **2026-11-13 (Friday): no trading session, broker connection lost all day.** The Robinhood connector returned 503 from 8:42 ET; the governor then disconnected it (about 11:55) and the reconnect needs a desktop browser (Robinhood blocks the sign-in on a phone). No state check, no slot data, no orders, no C4 model close, no scorecard refresh, no `improve.py tick` for this day. Last known state: flat, $2,585.15 (2,584 USDG + $1.15), no open orders. The session itself was down from about 13:10 to 17:02 ET (worker restarts); the 13:30 loop trigger and the 15:57 backstop were delivered at 17:02 and found nothing to do. **On the next connected session:** state check first, then fetch 11-13 bars so `extend_live.py` and the model record cover the day. A connector that the governor disconnects does not return to a running session: a new session and a trigger move are needed (A2).
+
 - **Trigger creation is rate-limited.** About 10 `create_trigger` calls per minute. Wait about 30 seconds and retry, then confirm the chain with `list_triggers`.
 - **The scheduler can skip or delay a slot.** Resting protective orders cover an open position. Check for missed slots (A2).
 - **`paper.py --now HH:MM` reads bars that END at HH:MM** (last bar begins HH:MM-5; `t2k`/`grid`). A slot is therefore ready to run the moment it fires (the bar ending HH:MM is already published); do not wait for the bar that begins at HH:MM. On 2026-10-22 waiting for that bar added up to 5 minutes of avoidable delay per report for about an hour, with no benefit. (Corrected 2026-10-22.)
