@@ -14,6 +14,7 @@ While the position is open no FADE or PULLBACK entry is taken (one position at a
     python3 -I tools/live/ibs_trend.py manage [--day D] [--now HH:MM] DUMP...  # every slot while it is open, and the 15:55 exit slot
     python3 -I tools/live/ibs_trend.py ovn-signal [--day D] [--now 15:55] DUMP...   # B7: the 15:55 overnight check (every trading day)
     python3 -I tools/live/ibs_trend.py ovn-exit [--day D] [--now 09:35] DUMP...     # B7: the 9:35 slot after an overnight entry (run AFTER `enter`)
+    python3 -I tools/live/ibs_trend.py skip [--day D] day|overnight REASON          # the real entry was NOT made: drop it from the record
     python3 -I tools/live/ibs_trend.py replay CACHE.json.gz [FROM] [TO]     # research check: the same code on a 5-minute cache
 
 Files: archive/ibs_daily.json (daily high, low, close, first-bar volume per proxy), archive/ibs_state.json (today's signal and
@@ -55,12 +56,34 @@ def rsi2(c):
     return 100.0 if al == 0 else 100 - 100 / (1 + ag / al)
 
 
-def check(store, day):
+def prev_session(day):
+    """The trading session before `day`: the previous weekday that is not in paper.py's NO_TRADE list."""
+    import datetime as _d
+    x = _d.date.fromisoformat(day) - _d.timedelta(days=1)
+    while x.weekday() >= 5 or x.isoformat() in P.NO_TRADE: x -= _d.timedelta(days=1)
+    return x.isoformat()
+
+
+def persist(what):
+    """Commit and push the IBS state files at once, so a container restart cannot lose an open position's record (v5.2.54)."""
+    import subprocess
+    if os.environ.get('IBS_NO_GIT') or not os.path.isdir(os.path.join(ROOT, '.git')): return
+    try:
+        fs = [f for f in (STATE, DAILY, LOG) if os.path.exists(f)]
+        subprocess.run(['git', '-C', ROOT, 'add'] + fs, check=False, capture_output=True, timeout=30)
+        if subprocess.run(['git', '-C', ROOT, 'commit', '-qm', f'IBS state: {what}'] + ['--'] + fs, capture_output=True, timeout=30).returncode == 0:
+            r = subprocess.run(['git', '-C', ROOT, 'push', '-q'], capture_output=True, timeout=60)
+            print(f"  (state saved and {'pushed' if r.returncode == 0 else 'committed; PUSH FAILED - push by hand'})")
+    except Exception as e: print(f"  WARNING: state not committed ({e}); commit and push archive/ibs_state.json by hand")
+
+
+def check(store, day, strict=False):
     """Signals for `day` from the daily store. Returns {proxy: dict(ok, side, above, ibs, close, sma, n)}; side +1 long leg, -1 inverse leg."""
     out = {}
     for p in LEG:
         allp = sorted(d for d in store.get(p, {}) if d < day); prior = allp[-SMA:]
         if len(prior) < SMA: out[p] = dict(ok=False, n=len(prior)); continue
+        if strict and prior[-1] != prev_session(day): out[p] = dict(ok=False, n=len(prior), stale=prior[-1]); continue      # the last session is missing: no signal from old data
         c = [store[p][d][2] for d in prior]; h, l, cl = store[p][prior[-1]][:3]
         ibs = (cl - l) / (h - l) if h > l else 0.5; sma = st.mean(c)
         side = 1 if (cl > sma and ibs < LO) else -1 if (cl <= sma and ibs > HI and day >= MIRROR_FROM) else 0
@@ -118,14 +141,16 @@ def blocked(day):
 
 def cmd_signal(argv):
     opts, raw, days = args_days(argv); day = opts.get('day') or __import__('datetime').datetime.now(P.ET).date().isoformat()
-    store, n = update_store(raw, day); sig = check(store, day)
+    store, n = update_store(raw, day); sig = check(store, day, strict=True)
     print(f"IBS-TREND signal check for {day} (B6): LONG = above the {SMA}-session average close and prior-day IBS below {LO:.2f}; MIRROR = at or below it and IBS above {HI:.2f}. Daily store +{n} rows.")
     for p, s in sig.items():
         if s['n'] < SMA: print(f"  {p:<5} only {s['n']} prior sessions in the store, need {SMA}: fetch the 20-session baseline (C3) and rerun"); continue
+        if s.get('stale'): print(f"  {p:<5} STALE: the store ends {s['stale']} but the last session was {prev_session(day)}. No signal from old data: fetch the 20-session baseline (C3) and rerun"); continue
         print(f"  {p:<5} {s['last']} close {s['close']:.2f} vs average {s['sma']:.2f} ({'above' if s['above'] else 'below'}), IBS {s['ibs']:.2f} RSI2 {('%.0f' % s['rsi']) if s['rsi'] is not None else 'n/a (' + str(s['n50']) + ' closes)'} -> {'SIGNAL ' + s['kind'] + ' -> ' + leg_of(p, s['side']) if s['ok'] else 'no'}")
     ok = [p for p, s in sig.items() if s['ok']]; state = jload(STATE, {})
     state[day] = dict(signals={p: dict(ibs=round(sig[p]['ibs'], 4), v0=sig[p]['v0'], side=sig[p]['side'], kind=sig[p]['kind']) for p in ok}, status='signal' if ok else 'none')
-    jsave(STATE, state); why = blocked(day)
+    jsave(STATE, state); persist('signal ' + day); why = blocked(day)
+    if any(s.get('stale') or s['n'] < SMA for s in sig.values()): print("  WARNING: the check is INCOMPLETE for the proxies marked above. Do not report 'no signal' until it is rerun on fresh data.")
     if not ok: print("  NO IBS-TREND SIGNAL today. FADE and PULLBACK run as usual.")
     elif why: print(f"  IBS-TREND SIGNAL ({', '.join(ok)}) NOT TRADED: {why}.")
     else:
@@ -151,7 +176,7 @@ def cmd_enter(argv):
         if best is None or rv > best[1]: best = (p, rv, b[0][3], g.get('side', 1))
     if not best: return
     p, rv, ref, side = best; leg = leg_of(p, side); lb = P.grid(raw.get(leg, {}).get(day, {}), 1)
-    s.update(status='open', proxy=p, ticker=leg, side=side, kind=s['signals'][p].get('kind'), k=1, xbar=None, ref=ref); jsave(STATE, state)
+    s.update(status='open', proxy=p, ticker=leg, side=side, kind=s['signals'][p].get('kind'), k=1, xbar=None, ref=ref); jsave(STATE, state); persist('entry ' + day)
     print(f"  LIVE ACTIONS (only if the real account is flat; A1 safety checks first):")
     print(f"    ENTER IBS-TREND: buy {leg} now (marketable limit, B5.2 steps). {'Long' if side > 0 else 'MIRROR (inverse leg)'}: proxy {p} {ref:.2f}, proxy stop about {ref * (1 - side * STOP_PCT / 100):.2f} (1% of the proxy {'below' if side > 0 else 'above'} = {LEV * STOP_PCT:g}% on {leg}).")
     print(f"      size (B4.1): 3% of the account at risk on a {LEV * STOP_PCT:g}% leg stop = 100% of cash (the cap). Whole shares, floor.")
@@ -187,7 +212,7 @@ def cmd_manage(argv):
     else:
         print(f"  IBS-TREND model STOPPED at {P.k2t(m['xbar'])} (proxy {p} touched {m['stop']:.2f}); model {pct_leg(m):+.2f}% on the leg. Check the real stop filled (get_equity_orders). "
               f"If the real position is still open, leave the resting stop and sell at 15:55. No new entry today (B6.6): once flat, buy USDG and the remaining slots are one-line checks.")
-    if first: print(f"  logged the model trade to archive/ibs_trades.csv")
+    if first: print(f"  logged the model trade to archive/ibs_trades.csv"); persist('exit ' + day)
 
 
 def cmd_replay(argv):
@@ -223,13 +248,13 @@ def cmd_replay(argv):
 OVN_SIZE, OVN_STOP, OVN_FROM = 0.5, 0.90, '2026-11-16'      # share of cash; disaster stop as a share of the fill; first entry day
 
 
-def ovn_pick(store, bars_by_proxy, day):
+def ovn_pick(store, bars_by_proxy, day, strict=False):
     """15:55 check. bars_by_proxy: {proxy: today's completed bars through 15:55}. LONG signal only: the 15:55 price above the average of
     the last 20 closes (19 stored + now) and in the bottom 10% of today's range. Returns one row per proxy; `ok` marks a signal."""
     out = []
     for p in LEG:
         b = bars_by_proxy.get(p); prior = sorted(d for d in store.get(p, {}) if d < day)
-        if not b or len(prior) < SMA: continue
+        if not b or len(prior) < SMA or (strict and prior[-1] != prev_session(day)): continue
         c = b[-1][3]; H = max(x[1] for x in b); L = min(x[2] for x in b)
         if H <= L: continue
         c20 = [store[p][d][2] for d in prior[-(SMA - 1):]] + [c]; vv = [store[p][d][4] for d in prior[-20:] if len(store[p][d]) > 4]
@@ -248,13 +273,14 @@ def cmd_ovn_signal(argv):
     nxt = __import__('datetime').date.fromisoformat(day) + __import__('datetime').timedelta(days=1)
     while nxt.weekday() >= 5: nxt += __import__('datetime').timedelta(days=1)
     if not why and nxt.isoformat() in P.NO_TRADE: why = f"the next session {nxt.isoformat()} is {P.NO_TRADE[nxt.isoformat()]}: no trading, so no overnight hold (B7.4)"
-    rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in LEG if day in raw.get(p, {})}, day)
+    rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in LEG if day in raw.get(p, {})}, day, strict=True)
+    if len(rows) < len(LEG): print(f"  WARNING: only {len(rows)} of {len(LEG)} proxies could be checked (missing bars, or the daily store does not end at {prev_session(day)}). Refetch groups 1 and 2; if the store is stale run `signal` on the 20-session baseline first.")
     print(f"OVERNIGHT check for {day} at 15:55 (B7): the 15:55 price above the {SMA}-close average and in the bottom {LO:.0%} of today's range.")
     for r in rows: print(f"  {r['p']:<5} {r['c']:.2f} vs average {r['sma']:.2f} ({'above' if r['up'] else 'below'}), position in range {r['ibs']:.2f}, relative volume {r['rv']:.2f} -> {'SIGNAL' if r['ok'] else 'no'}")
     ok = [r for r in rows if r['ok']]
     if not ok: print("  NO OVERNIGHT ENTRY tonight."); return
     if why: print(f"  OVERNIGHT SIGNAL NOT TRADED: {why}."); return
-    r = max(ok, key=lambda x: x['rv']); leg = LEG[r['p']]; ovn[day] = dict(proxy=r['p'], ticker=leg, ref=r['c'], status='open'); jsave(STATE, state)
+    r = max(ok, key=lambda x: x['rv']); leg = LEG[r['p']]; ovn[day] = dict(proxy=r['p'], ticker=leg, ref=r['c'], status='open'); jsave(STATE, state); persist('overnight entry ' + day)
     print("  LIVE ACTIONS (only if the real account is flat; A1 safety checks first):")
     print(f"    ENTER OVERNIGHT: buy {leg} now (marketable limit, B5.2 steps) with {OVN_SIZE:.0%} of cash: shares = floor({OVN_SIZE} x buying power / ask). Sell USDG for that amount first (B4.8 peg guard).")
     print(f"      after the fill F: one GTC stop-market for all shares at F x {OVN_STOP:.2f}, rounded down to the cent (a disaster stop: it only works in regular hours).")
@@ -280,7 +306,17 @@ def cmd_ovn_exit(argv):
         print(f"  OVERNIGHT KEEP (B7.5): today's IBS-TREND entry is the same leg {leg}. Keep the shares, cancel the overnight stop, buy up to the full B6 size, and place ONE stop-market for all shares at (the 9:35 fill) x 0.97. Model overnight leg {pct:+.2f}%.")
     else:
         print(f"  OVERNIGHT EXIT (9:35, B7.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat. Then act on any IBS-TREND entry, or buy USDG (B4.8). Model overnight leg {pct:+.2f}%.")
-    print("  logged the model trade to archive/ibs_trades.csv")
+    print("  logged the model trade to archive/ibs_trades.csv"); persist('overnight exit ' + day)
+
+
+def cmd_skip(argv):
+    """skip [--day D] day|overnight REASON: the real entry was not made (A1 block, late, order failed). The model record drops it too."""
+    opts = {}
+    while argv and argv[0].startswith('--'): opts[argv[0][2:]] = argv[1]; argv = argv[2:]
+    day = opts.get('day') or __import__('datetime').datetime.now(P.ET).date().isoformat(); which = argv[0] if argv else 'day'; why = ' '.join(argv[1:]) or 'not entered'
+    state = jload(STATE, {}); e = state.get('overnight', {}).get(day) if which == 'overnight' else state.get(day)
+    if not e or e.get('status') != 'open': print(f"IBS-TREND skip: no open {which} entry for {day}."); return
+    e.update(status='skipped', why=why); jsave(STATE, state); persist(f'skip {which} {day}'); print(f"  {which} entry {day} marked skipped ({why}). FADE and PULLBACK are free again today." if which != 'overnight' else f"  overnight entry {day} marked skipped ({why}).")
 
 
 def replay_overnight(raw, a, z):
@@ -304,4 +340,4 @@ def replay_overnight(raw, a, z):
 
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
-    {'signal': cmd_signal, 'enter': cmd_enter, 'manage': cmd_manage, 'replay': cmd_replay, 'ovn-signal': cmd_ovn_signal, 'ovn-exit': cmd_ovn_exit}.get(cmd, lambda a: print(__doc__))(sys.argv[2:])
+    {'signal': cmd_signal, 'enter': cmd_enter, 'manage': cmd_manage, 'replay': cmd_replay, 'ovn-signal': cmd_ovn_signal, 'ovn-exit': cmd_ovn_exit, 'skip': cmd_skip}.get(cmd, lambda a: print(__doc__))(sys.argv[2:])
