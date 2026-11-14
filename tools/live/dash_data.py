@@ -23,11 +23,11 @@ days = health.trading_days(health.LIVE_START, day)
 # one row per live trading day: the account % made that day by each system (0 on days without a trade)
 daily = []
 for i, d in enumerate(days, 1):
-    row = dict(d=i, day=d, combined=0.0, fade=0.0, pullback=0.0, ibs=0.0, overnight=0.0)
+    row = dict(d=i, day=d, combined=0.0, fade=0.0, pullback=0.0, ibs_long=0.0, mirror=0.0, dip=0.0, overnight=0.0)
     for t in trades:
         if t['day'] == d:
             row['combined'] = round(row['combined'] + t['acct_pct'], 4)
-            k = 'fade' if t['system'] == 'FADE' else 'ibs' if t['system'].startswith('IBS') else 'overnight' if t['system'].startswith('OVERNIGHT') else 'pullback'; row[k] = round(row.get(k, 0.0) + t['acct_pct'], 4)      # v5.2.48: IBS-TREND has its own column
+            k = {'FADE': 'fade', 'IBS-LONG': 'ibs_long', 'MIRROR': 'mirror', 'DIP': 'dip', 'OVERNIGHT': 'overnight'}.get(t['system'].upper(), 'pullback'); row[k] = round(row.get(k, 0.0) + t['acct_pct'], 4)      # v5.2.48: IBS-TREND has its own column
     daily.append(row)
 # health.json: the latest tracker row (archive/health_log.csv, written by health.py) as one line per measure, for the dashboard's health cards
 def tone(st):
@@ -65,8 +65,8 @@ if log:
         for r in hrows:
             if r['system'] == sname: r['trades'] = int(L[k]); r['window'] = W; r['day'] = L['date']
 # v5.2.54: health cards for the new systems (RULEBOOK B6.11, B7.10): review at 20 and 30 live trades, profit factor under 1.0 is a warning at 20 and goes to the governor at 30
-for sname, key in (('IBS-TREND', 'IBS'), ('OVERNIGHT', 'OVERNIGHT')):
-    xs = [t for t in trades if t['system'].upper().startswith(key)][-30:]; n = len(xs); acct = [t['acct_pct'] for t in xs]
+for sname in ('IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'):
+    xs = [t for t in trades if t['system'].upper() == sname][-30:]; n = len(xs); acct = [t['acct_pct'] for t in xs]
     gw = sum(a for a in acct if a > 0); gl = -sum(a for a in acct if a <= 0); pf = (gw / gl) if gl else None
     wins = sum(a > 0 for a in acct); gaps = [t['acct_pct'] - t['model_pct'] for t in xs if t.get('model_pct') is not None]
     verdict = 'TOO EARLY' if n < 20 else ('ACT' if (pf is not None and pf < 1.0 and n >= 30) else 'WATCH' if (pf is not None and pf < 1.0) else 'HEALTHY')
