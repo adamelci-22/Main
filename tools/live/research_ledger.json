@@ -586,5 +586,15 @@
   "result": "Long signal at 50%: +136.7, +36.8, +12.8, +113.0, +204.0 (average 2022-25 +74.8 vs +67.6), max DD 23.1 vs 25.4, 15% stop fires 2x vs 5x, worst night -4.1%, passes with cost doubled. Long + dip at 50%: average +84.7, 2026 below baseline, fails the test rule with cost doubled. Baseline book trips the 15% stop 5 times in the backtest",
   "verdict": "not adopted (A1.8); recommended form if the governor approves: long signal only at 50% of cash",
   "champion_version": "5.2.51"
+ },
+ {
+  "id": "study.overnight_universe",
+  "date": "2026-11-14",
+  "kind": "study",
+  "idea": "Universe check for the overnight leg: drop one of the six proxies, add one of 12 new ones",
+  "method": "tools/backtest/overnight_universe.py; baseline v5.2.51 + overnight long at 50%; train 2022/2024/2026, test 2023/2025",
+  "result": "No change passes. Five qualify on train (EEM, FXI, XLRE, XOP, XLU) and none beats the baseline in both test years. The overnight leg alone is positive on 10 of 12 new proxies (+0.18 to +0.62% a leg), so the effect is general, but one position a night chosen by volume gains nothing from more funds",
+  "verdict": "ADOPTED: overnight leg on the six proxies (v5.2.52), governor instruction 2026-11-14; universe unchanged",
+  "champion_version": "5.2.52"
  }
 ]

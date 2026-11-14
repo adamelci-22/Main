@@ -12,6 +12,8 @@ While the position is open no FADE or PULLBACK entry is taken (one position at a
     python3 -I tools/live/ibs_trend.py signal [--day D] DUMP...             # 8:41 research: the 20-session baseline dump (C3)
     python3 -I tools/live/ibs_trend.py enter  [--day D] [--now HH:MM] DUMP...  # the 9:35 slot (the C1.2 group with the six proxies)
     python3 -I tools/live/ibs_trend.py manage [--day D] [--now HH:MM] DUMP...  # every slot while it is open, and the 15:55 exit slot
+    python3 -I tools/live/ibs_trend.py ovn-signal [--day D] [--now 15:55] DUMP...   # B7: the 15:55 overnight check (every trading day)
+    python3 -I tools/live/ibs_trend.py ovn-exit [--day D] [--now 09:35] DUMP...     # B7: the 9:35 slot after an overnight entry (run AFTER `enter`)
     python3 -I tools/live/ibs_trend.py replay CACHE.json.gz [FROM] [TO]     # research check: the same code on a 5-minute cache
 
 Files: archive/ibs_daily.json (daily high, low, close, first-bar volume per proxy), archive/ibs_state.json (today's signal and
@@ -39,8 +41,8 @@ def jsave(path, obj): json.dump(obj, open(path, 'w'), indent=1, sort_keys=True)
 
 
 def day_row(bars):
-    """bars: completed 5-minute bars of one full session -> [high, low, close, first-bar volume]."""
-    return [max(x[1] for x in bars), min(x[2] for x in bars), bars[-1][3], bars[0][4]]
+    """bars: completed 5-minute bars of one full session -> [high, low, close, first-bar volume, volume through 15:55]."""
+    return [max(x[1] for x in bars), min(x[2] for x in bars), bars[-1][3], bars[0][4], sum(x[4] for x in bars[:77])]
 
 
 def rsi2(c):
@@ -59,7 +61,7 @@ def check(store, day):
     for p in LEG:
         allp = sorted(d for d in store.get(p, {}) if d < day); prior = allp[-SMA:]
         if len(prior) < SMA: out[p] = dict(ok=False, n=len(prior)); continue
-        c = [store[p][d][2] for d in prior]; h, l, cl, _ = store[p][prior[-1]]
+        c = [store[p][d][2] for d in prior]; h, l, cl = store[p][prior[-1]][:3]
         ibs = (cl - l) / (h - l) if h > l else 0.5; sma = st.mean(c)
         side = 1 if (cl > sma and ibs < LO) else -1 if (cl <= sma and ibs > HI and day >= MIRROR_FROM) else 0
         kind = 'long' if side > 0 else 'mirror' if side < 0 else None; rsi = None; n50 = len(allp)
@@ -190,6 +192,8 @@ def cmd_manage(argv):
 
 def cmd_replay(argv):
     global MIRROR_FROM, DIP_FROM
+    if '--overnight' in argv:
+        argv = [x for x in argv if x != '--overnight']; return replay_overnight(json.load(gzip.open(argv[0], 'rt')), argv[1] if len(argv) > 1 else '0000', argv[2] if len(argv) > 2 else '9999')
     if '--dip' in argv: argv = [x for x in argv if x != '--dip']; DIP_FROM = '0000'
     if '--mirror' in argv: argv = [x for x in argv if x != '--mirror']; MIRROR_FROM = '0000'
     raw = json.load(gzip.open(argv[0], 'rt')); a = argv[1] if len(argv) > 1 else '0000'; z = argv[2] if len(argv) > 2 else '9999'
@@ -215,6 +219,86 @@ def cmd_replay(argv):
     print(f"IBS-TREND replay {a}..{z}: {n} trades (one a day). Year returns, full cash: " + ', '.join(f"{y} {(v - 1) * 100:+.1f}%" for y, v in sorted(by.items())))
 
 
+# ------------------------------------------------------------------ B7: the overnight leg (v5.2.52, governor 2026-11-14)
+OVN_SIZE, OVN_STOP, OVN_FROM = 0.5, 0.90, '2026-11-16'      # share of cash; disaster stop as a share of the fill; first entry day
+
+
+def ovn_pick(store, bars_by_proxy, day):
+    """15:55 check. bars_by_proxy: {proxy: today's completed bars through 15:55}. LONG signal only: the 15:55 price above the average of
+    the last 20 closes (19 stored + now) and in the bottom 10% of today's range. Returns one row per proxy; `ok` marks a signal."""
+    out = []
+    for p in LEG:
+        b = bars_by_proxy.get(p); prior = sorted(d for d in store.get(p, {}) if d < day)
+        if not b or len(prior) < SMA: continue
+        c = b[-1][3]; H = max(x[1] for x in b); L = min(x[2] for x in b)
+        if H <= L: continue
+        c20 = [store[p][d][2] for d in prior[-(SMA - 1):]] + [c]; vv = [store[p][d][4] for d in prior[-20:] if len(store[p][d]) > 4]
+        out.append(dict(p=p, c=c, ibs=(c - L) / (H - L), sma=st.mean(c20), up=c > st.mean(c20), rv=(sum(x[4] for x in b) / st.mean(vv)) if vv else 0.0))
+        out[-1]['ok'] = out[-1]['up'] and out[-1]['ibs'] < LO
+    return out
+
+
+def cmd_ovn_signal(argv):
+    opts, raw, days = args_days(argv); day = opts.get('day') or days[-1]
+    K = P.t2k(opts['now']) if 'now' in opts else max((max(raw[p][day]) - 570) // 5 + 1 for p in LEG if day in raw.get(p, {}))
+    if not 76 <= K <= 78: print(f"OVERNIGHT (B7): the check runs at the 15:55 slot only (bars completed {K}). No entry."); return
+    K = min(K, 77); store, _ = update_store(raw, day); state = jload(STATE, {}); ovn = state.setdefault('overnight', {})
+    if any(v.get('status') == 'open' for v in ovn.values()): print("OVERNIGHT (B7): a position from an earlier day is still open. No second entry."); return
+    why = blocked(day) or ('before the start date' if day < OVN_FROM else None)
+    rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in LEG if day in raw.get(p, {})}, day)
+    print(f"OVERNIGHT check for {day} at 15:55 (B7): the 15:55 price above the {SMA}-close average and in the bottom {LO:.0%} of today's range.")
+    for r in rows: print(f"  {r['p']:<5} {r['c']:.2f} vs average {r['sma']:.2f} ({'above' if r['up'] else 'below'}), position in range {r['ibs']:.2f}, relative volume {r['rv']:.2f} -> {'SIGNAL' if r['ok'] else 'no'}")
+    ok = [r for r in rows if r['ok']]
+    if not ok: print("  NO OVERNIGHT ENTRY tonight."); return
+    if why: print(f"  OVERNIGHT SIGNAL NOT TRADED: {why}."); return
+    r = max(ok, key=lambda x: x['rv']); leg = LEG[r['p']]; ovn[day] = dict(proxy=r['p'], ticker=leg, ref=r['c'], status='open'); jsave(STATE, state)
+    print("  LIVE ACTIONS (only if the real account is flat; A1 safety checks first):")
+    print(f"    ENTER OVERNIGHT: buy {leg} now (marketable limit, B5.2 steps) with {OVN_SIZE:.0%} of cash: shares = floor({OVN_SIZE} x buying power / ask). Sell USDG for that amount first (B4.8 peg guard).")
+    print(f"      after the fill F: one GTC stop-market for all shares at F x {OVN_STOP:.2f}, rounded down to the cent (a disaster stop: it only works in regular hours).")
+    print(f"      exit: sell everything at the next session's 9:35 slot (B7.5). Proxy {r['p']} {r['c']:.2f}.")
+
+
+def cmd_ovn_exit(argv):
+    opts, raw, days = args_days(argv); day = opts.get('day') or days[-1]; state = jload(STATE, {}); ovn = state.get('overnight', {})
+    held = sorted(d for d, v in ovn.items() if v.get('status') == 'open' and d < day)
+    if not held: print("OVERNIGHT (B7): no overnight position to exit."); return
+    e = ovn[held[-1]]; p, leg = e['proxy'], e['ticker']; bars = raw.get(p, {}).get(day)
+    if not bars: print(f"OVERNIGHT (B7): no {p} bars for {day} in the dump. Sell ALL {leg} now anyway (B7.5): the exit does not wait for data."); return
+    K = P.t2k(opts['now']) if 'now' in opts else (max(bars) - 570) // 5 + 1; b = P.grid(bars, max(K, 1)); px = b[1][0] if len(b) > 1 else b[0][3]
+    pct = LEV * (px / e['ref'] - 1) * 100 - COST; e.update(status='closed', exit_day=day, pct=round(pct, 3)); jsave(STATE, state)
+    new = not os.path.exists(LOG)
+    with open(LOG, 'a', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=FIELDS)
+        if new: w.writeheader()
+        w.writerow(dict(day=day, system='OVN', side='overnight', proxy=p, ticker=leg, ibs='', entry_time=f"{held[-1]} 15:55", entry_px_proxy=f"{e['ref']:.4f}", stop_proxy='',
+                        exit_time='9:35', exit_px_proxy=f"{px:.4f}", exit_reason='time', pct_leg=f"{pct:.3f}"))
+    t = state.get(day, {})
+    if t.get('status') == 'open' and t.get('ticker') == leg:
+        print(f"  OVERNIGHT KEEP (B7.5): today's IBS-TREND entry is the same leg {leg}. Keep the shares, cancel the overnight stop, buy up to the full B6 size, and place ONE stop-market for all shares at (the 9:35 fill) x 0.97. Model overnight leg {pct:+.2f}%.")
+    else:
+        print(f"  OVERNIGHT EXIT (9:35, B7.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat. Then act on any IBS-TREND entry, or buy USDG (B4.8). Model overnight leg {pct:+.2f}%.")
+    print("  logged the model trade to archive/ibs_trades.csv")
+
+
+def replay_overnight(raw, a, z):
+    days = sorted(d for d in raw['QQQ'] if len(raw['QQQ'][d]) >= 78); store = {p: {} for p in LEG}; by = {}; n = 0; prev = None
+
+    def bars(p, d):
+        r = raw[p].get(d)
+        return [tuple(x[1:]) for x in r[:78]] if r and len(r) >= 78 else None
+    for d in days:
+        if prev and a <= d <= z:                                    # sell last night's position at today's 9:35 open
+            p, ref = prev; b = bars(p, d)
+            if b: g = LEV * (b[1][0] / ref - 1) * 100 - COST; by[d[:4]] = by.get(d[:4], 1.0) * (1 + g / 100); n += 1
+        prev = None
+        ok = [r for r in ovn_pick(store, {p: (bars(p, d) or [])[:77] for p in LEG}, d) if r['ok']]
+        if ok: r = max(ok, key=lambda x: x['rv']); prev = (r['p'], r['c'])
+        for p in LEG:
+            b = bars(p, d)
+            if b: store[p][d] = day_row(b)
+    print(f"OVERNIGHT replay {a}..{z}: {n} nights. Year returns at FULL size (live size is {OVN_SIZE:.0%}): " + ', '.join(f"{y} {(v - 1) * 100:+.1f}%" for y, v in sorted(by.items())))
+
+
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
-    {'signal': cmd_signal, 'enter': cmd_enter, 'manage': cmd_manage, 'replay': cmd_replay}.get(cmd, lambda a: print(__doc__))(sys.argv[2:])
+    {'signal': cmd_signal, 'enter': cmd_enter, 'manage': cmd_manage, 'replay': cmd_replay, 'ovn-signal': cmd_ovn_signal, 'ovn-exit': cmd_ovn_exit}.get(cmd, lambda a: print(__doc__))(sys.argv[2:])
