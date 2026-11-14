@@ -576,5 +576,15 @@
   "result": "Long signals overnight alone +12.7, +10.2, -1.3, +6.7, +9.1 (257 signals, 61% wins, +0.34% a leg, worst -8.7%); in the book +150.0, +43.3, +11.6, +119.3, +216.2: PASS. Long + dip: +177.1, +32.0, +20.8, +176.9, +162.4: PASS, worst leg -17.2%. Mirror overnight: no edge. 28 of 640 legs worse than -5%; no stop is possible overnight",
   "verdict": "not adopted: breaks A1.8; offered as \"add overnight long\" (full or half size)",
   "champion_version": "5.2.51"
+ },
+ {
+  "id": "study.overnight_sizing",
+  "date": "2026-11-13",
+  "kind": "study",
+  "idea": "Overnight leg sizing and risk: long signal or long + dip, 100/50/33/25% of cash, cost doubled, FADE at 100/50/0%",
+  "method": "tools/backtest/overnight_size.py; baseline v5.2.51; train 2022/2024/2026, test 2023/2025; whole-period drawdown and A1.13 15% stop count",
+  "result": "Long signal at 50%: +136.7, +36.8, +12.8, +113.0, +204.0 (average 2022-25 +74.8 vs +67.6), max DD 23.1 vs 25.4, 15% stop fires 2x vs 5x, worst night -4.1%, passes with cost doubled. Long + dip at 50%: average +84.7, 2026 below baseline, fails the test rule with cost doubled. Baseline book trips the 15% stop 5 times in the backtest",
+  "verdict": "not adopted (A1.8); recommended form if the governor approves: long signal only at 50% of cash",
+  "champion_version": "5.2.51"
  }
 ]

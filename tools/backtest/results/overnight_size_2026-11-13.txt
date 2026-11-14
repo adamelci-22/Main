@@ -1,0 +1,34 @@
+Overnight leg, sizing and risk (governor 2026-11-13: "what is the best set up including an analysis on the overnight"). Research only.
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th); verdict against the v5.2.51 book
+
+        BASELINE v5.2.51 (no overnight, FADE full)      +121.8   +30.0   +13.1  +105.6  +189.8 | avg 22-25  +67.6 worst yr  +13.1 | max DD 25.4 | 15% stop fires 5x
+
+LONG signal overnight
+   145 nights (12% of nights), 57% wins, average leg +0.30%, worst leg -8.2%, best +16.6%, legs under -5%: 7, under -3%: 21
+   PASS size 100% of cash                               +150.0   +43.3   +11.6  +119.3  +216.2 | avg 22-25  +81.1 worst yr  +11.6 | max DD 23.5 | 15% stop fires 3x | worst night  -8.2%, nights under -3%: 21
+   PASS size 50% of cash                                +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 worst yr  +12.8 | max DD 23.1 | 15% stop fires 2x | worst night  -4.1%, nights under -3%:  3
+   PASS size 33% of cash                                +131.8   +34.5   +13.0  +110.6  +199.4 | avg 22-25  +72.5 worst yr  +13.0 | max DD 23.8 | 15% stop fires 2x | worst night  -2.7%, nights under -3%:  0
+   PASS size 25% of cash                                +129.4   +33.5   +13.0  +109.4  +197.1 | avg 22-25  +71.3 worst yr  +13.0 | max DD 24.2 | 15% stop fires 3x | worst night  -2.0%, nights under -3%:  0
+   PASS size 50%, cost doubled (0.12%)                  +135.5   +35.6   +11.6  +110.5  +201.5 | avg 22-25  +73.3 worst yr  +11.6 | max DD 23.3 | 15% stop fires 2x | worst night  -4.1%, nights under -3%:  3
+   leg alone at full size by year:  +12.7  +10.2   -1.3   +6.7   +9.1
+
+LONG + DIP signals overnight
+   270 nights (23% of nights), 55% wins, average leg +0.24%, worst leg -8.9%, best +16.6%, legs under -5%: 12, under -3%: 36
+   PASS size 100% of cash                               +177.1   +32.0   +20.8  +176.9  +162.4 | avg 22-25 +101.7 worst yr  +20.8 | max DD 27.8 | 15% stop fires 3x | worst night  -8.9%, nights under -3%: 36
+   PASS size 50% of cash                                +149.6   +31.5   +17.8  +139.8  +178.6 | avg 22-25  +84.7 worst yr  +17.8 | max DD 21.1 | 15% stop fires 2x | worst night  -4.4%, nights under -3%:  7
+   PASS size 33% of cash                                +140.1   +31.1   +16.4  +127.8  +183.0 | avg 22-25  +78.9 worst yr  +16.4 | max DD 22.5 | 15% stop fires 2x | worst night  -2.9%, nights under -3%:  0
+   PASS size 25% of cash                                +135.7   +30.9   +15.6  +122.3  +184.9 | avg 22-25  +76.1 worst yr  +15.6 | max DD 23.2 | 15% stop fires 2x | worst night  -2.2%, nights under -3%:  0
+   qual size 50%, cost doubled (0.12%)                  +147.1   +29.5   +15.3  +135.9  +173.8 | avg 22-25  +81.9 worst yr  +15.3 | max DD 21.2 | 15% stop fires 2x | worst night  -4.5%, nights under -3%:  7
+   leg alone at full size by year:  +24.9   +1.5   +6.9  +34.6   -9.5
+
+FADE SIZE inside the book (no overnight / long overnight at 50%)
+        FADE 100%, no overnight                         +121.8   +30.0   +13.1  +105.6  +189.8 | avg 22-25  +67.6 worst yr  +13.1 | max DD 25.4 | 15% stop fires 5x
+   PASS FADE 100%, long overnight at 50%                +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 worst yr  +12.8 | max DD 23.1 | 15% stop fires 2x | worst night  -4.1%, nights under -3%:  3
+        FADE 50%, no overnight                          +119.2   +32.5   +15.4  +105.8  +142.9 | avg 22-25  +68.2 worst yr  +15.4 | max DD 24.3 | 15% stop fires 3x
+        FADE 50%, long overnight at 50%                 +133.9   +39.5   +15.1  +113.1  +154.8 | avg 22-25  +75.4 worst yr  +15.1 | max DD 22.1 | 15% stop fires 2x | worst night  -4.1%, nights under -3%:  3
+        FADE 0%, no overnight                           +113.9   +38.0   +19.7  +102.4  +106.6 | avg 22-25  +68.5 worst yr  +19.7 | max DD 23.6 | 15% stop fires 3x
+        FADE 0%, long overnight at 50%                  +128.2   +45.2   +19.4  +109.7  +116.7 | avg 22-25  +75.6 worst yr  +19.4 | max DD 21.3 | 15% stop fires 2x | worst night  -4.1%, nights under -3%:  3
+
+MONTHS (v5.2.51 baseline vs + long overnight at 50%)
+   baseline                 winning months by year:  75%  67%  42%  67%  90% | worst month by year: -10.0  -7.6 -11.9  -6.5  -0.5
+   + long overnight 50%     winning months by year:  75%  67%  50%  67%  90% | worst month by year:  -9.5  -7.8 -12.7  -8.4  -0.5
