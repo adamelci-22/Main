@@ -245,6 +245,9 @@ def cmd_ovn_signal(argv):
     K = min(K, 77); store, _ = update_store(raw, day); state = jload(STATE, {}); ovn = state.setdefault('overnight', {})
     if any(v.get('status') == 'open' for v in ovn.values()): print("OVERNIGHT (B7): a position from an earlier day is still open. No second entry."); return
     why = blocked(day) or ('before the start date' if day < OVN_FROM else None)
+    nxt = __import__('datetime').date.fromisoformat(day) + __import__('datetime').timedelta(days=1)
+    while nxt.weekday() >= 5: nxt += __import__('datetime').timedelta(days=1)
+    if not why and nxt.isoformat() in P.NO_TRADE: why = f"the next session {nxt.isoformat()} is {P.NO_TRADE[nxt.isoformat()]}: no trading, so no overnight hold (B7.4)"
     rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in LEG if day in raw.get(p, {})}, day)
     print(f"OVERNIGHT check for {day} at 15:55 (B7): the 15:55 price above the {SMA}-close average and in the bottom {LO:.0%} of today's range.")
     for r in rows: print(f"  {r['p']:<5} {r['c']:.2f} vs average {r['sma']:.2f} ({'above' if r['up'] else 'below'}), position in range {r['ibs']:.2f}, relative volume {r['rv']:.2f} -> {'SIGNAL' if r['ok'] else 'no'}")
