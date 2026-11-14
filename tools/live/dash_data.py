@@ -23,7 +23,7 @@ days = health.trading_days(health.LIVE_START, day)
 # one row per live trading day: the account % made that day by each system (0 on days without a trade)
 daily = []
 for i, d in enumerate(days, 1):
-    row = dict(d=i, day=d, combined=0.0, fade=0.0, pullback=0.0)
+    row = dict(d=i, day=d, combined=0.0, fade=0.0, pullback=0.0, ibs=0.0, overnight=0.0)
     for t in trades:
         if t['day'] == d:
             row['combined'] = round(row['combined'] + t['acct_pct'], 4)
@@ -64,6 +64,20 @@ if log:
     for sname, k in (('FADE', 'fade_trades'), ('PULLBACK', 'pb_trades')):
         for r in hrows:
             if r['system'] == sname: r['trades'] = int(L[k]); r['window'] = W; r['day'] = L['date']
+# v5.2.54: health cards for the new systems (RULEBOOK B6.11, B7.10): review at 20 and 30 live trades, profit factor under 1.0 is a warning at 20 and goes to the governor at 30
+for sname, key in (('IBS-TREND', 'IBS'), ('OVERNIGHT', 'OVERNIGHT')):
+    xs = [t for t in trades if t['system'].upper().startswith(key)][-30:]; n = len(xs); acct = [t['acct_pct'] for t in xs]
+    gw = sum(a for a in acct if a > 0); gl = -sum(a for a in acct if a <= 0); pf = (gw / gl) if gl else None
+    wins = sum(a > 0 for a in acct); gaps = [t['acct_pct'] - t['model_pct'] for t in xs if t.get('model_pct') is not None]
+    verdict = 'TOO EARLY' if n < 20 else ('ACT' if (pf is not None and pf < 1.0 and n >= 30) else 'WATCH' if (pf is not None and pf < 1.0) else 'HEALTHY')
+    early = 'too early' if n < 20 else None
+    def hr(i, measure, value, rule, st): hrows.append(dict(id=f'{sname}_{i}', system=sname, order=i, measure=measure, value=value, rule=rule, tone=tone(st), status=st, trades=n, window=30, day=day))
+    hr(0, 'Verdict', verdict, '', verdict)
+    hr(1, 'Profit factor, last 30', ('%.2f' % pf) if pf is not None else 'n/a', 'healthy above 1.3, warning under 1.0', early or ('HEALTHY' if pf is None or pf >= 1.3 else 'WATCH' if pf >= 1.0 else 'ACT'))
+    hr(2, 'Win rate, last 30', f'{100 * wins / n:.0f}%' if n else 'n/a', 'backtest 55% to 60%', early or ('HEALTHY' if wins / n >= .5 else 'WATCH'))
+    hr(3, 'Average trade (of account)', f'{sum(acct) / n:+.2f}%' if n else 'n/a', 'healthy above 0', early or ('HEALTHY' if sum(acct) / n > 0 else 'ACT'))
+    hr(4, 'Execution gap', f'{sum(gaps) / len(gaps):+.2f}%' if gaps else 'n/a', 'healthy above -0.10%, act below -0.25%', early or ('HEALTHY' if not gaps or sum(gaps) / len(gaps) > -0.10 else 'WATCH' if sum(gaps) / len(gaps) > -0.25 else 'ACT'))
+    hr(5, 'Worst trade (of account)', f'{min(acct):+.2f}%' if n else 'n/a', 'stop costs about 3%', early or ('HEALTHY' if min(acct) > -4 else 'WATCH'))
 # fade_skips.json: FADE trades the runaway skip passed on (v5.2.39): live days from archive/fade_skips.csv, the backtest reference beside them
 skips = []
 for src, f in (('live', os.path.join(health.ROOT, 'archive', 'fade_skips.csv')), ('backtest', os.path.join(health.ROOT, 'tools', 'backtest', 'results', 'fade_skips_backtest.csv'))):
