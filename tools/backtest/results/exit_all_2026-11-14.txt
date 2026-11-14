@@ -1,0 +1,82 @@
+Exit study for every live system (governor 2026-11-14: "make sure there is no better stop/exit/tp strategies for all of these systems
+   book years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th). win and avg = that system's own signals, leg %.
+   BASELINE book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25 +74.8
+
+IBS-LONG: 305 signals, 300 exits tested. 0 PASS, 38 qualify on train only.
+   live LIVE: stop 1%, target none, lock off, trail off, out 15:55 win  55% avg +0.51% | book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0)
+   best by RETURN (train years compounded):
+   qual stop 1%, target 0.5%, lock off, trail off, out 15:55       win  67% avg +0.11% | book   +95.5   +23.6   +18.7   +52.9  +313.3 | avg 22-25  +47.7 (-27.1)
+   qual stop 1%, target 0.5%, lock off, trail 1%, out 15:55        win  67% avg +0.11% | book   +95.5   +23.6   +18.7   +52.9  +313.3 | avg 22-25  +47.7 (-27.1)
+   qual stop 1%, target 0.5%, lock BE at +0.5%, trail off, out 15:55 win  67% avg +0.11% | book   +95.5   +23.6   +18.7   +52.9  +313.3 | avg 22-25  +47.7 (-27.1)
+   qual stop 1%, target 0.5%, lock BE at +0.5%, trail 1%, out 15:55 win  67% avg +0.11% | book   +95.5   +23.6   +18.7   +52.9  +313.3 | avg 22-25  +47.7 (-27.1)
+   best by WIN RATE:
+   qual stop 2%, target 0.5%, lock off, trail off, out 15:55       win  71% avg +0.23% | book   +97.0   +25.4   +12.9   +48.8  +283.3 | avg 22-25  +46.0 (-28.8)
+   qual stop 2%, target 0.5%, lock off, trail 1%, out 15:55        win  71% avg +0.23% | book   +97.0   +25.4   +12.9   +48.8  +283.3 | avg 22-25  +46.0 (-28.8)
+   qual stop 2%, target 0.5%, lock BE at +0.5%, trail off, out 15:55 win  71% avg +0.23% | book   +97.0   +25.4   +12.9   +48.8  +283.3 | avg 22-25  +46.0 (-28.8)
+   qual stop 2%, target 0.5%, lock BE at +0.5%, trail 1%, out 15:55 win  71% avg +0.23% | book   +97.0   +25.4   +12.9   +48.8  +283.3 | avg 22-25  +46.0 (-28.8)
+
+MIRROR: 157 signals, 300 exits tested. 0 PASS, 41 qualify on train only.
+   live LIVE: stop 1%, target none, lock off, trail off, out 15:55 win  45% avg +0.55% | book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0)
+   best by RETURN (train years compounded):
+   qual stop 0.5%, target none, lock off, trail off, out 15:55     win  35% avg +0.75% | book  +149.5   +19.7   +24.1  +122.3  +223.2 | avg 22-25  +78.9 ( +4.1)
+   qual stop 0.5%, target none, lock off, trail off, out 15:00     win  36% avg +0.51% | book  +126.3   +16.9   +20.4  +119.2  +228.6 | avg 22-25  +70.7 ( -4.1)
+   qual stop 0.75%, target none, lock off, trail off, out 15:55    win  43% avg +0.72% | book  +140.3   +22.0   +16.7  +123.0  +213.5 | avg 22-25  +75.5 ( +0.7)
+   qual stop 0.5%, target 2.0%, lock off, trail off, out 15:55     win  36% avg +0.39% | book  +111.5   +17.3   +30.1  +104.2  +212.7 | avg 22-25  +65.7 ( -9.1)
+   best by WIN RATE:
+        stop 2%, target 0.5%, lock off, trail off, out 15:00       win  80% avg +0.26% | book   +68.4    +9.5   +36.0   +86.9  +211.5 | avg 22-25  +50.2 (-24.6)
+        stop 2%, target 0.5%, lock off, trail 1%, out 15:00        win  80% avg +0.26% | book   +68.4    +9.5   +36.0   +86.9  +211.5 | avg 22-25  +50.2 (-24.6)
+        stop 2%, target 0.5%, lock BE at +0.5%, trail off, out 15:00 win  80% avg +0.26% | book   +68.4    +9.5   +36.0   +86.9  +211.5 | avg 22-25  +50.2 (-24.6)
+        stop 2%, target 0.5%, lock BE at +0.5%, trail 1%, out 15:00 win  80% avg +0.26% | book   +68.4    +9.5   +36.0   +86.9  +211.5 | avg 22-25  +50.2 (-24.6)
+
+DIP: 232 signals, 300 exits tested. 0 PASS, 1 qualify on train only.
+   live LIVE: stop 1%, target none, lock off, trail off, out 15:55 win  58% avg +0.53% | book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( -0.0)
+   best by RETURN (train years compounded):
+   qual stop 1%, target 2.0%, lock off, trail off, out 15:55       win  58% avg +0.57% | book  +134.1   +42.6   +14.5  +113.0  +207.1 | avg 22-25  +76.0 ( +1.2)
+        stop 0.75%, target 2.0%, lock off, trail off, out 15:55    win  55% avg +0.53% | book  +129.1   +47.3   +11.0  +126.5  +221.6 | avg 22-25  +78.5 ( +3.7)
+        stop 1%, target none, lock off, trail off, out 15:55       win  58% avg +0.53% | book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( -0.0)
+        stop 1%, target 1.5%, lock off, trail off, out 15:55       win  58% avg +0.49% | book  +150.7   +36.6    +8.9  +114.2  +186.0 | avg 22-25  +77.6 ( +2.8)
+   best by WIN RATE:
+        stop 2%, target 0.5%, lock off, trail off, out 15:55       win  72% avg +0.25% | book  +144.6   +23.0    -8.8  +123.4  +117.7 | avg 22-25  +70.6 ( -4.2)
+        stop 2%, target 0.5%, lock off, trail 1%, out 15:55        win  72% avg +0.25% | book  +144.6   +23.0    -8.8  +123.4  +117.7 | avg 22-25  +70.6 ( -4.2)
+        stop 2%, target 0.5%, lock BE at +0.5%, trail off, out 15:55 win  72% avg +0.25% | book  +144.6   +23.0    -8.8  +123.4  +117.7 | avg 22-25  +70.6 ( -4.2)
+        stop 2%, target 0.5%, lock BE at +0.5%, trail 1%, out 15:55 win  72% avg +0.25% | book  +144.6   +23.0    -8.8  +123.4  +117.7 | avg 22-25  +70.6 ( -4.2)
+
+OVERNIGHT: 145 nights. Exits after 9:35 hold the account through the morning, so they are judged alone (leg at full size).
+   live sell 9:35, stop none, target none              win  57% avg +0.30% | alone  +12.7  +10.2   -1.3   +6.7   +9.1 | avg 22-25  +7.1 | train worst  -1.3 test +10.2  +6.7
+   best by RETURN (train years compounded):
+        sell 15:55, stop none, target 0.5%             win  68% avg +0.49% | alone  +24.0   -7.7   -3.5  +12.9  +49.0 | avg 22-25  +6.4 | train worst  -3.5 test  -7.7 +12.9
+        sell 15:55, stop 2.0%, target none             win  55% avg +0.87% | alone  +44.4  +42.3   +3.9  +19.5  +14.1 | avg 22-25 +27.6 | train worst  +3.9 test +42.3 +19.5
+        sell 15:55, stop 2.0%, target 0.5%             win  67% avg +0.37% | alone  +20.3  -10.7   +0.4   +2.6  +41.5 | avg 22-25  +3.1 | train worst  +0.4 test -10.7  +2.6
+        sell 15:55, stop none, target none             win  56% avg +0.94% | alone  +38.8  +47.2   -0.1  +30.5  +20.6 | avg 22-25 +29.1 | train worst  -0.1 test +47.2 +30.5
+   best by WIN RATE:
+        sell 15:55, stop none, target 0.5%             win  68% avg +0.49% | alone  +24.0   -7.7   -3.5  +12.9  +49.0 | avg 22-25  +6.4 | train worst  -3.5 test  -7.7 +12.9
+        sell 15:55, stop 2.0%, target 0.5%             win  67% avg +0.37% | alone  +20.3  -10.7   +0.4   +2.6  +41.5 | avg 22-25  +3.1 | train worst  +0.4 test -10.7  +2.6
+        sell 13:30, stop none, target 0.5%             win  64% avg +0.42% | alone  +15.7   -5.5   -1.0  +18.9  +31.5 | avg 22-25  +7.0 | train worst  -1.0 test  -5.5 +18.9
+        sell 13:30, stop 2.0%, target 0.5%             win  64% avg +0.34% | alone  +15.7   -8.4   -1.2   +8.3  +31.7 | avg 22-25  +3.6 | train worst  -1.2 test  -8.4  +8.3
+   exits that beat the live exit on train AND in both test years (alone): 8 of 54: sell 11:00, stop 1.0%, target none; sell 11:00, stop 2.0%, target none; sell 13:30, stop none, target none; sell 13:30, stop 1.0%, target none
+
+FADE: 470 signals, 24 exits tested. 0 PASS. (About 1,000 other FADE exits were tested on 2026-11-11/12: none adopted.)
+   live LIVE: lock +0.15R|cut on|tp 2R|chand 2                     win  57% avg -0.04% | book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0)
+   best by RETURN:
+   qual lock +0.15R|cut on|tp 3R|chand 2                           win  57% avg -0.03% | book  +136.5   +36.7   +15.9  +116.0  +215.0 | avg 22-25  +76.3 ( +1.5)
+   qual lock +0.15R|cut on|tp 3R|chand 3                           win  57% avg -0.04% | book  +136.6   +36.0   +17.1  +115.3  +209.1 | avg 22-25  +76.3 ( +1.5)
+   qual lock +0.15R|cut off|tp 3R|chand 2                          win  58% avg -0.06% | book  +132.7   +33.9   +13.7  +119.3  +213.8 | avg 22-25  +74.9 ( +0.1)
+   best by WIN RATE:
+        lock +0.15R|cut off|tp 2R|chand 2                          win  58% avg -0.06% | book  +132.9   +34.0   +10.7  +116.2  +202.9 | avg 22-25  +73.4 ( -1.4)
+        lock +0.15R|cut off|tp 2R|chand 3                          win  58% avg -0.07% | book  +132.5   +32.8   +12.1  +115.2  +197.2 | avg 22-25  +73.1 ( -1.7)
+   qual lock +0.15R|cut off|tp 3R|chand 2                          win  58% avg -0.06% | book  +132.7   +33.9   +13.7  +119.3  +213.8 | avg 22-25  +74.9 ( +0.1)
+
+PULLBACK: 444 signals, 6 exits tested. 0 PASS. (PULLBACK exits were screened on 2026-11-11/12; the runner was adopted then.)
+        100% at high                                               win  50% avg +0.02% | book  +117.0   +37.6   +13.2   +76.8  +180.4 | avg 22-25  +61.2 (-13.7)
+   live LIVE: runner EMA20                                         win  50% avg +0.12% | book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0)
+        runner chand3                                              win  50% avg +0.12% | book  +136.1   +37.1   +16.2  +112.9  +201.1 | avg 22-25  +75.6 ( +0.8)
+        half at high + runner EMA20                                win  50% avg +0.09% | book  +130.7   +37.4   +13.2  +104.1  +198.0 | avg 22-25  +71.3 ( -3.5)
+        runner EMA9                                                win  50% avg +0.07% | book  +128.5   +38.2   +13.2  +104.8  +184.6 | avg 22-25  +71.1 ( -3.7)
+        runner chand2                                              win  50% avg +0.07% | book  +132.4   +36.6   +12.7  +102.1  +192.6 | avg 22-25  +71.0 ( -3.9)
+
+SUMMARY: system, exits that pass the return rule, live win rate, best win rate found
+   IBS-LONG     0 of 300 pass | live win 55% | best win 71%
+   MIRROR       0 of 300 pass | live win 45% | best win 80%
+   DIP          0 of 300 pass | live win 58% | best win 72%
+   FADE         0 of  24 pass | live win 57% | best win 58%
+   PULLBACK     0 of   6 pass | live win 50% | best win 50%

@@ -596,5 +596,15 @@
   "result": "No change passes. Five qualify on train (EEM, FXI, XLRE, XOP, XLU) and none beats the baseline in both test years. The overnight leg alone is positive on 10 of 12 new proxies (+0.18 to +0.62% a leg), so the effect is general, but one position a night chosen by volume gains nothing from more funds",
   "verdict": "ADOPTED: overnight leg on the six proxies (v5.2.52), governor instruction 2026-11-14; universe unchanged",
   "champion_version": "5.2.52"
+ },
+ {
+  "id": "study.exit_all_systems",
+  "date": "2026-11-14",
+  "kind": "study",
+  "idea": "Stops, targets, breakeven locks, trails and exit times for every live system, ranked by return and by win rate",
+  "method": "tools/backtest/exit_all.py (900 exits for the 9:35 systems, 54 overnight, 24 FADE, 6 PULLBACK) and exit_overnight_hold.py (18 book-level hold variants); baseline v5.2.52 book; train 2022/2024/2026, test 2023/2025",
+  "result": "0 of 930 day-trade exits pass. Best win rate uses a 0.5% target: IBS-LONG 71%, MIRROR 80%, DIP 72% (live 55/45/58%) and costs 28.8, 24.6 and 4.2 points of average yearly return. Overnight held to the next close looks better alone and fails in the book: 84% of overnight days also carry an IBS-LONG signal",
+  "verdict": "no change: live exits stay",
+  "champion_version": "5.2.56"
  }
 ]
