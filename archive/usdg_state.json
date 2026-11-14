@@ -1,8 +1,10 @@
 {
- "enabled": true,
+ "enabled": false,
  "killed": false,
  "cap_pct": 100,
  "note": "RULEBOOK B4.8 (v5.2.42). enabled=false until the governor says start. killed=true means sell all USDG and stay in cash until the governor says start again. cap_pct = most of total_value held in USDG. Started by the governor 2026-11-05 00:55 ET: \"Start usdg buy all capital into it now\".",
  "rate_note": "7% APY per the governor 2026-11-05, not verified; read the posted rate before the first buy.",
- "started": "2026-11-05 00:55 ET"
+ "started": "2026-11-05 00:55 ET",
+ "stopped": "2026-11-14 16:27 ET",
+ "stop_note": "Governor \"stop USDG\" 2026-11-14: sold all 2,584 (order 6af8d218-84cc-482b-a774-432af00d7745, filled at $1.00, fee $0). Observed interest at most $0.49 in 9 days (about 0.8% a year), the same as plain cash; 27 orders in 5 trading days. Rule B4.8 is OFF."
 }

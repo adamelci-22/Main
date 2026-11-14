@@ -80,3 +80,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-12,LABD,PULLBACK,cancel,close,13:30,13:30:37,13:30:38,7.07,7.08,0.14,,,,,364,C4 close: cancelled OCO 6af5f274 (121) and stop-market 6af5fa39 (243); both verified cancelled,,
 2026-11-12,LABD,PULLBACK,sell,exit,13:30,13:31:11,13:31:11,7.07,7.08,0.14,7.07,7.06,7.0801,0.00,364,13:30 time exit marketable limit 7.06 filled 364 @ 7.0801 fee 0.06; order 6af605ef-77c9-4580-b5eb-59226f97c5b3,,
 2026-11-12,USDG,B4.8,buy,usdg_rebuy,13:30,13:31:40,13:31:41,1,1,0,1,,1,0,2584,market buy dollar_amount 2584 after the 13:30 flatten; order 6af6060c-40f6-406d-a3df-e434e448d26b,,
+2026-11-14,USDG,B4.8,sell,usdg_sell,16:26,16:26:49,16:26:50,1,1,0,1,,1,0,2584,governor "stop USDG": market sell all 2584 and rule switched OFF; order 6af8d218-84cc-482b-a774-432af00d7745; total value unchanged at 2585.64,,

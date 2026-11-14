@@ -154,7 +154,7 @@ def cmd_signal(argv):
     if not ok: print("  NO IBS-TREND SIGNAL today. FADE and PULLBACK run as usual.")
     elif why: print(f"  IBS-TREND SIGNAL ({', '.join(ok)}) NOT TRADED: {why}.")
     else:
-        print(f"  IBS-TREND SIGNAL TODAY: {', '.join(ok)}. Start a 9:35 waiter. Sell all USDG at 9:31 (B4.8 peg check). At 9:35 fetch C1.2 groups 1 and 2 (the proxies and every leg) and run "
+        print(f"  IBS-TREND SIGNAL TODAY: {', '.join(ok)}. Start a 9:35 waiter. If the USDG rule is ON (it is OFF since 2026-11-14), sell all USDG at 9:31. At 9:35 fetch C1.2 groups 1 and 2 (the proxies and every leg) and run "
               f"`python3 -I tools/live/ibs_trend.py enter --now 09:35 <dump>`. Start the afternoon waiters (B6.6).")
 
 
@@ -208,10 +208,10 @@ def cmd_manage(argv):
             w.writerow(dict(day=day, system='IBS', side=s.get('kind') or ('long' if s.get('side', 1) > 0 else 'mirror'), proxy=p, ticker=leg, ibs=s['signals'][p]['ibs'], entry_time='9:35', entry_px_proxy=f"{m['entry']:.4f}", stop_proxy=f"{m['stop']:.4f}",
                             exit_time=P.k2t(m['xbar'] + (1 if m['why'] == 'time' else 0)), exit_px_proxy=f"{m['px']:.4f}", exit_reason=m['why'], pct_leg=f"{pct_leg(m):.3f}"))
     if m['why'] == 'time':
-        print(f"  IBS EXIT (15:55, B6.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat, then buy USDG (B4.8). Model {pct_leg(m):+.2f}% on the leg.")
+        print(f"  IBS EXIT (15:55, B6.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat, then buy USDG only if the rule is ON (B4.8). Model {pct_leg(m):+.2f}% on the leg.")
     else:
         print(f"  IBS-TREND model STOPPED at {P.k2t(m['xbar'])} (proxy {p} touched {m['stop']:.2f}); model {pct_leg(m):+.2f}% on the leg. Check the real stop filled (get_equity_orders). "
-              f"If the real position is still open, leave the resting stop and sell at 15:55. No new entry today (B6.6): once flat, buy USDG and the remaining slots are one-line checks.")
+              f"If the real position is still open, leave the resting stop and sell at 15:55. No new entry today (B6.6): once flat (buy USDG only if the rule is ON) the remaining slots are one-line checks.")
     if first: print(f"  logged the model trade to archive/ibs_trades.csv"); persist('exit ' + day)
 
 
@@ -282,7 +282,7 @@ def cmd_ovn_signal(argv):
     if why: print(f"  OVERNIGHT SIGNAL NOT TRADED: {why}."); return
     r = max(ok, key=lambda x: x['rv']); leg = LEG[r['p']]; ovn[day] = dict(proxy=r['p'], ticker=leg, ref=r['c'], status='open'); jsave(STATE, state); persist('overnight entry ' + day)
     print("  LIVE ACTIONS (only if the real account is flat; A1 safety checks first):")
-    print(f"    ENTER OVERNIGHT: buy {leg} now (marketable limit, B5.2 steps) with {OVN_SIZE:.0%} of cash: shares = floor({OVN_SIZE} x buying power / ask). Sell USDG for that amount first (B4.8 peg guard).")
+    print(f"    ENTER OVERNIGHT: buy {leg} now (marketable limit, B5.2 steps) with {OVN_SIZE:.0%} of cash: shares = floor({OVN_SIZE} x buying power / ask). If the USDG rule is ON, sell USDG for that amount first (B4.8 peg guard).")
     print(f"      after the fill F: one GTC stop-market for all shares at F x {OVN_STOP:.2f}, rounded down to the cent (a disaster stop: it only works in regular hours).")
     print(f"      exit: sell everything at the next session's 9:35 slot (B7.5). Proxy {r['p']} {r['c']:.2f}.")
 
@@ -305,7 +305,7 @@ def cmd_ovn_exit(argv):
     if t.get('status') == 'open' and t.get('ticker') == leg:
         print(f"  OVERNIGHT KEEP (B7.5): today's IBS-TREND entry is the same leg {leg}. Keep the shares, cancel the overnight stop, buy up to the full B6 size, and place ONE stop-market for all shares at (the 9:35 fill) x 0.97. Model overnight leg {pct:+.2f}%.")
     else:
-        print(f"  OVERNIGHT EXIT (9:35, B7.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat. Then act on any IBS-TREND entry, or buy USDG (B4.8). Model overnight leg {pct:+.2f}%.")
+        print(f"  OVERNIGHT EXIT (9:35, B7.5): cancel the resting stop, sell ALL {leg} now (marketable limit), verify flat. Then act on any IBS-TREND entry (buy USDG only if the rule is ON, B4.8). Model overnight leg {pct:+.2f}%.")
     print("  logged the model trade to archive/ibs_trades.csv"); persist('overnight exit ' + day)
 
 
