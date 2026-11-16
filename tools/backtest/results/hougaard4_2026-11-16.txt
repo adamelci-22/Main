@@ -1,0 +1,16 @@
+Control follow-up (2026-11-16): the Hougaard control showed the 3x inverse leg earning from the 9:35 open to 15:55 on most weekdays. Is that
+   BASELINE book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25 +74.8
+
+INVERSE leg (short the proxy), every proxy every day 9:35 to 15:55, stop 1.0%: n 7206 win 43% avg -0.019% PF 0.99
+   by year 2022 +0.16% 2023 -0.14% 2024 +0.01% 2025 -0.05% 2026 -0.08% | by weekday M -0.27% T -0.06% W -0.09% T +0.22% F +0.10%
+        alone   +20.5   -35.9   +21.5    +4.8   -12.1 | book   +29.4   -31.1   +50.7   +30.4   +32.4 avg 22-25 +19.9 (-54.9)
+LONG leg, every proxy every day 9:35 to 15:55, stop 1.0%: n 7206 win 46% avg +0.008% PF 1.01
+   by year 2022 -0.01% 2023 +0.08% 2024 -0.09% 2025 +0.09% 2026 -0.03% | by weekday M +0.10% T +0.01% W -0.10% T +0.02% F +0.02%
+        alone   -71.2   +34.9   -27.0   -39.6   +12.7 | book   -37.1   +47.0   -17.5   -16.6   +74.0 avg 22-25 -6.0 (-80.9)
+
+THE TAPE: QQQ open to 15:55, and 15:55 to the next open, mean % a day
+   2022: open to close -0.049%  close to open -0.091%
+   2023: open to close +0.092%  close to open +0.084%
+   2024: open to close -0.011%  close to open +0.112%
+   2025: open to close +0.041%  close to open +0.048%
+   2026: open to close +0.015%  close to open +0.042%

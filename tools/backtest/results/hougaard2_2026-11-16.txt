@@ -1,0 +1,28 @@
+Hougaard follow-up (2026-11-16): the day patterns are real in frequency (TFM: Monday trades below Friday's low 54% of the time after a Friday
+   BASELINE book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25 +74.8
+
+TFM at 9:35
+        stop 0.5% out 13:30  n  669 win  31% avg -0.08% PF 0.92 | alone  +11.7   -1.2   -7.9   -8.2  -23.9 | book avg 22-25  +72.7 ( -2.1) test -18.3 -36.2
+        stop 0.5% out 15:55  n  669 win  28% avg -0.02% PF 0.99 | alone  +20.2   +0.1   -8.6   -5.6  -23.6 | book avg 22-25  +77.9 ( +3.1) test -18.5 -34.5
+   qual stop 1.0% out 13:30  n  669 win  43% avg -0.01% PF 0.99 | alone  +36.3   +4.5   +0.5   -8.4  -11.8 | book avg 22-25  +92.6 (+17.8) test  -8.7 -42.7
+        stop 1.0% out 15:55  n  669 win  41% avg +0.04% PF 1.03 | alone  +34.3   +6.6   -2.3   -9.8  -16.6 | book avg 22-25  +88.7 (+13.9) test  -7.9 -52.9
+        stop 1.5% out 13:30  n  669 win  47% avg +0.06% PF 1.05 | alone  +34.2   +2.9   -0.2   -2.4   -6.3 | book avg 22-25  +90.4 (+15.6) test  -3.1 -27.2
+        stop 1.5% out 15:55  n  669 win  45% avg +0.05% PF 1.04 | alone  +33.6   +2.3   -4.7   -2.9  -10.5 | book avg 22-25  +87.2 (+12.4) test  -5.2 -33.3
+
+TFM at 9:35, open already under Friday low
+        stop 0.5% out 13:30  n  162 win  23% avg -0.48% PF 0.58 | alone   -7.8   +4.5   -4.4   -7.9  -15.0 | book avg 22-25  +67.6 ( -7.2) test  +0.0 -18.8
+        stop 0.5% out 15:55  n  162 win  20% avg -0.48% PF 0.61 | alone   -8.6   +6.0   -5.9   -8.6  -13.2 | book avg 22-25  +66.7 ( -8.1) test  +0.8 -19.4
+   qual stop 1.0% out 13:30  n  162 win  34% avg -0.67% PF 0.60 | alone  +15.8   +4.8   -1.2   -9.3  -18.8 | book avg 22-25  +82.9 ( +8.1) test  -0.5 -20.8
+        stop 1.0% out 15:55  n  162 win  29% avg -0.84% PF 0.57 | alone  +15.8   +8.6   -4.4  -15.9  -20.1 | book avg 22-25  +79.8 ( +5.0) test  +3.2 -33.2
+   qual stop 1.5% out 13:30  n  162 win  38% avg -0.73% PF 0.61 | alone   +5.9   +4.3   +0.1   -7.6  -12.8 | book avg 22-25  +79.2 ( +4.4) test  +1.7 -18.6
+        stop 1.5% out 15:55  n  162 win  35% avg -1.08% PF 0.54 | alone   +5.9   +6.7   -0.7  -12.1  -16.6 | book avg 22-25  +77.2 ( +2.4) test  +4.0 -26.7
+
+MTWT at 9:35
+        stop 0.5% out 13:30  n  397 win  36% avg +0.03% PF 1.04 | alone   +0.2   -2.7   +4.0   -3.5   -2.8 | book avg 22-25  +87.6 (+12.8) test +10.8 +13.5
+   PASS stop 0.5% out 15:55  n  397 win  33% avg +0.34% PF 1.34 | alone   +7.2   +2.4   +9.4  +14.6   -2.8 | book avg 22-25 +106.7 (+31.9) test +18.2 +58.0
+        stop 1.0% out 13:30  n  397 win  48% avg +0.08% PF 1.07 | alone   -0.4  +19.6   +4.7   -0.6  +10.5 | book avg 22-25  +99.5 (+24.7) test +42.6 +24.8
+   PASS stop 1.0% out 15:55  n  397 win  47% avg +0.48% PF 1.38 | alone   +7.1  +31.5   +8.7  +11.0  +20.4 | book avg 22-25 +117.8 (+43.0) test +53.3 +62.0
+        stop 1.5% out 13:30  n  397 win  51% avg +0.04% PF 1.04 | alone   -4.0  +10.3   +6.6   +0.2   +4.3 | book avg 22-25  +93.2 (+18.4) test +27.6 +27.7
+        stop 1.5% out 15:55  n  397 win  51% avg +0.46% PF 1.35 | alone   +2.3  +14.4  +14.0   +7.7   +8.9 | book avg 22-25 +105.8 (+31.0) test +31.0 +51.6
+
+   PASS count: 2

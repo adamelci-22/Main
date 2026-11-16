@@ -1,0 +1,17 @@
+Hougaard MTWT controls (2026-11-16). MTWT at 9:35 (Monday's high above Tuesday's and Wednesday's -> Thursday: inverse leg at 9:35, stop 1% of the
+
+   MTWT pattern Thursdays (the setup)                         n  397 win  47% avg +0.48% PF 1.38 | avg leg % by year 2022 -0.84 2023 +0.64 2024 +1.02 2025 +1.16 2026 -0.14
+   EVERY Thursday, inverse leg 9:35 to 15:55                  n 1446 win  44% avg +0.22% PF 1.17 | avg leg % by year 2022 +0.31 2023 +0.03 2024 +0.47 2025 +0.37 2026 -0.13
+   Thursdays WITHOUT the pattern                              n  863 win  45% avg +0.36% PF 1.29 | avg leg % by year 2022 +1.32 2023 -0.17 2024 +0.45 2025 +0.09 2026 -0.01
+   same three-day high pattern, traded on Friday (placebo)    n  473 win  42% avg +0.13% PF 1.09 | avg leg % by year 2022 +0.61 2023 -0.25 2024 +0.22 2025 -0.38 2026 +0.57
+   same three-day high pattern, traded on Wednesday (placebo) n  494 win  52% avg +0.44% PF 1.41 | avg leg % by year 2022 -0.14 2023 +1.04 2024 +0.64 2025 -0.14 2026 +0.81
+   random Thursdays, same count (134 days): mean avg leg +0.217%; the setup's +0.477% beats 94% of 500 draws
+   signals by proxy: QQQ 65, SOXX 65, IWM 68, XLK 61, XBI 67, XLF 71
+   signal days: 134 of 241 Thursdays (56%), about 28 a year
+     proxy QQQ                                                n   65 win  40% avg +0.03% PF 1.02 | avg leg % by year 2022 -1.51 2023 -0.13 2024 +1.27 2025 +1.14 2026 -0.89
+     proxy SOXX                                               n   65 win  48% avg +1.03% PF 1.72 | avg leg % by year 2022 -0.79 2023 +0.33 2024 +1.20 2025 +3.36 2026 +0.66
+     proxy IWM                                                n   68 win  51% avg +0.52% PF 1.47 | avg leg % by year 2022 -0.97 2023 +1.27 2024 +0.75 2025 +1.05 2026 -0.51
+     proxy XLK                                                n   61 win  39% avg +0.44% PF 1.33 | avg leg % by year 2022 -1.01 2023 -0.79 2024 +1.56 2025 +2.06 2026 +0.04
+     proxy XBI                                                n   67 win  48% avg +0.51% PF 1.35 | avg leg % by year 2022 -0.34 2023 +2.23 2024 +1.46 2025 -0.38 2026 -1.22
+     proxy XLF                                                n   71 win  54% avg +0.33% PF 1.38 | avg leg % by year 2022 -0.40 2023 +0.99 2024 +0.30 2025 -0.05 2026 +0.86
+   of the 134 signal days, 40 also carry an IBS-family signal (30%)

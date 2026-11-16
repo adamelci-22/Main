@@ -1,0 +1,16 @@
+Hougaard as a FILTER on the live systems (2026-11-16). The Thursday-Friday-Monday condition (Friday did not beat Thursday's high) is real in
+   BASELINE book  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25 +74.8
+
+A. each system on Mondays after Thursday-Friday: pattern (Friday failed to beat Thursday) against no pattern. avg leg %, trades
+   IBS-LONG  pattern +0.68% (n 17) | no pattern +0.12% (n 22)
+   DIP       pattern +0.87% (n 45) | no pattern +2.08% (n 5)
+   MIRROR    pattern +2.17% (n 23) | no pattern -0.72% (n 16)
+   FADE      no proxy tag on its trades
+   PULLBACK  no proxy tag on its trades
+
+B and C. the book with a Hougaard filter
+        skip IBS-LONG and DIP on pattern Mondays                        +144.1   +39.7    -1.0   +88.9  +200.2 | avg 22-25  +67.9 ( -6.9)
+        skip IBS-LONG and DIP on EVERY Monday (day-of-week control)     +141.1   +23.2   -11.6  +105.1  +225.8 | avg 22-25  +64.5 (-10.4)
+        skip the MIRROR on non-pattern Mondays                          +139.4   +36.2   +12.8  +123.3  +177.6 | avg 22-25  +77.9 ( +3.1)
+        skip IBS-LONG, DIP on pattern Mondays and the MIRROR on non-pattern Mondays  +146.9   +39.1    -1.0   +98.1  +174.1 | avg 22-25  +70.8 ( -4.0)
+   pattern Mondays in the sample: 46 days carry an IBS-family signal

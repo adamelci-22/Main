@@ -606,5 +606,15 @@
   "result": "0 of 930 day-trade exits pass. Best win rate uses a 0.5% target: IBS-LONG 71%, MIRROR 80%, DIP 72% (live 55/45/58%) and costs 28.8, 24.6 and 4.2 points of average yearly return. Overnight held to the next close looks better alone and fails in the book: 84% of overnight days also carry an IBS-LONG signal",
   "verdict": "no change: live exits stay",
   "champion_version": "5.2.56"
+ },
+ {
+  "id": "study.hougaard",
+  "date": "2026-11-16",
+  "kind": "study",
+  "idea": "Tom Hougaard day-based setups: Thursday-Friday-Monday, Monday-Thursday, Monday-extreme failed breaks, gap fill, School Run, First Bar, Rule of 4 on FOMC days; also as filters on the live systems",
+  "method": "tools/backtest/hougaard.py to hougaard5.py; six proxies, 3x legs, Massive tape 2022-2026; train 2022/2024/2026, test 2023/2025; alone and added to the live book; placebo and random-draw controls",
+  "result": "0 setups pass after controls. TFM: Monday breaks Friday low 54% vs 35% but as a trade PF 0.81 to 1.05. MTWT at 9:35 PF 1.38 and passed the rule, but Thursdays without the pattern earn more (+0.36% vs +0.48% a trade), the Wednesday placebo gives PF 1.41 and random Thursdays reach 94% of the setup. Gap fill PF 0.77 to 0.95, School Run 1.02, First Bar 0.99 to 1.04, Monday failed break 0.98, Rule of 4 0.59. As filters on IBS systems: fail",
+  "verdict": "not adopted; the pattern frequencies are real but untradable",
+  "champion_version": "5.2.58"
  }
 ]

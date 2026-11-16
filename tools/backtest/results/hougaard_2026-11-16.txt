@@ -1,0 +1,50 @@
+Tom Hougaard day-based setups (governor 2026-11-16: "can you incorporate this"). Research only. Same method as the other studies:
+   FOMC dates checked against the tape: 
+   date check: QQQ range of the four bars after 14:00: FOMC days mean 0.861% (n 39) vs other days 0.281% (n 1162): dates plausible
+   BASELINE book + overnight:  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25 +74.8
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th). alone = that setup only at full cash; book = added to the live book.
+
+TFM
+   qual {'last': 77}                                 n  329 win  39% avg -0.29% PF 0.81 | alone  +12.5   -7.9   +0.5  -12.0  -22.9 | book avg 22-25  +73.6 ( -1.2) test  -8.9 -46.6
+        {'last': 48}                                 n  307 win  43% avg -0.25% PF 0.81 | alone  +14.8   -7.7   -1.5  -12.5  -17.9 | book avg 22-25  +73.7 ( -1.1) test  -8.8 -36.8
+
+MTWT
+        {'last': 77}                                 n  191 win  47% avg +0.13% PF 1.10 | alone   +0.3  +13.1   +4.1  +10.8   -1.3 | book avg 22-25  +91.7 (+16.9) test +13.5 +43.1
+        {'last': 48}                                 n  174 win  41% avg -0.41% PF 0.67 | alone   -1.3   +5.3   -2.5   -5.7   +0.1 | book avg 22-25  +79.6 ( +4.8) test  +7.7  +6.5
+
+MONFB
+        {'last': 77}                                 n 1724 win  36% avg -0.02% PF 0.98 | alone  +94.8  -13.8  -46.6  -23.7   -6.8 | book avg 22-25 +112.8 (+38.0) test +27.8 -67.8
+        {'last': 48}                                 n 1611 win  40% avg -0.03% PF 0.96 | alone  +39.7  -15.1  -29.0  -29.2  -13.5 | book avg 22-25  +78.2 ( +3.4) test +13.8 -65.5
+
+GAP Tue+Fri
+        {'gm': 0.3, 'dow': 'tf', 'last': 77}         n 1964 win  49% avg -0.23% PF 0.80 | alone  -14.0  +18.1  -41.6  -25.4  -26.6 | book avg 22-25  +35.4 (-39.5) test  +2.3 -54.5
+        {'gm': 0.3, 'dow': 'tf', 'last': 48}         n 1964 win  49% avg -0.20% PF 0.82 | alone  -18.2  +19.2  -39.3  -27.7  -20.6 | book avg 22-25  +32.5 (-42.3) test  +4.1 -61.5
+        {'gm': 0.5, 'dow': 'tf', 'last': 77}         n 1425 win  47% avg -0.26% PF 0.79 | alone  -30.9   +1.7  -35.3   -8.5  -31.8 | book avg 22-25  +23.8 (-51.0) test -11.5 -54.6
+        {'gm': 0.5, 'dow': 'tf', 'last': 48}         n 1425 win  47% avg -0.23% PF 0.81 | alone  -34.2   +5.8  -32.5  -11.8  -25.1 | book avg 22-25  +22.7 (-52.1) test  -6.0 -61.6
+        {'gm': 1.0, 'dow': 'tf', 'last': 77}         n  679 win  40% avg -0.34% PF 0.77 | alone   -4.2   +4.6  -24.7  -10.5  -45.2 | book avg 22-25  +50.7 (-24.1) test +10.1 -17.0
+        {'gm': 1.0, 'dow': 'tf', 'last': 48}         n  679 win  42% avg -0.26% PF 0.81 | alone  -15.3   +6.2  -22.9  -12.1  -41.2 | book avg 22-25  +45.2 (-29.6) test +12.6 -24.0
+
+GAP every day
+        {'gm': 0.3, 'dow': 'all', 'last': 77}        n 4824 win  51% avg -0.08% PF 0.92 | alone  -41.6  -14.8  -41.2  -28.6  +48.0 | book avg 22-25  -10.7 (-85.5) test -50.3 -113.4
+        {'gm': 0.3, 'dow': 'all', 'last': 48}        n 4824 win  50% avg -0.09% PF 0.91 | alone  -42.4   -7.7  -49.1  -34.6  +26.8 | book avg 22-25  -13.4 (-88.2) test -41.6 -122.3
+        {'gm': 0.5, 'dow': 'all', 'last': 77}        n 3591 win  50% avg -0.06% PF 0.95 | alone  -44.9  -16.4  -27.8   -7.5  +21.9 | book avg 22-25   -2.7 (-77.5) test -50.6 -107.0
+        {'gm': 0.5, 'dow': 'all', 'last': 48}        n 3591 win  49% avg -0.07% PF 0.94 | alone  -41.2  -11.0  -39.1  -14.8  +13.0 | book avg 22-25   -6.0 (-80.8) test -43.3 -117.7
+        {'gm': 1.0, 'dow': 'all', 'last': 77}        n 1679 win  44% avg -0.08% PF 0.95 | alone  -39.7   -1.1  -16.7  -42.2  +14.6 | book avg 22-25   +6.2 (-68.6) test  +0.0 -112.8
+        {'gm': 1.0, 'dow': 'all', 'last': 48}        n 1679 win  44% avg -0.07% PF 0.94 | alone  -35.3   +4.7  -20.7  -45.3   -3.6 | book avg 22-25   +7.2 (-67.6) test +11.5 -121.2
+
+SCHOOL
+        {'last': 77}                                 n 7110 win  42% avg +0.02% PF 1.02 | alone  -10.1   -8.4  +14.0  +45.2  -38.2 | book avg 22-25  +84.2 ( +9.4) test -16.3 +87.0
+        {'last': 48}                                 n 7110 win  45% avg -0.02% PF 0.97 | alone  -45.1  -25.9  +43.4  +24.7  -35.1 | book avg 22-25  +62.0 (-12.8) test -15.0 +33.2
+
+FIRSTB same dir
+        {'last': 77, 'same': True}                   n 5054 win  45% avg +0.05% PF 1.04 | alone  +14.0   +9.0  +25.9   +6.5  -20.2 | book avg 22-25  +65.2 ( -9.6) test +64.9 -64.3
+        {'last': 48, 'same': True}                   n 5054 win  47% avg -0.01% PF 0.99 | alone   -7.3  +16.9  +12.4  -12.4  -18.6 | book avg 22-25  +60.7 (-14.1) test +73.4 -77.4
+
+FIRSTB either
+        {'last': 77, 'same': False}                  n 6816 win  45% avg +0.05% PF 1.04 | alone  +20.7   +7.1   -2.0  -18.8  -30.4 | book avg 22-25  +69.7 ( -5.1) test +91.0 -94.9
+        {'last': 48, 'same': False}                  n 6816 win  47% avg +0.01% PF 1.01 | alone   -5.8  +30.8   -0.2  -27.6  -21.7 | book avg 22-25  +70.4 ( -4.4) test +121.9 -96.2
+
+RULE4 FOMC
+        {'last': 77}                                 n  228 win  47% avg -0.67% PF 0.59 | alone  -14.7   +1.8   -5.0   +6.1   -1.5 | book avg 22-25  +70.3 ( -4.5) test  +5.3  +9.2
+
+   PASS count: 0
