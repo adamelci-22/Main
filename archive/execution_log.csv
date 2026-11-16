@@ -81,3 +81,6 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-12,LABD,PULLBACK,sell,exit,13:30,13:31:11,13:31:11,7.07,7.08,0.14,7.07,7.06,7.0801,0.00,364,13:30 time exit marketable limit 7.06 filled 364 @ 7.0801 fee 0.06; order 6af605ef-77c9-4580-b5eb-59226f97c5b3,,
 2026-11-12,USDG,B4.8,buy,usdg_rebuy,13:30,13:31:40,13:31:41,1,1,0,1,,1,0,2584,market buy dollar_amount 2584 after the 13:30 flatten; order 6af6060c-40f6-406d-a3df-e434e448d26b,,
 2026-11-14,USDG,B4.8,sell,usdg_sell,16:26,16:26:49,16:26:50,1,1,0,1,,1,0,2584,governor "stop USDG": market sell all 2584 and rule switched OFF; order 6af8d218-84cc-482b-a774-432af00d7745; total value unchanged at 2585.64,,
+2026-11-16,TECS,PULLBACK,buy,entry,11:15,11:15:35,11:15:36,77.62,77.75,0.17,77.65,77.65,77.65,0.00,33,limit buy GFD at the trigger close 77.65 filled 33 @ 77.65 in 1s; order 6afb2c27-1572-4649-8d31-0e3b0fdf519a; sized by cash (3% risk = 102 shares > cash),,
+2026-11-16,TECS,PULLBACK,sell,stop_2_3,11:15,11:15:43,11:15:43,,,,76.89,,,,22,GTC stop-market 22 @ 76.89 resting; order 6afb2c2f-ca7e-4baf-ae18-965d8f06078b,,
+2026-11-16,TECS,PULLBACK,sell,oco_1_3,11:15,11:15:47,11:15:47,,,,79.15,,,,11,GTC OCO 11: take-profit 79.15 + stop 76.89 resting; advanced order 6afb1c3a-8096-45c5-befb-e42dcc10cb69,,
