@@ -50,15 +50,15 @@ if log:
     def add(system, i, measure, value, rule, st): hrows.append(dict(id=f'{system}_{i}', system=system, order=i, measure=measure, value=value, rule=rule, tone=tone(st), status=st))
     W = health.WINDOW
     add('FADE', 0, 'Verdict', L['verdict'], '', L['verdict'])
-    add('FADE', 1, f'Profit factor, last {W}', L['fade_pf'], 'healthy above 1.5, act below 1.0', L['pf_status'])
+    add('FADE', 1, f'Profit factor, last {W}', L['fade_pf'], f"five-year average {health.BASE['FADE']['pf']:.2f}; healthy above {health.BASE['FADE']['p25']['pf']:.2f}, act below {health.BASE['FADE']['p5']['pf']:.2f}", L['pf_status'])
     add('FADE', 2, f'Reached +2R, last {W}', (L['pct_reach_2R'] + '%') if L['pct_reach_2R'] else 'n/a', 'healthy above 40%, act below 30%', L['reach_2R_status'])
     add('FADE', 3, 'Execution gap', pct(L['fade_exec_gap_pct'], 2, True) if L['fade_exec_gap_pct'] else 'n/a', 'healthy above -0.10%, act below -0.25%', L['fade_exec_status'])
     add('FADE', 4, 'Trade pace, last 30 days', freq(L['fade_trades_30d'], L['fade_expected_30d']), 'healthy at 60% or more of backtest pace', L['fade_freq_status'])
     add('FADE', 5, 'Drawdown from high', pct(L['drawdown_pct'], 1), 'healthy below 7%, act at 10%', L['dd_status'])
     add('PULLBACK', 0, 'Verdict', L['pb_verdict'], '', L['pb_verdict'])
-    add('PULLBACK', 1, f'Profit factor, last {W}', L['pb_pf'], 'healthy above 1.5, act below 1.0', L['pb_pf_status'])
-    add('PULLBACK', 2, f'Win rate, last {W}', (L['pb_win_pct'] + '%') if L['pb_win_pct'] else 'n/a', 'healthy above 60%, act below 50%', L['pb_win_status'])
-    add('PULLBACK', 3, 'Average trade (of position)', (L['pb_avg_pct'] + '%') if L['pb_avg_pct'] else 'n/a', 'healthy above +0.20%, act below 0', L['pb_avg_status'])
+    add('PULLBACK', 1, f'Profit factor, last {W}', L['pb_pf'], f"five-year average {health.BASE['PULLBACK']['pf']:.2f}; healthy above {health.BASE['PULLBACK']['p25']['pf']:.2f}, act below {health.BASE['PULLBACK']['p5']['pf']:.2f}", L['pb_pf_status'])
+    add('PULLBACK', 2, f'Win rate, last {W}', (L['pb_win_pct'] + '%') if L['pb_win_pct'] else 'n/a', f"five-year average {health.BASE['PULLBACK']['win']:.0f}%; healthy above {health.BASE['PULLBACK']['p25']['win']:.0f}%, act below {health.BASE['PULLBACK']['p5']['win']:.0f}%", L['pb_win_status'])
+    add('PULLBACK', 3, 'Average trade (of position)', (L['pb_avg_pct'] + '%') if L['pb_avg_pct'] else 'n/a', f"five-year average {health.BASE['PULLBACK']['avg']:+.2f}%; healthy above {health.BASE['PULLBACK']['p25']['avg']:+.2f}%, act below {health.BASE['PULLBACK']['p5']['avg']:+.2f}%", L['pb_avg_status'])
     add('PULLBACK', 4, 'Execution gap', pct(L['pb_exec_gap_pct'].rstrip('%'), 2, True) if L['pb_exec_gap_pct'] else 'n/a', 'healthy above -0.10%, act below -0.25%', L['pb_exec_status'])
     add('PULLBACK', 5, 'Trade pace, last 30 days', freq(L['pb_trades_30d'], L['pb_expected_30d']), 'healthy at 60% or more of backtest pace', L['pb_freq_status'])
     for sname, k in (('FADE', 'fade_trades'), ('PULLBACK', 'pb_trades')):
@@ -66,16 +66,19 @@ if log:
             if r['system'] == sname: r['trades'] = int(L[k]); r['window'] = W; r['day'] = L['date']
 # v5.2.54: health cards for the new systems (RULEBOOK B6.11, B7.10): review at 20 and 30 live trades, profit factor under 1.0 is a warning at 20 and goes to the governor at 30
 for sname in ('IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'):
-    xs = [t for t in trades if t['system'].upper() == sname][-30:]; n = len(xs); acct = [t['acct_pct'] for t in xs]
+    # v5.2.60: judged against the five-year backtest (tools/live/health_baseline.json): HEALTHY at or above the 25th percentile of its 30-trade windows, WATCH down to the 5th, ACT below it
+    B5 = health.BASE[sname]; xs = [t for t in trades if t['system'].upper() == sname][-30:]; n = len(xs); acct = [t['acct_pct'] for t in xs]; pos = [t.get('pos_pct', t['acct_pct']) for t in xs]
     gw = sum(a for a in acct if a > 0); gl = -sum(a for a in acct if a <= 0); pf = (gw / gl) if gl else None
     wins = sum(a > 0 for a in acct); gaps = [t['acct_pct'] - t['model_pct'] for t in xs if t.get('model_pct') is not None]
-    verdict = 'TOO EARLY' if n < 20 else ('ACT' if (pf is not None and pf < 1.0 and n >= 30) else 'WATCH' if (pf is not None and pf < 1.0) else 'HEALTHY')
+    band = lambda v, m: 'HEALTHY' if v is None or v >= B5['p25'][m] else 'WATCH' if v >= B5['p5'][m] else 'ACT'
+    wr = (100 * wins / n) if n else None; av = (sum(pos) / n) if n else None
+    verdict = 'TOO EARLY' if n < 20 else ('ACT' if (pf is not None and band(pf, 'pf') == 'ACT' and n >= 30) else 'WATCH' if (pf is not None and band(pf, 'pf') != 'HEALTHY') else 'HEALTHY')
     early = 'too early' if n < 20 else None
     def hr(i, measure, value, rule, st): hrows.append(dict(id=f'{sname}_{i}', system=sname, order=i, measure=measure, value=value, rule=rule, tone=tone(st), status=st, trades=n, window=30, day=day))
     hr(0, 'Verdict', verdict, '', verdict)
-    hr(1, 'Profit factor, last 30', ('%.2f' % pf) if pf is not None else 'n/a', 'healthy above 1.3, warning under 1.0', early or ('HEALTHY' if pf is None or pf >= 1.3 else 'WATCH' if pf >= 1.0 else 'ACT'))
-    hr(2, 'Win rate, last 30', f'{100 * wins / n:.0f}%' if n else 'n/a', 'backtest 55% to 60%', early or ('HEALTHY' if wins / n >= .5 else 'WATCH'))
-    hr(3, 'Average trade (of account)', f'{sum(acct) / n:+.2f}%' if n else 'n/a', 'healthy above 0', early or ('HEALTHY' if sum(acct) / n > 0 else 'ACT'))
+    hr(1, 'Profit factor, last 30', ('%.2f' % pf) if pf is not None else 'n/a', f"five-year average {B5['pf']:.2f}; healthy above {B5['p25']['pf']:.2f}, act below {B5['p5']['pf']:.2f}", early or band(pf, 'pf'))
+    hr(2, 'Win rate, last 30', f'{wr:.0f}%' if n else 'n/a', f"five-year average {B5['win']:.0f}%; healthy above {B5['p25']['win']:.0f}%, act below {B5['p5']['win']:.0f}%", early or band(wr, 'win'))
+    hr(3, 'Average trade (of position)', f'{av:+.2f}%' if n else 'n/a', f"five-year average {B5['avg']:+.2f}%; healthy above {B5['p25']['avg']:+.2f}%, act below {B5['p5']['avg']:+.2f}%", early or band(av, 'avg'))
     hr(4, 'Execution gap', f'{sum(gaps) / len(gaps):+.2f}%' if gaps else 'n/a', 'healthy above -0.10%, act below -0.25%', early or ('HEALTHY' if not gaps or sum(gaps) / len(gaps) > -0.10 else 'WATCH' if sum(gaps) / len(gaps) > -0.25 else 'ACT'))
     hr(5, 'Worst trade (of account)', f'{min(acct):+.2f}%' if n else 'n/a', 'stop costs about 3%', early or ('HEALTHY' if min(acct) > -4 else 'WATCH'))
 # fade_skips.json: FADE trades the runaway skip passed on (v5.2.39): live days from archive/fade_skips.csv, the backtest reference beside them

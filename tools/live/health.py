@@ -2,11 +2,9 @@
 """FADE and PULLBACK health tracker (RULEBOOK C5, governor instructions 2026-10-28). Run at the 13:30 close after the day's trades are logged:
     python3 tools/live/health.py <total value> [YYYY-MM-DD]     # prints both tables and records the day's row in archive/health_log.csv
 Real trades from archive/live_trades.csv; drawdown from archive/hwm.json. Rolling window = the last 30 trades of each system.
-    FADE      profit factor                  healthy > 1.5      warning 1.0-1.5        ACT < 1.0
-              % of trades reaching +2R       healthy > 40%      warning 30-40%         ACT < 30%
-    PULLBACK  profit factor                  healthy > 1.5      warning 1.0-1.5        ACT < 1.0
-              win rate                       healthy > 60%      warning 50-60%         ACT < 50%
-              average trade (% of position)  healthy > +0.20%   warning 0 to +0.20%    ACT < 0
+    FADE      profit factor                  v5.2.60: from the five-year backtest (health_baseline.json): healthy above its 25th percentile, ACT below its 5th
+              % of trades reaching +2R       healthy > 40%      warning 30-40%         ACT < 30%   (no five-year record of 2R)
+    PULLBACK  profit factor, win rate, average trade: the same five-year percentile bands (the report prints them and the five-year average)
     both      execution gap, real - model    healthy > -0.10%   warning -0.10 to -0.25 ACT < -0.25%   (per trade, % of position; v5.2.23)
               trade frequency vs backtest    healthy >= 60%     warning 30-60%         CHECK < 30%    (last 30 trading days; v5.2.23)
     account   drawdown from the all-time high healthy < 7%      warning 7-10%          ACT >= 10%     (A1.13 hard stop at 15%)
@@ -25,7 +23,17 @@ LOG = os.path.join(ROOT, 'archive', 'health_log.csv')
 WINDOW, MIN_ACT, FREQ_DAYS, FREQ_MIN_DAYS = 30, 10, 30, 10
 LIVE_START = '2026-10-16'
 # expected trades per trading day: Robinhood backtest 2026-03-03..10-14 of the live rules (v5.2.22, 8-fund PULLBACK), one account, 157 days
-RATE = {'FADE': 47 / 157, 'PULLBACK': 50 / 157}      # FADE pace with the runaway skip (v5.2.39; was 63 / 157)
+# v5.2.60 (governor 2026-11-16: "when you say it's unhealthy look at what the average over the full 5 years was"): the bands for profit factor, win rate and average trade come from
+# the five-year backtest (tools/live/health_baseline.json, built by tools/backtest/health_bt.py): HEALTHY at or above the 25th percentile of its 30-trade windows, WARNING down to the
+# 5th percentile, ACT below it; the five-year average is printed beside each. Pace = the backtest's trades per trading day.
+BASE = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'health_baseline.json')))['systems']
+RATE = {k: BASE[k]['pace_per_day'] for k in ('FADE', 'PULLBACK')}
+
+
+def bands(sysname, m, unit='', dec=2):
+    """(healthy edge, warning edge, texts) for measure m ('pf', 'win', 'avg') of a system from the five-year baseline."""
+    b = BASE[sysname]; f = lambda v: f'{v:.{dec}f}{unit}' if m != 'avg' else f'{v:+.2f}{unit}'
+    return b['p25'][m], b['p5'][m], f"> {f(b['p25'][m])}", f"{f(b['p5'][m])} to {f(b['p25'][m])}", f"< {f(b['p5'][m])}", f"5-yr avg {f(b[m])}"
 
 
 def grade(v, healthy, warn, higher_is_better=True):
@@ -88,7 +96,7 @@ def verdict(meas, fg, extra, act_text):
     gs = [m[5] for m in meas] + extra
     acts = sum(g == 'ACT' for g in gs)
     if acts >= 2: v = f"ACT: two or more triggers. Governor decision: {act_text}. Nothing changes until the governor decides."
-    elif acts == 1 or any(g.startswith('WARNING') for g in gs): v = "WATCH: a measure is outside the healthy range. No action; keep the system as is."
+    elif acts == 1 or any(g.startswith('WARNING') and 'too few' not in g for g in gs): v = "WATCH: a measure is outside the healthy range. No action; keep the system as is."
     else: v = "HEALTHY: keep the system as is."
     if fg.startswith('CHECK'): v += " TRADE COUNT LOW: check the fetch groups, waiters and data before blaming the market."
     return acts, v
@@ -105,16 +113,18 @@ def main():
         r2 = [r for r in rs if r.get('reached_2R', '').strip().lower() in ('yes', 'no')]
         p2r = 100 * sum(r['reached_2R'].strip().lower() == 'yes' for r in r2) / len(r2) if r2 else None
         v = pf(rs)
-        return [(f'Profit factor, last {WINDOW} trades', fmt_pf(v) + f' (n={len(rs)})', '> 1.5', '1.0-1.5', '< 1.0', grade(v, 1.5, 1.0)),
+        h, w_, th, tw, ta, avgtxt = bands('FADE', 'pf')
+        return [(f'Profit factor, last {WINDOW} trades', fmt_pf(v) + f' (n={len(rs)})', th + f'  ({avgtxt})', tw, ta, grade(v, h, w_)),
                 (f'% reaching +2R, last {WINDOW}', ('n/a' if p2r is None else f'{p2r:.0f}%') + f' (n={len(r2)})', '> 40%', '30-40%', '< 30%', grade(p2r, 40, 30))]
 
     def pb_specific(rs):
         n = len(rs); v = pf(rs)
         win = 100 * sum(float(r['pnl_usd']) > 0 for r in rs) / n if n else None
         avg = sum(float(r['pnl_pct_position']) for r in rs) / n if n else None
-        return [(f'Profit factor, last {WINDOW} trades', fmt_pf(v) + f' (n={n})', '> 1.5', '1.0-1.5', '< 1.0', grade(v, 1.5, 1.0)),
-                (f'Win rate, last {WINDOW} trades', 'n/a' if win is None else f'{win:.0f}%', '> 60%', '50-60%', '< 50%', grade(win, 60, 50)),
-                ('Average trade (% of position)', 'n/a' if avg is None else f'{avg:+.2f}%', '> +0.20%', '0 to +0.20%', '< 0', grade(avg, 0.20, 0.0))]
+        ph, pw, pth, ptw, pta, pavg = bands('PULLBACK', 'pf'); wh, ww, wth, wtw, wta, wavg = bands('PULLBACK', 'win', '%', 0); ah, aw, ath, atw, ata, aavg = bands('PULLBACK', 'avg', '%')
+        return [(f'Profit factor, last {WINDOW} trades', fmt_pf(v) + f' (n={n})', pth + f'  ({pavg})', ptw, pta, grade(v, ph, pw)),
+                (f'Win rate, last {WINDOW} trades', 'n/a' if win is None else f'{win:.0f}%', wth + f'  ({wavg})', wtw, wta, grade(win, wh, ww)),
+                ('Average trade (% of position)', 'n/a' if avg is None else f'{avg:+.2f}%', ath + f'  ({aavg})', atw, ata, grade(avg, ah, aw))]
 
     fm, ffg, fn, fgap, ffreq, fgot, fexp = system('FADE', rows, day, tdays, fade_specific)
     line('Drawdown from all-time high', f'{dd:.1f}%', '< 7%', '7-10%', '>= 10%', g_dd)

@@ -76,3 +76,13 @@ for s in SYS:
     if not w: continue
     P = [x[1] for x in w]; Wn = [x[2] for x in w]; A = [x[3] for x in w]; q = lambda L, p: float(np.percentile(L, p))
     print(f"   {s:<10} | {q(P, 5):>6.2f} {q(P, 10):>6.2f} {q(P, 25):>6.2f} {q(P, 50):>6.2f} | {q(Wn, 5):>7.0f}% {q(Wn, 25):>4.0f}% {q(Wn, 50):>4.0f}% | {q(A, 5):>+7.2f}% {q(A, 25):>+6.2f}% {q(A, 50):>+6.2f}%")
+
+# baseline file read by tools/live/health.py and dash_data.py (v5.2.60): the five-year average of each measure and the 25th and 5th percentile of 30-trade windows
+base = {}
+for s_ in SYS:
+    rows = sorted(by[s_], key=lambda t: t['day']); w = stats(rows, 30); a = [x['acct_pct'] for x in rows]; p = [x['pos_pct'] for x in rows]; ds_ = defaultdict(int)
+    for t in rows: ds_[t['day']] += 1
+    q = lambda L, k: round(float(np.percentile(L, k)), 3)
+    base[s_] = dict(trades=len(rows), pf=round(pf(a), 3), win=round(100 * float(np.mean([x > 0 for x in p])), 1), avg=round(float(np.mean(p)), 3), pace_per_day=round(len(rows) / len(days), 4),
+                    p25=dict(pf=q([x[1] for x in w], 25), win=q([x[2] for x in w], 25), avg=q([x[3] for x in w], 25)), p5=dict(pf=q([x[1] for x in w], 5), win=q([x[2] for x in w], 5), avg=q([x[3] for x in w], 5)))
+json.dump(dict(source='tools/backtest/health_bt.py on the five-year backtest trades 2022-01-03..2026-10-30', window=30, systems=base), open(sys.argv[2], 'w'), indent=1) if len(sys.argv) > 2 else None
