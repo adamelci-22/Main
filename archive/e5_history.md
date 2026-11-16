@@ -183,3 +183,11 @@
 - **Context:** a strong gap up after yesterday's reversal day. Semiconductors +5.2% and tech +2.9% premarket, financials flat. No FOMC.
 - **Triggers (A2):** the 8:41, 13:30 and watchdog standing triggers and the bimonthly reset reminder are enabled on this session. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `archive/improve/pending.json`, `challenger` null. No proposal pending, no approved challenger. FADE 0 of 5, PULLBACK 2 of 5 (NVDQ 11-06).
+
+## 2026-11-16 (Monday) 9:00 research, rulebook v5.2.59
+- **Account:** 462514035 flat, no open orders, cash $2,585.64 = total value at 9:00. Drawdown stop clear (high $2,628.85, -1.64%). USDG off.
+- **NO IBS-TREND SIGNAL.** QQQ SOXX IWM XLK XBI all closed below their 20-session average with IBS 0.44 to 0.76 (no mirror: IBS under 0.95). XLF above the average, IBS 0.93 (no long). RSI2 17 to 35 on the five below-average proxies. FADE and PULLBACK run as usual. No overnight position.
+- **Corporate actions:** clean. Premarket moves match underlyings: QQQ -1.35%, TQQQ -4.1%; SOXX -4.2%, SOXL -12.6%, SOXS +12.5%; IWM -0.5%, TNA -1.5%; XLK -2.1%, TECL -5.7%, TECS +6.3%; XBI -0.4%; XLF +0.1%. SSG spread wide (bid 17.12, ask 18.86): A1.7 applies to any SSG entry.
+- **Earnings (A1.9):** NVDA reports Tue 2026-11-17 after the close (verified). No NVDA-linked entry (NVD, NVDQ) on Wed 11-18. MSFT reports 2027-01-27. Nothing today.
+- **Context:** gap-down day, semis -4.2% premarket. FADE trades Mondays. 9:30 waiter started.
+- **RVOL baseline:** 20 sessions 2026-10-19..11-13 -> `archive/paper_rvol_2026-11-16.json`.
