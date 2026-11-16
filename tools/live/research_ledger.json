@@ -616,5 +616,25 @@
   "result": "0 setups pass after controls. TFM: Monday breaks Friday low 54% vs 35% but as a trade PF 0.81 to 1.05. MTWT at 9:35 PF 1.38 and passed the rule, but Thursdays without the pattern earn more (+0.36% vs +0.48% a trade), the Wednesday placebo gives PF 1.41 and random Thursdays reach 94% of the setup. Gap fill PF 0.77 to 0.95, School Run 1.02, First Bar 0.99 to 1.04, Monday failed break 0.98, Rule of 4 0.59. As filters on IBS systems: fail",
   "verdict": "not adopted; the pattern frequencies are real but untradable",
   "champion_version": "5.2.58"
+ },
+ {
+  "id": "study.entry_timing",
+  "date": "2026-11-16",
+  "kind": "study",
+  "idea": "Entry timing: later or earlier fills for the 9:35 family, fill slippage and a 5-minute delay, overnight entry earlier than 15:55, overnight exit at 9:30 to 10:00, overnight slippage",
+  "method": "tools/backtest/entry_timing.py; live joint book v5.2.59 as baseline; one change at a time; train 2022/2024/2026, test 2023/2025",
+  "result": "9:35 is the best entry bar: 9:30 -10.5 points a year, 9:40 -15.1, 9:45 -36.5, 10:05 -35.8, 10:35 -52.2. Slippage is the main risk: +0.05% worse fill costs 18.6 points a year, +0.10% costs 34.0, +0.20% costs 66.6 (average 2022-25 falls from +74.8 to +8.2). A 5-minute delay costs 15.1. Overnight entry time is not monotonic (15:45 -3.3, 15:30 +1.8, 15:00 -8.3, 14:00 -10.9, 13:00 +4.3 and passes the rule) so the 13:00 pass is noise, and 13:00 to 15:55 overlaps the day trades. Overnight exit 9:40 +2.5, 9:45 +3.3 qualify but fail 2025. Overnight slip 0.10% each way costs 14.2 points",
+  "verdict": "not adopted; live entry and exit times stay. Track real fill slippage on the first 20 trades per system",
+  "champion_version": "5.2.59"
+ },
+ {
+  "id": "study.hougaard_direction",
+  "date": "2026-11-16",
+  "kind": "study",
+  "idea": "Direct directional re-check of the Hougaard Thursday-Friday-Monday claim (Monday falls after Friday high at or below Thursday high and a break of Friday low)",
+  "method": "tools/backtest/hougaard6.py; proxy returns only; controls: other Mondays, the same structure on Tuesday to Friday, 5000 random draws",
+  "result": "Open-to-close on pattern Mondays -0.20% vs +0.26% on other Mondays (347 events, t -2.1). The fall is selection: the same structure on Tuesday, Wednesday and Friday falls more (-0.46%, -0.54%, -0.52%). From the break of Friday low to the close the proxy RISES +0.23% (55% up), so a short at the break loses. Gap-down Mondays rebound +0.57% (68% up). Pattern effect is -0.5% in 2022 and about 0 in 2023-2025",
+  "verdict": "not adopted; the claim measures the day breaking its low, not a tradable edge",
+  "champion_version": "5.2.59"
  }
 ]

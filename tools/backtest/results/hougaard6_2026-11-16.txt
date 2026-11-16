@@ -1,0 +1,40 @@
+Hougaard TFM direct directional re-check (governor 2026-11-16: "Are you sure"). Research only. No legs, no stops, no book: just direction.
+   returns in % on the PROXY to the 15:55 bar close. Negative = the Monday fall the claim predicts.
+
+MONDAYS: 1350 proxy-Mondays. TFM pattern (Friday high <= Thursday high) AND Monday breaks Friday's low: 347 (26%)
+   open to close
+      TFM pattern + break                            n  347 mean -0.203% median -0.210% up  44% t -2.08
+      all other Mondays                              n 1003 mean +0.260% median +0.205% up  60% t +7.66
+      random draws of 347 Mondays: pattern mean -0.203% is lower than 100.0% of draws (p low-side 0.000)
+   9:35 open to close
+      TFM pattern + break                            n  347 mean -0.150% median -0.117% up  48% t -1.60
+      all other Mondays                              n 1003 mean +0.213% median +0.157% up  58% t +6.82
+      random draws of 347 Mondays: pattern mean -0.150% is lower than 100.0% of draws (p low-side 0.000)
+   break of Friday low to close
+      TFM pattern + break                            n  347 mean +0.229% median +0.179% up  55% t +2.72
+      all other Mondays                              n  228 mean +0.169% median +0.096% up  56% t +2.47
+
+BY PROXY (open to close, pattern + break)
+      QQQ                                            n   53 mean -0.148% median +0.004% up  51% t -0.72
+      SOXX                                           n   66 mean -0.103% median -0.090% up  47% t -0.33
+      IWM                                            n   59 mean -0.035% median -0.156% up  46% t -0.18
+      XLK                                            n   56 mean -0.188% median -0.084% up  48% t -0.81
+      XBI                                            n   65 mean -0.686% median -0.690% up  32% t -2.87
+      XLF                                            n   48 mean +0.030% median -0.267% up  42% t +0.17
+
+BY YEAR (open to close, pattern + break)
+      2022                                           n   96 mean -0.505% median -0.771% up  35% t -2.46
+      2023                                           n   49 mean -0.020% median -0.076% up  47% t -0.14
+      2024                                           n   65 mean -0.021% median +0.000% up  49% t -0.11
+      2025                                           n   68 mean +0.046% median -0.012% up  50% t +0.19
+      2026                                           n   56 mean -0.202% median -0.295% up  46% t -0.70
+
+PLACEBO: the same structure on every other weekday (day d, d-1 high <= d-2 high, d breaks d-1 low), open to close
+      Tuesday (24% qualify)                          n  370 mean -0.459% median -0.378% up  34% t -6.58
+      Wednesday (23% qualify)                        n  358 mean -0.540% median -0.571% up  33% t -6.36
+      Thursday (24% qualify)                         n  362 mean -0.273% median -0.391% up  38% t -2.96
+      Friday (28% qualify)                           n  403 mean -0.519% median -0.583% up  35% t -6.63
+
+TRADE-LIKE: short the proxy at the 9:35 open on pattern Mondays whose open is already below Friday's low (gap) vs not
+      gap below Friday low                           n  161 mean +0.566% median +0.534% up  68% t +4.06
+      open above Friday low, then breaks it          n  186 mean -0.770% median -0.750% up  30% t -7.15

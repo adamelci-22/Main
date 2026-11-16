@@ -1,0 +1,47 @@
+Entry-timing study (governor 2026-11-16: "entry timing ... later entries, fill latency, earlier overnight entry or later overnight exit"). Research only.
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th); parentheses = points vs the live book
+
+        LIVE book (9:35 entry, overnight 15:55 to 9:35)   +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) 
+
+A. 9:35 FAMILY ENTRY BAR (all three systems move together)
+        enter 9:30                                         +90.8   +28.8   -27.6  +165.2  +132.0 | avg 22-25  +64.3 (-10.5) | win 52% avg +0.50% n 694
+        enter 9:35 live                                   +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) | win 54% avg +0.53% n 694
+        enter 9:40                                         +94.8   +40.3    +1.2  +102.3  +111.8 | avg 22-25  +59.7 (-15.1) | win 52% avg +0.41% n 694
+        enter 9:45                                         +38.2   +33.2   -12.5   +94.3   +75.4 | avg 22-25  +38.3 (-36.5) | win 51% avg +0.29% n 694
+        enter 9:50                                        +116.9   +32.3   -19.4  +107.1   +76.1 | avg 22-25  +59.2 (-15.6) | win 53% avg +0.34% n 694
+        enter 10:05                                        +83.3   +23.2   -32.9   +82.2   +68.5 | avg 22-25  +39.0 (-35.8) | win 53% avg +0.19% n 694
+        enter 10:35                                        +95.7   -18.6   -26.6   +39.8  +113.2 | avg 22-25  +22.6 (-52.2) | win 48% avg +0.02% n 694
+
+B. FILL SLIPPAGE ON THE 9:35 FAMILY (entry price worse by x% of the proxy; 3x on the leg)
+        enter 9:35, slip 0.05%                            +105.3   +20.2    -0.2   +99.3  +166.5 | avg 22-25  +56.2 (-18.6) | win 52% avg +0.38% n 694
+        enter 9:35, slip 0.10%                             +84.3    +4.4   -12.0   +86.6  +146.4 | avg 22-25  +40.8 (-34.0) | win 50% avg +0.24% n 694
+        enter 9:35, slip 0.20%                             +41.5   -22.7   -36.7   +50.8  +100.9 | avg 22-25   +8.2 (-66.6) | win 45% avg -0.07% n 694
+        enter 9:40 (5 min late), slip 0.00%                +94.8   +40.3    +1.2  +102.3  +111.8 | avg 22-25  +59.7 (-15.1) | win 52% avg +0.41% n 694
+        enter 9:40 (5 min late), slip 0.05%                +68.7   +25.8    -9.1   +80.7   +83.0 | avg 22-25  +41.5 (-33.3) | win 51% avg +0.25% n 694
+        enter 9:40 (5 min late), slip 0.10%                +57.4   +11.5   -26.2   +66.2   +69.1 | avg 22-25  +27.2 (-47.6) | win 48% avg +0.07% n 694
+        enter 9:40 (5 min late), slip 0.20%                +18.2   -22.9   -39.7   +33.0   +23.1 | avg 22-25   -2.8 (-77.7) | win 42% avg -0.29% n 694
+
+C. OVERNIGHT ENTRY TIME (signal recomputed then; exit 9:35)
+        enter 15:55 live                                  +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) | 145 nights, avg leg +0.30%
+        enter 15:45                                       +133.2   +31.7    +3.0  +118.2  +177.9 | avg 22-25  +71.5 ( -3.3) | 161 nights, avg leg +0.01%
+        enter 15:30                                       +126.5   +42.6   +22.4  +115.0  +200.7 | avg 22-25  +76.6 ( +1.8) | 168 nights, avg leg +0.35%
+        enter 15:00                                       +115.9   +40.1   +13.5   +96.6  +206.4 | avg 22-25  +66.5 ( -8.3) | 154 nights, avg leg +0.12%
+   qual enter 14:00                                       +115.0   +42.0   +17.4   +81.1  +228.7 | avg 22-25  +63.9 (-10.9) | 154 nights, avg leg +0.16%
+   PASS enter 13:00                                       +135.4   +46.8   +20.2  +114.2  +210.3 | avg 22-25  +79.1 ( +4.3) | 166 nights, avg leg +0.46%
+
+D. OVERNIGHT EXIT TIME (entry 15:55)
+   qual exit 9:30 open                                    +131.7   +32.5   +18.7  +110.2  +223.4 | avg 22-25  +73.3 ( -1.5) | avg leg +0.36%
+        exit 9:35 live                                    +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) | avg leg +0.30%
+   qual exit 9:40                                         +142.5   +39.1   +14.9  +112.9  +204.5 | avg 22-25  +77.3 ( +2.5) | avg leg +0.38%
+   qual exit 9:45                                         +152.6   +33.6   +15.1  +111.0  +201.8 | avg 22-25  +78.1 ( +3.3) | avg leg +0.36%
+   qual exit 10:00                                        +144.9   +35.6   +15.0  +111.4  +197.2 | avg 22-25  +76.7 ( +1.9) | avg leg +0.32%
+
+E. OVERNIGHT FILL SLIP (each side, % of the 3x leg price proxy)
+        slip 0.05% each way                               +131.1   +31.0    +7.0  +101.2  +191.9 | avg 22-25  +67.6 ( -7.3) | avg leg -0.00%
+        slip 0.10% each way                               +125.6   +25.4    +1.5   +90.0  +180.3 | avg 22-25  +60.6 (-14.2) | avg leg -0.30%
+        slip 0.20% each way                               +115.0   +15.0    -8.6   +69.5  +158.5 | avg 22-25  +47.7 (-27.1) | avg leg -0.90%
+
+CONFLICT CHECK for C: nights where a day trade is still open at the earlier entry bar
+      entry bar 72: 29 of 168 signal nights have a day trade open at entry (they would split cash)
+      entry bar 66: 24 of 154 signal nights have a day trade open at entry (they would split cash)
+      entry bar 54: 32 of 154 signal nights have a day trade open at entry (they would split cash)
