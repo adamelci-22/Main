@@ -73,6 +73,8 @@ def persist(what):
         subprocess.run(['git', '-C', ROOT, 'add'] + fs, check=False, capture_output=True, timeout=30)
         if subprocess.run(['git', '-C', ROOT, 'commit', '-qm', f'IBS state: {what}'] + ['--'] + fs, capture_output=True, timeout=30).returncode == 0:
             r = subprocess.run(['git', '-C', ROOT, 'push', '-q'], capture_output=True, timeout=60)
+            if r.returncode != 0:                                      # another commit (the waiter log) moved the branch: rebase and push once more
+                subprocess.run(['git', '-C', ROOT, 'pull', '-q', '--rebase', '--autostash'], capture_output=True, timeout=60); r = subprocess.run(['git', '-C', ROOT, 'push', '-q'], capture_output=True, timeout=60)
             print(f"  (state saved and {'pushed' if r.returncode == 0 else 'committed; PUSH FAILED - push by hand'})")
     except Exception as e: print(f"  WARNING: state not committed ({e}); commit and push archive/ibs_state.json by hand")
 
@@ -148,6 +150,8 @@ def cmd_signal(argv):
         if s.get('stale'): print(f"  {p:<5} STALE: the store ends {s['stale']} but the last session was {prev_session(day)}. No signal from old data: fetch the 20-session baseline (C3) and rerun"); continue
         print(f"  {p:<5} {s['last']} close {s['close']:.2f} vs average {s['sma']:.2f} ({'above' if s['above'] else 'below'}), IBS {s['ibs']:.2f} RSI2 {('%.0f' % s['rsi']) if s['rsi'] is not None else 'n/a (' + str(s['n50']) + ' closes)'} -> {'SIGNAL ' + s['kind'] + ' -> ' + leg_of(p, s['side']) if s['ok'] else 'no'}")
     ok = [p for p, s in sig.items() if s['ok']]; state = jload(STATE, {})
+    if state.get(day, {}).get('status') in ('open', 'closed', 'skipped'):
+        print(f"  The record for {day} is already {state[day]['status']} ({state[day].get('proxy')} -> {state[day].get('ticker')}): NOT overwritten. Signals recomputed above are for information only."); return
     state[day] = dict(signals={p: dict(ibs=round(sig[p]['ibs'], 4), v0=sig[p]['v0'], side=sig[p]['side'], kind=sig[p]['kind']) for p in ok}, status='signal' if ok else 'none')
     jsave(STATE, state); persist('signal ' + day); why = blocked(day)
     if any(s.get('stale') or s['n'] < SMA for s in sig.values()): print("  WARNING: the check is INCOMPLETE for the proxies marked above. Do not report 'no signal' until it is rerun on fresh data.")
@@ -319,6 +323,17 @@ def cmd_skip(argv):
     e.update(status='skipped', why=why); jsave(STATE, state); persist(f'skip {which} {day}'); print(f"  {which} entry {day} marked skipped ({why}). FADE and PULLBACK are free again today." if which != 'overnight' else f"  overnight entry {day} marked skipped ({why}).")
 
 
+def cmd_status(argv):
+    """status [--day D]: today's signal record, the day trade, any overnight position and the last 5 model trades. Read-only."""
+    opts = {}
+    while argv and argv[0].startswith('--'): opts[argv[0][2:]] = argv[1]; argv = argv[2:]
+    day = opts.get('day') or __import__('datetime').datetime.now(P.ET).date().isoformat(); state = jload(STATE, {}); t = state.get(day)
+    print(f"IBS status for {day}: " + ('no record (run `signal`)' if not t else f"{t.get('status')}" + (f" | signals {', '.join(t.get('signals', {})) or 'none'}" if t.get('signals') is not None else '') + (f" | {t.get('proxy')} -> {t.get('ticker')} ({t.get('kind')})" if t.get('proxy') else '')))
+    for d, v in sorted(state.get('overnight', {}).items())[-3:]: print(f"  overnight {d}: {v.get('status')} {v.get('ticker', '')} ref {v.get('ref', '')}" + (f" exit {v.get('exit_day')} {v.get('pct')}%" if v.get('exit_day') else ''))
+    if os.path.exists(LOG):
+        rs = list(csv.DictReader(open(LOG)))[-5:]; print(f"  model trades logged: {len(list(csv.DictReader(open(LOG))))}; last: " + '; '.join(f"{r['day']} {r['system']}/{r['side']} {r['ticker']} {float(r['pct_leg']):+.2f}%" for r in rs))
+
+
 def replay_overnight(raw, a, z):
     days = sorted(d for d in raw['QQQ'] if len(raw['QQQ'][d]) >= 78); store = {p: {} for p in LEG}; by = {}; n = 0; prev = None
 
@@ -340,4 +355,4 @@ def replay_overnight(raw, a, z):
 
 if __name__ == '__main__':
     cmd = sys.argv[1] if len(sys.argv) > 1 else ''
-    {'signal': cmd_signal, 'enter': cmd_enter, 'manage': cmd_manage, 'replay': cmd_replay, 'ovn-signal': cmd_ovn_signal, 'ovn-exit': cmd_ovn_exit, 'skip': cmd_skip}.get(cmd, lambda a: print(__doc__))(sys.argv[2:])
+    {'signal': cmd_signal, 'enter': cmd_enter, 'manage': cmd_manage, 'replay': cmd_replay, 'ovn-signal': cmd_ovn_signal, 'ovn-exit': cmd_ovn_exit, 'skip': cmd_skip, 'status': cmd_status}.get(cmd, lambda a: print(__doc__))(sys.argv[2:])
