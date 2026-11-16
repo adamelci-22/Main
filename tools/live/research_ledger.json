@@ -636,5 +636,15 @@
   "result": "Open-to-close on pattern Mondays -0.20% vs +0.26% on other Mondays (347 events, t -2.1). The fall is selection: the same structure on Tuesday, Wednesday and Friday falls more (-0.46%, -0.54%, -0.52%). From the break of Friday low to the close the proxy RISES +0.23% (55% up), so a short at the break loses. Gap-down Mondays rebound +0.57% (68% up). Pattern effect is -0.5% in 2022 and about 0 in 2023-2025",
   "verdict": "not adopted; the claim measures the day breaking its low, not a tradable edge",
   "champion_version": "5.2.59"
+ },
+ {
+  "id": "study.health_bands_backtest",
+  "date": "2026-11-16",
+  "kind": "study",
+  "idea": "Measure the live health bands (health.py) on the full five-year backtest",
+  "method": "tools/backtest/health_bt.py on the 942 backtest trades; rolling 30 and 20 trade windows per system; share of windows in each band, by year, worst windows, trade frequency, percentiles",
+  "result": "A system running exactly to the backtest still hits ACT (profit factor under 1.0) in 42% of 30-trade windows for FADE, 31% PULLBACK, 22% MIRROR, 16% OVERNIGHT, 10% IBS-LONG, 2% DIP. Longest runs under 1.0: PULLBACK 520 days, FADE 252, MIRROR 178, IBS-LONG 57, OVERNIGHT 51. Median 30-trade PF: FADE 1.10, PULLBACK 1.76, IBS-LONG 1.54, MIRROR 2.17, DIP 1.49, OVERNIGHT 1.27. Frequency check: 16 to 30% of windows run under 60% of pace. Candidate bands (5th percentile as ACT): PF FADE 0.47, PULLBACK 0.27, IBS-LONG 0.92, MIRROR 0.87, DIP 1.11, OVERNIGHT 0.78",
+  "verdict": "no change made; bands need the governor written instruction",
+  "champion_version": "5.2.59"
  }
 ]

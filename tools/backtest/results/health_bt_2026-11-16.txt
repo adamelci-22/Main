@@ -1,0 +1,62 @@
+Health measures on the full five-year backtest (governor 2026-11-16: "Measure health on the full back test"). Research only.
+   942 trades. Bands from health.py: PF healthy >1.5, warning 1.0-1.5, ACT <1.0 | win rate >60 / 50-60 / <50 | average trade >+0.20% / 0-0.20 / <0
+
+ROLLING WINDOW OF 30 TRADES (share of windows in each band; a healthy backtest system still raises these)
+   system     trades windows |       PF H/W/A %  PF min |      win H/W/A %  win min |      avg H/W/A %  avg min | any ACT   2+ ACT
+   FADE          228     199 |       29/ 29/ 42    0.36 |       36/ 51/ 13      43% |       30/ 25/ 45   -0.54% |    47%     42%
+   PULLBACK      207     178 |       60/ 10/ 31    0.19 |       17/ 46/ 37      30% |       64/  5/ 31   -0.66% |    37%     31%
+   IBS-LONG      155     126 |       54/ 37/ 10    0.80 |       23/ 69/  8      47% |       79/ 12/ 10   -0.21% |    14%     10%
+   MIRROR         74      45 |       67/ 11/ 22    0.87 |       49/ 27/ 24      33% |       76/  2/ 22   -0.23% |    24%     22%
+   DIP           133     104 |       50/ 48/  2    0.89 |       38/ 62/  0      53% |       88/ 10/  2   -0.13% |     2%      2%
+   OVERNIGHT     145     116 |       23/ 61/ 16    0.58 |       24/ 63/ 13      43% |       62/ 22/ 16   -0.45% |    19%     16%
+
+ROLLING WINDOW OF 20 TRADES (share of windows in each band; a healthy backtest system still raises these)
+   system     trades windows |       PF H/W/A %  PF min |      win H/W/A %  win min |      avg H/W/A %  avg min | any ACT   2+ ACT
+   FADE          228     209 |       34/ 22/ 44    0.20 |       40/ 44/ 16      40% |       32/ 24/ 44   -0.79% |    45%     43%
+   PULLBACK      207     188 |       60/ 11/ 29    0.14 |       19/ 47/ 34      25% |       65/  6/ 29   -0.84% |    38%     29%
+   IBS-LONG      155     136 |       51/ 36/ 13    0.67 |       21/ 66/ 12      40% |       70/ 17/ 13   -0.41% |    18%     13%
+   MIRROR         74      55 |       56/ 18/ 25    0.62 |       38/ 20/ 42      25% |       62/ 13/ 25   -0.51% |    49%     25%
+   DIP           133     114 |       53/ 34/ 13    0.54 |       43/ 50/  7      40% |       76/ 11/ 13   -0.64% |    13%     13%
+   OVERNIGHT     145     126 |       39/ 39/ 22    0.43 |       23/ 61/ 16      35% |       62/ 16/ 22   -0.67% |    30%     22%
+
+BY YEAR: share of 30-trade windows (ending in that year) with profit factor under 1.0 (ACT)
+   system        2022    2023    2024    2025    2026
+   FADE            0%     15%     76%     63%      0%
+   PULLBACK       22%    100%     31%      0%      0%
+   IBS-LONG         -      4%     23%      0%     12%
+   MIRROR           -      0%      0%     36%     83%
+   DIP              -      0%      5%      0%      0%
+   OVERNIGHT        -      0%     11%     37%      0%
+
+WORST 30-TRADE WINDOW per system (ends on, PF, win %, average trade %)
+   FADE       2024-05-06  PF 0.36  win 47%  avg -0.37%
+   PULLBACK   2023-05-12  PF 0.19  win 33%  avg -0.65%
+   IBS-LONG   2024-03-26  PF 0.80  win 50%  avg -0.21%
+   MIRROR     2026-03-09  PF 0.87  win 33%  avg -0.23%
+   DIP        2024-05-31  PF 0.89  win 53%  avg -0.13%
+   OVERNIGHT  2025-09-25  PF 0.58  win 43%  avg -0.45%
+
+LONGEST RUN OF 30-TRADE WINDOWS WITH PF UNDER 1.0 (in trades, and calendar days from first to last window end)
+   FADE       39 windows, 2023-11-08 to 2024-07-17 (252 days)
+   PULLBACK   55 windows, 2022-11-16 to 2024-04-19 (520 days)
+   IBS-LONG   7 windows, 2024-03-25 to 2024-05-21 (57 days)
+   MIRROR     5 windows, 2025-05-16 to 2025-11-10 (178 days)
+   DIP        1 windows, 2024-04-12 to 2024-04-12 (0 days)
+   OVERNIGHT  8 windows, 2025-08-18 to 2025-10-08 (51 days)
+
+TRADES PER 30 TRADING DAYS (frequency check, health.py grades the live count against the pace: healthy >= 60%, warning 30-60%, check < 30%)
+   FADE       pace   9.1 per 30 days | min   3 ( 33% of pace) | windows under 60% of pace   5% | under 30%   0%
+   PULLBACK   pace   8.0 per 30 days | min   2 ( 25% of pace) | windows under 60% of pace  16% | under 30%   1%
+   IBS-LONG   pace   6.1 per 30 days | min   0 (  0% of pace) | windows under 60% of pace  19% | under 30%   4%
+   MIRROR     pace   2.9 per 30 days | min   0 (  0% of pace) | windows under 60% of pace  30% | under 30%  12%
+   DIP        pace   5.2 per 30 days | min   0 (  0% of pace) | windows under 60% of pace  26% | under 30%  20%
+   OVERNIGHT  pace   5.8 per 30 days | min   0 (  0% of pace) | windows under 60% of pace  27% | under 30%   6%
+
+BACKTEST PERCENTILES of 30-trade windows (candidate bands: WARNING below the 25th percentile, ACT below the 5th; a healthy system then alarms about 5% of the time)
+   system     |  PF p5    p10    p25    p50 |  win% p5   p25   p50 |  avg% p5     p25     p50
+   FADE       |   0.47   0.56   0.77   1.10 |      47%   53%   57% |   -0.40%  -0.18%  +0.04%
+   PULLBACK   |   0.27   0.43   0.80   1.76 |      37%   43%   53% |   -0.54%  -0.12%  +0.36%
+   IBS-LONG   |   0.92   1.03   1.24   1.54 |      47%   50%   57% |   -0.09%  +0.22%  +0.49%
+   MIRROR     |   0.87   0.89   1.19   2.17 |      34%   50%   60% |   -0.22%  +0.26%  +0.95%
+   DIP        |   1.11   1.20   1.38   1.49 |      53%   57%   60% |   +0.11%  +0.36%  +0.47%
+   OVERNIGHT  |   0.78   0.90   1.11   1.27 |      47%   50%   57% |   -0.25%  +0.12%  +0.25%
