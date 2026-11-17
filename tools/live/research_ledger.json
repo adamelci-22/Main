@@ -686,5 +686,15 @@
   "result": "3R giveback fires on 9 of 444 trades (2%): helped 4, hurt 4, -1.2% of position in total, +0.2 points a year in the book (neutral). 0 of 9 signals pass. Less room: VWAP 0.0, 9-EMA after 12:00 -2.1, 9-EMA on volume -3.4. More room: above VWAP +0.3, two closes -0.3. Loss cuts: no +0.5R after 30 min +1.4 and -0.5R after 15 min +1.6 but both lose 2024 and 2026 (fail train); 60 min -0.2; VWAP -1.0",
   "verdict": "not adopted; giveback kept as neutral at the governor choice",
   "champion_version": "5.2.61"
+ },
+ {
+  "id": "study.pb_lock_high",
+  "date": "2026-11-17",
+  "kind": "study",
+  "idea": "Lock the PULLBACK runner stop at the morning high (or halfway) once price clears the high by x R (governor: gain cuts past the high)",
+  "method": "tools/backtest/pb_lock_high.py; base live v5.2.61; x = 0, 0.5, 1, 2 R; live joint book; train/test rule",
+  "result": "0 of 8 pass, all below or equal to live: stop to the high -2.5 to -0.7 points a year, stop halfway -2.3 to 0.0. Earlier the same day: second sale at high + 0.5R to 3R or high + 1 to 3% -6.4 to -3.6, runner limit at +2 to +6% -12.7 to -5.1",
+  "verdict": "not adopted",
+  "champion_version": "5.2.61"
  }
 ]
