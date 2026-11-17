@@ -666,5 +666,15 @@
   "result": "0 of 22 pass. Best: give back 40% once 3R up, +0.2 points a year (qualifies on train, loses 2025). Tight rules cost the most: give back 30% at 1R -6.6, close 1% under the best -7.3, 9-EMA runner -3.7. Wide rules almost never fire (+0.0). On 2026-11-17 the 40%-after-3R rule would have sold the UVXY runner at about 22.29 (+$59) instead of breakeven",
   "verdict": "not adopted by the rule; neutral option offered to the governor",
   "champion_version": "5.2.60"
+ },
+ {
+  "id": "study.pb_cashout",
+  "date": "2026-11-17",
+  "kind": "study",
+  "idea": "Sell more of PULLBACK at the morning high, or cash out the runner at a fixed gain (governor question after a +4.4% day ended flat)",
+  "method": "tools/backtest/pb_cashout.py; share at the high 1/3, 1/2, 2/3, all; runner limit at +2 to +6%; 1/2 at the high + runner limit; live joint book; five years",
+  "result": "Every step toward cashing out lowers return. Sell at the high: 1/2 -3.5, 2/3 -6.9, all -13.7 points a year (PF 1.21 -> 1.04). Runner cashed at +2% to +6%: -12.7 to -5.1. 1/2 at the high plus a runner limit: -9.3 to -7.0. The PULLBACK edge comes from the few runners that keep going; selling everything at the high leaves almost no edge (PF 1.04)",
+  "verdict": "not adopted; live exit (1/3 at the high, runner, 3R giveback from 11-18) stays",
+  "champion_version": "5.2.61"
  }
 ]
