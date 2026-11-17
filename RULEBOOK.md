@@ -501,6 +501,8 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 
 ## E6. Known issues
 
+- **2026-11-17 (Tuesday): the container restarted again before 15:36 ET (uptime 0 at the 15:36 afternoon watchdog).** The account was flat with no orders ($2,557.89). The watchdog started the 15:55 waiter at 15:37 with `timeout 1800000` (the v5.2.60 fix), which outlasts the slot. Only waiter processes were lost; repository state was committed. Two afternoon restarts on consecutive days: the 15:36 watchdog is the guard for the overnight check.
+
 - **2026-11-16 (Monday): the container restarted at about 15:36 ET (uptime 0 minutes at the 15:36 afternoon watchdog).** No waiters survived (every slot waiter before 13:30 had already run; the 13:30 close had run). The account was flat with no orders and $2,557.75, so no position was exposed. The watchdog started the 15:55 waiter at 15:37; the 15:51 trigger also fires. Only the background waiter processes were lost; files and repository state were intact and everything was committed. **Second fault, same day:** the 15:55 waiter that the watchdog started at 15:37 used `timeout 900000` (15 minutes) and expired at 15:52, three minutes before the slot. The 15:51 trigger saw a process (it had not yet expired) and did not restart it; I restarted it at 15:52 and the 15:55 check ran on time. Fix (v5.2.60): the afternoon watchdog (`trig_01Uxju7RnuTMJJ4ySpyYuYKJ`) now starts waiters with `timeout 1800000`. Rule for any waiter started early: its timeout must outlast the slot.
 
 - **2026-11-14 (Saturday): the Robinhood connector returned to this session without a new session.** State check clean: $2,585.64, flat, no open orders, 2,584 USDG, cash $1.64. Friday's bars were fetched and added to the dataset and the IBS daily store.
