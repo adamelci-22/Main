@@ -1,0 +1,22 @@
+PULLBACK: signals for more room, less room, or an early loss cut, and an audit of the v5.2.61 3R giveback rule (governor 2026-11-17: "are there any signals
+   years 2022 2023 2024 2025 2026; parentheses = points a year vs live v5.2.61
+
+   LIVE v5.2.61 (with the 3R giveback)                              +137.4   +37.0   +13.1  +112.7  +204.0 | avg 22-25  +75.1 | n 444 win 50% avg +0.11% PF 1.21
+
+AUDIT OF THE 3R GIVEBACK: fired on 9 of 444 trades (2.0%). Helped 4, hurt 4; average change -0.14% of the position per firing, total -1.2%; best +0.30%, worst -1.58%
+        without the 3R giveback (v5.2.60)                               +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( -0.2) | n 444 win 50% avg +0.12% PF 1.21
+
+LESS ROOM for the runner
+        runner out on a close under VWAP                                +137.4   +37.0   +13.1  +112.7  +204.0 | avg 22-25  +75.1 ( +0.0) | n 444 win 50% avg +0.11% PF 1.21
+        runner on the 9-EMA after 12:00                                 +126.5   +38.0   +13.9  +113.6  +194.3 | avg 22-25  +73.0 ( -2.1) | n 444 win 50% avg +0.09% PF 1.16
+        9-EMA close on 1.5x volume                                      +129.6   +37.5   +13.3  +106.3  +203.7 | avg 22-25  +71.7 ( -3.4) | n 444 win 50% avg +0.10% PF 1.19
+
+MORE ROOM for the runner
+        ignore the 20-EMA break while above VWAP                        +136.4   +36.8   +15.6  +112.5  +199.7 | avg 22-25  +75.3 ( +0.3) | n 444 win 50% avg +0.11% PF 1.21
+        20-EMA exit needs 2 closes under it                             +135.3   +37.8   +12.7  +113.3  +200.9 | avg 22-25  +74.8 ( -0.3) | n 444 win 50% avg +0.11% PF 1.20
+
+LOSS CUTS before the 1/3 fills
+        out if not +0.5R after 30 min                                   +139.4   +40.2    +8.7  +117.6  +195.3 | avg 22-25  +76.5 ( +1.4) | n 444 win 49% avg +0.12% PF 1.25
+        out if not +0.5R after 60 min                                   +136.1   +37.2   +12.5  +113.7  +200.5 | avg 22-25  +74.9 ( -0.2) | n 444 win 49% avg +0.11% PF 1.20
+        out on a close at -0.5R after 15 min                            +137.9   +36.1   +12.0  +120.6  +194.4 | avg 22-25  +76.7 ( +1.6) | n 444 win 46% avg +0.12% PF 1.25
+        out on a close under VWAP                                       +135.0   +39.8    +8.4  +113.2  +199.8 | avg 22-25  +74.1 ( -1.0) | n 444 win 47% avg +0.10% PF 1.21
