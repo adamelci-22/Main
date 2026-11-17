@@ -1,0 +1,36 @@
+PULLBACK runner fade-sell rules (governor 2026-11-17: "How was I up 4.4 percent today and ended at break even there must be a better way like a fade sell rule if
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th); parentheses = points vs the live book; stats = PULLBACK trades alone
+
+        LIVE check (must match): runner 20-EMA close                +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) | n 444 win 50% avg +0.12% PF 1.21
+
+GIVE: + sell when a close gives back f of the open gain, once it is m R up
+        + give back 30% of the gain once 1R up                      +120.6   +38.8   +11.2  +102.3  +184.5 | avg 22-25  +68.2 ( -6.6) | n 444 win 50% avg +0.06% PF 1.10
+        + give back 40% of the gain once 1R up                      +127.6   +38.3   +12.4  +105.6  +187.1 | avg 22-25  +71.0 ( -3.8) | n 444 win 50% avg +0.08% PF 1.15
+        + give back 50% of the gain once 1R up                      +135.3   +37.4   +13.7  +104.9  +197.6 | avg 22-25  +72.8 ( -2.0) | n 444 win 50% avg +0.10% PF 1.19
+        + give back 60% of the gain once 1R up                      +133.6   +36.5   +13.7  +108.5  +197.6 | avg 22-25  +73.1 ( -1.7) | n 444 win 50% avg +0.09% PF 1.17
+        + give back 30% of the gain once 2R up                      +128.3   +38.0   +12.5  +111.0  +194.3 | avg 22-25  +72.5 ( -2.3) | n 444 win 50% avg +0.08% PF 1.15
+        + give back 40% of the gain once 2R up                      +136.8   +37.6   +12.5  +109.1  +203.1 | avg 22-25  +74.0 ( -0.8) | n 444 win 50% avg +0.10% PF 1.19
+        + give back 50% of the gain once 2R up                      +136.3   +37.0   +12.6  +108.6  +203.1 | avg 22-25  +73.6 ( -1.2) | n 444 win 50% avg +0.11% PF 1.20
+        + give back 60% of the gain once 2R up                      +135.9   +36.8   +12.8  +107.8  +204.0 | avg 22-25  +73.3 ( -1.5) | n 444 win 50% avg +0.11% PF 1.20
+        + give back 30% of the gain once 3R up                      +128.3   +37.4   +13.0  +114.2  +194.7 | avg 22-25  +73.2 ( -1.6) | n 444 win 50% avg +0.09% PF 1.16
+   qual + give back 40% of the gain once 3R up                      +137.4   +37.0   +13.1  +112.7  +204.0 | avg 22-25  +75.1 ( +0.2) | n 444 win 50% avg +0.11% PF 1.21
+        + give back 50% of the gain once 3R up                      +136.7   +37.0   +12.6  +113.0  +204.0 | avg 22-25  +74.8 ( -0.0) | n 444 win 50% avg +0.12% PF 1.21
+        + give back 60% of the gain once 3R up                      +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) | n 444 win 50% avg +0.12% PF 1.21
+
+PEAK: + sell when a close is p % under the best close
+        + close 1% under the best close                             +128.8   +37.8   +10.8   +92.5  +188.7 | avg 22-25  +67.5 ( -7.3) | n 444 win 50% avg +0.05% PF 1.09
+        + close 1.5% under the best close                           +128.4   +37.0   +12.3   +94.3  +203.1 | avg 22-25  +68.0 ( -6.8) | n 444 win 50% avg +0.08% PF 1.15
+        + close 2% under the best close                             +133.2   +36.8   +12.9  +113.0  +204.9 | avg 22-25  +74.0 ( -0.8) | n 444 win 50% avg +0.11% PF 1.20
+        + close 3% under the best close                             +136.7   +36.8   +12.8  +113.0  +204.0 | avg 22-25  +74.8 ( +0.0) | n 444 win 50% avg +0.12% PF 1.21
+
+LOCK: + raise the stop once the trade is well up
+        + stop to +1R once 2R up                                    +136.1   +36.7   +12.8  +109.3  +205.0 | avg 22-25  +73.7 ( -1.1) | n 444 win 50% avg +0.11% PF 1.21
+        + stop to +1R once 3R up                                    +136.7   +36.8   +12.8  +113.2  +204.0 | avg 22-25  +74.9 ( +0.0) | n 444 win 50% avg +0.12% PF 1.21
+        + stop to +2R once 3R up                                    +131.3   +37.1   +13.0  +114.7  +197.2 | avg 22-25  +74.0 ( -0.8) | n 444 win 50% avg +0.10% PF 1.19
+        + stop to +2R once 4R up                                    +136.7   +36.8   +12.4  +113.0  +204.0 | avg 22-25  +74.7 ( -0.1) | n 444 win 50% avg +0.11% PF 1.21
+
+FAST runner (replaces the 20-EMA)
+        runner 9-EMA close                                          +128.5   +38.2   +13.2  +104.8  +184.6 | avg 22-25  +71.1 ( -3.7) | n 444 win 50% avg +0.07% PF 1.14
+        runner 3-bar low close (no 20-EMA)                          +132.1   +37.9   +12.6  +112.1  +201.9 | avg 22-25  +73.7 ( -1.1) | n 444 win 50% avg +0.10% PF 1.18
+
+   22 fade rules: 0 PASS, 1 qualify on train only. Best average 2022-25: give back 40% after 3R +75.1 vs live +74.8
