@@ -1,0 +1,26 @@
+Giveback gaps in the other systems (governor 2026-11-17: "What about for the other system are there any gaps like this we can make before I lose out on a 60$ gain").
+   live book v5.2.61:  +137.4   +37.0   +13.1  +112.7  +204.0 | avg 22-25 +75.1
+
+ROUND TRIPS (open gain on the proxy in R; R = FADE stop distance, 1% of the proxy for the 9:35 family = 3% on the leg)
+   FADE      470 trades | reached 1R: 158, ended under +0.2R: 62 | reached 2R: 53, ended under +0.2R: 0 | reached 3R: 19, ended under +0.2R: 0
+   IBS-LONG  305 trades | reached 1R: 103, ended under +0.2R: 12 | reached 2R: 27, ended under +0.2R: 1 | reached 3R: 11, ended under +0.2R: 0
+   MIRROR    157 trades | reached 1R: 76, ended under +0.2R: 27 | reached 2R: 32, ended under +0.2R: 2 | reached 3R: 15, ended under +0.2R: 0
+   DIP       232 trades | reached 1R: 84, ended under +0.2R: 7 | reached 2R: 19, ended under +0.2R: 0 | reached 3R: 3, ended under +0.2R: 0
+
+FADE + giveback (on top of the +0.15R lock, 2R third and chandelier)
+        FADE: give back 40% once 1R up                        +135.7   +41.7   +14.0  +100.7  +171.9 | avg 22-25  +73.0 ( -2.0)
+        FADE: give back 50% once 1R up                        +135.9   +42.2   +14.5   +96.0  +176.6 | avg 22-25  +72.1 ( -2.9)
+        FADE: give back 40% once 1.5R up                      +126.1   +38.7   +13.8  +109.5  +187.3 | avg 22-25  +72.1 ( -3.0)
+        FADE: give back 50% once 1.5R up                      +130.7   +38.1   +13.3  +106.5  +188.0 | avg 22-25  +72.2 ( -2.9)
+   qual FADE: give back 40% once 2R up                        +137.9   +37.0   +13.6  +112.7  +203.0 | avg 22-25  +75.3 ( +0.3)
+        FADE: give back 50% once 2R up                        +137.4   +37.0   +13.1  +112.7  +204.0 | avg 22-25  +75.1 ( +0.0)
+
+9:35 FAMILY + giveback (IBS-LONG, MIRROR, DIP together)
+        9:35 family: give back 40% once 1R up                  +56.9   +34.6   +10.8   +87.7  +208.4 | avg 22-25  +47.5 (-27.5)
+        9:35 family: give back 50% once 1R up                  +73.4   +31.3    +7.7   +90.7  +218.8 | avg 22-25  +50.8 (-24.3)
+        9:35 family: give back 40% once 1.5R up               +113.4   +34.2   +15.4  +105.4  +221.7 | avg 22-25  +67.1 ( -7.9)
+        9:35 family: give back 50% once 1.5R up               +102.6   +33.6   +14.3  +101.5  +237.1 | avg 22-25  +63.0 (-12.1)
+   qual 9:35 family: give back 40% once 2R up                 +135.6   +34.2   +16.3  +120.1  +209.6 | avg 22-25  +76.6 ( +1.5)
+   qual 9:35 family: give back 50% once 2R up                 +134.6   +33.6   +15.5  +115.9  +217.6 | avg 22-25  +74.9 ( -0.2)
+        9:35 family: give back 40% once 3R up                 +137.4   +37.0   +13.1  +120.1  +204.0 | avg 22-25  +76.9 ( +1.8)
+        9:35 family: give back 50% once 3R up                 +137.4   +37.0   +13.1  +115.9  +204.0 | avg 22-25  +75.8 ( +0.8)

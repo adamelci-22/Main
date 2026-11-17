@@ -706,5 +706,15 @@
   "result": "Stop 25% of the way at the high: -2.3 points a year (PF 1.21 -> 1.16); 10% of the way: -3.6. Delayed to 0.5R past the high: -2.5 both. Delayed to 1R past the high: 0.0 (qualifies on train, fails test). Runners often dip back to just above breakeven before running, so any stop above breakeven at the fill gets hit on the trades that pay",
   "verdict": "not adopted",
   "champion_version": "5.2.61"
+ },
+ {
+  "id": "study.giveback_all",
+  "date": "2026-11-17",
+  "kind": "study",
+  "idea": "Giveback gaps in FADE, IBS-LONG, MIRROR, DIP (governor: other systems, before I lose out on a $60 gain)",
+  "method": "tools/backtest/giveback_all.py; round trips (reached 1/2/3R, ended under +0.2R); giveback once m R up (1 to 3), f 40/50%; live joint book v5.2.61; train/test rule",
+  "result": "Round trips from 2R: FADE 0 of 53, IBS-LONG 1 of 27, MIRROR 2 of 32, DIP 0 of 19; from 3R: 0 in every system (FADE already has the +0.15R lock, the 2R third and a 2-ATR chandelier; the 9:35 family exits at 15:55). Givebacks: FADE best 40% at 2R +0.3 (qual, fails test); 9:35 family 40% at 2R +1.5 (qual, loses 2023), 40% at 3R +1.8 but only from 2025 (train years unchanged), 1R versions -24 to -28. 0 pass. OVERNIGHT has no intraday hold",
+  "verdict": "not adopted; the gap existed only in the PULLBACK runner, now covered by v5.2.61",
+  "champion_version": "5.2.61"
  }
 ]
