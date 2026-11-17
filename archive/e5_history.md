@@ -191,3 +191,12 @@
 - **Earnings (A1.9):** NVDA reports Tue 2026-11-17 after the close (verified). No NVDA-linked entry (NVD, NVDQ) on Wed 11-18. MSFT reports 2027-01-27. Nothing today.
 - **Context:** gap-down day, semis -4.2% premarket. FADE trades Mondays. 9:30 waiter started.
 - **RVOL baseline:** 20 sessions 2026-10-19..11-13 -> `archive/paper_rvol_2026-11-16.json`.
+
+## 2026-11-17 (Tuesday) 9:00 research, rulebook v5.2.60
+- **Account:** 462514035 flat, no open orders, cash $2,557.75 = total value at 9:00. Drawdown stop clear (high $2,628.85, -2.70%). USDG off. No overnight position (none was entered 11-16).
+- **NO IBS-TREND SIGNAL.** QQQ SOXX IWM XLK XBI closed below their 20-session average (IBS 0.07 to 0.23, RSI2 6 to 12: oversold but under the 50-day trend, so no dip). XLF above the average, IBS 0.30. FADE and PULLBACK run as usual.
+- **Corporate actions:** clean. Premarket: QQQ +0.2%, SOXX +1.2%, IWM -0.6%, XLK +0.4%, XBI +0.7%, XLF -0.5%, funds in line with their proxies. SSG spread wide (bid 16.90, ask 17.95): A1.7 applies. TECS bid/ask 78.13/78.89 premarket.
+- **Earnings (A1.9):** NVDA reports tonight (Tue 2026-11-17) after the close: NVD and NVDQ have no real entry tomorrow (`EARNINGS_SKIP` 2026-11-18). Nothing today. MSFT 2027-01-27.
+- **Triggers (A2):** the 8:41, 9:33, 9:36 to 12:36 watchdog, 13:30 loop, afternoon watchdog (timeout 1800000 since 11-16), 15:51 and 15:57 triggers and the bimonthly reset reminder are enabled. The two `v5 paper` triggers belong to another session.
+- **Cycle (D4):** no `pending.json`, challenger null.
+- **RVOL baseline:** 20 sessions 2026-10-20..11-16 -> `archive/paper_rvol_2026-11-17.json`. 9:30 waiter started.
