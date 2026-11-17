@@ -5,8 +5,17 @@
   "reason": "v4 pushed by the governor 2026-11-05 (no second trade from a system that lost earlier that day); 5 new trades under v4 before the next goal check"
  },
  "pb": {
-  "state": "waiting",
+  "state": "trial",
+  "id": "drop.pb.NVDQ",
+  "desc": "drop NVDQ from the PULLBACK list (universe can only shrink)",
+  "changes": {
+   "x.drop_pb": [
+    "NVDQ"
+   ]
+  },
+  "why": "fewer but better trades: positive on the last 5 days (+0.12%) and the whole dataset (+0.76%, 8 days differ); NVDQ is also a single-stock fund with earnings gaps (NVDA reports tonight)",
+  "start": "2026-11-18",
   "since": "2026-11-05",
-  "reason": "v4 pushed by the governor 2026-11-05 (no second trade from a system that lost earlier that day); 5 new trades under v4 before the next goal check"
+  "base_version": 4
  }
 }
