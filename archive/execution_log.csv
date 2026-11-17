@@ -88,3 +88,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-17,TQQQ,FADE,buy,entry,10:15,10:15:31,10:15:31,52.51,52.52,0.02,52.53,52.64,52.525,-0.01,48,limit buy GFD 52.64 (ask+0.10%) filled 48 @ 52.525 in 1s; sized by the 100% of account cap (3% risk would be 97 shares); order 6afc6f93-57cc-4996-8546-efc6f3adf768,,
 2026-11-17,TQQQ,FADE,sell,stop_2_3,10:15,10:15:41,10:15:41,,,,51.73,,,,32,GTC stop-market 32 @ 51.73 (F x 0.985 rounded down) resting; order 6afc6f9d-e3dd-4046-8bd1-949f484c8c5c,,
 2026-11-17,TQQQ,FADE,sell,oco_1_3,10:15,10:15:42,10:15:43,,,,54.10,,,,16,GTC OCO 16: take-profit 54.10 (F x 1.03 rounded down) + stop 51.73 resting; advanced order 6afc6caf-b6ce-4580-b2d6-9fb46530f959,,
+2026-11-17,TQQQ,FADE,sell,stop_exit,10:32,,10:32:34,,,,51.73,,51.73,0.00,48,"stop fills: OCO stop leg 16 @ 51.73 (fee 0.02), stop-market 32 @ 51.73 (fee 0.04); stops resting from 10:15:42; OCO limit leg 54.10 cancelled; flat, cash 2519.53",,
