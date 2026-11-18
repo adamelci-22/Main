@@ -200,3 +200,11 @@
 - **Triggers (A2):** the 8:41, 9:33, 9:36 to 12:36 watchdog, 13:30 loop, afternoon watchdog (timeout 1800000 since 11-16), 15:51 and 15:57 triggers and the bimonthly reset reminder are enabled. The two `v5 paper` triggers belong to another session.
 - **Cycle (D4):** no `pending.json`, challenger null.
 - **RVOL baseline:** 20 sessions 2026-10-20..11-16 -> `archive/paper_rvol_2026-11-17.json`. 9:30 waiter started.
+
+## 2026-11-18 (Wednesday) 9:00 research, rulebook v5.2.61
+- **Account:** 462514035 flat, no open orders, cash $2,558.14 = total value at 9:00. Drawdown stop clear (high $2,634.56, -2.90%). USDG off. No overnight position.
+- **NO IBS-TREND SIGNAL.** All six proxies closed below their 20-session average (XLF 57.09 vs 57.28, IBS 0.11 just misses the long side's below-average rule). RSI2 4 to 15 on five proxies, but under the 50-day average, so no dip. FADE and PULLBACK run as usual.
+- **New today:** v5.2.61 3R giveback on the PULLBACK runner is live (`GIVEBACK_FROM` 2026-11-18). PULLBACK paper trial drop.pb.NVDQ starts.
+- **Earnings (A1.9):** NVDA reported 2026-11-17 pm (EPS 2.68 vs 2.47 est): NVD and NVDQ have no real entry today (`EARNINGS_SKIP`). MSFT 2027-01-27.
+- **Corporate actions:** clean. Premarket QQQ +0.9%, SOXX +2.2% (SOXL +6.4%, SOXS -6.5%), XLK +1.2%, IWM -0.2%, XBI -0.2%, XLF -0.2%; NVD -6.1% and NVDQ -6.0% match NVDA +3% after earnings; UVXY -6.2%. SSG spread wide (15.09/18.09): A1.7 applies.
+- **Context:** the container restarted overnight (uptime 0 at 8:41); state and triggers intact. RVOL baseline 2026-10-21..11-17 -> `archive/paper_rvol_2026-11-18.json`. 9:30 waiter started.
