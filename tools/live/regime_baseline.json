@@ -1,0 +1,9 @@
+{
+ "source": "five-year backtest of the live book, bt_curve.json and bt_trades.json from tools/backtest/dash_backtest.py, 2022-01-03..2026-10-30 (governor 2026-11-18: use the full data set including all 5 years)",
+ "sessions": 1198,
+ "edge_all": 0.289,
+ "fade_pf": 1.286,
+ "fade_trades": 228,
+ "pb_pf": 1.605,
+ "pb_trades": 207
+}

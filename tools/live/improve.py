@@ -405,6 +405,11 @@ def live_daily():
 
 
 # ------------------------------------------------------------------ regime, attribution, defensive review (D4, v5.2.33)
+def _regime_base():
+    try: return json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'regime_baseline.json')))
+    except Exception: return None
+
+
 def regime(D, values, window=20):
     """The champion's own trades on the most recent sessions of the dataset (it grows by one live session each close): FADE +2R reach
     rate and profit factor over the last `window` FADE trades, PULLBACK profit factor over the last `window`, against the whole dataset.
@@ -416,6 +421,10 @@ def regime(D, values, window=20):
     reach = lambda x: round(100 * sum(1 for y in x if y[4]) / len(x)) if x else None
     out = dict(window=window, fade_from=fw[0][0] if fw else None, fade_reach=reach(fw), fade_reach_all=reach(f), fade_pf=pf_([x[1] for x in fw]), fade_pf_all=pf_([x[1] for x in f]),
                pb_from=pw[0][0] if pw else None, pb_pf=pf_([x[1] for x in pw]), pb_pf_all=pf_([x[1] for x in p]))
+    # v5.2.62 (governor 2026-11-18: use the full data set including all 5 years): the comparison baselines are the five-year backtest, not the 8-month cache
+    # (tools/live/regime_baseline.json). The five-year trades carry no +2R flag, so the FADE reach baseline stays the cache's.
+    RB = _regime_base()
+    if RB: out.update(fade_pf_all=RB['fade_pf'], pb_pf_all=RB['pb_pf'])
     bad = []; warn = []
     for k, v, hi, lo in (('FADE +2R reach', out['fade_reach'], 40, 30), ('FADE PF', out['fade_pf'], 1.5, 1.0), ('PULLBACK PF', out['pb_pf'], 1.5, 1.0)):
         if v is None: continue
@@ -423,7 +432,7 @@ def regime(D, values, window=20):
         elif v <= hi: warn.append(k)
     # edge monitor (v5.2.34): the version in force's mean day over the last 40 sessions against the whole dataset, and the bootstrap
     # chance that the recent mean is above zero. INTACT: chance >= 90% and mean at least half the dataset's; FADING: chance below 70%; else THINNING.
-    r = [x for _, x in daily[-40:]]; allm = sum(x for _, x in daily) / len(daily); rng = random.Random(f"edge:{len(daily)}")
+    r = [x for _, x in daily[-40:]]; allm = RB['edge_all'] if RB else sum(x for _, x in daily) / len(daily); rng = random.Random(f"edge:{len(daily)}")
     p = sum(sum(rng.choices(r, k=len(r))) > 0 for _ in range(2000)) / 2000; m = sum(r) / len(r)
     out.update(edge_from=daily[-40][0], edge_mean=round(m, 3), edge_all=round(allm, 3), edge_p=round(100 * p),
                edge='FADING' if p < 0.70 else 'INTACT' if p >= 0.90 and m >= allm / 2 else 'THINNING')
@@ -434,8 +443,8 @@ def regime(D, values, window=20):
 
 
 def regime_line(g):
-    return (f"  regime {g['state']}: edge {g['edge']} (last 40 sessions from {g['edge_from']}: {g['edge_mean']:+.3f}%/day vs dataset {g['edge_all']:+.3f}%, chance above zero {g['edge_p']}%); last {g['window']} model FADE trades (from {g['fade_from']}) reach +2R {g['fade_reach']}% (dataset {g['fade_reach_all']}%), PF {g['fade_pf']} (dataset {g['fade_pf_all']}); "
-            f"last {g['window']} PULLBACK (from {g['pb_from']}) PF {g['pb_pf']} (dataset {g['pb_pf_all']})" + (f"  [{', '.join(g['flags'])}]" if g['flags'] else ''))
+    return (f"  regime {g['state']}: edge {g['edge']} (last 40 sessions from {g['edge_from']}: {g['edge_mean']:+.3f}%/day vs five-year {g['edge_all']:+.3f}%, chance above zero {g['edge_p']}%); last {g['window']} model FADE trades (from {g['fade_from']}) reach +2R {g['fade_reach']}% (dataset {g['fade_reach_all']}%), PF {g['fade_pf']} (five-year {g['fade_pf_all']}); "
+            f"last {g['window']} PULLBACK (from {g['pb_from']}) PF {g['pb_pf']} (five-year {g['pb_pf_all']})" + (f"  [{', '.join(g['flags'])}]" if g['flags'] else ''))
 
 
 def attribution(since=None):
