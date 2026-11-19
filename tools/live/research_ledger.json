@@ -734,5 +734,14 @@
   "method": "tools/backtest/relval_exit.py; 100 variants: target none/0.25/0.5/0.75/1.0 gap x stop 0.5/0.75/1.0/1.5/2.0 gap x breakeven off/on x out 15:55 / next 9:35; joint book without FADE; pick on train 2022/2024/2026, read test 2023/2025 after",
   "result": "Train pick (no target, stop 0.5 gap, hold to next 9:35) +343.7 pts on train, -78.1 on test (loses both test years). Tight stops and overnight holds win train and lose test; wider stops and the 15:55 exit hold up on test. Current exit (target 0.5, stop 1.0, out 15:55) kept. Live code equals the backtest 219/219 (relval_check.py).",
   "status": "current exit kept; RELVAL live from 2026-11-20 (v5.2.64)"
+ },
+ {
+  "id": "study.pb_earlier",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "With FADE removed, start PULLBACK earlier (governor: extend the pull back timing to earlier)",
+  "method": "tools/backtest/pb_earlier.py; live book v5.2.64 (no FADE, RELVAL, IBS family, overnight 50%); PB window from 10:00/10:05, an early mode (dip from 9:40, 2-bar opening range, from 9:50-10:00), later end 13:25; train 2022/2024/2026, test 2023/2025",
+  "result": "0 PASS. From 10:00 or 10:05: 2 more trades in 5 years, train +0.0, test -4.4. Early mode: +35 trades, PF 1.21 -> 1.16, train +8.3, test -25.8. Later end 13:25: train -48.7, test +2.6. The live window stays. Book without FADE + RELVAL averages +81.2%/yr 2022-25 vs +74.8% for the old book with FADE.",
+  "status": "rejected; live window kept"
  }
 ]

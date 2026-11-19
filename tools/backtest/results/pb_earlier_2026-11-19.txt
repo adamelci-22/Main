@@ -1,0 +1,13 @@
+PULLBACK earlier entry window, FADE removed (governor 2026-11-19: "If we remove fade system and extend the pull back timing to
+   years 2022 2023 2024 2025 2026 | TRAIN / TEST compounded (points vs live) | average 2022-25 | PULLBACK trades alone
+
+   live LIVE v5.2.64 (no FADE, RELVAL, PB 10:10-12:55)  +146.7   +41.1   +17.1  +119.8  +132.5 | TRAIN  +571.3 (  +0.0) TEST +210.2 (  +0.0) | avg 22-25  +81.2 | n 444 win 50% avg +0.12% PF 1.21
+   ref  old book WITH FADE, no RELVAL                   +136.7   +36.8   +12.8  +113.0  +204.0 | TRAIN  +711.5 TEST +191.4 | avg 22-25  +74.8
+
+        PB from 10:00 (j0=6)                            +146.7   +41.1   +17.1  +116.7  +132.5 | TRAIN  +571.3 (  +0.0) TEST +205.8 (  -4.4) | avg 22-25  +80.4 | n 446 win 50% avg +0.11% PF 1.20
+        PB from 10:05 (j0=7)                            +146.7   +41.1   +17.1  +116.7  +132.5 | TRAIN  +571.3 (  +0.0) TEST +205.8 (  -4.4) | avg 22-25  +80.4 | n 446 win 50% avg +0.11% PF 1.20
+   qual EARLY: from 9:50, dip from 9:40, OR 2 bars      +152.8   +35.3   +18.3  +110.2  +127.2 | TRAIN  +579.6 (  +8.3) TEST +184.4 ( -25.8) | avg 22-25  +79.1 | n 479 win 49% avg +0.09% PF 1.16
+   qual EARLY: from 9:55, dip from 9:40, OR 2 bars      +152.8   +35.3   +18.3  +110.2  +127.2 | TRAIN  +579.6 (  +8.3) TEST +184.4 ( -25.8) | avg 22-25  +79.1 | n 479 win 49% avg +0.09% PF 1.16
+   qual EARLY: from 10:00, dip from 9:40, OR 2 bars     +152.8   +35.3   +18.3  +110.2  +127.2 | TRAIN  +579.6 (  +8.3) TEST +184.4 ( -25.8) | avg 22-25  +79.1 | n 479 win 49% avg +0.09% PF 1.16
+        later end: to 13:25 (j1=47)                     +143.3   +41.9   +10.9  +120.4  +130.8 | TRAIN  +522.7 ( -48.7) TEST +212.8 (  +2.6) | avg 22-25  +79.1 | n 510 win 49% avg +0.09% PF 1.18
+        from 10:00 and to 13:25                         +143.3   +41.9   +10.9  +117.3  +130.8 | TRAIN  +522.7 ( -48.7) TEST +208.4 (  -1.8) | avg 22-25  +78.3 | n 512 win 49% avg +0.09% PF 1.17
