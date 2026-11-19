@@ -1,0 +1,41 @@
+Blocked and freed trades in the live book (governor 2026-11-19: "Counting what gets blocked or freed up"). Research only.
+
+PART 1. LIVE BOOK: signals offered, taken, lost (account % = each trade sized at 3% risk, summed, not compounded)
+   system     offered  taken  lost | taken: sum acct %, PF | lost: sum acct %, PF | lost to (count)
+   PULLBACK       444    231   213 |   +67.7, PF 1.58 |   -15.5, PF 0.87 | IBS stop-out 61, PULLBACK 41, IBS-LONG 36, loss block 30, MIRROR 26, DIP 19
+   IBS-LONG       305    155   150 |   +83.2, PF 1.54 |   +73.4, PF 1.44 | IBS-LONG 66, loss block 62, DIP 17, IBS stop-out 5
+   MIRROR         157     74    83 |   +64.7, PF 1.69 |   +21.7, PF 1.16 | loss block 44, MIRROR 33, DIP 3, IBS stop-out 2, IBS-LONG 1
+   DIP            232    133    99 |   +78.5, PF 1.62 |   +44.8, PF 1.53 | DIP 49, loss block 35, IBS-LONG 9, IBS stop-out 5, MIRROR 1
+   RELVAL         219    137    82 |   +15.3, PF 1.35 |    +5.2, PF 1.20 | IBS stop-out 24, loss block 15, IBS-LONG 14, RELVAL 12, DIP 11, MIRROR 5, cap 1
+
+PART 2. DROP ONE SYSTEM: trades of the others it frees
+   dropped    its trades  its sum acct % | freed trades  freed sum acct %  freed PF | net (freed - dropped)
+   PULLBACK          231           +67.7 |            0              +0.0     99.00 |   -67.7   freed: 
+   IBS-LONG          155           +83.2 |           82              -7.5      0.85 |   -90.7   freed: PULLBACK 49, RELVAL 21, DIP 11, MIRROR 1
+   MIRROR             74           +64.7 |           34             -12.2      0.49 |   -76.9   freed: PULLBACK 25, RELVAL 8, DIP 1
+   DIP               133           +78.5 |           60             +28.0      1.85 |   -50.5   freed: PULLBACK 28, IBS-LONG 15, RELVAL 13, MIRROR 4
+   RELVAL            137           +15.3 |            0              +0.0     99.00 |   -15.3   freed: 
+Why IBS-LONG loses winning signals (governor 2026-11-19: "why are these stocks losing gainers identify that focus on ibs first").
+
+1. HOW MANY IBS-LONG SIGNALS FIRE ON ONE MORNING: 305 signals on 170 days. Days by count: 1 fund(s) 99 days, 2 fund(s) 34 days, 3 fund(s) 21 days, 4 fund(s) 10 days, 5 fund(s) 1 days, 6 fund(s) 5 days
+
+2. WHY EACH LOST SIGNAL WAS LOST
+    128  another IBS-LONG fund taken the same 9:35 bar
+     17  busy (DIP)
+      5  IBS stop-out
+
+3. DAYS WITH 2+ IBS-LONG SIGNALS WHERE ONE WAS TAKEN: 66 days
+   taken trade:         sum   +19.8 acct %, avg +0.30, win 53%, PF 1.29
+   lost same-day ones:  sum   +44.0 acct % over 128 trades, avg +0.34, win 53%, PF 1.30
+   equal split of all:  avg +0.37 a day (what splitting cash would earn)
+   perfect hindsight:   avg +1.87 a day (best fund each day; not reachable)
+   days where every lost fund ended on the same side (win/lose) as the taken one: 40 of 66 (61%)
+   correlation of same-day outcomes between funds: 0.48 over 242 pairs
+
+4. WHICH FUNDS GET TAKEN AND WHICH GET LOST (relative-volume pick)
+   IWM   signals  51 | taken  25 sum   +7.1 PF 1.35 | lost  26 sum   +6.5 PF 1.25
+   QQQ   signals  45 | taken  17 sum  -10.4 PF 0.50 | lost  28 sum  +19.7 PF 1.82
+   SOXX  signals  51 | taken  25 sum  +55.5 PF 3.98 | lost  26 sum   -7.3 PF 0.85
+   XBI   signals  57 | taken  36 sum  +18.4 PF 1.35 | lost  21 sum  +33.7 PF 2.57
+   XLF   signals  54 | taken  40 sum  +10.4 PF 1.36 | lost  14 sum   +5.4 PF 1.59
+   XLK   signals  47 | taken  12 sum   +2.2 PF 1.17 | lost  35 sum  +15.4 PF 1.44
