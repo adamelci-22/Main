@@ -725,5 +725,14 @@
   "method": "tools/backtest/fade_replace.py; live joint book without FADE as the base (PULLBACK, IBS-LONG, MIRROR, DIP, overnight 50%), Massive 5-minute tape 2022-01..2026-10; 18 coded proxy->3x leg systems, 40 settings, each in FADE's slot; QUALIFY = beats the base on train compounded and in 2 of 3 train years, PASS = also beats it in 2023 and 2025; pick = best train qualifier",
   "result": "0 PASS, 11 qualify on train. Pre-set pick VWAPPB xm=0.5 (train +180.7 pts vs base) fails test (-50.6). Base without FADE: test +204.5% vs +191.4% with the old FADE (cut confirmed out of sample). Closest: RELVAL a=48 z=72 xm=1.0 (train +81.0, test +5.7 compounded; 2023 41.1 vs 45.2 base, 2025 119.8 vs 109.7), PF 1.21 over 219 trades; 4 of 5 RELVAL settings qualify on train. No candidate goes live.",
   "status": "rejected (no PASS); RELVAL offered as a paper trial only"
+ },
+ {
+  "id": "study.relval_exit",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "Best exit and hold for RELVAL before it goes live (governor: push the relval system)",
+  "method": "tools/backtest/relval_exit.py; 100 variants: target none/0.25/0.5/0.75/1.0 gap x stop 0.5/0.75/1.0/1.5/2.0 gap x breakeven off/on x out 15:55 / next 9:35; joint book without FADE; pick on train 2022/2024/2026, read test 2023/2025 after",
+  "result": "Train pick (no target, stop 0.5 gap, hold to next 9:35) +343.7 pts on train, -78.1 on test (loses both test years). Tight stops and overnight holds win train and lose test; wider stops and the 15:55 exit hold up on test. Current exit (target 0.5, stop 1.0, out 15:55) kept. Live code equals the backtest 219/219 (relval_check.py).",
+  "status": "current exit kept; RELVAL live from 2026-11-20 (v5.2.64)"
  }
 ]
