@@ -208,3 +208,12 @@
 - **Earnings (A1.9):** NVDA reported 2026-11-17 pm (EPS 2.68 vs 2.47 est): NVD and NVDQ have no real entry today (`EARNINGS_SKIP`). MSFT 2027-01-27.
 - **Corporate actions:** clean. Premarket QQQ +0.9%, SOXX +2.2% (SOXL +6.4%, SOXS -6.5%), XLK +1.2%, IWM -0.2%, XBI -0.2%, XLF -0.2%; NVD -6.1% and NVDQ -6.0% match NVDA +3% after earnings; UVXY -6.2%. SSG spread wide (15.09/18.09): A1.7 applies.
 - **Context:** the container restarted overnight (uptime 0 at 8:41); state and triggers intact. RVOL baseline 2026-10-21..11-17 -> `archive/paper_rvol_2026-11-18.json`. 9:30 waiter started.
+
+## 2026-11-19 (Thursday) 9:00 research, rulebook v5.2.62
+- **Account:** 462514035 flat, no open orders, cash $2,558.14 = total value at 9:00. Drawdown stop clear (high $2,634.56, -2.90%). USDG off. No overnight position (none was entered 11-18).
+- **IBS-TREND SIGNAL TODAY: XLF dip -> FAS.** XLF closed 56.43 under its 20-session average 57.30 with IBS 0.07 and RSI2 6. Rule: dip. Other proxies: no signal (XBI RSI2 4, IBS 0.20 misses). 9:35 waiter started. Entry at 9:35 follows B6.4 (A1 checks, FAS leg, stop-market at fill x 0.97).
+- **New today:** regime line compares against the five-year backtest (v5.2.62). No trading rule changed.
+- **Earnings (A1.9):** NVDA reported 2026-11-17 pm, so NVD and NVDQ trade again today. MSFT next 2027-01-27.
+- **Corporate actions:** clean. Premarket QQQ +1.8%, SOXX +2.8% (SOXL +8.7%, SOXS -8.5%), XLK +2.1%, IWM +0.5%, XBI +0.8%, XLF +0.2%; UVXY -3.8%; NVD -2.5% and NVDQ -2.2%. FAS premarket spread 1.0% (161.60/162.99), SSG quote stale and wide (30.96/37.20): A1.7 applies at 9:35.
+- **Cycle (D4):** no `pending.json`. Paper trial drop.pb.NVDQ runs (1 of 10 trades).
+- **Context:** the container restarted overnight again (uptime 0 at 8:41); state and triggers intact. RVOL baseline 2026-10-22..11-18 -> `archive/paper_rvol_2026-11-19.json`. 9:30 and 9:35 waiters started.
