@@ -2,9 +2,9 @@
 """Backtest data for the scorecard dashboard (governor 2026-11-14: "add backtest sections, include all the new systems"). Research only.
     python3 -I tools/backtest/dash_backtest.py OUT_DIR
 Writes bt_trades.json (every backtest trade of the live rules, one row per trade), bt_years.json, bt_curve.json, bt_months.json, bt_risk.json,
-systems.json and periods_bt.json: the live book (FADE, PULLBACK, IBS long, mirror, dip, overnight leg at 50%) on the Massive 5-minute tape
+systems.json and periods_bt.json: the live book (RELVAL, PULLBACK, IBS long, mirror, dip, overnight leg at 50%; v5.2.64: RELVAL replaced FADE) on the Massive 5-minute tape
 2022-01-03..2026-10-30, one shared account. Earlier rule versions are not output (governor 2026-11-14: remove everything about the old rules).
-System names match the real trade log: FADE, PULLBACK, IBS-LONG, MIRROR, DIP, OVERNIGHT."""
+System names match the real trade log: RELVAL, PULLBACK, IBS-LONG, MIRROR, DIP, OVERNIGHT."""
 import json, os, sys
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
@@ -12,7 +12,9 @@ import overnight_size as OS
 O, B, BA, SB, N2, NS, TB, BM = OS.O, OS.B, OS.BA, OS.SB, OS.N2, OS.NS, OS.TB, OS.BM
 out = sys.argv[1]; os.makedirs(out, exist_ok=True); dm = O.dm; YEARS = SB.YEARS; r4 = lambda x: round(float(x), 3)
 
-F0 = B.fade_trades(); P0 = B.pb_trades(); I0 = B.ibs_trades(sid=4)
+import new_systems as NSY
+F0 = B.BC.new(B.ds, B.ctx, dm, NSY.relval, dict(a=48, z=72, xm=1.0), 0)   # v5.2.64: RELVAL in FADE's slot (sys 0)
+P0 = B.pb_trades(); I0 = B.ibs_trades(sid=4)
 M = B.BC.new(B.ds, B.ctx, dm, BM.mirror_fn, dict(hi=0.95, n=20), 5); D = B.BC.new(B.ds, B.ctx, dm, N2.rsi2d, dict(th=10, n=50, last=NS.END), 2)
 S = O.signals(); ovn = np.zeros(len(dm))
 for n, d in enumerate(dm):
@@ -21,7 +23,7 @@ for n, d in enumerate(dm):
 def acct(parts, after_stop=False, extra=0.0):
     return BA.acct(dm, TB.byday([t for p in parts for t in p]), after_stop=after_stop, extra_cost=extra)
 v51, tk, _ = acct([F0, P0, I0, M, D]); cur = (1 + v51) * (1 + 0.5 * ovn) - 1
-SYS = {0: 'FADE', 1: 'PULLBACK', 4: 'IBS-LONG', 5: 'MIRROR', 2: 'DIP'}
+SYS = {0: 'RELVAL', 1: 'PULLBACK', 4: 'IBS-LONG', 5: 'MIRROR', 2: 'DIP'}
 def taken_rows(parts):
     """The shared account (live rules: no entry after an IBS-family stop-out): every trade taken, with its account result."""
     by = TB.byday([t for p in parts for t in p]); rows = []
@@ -50,8 +52,8 @@ chk = np.array([0.0]); eq = {}
 for r in rows: eq[r['day'][:4]] = eq.get(r['day'][:4], 1.0) * (1 + r['acct_pct'] / 100)
 print('rows check by year', {y: round((v - 1) * 100, 1) for y, v in sorted(eq.items())}, 'against', [round(v, 1) for v in SB.yret(cur)])
 json.dump([dict(source='backtest', days=len(dm), start=dm[0], end=dm[-1])], open(os.path.join(out, 'periods_bt.json'), 'w'))
-BOOKS = [('b4', 'All systems, as live from Nov 16', cur)]
-ALONE = [('s0', 'FADE alone', acct([F0])[0]), ('s1', 'PULLBACK alone', acct([P0])[0]), ('s2', 'IBS-LONG alone', acct([I0])[0]), ('s3', 'MIRROR alone', acct([M])[0]), ('s4', 'DIP alone', acct([D])[0]), ('s5', 'OVERNIGHT alone, full size', ovn)]
+BOOKS = [('b4', 'All systems, as live from Nov 20', cur)]
+ALONE = [('s0', 'RELVAL alone', acct([F0])[0]), ('s1', 'PULLBACK alone', acct([P0])[0]), ('s2', 'IBS-LONG alone', acct([I0])[0]), ('s3', 'MIRROR alone', acct([M])[0]), ('s4', 'DIP alone', acct([D])[0]), ('s5', 'OVERNIGHT alone, full size', ovn)]
 years = []
 for grp, items in (('Book', BOOKS), ('System', ALONE)):
     for i, nm, r in items:
@@ -74,11 +76,11 @@ for f in (0.0, 0.33, 0.5, 1.0):
                      max_dd=r4(mdd), stops=halts, note=('worst night ' + f'{o.min() * 100:+.1f}%' + f', {int((o < -0.03).sum())} nights under -3%') if f else ''))
 json.dump(risk, open(os.path.join(out, 'bt_risk.json'), 'w'))
 # systems table
-names = {0: 'FADE', 1: 'PULLBACK', 4: 'IBS-LONG', 5: 'MIRROR', 2: 'DIP'}; nyr = len(dm) / 252; rows = []
+names = {0: 'RELVAL', 1: 'PULLBACK', 4: 'IBS-LONG', 5: 'MIRROR', 2: 'DIP'}; nyr = len(dm) / 252; rows = []
 for s, nm in names.items():
     x = [t for t in tk if t['sys'] == s]; rows.append(dict(id=nm, name=nm, trades=len(x), per_year=r4(len(x) / nyr), win_pct=r4(100 * np.mean([t['g'] > 0 for t in x])), points=r4(sum(t['g'] for t in x))))
 nights = ovn[ovn != 0]; rows.append(dict(id='OVERNIGHT', name='OVERNIGHT (50% of cash)', trades=len(nights), per_year=r4(len(nights) / nyr), win_pct=r4(100 * np.mean(nights > 0)), points=r4(sum(0.5 * nights * 100))))
-SPEC = {'FADE': ('Failed 30-minute box break on a proxy, first retest closes back inside', 'Opposite leg, 3x', '10:10 to 12:55', 'Beyond the break extreme, at least 0.5% of the proxy', '1/3 at 2R, rest on a 2-ATR chandelier, out 13:30', 'Not on Fridays'),
+SPEC = {'RELVAL': ('13:35-15:30: a sector proxy is 1%+ and 2.5 sd away from QQQ since the open', 'Opposite leg, 3x (back toward QQQ)', '13:35 to 15:30', 'One more gap against (3x the gap on the leg)', 'Half the gap back toward QQQ, else out 15:55', 'Replaced FADE on Nov 20'),
         'PULLBACK': ('Breakout on volume, 2 to 5 bar dip, trigger bar above the prior high', 'Inverse and single-stock funds', '10:10 to 12:50', 'Dip low, at least 0.75%', '1/3 at the morning high, rest to a 20-EMA close, out 13:30', ''),
         'IBS-LONG': ('Closed above its 20-day average and in the bottom 10% of its range', '3x long leg', '9:35', '1% of the proxy (3% on the leg)', 'Out 15:55', 'One IBS trade a day'),
         'MIRROR': ('Closed at or below its 20-day average and in the top 5% of its range', '3x inverse leg', '9:35', '1% of the proxy', 'Out 15:55', 'One IBS trade a day'),

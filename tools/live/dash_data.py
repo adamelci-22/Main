@@ -23,11 +23,11 @@ days = health.trading_days(health.LIVE_START, day)
 # one row per live trading day: the account % made that day by each system (0 on days without a trade)
 daily = []
 for i, d in enumerate(days, 1):
-    row = dict(d=i, day=d, combined=0.0, fade=0.0, pullback=0.0, ibs_long=0.0, mirror=0.0, dip=0.0, overnight=0.0)
+    row = dict(d=i, day=d, combined=0.0, fade=0.0, relval=0.0, pullback=0.0, ibs_long=0.0, mirror=0.0, dip=0.0, overnight=0.0)
     for t in trades:
         if t['day'] == d:
             row['combined'] = round(row['combined'] + t['acct_pct'], 4)
-            k = {'FADE': 'fade', 'IBS-LONG': 'ibs_long', 'MIRROR': 'mirror', 'DIP': 'dip', 'OVERNIGHT': 'overnight'}.get(t['system'].upper(), 'pullback'); row[k] = round(row.get(k, 0.0) + t['acct_pct'], 4)      # v5.2.48: IBS-TREND has its own column
+            k = {'FADE': 'fade', 'RELVAL': 'relval', 'IBS-LONG': 'ibs_long', 'MIRROR': 'mirror', 'DIP': 'dip', 'OVERNIGHT': 'overnight'}.get(t['system'].upper(), 'pullback'); row[k] = round(row.get(k, 0.0) + t['acct_pct'], 4)      # v5.2.48: IBS-TREND has its own column
     daily.append(row)
 # health.json: the latest tracker row (archive/health_log.csv, written by health.py) as one line per measure, for the dashboard's health cards
 def tone(st):

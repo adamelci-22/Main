@@ -14,10 +14,10 @@ B, BA, BM, SB, N2, NS, TB = O.B, O.BA, O.BM, O.SB, O.N2, O.NS, O.TB; TR, TE = O.
 
 def dd_stats(r):
     eq = np.cumprod(1 + r); pk = np.maximum.accumulate(eq); dd = 1 - eq / pk
-    halts = 0; high = 1.0; e = 1.0                      # A1.13: halt at 15% under the high; count fires, restart the high at the halt level
+    halts = 0; high = 1.0; e = 1.0                      # A1.13: halt at 25% under the high (v5.2.65; was 15%); count fires, restart the high at the halt level
     for x in r:
         e *= 1 + x; high = max(high, e)
-        if e <= 0.85 * high: halts += 1; high = e
+        if e <= 0.75 * high: halts += 1; high = e
     return dd.max() * 100, halts
 
 

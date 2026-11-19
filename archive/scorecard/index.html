@@ -1,0 +1,1187 @@
+<meta name="dash-one-writer">
+<style>
+.sc { max-width: 1160px; margin-inline: auto; display: flex; flex-direction: column; gap: var(--cds-gap-xl); font-family: var(--font-anthropic-sans); font-variant-numeric: tabular-nums; }
+.sc * { min-width: 0; }
+.sc h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.1rem; line-height: 1.1; margin: 0; text-wrap: balance; }
+.sc h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.sc p { margin: 0; }
+.sc .pos { color: var(--color-ok); }
+.sc .neg { color: var(--color-bad); }
+.sc-hero { display: flex; flex-direction: column; gap: var(--cds-gap-md); padding: var(--cds-pad-xl) var(--cds-pad-lg); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius);
+  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--sc-live) 16%, transparent), transparent 60%), var(--color-panel); }
+.sc-eyebrow { font-size: var(--cds-font-size-caption); letter-spacing: .12em; text-transform: uppercase; color: var(--color-fg-muted); }
+.sc-chips { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); }
+.sc-chip { font-size: var(--cds-font-size-caption); padding: .3rem .75rem; border: 1px solid var(--color-border-line); border-radius: 999px; color: var(--color-fg-muted); background: color-mix(in srgb, var(--color-bg) 55%, transparent); }
+.sc-chip.pos, .sc-chip.neg { border-color: currentColor; font-weight: var(--cds-font-weight-medium); }
+.sc-label { font-size: var(--cds-font-size-caption); letter-spacing: .12em; text-transform: uppercase; color: var(--color-fg-muted); margin-bottom: calc(-1 * var(--cds-gap-sm)); }
+.sc-note { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; max-width: 75ch; }
+.sc-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12.5rem), 1fr)); gap: var(--cds-gap-md); }
+.sc-tile, .sc-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); padding: var(--cds-pad-lg); }
+.sc-tile { display: flex; flex-direction: column; gap: var(--cds-gap-xs); }
+.sc-tile .lab { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .08em; }
+.sc-tile .big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.2rem; line-height: 1.1; }
+.sc-tile .cmp { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.5; }
+.sc-tile .cmp b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.sc-card { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+.sc-head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--cds-gap-md); }
+.sc-seg { display: inline-flex; border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); overflow: hidden; }
+.sc-seg button { font: inherit; font-size: var(--cds-font-size-caption); padding: .4rem .9rem; background: transparent; color: var(--color-fg-muted); border: 0; cursor: pointer; }
+.sc-seg button + button { border-left: 1px solid var(--color-border-line); }
+.sc-seg button[aria-pressed="true"] { background: var(--sc-live); color: var(--color-bg); font-weight: var(--cds-font-weight-medium); }
+.sc-seg button:focus-visible { outline: 2px solid var(--color-fg); outline-offset: -2px; }
+.sc-range { align-self: flex-start; max-width: 100%; }
+.sc-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: var(--cds-gap-md); }
+.sc-chart { position: relative; min-height: 340px; }
+.sc-chart.short { min-height: 280px; }
+.sc-chart.mini { min-height: 210px; }
+.sc-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.sc-chart.dash-skeleton { min-height: inherit; }
+.sc-key { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sc-key span { display: inline-flex; align-items: center; gap: .5rem; }
+.sc-key svg { width: 34px; height: 10px; }
+.sc-sw { width: .8rem; height: .8rem; border-radius: 3px; display: inline-block; }
+.sc-sw.bt { background: color-mix(in srgb, var(--color-fg-muted) 55%, transparent); }
+.sc-sw.lv { background: var(--sc-live); }
+.sc-sw.up { background: var(--color-ok); }
+.sc-sw.dn { background: var(--color-bad); }
+.sc-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); border-radius: var(--cds-radius); box-shadow: var(--cds-shadow-popover); padding: var(--cds-pad-xs) var(--cds-pad-sm); font-size: var(--cds-font-size-caption); line-height: 1.5; white-space: nowrap; z-index: 2; }
+.sc-tip .d { color: var(--cds-text-secondary); }
+.sc-scroll { overflow-x: auto; }
+.sc table { border-collapse: collapse; width: 100%; font-size: var(--cds-font-size-caption); }
+.sc th { text-align: right; font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); padding: .45rem .6rem; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.sc td { text-align: right; padding: .5rem .6rem; border-bottom: 1px solid var(--color-border-line); white-space: nowrap; }
+.sc th:first-child, .sc td:first-child, .sc th.l, .sc td.l { text-align: left; }
+.sc tbody tr.sc-live td { font-weight: var(--cds-font-weight-medium); }
+.sc tbody tr.sc-est td { font-style: italic; color: var(--color-fg-muted); }
+.sc tbody tr.sc-live td:nth-child(2) { color: var(--sc-live); }
+.sc tbody tr.sc-backtest td { color: var(--color-fg-muted); }
+.sc tbody tr.sc-last td { border-bottom-width: 2px; }
+.sc-box { max-height: 22rem; overflow: auto; }
+.sc-box thead th { position: sticky; top: 0; background: var(--color-panel); }
+.sc [hidden] { display: none !important; }
+.sc-bt-ctl { display: flex; flex-direction: column; gap: var(--cds-gap-sm); }
+.sc-seg.sc-wrap { flex-wrap: wrap; max-width: 100%; }
+.sc-wst { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr)); gap: var(--cds-gap-sm); }
+.sc-wst > div { display: flex; flex-direction: column; gap: .15rem; padding: var(--cds-pad-sm) var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); }
+.sc-wst .lab { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); text-transform: uppercase; letter-spacing: .08em; }
+.sc-wst .val { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 1.45rem; line-height: 1.15; }
+.sc-wst .sub { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sc h3 { font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.sc tbody tr.sc-sel td { font-weight: var(--cds-font-weight-medium); background: color-mix(in srgb, var(--sc-live) 9%, transparent); }
+.sc-sum { display: flex; align-items: baseline; gap: var(--cds-gap-sm); cursor: pointer; list-style: none; }
+.sc-sum::-webkit-details-marker { display: none; }
+.sc-sum::after { content: ''; order: 9; margin-left: auto; align-self: center; width: .5rem; height: .5rem; border-right: 2px solid var(--color-fg-muted); border-bottom: 2px solid var(--color-fg-muted); transform: rotate(45deg); transition: transform var(--cds-dur-slow); }
+details[open] > .sc-sum::after { transform: rotate(-135deg); }
+.sc-sum:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 4px; border-radius: var(--cds-radius); }
+.sc-count { color: var(--color-fg-muted); font-size: var(--cds-font-size-body); }
+.sc-hint { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+details[open] .sc-hint { display: none; }
+.sc-hc { display: flex; flex-direction: column; gap: var(--cds-gap-md); }
+.sc-hrow { display: grid; grid-template-columns: .65rem 1fr auto; column-gap: .7rem; align-items: baseline; padding: .55rem 0; border-top: 1px solid var(--color-border-line); }
+.sc-hrow .dot { width: .6rem; height: .6rem; border-radius: 50%; background: var(--color-fg-muted); align-self: center; }
+.sc-hrow.ok .dot { background: var(--color-ok); }
+.sc-hrow.warn .dot { background: var(--color-warn, #d9a400); }
+.sc-hrow.bad .dot { background: var(--color-bad); }
+.sc-hrow.early .dot, .sc-hrow.na .dot { background: transparent; box-shadow: inset 0 0 0 2px var(--color-fg-muted); }
+.sc-hrow .m { color: var(--color-fg); }
+.sc-hrow .r { grid-column: 2 / 4; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+.sc-hrow .v { font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); text-align: right; }
+.sc-hrow.early .v, .sc-hrow.na .v { color: var(--color-fg-muted); font-weight: normal; }
+.sc-verdict { font-size: var(--cds-font-size-caption); padding: .3rem .75rem; border-radius: 999px; border: 1px solid currentColor; font-weight: var(--cds-font-weight-medium); white-space: nowrap; }
+.sc-verdict.ok { color: var(--color-ok); } .sc-verdict.warn { color: var(--color-warn, #d9a400); } .sc-verdict.bad { color: var(--color-bad); }
+.sc-prog { display: flex; flex-direction: column; gap: .35rem; }
+.sc-prog .bar { position: relative; height: .55rem; border-radius: 999px; background: color-mix(in srgb, var(--color-fg-muted) 22%, transparent); overflow: hidden; }
+.sc-prog .bar i { position: absolute; inset: 0 auto 0 0; background: var(--sc-live); border-radius: 999px; }
+.sc-prog .bar b { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--color-fg-muted); }
+.sc-tk { display: grid; grid-template-columns: minmax(7rem, 11rem) 1fr auto; gap: .8rem; align-items: center; padding: .4rem 0; font-size: var(--cds-font-size-caption); }
+.sc-tk .t { color: var(--color-fg); } .sc-tk .t span { color: var(--color-fg-muted); }
+.sc-tk .trk { height: .8rem; border-radius: 4px; background: color-mix(in srgb, var(--color-fg-muted) 14%, transparent); }
+.sc-tk .trk i { display: block; height: 100%; border-radius: 4px; background: var(--color-ok); }
+.sc-tk .trk i.neg { background: var(--color-bad); }
+.sc-tk .v { font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); text-align: right; }
+@media (max-width: 600px) {
+  .sc { gap: var(--cds-gap-lg, 1.25rem); }
+  .sc h1 { font-size: 1.6rem; }
+  .sc-hero { padding: var(--cds-pad-lg) var(--cds-pad-md, .85rem); }
+  .sc-tile, .sc-card { padding: var(--cds-pad-md, .85rem); }
+  .sc-tile .big { font-size: 1.8rem; }
+  .sc-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cds-gap-sm); }
+  .sc-tile .cmp { font-size: .72rem; }
+  .sc-seg { width: 100%; } .sc-seg button { flex: 1 1 auto; padding: .45rem .25rem; font-size: .7rem; letter-spacing: 0; white-space: nowrap; }
+  .sc-tk { grid-template-columns: 1fr auto; } .sc-tk .trk { grid-column: 1 / 3; grid-row: 2; }
+  .sc-hrow { grid-template-columns: .65rem 1fr auto; }
+  .sc-chip { font-size: .72rem; padding: .25rem .6rem; }
+}
+.sc-open { display: flex; flex-direction: column; gap: var(--cds-gap-md); padding-top: var(--cds-pad-lg); }
+.sc-empty { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); }
+</style>
+<div class="sc">
+  <header class="sc-hero" id="top">
+    <span class="sc-eyebrow">Robinhood account: RELVAL, PULLBACK, IBS-LONG, MIRROR, DIP and OVERNIGHT</span>
+    <h1>Agentic trading scorecard</h1>
+    <div class="sc-chips">
+      <span class="sc-chip">Live since Oct 16</span>
+      <span class="sc-chip">Backtest Jan 2022 to Oct 2026</span>
+      <span class="sc-chip">Estimate 2018 to 2021</span>
+      <span class="sc-chip" data-draw="stat" data-source="periods" data-where="source=live" data-field="end">—</span>
+      <span class="sc-chip" data-draw="stat" data-source="pace" data-where="system=Combined" data-field="gap" data-tone="">—</span>
+    </div>
+  </header>
+
+  <section class="sc-tiles" id="summary" aria-label="Combined results, live against backtest">
+    <div class="sc-tile">
+      <span class="lab">Total return</span>
+      <span class="big" data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="total_return" data-tone="">—</span>
+      <span class="cmp">Backtest <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="total_return">—</b> over <b data-draw="stat" data-source="periods" data-where="source=backtest" data-field="days">—</b> days</span>
+    </div>
+    <div class="sc-tile">
+      <span class="lab">Return per day</span>
+      <span class="big" data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="pct_per_day" data-tone="">—</span>
+      <span class="cmp">Backtest <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="pct_per_day">—</b> a day · live <b data-draw="stat" data-source="periods" data-where="source=live" data-field="days">—</b> trading days</span>
+    </div>
+    <div class="sc-tile">
+      <span class="lab">Cash gain</span>
+      <span class="big" data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="cash_gain" data-tone="">—</span>
+      <span class="cmp">Backtest <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="cash_gain">—</b> on a <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="base">—</b> account</span>
+    </div>
+    <div class="sc-tile">
+      <span class="lab">Win rate</span>
+      <span class="big" data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="win_rate">—</span>
+      <span class="cmp">Backtest <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="win_rate">—</b> · <b data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="trades">—</b> live trades</span>
+    </div>
+    <div class="sc-tile">
+      <span class="lab">Profit factor</span>
+      <span class="big" data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="pf">—</span>
+      <span class="cmp">Backtest <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="pf">—</b></span>
+    </div>
+    <div class="sc-tile">
+      <span class="lab">Trades per week</span>
+      <span class="big" data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="trades_per_week">—</span>
+      <span class="cmp">Backtest <b data-draw="stat" data-source="stats" data-where="id=Combined_backtest" data-field="trades_per_week">—</b> a week</span>
+    </div>
+  </section>
+
+  <section class="sc-card" id="day-card">
+    <div class="sc-head">
+      <div>
+        <h2>Return by trading day</h2>
+        <p class="sc-note">Account return after each trading day since Oct 16</p>
+      </div>
+      <div class="sc-seg" role="group" aria-label="System">
+        <button type="button" data-sys="Combined" aria-pressed="true">Combined</button>
+        <button type="button" data-sys="RELVAL" aria-pressed="false">RELVAL</button>
+        <button type="button" data-sys="PULLBACK" aria-pressed="false">PULLBACK</button>
+        <button type="button" data-sys="IBS-LONG" aria-pressed="false">IBS-LONG</button>
+        <button type="button" data-sys="MIRROR" aria-pressed="false">MIRROR</button>
+        <button type="button" data-sys="DIP" aria-pressed="false">DIP</button>
+        <button type="button" data-sys="OVERNIGHT" aria-pressed="false">OVERNIGHT</button>
+      </div>
+    </div>
+    <div class="sc-key" aria-hidden="true">
+      <span><svg viewBox="0 0 34 8"><line x1="1" y1="4" x2="33" y2="4" stroke="var(--color-fg-muted)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="0.1 6"></line></svg>Backtest pace</span>
+      <span><svg viewBox="0 0 34 8"><line x1="1" y1="4" x2="33" y2="4" stroke="var(--sc-live)" stroke-width="2.5" stroke-linecap="round"></line></svg>Real trades</span>
+    </div>
+    <div class="sc-chart dash-skeleton" id="day-chart" data-draw="chartday" data-source="curve_days"></div>
+  </section>
+
+  <p class="sc-label">Where the results come from</p>
+
+  <div class="sc-grid2">
+    <section class="sc-card" id="bars-card">
+      <div class="sc-head">
+        <div>
+          <h2>Result by day</h2>
+          <p class="sc-note">What the account made on each trading day </p>
+        </div>
+        <div class="sc-seg" role="group" aria-label="System">
+        <button type="button" data-sys="Combined" aria-pressed="true">Combined</button>
+        <button type="button" data-sys="RELVAL" aria-pressed="false">RELVAL</button>
+        <button type="button" data-sys="PULLBACK" aria-pressed="false">PULLBACK</button>
+        <button type="button" data-sys="IBS-LONG" aria-pressed="false">IBS-LONG</button>
+        <button type="button" data-sys="MIRROR" aria-pressed="false">MIRROR</button>
+        <button type="button" data-sys="DIP" aria-pressed="false">DIP</button>
+        <button type="button" data-sys="OVERNIGHT" aria-pressed="false">OVERNIGHT</button>
+      </div>
+      </div>
+      <div class="sc-seg sc-range" role="group" aria-label="Range">
+        <button type="button" data-range="all" aria-pressed="true">All time</button>
+        <button type="button" data-range="7d" aria-pressed="false">1 week</button>
+        <button type="button" data-range="1m" aria-pressed="false">1 month</button>
+        <button type="button" data-range="3m" aria-pressed="false">3 months</button>
+        <button type="button" data-range="1y" aria-pressed="false">1 year</button>
+      </div>
+      <div class="sc-key" aria-hidden="true"><span><i class="sc-sw up"></i>Gain</span><span><i class="sc-sw dn" style="background: #d93636"></i>Loss</span></div>
+      <div class="sc-chart short dash-skeleton" id="bars-chart" data-draw="bars" data-source="live_days"></div>
+    </section>
+
+    <section class="sc-card" id="dist-card">
+      <div class="sc-head">
+        <div>
+          <h2>Real trades against the backtest</h2>
+        </div>
+        <div class="sc-seg" role="group" aria-label="System">
+        <button type="button" data-sys="Combined" aria-pressed="true">Combined</button>
+        <button type="button" data-sys="RELVAL" aria-pressed="false">RELVAL</button>
+        <button type="button" data-sys="PULLBACK" aria-pressed="false">PULLBACK</button>
+        <button type="button" data-sys="IBS-LONG" aria-pressed="false">IBS-LONG</button>
+        <button type="button" data-sys="MIRROR" aria-pressed="false">MIRROR</button>
+        <button type="button" data-sys="DIP" aria-pressed="false">DIP</button>
+        <button type="button" data-sys="OVERNIGHT" aria-pressed="false">OVERNIGHT</button>
+      </div>
+      </div>
+      <div class="sc-key" aria-hidden="true"><span><i class="sc-sw up"></i><i class="sc-sw dn" style="background: #d93636"></i>Backtest trades</span><span><i class="sc-sw lv" style="background: color-mix(in srgb, var(--sc-live) 70%, black)"></i>Real trades</span></div>
+      <div class="sc-chart short dash-skeleton" id="dist-chart" data-draw="dist" data-source="bt_trades live_trades"></div>
+    </section>
+  </div>
+
+  <section class="sc-card" id="btcurve-card">
+    <h2>Growth of the account in the backtest</h2>
+    <div class="sc-bt-ctl">
+      <div class="sc-seg sc-wrap" role="group" aria-label="Backtest system">
+        <button type="button" data-btsys="Combined" aria-pressed="true">Combined</button>
+        <button type="button" data-btsys="RELVAL" aria-pressed="false">RELVAL</button>
+        <button type="button" data-btsys="PULLBACK" aria-pressed="false">PULLBACK</button>
+        <button type="button" data-btsys="IBS-LONG" aria-pressed="false">IBS-LONG</button>
+        <button type="button" data-btsys="MIRROR" aria-pressed="false">MIRROR</button>
+        <button type="button" data-btsys="DIP" aria-pressed="false">DIP</button>
+        <button type="button" data-btsys="OVERNIGHT" aria-pressed="false">OVERNIGHT</button>
+        <button type="button" data-btsys="ALL" aria-pressed="false">All 7 overlaid</button>
+      </div>
+      <div class="sc-seg sc-wrap" role="group" aria-label="Backtest window">
+        <button type="button" data-btyear="all" aria-pressed="true">All years</button>
+        <button type="button" data-btyear="2022" aria-pressed="false">2022</button>
+        <button type="button" data-btyear="2023" aria-pressed="false">2023</button>
+        <button type="button" data-btyear="2024" aria-pressed="false">2024</button>
+        <button type="button" data-btyear="2025" aria-pressed="false">2025</button>
+        <button type="button" data-btyear="2026" aria-pressed="false">2026</button>
+      </div>
+    </div>
+    <div class="sc-wst bt-single" id="btwin-stats">
+      <div><span class="lab">Return</span><span class="val" data-draw="btw" data-f="ret">—</span></div>
+      <div><span class="lab">Deepest drawdown</span><span class="val" data-draw="btw" data-f="max_dd">—</span><span class="sub" data-draw="btw" data-f="dd_span">—</span></div>
+      <div><span class="lab">Trades</span><span class="val" data-draw="btw" data-f="trades">—</span><span class="sub"><span data-draw="btw" data-f="win">—</span> won</span></div>
+    </div>
+    <div class="sc-key bt-overlay" hidden="" aria-hidden="true">
+      <span><svg viewBox="0 0 34 8"><line data-ovl="Combined" x1="1" y1="4" x2="33" y2="4"></line></svg>Combined</span>
+      <span><svg viewBox="0 0 34 8"><line data-ovl="RELVAL" x1="1" y1="4" x2="33" y2="4"></line></svg>RELVAL</span>
+      <span><svg viewBox="0 0 34 8"><line data-ovl="PULLBACK" x1="1" y1="4" x2="33" y2="4"></line></svg>PULLBACK</span>
+      <span><svg viewBox="0 0 34 8"><line data-ovl="IBS-LONG" x1="1" y1="4" x2="33" y2="4"></line></svg>IBS-LONG</span>
+      <span><svg viewBox="0 0 34 8"><line data-ovl="MIRROR" x1="1" y1="4" x2="33" y2="4"></line></svg>MIRROR</span>
+      <span><svg viewBox="0 0 34 8"><line data-ovl="DIP" x1="1" y1="4" x2="33" y2="4"></line></svg>DIP</span>
+      <span><svg viewBox="0 0 34 8"><line data-ovl="OVERNIGHT" x1="1" y1="4" x2="33" y2="4"></line></svg>OVERNIGHT</span>
+    </div>
+    <div class="sc-chart dash-skeleton" id="btcurve-chart" data-draw="btcurve" data-source="bt_sys_curve bt_window"></div>
+    <h3 id="btwin-head">Every system, <span data-draw="btwin_label">—</span></h3>
+    <div class="sc-scroll">
+      <table id="btwin-table" data-source="bt_window" data-row-key="id">
+        <thead><tr>
+          <th data-field="system">Book or system</th><th data-field="ret">Return</th><th data-field="max_dd">Deepest drawdown</th><th data-field="trades">Trades</th><th data-field="win">Won</th>
+        </tr></thead>
+        <tbody data-draw="btwin_body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sc-card" id="compare-card">
+    <div>
+      <h2>Systems side by side</h2>
+      <p class="sc-note">Backtest against live for each system.</p>
+    </div>
+    <div class="sc-key" aria-hidden="true"><span><i class="sc-sw bt"></i>Backtest</span><span><i class="sc-sw lv"></i>Live</span></div>
+    <div class="sc-grid2">
+      <div>
+        <p class="sc-note">Win rate</p>
+        <div class="sc-chart mini dash-skeleton" id="cmp-win" data-draw="cmp_win" data-source="stats"></div>
+      </div>
+      <div>
+        <p class="sc-note">Average trade, % of account</p>
+        <div class="sc-chart mini dash-skeleton" id="cmp-avg" data-draw="cmp_avg" data-source="stats"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sc-card" id="ticker-card">
+    <div>
+      <h2>Result by fund</h2>
+      <p class="sc-note">Cash result of the real trades in each fund, best first.</p>
+    </div>
+    <div data-draw="tickers" data-source="tickers"></div>
+  </section>
+
+  <section class="sc-card" id="sys-card">
+    <div>
+      <h2>Systems in force</h2>
+    </div>
+    <div class="sc-scroll">
+      <table data-source="systems" data-row-key="id">
+        <thead><tr>
+          <th data-field="name">System</th><th data-field="signal" class="l">Signal</th><th data-field="leg" class="l">Fund</th><th data-field="entry">Entry</th><th data-field="stop" class="l">Stop</th>
+          <th data-field="exit" class="l">Exit</th><th data-field="per_year">Trades a year</th><th data-field="win_pct">Win rate</th><th data-field="points">Account points</th>
+        </tr></thead>
+        <tbody data-draw="sys_body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sc-card" id="btyears-card">
+    <div>
+      <h2>Return by year</h2>
+    </div>
+    <div class="sc-scroll">
+      <table data-source="bt_pivot" data-row-key="id">
+        <thead><tr>
+          <th data-field="name">Book or system</th><th data-field="y2022">2022</th><th data-field="y2023">2023</th><th data-field="y2024">2024</th><th data-field="y2025">2025</th><th data-field="y2026">2026, in sample</th><th data-field="avg">Average 2022 to 2025</th>
+        </tr></thead>
+        <tbody data-draw="pivot_body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sc-card" id="btext-card">
+    <div>
+      <h2>Longer history, 2018 to 2026</h2>
+      <p class="sc-note">Each year compounds daily returns within that year. The 9:35 IBS family (IBS-LONG, MIRROR, DIP) and the overnight leg, the core of the book. 2018 to 2021 are estimates: daily bars only (the 5-minute data starts Nov 2021), corrected by the average 2022 to 2026 gap of 13.1 points a year, with a range of about plus or minus 17 points. PULLBACK and RELVAL need 5-minute bars and cannot be tested before 2022. 2018 to 2021 were never used to build any rule.</p>
+    </div>
+    <div class="sc-scroll">
+      <table data-source="bt_ext" data-row-key="id">
+        <thead><tr>
+          <th data-field="year">Year</th><th data-field="kind" class="l">Basis</th><th data-field="core_est">Core: estimated or measured</th><th data-field="low">Range low</th><th data-field="high">Range high</th><th data-field="core_daily">Core on daily bars</th><th data-field="dd_daily">Worst drawdown, daily bars</th><th data-field="full_book">Full book (5-minute)</th>
+        </tr></thead>
+        <tbody data-draw="ext_body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sc-card" id="btmonths-card">
+    <div>
+      <h2>Winning months by year</h2>
+    </div>
+    <div class="sc-scroll">
+      <table data-source="bt_month_stats" data-row-key="id">
+        <thead><tr>
+          <th data-field="year">Year</th><th data-field="months">Months</th><th data-field="win">Winning months</th><th data-field="med">Median month</th><th data-field="worst">Worst month</th><th data-field="best">Best month</th>
+        </tr></thead>
+        <tbody data-draw="month_body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="sc-card" id="btrisk-card">
+    <div>
+      <h2>What the result depends on</h2>
+    </div>
+    <div class="sc-scroll">
+      <table data-source="bt_risk" data-row-key="id">
+        <thead><tr>
+          <th data-field="kind">Test</th><th data-field="label" class="l">Case</th><th data-field="avg_22_25">Average year 2022 to 2025</th><th data-field="worst_year">Worst year</th><th data-field="max_dd">Deepest drawdown</th><th data-field="stops">Stop fires</th><th data-field="note" class="l">Note</th>
+        </tr></thead>
+        <tbody data-draw="risk_body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <p class="sc-label">Detail</p>
+
+    <section class="sc-card" id="stats-card">
+    <details>
+      <summary class="sc-sum">
+        <h2>Live against backtest, by system</h2>
+        <span class="sc-hint">Show the full table</span>
+      </summary>
+      <div class="sc-open">
+        <p class="sc-note">Avg win and avg loss are % of the position. Avg trade, total return, return per day and drawdown are % of the account. Return per day is the account gain divided by trading days.</p>
+    <div class="sc-scroll">
+      <table data-source="stats" data-row-key="id">
+        <thead><tr>
+          <th data-field="system">System</th><th data-field="source">Source</th><th data-field="trades">Trades</th><th data-field="win_rate">Win rate</th>
+          <th data-field="pf">Profit factor</th><th data-field="avg_win">Avg win</th><th data-field="avg_loss">Avg loss</th><th data-field="avg_trade">Avg trade</th>
+          <th data-field="total_return">Total return</th><th data-field="pct_per_day">Per day</th><th data-field="max_dd">Max drawdown</th><th data-field="reach_2r">Reached +2R</th>
+        </tr></thead>
+        <tbody data-draw="stats_body"></tbody>
+      </table>
+    </div>
+      </div>
+    </details>
+  </section>
+
+    <section class="sc-card" id="log-card">
+    <details>
+      <summary class="sc-sum">
+        <h2>Real trades</h2>
+        <span class="sc-count">(<span data-draw="stat" data-source="stats" data-where="id=Combined_live" data-field="trades">—</span>)</span>
+        <span class="sc-hint">Show every trade since Oct 16</span>
+      </summary>
+      <div class="sc-open">
+        <p class="sc-note">Every closed real trade since Oct 16, newest first, with what the model said that trade should have made.</p>
+    <div class="sc-scroll sc-box">
+      <table data-source="live_trades" data-row-key="n">
+        <thead><tr>
+          <th data-field="n">#</th><th data-field="day" class="l">Date</th><th data-field="system" class="l">System</th><th data-field="ticker" class="l">Ticker</th>
+          <th data-field="acct_pct">Account</th><th data-field="pos_pct">Position</th><th data-field="model_pct">Model</th><th data-field="pnl_usd">Result</th><th data-field="reached_2R">Reached +2R</th>
+        </tr></thead>
+        <tbody data-draw="log_body"></tbody>
+      </table>
+    </div>
+      </div>
+    </details>
+  </section>
+
+  <p class="sc-label">System health</p>
+
+  <div class="sc-grid2">
+    <section class="sc-card" id="health-relval"><div class="sc-hc" data-draw="health" data-source="health" data-where="system=RELVAL"></div></section>
+    <section class="sc-card" id="health-pb"><div class="sc-hc" data-draw="health" data-source="health" data-where="system=PULLBACK"></div></section>
+  </div>
+  <div class="sc-grid2">
+    <section class="sc-card" id="health-ibs"><div class="sc-hc" data-draw="health" data-source="health" data-where="system=IBS-LONG"></div></section>
+    <section class="sc-card" id="health-mir"><div class="sc-hc" data-draw="health" data-source="health" data-where="system=MIRROR"></div></section>
+  </div>
+  <div class="sc-grid2">
+    <section class="sc-card" id="health-dip"><div class="sc-hc" data-draw="health" data-source="health" data-where="system=DIP"></div></section>
+    <section class="sc-card" id="health-ovn"><div class="sc-hc" data-draw="health" data-source="health" data-where="system=OVERNIGHT"></div></section>
+  </div>
+</div>
+<script>
+(() => {
+  const MINUS = '−', DASH = '—';
+  document.querySelector('.sc').style.setProperty('--sc-live', dash.colors[0]);
+  const fp = (v, d) => (v == null || Number.isNaN(v)) ? DASH : (v >= 0 ? '+' : MINUS) + Math.abs(v).toFixed(d) + '%';
+  const fu = (v, d) => (v == null || Number.isNaN(v)) ? DASH : v.toFixed(d) + '%';
+  const fc = (v, d) => v == null ? DASH : (v >= 0 ? '+$' : MINUS + '$') + Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+  const dayFmt = d3.utcFormat('%b %-d');
+  const F = {
+    system: (r) => r.system, source: (r) => r.source, trades: (r) => String(r.trades), wins: (r) => String(r.wins), losses: (r) => String(r.losses),
+    win_rate: (r) => fu(r.win_rate, 0), pf: (r) => r.pf == null ? ((r.trades && !r.losses) ? '∞' : DASH) : r.pf.toFixed(2),
+    avg_win: (r) => fp(r.avg_win, 2), avg_loss: (r) => fp(r.avg_loss, 2), avg_trade: (r) => fp(r.avg_trade, 2),
+    trades_per_week: (r) => r.trades_per_week == null ? DASH : r.trades_per_week.toFixed(1),
+    total_return: (r) => fp(r.total_return, 1), pct_per_day: (r) => fp(r.pct_per_day, 2), max_dd: (r) => fu(r.max_dd, 1), reach_2r: (r) => fu(r.reach_2r, 0),
+    cash_gain: (r) => fc(r.cash_gain, r.source === 'Live' ? 2 : 0), base: (r) => '$' + Number(r.base).toLocaleString('en-US'),
+    days: (r) => String(r.days), end: (r) => 'Updated after the close of ' + dayFmt(new Date(r.end)),
+    gap: (r) => r.gap == null ? 'No live trades yet' : (r.gap >= 0 ? 'Ahead of' : 'Behind') + ' backtest pace by ' + Math.abs(r.gap).toFixed(1) + ' pts'
+  };
+  const TONE = { total_return: (r) => r.total_return, cash_gain: (r) => r.cash_gain, pct_per_day: (r) => r.pct_per_day, avg_trade: (r) => r.avg_trade, gap: (r) => r.gap };
+
+  dash.calc('stats', {
+    inputs: ['bt_trades', 'live_trades', 'periods'],
+    title: 'Scorecard statistics',
+    description: 'Win rate, profit factor, returns, cash gain and drawdown for each system, from every trade’s account result.',
+    fn: (bt_trades, live_trades, periods) => {
+      const BASE = 2500;
+      const days = {};
+      periods.forEach((p) => { days[p.source] = Number(p.days); });
+      const mean = (a) => a.length ? a.reduce((s, x) => s + x, 0) / a.length : null;
+      const out = [];
+      ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((sys) => {
+        [['backtest', bt_trades], ['live', live_trades]].forEach(([src, rows]) => {
+          const t = rows.filter((r) => sys === 'Combined' || r.system === sys).sort((a, b) => a.n - b.n);
+          const acct = t.map((r) => Number(r.acct_pct)), pos = t.map((r) => Number(r.pos_pct));
+          const w = acct.filter((x) => x > 0), l = acct.filter((x) => x <= 0);
+          let eq = 1, peak = 1, dd = 0;
+          acct.forEach((x) => { eq *= 1 + x / 100; peak = Math.max(peak, eq); dd = Math.max(dd, (peak - eq) / peak * 100); });
+          const sw = w.reduce((s, x) => s + x, 0), sl = -l.reduce((s, x) => s + x, 0);
+          const r2 = t.filter((r) => r.reached_2R === true || r.reached_2R === false);
+          out.push({
+            id: sys + '_' + src, system: sys, source: src === 'live' ? 'Live' : 'Backtest', trades: t.length, wins: w.length, losses: l.length,
+            win_rate: t.length ? w.length / t.length * 100 : null, trades_per_week: days[src] ? t.length / days[src] * 5 : null, pf: sl > 0 ? sw / sl : null,
+            avg_win: mean(pos.filter((x) => x > 0)), avg_loss: mean(pos.filter((x) => x <= 0)), avg_trade: mean(acct),
+            total_return: t.length ? (eq - 1) * 100 : null, pct_per_day: t.length && days[src] ? acct.reduce((s, x) => s + x, 0) / days[src] : null,
+            cash_gain: src === 'live' ? t.reduce((s, r) => s + Number(r.pnl_usd), 0) : (eq - 1) * BASE, base: BASE,
+            max_dd: t.length ? dd : null, reach_2r: r2.length ? r2.filter((r) => r.reached_2R === true).length / r2.length * 100 : null
+          });
+        });
+      });
+      return out;
+    }
+  });
+
+  dash.calc('pace', {
+    inputs: ['bt_trades', 'live_trades'],
+    title: 'Live return against backtest pace',
+    description: 'Each system’s live account return, the return the backtest pace gives after the same number of trades, and the gap in points.',
+    fn: (bt_trades, live_trades) => {
+      const out = [];
+      ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((sys) => {
+        const b = bt_trades.filter((r) => sys === 'Combined' || r.system === sys);
+        const l = live_trades.filter((r) => sys === 'Combined' || r.system === sys);
+        const avg = b.length ? b.reduce((s, r) => s + Number(r.acct_pct), 0) / b.length : 0;
+        const live = l.reduce((e, r) => e * (1 + Number(r.acct_pct) / 100), 1);
+        const expected = Math.pow(1 + avg / 100, l.length);
+        out.push({ id: sys, system: sys, trades: l.length, live: l.length ? (live - 1) * 100 : null, expected: (expected - 1) * 100, gap: l.length ? (live - expected) * 100 : null });
+      });
+      return out;
+    }
+  });
+
+  dash.calc('curve_days', {
+    inputs: ['bt_trades', 'live_days', 'periods'],
+    title: 'Return by trading day against backtest pace',
+    description: 'Account return after each live trading day, compounded, against the backtest average day repeated.',
+    fn: (bt_trades, live_days, periods) => {
+      const btDays = Number(periods.find((p) => p.source === 'backtest').days);
+      const col = { Combined: 'combined', RELVAL: 'relval', PULLBACK: 'pullback', 'IBS-LONG': 'ibs_long', MIRROR: 'mirror', DIP: 'dip', OVERNIGHT: 'overnight' };
+      const live = [...live_days].sort((a, b) => a.d - b.d);
+      const out = [];
+      ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((sys) => {
+        const avg = bt_trades.filter((r) => sys === 'Combined' || r.system === sys).reduce((s, r) => s + Number(r.acct_pct), 0) / btDays;
+        const N = live.length + 5;
+        let eq = 1;
+        for (let d = 0; d <= N; d++) {
+          if (d > 0 && d <= live.length) eq *= 1 + Number(live[d - 1][col[sys]]) / 100;
+          out.push({ id: sys + '_' + d, system: sys, d, expected: (Math.pow(1 + avg / 100, d) - 1) * 100, live: d <= live.length ? (eq - 1) * 100 : null });
+        }
+      });
+      return out;
+    }
+  });
+
+  dash.calc('tickers', {
+    inputs: ['live_trades'],
+    title: 'Real result by fund',
+    description: 'Trades, wins and cash result of the real trades in each fund.',
+    fn: (live_trades) => {
+      const m = {};
+      live_trades.forEach((r) => {
+        const k = r.system + '_' + r.ticker;
+        const o = m[k] || (m[k] = { id: k, ticker: r.ticker, system: r.system, trades: 0, wins: 0, cash: 0 });
+        o.trades += 1; o.wins += Number(r.pnl_usd) > 0 ? 1 : 0; o.cash += Number(r.pnl_usd);
+      });
+      return Object.values(m).sort((a, b) => b.cash - a.cash);
+    }
+  });
+
+  // every marked value: the element names its dataset, row and field
+  dash.draw('stat', (el) => {
+    const g = dash.data(el.dataset.source);
+    el.classList.remove('pos', 'neg');
+    if (g.status !== 'ok') { el.textContent = DASH; return; }
+    const [k, v] = (el.dataset.where || '').split('=').map(decodeURIComponent);
+    const row = g.data.find((r) => String(r[k]) === v);
+    const f = F[el.dataset.field];
+    el.textContent = row && f ? f(row) : DASH;
+    if (row && el.dataset.tone !== undefined && TONE[el.dataset.field]) {
+      const t = TONE[el.dataset.field](row);
+      if (t != null) el.classList.add(t >= 0 ? 'pos' : 'neg');
+    }
+  });
+
+  let sel = 'Combined';
+  let range = 'all';
+  const buttons = document.querySelectorAll('.sc-seg button[data-sys]');
+  document.querySelectorAll('.sc-seg button[data-range]').forEach((b, i, all) => b.addEventListener('click', () => {
+    range = b.dataset.range;
+    all.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.range === range)));
+    dash.draw('bars');
+  }));
+  buttons.forEach((b) => b.addEventListener('click', () => {
+    sel = b.dataset.sys;
+    buttons.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.sys === sel)));
+    ['chartday', 'bars', 'dist'].forEach((n) => dash.draw(n));
+  }));
+
+  const axisText = (svg, x, y, anchor, text, size) => svg.append('text').attr('x', x).attr('y', y).attr('text-anchor', anchor).attr('fill', 'var(--color-fg-muted)').attr('font-size', size || 11).text(text);
+  const tipFor = (el) => d3.select(el).append('div').attr('class', 'sc-tip').style('display', 'none');
+
+  const drawCurve = (el, g, o) => {
+    el.replaceChildren();
+    if (g.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const rows = g.data.filter((r) => r.system === sel);
+    if (!rows.length) return;
+    const X = o.x;
+    const W = Math.max(300, el.clientWidth), H = 340, m = { l: 44, r: el.clientWidth < 520 ? 74 : 96, t: 16, b: 36 };
+    const maxN = d3.max(rows, (r) => r[X]);
+    const x = d3.scaleLinear([0, maxN], [m.l, W - m.r]);
+    const vals = rows.flatMap((r) => [r.expected, r.live]).filter((v) => v != null);
+    const y = d3.scaleLinear([Math.min(0, d3.min(vals)), Math.max(1, d3.max(vals)) * 1.06], [H - m.b, m.t]).nice();
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img')
+      .attr('aria-label', `${o.title} for ${sel}: backtest pace against real trades`);
+    const gid = 'grad-' + o.gid;
+    const grad = svg.append('defs').append('linearGradient').attr('id', gid).attr('x1', 0).attr('x2', 0).attr('y1', 0).attr('y2', 1);
+    [[0, .34], [.5, .12], [1, 0]].forEach(([off, op]) => grad.append('stop').attr('offset', off).style('stop-color', 'var(--sc-live)').style('stop-opacity', op));
+    const yt = y.ticks(5);
+    svg.append('g').selectAll('line').data(yt).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', (t) => y(t)).attr('y2', (t) => y(t))
+      .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)').attr('stroke-width', 1);
+    svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
+      .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t) + '%');
+    const xt = d3.range(0, maxN + 1, maxN > 40 ? 10 : 5);
+    svg.append('g').selectAll('text').data(xt).join('text').attr('x', (t) => x(t)).attr('y', H - m.b + 18).attr('text-anchor', 'middle')
+      .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => t);
+    axisText(svg, (m.l + W - m.r) / 2, H - 2, 'middle', o.xlabel);
+    svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', 'var(--color-fg-muted)').attr('stroke-width', 2.5).attr('stroke-linecap', 'round').attr('stroke-dasharray', '0.1 6')
+      .attr('d', d3.line().x((r) => x(r[X])).y((r) => y(r.expected)));
+    const lv = rows.filter((r) => r.live != null);
+    svg.append('path').datum(lv).attr('fill', `url(#${gid})`).attr('d', d3.area().x((r) => x(r[X])).y0(y(0)).y1((r) => y(r.live)));
+    svg.append('path').datum(lv).attr('fill', 'none').attr('stroke', 'var(--sc-live)').attr('stroke-width', 2.75).attr('stroke-linejoin', 'round').attr('stroke-linecap', 'round')
+      .attr('d', d3.line().x((r) => x(r[X])).y((r) => y(r.live)));
+    svg.append('g').selectAll('circle').data(lv.filter((r) => r[X] > 0)).join('circle').attr('cx', (r) => x(r[X])).attr('cy', (r) => y(r.live)).attr('r', o.dots)
+      .attr('fill', 'var(--sc-live)').attr('stroke', 'var(--color-panel)').attr('stroke-width', 2);
+    const end = rows[rows.length - 1], last = lv[lv.length - 1];
+    axisText(svg, x(end[X]) + 8, y(end.expected) + 4, 'start', `Pace ${fp(end.expected, 1)}`, 12);
+    if (last && last[X] > 0) {
+      const ly = Math.abs(y(last.live) - y(end.expected)) < 16 && last[X] === end[X] ? y(last.live) + 18 : y(last.live);
+      svg.append('text').attr('x', x(last[X]) + 8).attr('y', ly - 8).attr('fill', 'var(--sc-live)').attr('font-size', 12).attr('font-weight', 600).text(`Live ${fp(last.live, 1)}`);
+    }
+    const tip = tipFor(el);
+    const rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').attr('stroke-width', 1).style('display', 'none');
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('pointermove', (event) => {
+        const box = svg.node().getBoundingClientRect(), px = (event.clientX - box.left) * (W / box.width);
+        const n = Math.max(0, Math.min(maxN, Math.round(x.invert(px)))), r = rows.find((q) => q[X] === n);
+        rule.attr('x1', x(n)).attr('x2', x(n)).style('display', null);
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'd').text(n === 0 ? 'Start' : `${o.unit} ${n}`);
+        tip.append('div').text(`Backtest pace ${fp(r.expected, 2)}`);
+        if (r.live != null) tip.append('div').text(`Real trades ${fp(r.live, 2)}`);
+        tip.style('left', Math.min(el.clientWidth - 150, Math.max(0, x(n) * (box.width / W) + 12)) + 'px').style('top', '12px');
+      })
+      .on('pointerleave', () => { tip.style('display', 'none'); rule.style('display', 'none'); });
+  };
+  dash.draw('chartday', (el) => drawCurve(el, dash.data('curve_days'), { x: 'd', unit: 'Day', xlabel: 'Trading day since Oct 16', title: 'Cumulative account return by trading day', dots: 4, gid: 'day' }));
+
+  dash.draw('bars', (el) => {
+    const g = dash.data('live_days');
+    el.replaceChildren();
+    if (g.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const col = { Combined: 'combined', RELVAL: 'relval', PULLBACK: 'pullback', 'IBS-LONG': 'ibs_long', MIRROR: 'mirror', DIP: 'dip', OVERNIGHT: 'overnight' }[sel];
+    const days = [...g.data].sort((a, b) => a.d - b.d).filter((r) => { const wd = new Date(r.day).getUTCDay(); return wd !== 0 && wd !== 6; });
+    const cut = days.length && range !== 'all' ? new Date(days[days.length - 1].day) : null;
+    if (cut) {
+      if (range === '7d') cut.setUTCDate(cut.getUTCDate() - 7);
+      else if (range === '1m') cut.setUTCMonth(cut.getUTCMonth() - 1);
+      else if (range === '3m') cut.setUTCMonth(cut.getUTCMonth() - 3);
+      else cut.setUTCFullYear(cut.getUTCFullYear() - 1);
+    }
+    const rows = days.filter((r) => !cut || new Date(r.day) > cut).map((r) => ({ d: r.d, day: r.day, v: Number(r[col]) }));
+    if (!rows.length) return;
+    const W = Math.max(280, el.clientWidth), H = 280, m = { l: 48, r: 12, t: 22, b: 34 };
+    const lim = Math.max(1, d3.max(rows, (r) => Math.abs(r.v)));
+    const y = d3.scaleLinear([-lim * 1.1, lim * 1.2], [H - m.b, m.t]).nice();
+    const x = d3.scaleBand(rows.map((r) => r.d), [m.l, W - m.r]).padding(0.3);
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img').attr('aria-label', `Account result on each trading day for ${sel}`);
+    const yt = y.ticks(4);
+    svg.append('g').selectAll('line').data(yt).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', (t) => y(t)).attr('y2', (t) => y(t))
+      .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').attr('font-size', 11)
+      .text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t) + '%');
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d)).attr('width', x.bandwidth()).attr('rx', 3)
+      .attr('y', (r) => r.v >= 0 ? y(r.v) : y(0)).attr('height', (r) => r.v === 0 ? 2 : Math.max(2, Math.abs(y(r.v) - y(0))))
+      .attr('fill', (r) => r.v >= 0 ? 'var(--color-ok)' : '#d93636').attr('opacity', (r) => r.v === 0 ? 0.35 : 0.9);
+    if (rows.length <= 14) svg.append('g').selectAll('text').data(rows.filter((r) => r.v !== 0)).join('text').attr('x', (r) => x(r.d) + x.bandwidth() / 2).attr('text-anchor', 'middle')
+      .attr('y', (r) => r.v >= 0 ? y(r.v) - 6 : y(r.v) + 14).attr('fill', 'var(--color-fg)').attr('font-size', 11).text((r) => fp(r.v, 2));
+    const every = Math.max(1, Math.ceil(rows.length / Math.floor((W - m.l - m.r) / 54)));
+    svg.append('g').selectAll('text').data(rows.filter((r, i) => i % every === 0)).join('text').attr('x', (r) => x(r.d) + x.bandwidth() / 2).attr('y', H - m.b + 18)
+      .attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((r) => dayFmt(new Date(r.day)));
+    const tip = tipFor(el);
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.d) - 3).attr('width', x.bandwidth() + 6).attr('y', m.t).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('pointermove', (event, r) => {
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'd').text(dayFmt(new Date(r.day)));
+        tip.append('div').text(r.v === 0 ? 'No trade' : fp(r.v, 2) + ' of account');
+        const box = svg.node().getBoundingClientRect();
+        tip.style('left', Math.min(el.clientWidth - 130, Math.max(0, (x(r.d) + x.bandwidth() / 2) * (box.width / W) + 10)) + 'px').style('top', '8px');
+      })
+      .on('pointerleave', () => tip.style('display', 'none'));
+  });
+
+  dash.draw('dist', (el) => {
+    const gb = dash.data('bt_trades'), gl = dash.data('live_trades');
+    el.replaceChildren();
+    if (gb.status !== 'ok' || gl.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const STEP = 0.25;
+    const bt = gb.data.filter((r) => sel === 'Combined' || r.system === sel).map((r) => Number(r.acct_pct));
+    const lv = gl.data.filter((r) => sel === 'Combined' || r.system === sel).map((r) => Number(r.acct_pct));
+    if (!bt.length) return;
+    const all = bt.concat(lv);
+    const lo = Math.floor(Math.min(...all)), hi = Math.ceil(Math.max(...all));
+    const edges = d3.range(lo, hi + STEP / 2, STEP);
+    const rows = edges.slice(0, -1).map((x0, i) => ({ x0, x1: edges[i + 1], b: 0, l: 0 }));
+    const idx = (v) => Math.min(rows.length - 1, Math.max(0, Math.floor((v - lo) / STEP + 1e-9)));
+    bt.forEach((v) => { rows[idx(v)].b += 1; });
+    lv.forEach((v) => { rows[idx(v)].l += 1; });
+    const W = Math.max(280, el.clientWidth), H = 280, m = { l: 38, r: 12, t: 18, b: 38 };
+    const x = d3.scaleLinear([lo, hi], [m.l, W - m.r]);
+    const y = d3.scaleLinear([0, Math.max(1, d3.max(rows, (r) => Math.max(r.b, r.l))) * 1.1], [H - m.b, m.t]).nice();
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img').attr('aria-label', `Backtest and real trade results in ${STEP}% steps, ${sel}`);
+    const yt = y.ticks(4).filter((t) => Number.isInteger(t));
+    svg.append('g').selectAll('line').data(yt).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', (t) => y(t)).attr('y2', (t) => y(t)).attr('stroke', 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end').attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => t);
+    const bw = (r) => Math.max(1, x(r.x1) - x(r.x0) - 0.6);
+    const tone = (r) => r.x1 <= 0 ? '#d93636' : 'var(--color-ok)';
+    svg.append('g').selectAll('rect').data(rows.filter((r) => r.b)).join('rect').attr('x', (r) => x(r.x0) + 0.3).attr('width', bw).attr('y', (r) => y(r.b)).attr('height', (r) => y(0) - y(r.b)).attr('rx', 2)
+      .attr('style', (r) => `fill: ${tone(r)}`);
+    svg.append('g').selectAll('rect').data(rows.filter((r) => r.l)).join('rect').attr('x', (r) => x(r.x0) + 0.3 + bw(r) * 0.15).attr('width', (r) => Math.max(1, bw(r) * 0.7)).attr('y', (r) => y(r.l)).attr('height', (r) => y(0) - y(r.l)).attr('rx', 1.5)
+      .attr('style', 'fill: color-mix(in srgb, var(--sc-live) 70%, black)');
+    svg.append('line').attr('x1', x(0)).attr('x2', x(0)).attr('y1', m.t - 6).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)');
+    const xt = d3.range(lo, hi + 1, hi - lo > 8 ? 2 : 1);
+    svg.append('g').selectAll('text').data(xt).join('text').attr('x', (t) => x(t)).attr('y', H - m.b + 18).attr('text-anchor', 'middle').attr('fill', 'var(--color-fg-muted)').attr('font-size', 11)
+      .text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t) + '%');
+    axisText(svg, (m.l + W - m.r) / 2, H - 2, 'middle', 'Result of a trade, % of account');
+    const tip = tipFor(el);
+    const pf = (v) => (v > 0 ? '+' : v < 0 ? MINUS : '') + Math.abs(v).toFixed(2) + '%';
+    svg.append('g').selectAll('rect').data(rows).join('rect').attr('x', (r) => x(r.x0)).attr('width', (r) => x(r.x1) - x(r.x0)).attr('y', m.t).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('pointermove', (event, r) => {
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'd').text(`${pf(r.x0)} to ${pf(r.x1)}`);
+        tip.append('div').text(`Backtest trades ${r.b}`);
+        tip.append('div').text(`Real trades ${r.l}`);
+        const box = svg.node().getBoundingClientRect();
+        tip.style('left', Math.min(el.clientWidth - 150, Math.max(0, x(r.x1) * (box.width / W) + 6)) + 'px').style('top', '8px');
+      })
+      .on('pointerleave', () => tip.style('display', 'none'));
+  });
+
+  const hbars = (el, g, field, fmt) => {
+    el.replaceChildren();
+    if (g.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const systems = ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'];
+    const items = systems.map((s) => ({ s, bt: g.data.find((r) => r.id === s + '_backtest'), lv: g.data.find((r) => r.id === s + '_live') }));
+    const vals = items.flatMap((i) => [i.bt, i.lv]).filter((r) => r && r[field] != null).map((r) => r[field]);
+    if (!vals.length) return;
+    const W = Math.max(260, el.clientWidth), rowH = 66, H = rowH * systems.length, m = { l: 84, r: 64, t: 4, b: 4 };
+    const x = d3.scaleLinear([Math.min(0, d3.min(vals)), Math.max(0.0001, d3.max(vals))], [m.l, W - m.r]);
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img').attr('aria-label', `${field} by system, backtest against live`);
+    items.forEach((it, i) => {
+      const y0 = m.t + i * rowH;
+      svg.append('text').attr('x', 0).attr('y', y0 + 30).attr('fill', 'var(--color-fg)').attr('font-size', 12).attr('font-weight', 500).text(it.s);
+      [[it.bt, y0 + 6, 'bt'], [it.lv, y0 + 32, 'lv']].forEach(([r, yy, kind]) => {
+        const v = r && r[field];
+        if (v == null) { svg.append('text').attr('x', m.l).attr('y', yy + 14).attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(kind === 'lv' ? 'no live trades yet' : DASH); return; }
+        svg.append('rect').attr('x', Math.min(x(0), x(v))).attr('y', yy).attr('width', Math.max(2, Math.abs(x(v) - x(0)))).attr('height', 20).attr('rx', 3)
+          .attr('fill', kind === 'lv' ? 'var(--sc-live)' : 'var(--color-fg-muted)').attr('opacity', kind === 'lv' ? 1 : 0.5);
+        svg.append('text').attr('x', Math.max(x(0), x(v)) + 6).attr('y', yy + 14).attr('fill', 'var(--color-fg)').attr('font-size', 11.5).text(fmt(v));
+      });
+    });
+  };
+  dash.draw('cmp_win', (el) => hbars(el, dash.data('stats'), 'win_rate', (v) => fu(v, 0)));
+  dash.draw('cmp_avg', (el) => hbars(el, dash.data('stats'), 'avg_trade', (v) => fp(v, 2)));
+
+  dash.draw('health', (el) => {
+    const g = dash.data(el.dataset.source);
+    el.replaceChildren();
+    if (g.status !== 'ok') return;
+    const sys = el.dataset.where.split('=')[1];
+    const rows = g.data.filter((r) => r.system === sys).sort((a, b) => a.order - b.order);
+    if (!rows.length) return;
+    const ver = rows[0], n = ver.trades, W = ver.window;
+    const head = document.createElement('div'); head.className = 'sc-head';
+    const h2 = document.createElement('h2'); h2.textContent = sys + ' health';
+    const vc = document.createElement('span'); vc.className = 'sc-verdict ' + ver.tone; const ms = rows.filter((r) => r.order > 0), score = ms.filter((r) => r.tone === 'ok' || r.tone === 'early' || r.tone === 'na').length;
+    vc.textContent = ver.value[0] + ver.value.slice(1).toLowerCase() + ' · ' + score + '/' + ms.length;
+    head.append(h2, vc); el.append(head);
+    const pr = document.createElement('div'); pr.className = 'sc-prog';
+    const lab = document.createElement('div'); lab.className = 'sc-note'; lab.textContent = n + ' of ' + W + ' trades toward a full window' + (n < 10 ? ' · measures are provisional until 10' : '');
+    const bar = document.createElement('div'); bar.className = 'bar';
+    const fill = document.createElement('i'); fill.style.width = Math.min(100, n / W * 100) + '%';
+    const mark = document.createElement('b'); mark.style.left = (10 / W * 100) + '%';
+    bar.append(fill, mark); pr.append(lab, bar); el.append(pr);
+    const wrap = document.createElement('div');
+    ms.forEach((r) => {
+      const d = document.createElement('div'); d.className = 'sc-hrow ' + r.tone; d.dataset.key = r.id;
+      const dot = document.createElement('span'); dot.className = 'dot';
+      const m = document.createElement('span'); m.className = 'm'; m.textContent = r.measure;
+      const v = document.createElement('span'); v.className = 'v'; v.textContent = r.value;
+      const ru = document.createElement('span'); ru.className = 'r'; ru.textContent = r.rule;
+      d.append(dot, m, v, ru); wrap.append(d);
+    });
+    const det = document.createElement('details'); const sm = document.createElement('summary'); sm.className = 'sc-sum';
+    const sh = document.createElement('span'); sh.className = 'sc-hint'; sh.textContent = 'Show the ' + ms.length + ' measures';
+    sm.append(sh); const op = document.createElement('div'); op.className = 'sc-open'; op.append(wrap); det.append(sm, op); el.append(det);
+  });
+
+  dash.draw('tickers', (el) => {
+    const g = dash.data('tickers');
+    el.replaceChildren();
+    if (g.status !== 'ok' || !g.data.length) return;
+    const mx = Math.max(1, d3.max(g.data, (r) => Math.abs(r.cash)));
+    g.data.forEach((r) => {
+      const d = document.createElement('div'); d.className = 'sc-tk'; d.dataset.key = r.id;
+      const t = document.createElement('span'); t.className = 't'; t.textContent = r.ticker + ' ';
+      const s = document.createElement('span'); s.textContent = r.system + ' · ' + r.trades + (r.trades === 1 ? ' trade' : ' trades') + ' · ' + r.wins + ' won'; t.append(document.createElement('br'), s);
+      const trk = document.createElement('div'); trk.className = 'trk';
+      const i = document.createElement('i'); if (r.cash < 0) i.className = 'neg'; i.style.width = Math.max(2, Math.abs(r.cash) / mx * 100) + '%'; trk.append(i);
+      const v = document.createElement('span'); v.className = 'v'; v.textContent = fc(r.cash, 2);
+      d.append(t, trk, v); el.append(d);
+    });
+  });
+
+  dash.draw('stats_body', (tb) => {
+    const g = dash.data('stats');
+    tb.replaceChildren();
+    if (g.status !== 'ok') return;
+    const cols = ['system', 'source', 'trades', 'win_rate', 'pf', 'avg_win', 'avg_loss', 'avg_trade', 'total_return', 'pct_per_day', 'max_dd', 'reach_2r'];
+    g.data.forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = r.id;
+      tr.className = 'sc-' + r.source.toLowerCase() + (r.source === 'Live' ? ' sc-last' : '');
+      cols.forEach((c) => { const td = document.createElement('td'); td.textContent = F[c](r); tr.append(td); });
+      tb.append(tr);
+    });
+  });
+
+  dash.draw('log_body', (tb) => {
+    const g = dash.data('live_trades');
+    tb.replaceChildren();
+    if (g.status !== 'ok') return;
+    [...g.data].sort((a, b) => b.n - a.n).forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.key = String(r.n);
+      const cells = [String(r.n), dayFmt(new Date(r.day)), r.system, r.ticker, fp(r.acct_pct, 2), fp(r.pos_pct, 2), fp(r.model_pct, 2),
+        (r.pnl_usd >= 0 ? '+$' : MINUS + '$') + Math.abs(r.pnl_usd).toFixed(2), r.reached_2R === true ? 'Yes' : r.reached_2R === false ? 'No' : DASH];
+      cells.forEach((c, i) => { const td = document.createElement('td'); if (i >= 1 && i <= 3) td.className = 'l'; td.textContent = c; tr.append(td); });
+      tb.append(tr);
+    });
+  });
+  // ---- backtest sections (2022 to 2026, Massive tape)
+  const fpn = (v, d) => (v == null || Number.isNaN(Number(v))) ? DASH : (Number(v) >= 0 ? '+' : MINUS) + Math.abs(Number(v)).toFixed(d) + '%';
+  dash.calc('bt_pivot', {
+    inputs: ['bt_years'],
+    title: 'Backtest return by year, pivoted',
+    description: 'Each book or system as one row, with its return in each year and the average of 2022 to 2025.',
+    fn: (bt_years) => {
+      const m = new Map();
+      bt_years.forEach((r) => {
+        const o = m.get(r.key) || { id: r.key, name: r.name, group: r.group };
+        o['y' + r.year] = Number(r.ret); m.set(r.key, o);
+      });
+      return [...m.values()].map((o) => ({ ...o, avg: (o.y2022 + o.y2023 + o.y2024 + o.y2025) / 4 }));
+    }
+  });
+  dash.calc('bt_month_stats', {
+    inputs: ['bt_months'],
+    title: 'Backtest months by year',
+    description: 'For each year, the share of winning months, the median, the worst and the best month.',
+    fn: (bt_months) => {
+      const by = {};
+      bt_months.forEach((r) => { (by[r.month.slice(0, 4)] = by[r.month.slice(0, 4)] || []).push(Number(r.current)); });
+      const med = (a) => { const s = [...a].sort((x, y) => x - y), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; };
+      return Object.keys(by).sort().map((y) => ({ id: y, year: y, months: by[y].length, win: by[y].filter((x) => x > 0).length / by[y].length * 100, med: med(by[y]), worst: Math.min(...by[y]), best: Math.max(...by[y]) }));
+    }
+  });
+  const tbl = (name, source, cols, fmt, o) => dash.draw(name, (tb) => {
+    const g = dash.data(source);
+    tb.replaceChildren();
+    if (g.status !== 'ok') return;
+    g.data.forEach((r) => {
+      const tr = document.createElement('tr'); tr.dataset.key = r.id;
+      if (o && o.cls) tr.className = o.cls(r);
+      cols.forEach((c, i) => {
+        const td = document.createElement('td'); const v = fmt[c](r); td.textContent = v;
+        if (o && o.left && o.left.includes(c)) td.className = 'l';
+        if (o && o.tone && o.tone.includes(c) && r[c] != null) td.classList.add(Number(r[c]) >= 0 ? 'pos' : 'neg');
+        tr.append(td);
+      });
+      tb.append(tr);
+    });
+  });
+  tbl('sys_body', 'systems', ['name', 'signal', 'leg', 'entry', 'stop', 'exit', 'per_year', 'win_pct', 'points'], {
+    name: (r) => r.name, signal: (r) => r.signal, leg: (r) => r.leg, entry: (r) => r.entry, stop: (r) => r.stop, exit: (r) => r.exit,
+    per_year: (r) => Number(r.per_year).toFixed(0), win_pct: (r) => Number(r.win_pct).toFixed(0) + '%', points: (r) => fpn(r.points, 0)
+  }, { left: ['signal', 'leg', 'stop', 'exit'], tone: ['points'] });
+  tbl('pivot_body', 'bt_pivot', ['name', 'y2022', 'y2023', 'y2024', 'y2025', 'y2026', 'avg'], {
+    name: (r) => r.name, y2022: (r) => fpn(r.y2022, 1), y2023: (r) => fpn(r.y2023, 1), y2024: (r) => fpn(r.y2024, 1), y2025: (r) => fpn(r.y2025, 1), y2026: (r) => fpn(r.y2026, 1), avg: (r) => fpn(r.avg, 1)
+  }, { tone: ['y2022', 'y2023', 'y2024', 'y2025', 'y2026', 'avg'], cls: (r) => r.id === 'b4' ? 'sc-live sc-last' : '' });
+  tbl('month_body', 'bt_month_stats', ['year', 'months', 'win', 'med', 'worst', 'best'], {
+    year: (r) => r.year, months: (r) => String(r.months), win: (r) => r.win.toFixed(0) + '%', med: (r) => fpn(r.med, 1), worst: (r) => fpn(r.worst, 1), best: (r) => fpn(r.best, 1)
+  }, { tone: ['med', 'worst', 'best'] });
+  const fx = (v, sgn) => v == null ? 'n/a' : (sgn && v >= 0 ? '+' : '') + Number(v).toFixed(1) + '%';
+  tbl('ext_body', 'bt_ext', ['year', 'kind', 'core_est', 'low', 'high', 'core_daily', 'dd_daily', 'full_book'], {
+    year: (r) => String(r.year), kind: (r) => r.kind === 'estimate' ? 'estimate' : (r.year === 2026 ? 'measured, in sample' : 'measured'),
+    core_est: (r) => fx(r.core_est, true), low: (r) => fx(r.low, true), high: (r) => fx(r.high, true), core_daily: (r) => fx(r.core_daily, true),
+    dd_daily: (r) => fx(r.dd_daily, false), full_book: (r) => fx(r.full_book, true)
+  }, { left: ['kind'], tone: ['core_est', 'core_daily', 'full_book'], cls: (r) => r.kind === 'estimate' ? 'sc-est' : '' });
+  tbl('risk_body', 'bt_risk', ['kind', 'label', 'avg_22_25', 'worst_year', 'max_dd', 'stops', 'note'], {
+    kind: (r) => r.kind, label: (r) => r.label, avg_22_25: (r) => fpn(r.avg_22_25, 1), worst_year: (r) => fpn(r.worst_year, 1), max_dd: (r) => Number(r.max_dd).toFixed(1) + '%',
+    stops: (r) => String(r.stops), note: (r) => r.note || ''
+  }, { left: ['label', 'note'], tone: ['worst_year'] });
+
+  // ---- backtest curve: each system, each year, high and low of the window
+  const BT_SYS = ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'];
+  const BT_WIN = ['all', '2022', '2023', '2024', '2025', '2026'];
+  dash.calc('bt_sys_curve', {
+    inputs: ['bt_curve', 'bt_trades'],
+    title: 'Backtest curve by system',
+    description: 'Account return after each backtest day, compounded. Combined is the shared-account curve. Each system compounds only its own trades in that shared account, flat on days it did not trade.',
+    fn: (bt_curve, bt_trades) => {
+      const byDay = new Map();
+      bt_trades.forEach((t) => { const k = t.system + '|' + t.day; byDay.set(k, (byDay.get(k) || []).concat(Number(t.acct_pct))); });
+      const out = [];
+      bt_curve.forEach((r) => out.push({ day: r.day, system: 'Combined', cur: Number(r.current) }));
+      ['RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((s) => {
+        let eq = 1;
+        bt_curve.forEach((r) => {
+          (byDay.get(s + '|' + r.day) || []).forEach((p) => { eq *= 1 + p / 100; });
+          out.push({ day: r.day, system: s, cur: (eq - 1) * 100 });
+        });
+      });
+      return out;
+    }
+  });
+  dash.calc('bt_window', {
+    inputs: ['bt_sys_curve', 'bt_trades'],
+    title: 'Backtest window highs and lows',
+    description: 'For each system and each window (all years, or one year restarted at zero on Jan 1): return, the high and the low of the window with their days, the deepest peak-to-trough drawdown, trades and the share that won.',
+    fn: (bt_sys_curve, bt_trades) => {
+      const out = [];
+      ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((s) => {
+        const rows = bt_sys_curve.filter((r) => r.system === s);
+        const tr = bt_trades.filter((t) => s === 'Combined' || t.system === s);
+        ['all', '2022', '2023', '2024', '2025', '2026'].forEach((w) => {
+          const start = w === 'all' ? '2022-01-01' : w + '-01-01';
+          const prev = rows.filter((r) => r.day < start).pop();
+          const base = 1 + (prev ? prev.cur : 0) / 100;
+          const inW = rows.filter((r) => r.day >= start && (w === 'all' || r.day.slice(0, 4) === w));
+          let v = 0, hi = 0, hiDay = start, lo = 0, loDay = start, pk = 0, pkDay = start, dd = 0, ddFrom = null, ddTo = null;
+          inW.forEach((r) => {
+            v = ((1 + r.cur / 100) / base - 1) * 100;
+            if (v > hi) { hi = v; hiDay = r.day; }
+            if (v < lo) { lo = v; loDay = r.day; }
+            if (v > pk) { pk = v; pkDay = r.day; }
+            const d = (1 - (1 + v / 100) / (1 + pk / 100)) * 100;
+            if (d > dd) { dd = d; ddFrom = pkDay; ddTo = r.day; }
+          });
+          const tw = tr.filter((t) => w === 'all' || t.day.slice(0, 4) === w);
+          out.push({
+            id: s + ':' + w, system: s, window: w, start, end: inW.length ? inW[inW.length - 1].day : start,
+            ret: v, high: hi, high_day: hiDay, low: lo, low_day: loDay, max_dd: dd, dd_from: ddFrom, dd_to: ddTo,
+            trades: tw.length, win: tw.length ? tw.filter((t) => Number(t.acct_pct) > 0).length / tw.length * 100 : null
+          });
+        });
+      });
+      return out;
+    }
+  });
+
+  const OVL = [
+    { s: 'Combined', w: 3.6, d: null },
+    { s: 'RELVAL', w: 2, d: '7 4' },
+    { s: 'PULLBACK', w: 2, d: '1 4' },
+    { s: 'IBS-LONG', w: 2.6, d: null },
+    { s: 'MIRROR', w: 2, d: '10 3 2 3' },
+    { s: 'DIP', w: 2.6, d: '3 3' },
+    { s: 'OVERNIGHT', w: 1.6, d: '14 5' }
+  ];
+  const ovColor = (i) => i === 0 ? 'var(--color-fg)' : dash.colors[(i - 1) % dash.colors.length];
+  document.querySelectorAll('[data-ovl]').forEach((n) => {
+    const i = OVL.findIndex((o) => o.s === n.dataset.ovl), o = OVL[i];
+    n.style.stroke = ovColor(i); n.style.strokeWidth = o.w; n.style.strokeLinecap = o.d && o.d.startsWith('1 ') ? 'round' : 'butt';
+    if (o.d) n.style.strokeDasharray = o.d;
+  });
+  let btSys = 'Combined', btWin = 'all';
+  const btRedraw = () => ['btcurve', 'btw', 'btwin_body', 'btwin_label'].forEach((n) => dash.draw(n));
+  document.querySelectorAll('button[data-btsys]').forEach((b, i, all) => b.addEventListener('click', () => {
+    btSys = b.dataset.btsys;
+    all.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.btsys === btSys)));
+    const ov = btSys === 'ALL';
+    document.querySelectorAll('.bt-single').forEach((n) => { n.hidden = ov; });
+    document.querySelectorAll('.bt-overlay').forEach((n) => { n.hidden = !ov; });
+    btRedraw();
+  }));
+  document.querySelectorAll('button[data-btyear]').forEach((b, i, all) => b.addEventListener('click', () => {
+    btWin = b.dataset.btyear;
+    all.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.btyear === btWin)));
+    btRedraw();
+  }));
+  const btD = d3.utcFormat('%b %-d, %Y');
+  const btDay = (s) => s ? btD(new Date(s)) : DASH;
+  const winName = (w) => w === 'all' ? 'Jan 2022 to Oct 2026' : (w === '2026' ? '2026 to Oct 30, in sample' : w);
+  const f0 = (v) => Math.abs(v) < 0.05 ? '0.0%' : fpn(v, 1);
+  const ddPct = (v) => v == null ? DASH : (v > 0 ? MINUS : '') + Math.abs(v).toFixed(1) + '%';
+
+  dash.draw('btwin_label', (el) => { el.textContent = winName(btWin); });
+
+  const BTW = {
+    ret: (r) => ({ t: fpn(r.ret, 1), f: 'ret', tone: r.ret }),
+    high: (r) => ({ t: f0(r.high), f: 'high', tone: r.high > 0 ? r.high : null }),
+    high_day: (r) => ({ t: r.high_day === r.start ? 'at the start' : btDay(r.high_day), f: 'high_day' }),
+    low: (r) => ({ t: f0(r.low), f: 'low', tone: r.low < 0 ? r.low : null }),
+    low_day: (r) => ({ t: r.low_day === r.start ? 'at the start, never below' : btDay(r.low_day), f: 'low_day' }),
+    max_dd: (r) => ({ t: ddPct(r.max_dd), f: 'max_dd', tone: r.max_dd > 0 ? -1 : null }),
+    dd_span: (r) => ({ t: r.dd_from ? btDay(r.dd_from) + ' to ' + btDay(r.dd_to) : 'none', f: null }),
+    trades: (r) => ({ t: String(r.trades), f: 'trades' }),
+    win: (r) => ({ t: r.win == null ? DASH : r.win.toFixed(0) + '%', f: 'win' })
+  };
+  dash.draw('btw', (el) => {
+    const g = dash.data('bt_window');
+    el.replaceChildren();
+    el.classList.remove('pos', 'neg');
+    const r = g.status === 'ok' ? g.data.find((x) => x.id === btSys + ':' + btWin) : null;
+    if (!r) { el.textContent = DASH; return; }
+    const o = BTW[el.dataset.f](r);
+    const sp = document.createElement('span');
+    if (o.f) { sp.dataset.source = 'bt_window'; sp.dataset.field = o.f; sp.dataset.where = 'id=' + encodeURIComponent(r.id); }
+    sp.textContent = o.t;
+    if (o.tone != null) sp.className = o.tone >= 0 ? 'pos' : 'neg';
+    el.append(sp);
+  });
+
+  dash.draw('btwin_body', (tb) => {
+    const g = dash.data('bt_window');
+    tb.replaceChildren();
+    if (g.status !== 'ok') return;
+    g.data.filter((r) => r.window === btWin).forEach((r) => {
+      const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.id);
+      if (r.system === btSys) tr.className = 'sc-sel';
+      const cells = [
+        [r.system === 'Combined' ? 'Combined, all six' : r.system, null],
+        [fpn(r.ret, 1), r.ret],
+        [ddPct(r.max_dd), r.max_dd > 0 ? -1 : null], [String(r.trades), null], [r.win == null ? DASH : r.win.toFixed(0) + '%', null]
+      ];
+      cells.forEach(([t, tone]) => { const td = document.createElement('td'); td.textContent = t; if (tone != null) td.className = tone >= 0 ? 'pos' : 'neg'; tr.append(td); });
+      tb.append(tr);
+    });
+  });
+
+
+  const drawOverlay = (el, curve, wins, st) => {
+    const narrow = el.clientWidth < 520;
+    const W = Math.max(300, el.clientWidth), H = narrow ? 340 : 420, m = { l: 56, r: narrow ? 18 : 108, t: 16, b: 32 };
+    const series = OVL.map((o, i) => {
+      const all = curve.filter((r) => r.system === o.s);
+      const prev = all.filter((r) => r.day < st.start).pop();
+      const base = 1 + (prev ? prev.cur : 0) / 100;
+      const pts = [{ day: new Date(st.start), s: st.start, cur: 0 }].concat(all.filter((r) => r.day >= st.start && r.day <= st.end)
+        .map((r) => ({ day: new Date(r.day), s: r.day, cur: ((1 + r.cur / 100) / base - 1) * 100 })));
+      const w = wins.find((q) => q.id === o.s + ':' + btWin);
+      return { ...o, i, pts, hi: w.high, hiDay: w.high_day, lo: w.low, loDay: w.low_day };
+    });
+    const x = d3.scaleUtc([new Date(st.start), new Date(st.end)], [m.l, W - m.r]);
+    const lo = Math.min(0, d3.min(series, (q) => q.lo)), hiV = Math.max(0, d3.max(series, (q) => q.hi));
+    const useLog = hiV > 150;
+    const pad = (hiV - lo) * 0.06 || 1;
+    let y, yt;
+    if (useLog) {
+      y = d3.scaleSymlog().constant(30).domain([lo - 1, hiV * 1.06]).range([H - m.b, m.t]);
+      yt = [-10, 0, 25, 50, 100, 200, 400, 800, 1600, 3200].filter((t) => t >= y.domain()[0] && t <= y.domain()[1]);
+    } else {
+      y = d3.scaleLinear([lo - pad, hiV + pad], [H - m.b, m.t]).nice();
+      yt = y.ticks(narrow ? 5 : 8);
+    }
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img')
+      .attr('aria-label', `All seven backtest lines overlaid for ${winName(btWin)}: ` + series.map((q) => `${q.s} ${fpn(q.pts[q.pts.length - 1].cur, 1)}`).join(', '));
+    let band = null;
+    if (st.dd_from) {
+      const x0 = x(new Date(st.dd_from)), x1 = x(new Date(st.dd_to));
+      band = { x0, x1 };
+      svg.append('rect').attr('x', x0).attr('y', m.t).attr('width', Math.max(2, x1 - x0)).attr('height', H - m.t - m.b).style('fill', 'var(--color-bad)').style('fill-opacity', .12);
+    }
+    svg.append('g').selectAll('line').data(yt).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', (t) => y(t)).attr('y2', (t) => y(t))
+      .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
+      .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t).toLocaleString('en-US') + '%');
+    const xticks = btWin === 'all' ? d3.range(2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1))) : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
+    const xf = btWin === 'all' ? d3.utcFormat('%Y') : d3.utcFormat('%b');
+    svg.append('g').selectAll('text').data(xticks).join('text').attr('x', (d) => x(d)).attr('y', H - 10).attr('text-anchor', 'start')
+      .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(xf);
+    // thin lines first, Combined last so it sits on top
+    [...series].reverse().forEach((q) => {
+      const col = ovColor(q.i);
+      const path = svg.append('path').datum(q.pts).attr('fill', 'none').attr('stroke-linejoin', 'round')
+        .style('stroke', col).style('stroke-width', q.w)
+        .attr('d', d3.line().x((r) => x(r.day)).y((r) => y(r.cur)));
+      if (q.d) path.style('stroke-dasharray', q.d).style('stroke-linecap', q.d.startsWith('1 ') ? 'round' : 'butt');
+    });
+    if (band) { const lx = (band.x0 + band.x1) / 2; svg.append('text').attr('x', Math.min(W - m.r - 4, Math.max(m.l + 4, lx))).attr('y', m.t + 13).attr('text-anchor', lx < m.l + 70 ? 'start' : lx > W - m.r - 70 ? 'end' : 'middle').attr('font-size', 11).style('fill', 'var(--color-bad)').style('paint-order', 'stroke').style('stroke', 'var(--color-panel)').style('stroke-width', 3).text(`Combined drawdown ${ddPct(st.max_dd)}`); }
+    // direct labels at the line ends, spaced so they never overlap
+    if (!narrow) {
+      const labs = series.map((q) => ({ q, y: y(q.pts[q.pts.length - 1].cur) })).sort((a, b) => a.y - b.y);
+      for (let k = 1; k < labs.length; k++) if (labs[k].y - labs[k - 1].y < 13) labs[k].y = labs[k - 1].y + 13;
+      const over = labs[labs.length - 1].y - (H - m.b);
+      if (over > 0) labs.forEach((l) => { l.y -= over; });
+      labs.forEach((l) => svg.append('text').attr('x', W - m.r + 8).attr('y', l.y + 4).attr('font-size', 11).attr('font-weight', l.q.i === 0 ? 700 : 500)
+        .style('fill', 'var(--color-fg)').text(`${l.q.s} ${fpn(l.q.pts[l.q.pts.length - 1].cur, 0)}`));
+    }
+    const tip = tipFor(el);
+    const rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').style('display', 'none');
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('pointermove', (event) => {
+        const box = svg.node().getBoundingClientRect(), px = (event.clientX - box.left) * (W / box.width);
+        const ref = series[0].pts, k = d3.bisector((q) => q.day).center(ref, x.invert(px)), r0 = ref[k];
+        rule.attr('x1', x(r0.day)).attr('x2', x(r0.day)).style('display', null);
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'd').text(r0.s === st.start ? 'Start of window' : btD(r0.day));
+        [...series].sort((a, b) => b.pts[k].cur - a.pts[k].cur).forEach((q) => tip.append('div').style('font-weight', q.i === 0 ? 600 : 400).text(`${q.s} ${fpn(q.pts[k].cur, 1)}`));
+        tip.style('left', Math.min(el.clientWidth - 170, Math.max(0, x(r0.day) * (box.width / W) + 12)) + 'px').style('top', '12px');
+      })
+      .on('pointerleave', () => { tip.style('display', 'none'); rule.style('display', 'none'); });
+  };
+
+  dash.draw('btcurve', (el) => {
+    const g = dash.data('bt_sys_curve'), gw = dash.data('bt_window');
+    el.replaceChildren();
+    if (g.status === 'error' || gw.status === 'error') { el.classList.remove('dash-skeleton'); el.textContent = 'Failed to load'; return; }
+    if (g.status !== 'ok' || gw.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
+    el.classList.remove('dash-skeleton');
+    const st = gw.data.find((x) => x.id === (btSys === 'ALL' ? 'Combined' : btSys) + ':' + btWin);
+    if (!st) return;
+    if (btSys === 'ALL') { drawOverlay(el, g.data, gw.data, st); return; }
+    const all = g.data.filter((r) => r.system === btSys);
+    const prev = all.filter((r) => r.day < st.start).pop();
+    const base = 1 + (prev ? prev.cur : 0) / 100;
+    const rows = [{ day: new Date(st.start), s: st.start, cur: 0 }].concat(all.filter((r) => r.day >= st.start && r.day <= st.end)
+      .map((r) => ({ day: new Date(r.day), s: r.day, cur: ((1 + r.cur / 100) / base - 1) * 100 })));
+    let pk = 0;
+    rows.forEach((r) => { pk = Math.max(pk, r.cur); r.dd = (1 - (1 + r.cur / 100) / (1 + pk / 100)) * 100; });
+    const narrow = el.clientWidth < 520;
+    const W = Math.max(300, el.clientWidth), H = narrow ? 300 : 360, m = { l: 56, r: 18, t: 30, b: 32 };
+    const x = d3.scaleUtc(d3.extent(rows, (r) => r.day), [m.l, W - m.r]);
+    const lo = Math.min(0, st.low), hiV = Math.max(0, st.high);
+    const useLog = hiV > 300;
+    const pad = (hiV - lo) * 0.12 || 1;
+    let y, yt;
+    if (useLog) {
+      y = d3.scaleSymlog().constant(50).domain([lo - 2, hiV * 1.08]).range([H - m.b, m.t]);
+      yt = [0, 100, 300, 1000, 3000, 10000].filter((t) => t <= y.domain()[1]);
+    } else {
+      y = d3.scaleLinear([lo - pad, hiV + pad], [H - m.b, m.t]).nice();
+      yt = y.ticks(narrow ? 4 : 6);
+    }
+    const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img')
+      .attr('aria-label', `Backtest account return for ${btSys}, ${winName(btWin)}, with the high at ${fpn(st.high, 1)}, the low at ${fpn(st.low, 1)} and the deepest drawdown of ${st.max_dd.toFixed(1)}%`);
+    // deepest drawdown band
+    let ddLab = null;
+    if (st.dd_from) {
+      const x0 = x(new Date(st.dd_from)), x1 = x(new Date(st.dd_to));
+      svg.append('rect').attr('x', x0).attr('y', m.t).attr('width', Math.max(2, x1 - x0)).attr('height', H - m.t - m.b)
+        .style('fill', 'var(--color-bad)').style('fill-opacity', .14);
+      const lab = `Drawdown ${ddPct(st.max_dd)}`;
+      const lx = (x0 + x1) / 2;
+      ddLab = svg.append('text').attr('x', Math.min(W - m.r - 4, Math.max(m.l + 4, lx))).attr('y', m.t + 13)
+        .attr('text-anchor', lx < m.l + 60 ? 'start' : lx > W - m.r - 60 ? 'end' : 'middle')
+        .attr('font-size', 11).style('fill', 'var(--color-bad)').style('paint-order', 'stroke').style('stroke', 'var(--color-panel)').style('stroke-width', 3).text(lab);
+    }
+    svg.append('g').selectAll('line').data(yt).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', (t) => y(t)).attr('y2', (t) => y(t))
+      .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
+      .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t).toLocaleString('en-US') + '%');
+    const xticks = btWin === 'all' ? d3.range(2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1)))
+      : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
+    const xf = btWin === 'all' ? d3.utcFormat('%Y') : d3.utcFormat('%b');
+    svg.append('g').selectAll('text').data(xticks).join('text').attr('x', (d) => x(d)).attr('y', H - 10).attr('text-anchor', 'start')
+      .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(xf);
+    svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', 'var(--sc-live)').attr('stroke-width', 2.25).attr('stroke-linejoin', 'round')
+      .attr('d', d3.line().x((r) => x(r.day)).y((r) => y(r.cur)));
+    if (ddLab) ddLab.raise();
+    const end = rows[rows.length - 1];
+    axisText(svg, W - m.r, y(end.cur) - 8, 'end', 'End ' + f0(end.cur), 12);
+    const tip = tipFor(el);
+    const rule = svg.append('line').attr('y1', m.t).attr('y2', H - m.b).attr('stroke', 'var(--cds-chart-axis)').style('display', 'none');
+    const dot = svg.append('circle').attr('r', 4).style('fill', 'var(--sc-live)').attr('stroke', 'var(--color-panel)').attr('stroke-width', 2).style('display', 'none');
+    svg.append('rect').attr('x', m.l).attr('y', m.t).attr('width', W - m.l - m.r).attr('height', H - m.t - m.b).attr('fill', 'transparent')
+      .on('pointermove', (event) => {
+        const box = svg.node().getBoundingClientRect(), px = (event.clientX - box.left) * (W / box.width);
+        const r = rows[d3.bisector((q) => q.day).center(rows, x.invert(px))];
+        rule.attr('x1', x(r.day)).attr('x2', x(r.day)).style('display', null);
+        dot.attr('cx', x(r.day)).attr('cy', y(r.cur)).style('display', null);
+        tip.style('display', null).html('');
+        tip.append('div').attr('class', 'd').text(r.s === st.start ? 'Start of window' : btD(r.day));
+        tip.append('div').text(`${btSys} ${fpn(r.cur, 1)}`);
+        tip.append('div').attr('class', 'd').text(r.dd > 0.05 ? `${r.dd.toFixed(1)}% below the high so far` : 'At its high so far');
+        tip.style('left', Math.min(el.clientWidth - 190, Math.max(0, x(r.day) * (box.width / W) + 12)) + 'px').style('top', '12px');
+      })
+      .on('pointerleave', () => { tip.style('display', 'none'); rule.style('display', 'none'); dot.style('display', 'none'); });
+  });
+})();
+</script>
