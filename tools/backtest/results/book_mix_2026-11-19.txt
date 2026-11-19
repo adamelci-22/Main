@@ -1,0 +1,37 @@
+Is the live mix best? (governor 2026-11-19: "Is this the best mix of systems or would removing some help?"). Research only.
+   years 2022 2023 2024 2025 2026 | TRAIN / TEST compounded (points vs live) | avg 2022-25 | max drawdown
+
+   live LIVE: all six                         +146.7   +41.1   +17.1  +119.8  +132.5 | TRAIN  +571.3 (   +0.0) TEST  +210.2 (  +0.0) | avg  +81.2 | DD 20.1%
+
+DROP ONE
+        without PULLBACK                      +118.4   +56.4    +7.8   +67.3   +78.6 | TRAIN  +320.4 ( -251.0) TEST  +161.7 ( -48.5) | avg  +62.5 | DD 21.2%
+        without IBS-LONG                       +94.9   +26.9   +17.0   +46.2  +114.0 | TRAIN  +387.8 ( -183.5) TEST   +85.6 (-124.6) | avg  +46.2 | DD 23.3%
+        without MIRROR                         +54.7    +6.8   +36.7   +96.7  +132.0 | TRAIN  +390.6 ( -180.7) TEST  +110.0 (-100.2) | avg  +48.7 | DD 21.9%
+        without DIP                           +150.5   +36.4    +1.0  +106.7   +84.4 | TRAIN  +366.6 ( -204.8) TEST  +182.0 ( -28.2) | avg  +73.7 | DD 24.7%
+        without RELVAL                        +128.2   +45.2   +19.4  +109.7  +116.7 | TRAIN  +490.4 (  -81.0) TEST  +204.5 (  -5.7) | avg  +75.6 | DD 21.3%
+        without OVERNIGHT                     +131.2   +34.1   +17.4  +112.3  +121.6 | TRAIN  +501.3 (  -70.0) TEST  +184.6 ( -25.6) | avg  +73.7 | DD 22.4%
+
+DROP TWO
+        without PULLBACK + IBS-LONG            +76.0   +52.6    +5.8   +16.1   +58.7 | TRAIN  +195.5 ( -375.8) TEST   +77.1 (-133.1) | avg  +37.6 | DD 19.5%
+        without PULLBACK + MIRROR              +35.9   +24.0   +27.6   +57.5   +77.5 | TRAIN  +207.8 ( -363.5) TEST   +95.4 (-114.8) | avg  +36.3 | DD 20.0%
+        without PULLBACK + DIP                +128.6   +50.6    -9.8   +59.2   +38.9 | TRAIN  +186.6 ( -384.7) TEST  +139.8 ( -70.4) | avg  +57.2 | DD 22.2%
+        without PULLBACK + RELVAL             +102.0   +61.0    +9.9   +59.6   +66.5 | TRAIN  +269.7 ( -301.7) TEST  +156.9 ( -53.3) | avg  +58.1 | DD 19.8%
+        without PULLBACK + OVERNIGHT          +104.7   +48.6    +8.0   +61.6   +70.3 | TRAIN  +276.5 ( -294.8) TEST  +140.1 ( -70.1) | avg  +55.7 | DD 23.5%
+        without IBS-LONG + MIRROR              +22.2    -4.0   +36.5   +30.9  +120.4 | TRAIN  +267.8 ( -303.6) TEST   +25.7 (-184.5) | avg  +21.4 | DD 27.3%
+        without IBS-LONG + DIP                 +97.9    +9.9    +0.1   +43.6   +71.0 | TRAIN  +238.7 ( -332.6) TEST   +57.7 (-152.5) | avg  +37.9 | DD 14.7%
+        without IBS-LONG + RELVAL              +80.2   +30.0   +17.1   +39.5  +100.6 | TRAIN  +323.1 ( -248.2) TEST   +81.4 (-128.8) | avg  +41.7 | DD 21.7%
+        without IBS-LONG + OVERNIGHT           +82.6   +20.6   +17.2   +41.2  +104.0 | TRAIN  +337.0 ( -234.4) TEST   +70.3 (-139.9) | avg  +40.4 | DD 23.0%
+        without MIRROR + DIP                   +57.2    +3.3   +21.6   +81.2   +65.2 | TRAIN  +215.7 ( -355.7) TEST   +87.1 (-123.1) | avg  +40.8 | DD 21.0%
+        without MIRROR + RELVAL                +43.9   +10.4   +38.4   +89.9  +123.1 | TRAIN  +344.4 ( -227.0) TEST  +109.6 (-100.6) | avg  +45.6 | DD 21.3%
+        without MIRROR + OVERNIGHT             +45.0    +1.5   +37.0   +89.9  +121.2 | TRAIN  +339.4 ( -231.9) TEST   +92.7 (-117.5) | avg  +43.4 | DD 22.1%
+        without DIP + RELVAL                  +131.7   +41.1    -1.2   +97.6   +64.4 | TRAIN  +276.5 ( -294.8) TEST  +178.7 ( -31.5) | avg  +67.3 | DD 23.8%
+        without DIP + OVERNIGHT               +134.8   +29.7    +1.2   +99.6   +75.8 | TRAIN  +317.9 ( -253.5) TEST  +158.8 ( -51.4) | avg  +66.3 | DD 22.3%
+        without RELVAL + OVERNIGHT            +113.9   +38.0   +19.7  +102.4  +106.6 | TRAIN  +428.8 ( -142.5) TEST  +179.4 ( -30.8) | avg  +68.5 | DD 23.6%
+
+EACH SYSTEM ALONE (overnight leg off unless named)
+        PULLBACK alone                          +8.2   -18.5   +15.6   +17.6   +40.1 | TRAIN   +75.3 ( -496.1) TEST    -4.1 (-214.3) | avg   +5.8 | DD 32.9%
+        IBS-LONG alone                         +24.1   +17.9    +7.3   +37.2    +8.0 | TRAIN   +43.8 ( -527.6) TEST   +61.7 (-148.5) | avg  +21.6 | DD 16.4%
+        MIRROR alone                           +59.8   +25.6   -17.6    +7.1    +6.0 | TRAIN   +39.7 ( -531.6) TEST   +34.5 (-175.7) | avg  +18.7 | DD 20.1%
+        DIP alone                               -4.5   +18.3   +24.8    +1.9   +49.9 | TRAIN   +78.6 ( -492.7) TEST   +20.5 (-189.7) | avg  +10.1 | DD 15.3%
+        RELVAL alone                            +7.5    -3.1    +4.5    +3.3    +7.6 | TRAIN   +20.8 ( -550.5) TEST    +0.2 (-210.0) | avg   +3.1 | DD  6.0%
+        OVERNIGHT alone                         +6.7    +5.2    -0.2    +3.6    +4.9 | TRAIN   +11.6 ( -559.7) TEST    +9.0 (-201.2) | avg   +3.8 | DD  9.2%

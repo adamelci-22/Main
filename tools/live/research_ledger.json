@@ -752,5 +752,14 @@
   "method": "tools/backtest/relval_multiday.py; 219 signals; exits same-day 15:55 (live), next 9:35, next 15:55, day 2/3/5 15:55; target 0.5 gap or none; stop 1 gap or none; trades alone, 3% risk sizing; train 2022/2024/2026, test 2023/2025",
   "result": "Every multi-day hold loses on test except one cell: no target, no stop, out next 15:55 (train +87.8, test +3.4 vs live +22.1/-1.6), which loses 2023 (-15.4 vs -1.2) and wins 2025 (+18.8 vs -0.4): fails the both-test-years rule, carries an unstopped 3x position overnight, and would block the next morning's book. Longer holds win 2022 (bear-year reversion) and lose 2023-2025. Live same-day exit kept.",
   "status": "rejected"
+ },
+ {
+  "id": "study.book_mix",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "Is the live mix best, or would removing systems help (governor question)",
+  "method": "tools/backtest/book_mix.py; live book v5.2.64 (PULLBACK, IBS-LONG, MIRROR, DIP, RELVAL, OVERNIGHT 50%); every drop-one and drop-two subset; one shared account; train 2022/2024/2026, test 2023/2025",
+  "result": "0 of 21 subsets beat the live book on train or on test. Live: avg +81.2%/yr 2022-25, train +571.3, test +210.2, max DD 20.1%. Cheapest removal: RELVAL (train -81.0, test -5.7); costliest: IBS-LONG (test -124.6) and MIRROR (test -100.2). Each system alone is far weaker (+3 to +22%/yr); together they fill each other's idle days.",
+  "status": "live mix kept"
  }
 ]
