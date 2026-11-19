@@ -12,6 +12,11 @@
   "status": "none"
  },
  "2026-11-19": {
+  "k": 1,
+  "kind": "dip",
+  "proxy": "XLF",
+  "ref": 56.505,
+  "side": 1,
   "signals": {
    "XLF": {
     "ibs": 0.072,
@@ -20,6 +25,8 @@
     "v0": 581189.15
    }
   },
-  "status": "signal"
+  "status": "open",
+  "ticker": "FAS",
+  "xbar": null
  }
 }
