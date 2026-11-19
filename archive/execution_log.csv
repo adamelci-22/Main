@@ -95,3 +95,5 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-17,UVXY,PULLBACK,sell,tp_1_3,11:32,,11:32:50,,,,22.52,22.52,22.52,0.00,39,OCO take-profit leg filled 39 @ 22.52 at 11:32:50 (fee 0.02): +$38.59; stop leg cancelled; order 6afc794c-fdb4-4402-a5d5-6ae70dea7b6d,,
 2026-11-17,UVXY,PULLBACK,sell,stop_move_be,11:35,11:35:26,11:35:26,,,,21.53,,,,78,runner stop moved to breakeven: cancelled 6afc7ff1 (21.12) verified then placed stop-market 78 @ 21.53 verified resting; order 6afc824e-ece2-4e34-a461-c3c9994daa3e,,
 2026-11-17,UVXY,PULLBACK,sell,runner_stop,12:17,,12:17:51,,,,21.53,,21.5275,-0.01,78,"runner breakeven stop filled 78 @ 21.5275 (fee 0.04); flat, cash 2557.89; peak was 23.24 at 11:50",,
+2026-11-19,FAS,IBS-LONG,buy,entry,09:35,09:35:36,09:35:36,161.50,161.87,0.23,161.87,162.09,161.66,-0.13,15,"IBS-TREND dip XLF (IBS 0.07); limit 162.09 filled 15 @ 161.66 in 0.2s; order 6aff0938-3a54-4f79-b28c-f7aefb4b0846",,
+2026-11-19,FAS,IBS-LONG,sell,stop_placed,09:35,09:35:50,09:35:50,161.29,161.59,0.19,156.81,,,,15,"stop-market 15 @ 156.81 (fill x 0.97) GTC verified resting; order 6aff0946-af9e-4ebc-9d0d-c2541640aa98; exit 15:55",,
