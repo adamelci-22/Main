@@ -779,5 +779,14 @@
   "method": "tools/backtest/am_select.py; live book v5.2.64; A: 18 pick rules among same-bar candidates; B: 180 tail filters per system (10 features x 3 cuts x 2 sides, thresholds from train trades), a filter counts only if the trades it removes lose on train AND test; C: split cash top 2/3; train 2022/2024/2026, test 2023/2025",
   "result": "0 changes PASS with losers removed in both periods. Split cash: worse (train -29.3/-13.8, test -10.3/-4.1). Pick rules: pre-set pick (rsi2 desc) train +136.7, test -37.6; pick by ibs desc +20.2/+27.0 but 2023 -19.1. Best filter: MIRROR skip when the proxy's prior 5-day return < -4.27% (20% cut): removed 24 trades, PF 0.20 train, 0.00 test (n 4); book train +64.9, test +20.8, DD 19.7 vs 20.1; 2023 unchanged (tie), so 'qual' not PASS. Only strict PASS (MIRROR drop rv<0.75) removes test winners (PF 4.33): luck, rejected.",
   "status": "MIRROR ret5 filter offered to the governor; nothing live"
+ },
+ {
+  "id": "study.slots",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "Priority pick and a two-slot account (2/3 + 1/3) for a second signal (governor question)",
+  "method": "tools/backtest/slots.py; live book v5.2.64 with up to 2 concurrent positions (big slot first), priority by train-year PF per (system, fund); reference: one slot at the same smaller size; train 2022/2024/2026, test 2023/2025",
+  "result": "Priority: train +117.2, test -64.8 (overfit). Two slots lower return vs live (2/3+1/3: avg 69.0 vs 81.0 %/yr 2022-25, train -134, test -51) but cut max drawdown 20.2% -> 13.6%; at the SAME drawdown a single smaller slot makes only 50.9 %/yr, so the second slot adds ~18 pts/yr at equal risk. Nothing passes the return rule.",
+  "status": "offered as a risk choice; nothing live"
  }
 ]
