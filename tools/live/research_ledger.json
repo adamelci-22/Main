@@ -716,5 +716,14 @@
   "result": "Round trips from 2R: FADE 0 of 53, IBS-LONG 1 of 27, MIRROR 2 of 32, DIP 0 of 19; from 3R: 0 in every system (FADE already has the +0.15R lock, the 2R third and a 2-ATR chandelier; the 9:35 family exits at 15:55). Givebacks: FADE best 40% at 2R +0.3 (qual, fails test); 9:35 family 40% at 2R +1.5 (qual, loses 2023), 40% at 3R +1.8 but only from 2025 (train years unchanged), 1R versions -24 to -28. 0 pass. OVERNIGHT has no intraday hold",
   "verdict": "not adopted; the gap existed only in the PULLBACK runner, now covered by v5.2.61",
   "champion_version": "5.2.61"
+ },
+ {
+  "id": "study.fade_replace",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "Replace the cut FADE (governor: find a system that can replace it, build on 2022 2024 2026, test on 2023 2025)",
+  "method": "tools/backtest/fade_replace.py; live joint book without FADE as the base (PULLBACK, IBS-LONG, MIRROR, DIP, overnight 50%), Massive 5-minute tape 2022-01..2026-10; 18 coded proxy->3x leg systems, 40 settings, each in FADE's slot; QUALIFY = beats the base on train compounded and in 2 of 3 train years, PASS = also beats it in 2023 and 2025; pick = best train qualifier",
+  "result": "0 PASS, 11 qualify on train. Pre-set pick VWAPPB xm=0.5 (train +180.7 pts vs base) fails test (-50.6). Base without FADE: test +204.5% vs +191.4% with the old FADE (cut confirmed out of sample). Closest: RELVAL a=48 z=72 xm=1.0 (train +81.0, test +5.7 compounded; 2023 41.1 vs 45.2 base, 2025 119.8 vs 109.7), PF 1.21 over 219 trades; 4 of 5 RELVAL settings qualify on train. No candidate goes live.",
+  "status": "rejected (no PASS); RELVAL offered as a paper trial only"
  }
 ]
