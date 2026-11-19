@@ -97,3 +97,4 @@ date,ticker,system,side,purpose,checkpoint_et,sent_et_sec,ack_et_sec,bid,ask,spr
 2026-11-17,UVXY,PULLBACK,sell,runner_stop,12:17,,12:17:51,,,,21.53,,21.5275,-0.01,78,"runner breakeven stop filled 78 @ 21.5275 (fee 0.04); flat, cash 2557.89; peak was 23.24 at 11:50",,
 2026-11-19,FAS,IBS-LONG,buy,entry,09:35,09:35:36,09:35:36,161.50,161.87,0.23,161.87,162.09,161.66,-0.13,15,"IBS-TREND dip XLF (IBS 0.07); limit 162.09 filled 15 @ 161.66 in 0.2s; order 6aff0938-3a54-4f79-b28c-f7aefb4b0846",,
 2026-11-19,FAS,IBS-LONG,sell,stop_placed,09:35,09:35:50,09:35:50,161.29,161.59,0.19,156.81,,,,15,"stop-market 15 @ 156.81 (fill x 0.97) GTC verified resting; order 6aff0946-af9e-4ebc-9d0d-c2541640aa98; exit 15:55",,
+2026-11-19,FAS,DIP,sell,stop_fill,10:49,,10:49:52,,,,156.81,,156.7494,-0.04,15,"GTC stop-market 15 filled @ 156.7494 at 10:49:52 (fee 0.05): -$73.71; flat, cash 2484.43; order 6aff0946-af9e-4ebc-9d0d-c2541640aa98",,
