@@ -249,6 +249,10 @@ details[open] .sc-hint { display: none; }
       </div>
       <div class="sc-seg sc-wrap" role="group" aria-label="Backtest window">
         <button type="button" data-btyear="all" aria-pressed="true">All years</button>
+        <button type="button" data-btyear="2018" aria-pressed="false">2018*</button>
+        <button type="button" data-btyear="2019" aria-pressed="false">2019*</button>
+        <button type="button" data-btyear="2020" aria-pressed="false">2020*</button>
+        <button type="button" data-btyear="2021" aria-pressed="false">2021*</button>
         <button type="button" data-btyear="2022" aria-pressed="false">2022</button>
         <button type="button" data-btyear="2023" aria-pressed="false">2023</button>
         <button type="button" data-btyear="2024" aria-pressed="false">2024</button>
@@ -899,7 +903,8 @@ details[open] .sc-hint { display: none; }
 
   // ---- backtest curve: each system, each year, high and low of the window
   const BT_SYS = ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'];
-  const BT_WIN = ['all', '2022', '2023', '2024', '2025', '2026'];
+  const BT_WIN = ['all', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'];
+  const EST_Y = ['2018', '2019', '2020', '2021'];
   dash.calc('bt_sys_curve', {
     inputs: ['bt_curve', 'bt_trades'],
     title: 'Backtest curve by system',
@@ -911,7 +916,7 @@ details[open] .sc-hint { display: none; }
       bt_curve.forEach((r) => out.push({ day: r.day, system: 'Combined', cur: Number(r.current) }));
       ['RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((s) => {
         let eq = 1;
-        bt_curve.forEach((r) => {
+        bt_curve.filter((r) => r.day >= '2022-01-01').forEach((r) => {
           (byDay.get(s + '|' + r.day) || []).forEach((p) => { eq *= 1 + p / 100; });
           out.push({ day: r.day, system: s, cur: (eq - 1) * 100 });
         });
@@ -928,8 +933,9 @@ details[open] .sc-hint { display: none; }
       ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((s) => {
         const rows = bt_sys_curve.filter((r) => r.system === s);
         const tr = bt_trades.filter((t) => s === 'Combined' || t.system === s);
-        ['all', '2022', '2023', '2024', '2025', '2026'].forEach((w) => {
-          const start = w === 'all' ? '2022-01-01' : w + '-01-01';
+        ['all', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'].forEach((w) => {
+          if (s !== 'Combined' && ['2018', '2019', '2020', '2021'].includes(w)) return;
+          const start = w === 'all' ? (rows.length ? rows[0].day : '2018-01-01') : w + '-01-01';
           const prev = rows.filter((r) => r.day < start).pop();
           const base = 1 + (prev ? prev.cur : 0) / 100;
           const inW = rows.filter((r) => r.day >= start && (w === 'all' || r.day.slice(0, 4) === w));
@@ -946,7 +952,7 @@ details[open] .sc-hint { display: none; }
           out.push({
             id: s + ':' + w, system: s, window: w, start, end: inW.length ? inW[inW.length - 1].day : start,
             ret: v, high: hi, high_day: hiDay, low: lo, low_day: loDay, max_dd: dd, dd_from: ddFrom, dd_to: ddTo,
-            trades: tw.length, win: tw.length ? tw.filter((t) => Number(t.acct_pct) > 0).length / tw.length * 100 : null
+            trades: ['2018', '2019', '2020', '2021'].includes(w) ? null : tw.length, win: tw.length && !['2018', '2019', '2020', '2021'].includes(w) ? tw.filter((t) => Number(t.acct_pct) > 0).length / tw.length * 100 : null
           });
         });
       });
@@ -986,7 +992,7 @@ details[open] .sc-hint { display: none; }
   }));
   const btD = d3.utcFormat('%b %-d, %Y');
   const btDay = (s) => s ? btD(new Date(s)) : DASH;
-  const winName = (w) => w === 'all' ? 'Jan 2022 to Oct 2026' : (w === '2026' ? '2026 to Oct 30, in sample' : w);
+  const winName = (w) => w === 'all' ? (btSys === 'Combined' ? 'Jan 2018 to Oct 2026 (2018 to 2021 estimated, IBS family and overnight only)' : 'Jan 2022 to Oct 2026') : (w === '2026' ? '2026 to Oct 30, in sample' : (['2018', '2019', '2020', '2021'].includes(w) ? w + ', estimated (IBS family and overnight only)' : w));
   const f0 = (v) => Math.abs(v) < 0.05 ? '0.0%' : fpn(v, 1);
   const ddPct = (v) => v == null ? DASH : (v > 0 ? MINUS : '') + Math.abs(v).toFixed(1) + '%';
 
@@ -1000,7 +1006,7 @@ details[open] .sc-hint { display: none; }
     low_day: (r) => ({ t: r.low_day === r.start ? 'at the start, never below' : btDay(r.low_day), f: 'low_day' }),
     max_dd: (r) => ({ t: ddPct(r.max_dd), f: 'max_dd', tone: r.max_dd > 0 ? -1 : null }),
     dd_span: (r) => ({ t: r.dd_from ? btDay(r.dd_from) + ' to ' + btDay(r.dd_to) : 'none', f: null }),
-    trades: (r) => ({ t: String(r.trades), f: 'trades' }),
+    trades: (r) => ({ t: r.trades == null ? DASH : String(r.trades) + (r.window === 'all' && r.system === 'Combined' ? ' (2022 on)' : ''), f: r.trades == null ? null : 'trades' }),
     win: (r) => ({ t: r.win == null ? DASH : r.win.toFixed(0) + '%', f: 'win' })
   };
   dash.draw('btw', (el) => {
@@ -1027,7 +1033,7 @@ details[open] .sc-hint { display: none; }
       const cells = [
         [r.system === 'Combined' ? 'Combined, all six' : r.system, null],
         [fpn(r.ret, 1), r.ret],
-        [ddPct(r.max_dd), r.max_dd > 0 ? -1 : null], [String(r.trades), null], [r.win == null ? DASH : r.win.toFixed(0) + '%', null]
+        [ddPct(r.max_dd), r.max_dd > 0 ? -1 : null], [r.trades == null ? DASH : String(r.trades), null], [r.win == null ? DASH : r.win.toFixed(0) + '%', null]
       ];
       cells.forEach(([t, tone]) => { const td = document.createElement('td'); td.textContent = t; if (tone != null) td.className = tone >= 0 ? 'pos' : 'neg'; tr.append(td); });
       tb.append(tr);
@@ -1044,8 +1050,8 @@ details[open] .sc-hint { display: none; }
       const base = 1 + (prev ? prev.cur : 0) / 100;
       const pts = [{ day: new Date(st.start), s: st.start, cur: 0 }].concat(all.filter((r) => r.day >= st.start && r.day <= st.end)
         .map((r) => ({ day: new Date(r.day), s: r.day, cur: ((1 + r.cur / 100) / base - 1) * 100 })));
-      const w = wins.find((q) => q.id === o.s + ':' + btWin);
-      return { ...o, i, pts, hi: w.high, hiDay: w.high_day, lo: w.low, loDay: w.low_day };
+      const hp = pts.reduce((m2, p) => p.cur > m2.cur ? p : m2, pts[0]), lp = pts.reduce((m2, p) => p.cur < m2.cur ? p : m2, pts[0]);
+      return { ...o, i, pts, hi: hp.cur, hiDay: hp.s, lo: lp.cur, loDay: lp.s };
     });
     const x = d3.scaleUtc([new Date(st.start), new Date(st.end)], [m.l, W - m.r]);
     const lo = Math.min(0, d3.min(series, (q) => q.lo)), hiV = Math.max(0, d3.max(series, (q) => q.hi));
@@ -1071,7 +1077,7 @@ details[open] .sc-hint { display: none; }
       .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t).toLocaleString('en-US') + '%');
-    const xticks = btWin === 'all' ? d3.range(2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1))) : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
+    const xticks = btWin === 'all' ? d3.range(st.start < '2022' ? 2018 : 2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1))) : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
     const xf = btWin === 'all' ? d3.utcFormat('%Y') : d3.utcFormat('%b');
     svg.append('g').selectAll('text').data(xticks).join('text').attr('x', (d) => x(d)).attr('y', H - 10).attr('text-anchor', 'start')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(xf);
@@ -1115,8 +1121,11 @@ details[open] .sc-hint { display: none; }
     if (g.status !== 'ok' || gw.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
     el.classList.remove('dash-skeleton');
     const st = gw.data.find((x) => x.id === (btSys === 'ALL' ? 'Combined' : btSys) + ':' + btWin);
-    if (!st) return;
-    if (btSys === 'ALL') { drawOverlay(el, g.data, gw.data, st); return; }
+    if (!st) { const p = document.createElement('p'); p.className = 'sc-note'; p.textContent = 'No estimate for this system in ' + btWin + ': 2018 to 2021 are estimated for the combined IBS family and overnight leg only (daily bars). Pick Combined.'; el.append(p); return; }
+    if (btSys === 'ALL') {
+      if (EST_Y.includes(btWin)) { const p = document.createElement('p'); p.className = 'sc-note'; p.textContent = 'The overlay needs every system: 2018 to 2021 are estimated for the combined core only. Pick Combined, or a year from 2022.'; el.append(p); return; }
+      drawOverlay(el, g.data, gw.data, btWin === 'all' ? { ...st, start: '2022-01-01' } : st); return;
+    }
     const all = g.data.filter((r) => r.system === btSys);
     const prev = all.filter((r) => r.day < st.start).pop();
     const base = 1 + (prev ? prev.cur : 0) / 100;
@@ -1140,6 +1149,14 @@ details[open] .sc-hint { display: none; }
     }
     const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${W} ${H}`).attr('width', '100%').attr('role', 'img')
       .attr('aria-label', `Backtest account return for ${btSys}, ${winName(btWin)}, with the high at ${fpn(st.high, 1)}, the low at ${fpn(st.low, 1)} and the deepest drawdown of ${st.max_dd.toFixed(1)}%`);
+    // estimated stretch (2018 to 2021, daily bars)
+    if (st.start < '2022-01-01' && btSys === 'Combined') {
+      const xe0 = x(rows[0].day), xe1 = x(new Date(Math.min(+new Date('2022-01-01'), +rows[rows.length - 1].day)));
+      svg.append('rect').attr('x', xe0).attr('y', m.t).attr('width', Math.max(2, xe1 - xe0)).attr('height', H - m.t - m.b)
+        .style('fill', 'var(--color-fg-muted)').style('fill-opacity', .08);
+      svg.append('text').attr('x', xe0 + 6).attr('y', H - m.b - 8).attr('font-size', 11).style('fill', 'var(--color-fg-muted)')
+        .text('Estimate: IBS family and overnight, daily bars');
+    }
     // deepest drawdown band
     let ddLab = null;
     if (st.dd_from) {
@@ -1156,7 +1173,7 @@ details[open] .sc-hint { display: none; }
       .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t).toLocaleString('en-US') + '%');
-    const xticks = btWin === 'all' ? d3.range(2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1)))
+    const xticks = btWin === 'all' ? d3.range(st.start < '2022' ? 2018 : 2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1)))
       : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
     const xf = btWin === 'all' ? d3.utcFormat('%Y') : d3.utcFormat('%b');
     svg.append('g').selectAll('text').data(xticks).join('text').attr('x', (d) => x(d)).attr('y', H - 10).attr('text-anchor', 'start')
