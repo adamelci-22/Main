@@ -516,6 +516,7 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 
 ## E6. Known issues
 
+- **2026-11-19 (Thursday): the container restarted twice: overnight (uptime 0 at 8:41) and again before 12:36 ET (uptime 0 at the 12:36 watchdog).** Both times the account was flat with no orders. Early shutdown had held since the 10:49 DIP stop-out, so no slot was lost; the 13:30 close runs from its scheduled task. Repository state intact (last commit 7502d2e pushed). Fifth restart in four days.
 - **2026-11-18 (Wednesday): the container restarted again before 15:36 ET (uptime 0 at the 15:36 afternoon watchdog).** The account was flat with no orders and no IBS-TREND trade, so nothing was unprotected. All waiters up to 15:30 had already fired. The 15:55 waiter was gone and the watchdog restarted it (timeout 1800000, started 15:36). No checkpoint was missed. Cause: the same container recycling seen on 2026-11-16 and 2026-11-17. The watchdogs cover it.
 - **2026-11-17 (Tuesday): the container restarted again before 15:36 ET (uptime 0 at the 15:36 afternoon watchdog).** The account was flat with no orders ($2,557.89). The watchdog started the 15:55 waiter at 15:37 with `timeout 1800000` (the v5.2.60 fix), which outlasts the slot. Only waiter processes were lost; repository state was committed. Two afternoon restarts on consecutive days: the 15:36 watchdog is the guard for the overnight check.
 
