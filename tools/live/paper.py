@@ -276,6 +276,7 @@ def rvol(today, base, p, k):
     return sum(b[4] for b in today[p][:k]) / base[p][k]
 
 
+FADE_OFF_FROM = '2026-11-19'   # RULEBOOK v5.2.63 (governor 2026-11-19: "Yes cut it"): FADE removed from live trading; no FADE entries from this date
 FADE_NO_FRIDAY_FROM = '2026-10-28'   # RULEBOOK v5.2.17 (A1.10): no FADE entries on Fridays from this date; PULLBACK still trades Fridays
 FROZEN_FROM = '2026-10-28'   # RULEBOOK v5.2.18 (B2): before 2R the FADE stop is frozen at -1R until a 5-min close at +1R, then trails 1R behind the best close, capped at +0.75R
 FROZEN_OFF_FROM = '2026-10-28'   # RULEBOOK v5.2.22: frozen trail REMOVED by the governor before it ever ran live (on only for days in [FROZEN_FROM, FROZEN_OFF_FROM), i.e. never)
@@ -343,6 +344,7 @@ def apply_tunables(day=None):
 
 
 def fade_day_ok(day):
+    if day and day >= FADE_OFF_FROM: return False          # v5.2.63: FADE cut
     return not (day and day >= FADE_NO_FRIDAY_FROM and datetime.strptime(day, '%Y-%m-%d').weekday() == 4)
 
 
@@ -671,7 +673,8 @@ def main():
     if not base: print("  (no RVOL baseline for today - same-bar ties fall back to list order; run --build-rvol at 9:00)")
     streak0 = S.get('loss_streak', 0)
     if streak0 >= LOCKOUT_LOSSES: print(f"  LOCKOUT: {streak0} losing trades in a row - no new paper entries until the governor clears it")
-    if not fade_day_ok(day): print("  FRIDAY: no FADE entries today (RULEBOOK v5.2.17, A1.10); PULLBACK only")
+    if day and day >= FADE_OFF_FROM: print("  FADE OFF (RULEBOOK v5.2.63): FADE is cut; PULLBACK and IBS-TREND only")
+    elif not fade_day_ok(day): print("  FRIDAY: no FADE entries today (RULEBOOK v5.2.17, A1.10); PULLBACK only")
     taken, skipped, signals, eq = simulate(today, prev, K, eq0, base, streak0, day)
     print(f"PAPER {day} at {a.now} ET (bars through {k2t(K)}), paper equity at open ${eq0:,.2f}")
     if not taken and not signals: print("  no paper trades or live signals")
