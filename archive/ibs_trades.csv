@@ -1,0 +1,2 @@
+day,system,side,proxy,ticker,ibs,entry_time,entry_px_proxy,stop_proxy,exit_time,exit_px_proxy,exit_reason,pct_leg
+2026-11-19,IBS,dip,XLF,FAS,0.072,9:35,56.5000,55.9350,10:35,55.9350,stop,-3.060
