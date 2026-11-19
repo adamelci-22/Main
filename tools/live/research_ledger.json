@@ -770,5 +770,14 @@
   "method": "tools/backtest/book_blocks.py; live book v5.2.64, one shared account, five-year Massive tape; signals offered/taken/lost with the lost signals' value; drop-one freed trades",
   "result": "PULLBACK 444 offered, 231 taken (+67.7 acct %, PF 1.58); its 213 lost signals are net losers (-15.5, PF 0.87; 61 lost to IBS stop-outs). IBS-LONG 155 of 305 taken; 150 lost (+73.4, PF 1.44), mostly other proxies the same 9:35 bar. DIP 99 lost (+44.8, PF 1.53). MIRROR 83 lost (+21.7). RELVAL 82 lost (+5.2). PULLBACK and RELVAL block nothing. Dropping IBS-LONG frees 82 trades worth -7.5 (PF 0.85); MIRROR frees 34 worth -12.2; DIP frees 60 worth +28.0 against its own +78.5. Every drop is a net loss. The leak is untaken same-morning 9:35 signals, a sizing question (split cash), not a mix question.",
   "status": "information; split-cash 9:35 test offered"
+ },
+ {
+  "id": "study.am_select",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "Filter the bad, keep the good in the 9:35 family (governor: only pullback has good filters, fix the others, resilient over the same build/test)",
+  "method": "tools/backtest/am_select.py; live book v5.2.64; A: 18 pick rules among same-bar candidates; B: 180 tail filters per system (10 features x 3 cuts x 2 sides, thresholds from train trades), a filter counts only if the trades it removes lose on train AND test; C: split cash top 2/3; train 2022/2024/2026, test 2023/2025",
+  "result": "0 changes PASS with losers removed in both periods. Split cash: worse (train -29.3/-13.8, test -10.3/-4.1). Pick rules: pre-set pick (rsi2 desc) train +136.7, test -37.6; pick by ibs desc +20.2/+27.0 but 2023 -19.1. Best filter: MIRROR skip when the proxy's prior 5-day return < -4.27% (20% cut): removed 24 trades, PF 0.20 train, 0.00 test (n 4); book train +64.9, test +20.8, DD 19.7 vs 20.1; 2023 unchanged (tie), so 'qual' not PASS. Only strict PASS (MIRROR drop rv<0.75) removes test winners (PF 4.33): luck, rejected.",
+  "status": "MIRROR ret5 filter offered to the governor; nothing live"
  }
 ]

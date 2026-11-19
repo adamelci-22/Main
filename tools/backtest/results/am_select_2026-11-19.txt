@@ -1,0 +1,218 @@
+9:35 family: filter the bad, keep the good (governor 2026-11-19: "why are the losers cut only pullback has good filters can you fix
+   years 2022 2023 2024 2025 2026 | TRAIN / TEST compounded, points vs live | max drawdown
+
+        LIVE v5.2.64 (pick = relative volume)         +146.7   +41.1   +17.1  +119.8  +132.5 | TRAIN    +0.0 TEST   +0.0 (vs live) | DD 20.1% 
+
+A. PICK among same-bar 9:35 candidates (rank replaces relative volume; asc = lowest first)
+   qual pick by ibs desc                              +137.2   +22.0   +25.1  +176.3  +133.0 | TRAIN   +20.2 TEST  +27.0 (vs live) | DD 18.5% 
+        pick by ibs asc                               +149.6   +34.1   +13.0  +111.3  +137.4 | TRAIN    -1.8 TEST  -26.9 (vs live) | DD 24.2% 
+   qual pick by rsi2 desc                             +159.5   +18.2   +15.1  +130.7  +170.6 | TRAIN  +136.7 TEST  -37.6 (vs live) | DD 25.5% 
+        pick by rsi2 asc                              +120.5   +42.9   +18.3  +125.6  +111.4 | TRAIN  -119.9 TEST  +12.2 (vs live) | DD 18.2% 
+        pick by dist20 desc                           +124.1   +11.4    +7.6  +112.4  +176.0 | TRAIN    -5.7 TEST  -73.5 (vs live) | DD 24.0% 
+        pick by dist20 asc                             +83.8   +49.3   +31.0  +148.1  +101.0 | TRAIN  -187.3 TEST  +60.1 (vs live) | DD 20.6% 
+        pick by dist50 desc                           +156.3   +13.5   +15.3  +122.3  +128.2 | TRAIN    +3.1 TEST  -58.0 (vs live) | DD 22.8% 
+        pick by dist50 asc                             +93.4   +47.9   +22.2  +149.4  +136.5 | TRAIN  -112.6 TEST  +58.6 (vs live) | DD 20.3% 
+        pick by rng desc                              +110.3   +42.6   +24.4  +173.2  +143.6 | TRAIN   -34.2 TEST  +79.5 (vs live) | DD 22.9% 
+        pick by rng asc                               +115.9   +25.6   +15.6  +127.9  +131.1 | TRAIN   -94.6 TEST  -23.9 (vs live) | DD 22.2% 
+        pick by gap desc                              +137.3   +27.4   +13.6  +165.9  +124.4 | TRAIN   -66.3 TEST  +28.5 (vs live) | DD 21.9% 
+   qual pick by gap asc                               +119.4   +37.7   +23.9  +132.9  +155.5 | TRAIN   +23.2 TEST  +10.5 (vs live) | DD 19.9% 
+   qual pick by bar1 desc                             +169.6   +26.2   +18.3  +159.9  +125.0 | TRAIN   +45.9 TEST  +17.8 (vs live) | DD 21.3% 
+   qual pick by bar1 asc                              +133.9   +32.6   +19.3  +141.6  +160.9 | TRAIN   +56.6 TEST  +10.2 (vs live) | DD 21.0% 
+        pick by ret5 desc                             +122.2   +33.2   +12.7  +124.8  +163.6 | TRAIN   -11.3 TEST  -10.7 (vs live) | DD 22.4% 
+        pick by ret5 asc                              +118.0   +25.9   +30.9  +168.3  +103.9 | TRAIN   -89.6 TEST  +27.5 (vs live) | DD 19.5% 
+        pick by vol20 desc                            +121.0   +31.1   +32.5  +136.3  +131.7 | TRAIN    +7.3 TEST   -0.3 (vs live) | DD 22.0% 
+        pick by vol20 asc                             +122.2   +35.1   +11.7  +130.3  +138.8 | TRAIN   -78.8 TEST   +0.8 (vs live) | DD 20.2% 
+
+B. FILTER each system: drop its worst tail on one feature (thresholds from TRAIN trades). removed = trades the filter drops, alone
+   qual IBS-LONG: drop ibs < 0.02 (20%)               +146.3   +28.3   +23.1   +97.1  +134.8 | TRAIN   +40.4 TEST  -57.4 (vs live) | DD 20.1% | removed TRAIN n 31 PF 1.35, TEST n 23 PF 0.79
+        IBS-LONG: drop ibs > 0.08 (20%)               +118.6   +48.6   +16.8  +119.8  +121.4 | TRAIN  -105.9 TEST  +16.5 (vs live) | DD 22.0% | removed TRAIN n 31 PF 2.01, TEST n 22 PF 1.64
+   qual IBS-LONG: drop ibs < 0.03 (30%)               +143.2   +32.7   +22.3   +71.2  +137.9 | TRAIN   +36.0 TEST  -83.0 (vs live) | DD 21.3% | removed TRAIN n 47 PF 1.19, TEST n 37 PF 0.73
+   qual IBS-LONG: drop ibs > 0.07 (30%)               +163.2   +31.8   +11.2  +122.0  +149.0 | TRAIN   +57.6 TEST  -17.7 (vs live) | DD 22.0% | removed TRAIN n 47 PF 1.68, TEST n 43 PF 1.70
+   qual IBS-LONG: drop ibs < 0.04 (40%)               +148.6   +31.7   +21.6   +58.5  +148.9 | TRAIN   +80.8 TEST -101.5 (vs live) | DD 21.3% | removed TRAIN n 62 PF 1.30, TEST n 59 PF 1.10
+        IBS-LONG: drop ibs > 0.06 (40%)               +171.5   +28.4   +12.8  +110.3  +128.5 | TRAIN   +28.7 TEST  -40.2 (vs live) | DD 23.4% | removed TRAIN n 62 PF 1.54, TEST n 65 PF 1.44
+        IBS-LONG: drop rsi2 < 21.66 (20%)             +121.8   +44.0   +25.3  +107.2  +114.4 | TRAIN   -75.6 TEST  -11.8 (vs live) | DD 20.1% | removed TRAIN n 31 PF 2.00, TEST n 36 PF 2.14
+        IBS-LONG: drop rsi2 > 61.20 (20%)             +165.5   +40.5   +13.2  +107.6  +127.8 | TRAIN   +13.2 TEST  -18.5 (vs live) | DD 22.1% | removed TRAIN n 31 PF 1.39, TEST n 26 PF 0.93
+        IBS-LONG: drop rsi2 < 26.46 (30%)             +137.2   +46.1   +38.4   +84.3  +116.4 | TRAIN   +39.1 TEST  -41.1 (vs live) | DD 15.9% | removed TRAIN n 47 PF 1.62, TEST n 54 PF 1.57
+        IBS-LONG: drop rsi2 > 49.98 (30%)             +131.6   +48.0   +15.6  +108.6  +122.4 | TRAIN   -75.9 TEST   -1.5 (vs live) | DD 20.1% | removed TRAIN n 47 PF 1.44, TEST n 40 PF 0.87
+   qual IBS-LONG: drop rsi2 < 31.20 (40%)             +148.5   +44.0   +33.3   +84.3  +116.9 | TRAIN   +47.2 TEST  -44.8 (vs live) | DD 15.9% | removed TRAIN n 62 PF 1.79, TEST n 63 PF 1.54
+        IBS-LONG: drop rsi2 > 41.58 (40%)             +129.8   +47.7   +16.5   +76.8  +138.4 | TRAIN   -33.2 TEST  -49.0 (vs live) | DD 20.2% | removed TRAIN n 62 PF 1.41, TEST n 59 PF 1.09
+   qual IBS-LONG: drop dist20 < 0.63 (20%)            +127.3   +33.3   +18.6  +120.4  +156.1 | TRAIN   +19.1 TEST  -16.4 (vs live) | DD 20.3% | removed TRAIN n 30 PF 0.93, TEST n 29 PF 1.55
+        IBS-LONG: drop dist20 > 3.61 (20%)            +194.1   +46.4   +16.8  +102.7  +109.1 | TRAIN   +47.2 TEST  -13.5 (vs live) | DD 18.6% | removed TRAIN n 30 PF 1.16, TEST n 37 PF 0.82
+   qual IBS-LONG: drop dist20 < 0.93 (30%)            +134.5   +38.3   +24.8  +106.9  +159.5 | TRAIN   +87.6 TEST  -23.9 (vs live) | DD 16.5% | removed TRAIN n 45 PF 0.85, TEST n 45 PF 2.05
+   qual IBS-LONG: drop dist20 > 2.63 (30%)            +164.7   +33.4   +21.1  +102.0  +110.3 | TRAIN    +2.7 TEST  -40.7 (vs live) | DD 18.4% | removed TRAIN n 45 PF 1.53, TEST n 62 PF 0.94
+        IBS-LONG: drop dist20 < 1.35 (40%)            +134.5   +37.9   +21.2   +91.6  +136.1 | TRAIN    -0.1 TEST  -46.0 (vs live) | DD 20.4% | removed TRAIN n 60 PF 1.21, TEST n 56 PF 2.21
+        IBS-LONG: drop dist20 > 2.19 (40%)            +133.1   +27.7   +17.1  +126.2  +102.8 | TRAIN  -117.6 TEST  -21.2 (vs live) | DD 18.4% | removed TRAIN n 60 PF 1.92, TEST n 72 PF 0.93
+        IBS-LONG: drop dist50 < 0.16 (20%)            +130.2   +55.0   +10.3  +114.3  +137.1 | TRAIN   -69.5 TEST  +22.1 (vs live) | DD 18.6% | removed TRAIN n 30 PF 2.50, TEST n 19 PF 1.96
+        IBS-LONG: drop dist50 > 5.79 (20%)            +109.3   +40.7   +15.3   +62.9  +140.2 | TRAIN   -91.6 TEST  -81.1 (vs live) | DD 20.1% | removed TRAIN n 30 PF 1.73, TEST n 55 PF 1.06
+        IBS-LONG: drop dist50 < 1.14 (30%)            +126.6   +32.2    +8.4  +101.3  +137.1 | TRAIN   -88.8 TEST  -44.0 (vs live) | DD 20.0% | removed TRAIN n 45 PF 2.14, TEST n 32 PF 1.77
+        IBS-LONG: drop dist50 > 4.41 (30%)            +115.9   +34.0   +22.2   +76.0  +122.5 | TRAIN   -84.3 TEST  -74.2 (vs live) | DD 20.1% | removed TRAIN n 45 PF 1.49, TEST n 77 PF 1.00
+        IBS-LONG: drop dist50 < 2.16 (40%)            +126.6   +32.2   +11.8   +93.7  +145.2 | TRAIN   -50.1 TEST  -54.0 (vs live) | DD 17.1% | removed TRAIN n 60 PF 1.98, TEST n 42 PF 1.75
+        IBS-LONG: drop dist50 > 3.57 (40%)            +119.9   +35.4   +23.6   +81.5   +98.5 | TRAIN  -131.6 TEST  -64.5 (vs live) | DD 20.1% | removed TRAIN n 60 PF 1.50, TEST n 92 PF 1.05
+   qual IBS-LONG: drop rng < 1.13 (20%)               +157.0   +46.9   +19.6  +103.0  +155.1 | TRAIN  +112.7 TEST  -11.9 (vs live) | DD 22.0% | removed TRAIN n 30 PF 1.00, TEST n 21 PF 0.99  <- bad out, good kept
+        IBS-LONG: drop rng > 2.92 (20%)               +138.7   +31.5    +7.3   +80.0  +113.7 | TRAIN  -124.1 TEST  -73.5 (vs live) | DD 19.5% | removed TRAIN n 30 PF 2.44, TEST n 18 PF 2.32
+   qual IBS-LONG: drop rng < 1.36 (30%)               +157.0   +26.4   +20.1  +103.4  +145.6 | TRAIN   +86.8 TEST  -53.1 (vs live) | DD 24.4% | removed TRAIN n 45 PF 1.10, TEST n 45 PF 1.01
+        IBS-LONG: drop rng > 2.41 (30%)               +126.7   +31.6    +6.5   +65.6  +106.2 | TRAIN  -173.8 TEST  -92.4 (vs live) | DD 18.1% | removed TRAIN n 45 PF 2.35, TEST n 32 PF 2.35
+   qual IBS-LONG: drop rng < 1.57 (40%)               +157.0   +31.6   +23.2  +102.9  +117.2 | TRAIN   +16.7 TEST  -43.3 (vs live) | DD 25.6% | removed TRAIN n 60 PF 1.12, TEST n 66 PF 1.11
+        IBS-LONG: drop rng > 2.00 (40%)               +109.0   +30.6   +12.6   +55.3  +112.3 | TRAIN  -171.8 TEST -107.4 (vs live) | DD 18.1% | removed TRAIN n 60 PF 2.10, TEST n 52 PF 2.10
+        IBS-LONG: drop gap < -0.36 (20%)              +148.0   +49.8   +16.8  +109.8  +122.6 | TRAIN   -26.6 TEST   +4.0 (vs live) | DD 24.1% | removed TRAIN n 30 PF 1.54, TEST n 32 PF 0.43
+        IBS-LONG: drop gap > 0.74 (20%)               +109.4   +33.3   +28.5  +119.2  +130.6 | TRAIN   -50.9 TEST  -17.9 (vs live) | DD 20.1% | removed TRAIN n 30 PF 1.42, TEST n 29 PF 1.24
+        IBS-LONG: drop gap < -0.07 (30%)              +157.3   +27.6   +21.1  +104.0  +114.5 | TRAIN    -2.9 TEST  -49.9 (vs live) | DD 20.9% | removed TRAIN n 45 PF 1.45, TEST n 51 PF 0.83
+   qual IBS-LONG: drop gap > 0.49 (30%)               +123.2   +26.3   +29.0  +123.3  +137.0 | TRAIN   +11.0 TEST  -28.2 (vs live) | DD 20.3% | removed TRAIN n 45 PF 1.52, TEST n 41 PF 1.14
+   qual IBS-LONG: drop gap < 0.06 (40%)               +173.8   +32.9   +22.0   +65.9  +103.5 | TRAIN    +8.6 TEST  -89.7 (vs live) | DD 21.2% | removed TRAIN n 60 PF 1.25, TEST n 65 PF 1.04
+   qual IBS-LONG: drop gap > 0.32 (40%)               +119.7   +17.9   +29.0  +114.5  +154.6 | TRAIN   +50.1 TEST  -57.4 (vs live) | DD 23.3% | removed TRAIN n 60 PF 1.60, TEST n 60 PF 1.76
+        IBS-LONG: drop bar1 < -0.34 (20%)             +121.8   +38.6   +10.6  +119.8  +107.3 | TRAIN  -162.8 TEST   -5.5 (vs live) | DD 20.1% | removed TRAIN n 30 PF 2.05, TEST n 13 PF 0.97
+   qual IBS-LONG: drop bar1 > 0.17 (20%)              +125.3   +35.4   +29.7   +91.7  +142.5 | TRAIN   +37.2 TEST  -50.6 (vs live) | DD 20.1% | removed TRAIN n 30 PF 1.78, TEST n 49 PF 1.55
+        IBS-LONG: drop bar1 < -0.25 (30%)             +104.2   +38.6    +8.3  +131.9  +106.4 | TRAIN  -215.0 TEST  +11.2 (vs live) | DD 22.9% | removed TRAIN n 45 PF 2.15, TEST n 20 PF 0.78
+   qual IBS-LONG: drop bar1 > 0.07 (30%)              +120.8   +39.8   +38.4   +43.3  +139.4 | TRAIN   +60.4 TEST -109.9 (vs live) | DD 24.1% | removed TRAIN n 45 PF 1.28, TEST n 70 PF 1.81
+        IBS-LONG: drop bar1 < -0.14 (40%)             +133.6   +35.2    +3.4  +116.0  +106.4 | TRAIN  -172.6 TEST  -18.2 (vs live) | DD 22.3% | removed TRAIN n 60 PF 2.55, TEST n 32 PF 1.32
+   qual IBS-LONG: drop bar1 > 0.00 (40%)              +142.4   +37.4   +34.5   +44.9  +134.4 | TRAIN   +92.7 TEST -111.1 (vs live) | DD 21.7% | removed TRAIN n 59 PF 1.16, TEST n 85 PF 1.46
+        IBS-LONG: drop ret5 < -0.89 (20%)             +125.2   +46.9   +13.6  +108.0  +116.0 | TRAIN  -118.5 TEST   -4.5 (vs live) | DD 19.5% | removed TRAIN n 30 PF 2.64, TEST n 31 PF 1.41
+        IBS-LONG: drop ret5 > 3.24 (20%)              +156.6   +48.2   +16.6   +99.7  +122.6 | TRAIN    -5.4 TEST  -14.3 (vs live) | DD 18.4% | removed TRAIN n 30 PF 1.43, TEST n 20 PF 0.99
+        IBS-LONG: drop ret5 < -0.26 (30%)              +97.8   +33.7   +16.8  +108.7  +114.3 | TRAIN  -176.6 TEST  -31.2 (vs live) | DD 20.4% | removed TRAIN n 45 PF 2.62, TEST n 47 PF 1.54
+        IBS-LONG: drop ret5 > 2.24 (30%)              +164.3   +41.6   +16.9   +96.6  +129.8 | TRAIN   +38.5 TEST  -31.8 (vs live) | DD 18.4% | removed TRAIN n 45 PF 1.34, TEST n 37 PF 1.31
+        IBS-LONG: drop ret5 < 0.35 (40%)               +97.8   +35.4   +12.3  +105.0  +121.5 | TRAIN  -179.3 TEST  -32.7 (vs live) | DD 20.4% | removed TRAIN n 60 PF 2.24, TEST n 70 PF 1.51
+   qual IBS-LONG: drop ret5 > 1.42 (40%)              +171.5   +24.1   +20.6   +66.5  +134.7 | TRAIN   +97.2 TEST -103.6 (vs live) | DD 20.3% | removed TRAIN n 60 PF 1.33, TEST n 55 PF 1.42
+        IBS-LONG: drop vol20 < 0.93 (20%)             +146.7   +43.6   +29.3  +116.2  +115.2 | TRAIN   +14.9 TEST   +0.4 (vs live) | DD 20.1% | removed TRAIN n 30 PF 1.48, TEST n 27 PF 0.71
+        IBS-LONG: drop vol20 > 2.26 (20%)             +113.2   +37.4   +16.2   +98.4  +111.5 | TRAIN  -147.7 TEST  -37.6 (vs live) | DD 18.6% | removed TRAIN n 30 PF 2.28, TEST n 15 PF 2.17
+        IBS-LONG: drop vol20 < 1.06 (30%)             +146.7   +47.1   +27.3   +96.3  +128.1 | TRAIN   +44.9 TEST  -21.5 (vs live) | DD 22.0% | removed TRAIN n 45 PF 1.35, TEST n 40 PF 0.82
+        IBS-LONG: drop vol20 > 1.96 (30%)             +108.4   +31.1   +14.2   +94.4  +114.9 | TRAIN  -159.8 TEST  -55.3 (vs live) | DD 18.6% | removed TRAIN n 45 PF 2.39, TEST n 25 PF 1.39
+        IBS-LONG: drop vol20 < 1.27 (40%)             +146.7   +49.8   +22.4  +105.1  +126.5 | TRAIN   +12.5 TEST   -3.0 (vs live) | DD 20.1% | removed TRAIN n 60 PF 1.52, TEST n 67 PF 0.97
+        IBS-LONG: drop vol20 > 1.73 (40%)             +108.2   +30.7   +15.7   +91.6  +128.7 | TRAIN  -120.2 TEST  -59.8 (vs live) | DD 18.6% | removed TRAIN n 60 PF 1.83, TEST n 30 PF 1.24
+        IBS-LONG: drop rv < 0.67 (20%)                +132.3   +34.0   +15.6  +111.3  +123.1 | TRAIN   -72.1 TEST  -27.2 (vs live) | DD 20.1% | removed TRAIN n 31 PF 3.01, TEST n 40 PF 1.39
+   qual IBS-LONG: drop rv > 1.19 (20%)                +157.7   +26.0   +19.0   +95.2  +129.3 | TRAIN   +31.7 TEST  -64.2 (vs live) | DD 20.1% | removed TRAIN n 31 PF 1.46, TEST n 26 PF 1.37
+   qual IBS-LONG: drop rv < 0.75 (30%)                +154.0   +34.0   +14.8  +110.0  +134.7 | TRAIN   +13.0 TEST  -28.9 (vs live) | DD 18.6% | removed TRAIN n 47 PF 1.65, TEST n 47 PF 1.40
+        IBS-LONG: drop rv > 1.09 (30%)                +138.9   +24.3   +23.6   +88.8  +123.5 | TRAIN   -11.8 TEST  -75.5 (vs live) | DD 20.1% | removed TRAIN n 47 PF 1.60, TEST n 36 PF 1.99
+        IBS-LONG: drop rv < 0.81 (40%)                +120.5   +34.0   +18.7  +118.6  +127.4 | TRAIN   -76.2 TEST  -17.3 (vs live) | DD 18.6% | removed TRAIN n 62 PF 1.57, TEST n 61 PF 1.20
+        IBS-LONG: drop rv > 0.99 (40%)                +121.3   +31.1   +27.6  +101.5  +130.3 | TRAIN   -21.2 TEST  -45.9 (vs live) | DD 19.8% | removed TRAIN n 62 PF 1.59, TEST n 52 PF 1.41
+        MIRROR: drop ibs < 0.96 (20%)                  +91.9   +35.6   +20.8  +114.4  +139.8 | TRAIN  -115.4 TEST  -19.5 (vs live) | DD 26.9% | removed TRAIN n 22 PF 1.18, TEST n 10 PF 5.36
+        MIRROR: drop ibs > 0.99 (20%)                  +96.8   +37.0   +20.6  +116.7  +111.3 | TRAIN  -169.9 TEST  -13.3 (vs live) | DD 20.1% | removed TRAIN n 22 PF 1.62, TEST n 9 PF 5.97
+        MIRROR: drop ibs < 0.97 (30%)                  +78.4   +31.2   +28.5  +109.8  +147.4 | TRAIN  -104.2 TEST  -35.1 (vs live) | DD 26.9% | removed TRAIN n 33 PF 1.28, TEST n 15 PF 4.87
+        MIRROR: drop ibs > 0.99 (30%)                 +104.4   +32.8   +20.6  +117.7  +111.3 | TRAIN  -150.6 TEST  -21.2 (vs live) | DD 20.0% | removed TRAIN n 33 PF 1.01, TEST n 15 PF 4.05
+        MIRROR: drop ibs < 0.97 (40%)                  +67.9   +21.7   +36.8  +102.4  +155.3 | TRAIN   -85.1 TEST  -63.8 (vs live) | DD 26.9% | removed TRAIN n 44 PF 1.20, TEST n 21 PF 6.14
+        MIRROR: drop ibs > 0.98 (40%)                 +115.1   +36.9   +25.2  +141.4  +111.3 | TRAIN  -102.3 TEST  +20.4 (vs live) | DD 20.0% | removed TRAIN n 44 PF 0.93, TEST n 21 PF 1.44
+   qual MIRROR: drop rsi2 < 36.81 (20%)               +149.8   +40.1   +20.8  +109.6  +139.9 | TRAIN   +52.4 TEST  -16.6 (vs live) | DD 20.1% | removed TRAIN n 22 PF 0.39, TEST n 12 PF 1.48
+        MIRROR: drop rsi2 > 82.80 (20%)                +83.4   +30.5   +23.7  +104.1  +131.4 | TRAIN  -146.3 TEST  -43.8 (vs live) | DD 21.4% | removed TRAIN n 22 PF 3.11, TEST n 6 PF 4.92
+   qual MIRROR: drop rsi2 < 51.30 (30%)               +132.4   +40.0   +24.9  +119.3  +139.9 | TRAIN   +24.9 TEST   -3.2 (vs live) | DD 20.1% | removed TRAIN n 33 PF 0.71, TEST n 21 PF 2.14
+        MIRROR: drop rsi2 > 77.08 (30%)                +74.2   +31.3   +23.7  +104.1  +131.4 | TRAIN  -172.6 TEST  -42.2 (vs live) | DD 18.2% | removed TRAIN n 33 PF 2.02, TEST n 8 PF 3.72
+   qual MIRROR: drop rsi2 < 61.05 (40%)               +126.9   +29.1   +28.8  +131.9  +147.5 | TRAIN   +51.8 TEST  -10.7 (vs live) | DD 19.7% | removed TRAIN n 44 PF 0.63, TEST n 27 PF 2.57
+        MIRROR: drop rsi2 > 69.06 (40%)                +34.5   +31.3   +21.8  +106.0  +131.4 | TRAIN  -292.2 TEST  -39.7 (vs live) | DD 21.8% | removed TRAIN n 44 PF 2.09, TEST n 13 PF 2.54
+   qual MIRROR: drop dist20 < -5.08 (20%)             +157.0   +40.1   +22.9  +128.0  +132.5 | TRAIN   +63.1 TEST   +9.1 (vs live) | DD 19.7% | removed TRAIN n 20 PF 0.41, TEST n 3 PF 0.12  <- bad out, good kept
+        MIRROR: drop dist20 > -0.74 (20%)              +91.1   +43.1   +19.9  +110.0  +138.7 | TRAIN  -124.5 TEST   -9.6 (vs live) | DD 26.9% | removed TRAIN n 20 PF 2.51, TEST n 6 PF 1.52
+   qual MIRROR: drop dist20 < -3.69 (30%)             +138.7   +36.9   +26.8  +136.9  +139.8 | TRAIN   +54.4 TEST  +14.0 (vs live) | DD 19.7% | removed TRAIN n 30 PF 0.52, TEST n 8 PF 1.62
+        MIRROR: drop dist20 > -1.26 (30%)              +66.3   +36.4   +18.7  +100.0  +118.0 | TRAIN  -241.0 TEST  -37.4 (vs live) | DD 24.6% | removed TRAIN n 30 PF 2.18, TEST n 14 PF 1.65
+   qual MIRROR: drop dist20 < -3.11 (40%)             +135.0   +27.1   +24.3  +119.3  +139.8 | TRAIN   +29.0 TEST  -31.5 (vs live) | DD 19.7% | removed TRAIN n 40 PF 0.49, TEST n 15 PF 5.22
+        MIRROR: drop dist20 > -1.77 (40%)              +50.7   +32.3   +22.8  +107.6  +124.9 | TRAIN  -254.9 TEST  -35.5 (vs live) | DD 24.6% | removed TRAIN n 40 PF 2.22, TEST n 21 PF 1.39
+        MIRROR: drop dist50 < -7.94 (20%)             +143.8   +31.5   +18.9  +128.0  +132.5 | TRAIN    +2.5 TEST  -10.5 (vs live) | DD 20.1% | removed TRAIN n 20 PF 0.41, TEST n 6 PF 1.09
+        MIRROR: drop dist50 > 0.75 (20%)              +111.8   +32.0   +17.7  +126.6  +139.8 | TRAIN   -73.5 TEST  -11.2 (vs live) | DD 20.1% | removed TRAIN n 20 PF 1.73, TEST n 11 PF 1.51
+   qual MIRROR: drop dist50 < -6.45 (30%)             +159.4   +27.4   +17.7  +104.9  +132.5 | TRAIN   +38.3 TEST  -49.2 (vs live) | DD 18.2% | removed TRAIN n 30 PF 0.29, TEST n 11 PF 1.58
+        MIRROR: drop dist50 > -0.95 (30%)              +94.6   +26.8   +17.7  +116.8  +139.8 | TRAIN  -121.9 TEST  -35.3 (vs live) | DD 20.1% | removed TRAIN n 30 PF 1.60, TEST n 20 PF 2.76
+        MIRROR: drop dist50 < -5.28 (40%)             +124.2   +31.4   +25.5  +104.9  +132.5 | TRAIN   -17.2 TEST  -41.0 (vs live) | DD 17.2% | removed TRAIN n 40 PF 0.42, TEST n 13 PF 1.44
+        MIRROR: drop dist50 > -3.02 (40%)              +79.8   +18.2   +26.1  +116.8  +124.9 | TRAIN  -161.4 TEST  -53.9 (vs live) | DD 25.8% | removed TRAIN n 40 PF 1.63, TEST n 28 PF 7.02
+        MIRROR: drop rng < 1.93 (20%)                  +98.7   +27.6   +28.5  +123.2  +112.3 | TRAIN  -129.6 TEST  -25.5 (vs live) | DD 25.8% | removed TRAIN n 20 PF 2.53, TEST n 23 PF 5.88
+   qual MIRROR: drop rng > 4.48 (20%)                 +163.9   +41.1   +18.9  +104.1  +139.8 | TRAIN   +81.1 TEST  -22.2 (vs live) | DD 18.2% | removed TRAIN n 20 PF 0.24, TEST n 1 PF 99.00
+        MIRROR: drop rng < 2.39 (30%)                  +93.6   +15.4   +32.5  +127.6  +112.3 | TRAIN  -126.8 TEST  -47.6 (vs live) | DD 25.8% | removed TRAIN n 30 PF 2.20, TEST n 35 PF 3.22
+   qual MIRROR: drop rng > 3.72 (30%)                 +165.0   +41.1   +18.9  +107.5  +147.4 | TRAIN  +108.2 TEST  -17.5 (vs live) | DD 18.2% | removed TRAIN n 30 PF 0.27, TEST n 2 PF 1.45
+        MIRROR: drop rng < 2.64 (40%)                  +96.6    +8.3   +37.2  +142.2  +119.0 | TRAIN   -80.9 TEST  -47.9 (vs live) | DD 27.6% | removed TRAIN n 40 PF 1.94, TEST n 39 PF 2.79
+   qual MIRROR: drop rng > 3.31 (40%)                 +160.2   +44.3   +18.9  +103.0  +146.2 | TRAIN   +90.5 TEST  -17.2 (vs live) | DD 18.2% | removed TRAIN n 40 PF 0.44, TEST n 5 PF 1.30
+        MIRROR: drop gap < -0.90 (20%)                 +95.6   +41.1   +14.5  +110.5  +139.8 | TRAIN  -134.0 TEST  -13.1 (vs live) | DD 19.2% | removed TRAIN n 20 PF 2.76, TEST n 4 PF 1.12
+   qual MIRROR: drop gap > 0.58 (20%)                 +132.7   +30.2   +24.1  +102.6  +139.8 | TRAIN   +21.5 TEST  -46.4 (vs live) | DD 17.6% | removed TRAIN n 20 PF 0.32, TEST n 18 PF 3.30
+        MIRROR: drop gap < -0.60 (30%)                 +86.4   +32.6   +20.0  +110.5  +139.8 | TRAIN  -134.9 TEST  -30.9 (vs live) | DD 19.2% | removed TRAIN n 30 PF 2.55, TEST n 9 PF 2.47
+   qual MIRROR: drop gap > 0.30 (30%)                 +132.7   +21.5   +24.1  +123.9  +138.7 | TRAIN   +18.3 TEST  -38.1 (vs live) | DD 23.4% | removed TRAIN n 30 PF 0.36, TEST n 28 PF 3.37
+        MIRROR: drop gap < -0.10 (40%)                 +79.4   +24.3   +22.9  +114.8  +119.0 | TRAIN  -188.5 TEST  -43.2 (vs live) | DD 21.9% | removed TRAIN n 40 PF 2.39, TEST n 14 PF 2.82
+   qual MIRROR: drop gap > 0.16 (40%)                 +127.8   +21.5   +28.8  +115.0  +138.7 | TRAIN   +29.0 TEST  -48.9 (vs live) | DD 23.4% | removed TRAIN n 40 PF 0.35, TEST n 30 PF 3.51
+        MIRROR: drop bar1 < -0.32 (20%)               +123.8   +35.2   +23.6  +116.9  +139.8 | TRAIN    -8.1 TEST  -17.0 (vs live) | DD 20.1% | removed TRAIN n 20 PF 1.12, TEST n 9 PF 1.27
+        MIRROR: drop bar1 > 0.43 (20%)                +117.3   +45.6   +12.8  +119.8  +119.1 | TRAIN  -134.5 TEST   +9.8 (vs live) | DD 18.6% | removed TRAIN n 20 PF 1.03, TEST n 4 PF 1.64
+        MIRROR: drop bar1 < -0.18 (30%)               +118.1   +30.8   +23.6  +120.4  +139.8 | TRAIN   -24.9 TEST  -22.0 (vs live) | DD 21.4% | removed TRAIN n 30 PF 1.73, TEST n 14 PF 1.51
+        MIRROR: drop bar1 > 0.25 (30%)                +125.6   +41.2   +12.8  +117.2  +124.9 | TRAIN   -99.0 TEST   -3.6 (vs live) | DD 18.6% | removed TRAIN n 30 PF 0.70, TEST n 9 PF 1.47
+        MIRROR: drop bar1 < -0.11 (40%)               +117.4   +30.8   +24.0  +120.4  +139.8 | TRAIN   -24.9 TEST  -22.0 (vs live) | DD 21.4% | removed TRAIN n 40 PF 1.23, TEST n 17 PF 2.26
+        MIRROR: drop bar1 > 0.16 (40%)                 +92.2   +42.4   +20.1  +118.8  +124.9 | TRAIN  -152.3 TEST   +1.3 (vs live) | DD 20.5% | removed TRAIN n 40 PF 0.73, TEST n 13 PF 1.91
+   qual MIRROR: drop ret5 < -4.27 (20%)               +159.3   +41.1   +18.4  +134.6  +139.8 | TRAIN   +64.9 TEST  +20.8 (vs live) | DD 19.7% | removed TRAIN n 20 PF 0.20, TEST n 4 PF 0.00  <- bad out, good kept
+        MIRROR: drop ret5 > 1.98 (20%)                 +75.2   +30.5   +19.5  +119.8  +131.4 | TRAIN  -186.6 TEST  -23.2 (vs live) | DD 21.4% | removed TRAIN n 20 PF 3.22, TEST n 5 PF 3.47
+   qual MIRROR: drop ret5 < -3.40 (30%)               +162.2   +42.7   +18.4  +108.8  +147.4 | TRAIN   +96.8 TEST  -12.2 (vs live) | DD 17.2% | removed TRAIN n 30 PF 0.24, TEST n 10 PF 1.28
+        MIRROR: drop ret5 > 0.21 (30%)                 +79.5   +30.2   +18.7  +123.4  +111.3 | TRAIN  -221.3 TEST  -19.3 (vs live) | DD 20.9% | removed TRAIN n 30 PF 1.78, TEST n 7 PF 1.69
+   qual MIRROR: drop ret5 < -2.29 (40%)               +177.4   +39.8   +17.8  +102.3  +147.5 | TRAIN  +137.6 TEST  -27.4 (vs live) | DD 17.7% | removed TRAIN n 40 PF 0.65, TEST n 20 PF 3.15
+        MIRROR: drop ret5 > -0.67 (40%)                +74.7   +20.1   +22.8  +125.0  +111.3 | TRAIN  -217.7 TEST  -39.9 (vs live) | DD 18.4% | removed TRAIN n 40 PF 1.28, TEST n 14 PF 2.73
+        MIRROR: drop vol20 < 1.44 (20%)               +145.9   +33.3   +23.7  +105.6  +112.3 | TRAIN   -25.8 TEST  -36.1 (vs live) | DD 20.1% | removed TRAIN n 20 PF 0.73, TEST n 27 PF 5.44
+   qual MIRROR: drop vol20 > 2.66 (20%)               +152.0   +41.1   +21.4  +107.5  +139.8 | TRAIN   +62.2 TEST  -17.5 (vs live) | DD 18.2% | removed TRAIN n 20 PF 0.27, TEST n 2 PF 1.45
+        MIRROR: drop vol20 < 1.63 (30%)               +111.0   +25.1   +24.1  +103.2  +112.4 | TRAIN  -115.2 TEST  -56.0 (vs live) | DD 20.1% | removed TRAIN n 30 PF 1.37, TEST n 32 PF 5.06
+   qual MIRROR: drop vol20 > 2.39 (30%)               +138.0   +41.1   +18.8  +107.5  +139.8 | TRAIN    +6.7 TEST  -17.5 (vs live) | DD 18.2% | removed TRAIN n 30 PF 0.68, TEST n 2 PF 1.45
+        MIRROR: drop vol20 < 1.76 (40%)               +112.5   +25.1   +28.0   +84.8  +111.4 | TRAIN   -96.3 TEST  -79.0 (vs live) | DD 20.1% | removed TRAIN n 40 PF 1.50, TEST n 33 PF 5.64
+        MIRROR: drop vol20 > 2.19 (40%)               +111.7   +45.6   +18.8  +113.7  +139.8 | TRAIN   -68.5 TEST   +0.8 (vs live) | DD 18.2% | removed TRAIN n 40 PF 0.79, TEST n 8 PF 0.26  <- bad out, good kept
+   PASS MIRROR: drop rv < 0.75 (20%)                  +146.6   +41.3   +21.4  +121.9  +138.7 | TRAIN   +43.4 TEST   +3.3 (vs live) | DD 18.0% | removed TRAIN n 22 PF 1.29, TEST n 10 PF 4.33
+        MIRROR: drop rv > 1.45 (20%)                  +112.7   +37.9   +25.4   +95.6  +139.9 | TRAIN   -31.4 TEST  -40.5 (vs live) | DD 22.1% | removed TRAIN n 22 PF 0.64, TEST n 8 PF 4.66
+        MIRROR: drop rv < 0.83 (30%)                  +158.9   +32.6   +15.9  +128.9  +118.0 | TRAIN   -17.1 TEST   -6.7 (vs live) | DD 18.0% | removed TRAIN n 33 PF 1.05, TEST n 15 PF 2.97
+        MIRROR: drop rv > 1.21 (30%)                   +88.4   +41.0   +25.4   +90.2  +147.5 | TRAIN   -86.4 TEST  -42.0 (vs live) | DD 22.9% | removed TRAIN n 33 PF 0.89, TEST n 14 PF 3.95
+        MIRROR: drop rv < 0.92 (40%)                  +162.9   +28.9   +15.9  +136.2  +118.0 | TRAIN    -7.0 TEST   -5.9 (vs live) | DD 18.0% | removed TRAIN n 44 PF 0.96, TEST n 22 PF 3.51
+        MIRROR: drop rv > 1.12 (40%)                   +81.5   +41.0   +29.7   +96.3  +147.5 | TRAIN   -89.0 TEST  -33.4 (vs live) | DD 28.3% | removed TRAIN n 44 PF 0.75, TEST n 16 PF 4.00
+        DIP: drop ibs < 0.10 (20%)                    +146.7   +41.4    +7.5  +114.1  +124.2 | TRAIN   -76.7 TEST   -7.5 (vs live) | DD 24.2% | removed TRAIN n 27 PF 2.74, TEST n 22 PF 1.25
+        DIP: drop ibs > 0.50 (20%)                    +146.7   +28.2   +13.0  +115.0  +145.2 | TRAIN   +12.0 TEST  -34.5 (vs live) | DD 20.1% | removed TRAIN n 27 PF 1.69, TEST n 23 PF 7.59
+        DIP: drop ibs < 0.15 (30%)                    +154.4   +38.4    +4.4  +114.1  +126.7 | TRAIN   -69.1 TEST  -13.8 (vs live) | DD 26.3% | removed TRAIN n 41 PF 2.08, TEST n 36 PF 0.91
+        DIP: drop ibs > 0.42 (30%)                    +134.4   +37.6   +22.0  +109.6  +128.9 | TRAIN   -16.4 TEST  -21.8 (vs live) | DD 20.1% | removed TRAIN n 41 PF 1.93, TEST n 34 PF 2.78
+        DIP: drop ibs < 0.20 (40%)                    +156.4   +41.3    +6.5  +116.6  +104.2 | TRAIN  -113.4 TEST   -4.1 (vs live) | DD 26.3% | removed TRAIN n 54 PF 1.97, TEST n 45 PF 0.87
+        DIP: drop ibs > 0.34 (40%)                    +132.1   +36.0   +24.1  +104.7  +113.9 | TRAIN   -55.0 TEST  -31.7 (vs live) | DD 19.1% | removed TRAIN n 54 PF 1.87, TEST n 38 PF 2.34
+        DIP: drop rsi2 < 3.90 (20%)                   +145.2   +47.3   +14.3  +122.7  +152.3 | TRAIN   +35.8 TEST  +17.8 (vs live) | DD 20.1% | removed TRAIN n 27 PF 2.33, TEST n 24 PF 1.38
+        DIP: drop rsi2 > 8.91 (20%)                   +158.6   +37.7    +9.2  +138.0  +115.1 | TRAIN   -64.2 TEST  +17.4 (vs live) | DD 22.5% | removed TRAIN n 27 PF 2.00, TEST n 17 PF 1.26
+        DIP: drop rsi2 < 4.78 (30%)                   +133.3   +50.3   +17.9  +122.7  +134.8 | TRAIN   -25.2 TEST  +24.5 (vs live) | DD 20.1% | removed TRAIN n 41 PF 2.31, TEST n 32 PF 1.04
+        DIP: drop rsi2 > 8.23 (30%)                   +147.5   +40.1    +8.5  +131.8   +82.2 | TRAIN  -182.2 TEST  +14.7 (vs live) | DD 23.0% | removed TRAIN n 41 PF 2.31, TEST n 22 PF 1.26
+        DIP: drop rsi2 < 5.26 (40%)                   +133.3   +50.3   +14.4  +128.0  +150.1 | TRAIN    -4.0 TEST  +32.4 (vs live) | DD 20.1% | removed TRAIN n 54 PF 1.73, TEST n 37 PF 0.98
+        DIP: drop rsi2 > 7.18 (40%)                   +147.5   +32.6    +9.6  +131.8   +73.7 | TRAIN  -199.9 TEST   -2.7 (vs live) | DD 25.0% | removed TRAIN n 54 PF 2.22, TEST n 37 PF 1.59
+   qual DIP: drop dist20 < -2.36 (20%)                +153.3   +34.3   +12.1  +122.7  +138.4 | TRAIN    +5.6 TEST  -11.1 (vs live) | DD 20.1% | removed TRAIN n 27 PF 1.38, TEST n 13 PF 0.83
+        DIP: drop dist20 > 0.09 (20%)                 +140.6   +28.9   +17.1  +132.7  +128.0 | TRAIN   -29.2 TEST  -10.3 (vs live) | DD 19.1% | removed TRAIN n 27 PF 1.66, TEST n 31 PF 2.71
+        DIP: drop dist20 < -1.86 (30%)                +160.3   +42.2    +4.5  +121.6  +137.3 | TRAIN   -25.8 TEST   +5.0 (vs live) | DD 20.1% | removed TRAIN n 41 PF 1.60, TEST n 23 PF 0.55
+        DIP: drop dist20 > -0.51 (30%)                +141.4   +33.1   +21.1  +122.5  +129.2 | TRAIN    -1.0 TEST  -14.1 (vs live) | DD 19.1% | removed TRAIN n 41 PF 1.36, TEST n 44 PF 1.84
+        DIP: drop dist20 < -1.60 (40%)                +162.5   +47.7    +0.3  +117.2  +108.5 | TRAIN  -122.5 TEST  +10.5 (vs live) | DD 20.1% | removed TRAIN n 54 PF 1.85, TEST n 27 PF 0.70
+        DIP: drop dist20 > -0.82 (40%)                +144.5   +26.0   +21.8  +118.8  +124.4 | TRAIN    -3.2 TEST  -34.7 (vs live) | DD 19.1% | removed TRAIN n 54 PF 1.55, TEST n 52 PF 1.82
+        DIP: drop dist50 < 0.74 (20%)                 +153.7   +37.3   +16.4  +127.7  +114.9 | TRAIN   -36.5 TEST   +2.4 (vs live) | DD 19.1% | removed TRAIN n 27 PF 1.50, TEST n 16 PF 0.49
+        DIP: drop dist50 > 4.67 (20%)                 +163.4   +45.6    +8.4  +105.6  +117.3 | TRAIN   -50.9 TEST  -11.0 (vs live) | DD 20.1% | removed TRAIN n 27 PF 3.21, TEST n 18 PF 4.93
+   qual DIP: drop dist50 < 1.22 (30%)                 +156.1   +26.3   +23.1  +121.8  +138.4 | TRAIN   +80.3 TEST  -30.1 (vs live) | DD 19.1% | removed TRAIN n 41 PF 1.24, TEST n 28 PF 1.18
+        DIP: drop dist50 > 4.13 (30%)                 +167.7   +45.6    -1.1  +105.6  +119.9 | TRAIN   -88.9 TEST  -11.0 (vs live) | DD 20.1% | removed TRAIN n 41 PF 2.83, TEST n 19 PF 5.28
+        DIP: drop dist50 < 1.86 (40%)                 +147.7   +26.1   +12.6  +113.7  +121.9 | TRAIN   -52.4 TEST  -40.8 (vs live) | DD 23.3% | removed TRAIN n 54 PF 1.56, TEST n 42 PF 0.97
+        DIP: drop dist50 > 2.95 (40%)                 +160.3   +49.7    -1.6  +113.2  +107.3 | TRAIN  -140.6 TEST   +8.9 (vs live) | DD 20.2% | removed TRAIN n 54 PF 2.12, TEST n 32 PF 2.27
+        DIP: drop rng < 1.23 (20%)                    +141.8   +48.6   +19.9  +130.9  +118.4 | TRAIN   -38.4 TEST  +32.9 (vs live) | DD 20.1% | removed TRAIN n 27 PF 1.68, TEST n 19 PF 0.89
+        DIP: drop rng > 2.47 (20%)                    +138.4   +46.6   +10.4  +129.8  +148.1 | TRAIN   -18.5 TEST  +26.8 (vs live) | DD 20.1% | removed TRAIN n 27 PF 1.76, TEST n 14 PF 0.75
+        DIP: drop rng < 1.44 (30%)                    +157.2   +71.4   +19.0  +118.9  +112.7 | TRAIN   -20.6 TEST  +64.9 (vs live) | DD 20.1% | removed TRAIN n 41 PF 1.62, TEST n 38 PF 0.96
+        DIP: drop rng > 2.24 (30%)                    +147.5   +30.9    +9.8  +129.8  +146.5 | TRAIN    -1.4 TEST   -9.3 (vs live) | DD 19.9% | removed TRAIN n 41 PF 1.56, TEST n 22 PF 1.97
+        DIP: drop rng < 1.58 (40%)                    +144.4   +71.4   +18.0  +118.5  +109.8 | TRAIN   -66.2 TEST  +64.4 (vs live) | DD 21.9% | removed TRAIN n 54 PF 1.78, TEST n 40 PF 0.89
+        DIP: drop rng > 1.96 (40%)                    +159.8   +28.7    +9.0  +120.6  +136.2 | TRAIN    -2.5 TEST  -26.4 (vs live) | DD 19.9% | removed TRAIN n 54 PF 1.40, TEST n 32 PF 1.27
+        DIP: drop gap < -0.60 (20%)                   +152.7   +26.4   +10.8  +140.4  +128.7 | TRAIN   -30.8 TEST   -6.5 (vs live) | DD 22.4% | removed TRAIN n 27 PF 2.36, TEST n 15 PF 1.41
+        DIP: drop gap > 0.67 (20%)                    +128.5   +36.5    -0.9  +101.1  +118.0 | TRAIN  -177.7 TEST  -35.8 (vs live) | DD 20.3% | removed TRAIN n 27 PF 2.48, TEST n 26 PF 1.95
+        DIP: drop gap < -0.29 (30%)                   +152.5   +32.7   +10.8  +140.4  +138.6 | TRAIN    -3.9 TEST   +8.6 (vs live) | DD 22.0% | removed TRAIN n 41 PF 1.61, TEST n 25 PF 1.20
+        DIP: drop gap > 0.43 (30%)                    +128.5   +38.8    +2.0   +93.0  +117.8 | TRAIN  -164.0 TEST  -42.2 (vs live) | DD 21.1% | removed TRAIN n 41 PF 3.02, TEST n 35 PF 1.56
+        DIP: drop gap < -0.06 (40%)                   +158.9   +29.6   +13.5  +137.4  +128.0 | TRAIN    -1.5 TEST   -2.6 (vs live) | DD 23.9% | removed TRAIN n 54 PF 1.42, TEST n 39 PF 1.23
+        DIP: drop gap > 0.27 (40%)                    +128.2   +47.4    +5.7   +93.0  +101.5 | TRAIN  -185.1 TEST  -25.8 (vs live) | DD 19.3% | removed TRAIN n 54 PF 2.84, TEST n 41 PF 1.47
+        DIP: drop bar1 < -0.37 (20%)                  +144.2   +18.1   +12.2  +116.7  +140.2 | TRAIN   -13.1 TEST  -54.2 (vs live) | DD 20.1% | removed TRAIN n 27 PF 2.88, TEST n 11 PF 85.16
+        DIP: drop bar1 > 0.32 (20%)                   +158.3   +44.5   +18.8  +111.7  +108.3 | TRAIN   -32.4 TEST   -4.3 (vs live) | DD 19.1% | removed TRAIN n 27 PF 0.80, TEST n 14 PF 0.62  <- bad out, good kept
+   qual DIP: drop bar1 < -0.22 (30%)                  +151.9   +23.7   +30.6  +120.6  +119.2 | TRAIN   +50.0 TEST  -37.3 (vs live) | DD 20.1% | removed TRAIN n 41 PF 1.76, TEST n 22 PF 2.27
+   qual DIP: drop bar1 > 0.17 (30%)                   +172.2   +55.3   +28.2  +112.5   +94.0 | TRAIN    +5.4 TEST  +19.7 (vs live) | DD 19.1% | removed TRAIN n 41 PF 0.93, TEST n 30 PF 1.14
+        DIP: drop bar1 < -0.14 (40%)                  +145.1   +23.7   +20.3  +126.4  +128.6 | TRAIN    +2.8 TEST  -30.2 (vs live) | DD 22.0% | removed TRAIN n 54 PF 2.27, TEST n 30 PF 1.75
+        DIP: drop bar1 > 0.09 (40%)                   +174.5   +47.5   +32.3  +109.8   +83.9 | TRAIN    -3.2 TEST   -0.7 (vs live) | DD 19.1% | removed TRAIN n 54 PF 1.07, TEST n 38 PF 1.41
+        DIP: drop ret5 < -4.97 (20%)                  +141.6   +36.3   +10.4  +133.2  +122.5 | TRAIN   -78.0 TEST   +7.6 (vs live) | DD 20.1% | removed TRAIN n 27 PF 3.33, TEST n 8 PF 0.64
+   qual DIP: drop ret5 > -1.76 (20%)                  +161.0   +37.8   +34.4  +116.7  +104.0 | TRAIN   +44.5 TEST  -11.6 (vs live) | DD 19.1% | removed TRAIN n 27 PF 1.30, TEST n 20 PF 1.34
+        DIP: drop ret5 < -4.11 (30%)                  +139.7   +26.3    +0.3  +133.2  +126.3 | TRAIN  -127.1 TEST  -15.6 (vs live) | DD 20.1% | removed TRAIN n 41 PF 3.26, TEST n 15 PF 1.27
+        DIP: drop ret5 > -2.28 (30%)                  +162.7   +40.5   +19.9  +121.7   +95.0 | TRAIN   -57.2 TEST   +1.3 (vs live) | DD 19.1% | removed TRAIN n 41 PF 1.53, TEST n 41 PF 1.30
+        DIP: drop ret5 < -3.74 (40%)                  +143.6   +25.0    -6.5  +141.3  +110.4 | TRAIN  -192.1 TEST   -8.6 (vs live) | DD 20.2% | removed TRAIN n 54 PF 2.87, TEST n 23 PF 1.08
+   qual DIP: drop ret5 > -2.74 (40%)                  +162.7   +43.3   +22.6  +107.6  +116.6 | TRAIN   +26.4 TEST  -12.8 (vs live) | DD 23.7% | removed TRAIN n 54 PF 1.18, TEST n 55 PF 1.37
+        DIP: drop vol20 < 0.96 (20%)                  +146.7   +56.8   +17.5  +123.9  +102.1 | TRAIN   -85.9 TEST  +40.9 (vs live) | DD 21.3% | removed TRAIN n 27 PF 3.75, TEST n 31 PF 0.96
+        DIP: drop vol20 > 2.06 (20%)                  +132.1   +31.6    +7.2  +133.2  +145.0 | TRAIN   -61.6 TEST   -3.3 (vs live) | DD 20.1% | removed TRAIN n 27 PF 1.45, TEST n 9 PF 0.49
+        DIP: drop vol20 < 1.04 (30%)                  +142.9   +52.0   +23.7  +132.7  +103.9 | TRAIN   -58.9 TEST  +43.5 (vs live) | DD 20.1% | removed TRAIN n 41 PF 2.77, TEST n 39 PF 0.90
+        DIP: drop vol20 > 1.76 (30%)                  +137.7   +20.5    +4.9  +133.2  +148.7 | TRAIN   -51.0 TEST  -29.1 (vs live) | DD 20.1% | removed TRAIN n 41 PF 1.56, TEST n 15 PF 1.43
+        DIP: drop vol20 < 1.18 (40%)                  +142.9   +56.8   +26.4  +124.4   +85.1 | TRAIN  -103.0 TEST  +41.7 (vs live) | DD 20.1% | removed TRAIN n 54 PF 2.58, TEST n 49 PF 1.03
+        DIP: drop vol20 > 1.58 (40%)                  +147.2   +14.7    +4.3  +133.2  +141.6 | TRAIN   -48.3 TEST  -42.7 (vs live) | DD 20.1% | removed TRAIN n 54 PF 1.52, TEST n 20 PF 1.33
+        DIP: drop rv < 0.74 (20%)                     +149.8   +15.1   +11.0  +108.3  +125.8 | TRAIN   -45.0 TEST  -70.5 (vs live) | DD 19.7% | removed TRAIN n 27 PF 1.72, TEST n 29 PF 2.39
+        DIP: drop rv > 1.43 (20%)                     +141.2   +44.5    +5.9  +121.4  +113.2 | TRAIN  -126.7 TEST   +9.7 (vs live) | DD 23.5% | removed TRAIN n 27 PF 2.97, TEST n 14 PF 1.45
+        DIP: drop rv < 0.80 (30%)                     +150.2   +15.1   +21.2  +100.1  +108.6 | TRAIN   -38.7 TEST  -79.9 (vs live) | DD 19.1% | removed TRAIN n 41 PF 1.61, TEST n 35 PF 2.38
+        DIP: drop rv > 1.19 (30%)                     +145.0   +40.1   +10.8  +129.1  +101.7 | TRAIN  -123.8 TEST  +10.7 (vs live) | DD 24.7% | removed TRAIN n 41 PF 2.66, TEST n 26 PF 1.04
+        DIP: drop rv < 0.90 (40%)                     +157.0   +28.3   +16.4   +97.2  +106.1 | TRAIN   -54.9 TEST  -57.2 (vs live) | DD 19.1% | removed TRAIN n 54 PF 1.37, TEST n 46 PF 1.72
+        DIP: drop rv > 1.09 (40%)                     +135.1   +40.7    +0.2  +138.3  +100.1 | TRAIN  -199.9 TEST  +25.2 (vs live) | DD 27.1% | removed TRAIN n 54 PF 2.99, TEST n 35 PF 1.33
+
+C. SPLIT cash across the top same-bar candidates (rank by relative volume), each its own stop, out 15:55
+        split cash across top 2                       +128.1   +29.6   +15.2  +131.4  +144.3 | TRAIN   -29.3 TEST  -10.3 (vs live) | DD 20.2% 
+        split cash across top 3                       +125.1   +31.0   +18.2  +133.6  +147.1 | TRAIN   -13.8 TEST   -4.1 (vs live) | DD 20.9% 
+
+PRE-SET PICKS (best TRAIN among qualifiers, read against TEST after)
+   A: pick by rsi2 desc -> qual
+   B IBS-LONG: IBS-LONG: drop rng < 1.13 (20%) -> qual; removed trades lose on train and test: yes
+   B MIRROR: MIRROR: drop ret5 < -2.29 (40%) -> qual; removed trades lose on train and test: NO
+   B DIP: DIP: drop dist50 < 1.22 (30%) -> qual; removed trades lose on train and test: NO
+
+   filters that PASS and remove losers in both periods: 0
