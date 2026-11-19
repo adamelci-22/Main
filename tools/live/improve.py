@@ -358,9 +358,9 @@ def retire(t, evs):
 SCENARIOS = [('as replayed', 1.0, 1.0), ('wins -40%', 0.6, 1.0), ('wins -40%, losses +25%', 0.6, 1.25)]     # the last one stands in for the live-vs-backtest gap
 
 
-def risk_profile(daily, win=1.0, loss=1.0, days=250, B=4000, stop=15.0, seed='risk'):
+def risk_profile(daily, win=1.0, loss=1.0, days=250, B=4000, stop=25.0, seed='risk'):
     """Bootstrap one trading year from the daily account returns (each day as replayed, wins and losses scaled for the stress).
-    Returns the chance of reaching the A1.13 hard stop (-15% from the high; the path stops there), the median and 5th-percentile
+    Returns the chance of reaching the A1.13 hard stop (-25% from the high since v5.2.65; the path stops there), the median and 5th-percentile
     year, and the median and 95th-percentile worst drawdown. Days, not trades, are resampled, so idle days count as they happen."""
     r = [x * win if x > 0 else x * loss for _, x in daily]
     if len(r) < 20: return None
@@ -380,7 +380,7 @@ def risk_profile(daily, win=1.0, loss=1.0, days=250, B=4000, stop=15.0, seed='ri
 
 def risk_line(name, rp):
     if not rp: return f"  {name:<26}too few days"
-    return f"  {name:<26}P(-15% stop) {rp['p_stop']:5.1f}%   median year {rp['median']:+7.1f}%   bad year (5th pct) {rp['p5']:+7.1f}%   drawdown median {rp['dd_med']:4.1f}% (95th {rp['dd_p95']:4.1f}%)"
+    return f"  {name:<26}P(-25% stop) {rp['p_stop']:5.1f}%   median year {rp['median']:+7.1f}%   bad year (5th pct) {rp['p5']:+7.1f}%   drawdown median {rp['dd_med']:4.1f}% (95th {rp['dd_p95']:4.1f}%)"
 
 
 def risk_check(t, D, champ_daily, values):
@@ -741,7 +741,7 @@ def cmd_tick(a):
     try:                                                    # information only (v5.2.33-35): edge, regime and stop risk; they file nothing
         D = load_data(); g = regime(D, champion_values(t)); print(regime_line(g))
         head, rows, rec = defensive(t, D); bp = head['b']
-        print(f"  stop risk: stressed chance of the -15% stop {bp['p_stop'] if bp else 'n/a'}% on the last {head['window']} sessions (information; risk.pct is shared by both systems)")
+        print(f"  stop risk: stressed chance of the -25% stop {bp['p_stop'] if bp else 'n/a'}% on the last {head['window']} sessions (information; risk.pct is shared by both systems)")
         if today().weekday() == 4: print("  live vs model attribution, this week:\n" + attribution_text(attribution((today() - timedelta(days=6)).isoformat())))
     except Exception as x: print(f"  regime step failed: {x!r} (information only)")
     if pending(): print("  legacy proposal pending (outside the cycle):", json.dumps({k: pending()[k] for k in ('id', 'variable', 'old', 'new')}))
@@ -942,7 +942,7 @@ def cmd_prune(a):
 
 def cmd_risk(a):
     t = tun(); D = load_data(); daily = run_cf(D, champion_values(t))[0]
-    print(f"risk of the version in force v{current(t)['version']}: one trading year (250 days) bootstrapped from {len(daily)} replayed sessions, 4,000 paths, -15% hard stop ends a path")
+    print(f"risk of the version in force v{current(t)['version']}: one trading year (250 days) bootstrapped from {len(daily)} replayed sessions, 4,000 paths, -25% hard stop ends a path")
     for name, w, l in SCENARIOS: print(risk_line(name, risk_profile(daily, w, l)))
     if a.id:
         c = next((c for c in candidates(t) if c['id'] == a.id), None)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""RULEBOOK A1.13 drawdown stop: halt all real trading when total value falls 15% below its all-time high (deposit-adjusted).
+"""RULEBOOK A1.13 drawdown stop: halt all real trading when total value falls 25% below its all-time high (v5.2.65; was 15%) (deposit-adjusted).
 State: archive/hwm.json  {"hwm": all-time-high total value, "halted": bool, "halted_at": ..., "events": [...]}
-    python3 tools/live/hwm.py check VALUE        # every state check: raises the high if VALUE is a new high; HALTS if VALUE <= 85% of the high
+    python3 tools/live/hwm.py check VALUE        # every state check: raises the high if VALUE is a new high; HALTS if VALUE <= 75% of the high
     python3 tools/live/hwm.py deposit AMOUNT     # a deposit (+) or withdrawal (-): moves the high by the same dollars so it is never a drawdown or a fake high
     python3 tools/live/hwm.py clear VALUE        # GOVERNOR ONLY: lift a halt; the high restarts at VALUE
     python3 tools/live/hwm.py status
@@ -11,7 +11,7 @@ import json, os, sys
 from datetime import datetime
 from zoneinfo import ZoneInfo
 F = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'archive', 'hwm.json')
-LIMIT = 0.15
+LIMIT = 0.25                 # v5.2.65 (governor 2026-11-19 "raise to 25%"); was 0.15 (v5.2.16)
 
 
 def load(): return json.load(open(F))

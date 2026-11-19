@@ -7,7 +7,7 @@ Real trades from archive/live_trades.csv; drawdown from archive/hwm.json. Rollin
     PULLBACK  profit factor, win rate, average trade: the same five-year percentile bands (the report prints them and the five-year average)
     both      execution gap, real - model    healthy > -0.10%   warning -0.10 to -0.25 ACT < -0.25%   (per trade, % of position; v5.2.23)
               trade frequency vs backtest    healthy >= 60%     warning 30-60%         CHECK < 30%    (last 30 trading days; v5.2.23)
-    account   drawdown from the all-time high healthy < 7%      warning 7-10%          ACT >= 10%     (A1.13 hard stop at 15%)
+    account   drawdown from the all-time high healthy < 7%      warning 7-10%          ACT >= 10%     (A1.13 hard stop at 25%)
 Two or more ACT in a system -> the governor decides (FADE: S1 stretch-filter version or pause; PULLBACK: back to SOXS LABD TECS UVXY or drop it).
 Trade measures are provisional below 30 trades and never count as ACT below 10. Frequency is graded from 10 live trading days and never counts as
 ACT: a low count means check the tooling (fetch groups, waiters, data) first, then the market. Reports only: it changes no order, rule or state."""
@@ -128,7 +128,7 @@ def main():
 
     fm, ffg, fn, fgap, ffreq, fgot, fexp = system('FADE', rows, day, tdays, fade_specific)
     line('Drawdown from all-time high', f'{dd:.1f}%', '< 7%', '7-10%', '>= 10%', g_dd)
-    print(f"      (account high ${hwm:,.2f}; hard stop at 15%)")
+    print(f"      (account high ${hwm:,.2f}; hard stop at 25%)")
     if STARRED: print('  * too few trades to count yet (needs 10+)')
     facts, fv = verdict(fm, ffg, [g_dd], 'switch FADE to the S1 stretch-filter version, or pause and review')
     print(f"  VERDICT: {fv}")
