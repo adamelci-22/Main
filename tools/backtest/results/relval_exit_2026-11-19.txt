@@ -1,0 +1,38 @@
+RELVAL exit and hold study (governor 2026-11-19: "Push the relval system have you worked out the best exit and hold strategy for it").
+   years 2022 2023 2024 2025 2026 | TRAIN and TEST compounded, (points vs the current RELVAL exit) | RELVAL trades alone
+
+        BASE: book without FADE, no RELVAL        +128.2   +45.2   +19.4  +109.7  +116.7 | TRAIN  +490.4 TEST +204.5
+   cur  CURRENT: target 0.5, stop 1.0, out 15:55  +146.7   +41.1   +17.1  +119.8  +132.5 | TRAIN  +571.3 (  +0.0) TEST +210.2 (  +0.0) | n 219 win 52% avg +0.14% PF 1.21
+
+TOP 20 BY TRAIN (all 100 variants run; q = beats the current exit on train compounded and in 2 of 3 train years)
+   q    tgt none stop 0.5 be off next 9:35        +249.2   +16.4   +21.4   +99.3  +139.4 | TRAIN  +915.0 (+343.7) TEST +132.1 ( -78.1) | n 219 win 47% avg +0.11% PF 1.08
+   q    tgt 1.0 stop 0.5 be off next 9:35         +216.5   +16.4   +28.9  +111.0  +139.4 | TRAIN  +876.1 (+304.8) TEST +145.7 ( -64.5) | n 219 win 47% avg +0.11% PF 1.08
+   q    tgt 0.75 stop 0.5 be off next 9:35        +192.9   +27.3   +27.0   +91.9  +154.1 | TRAIN  +845.1 (+273.8) TEST +144.3 ( -65.9) | n 219 win 48% avg +0.11% PF 1.08
+   q    tgt 1.0 stop 0.5 be on next 9:35          +218.1   +10.5   +17.2  +101.9  +145.3 | TRAIN  +814.4 (+243.1) TEST +123.2 ( -87.0) | n 219 win 41% avg +0.09% PF 1.08
+   q    tgt 0.75 stop 0.5 be on next 9:35         +200.3   +20.9   +15.5  +105.7  +154.5 | TRAIN  +783.0 (+211.6) TEST +148.6 ( -61.6) | n 219 win 43% avg +0.14% PF 1.13
+   q    tgt 0.25 stop 0.5 be off next 9:35        +186.8   +30.1   +26.8   +92.2  +142.8 | TRAIN  +782.8 (+211.5) TEST +150.0 ( -60.2) | n 219 win 62% avg +0.18% PF 1.19
+   q    tgt 0.25 stop 0.5 be on next 9:35         +186.8   +30.1   +26.8   +92.2  +142.8 | TRAIN  +782.8 (+211.5) TEST +150.0 ( -60.2) | n 219 win 62% avg +0.18% PF 1.19
+   q    tgt none stop 0.5 be on next 9:35         +218.1   +10.5   +10.5   +90.7  +145.3 | TRAIN  +761.8 (+190.5) TEST +110.9 ( -99.3) | n 219 win 41% avg +0.05% PF 1.04
+   q    tgt 0.5 stop 0.5 be off next 9:35         +179.3   +26.4   +22.5   +86.0  +150.4 | TRAIN  +756.9 (+185.6) TEST +135.1 ( -75.1) | n 219 win 52% avg +0.14% PF 1.11
+   q    tgt none stop 0.75 be off next 9:35       +216.0   +17.1   +19.2   +92.4  +127.0 | TRAIN  +755.4 (+184.1) TEST +125.3 ( -84.9) | n 219 win 47% avg +0.02% PF 1.01
+   q    tgt none stop 0.5 be off 15:55            +188.5   +23.6   +13.6  +112.9  +156.0 | TRAIN  +739.1 (+167.8) TEST +163.2 ( -47.0) | n 219 win 48% avg +0.16% PF 1.24
+   q    tgt 1.0 stop 0.75 be off next 9:35        +188.5   +17.1   +24.1  +127.6  +127.0 | TRAIN  +712.8 (+141.5) TEST +166.4 ( -43.8) | n 219 win 48% avg +0.08% PF 1.05
+   q    tgt 0.5 stop 0.5 be on next 9:35          +180.5   +24.6   +13.9   +99.4  +152.8 | TRAIN  +707.6 (+136.3) TEST +148.5 ( -61.7) | n 219 win 47% avg +0.18% PF 1.17
+   q    tgt none stop 1.0 be off next 9:35        +202.8   +23.2   +19.4   +93.3  +122.1 | TRAIN  +702.8 (+131.5) TEST +138.2 ( -72.0) | n 219 win 47% avg -0.01% PF 0.99
+   q    tgt 1.0 stop 0.5 be off 15:55             +174.5   +23.6   +13.3  +111.0  +156.0 | TRAIN  +696.5 (+125.1) TEST +160.8 ( -49.4) | n 219 win 48% avg +0.14% PF 1.21
+   q    tgt 0.75 stop 0.75 be off next 9:35       +169.6   +27.1   +22.9  +109.3  +138.1 | TRAIN  +688.8 (+117.4) TEST +166.0 ( -44.2) | n 219 win 50% avg +0.08% PF 1.06
+   q    tgt 0.75 stop 0.5 be off 15:55            +170.8   +30.0   +11.7  +118.3  +157.6 | TRAIN  +679.2 (+107.9) TEST +183.8 ( -26.4) | n 219 win 49% avg +0.17% PF 1.26
+   q    tgt none stop 0.75 be off 15:55           +170.6   +30.5   +15.8  +128.0  +142.8 | TRAIN  +661.0 ( +89.6) TEST +197.5 ( -12.7) | n 219 win 50% avg +0.19% PF 1.28
+   q    tgt 1.0 stop 1.0 be off next 9:35         +178.5   +23.2   +23.0  +125.5  +122.1 | TRAIN  +660.7 ( +89.4) TEST +177.8 ( -32.4) | n 219 win 48% avg +0.04% PF 1.03
+   q    tgt 0.5 stop 0.5 be off 15:55             +164.7   +30.9   +13.3  +107.4  +152.5 | TRAIN  +657.0 ( +85.6) TEST +171.5 ( -38.7) | n 219 win 50% avg +0.14% PF 1.21
+
+BY DIMENSION (average TRAIN / TEST compounded over the variants holding that value)
+   target     0.25: +589.9 / +173.2 | 0.5: +586.1 / +184.6 | 0.75: +604.3 / +190.6 | 1.0: +616.2 / +176.8 | none: +624.9 / +168.4
+   stop       0.5: +717.6 / +157.0 | 0.75: +618.6 / +171.8 | 1.0: +581.9 / +181.9 | 1.5: +559.3 / +189.5 | 2.0: +544.0 / +193.3
+   breakeven  off: +630.9 / +180.5 | on: +577.6 / +177.0
+   hold       15:55: +566.1 / +197.3 | next 9:35: +642.5 / +160.1
+
+PICK (best TRAIN among variants that beat the current exit on train, chosen before reading TEST): tgt none stop 0.5 be off next 9:35
+   PICK PICK                                      +249.2   +16.4   +21.4   +99.3  +139.4 | TRAIN  +915.0 (+343.7) TEST +132.1 ( -78.1) | n 219 win 47% avg +0.11% PF 1.08
+   test verdict: loses to the current exit in both test years
+   overnight overlap: 24 of 219 RELVAL nights also have an OVERNIGHT signal (they share cash live; not modelled)

@@ -65,7 +65,7 @@ if log:
         for r in hrows:
             if r['system'] == sname: r['trades'] = int(L[k]); r['window'] = W; r['day'] = L['date']
 # v5.2.54: health cards for the new systems (RULEBOOK B6.11, B7.10): review at 20 and 30 live trades, profit factor under 1.0 is a warning at 20 and goes to the governor at 30
-for sname in ('IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'):
+for sname in ('IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT', 'RELVAL'):
     # v5.2.60: judged against the five-year backtest (tools/live/health_baseline.json): HEALTHY at or above the 25th percentile of its 30-trade windows, WATCH down to the 5th, ACT below it
     B5 = health.BASE[sname]; xs = [t for t in trades if t['system'].upper() == sname][-30:]; n = len(xs); acct = [t['acct_pct'] for t in xs]; pos = [t.get('pos_pct', t['acct_pct']) for t in xs]
     gw = sum(a for a in acct if a > 0); gl = -sum(a for a in acct if a <= 0); pf = (gw / gl) if gl else None
