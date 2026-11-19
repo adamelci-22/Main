@@ -797,5 +797,14 @@
   "method": "tools/backtest/breadth_index.py; live book v5.2.64; QQQ leg replaces the pick when 2/3/4+ same-side funds signal; breadth-only variants; train 2022/2024/2026, test 2023/2025",
   "result": "0 qualify on both. INDEX 2+: train -81.0, test -22.0; 3+: -7.5/-51.4; 4+: +3.8/-16.5. Breadth-only: train -267/-378. The QQQ leg on multi-signal mornings averages +0.37% (PF 1.36), close to the pick's own +0.30%: the skipped value is the same market move, so a cash account cannot add it without more capital at risk. Margin would trigger the under-$25k pattern-day-trader limit (3 day trades per 5 days), which the book cannot live with.",
   "status": "rejected; revisit with options (Level 3 from Feb 2027) or an account above $25k"
+ },
+ {
+  "id": "study.daily_family_2018",
+  "date": "2026-11-19",
+  "kind": "study",
+  "idea": "Expand the backtest to 2018-2021 (governor: expand the back test)",
+  "method": "tools/backtest/daily_family.py on Robinhood daily bars 2017-2026 (tools/backtest/data/rh_daily_2017_2026.json.gz); IBS-LONG, MIRROR, DIP and the overnight leg only (Massive has no data before 2021-11 on this plan; Robinhood has no real 5-minute bars that far back, so PULLBACK and RELVAL cannot be tested); entry at the open, 1% stop on the day's range, out at the close",
+  "result": "Family + overnight by year: 2018 -1.3, 2019 -1.2, 2020 +74.3, 2021 -26.4 (x1.25 over 2018-21, worst drawdown 37.1%) vs 2022-26 +95.1, +26.6, -12.2, +72.2, +51.7 on the same daily method (the 5-minute tape gives +102.0, +61.0, +9.9, +59.6, +66.5, so the daily method runs ~15-20 pts/yr low). By system 2018-21 vs 2022-26: IBS-LONG PF 0.87 vs 1.25 (lost money 2018-21), MIRROR 1.28 vs 1.56, DIP 1.20 vs 1.31, OVERNIGHT 1.11 vs 1.57. The core edge is real but regime-dependent: strong in 2020 and 2022-26, flat in 2018-19, negative in 2021 (calm, steady uptrend).",
+  "status": "information: expect flat or losing years; review IBS-LONG first if a calm uptrend returns"
  }
 ]
