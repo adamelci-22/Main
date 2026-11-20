@@ -1,0 +1,61 @@
+Universe check of every system in the live book v5.2.65 (governor 2026-11-20: "make sure all the trade universes are optimal").
+   years 2022 2023 2024 2025 2026 (TRAIN = 1st, 3rd, 5th); change = points against the live book
+
+        LIVE book v5.2.65                             +146.7   +41.1   +17.1  +119.8  +132.5 | avg 22-25  +81.2 worst  +17.1
+
+A. 9:35 FAMILY
+   qual family without QQQ                            +125.6   +38.7   +19.4  +116.0  +169.0 | avg 22-25  +74.9 worst  +19.4  change  -21.1   -2.4   +2.3   -3.9  +36.5
+        family without SOXX                            +79.6    +5.1    +0.3   +91.2  +147.7 | avg 22-25  +44.1 worst   +0.3  change  -67.0  -36.0  -16.8  -28.6  +15.2
+        family without IWM                            +115.1   +52.7   +25.5  +113.5  +109.6 | avg 22-25  +76.7 worst  +25.5  change  -31.5  +11.6   +8.4   -6.3  -22.9
+   qual family without XLK                            +138.8   +41.9   +29.0  +109.8  +133.6 | avg 22-25  +79.9 worst  +29.0  change   -7.9   +0.8  +11.9  -10.0   +1.2
+   qual family without XBI                            +155.4   +17.6   +30.8   +89.8  +103.6 | avg 22-25  +73.4 worst  +17.6  change   +8.8  -23.5  +13.7  -30.0  -28.9
+        family without XLF                            +133.3   +35.0   +29.3  +114.8   +70.8 | avg 22-25  +78.1 worst  +29.3  change  -13.4   -6.1  +12.2   -5.0  -61.7
+   qual family + SPY (SPXL/SPXS), 99 signals          +132.2   +60.9   +29.3  +118.9  +135.9 | avg 22-25  +85.3 worst  +29.3  change  -14.4  +19.8  +12.3   -0.9   +3.4
+        family + DIA (UDOW/SDOW), 118 signals         +113.4   +38.0   +15.8   +91.1  +140.1 | avg 22-25  +64.6 worst  +15.8  change  -33.2   -3.1   -1.3  -28.8   +7.6
+        family + TLT (TMF/TMV), 107 signals           +137.6   +40.7   +11.7  +109.2  +109.8 | avg 22-25  +74.8 worst  +11.7  change   -9.1   -0.4   -5.4  -10.7  -22.7
+        family + EEM (EDC/EDZ), 122 signals           +105.0   +50.9    +8.7   +90.1  +145.0 | avg 22-25  +63.7 worst   +8.7  change  -41.7   +9.8   -8.3  -29.8  +12.5
+        family + FXI (YINN/YANG), 105 signals         +161.9   +32.3   +27.0   +99.2  +101.5 | avg 22-25  +80.1 worst  +27.0  change  +15.3   -8.8   +9.9  -20.6  -31.0
+        family + XLRE (DRN/DRV), 113 signals          +115.9   +14.9   +12.7  +156.5  +117.4 | avg 22-25  +75.0 worst  +12.7  change  -30.8  -26.2   -4.3  +36.7  -15.1
+        family + XLE (ERX/ERY), 108 signals            +91.8   +48.3    -7.8  +103.0  +131.2 | avg 22-25  +58.8 worst   -7.8  change  -54.9   +7.2  -24.9  -16.8   -1.3
+        family + GDX (NUGT/DUST), 114 signals         +105.1   +43.9   +22.4  +135.9   +89.1 | avg 22-25  +76.8 worst  +22.4  change  -41.6   +2.8   +5.3  +16.1  -43.4
+        family + XOP (GUSH/DRIP), 111 signals         +134.3   +42.3    -5.3   +99.6  +108.5 | avg 22-25  +67.8 worst   -5.3  change  -12.4   +1.2  -22.3  -20.2  -24.0
+        family + KRE (DPST), 103 signals              +186.1   +44.5    +3.3  +104.2  +119.5 | avg 22-25  +84.5 worst   +3.3  change  +39.5   +3.4  -13.8  -15.7  -13.0
+        family + XLV (CURE), 84 signals               +125.9   +30.0   +18.8  +113.9  +133.2 | avg 22-25  +72.2 worst  +18.8  change  -20.7  -11.1   +1.7   -5.9   +0.7
+        family + XLU (UTSL), 87 signals               +147.7   +34.5    +6.7  +138.5  +118.0 | avg 22-25  +81.8 worst   +6.7  change   +1.0   -6.6  -10.3  +18.7  -14.5
+
+B. RELVAL
+        RELVAL without SOXX                           +133.0   +47.8   +17.6  +118.5  +123.0 | avg 22-25  +79.2 worst  +17.6  change  -13.6   +6.7   +0.6   -1.3   -9.4
+   qual RELVAL without IWM                            +149.5   +40.9   +17.0  +116.8  +132.6 | avg 22-25  +81.0 worst  +17.0  change   +2.8   -0.2   -0.1   -3.0   +0.1
+        RELVAL without XLK                            +143.2   +41.1   +15.4  +113.6  +131.6 | avg 22-25  +78.3 worst  +15.4  change   -3.5   +0.0   -1.7   -6.2   -0.9
+   PASS RELVAL without XBI                            +152.8   +42.8   +23.1  +124.8  +126.7 | avg 22-25  +85.9 worst  +23.1  change   +6.2   +1.7   +6.0   +5.0   -5.8
+        RELVAL without XLF                            +134.7   +39.7   +16.7  +107.8  +132.7 | avg 22-25  +74.7 worst  +16.7  change  -11.9   -1.4   -0.4  -12.1   +0.3
+        RELVAL + SPY (SPXL/SPXS), 21 signals          +146.6   +42.0   +17.1  +125.2  +136.1 | avg 22-25  +82.7 worst  +17.1  change   -0.0   +0.9   +0.0   +5.3   +3.7
+   PASS RELVAL + DIA (UDOW/SDOW), 45 signals          +150.9   +41.5   +17.1  +130.6  +133.0 | avg 22-25  +85.0 worst  +17.1  change   +4.2   +0.4   +0.1  +10.7   +0.5
+        RELVAL + TLT (TMF/TMV), 54 signals            +146.7   +39.7   +18.2  +116.3  +131.1 | avg 22-25  +80.2 worst  +18.2  change   +0.0   -1.4   +1.1   -3.5   -1.3
+        RELVAL + EEM (EDC/EDZ), 33 signals            +146.7   +41.5   +17.5  +113.5  +131.1 | avg 22-25  +79.8 worst  +17.5  change   +0.0   +0.4   +0.5   -6.3   -1.4
+   qual RELVAL + FXI (YINN/YANG), 49 signals          +144.9   +44.5   +18.1  +114.2  +134.8 | avg 22-25  +80.4 worst  +18.1  change   -1.7   +3.4   +1.0   -5.6   +2.3
+   PASS RELVAL + XLRE (DRN/DRV), 47 signals           +154.8   +41.4   +19.1  +120.9  +131.7 | avg 22-25  +84.0 worst  +19.1  change   +8.1   +0.3   +2.0   +1.1   -0.8
+        RELVAL + XLE (ERX/ERY), 54 signals            +144.1   +46.4   +17.7  +122.9  +132.5 | avg 22-25  +82.8 worst  +17.7  change   -2.6   +5.3   +0.6   +3.1   +0.1
+   qual RELVAL + GDX (NUGT/DUST), 50 signals          +144.9   +41.3   +18.3  +110.0  +133.2 | avg 22-25  +78.6 worst  +18.3  change   -1.8   +0.2   +1.2   -9.9   +0.8
+   qual RELVAL + XOP (GUSH/DRIP), 62 signals          +147.5   +43.1   +19.1  +113.8  +132.6 | avg 22-25  +80.9 worst  +19.1  change   +0.8   +2.0   +2.0   -6.1   +0.2
+
+C. PULLBACK
+        PULLBACK without SOXS                         +119.7   +36.6   +10.5  +124.5  +109.5 | avg 22-25  +72.8 worst  +10.5  change  -27.0   -4.5   -6.6   +4.7  -23.0
+        PULLBACK without LABD                         +140.8   +37.2   +19.4  +134.4  +119.5 | avg 22-25  +83.0 worst  +19.4  change   -5.9   -3.9   +2.3  +14.6  -13.0
+        PULLBACK without TECS                         +146.5   +43.9   +17.4   +97.6  +116.2 | avg 22-25  +76.3 worst  +17.4  change   -0.2   +2.8   +0.4  -22.2  -16.2
+        PULLBACK without UVXY                         +151.7   +57.9   +19.1   +75.7  +122.4 | avg 22-25  +76.1 worst  +19.1  change   +5.1  +16.8   +2.0  -44.1  -10.1
+        PULLBACK + SQQQ, 60 signals                   +138.3   +41.2   +15.2  +122.1  +132.7 | avg 22-25  +79.2 worst  +15.2  change   -8.3   +0.1   -1.9   +2.3   +0.2
+        PULLBACK + TZA, 59 signals                    +148.2   +37.9   +16.1  +108.9  +109.3 | avg 22-25  +77.8 worst  +16.1  change   +1.6   -3.2   -1.0  -10.9  -23.2
+   qual PULLBACK + FAZ, 27 signals                    +151.2   +39.2   +17.1  +125.5  +134.0 | avg 22-25  +83.2 worst  +17.1  change   +4.6   -1.9   +0.0   +5.6   +1.6
+
+D. RELVAL COMBINATIONS of the passes (one test, chosen after the single tests: read with care)
+   PASS RELVAL without XBI, + DIA                     +157.1   +43.3   +23.2  +135.8  +127.2 | avg 22-25  +89.8 worst  +23.2  change  +10.5   +2.2   +6.1  +15.9   -5.3
+   PASS RELVAL without XBI, + XLRE                    +161.1   +43.1   +25.2  +125.9  +126.8 | avg 22-25  +88.8 worst  +25.2  change  +14.4   +2.0   +8.1   +6.1   -5.7
+   PASS RELVAL + DIA + XLRE                           +159.1   +44.3   +19.1  +127.2  +132.2 | avg 22-25  +87.4 worst  +19.1  change  +12.4   +3.2   +2.1   +7.3   -0.3
+   PASS RELVAL without XBI, + DIA + XLRE              +165.6   +46.1   +25.3  +132.3  +127.3 | avg 22-25  +92.3 worst  +25.3  change  +18.9   +5.0   +8.2  +12.5   -5.1
+
+SUMMARY
+   A: 18 changes tested; qualify family without QQQ (qual), family without XLK (qual), family without XBI (qual), family + SPY (qual)
+   B: 14 changes tested; qualify RELVAL without IWM (qual), RELVAL without XBI (PASS), RELVAL + DIA (PASS), RELVAL + FXI (qual), RELVAL + XLRE (PASS), RELVAL + GDX (qual), RELVAL + XOP (qual)
+   C: 7 changes tested; qualify PULLBACK + FAZ (qual)
+   D: 4 changes tested; qualify RELVAL without XBI, + DIA (PASS), RELVAL without XBI, + XLRE (PASS), RELVAL + DIA + XLRE (PASS), RELVAL without XBI, + DIA + XLRE (PASS)

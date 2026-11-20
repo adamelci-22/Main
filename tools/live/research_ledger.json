@@ -815,5 +815,14 @@
   "method": "tools/backtest/pb_rv_estimate.py; monthly account result of each in the live book 2022-26 regressed on daily-bar conditions (QQQ 20-day volatility, QQQ month return, sector-vs-QQQ dispersion), applied to 2018-21; leave-one-year-out check",
   "result": "Weak fits: PULLBACK R^2 0.20, leave-one-year-out error 38.5 pts/yr (2022 predicted +87 vs actual +13) -> estimates 2018 -4, 2019 -13, 2020 +40, 2021 +20, each +/-38: not usable. RELVAL R^2 0.23, error 6.7 pts -> 2018 -0.5, 2019 -2.5, 2020 +15.3, 2021 +0.2, each +/-7. Both do best in high-volatility years (2020). Low-volatility years (2019, 2021) look flat to negative.",
   "status": "information; not added to the scorecard"
+ },
+ {
+  "id": "study.universe2",
+  "date": "2026-11-20",
+  "kind": "study",
+  "idea": "Are all trade universes optimal (governor: make sure all the trade universes are optimal)",
+  "method": "tools/backtest/universe2.py; live book v5.2.65 on the Massive tape; 9:35 family drop-one (6) / add-one (12 new proxies); RELVAL drop-one (5) / add-one (9 new with both legs); PULLBACK drop-one (4) / add SQQQ TZA FAZ; combinations of RELVAL passes; train 2022/2024/2026, test 2023/2025. Overnight universe was checked 2026-11-14 (no change).",
+  "result": "9:35 family: 0 PASS (SPY, without QQQ/XLK/XBI qualify on train only). PULLBACK: 0 PASS (+FAZ qualifies on train only). RELVAL: 3 single PASS: without XBI (+6.2,+1.7,+6.0,+5.0,-5.8), + DIA (UDOW/SDOW), + XLRE (DRN/DRV). Combined 'RELVAL without XBI, + DIA + XLRE': +165.6, +46.1, +25.3, +132.3, +127.3 vs live +146.7, +41.1, +17.1, +119.8, +132.5 (avg 2022-25 +92.3 vs +81.2), PASS. 3 passes of 14 is more than chance (~1 expected); combination chosen after the single tests. Live legs DRN/DRV are thin (A1.7 spread check). NVDQ/NVD/MSFU/SSG have no five-year bars (paper trial covers NVDQ).",
+  "status": "RELVAL universe change offered to the governor; nothing live"
  }
 ]
