@@ -344,12 +344,12 @@ details[open] .sc-hint { display: none; }
   <section class="sc-card" id="btext-card">
     <div>
       <h2>Longer history, 2018 to 2026</h2>
-      <p class="sc-note">Each year compounds daily returns within that year. The 9:35 IBS family (IBS-LONG, MIRROR, DIP) and the overnight leg, the core of the book. 2018 to 2021 are estimates: daily bars only (the 5-minute data starts Nov 2021), corrected by the average 2022 to 2026 gap of 13.1 points a year, with a range of about plus or minus 17 points. PULLBACK and RELVAL need 5-minute bars and cannot be tested before 2022. 2018 to 2021 were never used to build any rule.</p>
+      <p class="sc-note">Each year compounds daily returns within that year. 2018 to 2021 are rough estimates; the 5-minute data starts Nov 2021. Core (IBS family and overnight leg): daily-bar backtest plus the average 2022 to 2026 gap of 13.1 points. PULLBACK and RELVAL need 5-minute bars, so they are estimated from how their 2022 to 2026 months tracked volatility, the QQQ trend and sector dispersion (weak fits, about 0.2 of the swings explained). Full book = core x PULLBACK x RELVAL, which reproduces 2022 to 2026 exactly. Range about plus or minus 43 points, mostly from PULLBACK. Read the direction, not the decimals.</p>
     </div>
     <div class="sc-scroll">
       <table data-source="bt_ext" data-row-key="id">
         <thead><tr>
-          <th data-field="year">Year</th><th data-field="kind" class="l">Basis</th><th data-field="core_est">Core: estimated or measured</th><th data-field="low">Range low</th><th data-field="high">Range high</th><th data-field="core_daily">Core on daily bars</th><th data-field="dd_daily">Worst drawdown, daily bars</th><th data-field="full_book">Full book (5-minute)</th>
+          <th data-field="year">Year</th><th data-field="kind" class="l">Basis</th><th data-field="full_est">Full book</th><th data-field="full_low">Range low</th><th data-field="full_high">Range high</th><th data-field="core_est">Core (IBS family + overnight)</th><th data-field="pb">PULLBACK</th><th data-field="rv">RELVAL</th><th data-field="dd_daily">Worst drawdown, core daily bars</th>
         </tr></thead>
         <tbody data-draw="ext_body"></tbody>
       </table>
@@ -891,11 +891,11 @@ details[open] .sc-hint { display: none; }
     year: (r) => r.year, months: (r) => String(r.months), win: (r) => r.win.toFixed(0) + '%', med: (r) => fpn(r.med, 1), worst: (r) => fpn(r.worst, 1), best: (r) => fpn(r.best, 1)
   }, { tone: ['med', 'worst', 'best'] });
   const fx = (v, sgn) => v == null ? 'n/a' : (sgn && v >= 0 ? '+' : '') + Number(v).toFixed(1) + '%';
-  tbl('ext_body', 'bt_ext', ['year', 'kind', 'core_est', 'low', 'high', 'core_daily', 'dd_daily', 'full_book'], {
-    year: (r) => String(r.year), kind: (r) => r.kind === 'estimate' ? 'estimate' : (r.year === 2026 ? 'measured, in sample' : 'measured'),
-    core_est: (r) => fx(r.core_est, true), low: (r) => fx(r.low, true), high: (r) => fx(r.high, true), core_daily: (r) => fx(r.core_daily, true),
-    dd_daily: (r) => fx(r.dd_daily, false), full_book: (r) => fx(r.full_book, true)
-  }, { left: ['kind'], tone: ['core_est', 'core_daily', 'full_book'], cls: (r) => r.kind === 'estimate' ? 'sc-est' : '' });
+  tbl('ext_body', 'bt_ext', ['year', 'kind', 'full_est', 'full_low', 'full_high', 'core_est', 'pb', 'rv', 'dd_daily'], {
+    year: (r) => String(r.year), kind: (r) => r.kind === 'estimate' ? 'rough estimate' : (r.year === 2026 ? 'measured, in sample' : 'measured'),
+    full_est: (r) => fx(r.full_est, true), full_low: (r) => fx(r.full_low, true), full_high: (r) => fx(r.full_high, true), core_est: (r) => fx(r.core_est, true),
+    pb: (r) => fx(r.pb, true), rv: (r) => fx(r.rv, true), dd_daily: (r) => fx(r.dd_daily, false)
+  }, { left: ['kind'], tone: ['full_est', 'core_est', 'pb', 'rv'], cls: (r) => r.kind === 'estimate' ? 'sc-est' : '' });
   tbl('risk_body', 'bt_risk', ['kind', 'label', 'avg_22_25', 'worst_year', 'max_dd', 'stops', 'note'], {
     kind: (r) => r.kind, label: (r) => r.label, avg_22_25: (r) => fpn(r.avg_22_25, 1), worst_year: (r) => fpn(r.worst_year, 1), max_dd: (r) => Number(r.max_dd).toFixed(1) + '%',
     stops: (r) => String(r.stops), note: (r) => r.note || ''
@@ -992,7 +992,7 @@ details[open] .sc-hint { display: none; }
   }));
   const btD = d3.utcFormat('%b %-d, %Y');
   const btDay = (s) => s ? btD(new Date(s)) : DASH;
-  const winName = (w) => w === 'all' ? (btSys === 'Combined' ? 'Jan 2018 to Oct 2026 (2018 to 2021 estimated, IBS family and overnight only)' : 'Jan 2022 to Oct 2026') : (w === '2026' ? '2026 to Oct 30, in sample' : (['2018', '2019', '2020', '2021'].includes(w) ? w + ', estimated (IBS family and overnight only)' : w));
+  const winName = (w) => w === 'all' ? (btSys === 'Combined' ? 'Jan 2018 to Oct 2026 (2018 to 2021 rough estimate)' : 'Jan 2022 to Oct 2026') : (w === '2026' ? '2026 to Oct 30, in sample' : (['2018', '2019', '2020', '2021'].includes(w) ? w + ', rough estimate' : w));
   const f0 = (v) => Math.abs(v) < 0.05 ? '0.0%' : fpn(v, 1);
   const ddPct = (v) => v == null ? DASH : (v > 0 ? MINUS : '') + Math.abs(v).toFixed(1) + '%';
 
@@ -1121,9 +1121,9 @@ details[open] .sc-hint { display: none; }
     if (g.status !== 'ok' || gw.status !== 'ok') { el.classList.add('dash-skeleton'); return; }
     el.classList.remove('dash-skeleton');
     const st = gw.data.find((x) => x.id === (btSys === 'ALL' ? 'Combined' : btSys) + ':' + btWin);
-    if (!st) { const p = document.createElement('p'); p.className = 'sc-note'; p.textContent = 'No estimate for this system in ' + btWin + ': 2018 to 2021 are estimated for the combined IBS family and overnight leg only (daily bars). Pick Combined.'; el.append(p); return; }
+    if (!st) { const p = document.createElement('p'); p.className = 'sc-note'; p.textContent = 'No daily path for this system in ' + btWin + ': 2018 to 2021 are estimated for the whole book only (see Longer history). Pick Combined.'; el.append(p); return; }
     if (btSys === 'ALL') {
-      if (EST_Y.includes(btWin)) { const p = document.createElement('p'); p.className = 'sc-note'; p.textContent = 'The overlay needs every system: 2018 to 2021 are estimated for the combined core only. Pick Combined, or a year from 2022.'; el.append(p); return; }
+      if (EST_Y.includes(btWin)) { const p = document.createElement('p'); p.className = 'sc-note'; p.textContent = 'The overlay needs every system: 2018 to 2021 are estimated for the whole book only. Pick Combined, or a year from 2022.'; el.append(p); return; }
       drawOverlay(el, g.data, gw.data, btWin === 'all' ? { ...st, start: '2022-01-01' } : st); return;
     }
     const all = g.data.filter((r) => r.system === btSys);
@@ -1155,7 +1155,7 @@ details[open] .sc-hint { display: none; }
       svg.append('rect').attr('x', xe0).attr('y', m.t).attr('width', Math.max(2, xe1 - xe0)).attr('height', H - m.t - m.b)
         .style('fill', 'var(--color-fg-muted)').style('fill-opacity', .08);
       svg.append('text').attr('x', xe0 + 6).attr('y', H - m.b - 8).attr('font-size', 11).style('fill', 'var(--color-fg-muted)')
-        .text('Estimate: IBS family and overnight, daily bars');
+        .text('Rough estimate (5-minute data starts Nov 2021)');
     }
     // deepest drawdown band
     let ddLab = null;
