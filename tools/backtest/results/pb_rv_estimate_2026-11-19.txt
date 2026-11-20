@@ -1,0 +1,19 @@
+Rough 2018-2021 estimates for PULLBACK and RELVAL (governor 2026-11-19: "can you make estimates about pull back and relval").
+
+PULLBACK: monthly fit on 2022-26, R^2 0.20 (share of month-to-month variation explained); coefficients const -6.95, vol +0.92, QQQ month -0.088, dispersion +9.85
+   leave-one-year-out check (actual vs predicted from the other years): 2022 +13.0 vs +87.1, 2023 -9.8 vs +10.2, 2024 +8.6 vs +6.5, 2025 +31.4 vs -6.2, 2026 +30.2 vs +20.1
+   typical yearly error 38.5 points; plain average year 2022-26 +14.1%
+   2018: estimate   -4.0%  (range -42.5 to +34.5); QQQ vol 1.23%, dispersion 0.56%
+   2019: estimate  -13.1%  (range -51.6 to +25.4); QQQ vol 1.00%, dispersion 0.52%
+   2020: estimate  +39.7%  (range +1.2 to +78.2); QQQ vol 1.83%, dispersion 0.86%
+   2021: estimate  +20.4%  (range -18.1 to +58.8); QQQ vol 1.03%, dispersion 0.79%
+
+RELVAL: monthly fit on 2022-26, R^2 0.23 (share of month-to-month variation explained); coefficients const -2.13, vol +1.30, QQQ month +0.059, dispersion +0.87
+   leave-one-year-out check (actual vs predicted from the other years): 2022 +8.1 vs +16.6, 2023 -2.9 vs +3.0, 2024 -1.9 vs -0.1, 2025 +4.9 vs +0.6, 2026 +7.3 vs -2.7
+   typical yearly error 6.7 points; plain average year 2022-26 +3.1%
+   2018: estimate   -0.5%  (range -7.2 to +6.2); QQQ vol 1.23%, dispersion 0.56%
+   2019: estimate   -2.5%  (range -9.2 to +4.2); QQQ vol 1.00%, dispersion 0.52%
+   2020: estimate  +15.3%  (range +8.6 to +22.1); QQQ vol 1.83%, dispersion 0.86%
+   2021: estimate   +0.2%  (range -6.5 to +7.0); QQQ vol 1.03%, dispersion 0.79%
+
+   reference 2022-26 conditions: QQQ vol 2022 1.95%, 2023 1.11%, 2024 1.05%, 2025 1.26%, 2026 1.19%; dispersion 2022 0.79%, 2023 0.67%, 2024 0.68%, 2025 0.64%, 2026 0.81%
