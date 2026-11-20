@@ -249,6 +249,7 @@ details[open] .sc-hint { display: none; }
       </div>
       <div class="sc-seg sc-wrap" role="group" aria-label="Backtest window">
         <button type="button" data-btyear="all" aria-pressed="true">All years</button>
+        <button type="button" data-btyear="bt" aria-pressed="false">2022 to 2026</button>
         <button type="button" data-btyear="2018" aria-pressed="false">2018*</button>
         <button type="button" data-btyear="2019" aria-pressed="false">2019*</button>
         <button type="button" data-btyear="2020" aria-pressed="false">2020*</button>
@@ -289,7 +290,6 @@ details[open] .sc-hint { display: none; }
   <section class="sc-card" id="compare-card">
     <div>
       <h2>Systems side by side</h2>
-      <p class="sc-note">Backtest against live for each system.</p>
     </div>
     <div class="sc-key" aria-hidden="true"><span><i class="sc-sw bt"></i>Backtest</span><span><i class="sc-sw lv"></i>Live</span></div>
     <div class="sc-grid2">
@@ -307,7 +307,6 @@ details[open] .sc-hint { display: none; }
   <section class="sc-card" id="ticker-card">
     <div>
       <h2>Result by fund</h2>
-      <p class="sc-note">Cash result of the real trades in each fund, best first.</p>
     </div>
     <div data-draw="tickers" data-source="tickers"></div>
   </section>
@@ -344,7 +343,6 @@ details[open] .sc-hint { display: none; }
   <section class="sc-card" id="btext-card">
     <div>
       <h2>Longer history, 2018 to 2026</h2>
-      <p class="sc-note">Each year compounds daily returns within that year. 2018 to 2021 are rough estimates; the 5-minute data starts Nov 2021. Core (IBS family and overnight leg): daily-bar backtest plus the average 2022 to 2026 gap of 13.1 points. PULLBACK and RELVAL need 5-minute bars, so they are estimated from how their 2022 to 2026 months tracked volatility, the QQQ trend and sector dispersion (weak fits, about 0.2 of the swings explained). Full book = core x PULLBACK x RELVAL, which reproduces 2022 to 2026 exactly. Range about plus or minus 43 points, mostly from PULLBACK. Read the direction, not the decimals.</p>
     </div>
     <div class="sc-scroll">
       <table data-source="bt_ext" data-row-key="id">
@@ -903,7 +901,7 @@ details[open] .sc-hint { display: none; }
 
   // ---- backtest curve: each system, each year, high and low of the window
   const BT_SYS = ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'];
-  const BT_WIN = ['all', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'];
+  const BT_WIN = ['all', 'bt', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'];
   const EST_Y = ['2018', '2019', '2020', '2021'];
   dash.calc('bt_sys_curve', {
     inputs: ['bt_curve', 'bt_trades'],
@@ -933,12 +931,12 @@ details[open] .sc-hint { display: none; }
       ['Combined', 'RELVAL', 'PULLBACK', 'IBS-LONG', 'MIRROR', 'DIP', 'OVERNIGHT'].forEach((s) => {
         const rows = bt_sys_curve.filter((r) => r.system === s);
         const tr = bt_trades.filter((t) => s === 'Combined' || t.system === s);
-        ['all', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'].forEach((w) => {
+        ['all', 'bt', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'].forEach((w) => {
           if (s !== 'Combined' && ['2018', '2019', '2020', '2021'].includes(w)) return;
-          const start = w === 'all' ? (rows.length ? rows[0].day : '2018-01-01') : w + '-01-01';
+          const start = w === 'all' ? (rows.length ? rows[0].day : '2018-01-01') : w === 'bt' ? '2022-01-01' : w + '-01-01';
           const prev = rows.filter((r) => r.day < start).pop();
           const base = 1 + (prev ? prev.cur : 0) / 100;
-          const inW = rows.filter((r) => r.day >= start && (w === 'all' || r.day.slice(0, 4) === w));
+          const inW = rows.filter((r) => r.day >= start && (w === 'all' || w === 'bt' || r.day.slice(0, 4) === w));
           let v = 0, hi = 0, hiDay = start, lo = 0, loDay = start, pk = 0, pkDay = start, dd = 0, ddFrom = null, ddTo = null;
           inW.forEach((r) => {
             v = ((1 + r.cur / 100) / base - 1) * 100;
@@ -948,7 +946,7 @@ details[open] .sc-hint { display: none; }
             const d = (1 - (1 + v / 100) / (1 + pk / 100)) * 100;
             if (d > dd) { dd = d; ddFrom = pkDay; ddTo = r.day; }
           });
-          const tw = tr.filter((t) => w === 'all' || t.day.slice(0, 4) === w);
+          const tw = tr.filter((t) => w === 'all' || (w === 'bt' ? t.day >= '2022-01-01' : t.day.slice(0, 4) === w));
           out.push({
             id: s + ':' + w, system: s, window: w, start, end: inW.length ? inW[inW.length - 1].day : start,
             ret: v, high: hi, high_day: hiDay, low: lo, low_day: loDay, max_dd: dd, dd_from: ddFrom, dd_to: ddTo,
@@ -992,7 +990,7 @@ details[open] .sc-hint { display: none; }
   }));
   const btD = d3.utcFormat('%b %-d, %Y');
   const btDay = (s) => s ? btD(new Date(s)) : DASH;
-  const winName = (w) => w === 'all' ? (btSys === 'Combined' ? 'Jan 2018 to Oct 2026 (2018 to 2021 rough estimate)' : 'Jan 2022 to Oct 2026') : (w === '2026' ? '2026 to Oct 30, in sample' : (['2018', '2019', '2020', '2021'].includes(w) ? w + ', rough estimate' : w));
+  const winName = (w) => w === 'bt' ? 'Jan 2022 to Oct 2026, measured on 5-minute bars' : w === 'all' ? (btSys === 'Combined' ? 'Jan 2018 to Oct 2026 (2018 to 2021 rough estimate)' : 'Jan 2022 to Oct 2026') : (w === '2026' ? '2026 to Oct 30, in sample' : (['2018', '2019', '2020', '2021'].includes(w) ? w + ', rough estimate' : w));
   const f0 = (v) => Math.abs(v) < 0.05 ? '0.0%' : fpn(v, 1);
   const ddPct = (v) => v == null ? DASH : (v > 0 ? MINUS : '') + Math.abs(v).toFixed(1) + '%';
 
@@ -1077,8 +1075,8 @@ details[open] .sc-hint { display: none; }
       .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t).toLocaleString('en-US') + '%');
-    const xticks = btWin === 'all' ? d3.range(st.start < '2022' ? 2018 : 2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1))) : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
-    const xf = btWin === 'all' ? d3.utcFormat('%Y') : d3.utcFormat('%b');
+    const xticks = (btWin === 'all' || btWin === 'bt') ? d3.range(st.start < '2022' ? 2018 : 2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1))) : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
+    const xf = (btWin === 'all' || btWin === 'bt') ? d3.utcFormat('%Y') : d3.utcFormat('%b');
     svg.append('g').selectAll('text').data(xticks).join('text').attr('x', (d) => x(d)).attr('y', H - 10).attr('text-anchor', 'start')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(xf);
     // thin lines first, Combined last so it sits on top
@@ -1173,9 +1171,9 @@ details[open] .sc-hint { display: none; }
       .attr('stroke', (t) => t === 0 ? 'var(--cds-chart-axis)' : 'var(--cds-chart-grid)');
     svg.append('g').selectAll('text').data(yt).join('text').attr('x', m.l - 8).attr('y', (t) => y(t) + 4).attr('text-anchor', 'end')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text((t) => (t > 0 ? '+' : t < 0 ? MINUS : '') + Math.abs(t).toLocaleString('en-US') + '%');
-    const xticks = btWin === 'all' ? d3.range(st.start < '2022' ? 2018 : 2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1)))
+    const xticks = (btWin === 'all' || btWin === 'bt') ? d3.range(st.start < '2022' ? 2018 : 2022, 2027).map((yr) => new Date(Date.UTC(yr, 0, 1)))
       : x.ticks(d3.utcMonth.every(narrow ? 3 : 1));
-    const xf = btWin === 'all' ? d3.utcFormat('%Y') : d3.utcFormat('%b');
+    const xf = (btWin === 'all' || btWin === 'bt') ? d3.utcFormat('%Y') : d3.utcFormat('%b');
     svg.append('g').selectAll('text').data(xticks).join('text').attr('x', (d) => x(d)).attr('y', H - 10).attr('text-anchor', 'start')
       .attr('fill', 'var(--color-fg-muted)').attr('font-size', 11).text(xf);
     svg.append('path').datum(rows).attr('fill', 'none').attr('stroke', 'var(--sc-live)').attr('stroke-width', 2.25).attr('stroke-linejoin', 'round')
