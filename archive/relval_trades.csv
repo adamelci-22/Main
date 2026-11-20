@@ -1,0 +1,2 @@
+day,proxy,side,ticker,rp_pct,sd_pct,signal_bar,entry_time,entry_px_proxy,stop_proxy,target_proxy,exit_time,exit_px_proxy,exit_reason,pct_leg
+2026-11-20,DIA,-1,SDOW,2.267,0.873,13:40,13:45,486.84,497.8767,481.3217,15:30,481.3217,target,3.341
