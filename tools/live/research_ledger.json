@@ -824,5 +824,23 @@
   "method": "tools/backtest/universe2.py; live book v5.2.65 on the Massive tape; 9:35 family drop-one (6) / add-one (12 new proxies); RELVAL drop-one (5) / add-one (9 new with both legs); PULLBACK drop-one (4) / add SQQQ TZA FAZ; combinations of RELVAL passes; train 2022/2024/2026, test 2023/2025. Overnight universe was checked 2026-11-14 (no change).",
   "result": "9:35 family: 0 PASS (SPY, without QQQ/XLK/XBI qualify on train only). PULLBACK: 0 PASS (+FAZ qualifies on train only). RELVAL: 3 single PASS: without XBI (+6.2,+1.7,+6.0,+5.0,-5.8), + DIA (UDOW/SDOW), + XLRE (DRN/DRV). Combined 'RELVAL without XBI, + DIA + XLRE': +165.6, +46.1, +25.3, +132.3, +127.3 vs live +146.7, +41.1, +17.1, +119.8, +132.5 (avg 2022-25 +92.3 vs +81.2), PASS. 3 passes of 14 is more than chance (~1 expected); combination chosen after the single tests. Live legs DRN/DRV are thin (A1.7 spread check). NVDQ/NVD/MSFU/SSG have no five-year bars (paper trial covers NVDQ).",
   "status": "RELVAL universe change offered to the governor; nothing live"
+ },
+ {
+  "id": "study.ovn_all",
+  "date": "2026-11-20",
+  "kind": "study",
+  "idea": "Overnight leg universe on all years (governor: run all of them)",
+  "method": "tools/backtest/ovn_all.py; live book v5.2.67; overnight leg drop-one of 6 and add-one of 12; five-year total and years better",
+  "result": "Best: overnight without XBI +485 pts five-year total (3 of 5 years: +7.6, -2.6, +10.5, -4.0, +19.6), + FXI +338 (3 of 5), + TLT +194 (3 of 5); all others smaller or worse. The 2026-11-14 train/test check passed none of these. Drawdown unchanged at 20.6%.",
+  "status": "offered; not live"
+ },
+ {
+  "id": "study.pb_rh_legs",
+  "date": "2026-11-20",
+  "kind": "study",
+  "idea": "PULLBACK single-stock legs (NVDQ NVD MSFU SSG) check (governor: run all of them)",
+  "method": "tools/backtest/pb_rh_legs.py; Robinhood 5-minute cache 2026-03..10 (157 sessions), PULLBACK alone, per leg and drop-one",
+  "result": "Per leg PF: SOXS 2.83, LABD 3.06, TECS 4.30, UVXY 1.58, NVDQ 3.14, NVD 1.30, MSFU 38.3 (7 trades), SSG 5.58. Drop-one: NVD +4.1 pts, NVDQ +2.4, SSG +0.9; the rest cost 5 to 12 pts. 7 to 19 trades per leg, and this cache chose the legs (in-sample). NVD is the weakest; NVDQ already in a paper trial.",
+  "status": "information"
  }
 ]
