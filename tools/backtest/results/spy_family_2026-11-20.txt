@@ -1,0 +1,11 @@
+SPY in the 9:35 family on the CURRENT live book v5.2.66 (RELVAL with DIA in place of XBI) (governor 2026-11-20: "lets add spy ...
+   SPY signals: 99 in five years (IBS-LONG 43, MIRROR 22, DIP 34)
+
+   year       live    + SPY   change   live DD   +SPY DD
+   2022    +157.1%  +142.1%    -15.0     20.6%     20.6%
+   2023     +43.3%   +63.3%    +20.1     13.5%     13.4%
+   2024     +23.2%   +36.1%    +12.9     17.5%     18.7%
+   2025    +135.8%  +134.8%     -1.0     11.6%     11.6%
+   2026    +127.2%  +130.5%     +3.3     15.5%     15.5%
+   total    +2331%   +2812%     +482     20.6%     20.6%
+   average 2022-26: live +97.3%  + SPY +101.4%

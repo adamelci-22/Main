@@ -25,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.pat
 import paper as P
 LEG = {p: r[0] for p, r in P.FADE_ROWS.items()}          # proxy -> 3x long leg
 INV = {p: r[1] for p, r in P.FADE_ROWS.items()}          # proxy -> 3x inverse leg (the mirror, v5.2.49)
+FAM_LEG = dict(LEG, SPY='SPXL'); FAM_INV = dict(INV, SPY='SPXS')    # v5.2.67 (governor 2026-11-20 "lets add spy"): SPY joins the 9:35 family only; the overnight leg keeps LEG
 LO, HI, SMA, STOP_PCT, LEV, COST = 0.10, 0.95, 20, 1.0, 3, 0.06
 DIP_RSI, DIP_SMA, DIP_FROM = 10, 50, '2026-11-16'            # v5.2.50: dip-buy in an uptrend (needs 50 closes in the daily store)
 MIRROR_FROM = '2026-11-16'                               # the mirror trades from this day (replays before it: long side only unless --mirror)
@@ -82,7 +83,7 @@ def persist(what):
 def check(store, day, strict=False):
     """Signals for `day` from the daily store. Returns {proxy: dict(ok, side, above, ibs, close, sma, n)}; side +1 long leg, -1 inverse leg."""
     out = {}
-    for p in LEG:
+    for p in FAM_LEG:
         allp = sorted(d for d in store.get(p, {}) if d < day); prior = allp[-SMA:]
         if len(prior) < SMA: out[p] = dict(ok=False, n=len(prior)); continue
         if strict and prior[-1] != prev_session(day): out[p] = dict(ok=False, n=len(prior), stale=prior[-1]); continue      # the last session is missing: no signal from old data
@@ -113,7 +114,7 @@ def model(b, K, side=1):
 def pct_leg(m): return LEV * m.get('side', 1) * (m['px'] / m['entry'] - 1) * 100 - COST
 
 
-def leg_of(p, side): return LEG[p] if side > 0 else INV[p]
+def leg_of(p, side): return FAM_LEG[p] if side > 0 else FAM_INV[p]
 
 
 def args_days(argv):
@@ -126,7 +127,7 @@ def args_days(argv):
 def update_store(raw, upto):
     """Add every full session before `upto` found in the dumps to the daily store."""
     store = jload(DAILY, {}); n = 0
-    for p in LEG:
+    for p in FAM_LEG:
         for d, bars in raw.get(p, {}).items():
             if d >= upto or len(bars) < 70: continue
             g = P.grid(bars, 78)

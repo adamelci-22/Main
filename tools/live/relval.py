@@ -26,7 +26,7 @@ import paper as P
 PROXIES = ['SOXX', 'IWM', 'XLK', 'DIA', 'XLF']; REF = 'QQQ'          # v5.2.66 (governor 2026-11-19 "push it"): DIA replaces XBI
 ROWS = {'SOXX': ('SOXL', 'SOXS'), 'IWM': ('TNA', 'TZA'), 'XLK': ('TECL', 'TECS'), 'DIA': ('UDOW', 'SDOW'), 'XLF': ('FAS', 'FAZ')}   # proxy: (3x long, 3x inverse)
 LEG = {p: ROWS[p][0] for p in PROXIES}; INV = {p: ROWS[p][1] for p in PROXIES}
-GROUP = ['DIA', 'UDOW', 'SDOW']                                    # fetched with C1.2 groups 1 and 2 at every RELVAL slot and in the 9:00 baseline
+GROUP = ['SPY', 'SPXL', 'SPXS', 'DIA', 'UDOW', 'SDOW']                 # group 4 (v5.2.67): fetched with C1.2 groups 1 and 2 at 9:35, every RELVAL slot and every IBS-TREND slot
 A, Z, XM, KSD, NHIST, MINH = 48, 72, 1.0, 2.5, 20, 15       # signal bars A..Z-1 (13:30..15:25 bars); |rp| >= XM% and >= KSD sd
 TG, SM, LEV, COST, OUT_BAR, RISK = 0.5, 1.0, 3, 0.06, 77, 3.0
 LIVE_FROM = '2026-11-20'
