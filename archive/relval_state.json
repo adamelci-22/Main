@@ -1,12 +1,16 @@
 {
  "2026-11-20": {
+  "fill": 29.4773,
   "j": 50,
   "k": 51,
   "proxy": "DIA",
   "rp": 0.02267,
   "sd": 0.008733,
+  "shares": 38,
   "side": -1,
-  "status": "signal",
+  "status": "open",
+  "stop_leg": 27.47,
+  "target_leg": 30.48,
   "ticker": "SDOW"
  }
 }
