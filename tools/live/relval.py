@@ -8,7 +8,7 @@ Rule (the fade_replace.py / relval_exit.py setting, a=48 z=72 xm=1.0 ksd=2.5, ex
   signal blocked by an open position is spent). rp > 0 (the sector ran ahead of QQQ) -> buy the 3x INVERSE leg; rp < 0 -> the 3x LONG leg.
   Entry at the next bar's open (the slot where the signal bar closed). Stop: the proxy moves one gap (|rp|) further against us
   = leg fill x (1 - 3|rp|). Target: half the gap back toward QQQ = leg fill x (1 + 1.5|rp|). Both as one OCO on all shares.
-  Out at the 15:55 slot. Size: 3% of the account at risk on a 3|rp| leg stop, capped at 100% of cash. Several signals on one bar:
+  Out at the 15:55 slot. Size: 3% of the account at risk on a 3|rp| leg stop, capped at 100% of cash; from 2026-11-23 (v5.2.69) 100% of cash. Several signals on one bar:
   the highest relative volume (paper.py rvol). One position at a time; no entry while another system holds the account.
 
     python3 -I tools/live/relval.py prep DUMP...                 # 9:00: the 20-session baseline dump with DIA added (fills archive/relval_daily.json)
@@ -30,6 +30,7 @@ GROUP = ['SPY', 'SPXL', 'SPXS', 'DIA', 'UDOW', 'SDOW']                 # group 4
 A, Z, XM, KSD, NHIST, MINH = 48, 72, 1.0, 2.5, 20, 15       # signal bars A..Z-1 (13:30..15:25 bars); |rp| >= XM% and >= KSD sd
 TG, SM, LEV, COST, OUT_BAR, RISK = 0.5, 1.0, 3, 0.06, 77, 3.0
 LIVE_FROM = '2026-11-20'
+FULL_FROM = '2026-11-23'   # v5.2.69 (governor 2026-11-20 "push RELVAL full size"): 100% of cash on every RELVAL trade
 DAILY = os.path.join(ROOT, 'archive', 'relval_daily.json'); STATE = os.path.join(ROOT, 'archive', 'relval_state.json'); LOG = os.path.join(ROOT, 'archive', 'relval_trades.csv')
 FIELDS = ['day', 'proxy', 'side', 'ticker', 'rp_pct', 'sd_pct', 'signal_bar', 'entry_time', 'entry_px_proxy', 'stop_proxy', 'target_proxy', 'exit_time', 'exit_px_proxy', 'exit_reason', 'pct_leg']
 
@@ -176,14 +177,15 @@ def cmd_signal(argv):
     c = max(cands, key=lambda x: x['rv']); why = blocks(day)
     if len(cands) > 1: print(f"  several signals on this bar: {c['proxy']} has the highest relative volume ({', '.join(f'{x['proxy']} {x['rv']:.2f}' for x in cands)})")
     st_[day] = dict(status='signal', proxy=c['proxy'], ticker=c['ticker'], side=c['side'], rp=round(c['rp'], 6), sd=round(c['sd'], 6), j=c['j'], k=c['j'] + 1)
-    gap = abs(c['rp']); lr = LEV * gap * 100; frac = min(1.0, RISK / lr)
+    gap = abs(c['rp']); lr = LEV * gap * 100; full = day >= FULL_FROM; frac = 1.0 if full else min(1.0, RISK / lr)
     if why or day < LIVE_FROM:
         st_[day]['status'] = 'blocked'; st_[day]['why'] = '; '.join(why) or 'before LIVE_FROM'; jsave(STATE, st_); persist('blocked ' + day)
         print(f"  LIVE ACTIONS: none. RELVAL signal {c['proxy']} -> {c['ticker']} NOT TRADED: {st_[day]['why']}"); return
     jsave(STATE, st_); persist('signal ' + day)
     print("  LIVE ACTIONS (A1 safety checks first: account flat, no open orders, spread A1.7, daily loss limit A1.2, losing streak A1.1):")
     print(f"    ENTER RELVAL: buy {c['ticker']} now (marketable limit, B5.2 steps). Gap {gap * 100:.2f}% on {c['proxy']} -> leg risk {lr:.2f}%.")
-    print(f"      size: {RISK:.0f}% of the account at risk on a {lr:.2f}% leg stop = {frac * 100:.0f}% of the account (capped at cash). Whole shares, floor.")
+    if full: print(f"      size (v5.2.69 full size): 100% of cash, shares = floor(buying power / ask). Risk to the stop = the {lr:.2f}% leg stop. Whole shares, floor.")
+    else: print(f"      size: {RISK:.0f}% of the account at risk on a {lr:.2f}% leg stop = {frac * 100:.0f}% of the account (capped at cash). Whole shares, floor.")
     print(f"      after the fill F: ONE OCO on all shares, GTC: stop F x {1 - LEV * SM * gap:.4f} (rounded down to the cent), take-profit limit F x {1 + LEV * TG * gap:.4f} (rounded to the cent).")
     print(f"      then `python3 -I tools/live/relval.py opened {c['proxy']} F SHARES`. Exit: cancel the OCO and sell all at the 15:55 slot.")
 
