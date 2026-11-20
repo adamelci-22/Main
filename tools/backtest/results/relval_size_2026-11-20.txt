@@ -1,0 +1,9 @@
+RELVAL position size (governor 2026-11-20: "run the backtest at 3% 5% and full size"). Research only.
+   RELVAL signals 219; leg stop median 5.3% (10th 3.7%, 90th 8.7%) -> 3% risk = 57% of the account at the median
+
+   RELVAL size       2022    2023    2024    2025    2026 | 5-yr total | max DD | worst year DD | RELVAL trades, won, account pts, worst trade
+   3% (live)       +149.7   +60.7   +46.6  +130.8  +150.1 |     +3297% |  20.6% |         20.6% | 122, 58%, +30.7, -3.06%
+   5%              +163.3   +58.4   +48.4  +145.1  +157.7 |     +3810% |  21.4% |         21.4% | 122, 58%, +45.5, -5.05%
+     vs 3%          +13.6    -2.3    +1.8   +14.2    +7.6
+   full (100%)     +180.8   +56.8   +47.0  +145.3  +168.6 |     +4165% |  19.5% |         19.5% | 122, 58%, +54.8, -5.57%
+     vs 3%          +31.2    -3.9    +0.3   +14.5   +18.5
