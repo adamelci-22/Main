@@ -29,5 +29,9 @@
   "ticker": "FAS",
   "why": "stop",
   "xbar": 13
+ },
+ "2026-11-20": {
+  "signals": {},
+  "status": "none"
  }
 }
