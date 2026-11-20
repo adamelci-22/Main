@@ -217,3 +217,15 @@
 - **Corporate actions:** clean. Premarket QQQ +1.8%, SOXX +2.8% (SOXL +8.7%, SOXS -8.5%), XLK +2.1%, IWM +0.5%, XBI +0.8%, XLF +0.2%; UVXY -3.8%; NVD -2.5% and NVDQ -2.2%. FAS premarket spread 1.0% (161.60/162.99), SSG quote stale and wide (30.96/37.20): A1.7 applies at 9:35.
 - **Cycle (D4):** no `pending.json`. Paper trial drop.pb.NVDQ runs (1 of 10 trades).
 - **Context:** the container restarted overnight again (uptime 0 at 8:41); state and triggers intact. RVOL baseline 2026-10-22..11-18 -> `archive/paper_rvol_2026-11-19.json`. 9:30 and 9:35 waiters started.
+
+## 2026-11-20 (Friday) 9:00 research, rulebook v5.2.68
+- **Account:** 462514035 flat, no open orders, cash $2,484.43 = total value at 9:00. Drawdown stop clear (high $2,634.56, stop $1,975.92, -5.70%). USDG off. No overnight position (none entered 11-19).
+- **NO IBS-TREND SIGNAL.** All seven proxies closed far below their 20-session average after the 11-19 sell-off and closed at the lows (IBS 0.01 to 0.22, RSI2 1 to 8). Below the average rules out long and dip; IBS far under 0.95 rules out mirror. SPY checked for the first time (715.84 vs 751.33, IBS 0.01, RSI2 1).
+- **New today:** v5.2.67 SPY in the 9:35 family, v5.2.66 DIA in RELVAL, v5.2.68 overnight without XBI. FADE cut (v5.2.63). **RELVAL goes live at 13:35** (LIVE_FROM 2026-11-20).
+- **RELVAL trigger levels (B8.7), |sector move - QQQ move| from the open:** SOXX 4.15%, IWM 1.97%, XLK 1.48%, DIA 2.18%, XLF 3.25% (each also at least 1.0%). 20 sessions ending 11-19 for all five.
+- **Controls:** losing streak 1 (FAS 11-19 stop; UVXY 11-17 won). Earnings (A1.9): NVDA reported 11-17, next 2027-02-24; MSFT 2027-01-27. Nothing today.
+- **Corporate actions:** clean. Premarket QQQ -2.1%, SOXX -3.6% (SOXL -10.9%, SOXS +10.9%), XLK -2.7% (TECL -8.7%, TECS +8.0%), SPY -1.1% (SPXL -3.4%), IWM -0.5%, XBI -0.8%, XLF -0.1%, DIA -0.4%; NVDA -3.7% with NVD +7.7% and NVDQ +7.0%; UVXY +7.2%. SSG spread wide (36.48/43.57): A1.7 applies. TECS premarket spread 0.7%.
+- **Context:** second straight risk-off open after a close at the lows. Semis and tech lead down, small caps and financials near flat: dispersion favors a RELVAL signal this afternoon if it persists.
+- **Triggers (A2):** 8:41, 9:33, 9:36-12:36 watchdog, 13:30, 13:36/14:36/15:36 and 14:06/15:06 afternoon watchdogs, 15:51 and 15:57 enabled; bimonthly reminder enabled. One `v5 paper` trigger belongs to another session.
+- **Cycle (D4):** no `pending.json`, no approved challenger.
+- **RVOL baseline:** 20 sessions 2026-10-23..11-19 -> `archive/paper_rvol_2026-11-20.json`. 9:30 waiter started.
