@@ -6,8 +6,17 @@ import os, statistics as st, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(os.path.dirname(HERE), 'live'))
 import fade_replace as FR, new_systems as NS
 import relval as R
-B = FR.B; ds = B.ds; dm = FR.dm
-bt = {(t['day'], t['proxy']): t for t in B.BC.new(ds, B.ctx, dm, NS.relval, dict(a=48, z=72, xm=1.0), 0)}
+import universe as U, fade_diag as F
+B = FR.B; dm = FR.dm
+allp = list(F.LIVE) + list(U.NEW); F.LEV.update({p: (3, 3) for p in U.NEW})
+ds = F.DS(os.environ.get('M5U', '/tmp/claude-0/-home-user-Main/25e526f4-e830-5567-84f8-7b0fb1f877cc/scratchpad/uni/M5U.json.gz'), allp)   # v5.2.66: DIA needs the wider tape
+bt = {}
+for p in R.PROXIES:
+    for d in dm:
+        b = ds.bars[p].get(d)
+        if not b or len(b) < 78: continue
+        x = NS.relval(ds, None, p, d, b, a=48, z=72, xm=1.0)
+        if x: bt[(d, p)] = x
 mine = {}
 rel = {p: {x: ds.bars[p][x][-1][3] / ds.bars[p][x][0][0] - ds.bars['QQQ'][x][-1][3] / ds.bars['QQQ'][x][0][0] for x in ds.days if x in ds.bars[p] and x in ds.bars['QQQ']} for p in R.PROXIES}
 for p in R.PROXIES:

@@ -2,7 +2,7 @@
 """RELVAL, the afternoon relative-value system (RULEBOOK B8, v5.2.64, governor "Push the relval system" 2026-11-19). Replaces FADE.
 
 Rule (the fade_replace.py / relval_exit.py setting, a=48 z=72 xm=1.0 ksd=2.5, exit unchanged by the exit study):
-  For each sector proxy SOXX IWM XLK XBI XLF, at the close of every 5-minute bar from the 13:30 bar to the 15:25 bar (slots 13:35-15:30):
+  For each proxy SOXX IWM XLK DIA XLF (v5.2.66: DIA replaced XBI), at the close of every 5-minute bar from the 13:30 bar to the 15:25 bar (slots 13:35-15:30):
   rp = (proxy close / proxy 9:30 open) - (QQQ close / QQQ 9:30 open). The FIRST bar of the day where |rp| >= 1.0% AND |rp| >= 2.5 x the
   standard deviation of that proxy's last 20 sessions of (proxy open-to-close - QQQ open-to-close) is the proxy's signal (one a day; a
   signal blocked by an open position is spent). rp > 0 (the sector ran ahead of QQQ) -> buy the 3x INVERSE leg; rp < 0 -> the 3x LONG leg.
@@ -11,8 +11,8 @@ Rule (the fade_replace.py / relval_exit.py setting, a=48 z=72 xm=1.0 ksd=2.5, ex
   Out at the 15:55 slot. Size: 3% of the account at risk on a 3|rp| leg stop, capped at 100% of cash. Several signals on one bar:
   the highest relative volume (paper.py rvol). One position at a time; no entry while another system holds the account.
 
-    python3 -I tools/live/relval.py prep DUMP...                 # 9:00: the 20-session baseline dump (fills archive/relval_daily.json)
-    python3 -I tools/live/relval.py signal --now HH:MM DUMP...   # every slot 13:35-15:30 (the C1.2 groups 1 and 2)
+    python3 -I tools/live/relval.py prep DUMP...                 # 9:00: the 20-session baseline dump with DIA added (fills archive/relval_daily.json)
+    python3 -I tools/live/relval.py signal --now HH:MM DUMP...   # every slot 13:35-15:30 (C1.2 groups 1 and 2 + the RELVAL group DIA UDOW SDOW)
     python3 -I tools/live/relval.py opened PROXY FILL SHARES     # after the real entry filled: records the open trade
     python3 -I tools/live/relval.py skip REASON                  # a signal was not traded
     python3 -I tools/live/relval.py manage --now HH:MM DUMP...   # every slot while open, and 15:55 (logs the model trade)
@@ -23,8 +23,10 @@ import csv, json, os, statistics as st, sys
 from datetime import datetime
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.path.dirname(HERE)); sys.path.insert(0, HERE)
 import paper as P
-PROXIES = ['SOXX', 'IWM', 'XLK', 'XBI', 'XLF']; REF = 'QQQ'
-LEG = {p: P.FADE_ROWS[p][0] for p in PROXIES}; INV = {p: P.FADE_ROWS[p][1] for p in PROXIES}
+PROXIES = ['SOXX', 'IWM', 'XLK', 'DIA', 'XLF']; REF = 'QQQ'          # v5.2.66 (governor 2026-11-19 "push it"): DIA replaces XBI
+ROWS = {'SOXX': ('SOXL', 'SOXS'), 'IWM': ('TNA', 'TZA'), 'XLK': ('TECL', 'TECS'), 'DIA': ('UDOW', 'SDOW'), 'XLF': ('FAS', 'FAZ')}   # proxy: (3x long, 3x inverse)
+LEG = {p: ROWS[p][0] for p in PROXIES}; INV = {p: ROWS[p][1] for p in PROXIES}
+GROUP = ['DIA', 'UDOW', 'SDOW']                                    # fetched with C1.2 groups 1 and 2 at every RELVAL slot and in the 9:00 baseline
 A, Z, XM, KSD, NHIST, MINH = 48, 72, 1.0, 2.5, 20, 15       # signal bars A..Z-1 (13:30..15:25 bars); |rp| >= XM% and >= KSD sd
 TG, SM, LEV, COST, OUT_BAR, RISK = 0.5, 1.0, 3, 0.06, 77, 3.0
 LIVE_FROM = '2026-11-20'
