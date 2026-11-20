@@ -25,6 +25,7 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.pat
 import paper as P
 LEG = {p: r[0] for p, r in P.FADE_ROWS.items()}          # proxy -> 3x long leg
 INV = {p: r[1] for p, r in P.FADE_ROWS.items()}          # proxy -> 3x inverse leg (the mirror, v5.2.49)
+OVN_DROP, OVN_DROP_FROM = ('XBI',), '2026-11-20'     # v5.2.68 (governor 2026-11-20 "push OVERNIGHT: drop XBI"): the overnight leg no longer checks XBI
 FAM_LEG = dict(LEG, SPY='SPXL'); FAM_INV = dict(INV, SPY='SPXS')    # v5.2.67 (governor 2026-11-20 "lets add spy"): SPY joins the 9:35 family only; the overnight leg keeps LEG
 LO, HI, SMA, STOP_PCT, LEV, COST = 0.10, 0.95, 20, 1.0, 3, 0.06
 DIP_RSI, DIP_SMA, DIP_FROM = 10, 50, '2026-11-16'            # v5.2.50: dip-buy in an uptrend (needs 50 closes in the daily store)
@@ -258,6 +259,7 @@ def ovn_pick(store, bars_by_proxy, day, strict=False):
     the last 20 closes (19 stored + now) and in the bottom 10% of today's range. Returns one row per proxy; `ok` marks a signal."""
     out = []
     for p in LEG:
+        if p in OVN_DROP and day >= OVN_DROP_FROM: continue
         b = bars_by_proxy.get(p); prior = sorted(d for d in store.get(p, {}) if d < day)
         if not b or len(prior) < SMA or (strict and prior[-1] != prev_session(day)): continue
         c = b[-1][3]; H = max(x[1] for x in b); L = min(x[2] for x in b)
@@ -279,7 +281,8 @@ def cmd_ovn_signal(argv):
     while nxt.weekday() >= 5: nxt += __import__('datetime').timedelta(days=1)
     if not why and nxt.isoformat() in P.NO_TRADE: why = f"the next session {nxt.isoformat()} is {P.NO_TRADE[nxt.isoformat()]}: no trading, so no overnight hold (B7.4)"
     rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in LEG if day in raw.get(p, {})}, day, strict=True)
-    if len(rows) < len(LEG): print(f"  WARNING: only {len(rows)} of {len(LEG)} proxies could be checked (missing bars, or the daily store does not end at {prev_session(day)}). Refetch groups 1 and 2; if the store is stale run `signal` on the 20-session baseline first.")
+    nexp = len([p for p in LEG if not (p in OVN_DROP and day >= OVN_DROP_FROM)])
+    if len(rows) < nexp: print(f"  WARNING: only {len(rows)} of {nexp} proxies could be checked (missing bars, or the daily store does not end at {prev_session(day)}). Refetch groups 1 and 2; if the store is stale run `signal` on the 20-session baseline first.")
     print(f"OVERNIGHT check for {day} at 15:55 (B7): the 15:55 price above the {SMA}-close average and in the bottom {LO:.0%} of today's range.")
     for r in rows: print(f"  {r['p']:<5} {r['c']:.2f} vs average {r['sma']:.2f} ({'above' if r['up'] else 'below'}), position in range {r['ibs']:.2f}, relative volume {r['rv']:.2f} -> {'SIGNAL' if r['ok'] else 'no'}")
     ok = [r for r in rows if r['ok']]
