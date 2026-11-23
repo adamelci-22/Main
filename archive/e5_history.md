@@ -229,3 +229,14 @@
 - **Triggers (A2):** 8:41, 9:33, 9:36-12:36 watchdog, 13:30, 13:36/14:36/15:36 and 14:06/15:06 afternoon watchdogs, 15:51 and 15:57 enabled; bimonthly reminder enabled. One `v5 paper` trigger belongs to another session.
 - **Cycle (D4):** no `pending.json`, no approved challenger.
 - **RVOL baseline:** 20 sessions 2026-10-23..11-19 -> `archive/paper_rvol_2026-11-20.json`. 9:30 waiter started.
+
+## 2026-11-23 (Monday) 9:00 research, rulebook v5.2.69
+- **Account:** 462514035 flat, no open orders, cash $2,601.25 = total value at 9:00. Drawdown stop clear (high $2,634.56, stop $1,975.92, -1.26%). USDG off. No overnight position (none entered 11-20).
+- **NO IBS-TREND SIGNAL.** All seven proxies still below their 20-session average after Friday's sell-off (QQQ 609.91 vs 678.60), IBS 0.01 to 0.13, RSI2 0 to 3: long and dip are ruled out by the average, mirror by IBS under 0.95.
+- **New today: RELVAL trades at 100% of cash (v5.2.69, FULL_FROM 2026-11-23).** Risk to the stop is the full leg stop (median 5.3%, 90th percentile 8.7% of the account). Trigger levels (|sector move - QQQ move| from the open, each also at least 1.0%): SOXX 4.68%, IWM 2.23%, XLK 1.62%, DIA 2.58%, XLF 3.47%. Friday's first live RELVAL trade (SDOW, DIA +2.27%) took profit at 30.48: +$38.07.
+- **Controls:** losing streak 0 (SOXS and SDOW won Friday). Earnings (A1.9): NVDA reported 11-17, next 2027-02-24. MSFT next 2027-01-27. Nothing today.
+- **Corporate actions:** clean. Premarket moves match underlyings: QQQ +3.4%, SPY +2.5%, SOXX +5.6% (SOXL +16.7%, SOXS -17.1%), IWM +2.3% (TNA +6.5%), XLK +3.9% (TECL +11.2%, TECS -11.4%), XBI +2.2%, XLF +1.5%, DIA +1.6%, NVDA +8.9% (NVD -17.3%, NVDQ -17.5%), MSFU +5.7%, UVXY -11.6%. SSG spread wide (bid 36.80, ask 43.87): A1.7 applies. NVDQ premarket spread 1.9%, TECS 1.1%, FAS 0.9%.
+- **Context:** a sharp rebound after two risk-off sessions. Semis and tech lead (+5.6% and +3.9%), financials and the Dow lag (+1.5%, +1.6%): wide dispersion, so a RELVAL signal is likely at 13:35 or later.
+- **Triggers (A2):** 8:41, 9:33, 9:36-12:36 watchdog, 13:30, 13:36/14:36/15:36 and 14:06/15:06 afternoon watchdogs, 15:51 and 15:57 enabled; bimonthly reminder enabled. One `v5 paper` trigger belongs to another session.
+- **Cycle (D4):** no `pending.json`, no approved challenger. Paper trial drop.pb.NVDQ continues.
+- **Container:** uptime 0 at 8:42 (restarted over the weekend). State and triggers intact. RVOL baseline 2026-10-26..11-20 -> `archive/paper_rvol_2026-11-23.json`. 9:30 waiter started (pid running).
