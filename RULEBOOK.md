@@ -551,6 +551,7 @@ Earlier E5 text is kept in `archive/e5_history.md`.
 - **FADE P&L in the model** is leverage × proxy return. It tracks real leg prices within about 0.1% per trade, but real fills will differ. That's why `live_trades.csv` records both.
 
 ---
+- **Mon 2026-11-23: the container restarted at 9:34 ET (uptime 0).** The 8:41 research had run (E5 written and pushed), but the 9:30 waiter was lost with the restart. The 9:33 check found no IBS-TREND signal and no overnight position, so no 9:35 waiter was needed. The 9:30 slot's work (A1.8 check) was done by hand at 9:34: flat. Batch 1 waiters 10:00 to 11:25 were restarted at 9:34 (18 processes). Cause: the container is reclaimed and restarted often (seen again 2026-11-09, 2026-11-20, 2026-11-23); the standing triggers and the watchdogs recover it. Nothing was missed.
 
 ## Change log
 
