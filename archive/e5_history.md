@@ -240,3 +240,12 @@
 - **Triggers (A2):** 8:41, 9:33, 9:36-12:36 watchdog, 13:30, 13:36/14:36/15:36 and 14:06/15:06 afternoon watchdogs, 15:51 and 15:57 enabled; bimonthly reminder enabled. One `v5 paper` trigger belongs to another session.
 - **Cycle (D4):** no `pending.json`, no approved challenger. Paper trial drop.pb.NVDQ continues.
 - **Container:** uptime 0 at 8:42 (restarted over the weekend). State and triggers intact. RVOL baseline 2026-10-26..11-20 -> `archive/paper_rvol_2026-11-23.json`. 9:30 waiter started (pid running).
+
+## 2026-11-24 (Tuesday) 9:00 research, rulebook v5.2.69
+- **9:00 value:** $2,601.25, all cash, flat. No positions, no open orders, no overnight position (Monday's overnight entry was skipped). Account high $2,634.56, drawdown stop $1,975.92 (value -1.26% from the high).
+- **NO IBS-TREND SIGNAL.** All seven proxies sit below their 20-session average close (QQQ 650.87 vs 675.53, SOXX 140.24 vs 148.79, IWM 265.74 vs 275.67, XLK 162.44 vs 171.26, XBI 147.20 vs 151.53, XLF 55.64 vs 57.17, SPY 722.42 vs 745.74). No long. No mirror (IBS below 0.95 on all seven except none above). No dip (RSI2 above 10 on all).
+- **RELVAL prep (20 sessions, ending 2026-11-23):** triggers at |rp| of SOXX 4.59%, IWM 2.21%, XLK 1.58%, DIA 2.55%, XLF 3.43%. Size is 100% of cash.
+- **Controls:** no losing streak lockout. Earnings: MSFT next 2027-01-27, NVDA next 2027-02-24. Both clear.
+- **Triggers (A2):** 8:41, 9:33, 9:36-12:36 watchdog, 13:30, 13:36/14:36/15:36 and 14:06/15:06 afternoon watchdogs, 15:51 and 15:57 enabled. Bimonthly reminder enabled. One `v5 paper` trigger belongs to another session.
+- **Cycle (D4):** no pending proposal, no approved challenger. Paper trial drop.pb.NVDQ continues.
+- **Container:** uptime 0 at 8:42 (restarted overnight). RVOL baseline 2026-10-27..2026-11-23 -> `archive/paper_rvol_2026-11-24.json`. 9:30 waiter started.
