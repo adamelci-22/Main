@@ -1,0 +1,17 @@
+SELECTION PROCEDURE RUN ON TRAIN YEARS ONLY, scored on the years it never saw
+rule: an edit (add a name, or drop a live name) is applied if it helps the book in at least 2 of 3 train years (both of 2) and in total on the train years
+  train 2022-24          edits 17 (6 drops, 11 adds) | train: live    +547% ->    +938% | TEST: live    +559% ->    +121%  (2025: -115.1 2026: -98.7)
+      edits: +XLRE(rel), -UVXY(pb), +EEM(ovn), +FXI(fam), +FXI(ovn), +TECL(pb), +TLT(ovn), +XOP(ovn), -XBI(fam), -IWM(rel), +XOP(rel), -QQQ(ovn), +XLE(rel), +EEM(rel), -TECS(pb), +XLRE(ovn), -XLK(ovn)
+  train 2024-26          edits 11 (2 drops, 9 adds) | train: live    +868% ->   +1306% | TEST: live    +340% ->    +275%  (2022: -41.3 2023: -0.4)
+      edits: +XLU(ovn), -XLF(ovn), +TNA(pb), +XLV(ovn), +FXI(ovn), +XLE(rel), +FAZ(pb), +XLRE(ovn), -LABD(pb), +TLT(rel), +SQQQ(pb)
+  train 2022 2024 2026   edits 11 (0 drops, 11 adds) | train: live   +1009% ->   +1801% | TEST: live    +285% ->    +248%  (2023: +1.5 2025: -25.4)
+      edits: +XLRE(rel), +FXI(ovn), +TECL(pb), +XOP(ovn), +EEM(ovn), +XLU(ovn), +XOP(rel), +FAZ(pb), +TLT(rel), +XLRE(ovn), +TNA(pb)
+  train 2023 2025        edits  9 (3 drops, 6 adds) | train: live    +285% ->    +414% | TEST: live   +1009% ->    +473%  (2022: -48.4 2024: -12.0 2026: -86.1)
+      edits: -XLF(ovn), +XLE(rel), +TLT(ovn), +XLV(ovn), +XBI(ovn), -XLF(fam), +SQQQ(pb), -QQQ(ovn), +SPY(ovn)
+
+the five edits I made, scored the same way:
+   ('ovn', 'XLF') by year -7.6 +5.1 -0.7 +15.3 +1.6 | rank among all 8 of 63
+   ('ovn', 'FXI') by year +9.5 -0.4 +8.7 +3.3 -0.9 | rank among all 2 of 63
+   ('rel', 'XLRE') by year +29.6 +4.0 +5.7 -9.2 +0.7 | rank among all 1 of 63
+   ('rel', 'XLE') by year -9.1 +11.4 +1.2 +4.6 +2.4 | rank among all 10 of 63
+   ('pb', 'TECL') by year +15.6 +0.5 +1.1 -1.7 +0.3 | rank among all 5 of 63
