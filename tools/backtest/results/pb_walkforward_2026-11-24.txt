@@ -1,0 +1,15 @@
+Leave one year out: greedy picks on the other four years, scored on the held-out year (account return that year, %)
+held out    greedy        live four        SOXS TECS   SOXS TECS UVXY      no PULLBACK  | greedy legs chosen
+2022        +182.8           +180.8           +178.8           +174.2           +148.6  | SOXS UVXY TECS TNA FAZ TECL
+2023         +47.5            +56.8            +70.7            +52.6            +68.8  | SOXS UVXY TECS FAZ TNA TQQQ
+2024         +45.8            +47.0            +52.2            +49.9            +34.1  | SOXS UVXY TECS TQQQ LABD FAZ
+2025         +94.6           +145.3           +106.9           +161.6            +86.7  | SOXS LABD TECS TECL LABU TQQQ
+2026        +154.8           +168.6           +140.5           +153.6           +103.7  | SOXS UVXY TECS TQQQ TNA FAZ
+compound     +2917            +4165            +3506            +4059            +2040  (out-of-sample years compounded)
+legs chosen in how many of the 5 folds: SOXS 5, TECS 5, UVXY 4, FAZ 4, TQQQ 4, TNA 3, TECL 2, LABD 2, LABU 1
+
+Separate-years test (rulebook): train 2022 2024 2026 -> test 2023 2025, and train 2023 2025 -> test 2022 2024 2026
+  train ('2022', '2024', '2026'): greedy ['SOXS', 'LABU', 'TQQQ', 'TECS', 'LABD', 'TNA']
+     test ('2023', '2025'): greedy +232% | live four +285% | SOXS TECS +253% | SOXS TECS UVXY +299% | no PULLBACK +215%
+  train ('2023', '2025'): greedy ['UVXY', 'TECS', 'SOXS', 'TNA', 'FAS', 'FAZ']
+     test ('2022', '2024', '2026'): greedy +978% | live four +1009% | SOXS TECS +921% | SOXS TECS UVXY +942% | no PULLBACK +579%

@@ -1,0 +1,24 @@
+PULLBACK legs                                   2022    2023    2024    2025    2026 | 5-yr total | max DD | worst yr DD | yrs up | trades
+live four SOXS LABD TECS UVXY                 +180.8   +56.8   +47.0  +145.3  +168.6 |    +4165% |  19.5% |  19.5% | 5/5 | PB trades 227
+SOXS TECS                                     +178.8   +70.7   +52.2  +106.9  +140.5 |    +3506% |  17.0% |  17.0% | 5/5 | PB trades 129
+SOXS only                                     +187.3   +73.6   +45.9   +92.8  +130.5 |    +3134% |  19.0% |  19.0% | 5/5 | PB trades 95
+SOXS TECS UVXY                                +174.2   +52.6   +49.9  +161.6  +153.6 |    +4059% |  18.8% |  18.8% | 5/5 | PB trades 171
+SOXS TECS LABD                                +186.6   +73.8   +49.5   +96.1  +155.9 |    +3636% |  19.5% |  19.5% | 5/5 | PB trades 191
+SOXS TECS TECL                                +190.5   +69.3   +53.4  +105.5  +140.8 |    +3633% |  17.1% |  17.1% | 5/5 | PB trades 156
+SOXS TECS SQQQ                                +169.3   +69.3   +50.4  +109.0  +139.4 |    +3332% |  17.0% |  17.0% | 5/5 | PB trades 141
+SOXS TECS TZA                                 +178.0   +68.1   +51.0  +102.2  +114.5 |    +2960% |  17.7% |  17.7% | 5/5 | PB trades 146
+SOXS TECS TNA                                 +173.8   +68.9   +57.2  +113.4  +141.1 |    +3640% |  17.7% |  17.7% | 5/5 | PB trades 148
+all 13                                        +236.7   +42.0   +36.2  +152.7  +123.8 |    +3583% |  19.0% |  19.0% | 5/5 | PB trades 407
+no PULLBACK at all                            +148.6   +68.8   +34.1   +86.7  +103.7 |    +2040% |  21.1% |  21.1% | 5/5 | PB trades 0
+
+Greedy forward pick by 5-year total (in-sample, so read it as an upper bound):
+  + SOXS  -> +3134%   set now ['SOXS']
+  + TECS  -> +3506%   set now ['SOXS', 'TECS']
+  + UVXY  -> +4059%   set now ['SOXS', 'TECS', 'UVXY']
+  + TECL  -> +4255%   set now ['SOXS', 'TECS', 'UVXY', 'TECL']
+  + TNA   -> +4427%   set now ['SOXS', 'TECS', 'UVXY', 'TECL', 'TNA']
+  + LABD  -> +4670%   set now ['SOXS', 'TECS', 'UVXY', 'TECL', 'TNA', 'LABD']
+  + FAZ   -> +4837%   set now ['SOXS', 'TECS', 'UVXY', 'TECL', 'TNA', 'LABD', 'FAZ']
+  + TQQQ  -> +4907%   set now ['SOXS', 'TECS', 'UVXY', 'TECL', 'TNA', 'LABD', 'FAZ', 'TQQQ']
+  + FAS   -> +4914%   set now ['SOXS', 'TECS', 'UVXY', 'TECL', 'TNA', 'LABD', 'FAZ', 'TQQQ', 'FAS']
+greedy set                                    +210.6   +52.1   +50.5  +162.3  +168.9 |    +4914% |  20.2% |  20.2% | 5/5 | PB trades 293
