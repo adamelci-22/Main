@@ -42,7 +42,7 @@ if len(sys.argv) > 2:
             m = B.PS.manage(t, B.BC.RUN); P0.append(dict(day=t['day'], k=m['k'], xbar=m['xbar'], pct=m['pct'], leg_risk=m['leg_risk'], rv=t['rv'], sys=1))
     FAMU = [t for p in list(F_.LIVE) + ['SPY'] for t in U.family(dsu, ctxu, p, (3, 3))]
     I0 = [t for t in FAMU if t['sys'] == 4]; M = [t for t in FAMU if t['sys'] == 5]; D = [t for t in FAMU if t['sys'] == 2]
-    OVN_PX = ['QQQ', 'SOXX', 'IWM', 'XLK', 'FXI']; LG = {p: OU.legs(dsu, p, 3) for p in OVN_PX}      # v5.2.70: XLF out, FXI in (YINN, 3x); S = {}; ovn = np.zeros(len(dm))
+    OVN_PX = ['QQQ', 'SOXX', 'IWM', 'XLK', 'FXI']; LG = {p: OU.legs(dsu, p, 3) for p in OVN_PX}; S = {}; ovn = np.zeros(len(dm))      # v5.2.70: XLF out, FXI in (YINN, 3x)
     for n, d in enumerate(dm):
         c = [(LG[p][d][0], LG[p][d][1], p) for p in OVN_PX if d in LG[p]]
         if c:
