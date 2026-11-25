@@ -20,23 +20,29 @@ S = O.signals(); ovn = np.zeros(len(dm))
 for n, d in enumerate(dm):
     c = [t for t in S.get(d, []) if t['kind'] == 'long']
     if c: ovn[n] = max(c, key=lambda t: t['rv'])['pct'] / 100
-# v5.2.68 book (governor 2026-11-20 "this accurate?": the chart still showed v5.2.64): RELVAL with DIA in XBI's place, SPY in the 9:35
+# v5.2.70 book (v5.2.68 and 69 before it; governor 2026-11-20 "this accurate?": the chart still showed v5.2.64): RELVAL with DIA in XBI's place, SPY in the 9:35
 # family, overnight leg without XBI. Needs the universe tape: python3 -I dash_backtest.py OUT_DIR UNI_DIR (M5U.json.gz).
 if len(sys.argv) > 2:
     import universe as U, overnight_universe as OU
     F_ = U.F; allp = list(F_.LIVE) + list(U.NEW); F_.LEV.update({p: (3, 3) for p in U.NEW})
-    dsu = F_.DS(os.path.join(sys.argv[2], 'M5U.json.gz'), allp); ctxu = F_.context(dsu, allp); N2.PX = [p for p in allp if p != 'SPY']; N2.daily_init(dsu)
+    PBLEGS = ['SOXS', 'LABD', 'TECS', 'UVXY', 'TECL']      # v5.2.70: + TECL. NVDQ NVD MSFU SSG are live but the tape has no data on them
+    dsu = F_.DS(os.path.join(sys.argv[2], 'M5U.json.gz'), allp + PBLEGS); ctxu = F_.context(dsu, allp); N2.PX = [p for p in allp if p != 'SPY']; N2.daily_init(dsu)
     F0 = []
-    for p in ['SOXX', 'IWM', 'XLK', 'DIA', 'XLF']:
+    for p in ['SOXX', 'IWM', 'XLK', 'DIA', 'XLF', 'XLRE', 'XLE']:           # v5.2.70: + XLRE (DRN/DRV 3x), XLE (ERX/ERY 2x)
+        fl = U.NEW[p][0] / 3 if p in U.NEW else 1.0
         for d in dm:
             b = dsu.bars[p].get(d)
             if not b or len(b) < 78: continue
             x = NS.relval(dsu, ctxu, p, d, b, a=48, z=72, xm=1.0)
-            if x: F0.append(dict(day=d, k=x['k'], xbar=x['xbar'], pct=x['pct'], leg_risk=x['leg_risk'], rv=dsu.rvol(p, d, x['k']), sys=0, proxy=p))
+            if x: F0.append(dict(day=d, k=x['k'], xbar=x['xbar'], pct=(x['pct'] + NS.COST) * fl - NS.COST, leg_risk=x['leg_risk'], rv=dsu.rvol(p, d, x['k']), sys=0, proxy=p))
     F0 = [dict(t, leg_risk=1e-6) for t in F0]   # v5.2.69: RELVAL at 100% of cash (acct sizes min(1, 3 / leg_risk))
+    P0 = []
+    for leg in PBLEGS:
+        for t in TB.pb_entries(dsu, dm, [leg], dict(B.EP.LIVE)):
+            m = B.PS.manage(t, B.BC.RUN); P0.append(dict(day=t['day'], k=m['k'], xbar=m['xbar'], pct=m['pct'], leg_risk=m['leg_risk'], rv=t['rv'], sys=1))
     FAMU = [t for p in list(F_.LIVE) + ['SPY'] for t in U.family(dsu, ctxu, p, (3, 3))]
     I0 = [t for t in FAMU if t['sys'] == 4]; M = [t for t in FAMU if t['sys'] == 5]; D = [t for t in FAMU if t['sys'] == 2]
-    OVN_PX = [p for p in F_.LIVE if p != 'XBI']; LG = {p: OU.legs(dsu, p, 3) for p in OVN_PX}; S = {}; ovn = np.zeros(len(dm))
+    OVN_PX = ['QQQ', 'SOXX', 'IWM', 'XLK', 'FXI']; LG = {p: OU.legs(dsu, p, 3) for p in OVN_PX}      # v5.2.70: XLF out, FXI in (YINN, 3x); S = {}; ovn = np.zeros(len(dm))
     for n, d in enumerate(dm):
         c = [(LG[p][d][0], LG[p][d][1], p) for p in OVN_PX if d in LG[p]]
         if c:
@@ -75,7 +81,7 @@ chk = np.array([0.0]); eq = {}
 for r in rows: eq[r['day'][:4]] = eq.get(r['day'][:4], 1.0) * (1 + r['acct_pct'] / 100)
 print('rows check by year', {y: round((v - 1) * 100, 1) for y, v in sorted(eq.items())}, 'against', [round(v, 1) for v in SB.yret(cur)])
 json.dump([dict(source='backtest', days=len(dm), start=dm[0], end=dm[-1])], open(os.path.join(out, 'periods_bt.json'), 'w'))
-BOOKS = [('b4', 'All systems, as live from Nov 23 (v5.2.69)', cur)]
+BOOKS = [('b4', 'All systems, as live from Nov 25 (v5.2.70)', cur)]
 ALONE = [('s0', 'RELVAL alone', acct([F0])[0]), ('s1', 'PULLBACK alone', acct([P0])[0]), ('s2', 'IBS-LONG alone', acct([I0])[0]), ('s3', 'MIRROR alone', acct([M])[0]), ('s4', 'DIP alone', acct([D])[0]), ('s5', 'OVERNIGHT alone, full size', ovn)]
 years = []
 for grp, items in (('Book', BOOKS), ('System', ALONE)):
@@ -103,12 +109,12 @@ names = {0: 'RELVAL', 1: 'PULLBACK', 4: 'IBS-LONG', 5: 'MIRROR', 2: 'DIP'}; nyr 
 for s, nm in names.items():
     x = [t for t in tk if t['sys'] == s]; rows.append(dict(id=nm, name=nm, trades=len(x), per_year=r4(len(x) / nyr), win_pct=r4(100 * np.mean([t['g'] > 0 for t in x])), points=r4(sum(t['g'] for t in x))))
 nights = ovn[ovn != 0]; rows.append(dict(id='OVERNIGHT', name='OVERNIGHT (50% of cash)', trades=len(nights), per_year=r4(len(nights) / nyr), win_pct=r4(100 * np.mean(nights > 0)), points=r4(sum(0.5 * nights * 100))))
-SPEC = {'RELVAL': ('13:35-15:30: a sector proxy is 1%+ and 2.5 sd away from QQQ since the open', 'Opposite leg, 3x (back toward QQQ)', '13:35 to 15:30', 'One more gap against (3x the gap on the leg)', 'Half the gap back toward QQQ, else out 15:55', 'Replaced FADE on Nov 20. SOXX IWM XLK DIA XLF vs QQQ (DIA replaced XBI). 100% of cash from Nov 23'),
-        'PULLBACK': ('Breakout on volume, 2 to 5 bar dip, trigger bar above the prior high', 'Inverse and single-stock funds: SOXS LABD TECS UVXY NVDQ NVD MSFU SSG', '10:10 to 12:50', 'Dip low, at least 0.75%', '1/3 at the morning high, rest to a 20-EMA close, out 13:30', ''),
+SPEC = {'RELVAL': ('13:35-15:30: a sector proxy is 1%+ and 2.5 sd away from QQQ since the open', 'Opposite leg, 3x (XLE 2x) (back toward QQQ)', '13:35 to 15:30', 'One more gap against (3x the gap on the leg)', 'Half the gap back toward QQQ, else out 15:55', 'Replaced FADE on Nov 20. SOXX IWM XLK DIA XLF vs QQQ (DIA replaced XBI), plus XLRE and XLE from Nov 25. 100% of cash from Nov 23'),
+        'PULLBACK': ('Breakout on volume, 2 to 5 bar dip, trigger bar above the prior high', 'Inverse, vol and single-stock funds: SOXS LABD TECS UVXY TECL NVDQ NVD MSFU SSG (TECL added Nov 25)', '10:10 to 12:50', 'Dip low, at least 0.75%', '1/3 at the morning high, rest to a 20-EMA close, out 13:30', ''),
         'IBS-LONG': ('Closed above its 20-day average and in the bottom 10% of its range', '3x long leg', '9:35', '1% of the proxy (3% on the leg)', 'Out 15:55', 'One IBS trade a day. QQQ SOXX IWM XLK XBI XLF SPY (SPY added Nov 20)'),
         'MIRROR': ('Closed at or below its 20-day average and in the top 5% of its range', '3x inverse leg', '9:35', '1% of the proxy', 'Out 15:55', 'One IBS trade a day. QQQ SOXX IWM XLK XBI XLF SPY (SPY added Nov 20)'),
         'DIP': ('Closed above its 50-day average with a 2-day RSI under 10', '3x long leg', '9:35', '1% of the proxy', 'Out 15:55', 'One IBS trade a day. QQQ SOXX IWM XLK XBI XLF SPY (SPY added Nov 20)'),
-        'OVERNIGHT': ('At 15:55 above its 20-day average and in the bottom 10% of the day range', '3x long leg, 50% of cash', '15:55', 'Disaster stop at 90% of the fill', 'Sell at the next 9:35', 'Held overnight. QQQ SOXX IWM XLK XLF (XBI dropped Nov 20)')}
+        'OVERNIGHT': ('At 15:55 above its 20-day average and in the bottom 10% of the day range', '3x long leg, 50% of cash', '15:55', 'Disaster stop at 90% of the fill', 'Sell at the next 9:35', 'Held overnight. QQQ SOXX IWM XLK FXI (XBI dropped Nov 20, XLF out and FXI in Nov 25)')}
 for r in rows: r.update(zip(('signal', 'leg', 'entry', 'stop', 'exit', 'note'), SPEC[r['id']]))
 json.dump(rows, open(os.path.join(out, 'systems.json'), 'w'))
 print('systems', [(r['id'], r['trades'], r['win_pct'], r['points']) for r in rows]); print('risk', [(r['label'], r['avg_22_25'], r['max_dd'], r['stops']) for r in risk])
