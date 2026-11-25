@@ -249,3 +249,12 @@
 - **Triggers (A2):** 8:41, 9:33, 9:36-12:36 watchdog, 13:30, 13:36/14:36/15:36 and 14:06/15:06 afternoon watchdogs, 15:51 and 15:57 enabled. Bimonthly reminder enabled. One `v5 paper` trigger belongs to another session.
 - **Cycle (D4):** no pending proposal, no approved challenger. Paper trial drop.pb.NVDQ continues.
 - **Container:** uptime 0 at 8:42 (restarted overnight). RVOL baseline 2026-10-27..2026-11-23 -> `archive/paper_rvol_2026-11-24.json`. 9:30 waiter started.
+
+## 2026-11-25 (Wednesday) 9:00 research, rulebook v5.2.70
+- **v5.2.70 first live morning.** PULLBACK adds TECL, RELVAL adds XLRE and XLE (ERX/ERY 2x), from today. The overnight change (XLF out, FXI in, leg YINN) first trades Mon 2026-11-30 (no overnight hold tonight, Thanksgiving follows).
+- **9:00 value:** $2,538.49, all cash, flat. No positions, no open orders, no overnight position. Account high $2,634.56, drawdown stop $1,975.92 (value -3.65% from the high).
+- **NO IBS-TREND SIGNAL.** Six of seven proxies sit below their 20-session average (QQQ 638.12 vs 671.38, SOXX 128.66 vs 146.70, IWM 267.15 vs 275.02, XLK 157.10 vs 169.64, XLF 56.12 vs 57.18, SPY 718.79 vs 743.19). XBI is above (156.78 vs 151.62) with IBS 0.94, short of the long rule (IBS under 0.10) and above the mirror rule's average test.
+- **RELVAL prep (20 sessions ending 2026-11-24), triggers at |rp|:** SOXX 4.74%, IWM 2.30%, XLK 1.57%, DIA 2.55%, XLF 3.29%, **XLRE 3.51%, XLE 4.28%** (new). Group 5 (XLRE DRN DRV XLE ERX ERY FXI YINN) is fetched at the RELVAL slots. FXI has 20 daily rows in the IBS store for the overnight leg.
+- **Controls:** losing streak 1 of 5. PULLBACK lost yesterday (UVXY -$62.76) but the same-system loss block resets daily. Earnings: MSFT next 2027-01-27, NVDA next 2027-02-24, so no skip.
+- **Cycle (D4):** no pending proposal, no approved challenger. NVDQ drop paper trial continues.
+- **Container:** uptime 0 at 8:43 (restarted). 9:30 waiter started. Triggers were updated for v5.2.70 on 11-24 and are enabled.
