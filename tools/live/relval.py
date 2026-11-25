@@ -2,12 +2,13 @@
 """RELVAL, the afternoon relative-value system (RULEBOOK B8, v5.2.64, governor "Push the relval system" 2026-11-19). Replaces FADE.
 
 Rule (the fade_replace.py / relval_exit.py setting, a=48 z=72 xm=1.0 ksd=2.5, exit unchanged by the exit study):
-  For each proxy SOXX IWM XLK DIA XLF (v5.2.66: DIA replaced XBI), at the close of every 5-minute bar from the 13:30 bar to the 15:25 bar (slots 13:35-15:30):
+  For each proxy SOXX IWM XLK DIA XLF, and from 2026-11-25 XLRE and XLE (v5.2.66: DIA replaced XBI; v5.2.70: + XLRE, XLE), at the close of every 5-minute bar from the 13:30 bar to the 15:25 bar (slots 13:35-15:30):
   rp = (proxy close / proxy 9:30 open) - (QQQ close / QQQ 9:30 open). The FIRST bar of the day where |rp| >= 1.0% AND |rp| >= 2.5 x the
   standard deviation of that proxy's last 20 sessions of (proxy open-to-close - QQQ open-to-close) is the proxy's signal (one a day; a
   signal blocked by an open position is spent). rp > 0 (the sector ran ahead of QQQ) -> buy the 3x INVERSE leg; rp < 0 -> the 3x LONG leg.
   Entry at the next bar's open (the slot where the signal bar closed). Stop: the proxy moves one gap (|rp|) further against us
   = leg fill x (1 - 3|rp|). Target: half the gap back toward QQQ = leg fill x (1 + 1.5|rp|). Both as one OCO on all shares.
+  XLE's legs ERX/ERY are 2x: its stop is leg fill x (1 - 2|rp|) and its target leg fill x (1 + 1|rp|) (v5.2.70).
   Out at the 15:55 slot. Size: 3% of the account at risk on a 3|rp| leg stop, capped at 100% of cash; from 2026-11-23 (v5.2.69) 100% of cash. Several signals on one bar:
   the highest relative volume (paper.py rvol). One position at a time; no entry while another system holds the account.
 
@@ -23,10 +24,21 @@ import csv, json, os, statistics as st, sys
 from datetime import datetime
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.path.dirname(HERE)); sys.path.insert(0, HERE)
 import paper as P
-PROXIES = ['SOXX', 'IWM', 'XLK', 'DIA', 'XLF']; REF = 'QQQ'          # v5.2.66 (governor 2026-11-19 "push it"): DIA replaces XBI
-ROWS = {'SOXX': ('SOXL', 'SOXS'), 'IWM': ('TNA', 'TZA'), 'XLK': ('TECL', 'TECS'), 'DIA': ('UDOW', 'SDOW'), 'XLF': ('FAS', 'FAZ')}   # proxy: (3x long, 3x inverse)
+BASE = ['SOXX', 'IWM', 'XLK', 'DIA', 'XLF']; REF = 'QQQ'             # v5.2.66 (governor 2026-11-19 "push it"): DIA replaces XBI
+ADD_FROM = {'XLRE': '2026-11-25', 'XLE': '2026-11-25'}           # v5.2.70 (governor 2026-11-24 "Do these"): XLRE (DRN/DRV 3x) and XLE (ERX/ERY 2x) join
+PROXIES = BASE + list(ADD_FROM)                                   # every proxy the store keeps; proxies(day) is the list that trades that day
+ROWS = {'SOXX': ('SOXL', 'SOXS'), 'IWM': ('TNA', 'TZA'), 'XLK': ('TECL', 'TECS'), 'DIA': ('UDOW', 'SDOW'), 'XLF': ('FAS', 'FAZ'),
+        'XLRE': ('DRN', 'DRV'), 'XLE': ('ERX', 'ERY')}   # proxy: (long leg, inverse leg); 3x except XLE 2x (LEVP)
 LEG = {p: ROWS[p][0] for p in PROXIES}; INV = {p: ROWS[p][1] for p in PROXIES}
 GROUP = ['SPY', 'SPXL', 'SPXS', 'DIA', 'UDOW', 'SDOW']                 # group 4 (v5.2.67): fetched with C1.2 groups 1 and 2 at 9:35, every RELVAL slot and every IBS-TREND slot
+GROUP5 = ['XLRE', 'DRN', 'DRV', 'XLE', 'ERX', 'ERY', 'FXI', 'YINN']    # group 5 (v5.2.70): fetched at every RELVAL slot, at 15:55 and at 9:35 after an FXI overnight entry
+LEVP = {'XLE': 2}                                                    # leg leverage when not 3x
+
+
+def lev(p): return LEVP.get(p, LEV)
+
+
+def proxies(day): return BASE + [p for p, d in ADD_FROM.items() if day >= d]
 A, Z, XM, KSD, NHIST, MINH = 48, 72, 1.0, 2.5, 20, 15       # signal bars A..Z-1 (13:30..15:25 bars); |rp| >= XM% and >= KSD sd
 TG, SM, LEV, COST, OUT_BAR, RISK = 0.5, 1.0, 3, 0.06, 77, 3.0
 LIVE_FROM = '2026-11-20'
@@ -139,7 +151,7 @@ def cmd_prep(argv):
     store, n = store_update(P.load(paths), day)
     print(f"RELVAL prep for {day} (B8): daily store +{n} rows. Signal when |sector move - QQQ move| >= {XM:.1f}% and >= {KSD} x the 20-session sd:")
     bad = False
-    for p in PROXIES:
+    for p in proxies(day):
         sd, nh, last = sd_today(store, p, day)
         if sd is None: bad = True; print(f"  {p:<5} only {nh} sessions (need {MINH}): fetch the 20-session baseline and rerun prep"); continue
         print(f"  {p:<5} sd {sd * 100:.2f}% over {nh} sessions (last {last}) -> trigger at |rp| >= {max(XM, KSD * sd * 100):.2f}%")
@@ -157,8 +169,8 @@ def cmd_signal(argv):
     if rec.get('status') in ('open', 'closed'): print(f"  today's RELVAL trade is {rec['status']} ({rec.get('proxy')} -> {rec.get('ticker')}): run `relval.py manage`"); return
     base = jload(os.path.join(ROOT, 'archive', f'paper_rvol_{day}.json'), {}).get('base')
     cands, rows = [], []
-    for p in PROXIES:
-        if p not in tb: rows.append(f"  {p:<5} no bars today: refetch"); continue
+    for p in proxies(day):
+        if p not in tb: rows.append(f"  {p:<5} no bars today: refetch (group 5 for XLRE and XLE)"); continue
         sd, nh, _ = sd_today(store, p, day)
         if sd is None: rows.append(f"  {p:<5} sd needs {MINH} sessions, has {nh}: run `relval.py prep` on the 20-session dump"); continue
         pb, qb = tb[p], tb[REF]; j = min(last, Z - 1)
@@ -177,7 +189,7 @@ def cmd_signal(argv):
     c = max(cands, key=lambda x: x['rv']); why = blocks(day)
     if len(cands) > 1: print(f"  several signals on this bar: {c['proxy']} has the highest relative volume ({', '.join(f'{x['proxy']} {x['rv']:.2f}' for x in cands)})")
     st_[day] = dict(status='signal', proxy=c['proxy'], ticker=c['ticker'], side=c['side'], rp=round(c['rp'], 6), sd=round(c['sd'], 6), j=c['j'], k=c['j'] + 1)
-    gap = abs(c['rp']); lr = LEV * gap * 100; full = day >= FULL_FROM; frac = 1.0 if full else min(1.0, RISK / lr)
+    L = lev(c['proxy']); gap = abs(c['rp']); lr = L * gap * 100; full = day >= FULL_FROM; frac = 1.0 if full else min(1.0, RISK / lr)
     if why or day < LIVE_FROM:
         st_[day]['status'] = 'blocked'; st_[day]['why'] = '; '.join(why) or 'before LIVE_FROM'; jsave(STATE, st_); persist('blocked ' + day)
         print(f"  LIVE ACTIONS: none. RELVAL signal {c['proxy']} -> {c['ticker']} NOT TRADED: {st_[day]['why']}"); return
@@ -186,14 +198,14 @@ def cmd_signal(argv):
     print(f"    ENTER RELVAL: buy {c['ticker']} now (marketable limit, B5.2 steps). Gap {gap * 100:.2f}% on {c['proxy']} -> leg risk {lr:.2f}%.")
     if full: print(f"      size (v5.2.69 full size): 100% of cash, shares = floor(buying power / ask). Risk to the stop = the {lr:.2f}% leg stop. Whole shares, floor.")
     else: print(f"      size: {RISK:.0f}% of the account at risk on a {lr:.2f}% leg stop = {frac * 100:.0f}% of the account (capped at cash). Whole shares, floor.")
-    print(f"      after the fill F: ONE OCO on all shares, GTC: stop F x {1 - LEV * SM * gap:.4f} (rounded down to the cent), take-profit limit F x {1 + LEV * TG * gap:.4f} (rounded to the cent).")
+    print(f"      after the fill F: ONE OCO on all shares, GTC: stop F x {1 - L * SM * gap:.4f} (rounded down to the cent), take-profit limit F x {1 + L * TG * gap:.4f} (rounded to the cent). Leg leverage {L}x.")
     print(f"      then `python3 -I tools/live/relval.py opened {c['proxy']} F SHARES`. Exit: cancel the OCO and sell all at the 15:55 slot.")
 
 
 def cmd_opened(argv):
     day = datetime.now(P.ET).date().isoformat(); p, fill, sh = argv[0], float(argv[1]), int(argv[2]); st_ = jload(STATE, {}); r = st_.get(day)
     if not r or r.get('proxy') != p: print(f"  ERROR: no RELVAL signal for {p} today in {STATE}"); return
-    gap = abs(r['rp']); r.update(status='open', fill=fill, shares=sh, stop_leg=int(fill * (1 - LEV * SM * gap) * 100) / 100, target_leg=round(fill * (1 + LEV * TG * gap), 2))
+    L = lev(p); gap = abs(r['rp']); r.update(status='open', fill=fill, shares=sh, stop_leg=int(fill * (1 - L * SM * gap) * 100) / 100, target_leg=round(fill * (1 + L * TG * gap), 2))
     jsave(STATE, st_); persist('open ' + day); print(f"  RELVAL open: {sh} {r['ticker']} @ {fill}; OCO stop {r['stop_leg']} / target {r['target_leg']}; out at 15:55")
 
 
@@ -212,9 +224,9 @@ def cmd_manage(argv):
     if K - 1 >= OUT_BAR - 1 and x is None: x = (OUT_BAR, pb[OUT_BAR][0] if len(pb) > OUT_BAR else pb[-1][3], 'time 15:55')
     s = r['side']; e = pb[r['k']][0]
     if x is None:
-        m = pb[K - 1][3]; print(f"  RELVAL {r['proxy']} -> {r['ticker']} model open: proxy {m:.2f} vs entry {e:.2f} ({LEV * s * (m / e - 1) * 100:+.2f}% on the leg). Keep the OCO; out at 15:55.")
+        m = pb[K - 1][3]; print(f"  RELVAL {r['proxy']} -> {r['ticker']} model open: proxy {m:.2f} vs entry {e:.2f} ({lev(r['proxy']) * s * (m / e - 1) * 100:+.2f}% on the leg). Keep the OCO; out at 15:55.")
         return
-    j, px, why = x; pct = LEV * s * (px / e - 1) * 100 - COST
+    j, px, why = x; pct = lev(r['proxy']) * s * (px / e - 1) * 100 - COST
     print(f"  RELVAL model CLOSED at {P.k2t(j)} ({why}): {pct:+.2f}% on the leg.")
     if r.get('logged') != day:
         new = not os.path.exists(LOG)

@@ -27,7 +27,8 @@ STATE = os.path.join(ROOT, 'archive', 'paper_state.json')
 
 FADE_ROWS = {'QQQ': ('TQQQ', 'SQQQ', 3, 3), 'SOXX': ('SOXL', 'SOXS', 3, 3), 'IWM': ('TNA', 'TZA', 3, 3), 'XLK': ('TECL', 'TECS', 3, 3),
              'XBI': ('LABU', 'LABD', 3, 3), 'XLF': ('FAS', 'FAZ', 3, 3)}     # proxy: (bull leg, inverse leg, bull leverage, inverse leverage)
-PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVDQ', 'NVD', 'MSFU', 'SSG']     # tie order for same-bar pullback triggers (v5.2.21: + NVDQ NVD MSFU SSG)
+PB_LIST = ['SOXS', 'LABD', 'TECS', 'UVXY', 'NVDQ', 'NVD', 'MSFU', 'SSG', 'TECL']     # tie order for same-bar pullback triggers (v5.2.21: + NVDQ NVD MSFU SSG; v5.2.70: + TECL)
+PB_ADD_FROM = {'TECL': '2026-11-25'}   # v5.2.70 (governor 2026-11-24 "Do these"): TECL trades from this day; replays without a day leave it out
 SELL_BY = 47            # bar index of the 13:25-13:30 bar; positions are sold at its close (13:30)
 REAL_FREE = False       # --real-free: list LIVE signals even while the MODEL's own position is open (the governor closed the real one by hand; RULEBOOK A3/B4.2)
 FLOOR_TARGET = True     # pullback take-profit = morning high rounded down to the cent; main() turns it off for days before FLOOR_FROM
@@ -267,7 +268,7 @@ def pb_manage_runner(b, K, k, entry, stop, T, e20):
 
 
 # ------------------------------------------------------------------ day simulation (one shared paper account)
-PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK', 'NVD': 'NVDA', 'NVDQ': 'NVDQ', 'MSFU': 'MSFU', 'SSG': 'SSG'}     # proxy RVOL used only to break same-bar ties
+PB_PROXY = {'SOXS': 'SOXX', 'TECS': 'XLK', 'TECL': 'XLK', 'NVD': 'NVDA', 'NVDQ': 'NVDQ', 'MSFU': 'MSFU', 'SSG': 'SSG'}     # proxy RVOL used only to break same-bar ties
 
 
 def rvol(today, base, p, k):
@@ -385,6 +386,7 @@ def simulate(today, prev, K, equity, base=None, streak=0, day=None):
         cands.append(t)
     for i, leg in enumerate(list(PB_LIST) + [x for x in X_ADD_PB if x not in PB_LIST]):          # idea switch: extra PULLBACK funds (shadow only)
         if leg not in today or leg not in prev or leg in X_DROP_PB: continue
+        if leg in PB_ADD_FROM and (not day or day < PB_ADD_FROM[leg]): continue     # v5.2.70 start date
         t = pullback(today[leg], prev[leg], K)
         if not t: continue
         if t.get('k', 0) > X_PB_LAST: continue                                 # idea switch: no PULLBACK entries after this bar
@@ -600,6 +602,7 @@ def usdg_trigger(today, prev, K, taken, signals, day, streak=0):
             if b[6][3] > H or b[6][3] < L: hits.append(f"FADE {p} break {'up' if b[6][3] > H else 'down'} at 10:00, waiting for a retest")
     if 'PB' not in lost and not late:
         for leg in PB_LIST:
+            if leg in PB_ADD_FROM and (not day or day < PB_ADD_FROM[leg]): continue
             if leg not in today or leg not in prev or any(s[0] == 'PB' and s[1] == leg for s in signals): continue
             tl = today[leg][:K]; pl = prev[leg]
             ser = [x[3] for x in pl] + [x[3] for x in tl]; e9 = ema(ser, 9)[len(pl):]; e20 = ema(ser, 20)[len(pl):]

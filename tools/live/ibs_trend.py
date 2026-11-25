@@ -25,7 +25,12 @@ HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.path.dirname(os.pat
 import paper as P
 LEG = {p: r[0] for p, r in P.FADE_ROWS.items()}          # proxy -> 3x long leg
 INV = {p: r[1] for p, r in P.FADE_ROWS.items()}          # proxy -> 3x inverse leg (the mirror, v5.2.49)
-OVN_DROP, OVN_DROP_FROM = ('XBI',), '2026-11-20'     # v5.2.68 (governor 2026-11-20 "push OVERNIGHT: drop XBI"): the overnight leg no longer checks XBI
+OVN_DROP = {'XBI': '2026-11-20', 'XLF': '2026-11-25'}   # v5.2.68 (governor 2026-11-20 "push OVERNIGHT: drop XBI"); v5.2.70 (governor 2026-11-24 "Do these"): XLF out
+OVN_ADD = {'FXI': ('YINN', '2026-11-25')}             # v5.2.70: FXI joins the overnight leg (3x long leg YINN); its daily rows go in the store
+OVN_LEG = dict(LEG, **{p: v[0] for p, v in OVN_ADD.items()})
+
+
+def ovn_proxies(day): return [p for p in LEG if not (p in OVN_DROP and day >= OVN_DROP[p])] + [p for p, v in OVN_ADD.items() if day >= v[1]]
 FAM_LEG = dict(LEG, SPY='SPXL'); FAM_INV = dict(INV, SPY='SPXS')    # v5.2.67 (governor 2026-11-20 "lets add spy"): SPY joins the 9:35 family only; the overnight leg keeps LEG
 LO, HI, SMA, STOP_PCT, LEV, COST = 0.10, 0.95, 20, 1.0, 3, 0.06
 DIP_RSI, DIP_SMA, DIP_FROM = 10, 50, '2026-11-16'            # v5.2.50: dip-buy in an uptrend (needs 50 closes in the daily store)
@@ -128,7 +133,7 @@ def args_days(argv):
 def update_store(raw, upto):
     """Add every full session before `upto` found in the dumps to the daily store."""
     store = jload(DAILY, {}); n = 0
-    for p in FAM_LEG:
+    for p in list(FAM_LEG) + list(OVN_ADD):
         for d, bars in raw.get(p, {}).items():
             if d >= upto or len(bars) < 70: continue
             g = P.grid(bars, 78)
@@ -258,8 +263,7 @@ def ovn_pick(store, bars_by_proxy, day, strict=False):
     """15:55 check. bars_by_proxy: {proxy: today's completed bars through 15:55}. LONG signal only: the 15:55 price above the average of
     the last 20 closes (19 stored + now) and in the bottom 10% of today's range. Returns one row per proxy; `ok` marks a signal."""
     out = []
-    for p in LEG:
-        if p in OVN_DROP and day >= OVN_DROP_FROM: continue
+    for p in ovn_proxies(day):
         b = bars_by_proxy.get(p); prior = sorted(d for d in store.get(p, {}) if d < day)
         if not b or len(prior) < SMA or (strict and prior[-1] != prev_session(day)): continue
         c = b[-1][3]; H = max(x[1] for x in b); L = min(x[2] for x in b)
@@ -280,15 +284,15 @@ def cmd_ovn_signal(argv):
     nxt = __import__('datetime').date.fromisoformat(day) + __import__('datetime').timedelta(days=1)
     while nxt.weekday() >= 5: nxt += __import__('datetime').timedelta(days=1)
     if not why and nxt.isoformat() in P.NO_TRADE: why = f"the next session {nxt.isoformat()} is {P.NO_TRADE[nxt.isoformat()]}: no trading, so no overnight hold (B7.4)"
-    rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in LEG if day in raw.get(p, {})}, day, strict=True)
-    nexp = len([p for p in LEG if not (p in OVN_DROP and day >= OVN_DROP_FROM)])
-    if len(rows) < nexp: print(f"  WARNING: only {len(rows)} of {nexp} proxies could be checked (missing bars, or the daily store does not end at {prev_session(day)}). Refetch groups 1 and 2; if the store is stale run `signal` on the 20-session baseline first.")
+    rows = ovn_pick(store, {p: P.grid(raw[p][day], K) for p in ovn_proxies(day) if day in raw.get(p, {})}, day, strict=True)
+    nexp = len(ovn_proxies(day))
+    if len(rows) < nexp: print(f"  WARNING: only {len(rows)} of {nexp} proxies could be checked (missing bars, or the daily store does not end at {prev_session(day)}). Refetch groups 1, 2 and 5 (FXI); if the store is stale run `signal` on the 20-session baseline first.")
     print(f"OVERNIGHT check for {day} at 15:55 (B7): the 15:55 price above the {SMA}-close average and in the bottom {LO:.0%} of today's range.")
     for r in rows: print(f"  {r['p']:<5} {r['c']:.2f} vs average {r['sma']:.2f} ({'above' if r['up'] else 'below'}), position in range {r['ibs']:.2f}, relative volume {r['rv']:.2f} -> {'SIGNAL' if r['ok'] else 'no'}")
     ok = [r for r in rows if r['ok']]
     if not ok: print("  NO OVERNIGHT ENTRY tonight."); return
     if why: print(f"  OVERNIGHT SIGNAL NOT TRADED: {why}."); return
-    r = max(ok, key=lambda x: x['rv']); leg = LEG[r['p']]; ovn[day] = dict(proxy=r['p'], ticker=leg, ref=r['c'], status='open'); jsave(STATE, state); persist('overnight entry ' + day)
+    r = max(ok, key=lambda x: x['rv']); leg = OVN_LEG[r['p']]; ovn[day] = dict(proxy=r['p'], ticker=leg, ref=r['c'], status='open'); jsave(STATE, state); persist('overnight entry ' + day)
     print("  LIVE ACTIONS (only if the real account is flat; A1 safety checks first):")
     print(f"    ENTER OVERNIGHT: buy {leg} now (marketable limit, B5.2 steps) with {OVN_SIZE:.0%} of cash: shares = floor({OVN_SIZE} x buying power / ask). If the USDG rule is ON, sell USDG for that amount first (B4.8 peg guard).")
     print(f"      after the fill F: one GTC stop-market for all shares at F x {OVN_STOP:.2f}, rounded down to the cent (a disaster stop: it only works in regular hours).")
